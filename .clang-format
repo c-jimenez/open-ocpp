@@ -1,0 +1,25 @@
+---
+Language: Cpp
+BasedOnStyle: Microsoft
+ColumnLimit: 140
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AlignEscapedNewlines: Left
+AlignOperands: true
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: false
+BreakConstructorInitializers: BeforeColon
+ReflowComments: false
+AllowShortCaseLabelsOnASingleLine: false
+BinPackParameters: false
+BinPackArguments: false
+PointerAlignment: Left
+IndentCaseLabels: true
+BreakBeforeBraces: Allman
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+SpaceInEmptyBlock: true
+AlwaysBreakTemplateDeclarations: Yes

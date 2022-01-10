@@ -1,0 +1,9 @@
+#################################################################################
+#                                Build options                                  #
+#################################################################################
+
+# Log level (0 = All logs, 5 = No logs)
+add_compile_definitions(LOG_LEVEL=1)
+
+# Unit tests
+set(BUILD_UNIT_TESTS    ON)

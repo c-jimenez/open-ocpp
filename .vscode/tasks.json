@@ -1,0 +1,38 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build GCC native",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "gcc-native"
+            ],
+            "problemMatcher": "$gcc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "tests GCC native",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "tests-gcc-native"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "clean GCC native",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean-gcc-native"
+            ],
+            "group": "build"
+        }
+    ]
+}

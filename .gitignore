@@ -1,0 +1,3 @@
+build_*
+bin/*
+.vscode/settings.json

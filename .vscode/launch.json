@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "x86 debug",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_chargepoint",
+            "cwd": "${workspaceRoot}/bin/gcc_native/",
+            "arguments": "",
+            "valuesFormatting": "parseText"
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "x86 test debug",
+            "target": "${workspaceRoot}/build_gcc_native/tests/tools/test_logs",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
+        }
+    ]
+}

@@ -1,0 +1,81 @@
+/*
+Copyright (c) 2020 Cedric Jimenez
+This file is part of OpenOCPP.
+
+OpenOCPP is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+OpenOCPP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "UnlockConnector.h"
+#include "IRpcClient.h"
+
+using namespace ocpp::types;
+
+namespace ocpp
+{
+
+namespace types
+{
+
+/** @brief Helper to convert a UnlockStatus enum to string */
+const EnumToStringFromString<UnlockStatus> UnlockStatusHelper = {
+    {UnlockStatus::Unlocked, "Unlocked"}, {UnlockStatus::UnlockFailed, "UnlockFailed"}, {UnlockStatus::NotSupported, "NotSupported"}};
+
+} // namespace types
+
+namespace messages
+{
+
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+bool UnlockConnectorReqConverter::fromJson(const rapidjson::Value& json,
+                                           UnlockConnectorReq&     data,
+                                           const char*&            error_code,
+                                           std::string&            error_message)
+{
+    bool ret = extract(json, "connectorId", data.connectorId, error_message);
+    ret      = ret && (data.connectorId > 0);
+    if (!ret)
+    {
+        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+    }
+    return ret;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+bool UnlockConnectorReqConverter::toJson(const UnlockConnectorReq& data, rapidjson::Document& json)
+{
+    fill(json, "connectorId", data.connectorId);
+    return true;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+bool UnlockConnectorConfConverter::fromJson(const rapidjson::Value& json,
+                                            UnlockConnectorConf&    data,
+                                            const char*&            error_code,
+                                            std::string&            error_message)
+{
+    (void)error_code;
+    (void)error_message;
+    data.status = UnlockStatusHelper.fromString(json["status"].GetString());
+    return true;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+bool UnlockConnectorConfConverter::toJson(const UnlockConnectorConf& data, rapidjson::Document& json)
+{
+    fill(json, "status", UnlockStatusHelper.toString(data.status));
+    return true;
+}
+
+} // namespace messages
+} // namespace ocpp

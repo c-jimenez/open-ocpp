@@ -1,0 +1,111 @@
+/*
+Copyright (c) 2020 Cedric Jimenez
+This file is part of OpenOCPP.
+
+OpenOCPP is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+OpenOCPP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "GetCompositeSchedule.h"
+#include "ChargingScheduleConverter.h"
+#include "IRpcClient.h"
+
+using namespace ocpp::types;
+
+namespace ocpp
+{
+namespace types
+{
+/** @brief Helper to convert a enum class GetCompositeScheduleStatus enum to string */
+const EnumToStringFromString<GetCompositeScheduleStatus> GetCompositeScheduleStatusHelper = {
+    {GetCompositeScheduleStatus::Accepted, "Accepted"}, {GetCompositeScheduleStatus::Rejected, "Rejected"}};
+
+} // namespace types
+
+namespace messages
+{
+
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&  json,
+                                                GetCompositeScheduleReq& data,
+                                                const char*&             error_code,
+                                                std::string&             error_message)
+{
+    bool ret = extract(json, "connectorId", data.connectorId, error_message);
+    ret      = ret && extract(json, "duration", data.duration, error_message);
+    if (json.HasMember("chargingRateUnit"))
+    {
+        data.chargingRateUnit = ChargingRateUnitTypeHelper.fromString(json["chargingRateUnit"].GetString());
+    }
+    if (!ret)
+    {
+        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+    }
+    return ret;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& data, rapidjson::Document& json)
+{
+    fill(json, "connectorId", data.connectorId);
+    fill(json, "duration", data.duration);
+    if (data.chargingRateUnit.isSet())
+    {
+        fill(json, "chargingRateUnit", ChargingRateUnitTypeHelper.toString(data.chargingRateUnit));
+    }
+    return true;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&   json,
+                                                 GetCompositeScheduleConf& data,
+                                                 const char*&              error_code,
+                                                 std::string&              error_message)
+{
+    data.status = GetCompositeScheduleStatusHelper.fromString(json["status"].GetString());
+    bool ret    = extract(json, "connectorId", data.connectorId, error_message);
+    ret         = ret && extract(json, "scheduleStart", data.scheduleStart, error_message);
+    if (json.HasMember("chargingSchedule"))
+    {
+        ChargingScheduleConverter charging_schedule_converter;
+        ret = charging_schedule_converter.fromJson(json[""], data.chargingSchedule.value(), error_code, error_message);
+    }
+    if (!ret && !error_code)
+    {
+        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+    }
+    return true;
+}
+
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& data, rapidjson::Document& json)
+{
+    bool ret = true;
+    fill(json, "status", GetCompositeScheduleStatusHelper.toString(data.status));
+    fill(json, "connectorId", data.connectorId);
+    fill(json, "scheduleStart", data.scheduleStart);
+    if (data.chargingSchedule.isSet())
+    {
+        ChargingScheduleConverter charging_schedule_converter;
+        charging_schedule_converter.setAllocator(allocator);
+
+        rapidjson::Document value;
+        value.Parse("{}");
+        ret = charging_schedule_converter.toJson(data.chargingSchedule, value);
+        json.AddMember(rapidjson::StringRef("chargingSchedule"), value.Move(), *allocator);
+    }
+    return ret;
+}
+
+} // namespace messages
+} // namespace ocpp
