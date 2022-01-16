@@ -46,7 +46,8 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
                                        Connectors&                           connectors,
                                        ocpp::messages::GenericMessageSender& msg_sender,
                                        IStatusManager&                       status_manager,
-                                       ITriggerMessageManager&               trigger_manager)
+                                       ITriggerMessageManager&               trigger_manager,
+                                       IConfigManager&                       config_manager)
     : m_ocpp_config(ocpp_config),
       m_database(database),
       m_events_handler(events_handler),
@@ -65,6 +66,9 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
     // Register messages handlers
     trigger_manager.registerHandler(MessageTrigger::MeterValues, *this);
     m_clock_aligned_timer.setCallback(std::bind(&MeterValuesManager::processClockAligned, this));
+
+    // Register configuration change handler
+    config_manager.registerConfigChangedListener("ClockAlignedDataInterval", *this);
 
     // Start clock aligned and sample timers
     configureClockAlignedTimer();
@@ -194,6 +198,28 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
     return ret;
 }
 
+/** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */
+void MeterValuesManager::configurationValueChanged(const std::string& key)
+{
+    // No need to check key, only ClockAlignedDataInterval is monitored
+    (void)key;
+
+    // Check new value
+    std::chrono::seconds interval = m_ocpp_config.clockAlignedDataInterval();
+    if (interval == std::chrono::seconds(0))
+    {
+        // Disable clock aligned values
+        m_clock_aligned_timer.stop();
+
+        LOG_INFO << "Clock aligned meter values disabled";
+    }
+    else
+    {
+        // Reconfigure clock aligned timer
+        configureClockAlignedTimer();
+    }
+}
+
 /** @brief Configure clock-aligned timer */
 void MeterValuesManager::configureClockAlignedTimer(void)
 {
@@ -204,6 +230,8 @@ void MeterValuesManager::configureClockAlignedTimer(void)
     std::chrono::seconds interval = m_ocpp_config.clockAlignedDataInterval();
     if (interval >= std::chrono::seconds(0))
     {
+        LOG_INFO << "Configure clock aligned meter values : interval in seconds = " << interval.count();
+
         // Compute next due date
         time_t    now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         struct tm aligned_time_tm;

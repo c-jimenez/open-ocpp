@@ -238,7 +238,8 @@ bool ChargePoint::start()
                                                                       m_connectors,
                                                                       *m_msg_sender,
                                                                       *m_status_manager,
-                                                                      *m_trigger_manager);
+                                                                      *m_trigger_manager,
+                                                                      *m_config_manager);
         m_smart_charging_manager = std::make_unique<SmartChargingManager>(
             m_stack_config, m_ocpp_config, m_database, m_timer_pool, m_worker_pool, m_connectors, m_messages_converter, *m_msg_dispatcher);
         m_transaction_manager = std::make_unique<TransactionManager>(m_ocpp_config,
