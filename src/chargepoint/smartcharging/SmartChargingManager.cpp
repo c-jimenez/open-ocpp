@@ -72,10 +72,14 @@ SmartChargingManager::~SmartChargingManager() { }
 
 /** @copydoc bool ISmartChargingManager::getSetpoint(unsigned int,
                                                          ocpp::types::Optional<float>&,
-                                                         ocpp::types::Optional<float>&) */
+                                                         unsigned int&,
+                                                         ocpp::types::Optional<float>&,
+                                                         unsigned int&) */
 bool SmartChargingManager::getSetpoint(unsigned int                  connector_id,
                                        ocpp::types::Optional<float>& charge_point_setpoint,
-                                       ocpp::types::Optional<float>& connector_setpoint)
+                                       unsigned int&                 charge_point_number_phases,
+                                       ocpp::types::Optional<float>& connector_setpoint,
+                                       unsigned int&                 connector_number_phases)
 {
     bool ret = false;
 
@@ -88,6 +92,7 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
     {
         // Compute charge point setpoint
         charge_point_setpoint.clear();
+        charge_point_number_phases = 3u; // Default, if not set is 3 phases charging
         for (const auto& profile : m_profile_db.chargePointMaxProfiles())
         {
             // Check if the profile is active
@@ -95,6 +100,10 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
             if (isProfileActive(connector, profile.second, period))
             {
                 // Apply setpoint
+                if (period->numberPhases.isSet())
+                {
+                    charge_point_number_phases = period->numberPhases;
+                }
                 if (profile.second.chargingSchedule.chargingRateUnit == ChargingRateUnitType::A)
                 {
                     charge_point_setpoint = period->limit;
@@ -110,12 +119,14 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
         // Compute connector setpoint if a transaction is active on the connector
         ocpp::types::ChargingRateUnitType connector_setpoint_unit = ChargingRateUnitType::A;
         connector_setpoint.clear();
+        connector_number_phases = 3u; // Default, if not set is 3 phases charging
         if (connector->transaction_id != 0)
         {
-            computeSetpoint(connector, connector_setpoint, connector_setpoint_unit, m_profile_db.txProfiles());
+            computeSetpoint(connector, connector_setpoint, connector_setpoint_unit, connector_number_phases, m_profile_db.txProfiles());
             if (!connector_setpoint.isSet())
             {
-                computeSetpoint(connector, connector_setpoint, connector_setpoint_unit, m_profile_db.txDefaultProfiles());
+                computeSetpoint(
+                    connector, connector_setpoint, connector_setpoint_unit, connector_number_phases, m_profile_db.txDefaultProfiles());
             }
         }
         if (connector_setpoint.isSet() && (connector_setpoint_unit == ChargingRateUnitType::W))
@@ -129,7 +140,8 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
             if (!connector_setpoint.isSet() || (connector_setpoint > charge_point_setpoint))
             {
                 // Connector setpoint becomes charge point setpoint
-                connector_setpoint = charge_point_setpoint;
+                connector_setpoint      = charge_point_setpoint;
+                connector_number_phases = charge_point_number_phases;
             }
         }
 
@@ -435,6 +447,7 @@ void SmartChargingManager::cleanupProfiles()
 void SmartChargingManager::computeSetpoint(Connector*                                  connector,
                                            ocpp::types::Optional<float>&               connector_setpoint,
                                            ocpp::types::ChargingRateUnitType&          connector_setpoint_unit,
+                                           unsigned int&                               connector_number_phases,
                                            const ProfileDatabase::ChargingProfileList& profiles_list)
 {
     unsigned int level = 0;
@@ -457,6 +470,14 @@ void SmartChargingManager::computeSetpoint(Connector*                           
                 // Apply setpoint
                 connector_setpoint      = period->limit;
                 connector_setpoint_unit = profile.second.chargingSchedule.chargingRateUnit;
+                if (period->numberPhases.isSet())
+                {
+                    connector_number_phases = period->numberPhases;
+                }
+                else
+                {
+                    connector_number_phases = 3u; // Default, if not set is 3 phases charging
+                }
             }
 
             // Check connector type

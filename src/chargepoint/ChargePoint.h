@@ -136,10 +136,14 @@ class ChargePoint : public IChargePoint,
 
     /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
                                                 ocpp::types::Optional<float>&,
-                                                ocpp::types::Optional<float>&) */
+                                                unsigned int&,
+                                                ocpp::types::Optional<float>&,
+                                                unsigned int&) */
     bool getSetpoint(unsigned int                  connector_id,
                      ocpp::types::Optional<float>& charge_point_setpoint,
-                     ocpp::types::Optional<float>& connector_setpoint) override;
+                     unsigned int&                 charge_point_number_phases,
+                     ocpp::types::Optional<float>& connector_setpoint,
+                     unsigned int&                 connector_number_phases) override;
 
     /** @copydoc bool IChargePoint::notifyFirmwareUpdateStatus(bool) */
     bool notifyFirmwareUpdateStatus(bool success) override;

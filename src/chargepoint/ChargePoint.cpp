@@ -526,16 +526,21 @@ bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<o
 
 /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
                                             ocpp::types::Optional<float>&,
-                                            ocpp::types::Optional<float>&) */
+                                            unsigned int&,
+                                            ocpp::types::Optional<float>&,
+                                            unsigned int&) */
 bool ChargePoint::getSetpoint(unsigned int                  connector_id,
                               ocpp::types::Optional<float>& charge_point_setpoint,
-                              ocpp::types::Optional<float>& connector_setpoint)
+                              unsigned int&                 charge_point_number_phases,
+                              ocpp::types::Optional<float>& connector_setpoint,
+                              unsigned int&                 connector_number_phases)
 {
     bool ret = false;
 
     if (m_smart_charging_manager.get())
     {
-        ret = m_smart_charging_manager->getSetpoint(connector_id, charge_point_setpoint, connector_setpoint);
+        ret = m_smart_charging_manager->getSetpoint(
+            connector_id, charge_point_setpoint, charge_point_number_phases, connector_setpoint, connector_number_phases);
     }
     else
     {
