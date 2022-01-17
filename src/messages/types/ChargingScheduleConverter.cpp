@@ -49,7 +49,15 @@ bool ChargingScheduleConverter::fromJson(const rapidjson::Value&        json,
         ChargingSchedulePeriod& period = chargingSchedulePeriods.back();
         extract(*it_period, "startPeriod", period.startPeriod);
         extract(*it_period, "limit", period.limit);
-        extract(*it_period, "numberPhases", period.numberPhases);
+        ret = ret && extract(*it_period, "numberPhases", period.numberPhases, error_message);
+        if (ret && period.numberPhases.isSet())
+        {
+            if ((period.numberPhases == 0) || (period.numberPhases > 3u))
+            {
+                error_message = "numberPhases parameter must be in interval [1;3]";
+                ret           = false;
+            }
+        }
     }
 
     if (!ret)

@@ -37,12 +37,16 @@ class ISmartChargingManager
      * @brief Get the smart charging setpoints for a connector and the whole charge point
      * @param connector_id Id of the connector
      * @param charge_point_setpoint Setpoint of the whole charge point in A (not set if no active profile)
+     * @param charge_point_number_phases Number of phases allowed to charge for the whole charge point
      * @param connector_setpoint Setpoint of the given connector in A (not set if no active profile)
+     * @param connector_number_phases Number of phases allowed to charge for the given connector
      * @return true if the setpoints have been computed, false otherwise
      */
     virtual bool getSetpoint(unsigned int                  connector_id,
                              ocpp::types::Optional<float>& charge_point_setpoint,
-                             ocpp::types::Optional<float>& connector_setpoint) = 0;
+                             unsigned int&                 charge_point_number_phases,
+                             ocpp::types::Optional<float>& connector_setpoint,
+                             unsigned int&                 connector_number_phases) = 0;
 
     /**
      * @brief Install a TxProfile charging profile on a connector
