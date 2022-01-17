@@ -110,7 +110,8 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
                 }
                 else
                 {
-                    charge_point_setpoint = period->limit / m_stack_config.operatingVoltage();
+                    charge_point_setpoint =
+                        period->limit / (static_cast<float>(charge_point_number_phases) * m_stack_config.operatingVoltage());
                 }
                 break;
             }
@@ -131,7 +132,7 @@ bool SmartChargingManager::getSetpoint(unsigned int                  connector_i
         }
         if (connector_setpoint.isSet() && (connector_setpoint_unit == ChargingRateUnitType::W))
         {
-            connector_setpoint /= m_stack_config.operatingVoltage();
+            connector_setpoint /= (static_cast<float>(connector_number_phases) * m_stack_config.operatingVoltage());
         }
 
         // Connector setpoint cannot be greater than charge point setpoint
