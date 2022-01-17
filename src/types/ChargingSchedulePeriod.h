@@ -42,7 +42,7 @@ struct ChargingSchedulePeriod
     float limit;
     /** @brief Optional. The number of phases that can be used for charging. If a number of
                phases is needed, numberPhases=3 will be assumed unless another number is given */
-    Optional<int> numberPhases;
+    Optional<unsigned int> numberPhases;
 };
 
 } // namespace types
