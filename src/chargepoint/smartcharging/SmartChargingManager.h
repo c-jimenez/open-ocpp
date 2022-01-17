@@ -82,10 +82,14 @@ class SmartChargingManager
 
     /** @copydoc bool ISmartChargingManager::getSetpoint(unsigned int,
                                                          ocpp::types::Optional<float>&,
-                                                         ocpp::types::Optional<float>&) */
+                                                         unsigned int&,
+                                                         ocpp::types::Optional<float>&,
+                                                         unsigned int&) */
     bool getSetpoint(unsigned int                  connector_id,
                      ocpp::types::Optional<float>& charge_point_setpoint,
-                     ocpp::types::Optional<float>& connector_setpoint) override;
+                     unsigned int&                 charge_point_number_phases,
+                     ocpp::types::Optional<float>& connector_setpoint,
+                     unsigned int&                 connector_number_phases) override;
 
     /** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ChargingProfile&) */
     bool installTxProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile) override;
@@ -153,6 +157,7 @@ class SmartChargingManager
     void computeSetpoint(Connector*                                  connector,
                          ocpp::types::Optional<float>&               connector_setpoint,
                          ocpp::types::ChargingRateUnitType&          connector_setpoint_unit,
+                         unsigned int&                               connector_number_phases,
                          const ProfileDatabase::ChargingProfileList& profiles_list);
 
     /** @brief Check if the given profile is active */

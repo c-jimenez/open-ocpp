@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Database.h"
 #include "Enums.h"
+#include "IConfigManager.h"
 #include "IMeterValuesManager.h"
 #include "ITriggerMessageManager.h"
 #include "Timer.h"
@@ -50,7 +51,9 @@ class IChargePointEventsHandler;
 class IStatusManager;
 
 /** @brief Handle charge point meter values requests */
-class MeterValuesManager : public IMeterValuesManager, public ITriggerMessageManager::ITriggerMessageHandler
+class MeterValuesManager : public IMeterValuesManager,
+                           public ITriggerMessageManager::ITriggerMessageHandler,
+                           public IConfigManager::IConfigChangedListener
 {
   public:
     /** @brief Constructor */
@@ -62,7 +65,8 @@ class MeterValuesManager : public IMeterValuesManager, public ITriggerMessageMan
                        Connectors&                           connectors,
                        ocpp::messages::GenericMessageSender& msg_sender,
                        IStatusManager&                       status_manager,
-                       ITriggerMessageManager&               trigger_manager);
+                       ITriggerMessageManager&               trigger_manager,
+                       IConfigManager&                       config_manager);
 
     /** @brief Destructor */
     virtual ~MeterValuesManager();
@@ -88,6 +92,11 @@ class MeterValuesManager : public IMeterValuesManager, public ITriggerMessageMan
 
     /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+
+    // IConfigChangedListener interface
+
+    /** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */
+    void configurationValueChanged(const std::string& key) override;
 
   private:
     /** @brief Standard OCPP configuration */

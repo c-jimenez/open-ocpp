@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef IWEBSOCKETCLIENT_H
 #define IWEBSOCKETCLIENT_H
 
+#include <chrono>
 #include <string>
 
 namespace ocpp
@@ -42,15 +43,17 @@ class IWebsocketClient
      * @param url URL to connect to
      * @param protocol Name of the protocol to use
      * @param credentials Credentials to use
-     * @param connect_timeout Connection timeout in ms
-     * @param retry_interval Retry interval in ms when connection cannot be established (0 = no retry)
+     * @param connect_timeout Connection timeout
+     * @param retry_interval Retry interval when connection cannot be established (0 = no retry)
+     * @param ping_interval Interval between 2 websocket PING messages when the socket is idle
      * @return true if the connexion process has been started, false otherwise
      */
-    virtual bool connect(const std::string& url,
-                         const std::string& protocol,
-                         const Credentials& credentials,
-                         unsigned int       connect_timeout = 5000u,
-                         unsigned int       retry_interval  = 5000u) = 0;
+    virtual bool connect(const std::string&        url,
+                         const std::string&        protocol,
+                         const Credentials&        credentials,
+                         std::chrono::milliseconds connect_timeout = std::chrono::seconds(5),
+                         std::chrono::milliseconds retry_interval  = std::chrono::seconds(5),
+                         std::chrono::milliseconds ping_interval   = std::chrono::seconds(5)) = 0;
 
     /**
      * @brief Disconnect the client

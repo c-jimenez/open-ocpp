@@ -56,7 +56,7 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule and number of phases parameter in charging profile are not supported for now |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
 ### Supported OCPP configuration keys
@@ -98,7 +98,7 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | TransactionMessageAttempts | S | None |
 | TransactionMessageRetryInterval | S | None |
 | UnlockConnectorOnEVSideDisconnect | U | None |
-| WebSocketPingInterval | S | Not implemented yet, websocket ping interval is set to 3s |
+| WebSocketPingInterval | S | Reboot required |
 | LocalAuthListEnabled | S | None |
 | LocalAuthListMaxLength | S | None |
 | SendLocalListMaxLength | S | None |

@@ -238,7 +238,8 @@ bool ChargePoint::start()
                                                                       m_connectors,
                                                                       *m_msg_sender,
                                                                       *m_status_manager,
-                                                                      *m_trigger_manager);
+                                                                      *m_trigger_manager,
+                                                                      *m_config_manager);
         m_smart_charging_manager = std::make_unique<SmartChargingManager>(
             m_stack_config, m_ocpp_config, m_database, m_timer_pool, m_worker_pool, m_connectors, m_messages_converter, *m_msg_dispatcher);
         m_transaction_manager = std::make_unique<TransactionManager>(m_ocpp_config,
@@ -525,16 +526,21 @@ bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<o
 
 /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
                                             ocpp::types::Optional<float>&,
-                                            ocpp::types::Optional<float>&) */
+                                            unsigned int&,
+                                            ocpp::types::Optional<float>&,
+                                            unsigned int&) */
 bool ChargePoint::getSetpoint(unsigned int                  connector_id,
                               ocpp::types::Optional<float>& charge_point_setpoint,
-                              ocpp::types::Optional<float>& connector_setpoint)
+                              unsigned int&                 charge_point_number_phases,
+                              ocpp::types::Optional<float>& connector_setpoint,
+                              unsigned int&                 connector_number_phases)
 {
     bool ret = false;
 
     if (m_smart_charging_manager.get())
     {
-        ret = m_smart_charging_manager->getSetpoint(connector_id, charge_point_setpoint, connector_setpoint);
+        ret = m_smart_charging_manager->getSetpoint(
+            connector_id, charge_point_setpoint, charge_point_number_phases, connector_setpoint, connector_number_phases);
     }
     else
     {
@@ -805,8 +811,11 @@ bool ChargePoint::doConnect()
     credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
 
     // Start connection process
-    return m_rpc_client->start(
-        connection_url, credentials, m_stack_config.connectionTimeout().count(), m_stack_config.retryInterval().count());
+    return m_rpc_client->start(connection_url,
+                               credentials,
+                               m_stack_config.connectionTimeout(),
+                               m_stack_config.retryInterval(),
+                               m_ocpp_config.webSocketPingInterval());
 }
 
 /** @brief Specific configuration check for parameter : AuthorizationKey */

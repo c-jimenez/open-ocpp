@@ -59,11 +59,13 @@ RpcClient::~RpcClient()
 
 // IRpcClient interface
 
-/** @copydoc bool IRpcClient::start(const std::string& , const IWebsocketClient::Credentials&, unsigned int, unsigned int) */
+/** @copydoc bool IRpcClient::start(const std::string&, const std::string&, const Credentials&,
+ *                                  std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
 bool RpcClient::start(const std::string&                                     url,
                       const ocpp::websockets::IWebsocketClient::Credentials& credentials,
-                      unsigned int                                           connect_timeout,
-                      unsigned int                                           retry_interval)
+                      std::chrono::milliseconds                              connect_timeout,
+                      std::chrono::milliseconds                              retry_interval,
+                      std::chrono::milliseconds                              ping_interval)
 {
     bool ret = false;
 
@@ -71,7 +73,7 @@ bool RpcClient::start(const std::string&                                     url
     if (!m_rx_thread)
     {
         // Connect to websocket
-        ret = m_websocket.connect(url, m_protocol, credentials, connect_timeout, retry_interval);
+        ret = m_websocket.connect(url, m_protocol, credentials, connect_timeout, retry_interval, ping_interval);
         if (ret)
         {
             // Initialize transaction id sequence

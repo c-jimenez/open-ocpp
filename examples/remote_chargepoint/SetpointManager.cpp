@@ -65,6 +65,8 @@ void SetpointManager::update()
 {
     Optional<float> charge_point_setpoint;
     Optional<float> connector_setpoint;
+    unsigned int    charge_point_number_phases = 0u;
+    unsigned int    connector_number_phases    = 0u;
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -91,7 +93,7 @@ void SetpointManager::update()
         }
 
         // Get the smart charging setpoint
-        if (m_charge_point.getSetpoint(id, charge_point_setpoint, connector_setpoint))
+        if (m_charge_point.getSetpoint(id, charge_point_setpoint, charge_point_number_phases, connector_setpoint, connector_number_phases))
         {
             // Apply setpoints
             if (charge_point_setpoint.isSet())

@@ -37,6 +37,7 @@ LibWebsocketClient::LibWebsocketClient()
       m_thread(nullptr),
       m_end(false),
       m_retry_interval(0),
+      m_ping_interval(0),
       m_connection_error_notified(false),
       m_url(),
       m_protocol(""),
@@ -57,12 +58,14 @@ LibWebsocketClient::~LibWebsocketClient()
     disconnect();
 }
 
-/** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&, unsigned int, unsigned int) */
-bool LibWebsocketClient::connect(const std::string& url,
-                                 const std::string& protocol,
-                                 const Credentials& credentials,
-                                 unsigned int       connect_timeout,
-                                 unsigned int       retry_interval)
+/** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
+ *                                          std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
+bool LibWebsocketClient::connect(const std::string&        url,
+                                 const std::string&        protocol,
+                                 const Credentials&        credentials,
+                                 std::chrono::milliseconds connect_timeout,
+                                 std::chrono::milliseconds retry_interval,
+                                 std::chrono::milliseconds ping_interval)
 {
     bool ret = false;
 
@@ -83,7 +86,7 @@ bool LibWebsocketClient::connect(const std::string& url,
             info.options      = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
             info.port         = CONTEXT_PORT_NO_LISTEN;
             info.protocols    = protocols;
-            info.timeout_secs = connect_timeout / 1000u;
+            info.timeout_secs = static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::seconds>(connect_timeout).count());
             m_credentials     = credentials;
             if (!m_credentials.tls12_cipher_list.empty())
             {
@@ -110,11 +113,12 @@ bool LibWebsocketClient::connect(const std::string& url,
                 m_end                       = false;
                 m_connection_error_notified = false;
                 m_connected                 = false;
-                m_retry_interval            = retry_interval;
-                m_retry_count               = 0;
-                m_protocol                  = protocol;
-                m_thread                    = new std::thread(std::bind(&LibWebsocketClient::process, this));
-                ret                         = true;
+                m_retry_interval            = static_cast<uint32_t>(retry_interval.count());
+                m_ping_interval = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+                m_retry_count   = 0;
+                m_protocol      = protocol;
+                m_thread        = new std::thread(std::bind(&LibWebsocketClient::process, this));
+                ret             = true;
             }
         }
     }
@@ -213,8 +217,8 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
         .retry_ms_table_count = 1,
         .conceal_count        = 1,
 
-        .secs_since_valid_ping   = 3,  /* force PINGs after secs idle */
-        .secs_since_valid_hangup = 10, /* hangup after secs idle */
+        .secs_since_valid_ping   = client->m_ping_interval,                             /* force PINGs after secs idle */
+        .secs_since_valid_hangup = static_cast<uint16_t>(2u * client->m_ping_interval), /* hangup after secs idle */
 
         .jitter_percent = 20,
     };
