@@ -45,11 +45,13 @@ class RpcClient : public IRpcClient, public ocpp::websockets::IWebsocketClient::
 
     // IRpcClient interface
 
-    /** @copydoc bool IRpcClient::start(const std::string& , const IWebsocketClient::Credentials&, unsigned int, unsigned int) */
+    /** @copydoc bool IRpcClient::start(const std::string&, const std::string&, const Credentials&,
+     *                                  std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
     bool start(const std::string&                                     url,
                const ocpp::websockets::IWebsocketClient::Credentials& credentials,
-               unsigned int                                           connect_timeout = 5000u,
-               unsigned int                                           retry_interval  = 5000u) override;
+               std::chrono::milliseconds                              connect_timeout = std::chrono::seconds(5),
+               std::chrono::milliseconds                              retry_interval  = std::chrono::seconds(5),
+               std::chrono::milliseconds                              ping_interval   = std::chrono::seconds(5)) override;
 
     /** @copydoc bool IRpcClient::stop() */
     bool stop() override;

@@ -33,6 +33,7 @@ WebsocketClientStub::WebsocketClientStub()
       m_credentials(),
       m_connect_timeout(0),
       m_retry_interval(0),
+      m_ping_interval(0),
       m_disconnect_called(false),
       m_is_connected(false),
       m_send_called(false),
@@ -52,19 +53,22 @@ WebsocketClientStub::~WebsocketClientStub()
 
 /// IWebsocketClient interface
 
-/** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&, unsigned int, unsigned int) */
-bool WebsocketClientStub::connect(const std::string& url,
-                                  const std::string& protocol,
-                                  const Credentials& credentials,
-                                  unsigned int       connect_timeout,
-                                  unsigned int       retry_interval)
+/** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
+ *                                          std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
+bool WebsocketClientStub::connect(const std::string&        url,
+                                  const std::string&        protocol,
+                                  const Credentials&        credentials,
+                                  std::chrono::milliseconds connect_timeout,
+                                  std::chrono::milliseconds retry_interval,
+                                  std::chrono::milliseconds ping_interval)
 {
     m_connect_called  = true;
     m_url             = url;
     m_protocol        = protocol;
     m_credentials     = credentials;
-    m_connect_timeout = connect_timeout;
-    m_retry_interval  = retry_interval;
+    m_connect_timeout = static_cast<unsigned int>(connect_timeout.count());
+    m_retry_interval  = static_cast<unsigned int>(retry_interval.count());
+    m_ping_interval   = static_cast<unsigned int>(ping_interval.count());
 
     return returnValue();
 }

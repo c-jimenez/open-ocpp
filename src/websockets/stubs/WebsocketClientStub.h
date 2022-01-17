@@ -40,12 +40,14 @@ class WebsocketClientStub : public IWebsocketClient
 
     /// IWebsocketClient interface
 
-    /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&, unsigned int, unsigned int) */
-    bool connect(const std::string& url,
-                 const std::string& protocol,
-                 const Credentials& credentials,
-                 unsigned int       connect_timeout,
-                 unsigned int       retry_interval) override;
+    /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
+     *                                          std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
+    bool connect(const std::string&        url,
+                 const std::string&        protocol,
+                 const Credentials&        credentials,
+                 std::chrono::milliseconds connect_timeout,
+                 std::chrono::milliseconds retry_interval,
+                 std::chrono::milliseconds ping_interval) override;
 
     /** @copydoc bool IWebsocketClient::disconnect() */
     bool disconnect() override;
@@ -93,6 +95,7 @@ class WebsocketClientStub : public IWebsocketClient
     const Credentials& credentials() const { return m_credentials; }
     unsigned int       connectTimeout() const { return m_connect_timeout; }
     unsigned int       retryInterval() const { return m_retry_interval; }
+    unsigned int       pingInterval() const { return m_ping_interval; }
     bool               disconnectCalled() const { return m_disconnect_called; }
     bool               sendCalled() const { return m_send_called; }
     const uint8_t*     sentData() const { return m_sent_data; }
@@ -111,6 +114,8 @@ class WebsocketClientStub : public IWebsocketClient
     unsigned int m_connect_timeout;
     /** @brief Retry interval */
     unsigned int m_retry_interval;
+    /** @brief PING interval */
+    unsigned int m_ping_interval;
     /** @brief Indicate if the disconnect() function has been called */
     bool m_disconnect_called;
     /** @brief Connection state */
