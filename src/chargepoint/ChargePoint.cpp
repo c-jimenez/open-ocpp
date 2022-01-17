@@ -806,8 +806,11 @@ bool ChargePoint::doConnect()
     credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
 
     // Start connection process
-    return m_rpc_client->start(
-        connection_url, credentials, m_stack_config.connectionTimeout().count(), m_stack_config.retryInterval().count());
+    return m_rpc_client->start(connection_url,
+                               credentials,
+                               m_stack_config.connectionTimeout(),
+                               m_stack_config.retryInterval(),
+                               m_ocpp_config.webSocketPingInterval());
 }
 
 /** @brief Specific configuration check for parameter : AuthorizationKey */

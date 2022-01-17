@@ -109,12 +109,14 @@ TEST_SUITE("Initialization, connection/disconnection")
         RpcClient                     client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
 
-        CHECK(client.start(WS_URL, credentials, 1500u, 2500u));
+        CHECK(client.start(
+            WS_URL, credentials, std::chrono::milliseconds(1500u), std::chrono::milliseconds(2500u), std::chrono::milliseconds(3500u)));
         CHECK(websocket.connectCalled());
         CHECK_EQ(websocket.protocol(), WS_PROTOCOL);
         CHECK_EQ(websocket.url(), WS_URL);
         CHECK_EQ(websocket.connectTimeout(), 1500u);
         CHECK_EQ(websocket.retryInterval(), 2500u);
+        CHECK_EQ(websocket.pingInterval(), 3500u);
 
         websocket.notifyFailed();
         CHECK(listener.failed);
@@ -138,11 +140,13 @@ TEST_SUITE("Initialization, connection/disconnection")
         client.registerListener(listener);
 
         websocket.nextCallWillFail();
-        CHECK_FALSE(client.start(WS_URL, credentials, 1500u, 2500u));
+        CHECK_FALSE(client.start(
+            WS_URL, credentials, std::chrono::milliseconds(1500u), std::chrono::milliseconds(2500u), std::chrono::milliseconds(3500u)));
         CHECK(websocket.connectCalled());
 
         websocket.reset();
-        CHECK(client.start(WS_URL, credentials, 1500u, 2500u));
+        CHECK(client.start(
+            WS_URL, credentials, std::chrono::milliseconds(1500u), std::chrono::milliseconds(2500u), std::chrono::milliseconds(3500u)));
         CHECK(websocket.connectCalled());
 
         websocket.nextCallWillFail();

@@ -41,12 +41,14 @@ class LibWebsocketClient : public IWebsocketClient
     /** @brief Destructor */
     virtual ~LibWebsocketClient();
 
-    /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&, unsigned int, unsigned int) */
-    bool connect(const std::string& url,
-                 const std::string& protocol,
-                 const Credentials& credentials,
-                 unsigned int       connect_timeout = 5000u,
-                 unsigned int       retry_interval  = 5000u) override;
+    /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
+     *                                          std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
+    bool connect(const std::string&        url,
+                 const std::string&        protocol,
+                 const Credentials&        credentials,
+                 std::chrono::milliseconds connect_timeout = std::chrono::seconds(5),
+                 std::chrono::milliseconds retry_interval  = std::chrono::seconds(5),
+                 std::chrono::milliseconds ping_interval   = std::chrono::seconds(5)) override;
 
     /** @copydoc bool IWebsocketClient::disconnect() */
     bool disconnect() override;
@@ -91,6 +93,8 @@ class LibWebsocketClient : public IWebsocketClient
     bool m_end;
     /** @brief Retry interval in ms */
     uint32_t m_retry_interval;
+    /** @brief PING interval in s */
+    uint16_t m_ping_interval;
     /** @brief Indicate if the connection error has been notified at least once */
     bool m_connection_error_notified;
     /** @brief Connection URL */
