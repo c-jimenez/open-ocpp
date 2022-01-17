@@ -98,7 +98,7 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | TransactionMessageAttempts | S | None |
 | TransactionMessageRetryInterval | S | None |
 | UnlockConnectorOnEVSideDisconnect | U | None |
-| WebSocketPingInterval | S | Not implemented yet, websocket ping interval is set to 3s |
+| WebSocketPingInterval | S | Reboot required |
 | LocalAuthListEnabled | S | None |
 | LocalAuthListMaxLength | S | None |
 | SendLocalListMaxLength | S | None |
