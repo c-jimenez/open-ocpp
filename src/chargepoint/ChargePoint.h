@@ -135,15 +135,13 @@ class ChargePoint : public IChargePoint,
     bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
 
     /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
-                                                ocpp::types::Optional<float>&,
-                                                unsigned int&,
-                                                ocpp::types::Optional<float>&,
-                                                unsigned int&) */
-    bool getSetpoint(unsigned int                  connector_id,
-                     ocpp::types::Optional<float>& charge_point_setpoint,
-                     unsigned int&                 charge_point_number_phases,
-                     ocpp::types::Optional<float>& connector_setpoint,
-                     unsigned int&                 connector_number_phases) override;
+                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                ocpp::types::ChargingRateUnitType) */
+    bool getSetpoint(unsigned int                                               connector_id,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
+                     ocpp::types::ChargingRateUnitType                          unit) override;
 
     /** @copydoc bool IChargePoint::notifyFirmwareUpdateStatus(bool) */
     bool notifyFirmwareUpdateStatus(bool success) override;

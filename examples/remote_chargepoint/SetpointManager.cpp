@@ -63,10 +63,8 @@ float SetpointManager::getSetpoint(unsigned int connector_id)
 /** @brief Periodically update the setpoints */
 void SetpointManager::update()
 {
-    Optional<float> charge_point_setpoint;
-    Optional<float> connector_setpoint;
-    unsigned int    charge_point_number_phases = 0u;
-    unsigned int    connector_number_phases    = 0u;
+    Optional<SmartChargingSetpoint> charge_point_setpoint;
+    Optional<SmartChargingSetpoint> connector_setpoint;
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -93,14 +91,14 @@ void SetpointManager::update()
         }
 
         // Get the smart charging setpoint
-        if (m_charge_point.getSetpoint(id, charge_point_setpoint, charge_point_number_phases, connector_setpoint, connector_number_phases))
+        if (m_charge_point.getSetpoint(id, charge_point_setpoint, connector_setpoint))
         {
             // Apply setpoints
             if (charge_point_setpoint.isSet())
             {
-                if (charge_point_setpoint < static_cast<float>(m_max_charge_point_current))
+                if (charge_point_setpoint.value().value < static_cast<float>(m_max_charge_point_current))
                 {
-                    m_setpoints[0] = charge_point_setpoint;
+                    m_setpoints[0] = charge_point_setpoint.value().value;
                 }
                 else
                 {
@@ -109,9 +107,9 @@ void SetpointManager::update()
             }
             if (connector_setpoint.isSet())
             {
-                if (connector_setpoint < static_cast<float>(m_max_connector_current))
+                if (connector_setpoint.value().value < static_cast<float>(m_max_connector_current))
                 {
-                    m_setpoints[id] = connector_setpoint;
+                    m_setpoints[id] = connector_setpoint.value().value;
                 }
                 else
                 {
