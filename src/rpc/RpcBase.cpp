@@ -45,8 +45,11 @@ RpcBase::~RpcBase()
     stop();
 }
 
-/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, unsigned int) */
-bool RpcBase::call(const std::string& action, const rapidjson::Document& payload, rapidjson::Document& response, unsigned int timeout)
+/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+bool RpcBase::call(const std::string&         action,
+                   const rapidjson::Document& payload,
+                   rapidjson::Document&       response,
+                   std::chrono::milliseconds  timeout)
 {
     bool ret = false;
 
@@ -81,7 +84,7 @@ bool RpcBase::call(const std::string& action, const rapidjson::Document& payload
             std::stringstream expected_id;
             expected_id << m_transaction_id;
             RpcMessage* rpc_message = nullptr;
-            auto        wait_time   = std::chrono::steady_clock().now() + std::chrono::milliseconds(timeout);
+            auto        wait_time   = std::chrono::steady_clock().now() + timeout;
             do
             {
                 // Compute timeout

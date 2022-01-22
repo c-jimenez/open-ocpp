@@ -44,11 +44,11 @@ class RpcBase : public IRpc
 
     // IRpc interface
 
-    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, unsigned int) */
+    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
     bool call(const std::string&         action,
               const rapidjson::Document& payload,
               rapidjson::Document&       response,
-              unsigned int               timeout = 2000u) override;
+              std::chrono::milliseconds  timeout = std::chrono::seconds(2)) override;
 
     /** @copydoc void IRpc::registerListener(IListener&) */
     void registerListener(IRpc::IListener& listener) override;

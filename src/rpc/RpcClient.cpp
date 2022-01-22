@@ -51,7 +51,7 @@ bool RpcClient::start(const std::string&                                     url
     bool ret = false;
 
     // Check if already started
-    if (!m_started)
+    if (!m_started && m_listener && rpcListener())
     {
         // Connect to websocket
         ret = m_websocket.connect(url, m_protocol, credentials, connect_timeout, retry_interval, ping_interval);
@@ -99,33 +99,33 @@ bool RpcClient::isConnected() const
     return m_websocket.isConnected();
 }
 
-// IWebsocketClientListener interface
+// IWebsocketClient::IListener interface
 
-/** @copydoc void IWebsocketClientListener::wsClientConnected() */
+/** @copydoc void IWebsocketClient::IListener::wsClientConnected() */
 void RpcClient::wsClientConnected()
 {
     m_listener->rpcClientConnected();
 }
 
-/** @copydoc void IWebsocketClientListener::wsClientFailed() */
+/** @copydoc void IWebsocketClient::IListener::wsClientFailed() */
 void RpcClient::wsClientFailed()
 {
     m_listener->rpcClientFailed();
 }
 
-/** @copydoc void IWebsocketClientListener::wsClientDisconnected() */
+/** @copydoc void IWebsocketClient::IListener::wsClientDisconnected() */
 void RpcClient::wsClientDisconnected()
 {
     rpcListener()->rpcDisconnected();
 }
 
-/** @copydoc void IWebsocketClientListener::wsClientError() */
+/** @copydoc void IWebsocketClient::IListener::wsClientError() */
 void RpcClient::wsClientError()
 {
     rpcListener()->rpcError();
 }
 
-/** @copydoc void IWebsocketClientListener::wsClientDataReceived(const void*, size_t) */
+/** @copydoc void IWebsocketClient::IListener::wsClientDataReceived(const void*, size_t) */
 void RpcClient::wsClientDataReceived(const void* data, size_t size)
 {
     // Process data

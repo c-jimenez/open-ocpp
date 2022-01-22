@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "json.h"
 
+#include <chrono>
 #include <string>
 
 namespace ocpp
@@ -50,13 +51,13 @@ class IRpc
      * @param action Remote action
      * @param payload JSON payload for the action
      * @param response JSON response received
-     * @param timeout Response timeout in ms
+     * @param timeout Response timeout
      * @return true if a response has been received, false otherwise
      */
     virtual bool call(const std::string&         action,
                       const rapidjson::Document& payload,
                       rapidjson::Document&       response,
-                      unsigned int               timeout = 2000u) = 0;
+                      std::chrono::milliseconds  timeout = std::chrono::seconds(2)) = 0;
 
     /**
      * @brief Register a listener to the RPC events

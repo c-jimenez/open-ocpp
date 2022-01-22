@@ -45,8 +45,8 @@ class GenericMessageSender
 {
   public:
     /** @brief Constructor */
-    GenericMessageSender(const ocpp::config::IChargePointConfig& stack_config, ocpp::rpc::IRpc& rpc, MessagesConverter& messages_converter)
-        : m_stack_config(stack_config), m_rpc(rpc), m_messages_converter(messages_converter)
+    GenericMessageSender(ocpp::rpc::IRpc& rpc, MessagesConverter& messages_converter, std::chrono::milliseconds timeout)
+        : m_rpc(rpc), m_messages_converter(messages_converter), m_timeout(timeout)
     {
     }
 
@@ -89,7 +89,7 @@ class GenericMessageSender
                     // Execute call
                     rapidjson::Document resp;
                     resp.Parse("{}");
-                    if (m_rpc.call(action, payload, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
+                    if (m_rpc.call(action, payload, resp, m_timeout))
                     {
                         // Convert response
                         const char* error_code = nullptr;
@@ -141,7 +141,7 @@ class GenericMessageSender
             // Execute call
             rapidjson::Document resp;
             resp.Parse("{}");
-            if (m_rpc.call(action, request, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
+            if (m_rpc.call(action, request, resp, m_timeout))
             {
                 // Convert response
                 const char* error_code = nullptr;
@@ -158,12 +158,12 @@ class GenericMessageSender
     }
 
   private:
-    /** @brief Stack internal configuration */
-    const ocpp::config::IChargePointConfig& m_stack_config;
     /** @brief RPC */
     ocpp::rpc::IRpc& m_rpc;
     /** @brief Messages converter */
     MessagesConverter& m_messages_converter;
+    /** @brief Request timeout */
+    std::chrono::milliseconds m_timeout;
 };
 
 } // namespace messages

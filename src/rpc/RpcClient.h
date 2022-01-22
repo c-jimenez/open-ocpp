@@ -20,13 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define RPCCLIENT_H
 
 #include "IWebsocketClient.h"
-#include "Queue.h"
 #include "RpcBase.h"
-
-#include <condition_variable>
-#include <mutex>
-#include <thread>
-#include <vector>
 
 namespace ocpp
 {
@@ -77,24 +71,24 @@ class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::ILi
     /** @copydoc bool IRpc::isConnected() */
     bool isConnected() const override;
 
-    // IWebsocketClientListener interface
+    // IWebsocketClient::IListener interface
 
-    /** @copydoc void IWebsocketClientListener::wsClientConnected() */
+    /** @copydoc void IWebsocketClient::IListener::wsClientConnected() */
     void wsClientConnected() override;
 
-    /** @copydoc void IWebsocketClientListener::wsClientFailed() */
+    /** @copydoc void IWebsocketClient::IListener::wsClientFailed() */
     void wsClientFailed() override;
 
-    /** @copydoc void IWebsocketClientListener::wsClientDisconnected() */
+    /** @copydoc void IWebsocketClient::IListener::wsClientDisconnected() */
     void wsClientDisconnected() override;
 
-    /** @copydoc void IWebsocketClientListener::wsClientError() */
+    /** @copydoc void IWebsocketClient::IListener::wsClientError() */
     void wsClientError() override;
 
-    /** @copydoc void IWebsocketClientListener::wsClientDataReceived(const void*, size_t) */
+    /** @copydoc void IWebsocketClient::IListener::wsClientDataReceived(const void*, size_t) */
     void wsClientDataReceived(const void* data, size_t size) override;
 
-    /** @brief Interface for the RPC clients listeners */
+    /** @brief Interface for the RPC client listeners */
     class IListener
     {
       public:
@@ -115,7 +109,7 @@ class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::ILi
   private:
     /** @brief Protocol version */
     const std::string m_protocol;
-    /** @brief Websocket connexion */
+    /** @brief Websocket connection */
     ocpp::websockets::IWebsocketClient& m_websocket;
     /** @brief Listener */
     IListener* m_listener;

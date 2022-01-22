@@ -7,6 +7,7 @@
 add_library(rpc STATIC
     RpcBase.cpp
     RpcClient.cpp
+    RpcServer.cpp
 )
 
 # Exported includes

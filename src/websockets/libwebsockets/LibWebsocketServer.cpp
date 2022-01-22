@@ -443,11 +443,7 @@ LibWebsocketServer::Client::Client(struct lws* wsi) : m_wsi(wsi), m_connected(tr
 /** @brief Destructor */
 LibWebsocketServer::Client::~Client()
 {
-    SendMsg* msg = nullptr;
-    while (m_send_msgs.pop(msg, 0))
-    {
-        delete msg;
-    }
+    disconnect();
 }
 
 /** @copydoc bool IClient::disconnect() */
@@ -464,6 +460,13 @@ bool LibWebsocketServer::Client::disconnect()
 
         // Schedule a close
         lws_callback_on_writable(m_wsi);
+    }
+
+    // Empty message queue
+    SendMsg* msg = nullptr;
+    while (m_send_msgs.pop(msg, 0))
+    {
+        delete msg;
     }
 
     return ret;
