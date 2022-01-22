@@ -16,15 +16,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIBWEBSOCKETCLIENT_H
-#define LIBWEBSOCKETCLIENT_H
+#ifndef LIBWEBSOCKETSERVER_H
+#define LIBWEBSOCKETSERVER_H
 
-#include "IWebsocketClient.h"
+#include "IWebsocketServer.h"
 #include "Queue.h"
 #include "Url.h"
 #include "libwebsockets.h"
 
+#include <array>
 #include <condition_variable>
+#include <map>
 #include <mutex>
 #include <thread>
 
@@ -33,35 +35,27 @@ namespace ocpp
 namespace websockets
 {
 
-/** @brief Websocket client implementation using libwebsockets */
-class LibWebsocketClient : public IWebsocketClient
+/** @brief Websocket server implementation using libwebsockets */
+class LibWebsocketServer : public IWebsocketServer
 {
   public:
     /** @brief Constructor */
-    LibWebsocketClient();
+    LibWebsocketServer();
     /** @brief Destructor */
-    virtual ~LibWebsocketClient();
+    virtual ~LibWebsocketServer();
 
-    /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
-     *                                          std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
-    bool connect(const std::string&        url,
-                 const std::string&        protocol,
-                 const Credentials&        credentials,
-                 std::chrono::milliseconds connect_timeout = std::chrono::seconds(5),
-                 std::chrono::milliseconds retry_interval  = std::chrono::seconds(5),
-                 std::chrono::milliseconds ping_interval   = std::chrono::seconds(5)) override;
+    /** @copydoc bool IWebsocketServer::start(const std::string&, const std::string&, const Credentials&,
+     *                                        std::chrono::milliseconds) */
+    bool start(const std::string&        url,
+               const std::string&        protocol,
+               const Credentials&        credentials,
+               std::chrono::milliseconds ping_interval = std::chrono::seconds(5)) override;
 
-    /** @copydoc bool IWebsocketClient::disconnect() */
-    bool disconnect() override;
+    /** @copydoc bool IWebsocketServer::stop() */
+    bool stop() override;
 
-    /** @copydoc bool IWebsocketClient::isConnected() */
-    bool isConnected() override;
-
-    /** @copydoc bool IWebsocketClient::send(const void*, size_t) */
-    bool send(const void* data, size_t size) override;
-
-    /** @copydoc void IWebsocketClient::registerListener(IWebsocketClientListener&) */
-    void registerListener(IWebsocketClientListener& listener) override;
+    /** @copydoc void IWebsocketServer::registerListener(IListener&) */
+    void registerListener(IListener& listener) override;
 
   private:
     /** @brief Message to send */
@@ -86,46 +80,71 @@ class LibWebsocketClient : public IWebsocketClient
         size_t size;
     };
 
+    /** @brief Websocket client connection */
+    class Client : public IClient
+    {
+        friend class LibWebsocketServer;
+
+      public:
+        /**
+         * @brief Constructor
+         * @param wsi Client socket
+        */
+        Client(struct lws* wsi);
+        /** @brief Destructor */
+        virtual ~Client();
+
+        /** @copydoc bool IClient::disconnect() */
+        bool disconnect() override;
+
+        /** @copydoc bool IClient::disconnect() */
+        bool isConnected() override;
+
+        /** @copydoc bool IClient::send(const void*, size_t) */
+        bool send(const void* data, size_t size) override;
+
+        /** @copydoc bool IClient::registerListener(IListener&) */
+        void registerListener(IClient::IListener& listener) override;
+
+      private:
+        /** @brief Client socket */
+        struct lws* m_wsi;
+        /** @brief Connection status */
+        bool m_connected;
+        /** @brief Listener */
+        IClient::IListener* m_listener;
+        /** @brief Queue of messages to send */
+        ocpp::helpers::Queue<SendMsg*> m_send_msgs;
+    };
+
     /** @brief Listener */
-    IWebsocketClientListener* m_listener;
+    IListener* m_listener;
     /** @brief Internal thread */
     std::thread* m_thread;
     /** @brief Indicate the end of processing to the thread */
     bool m_end;
-    /** @brief Retry interval in ms */
-    uint32_t m_retry_interval;
-    /** @brief PING interval in s */
-    uint16_t m_ping_interval;
-    /** @brief Indicate if the connection error has been notified at least once */
-    bool m_connection_error_notified;
     /** @brief Connection URL */
     Url m_url;
     /** @brief Name of the protocol to use */
     std::string m_protocol;
     /** @brief Credentials */
     Credentials m_credentials;
-    /** @brief Indicate the connection state */
-    bool m_connected;
 
     /** @brief Websocket context */
     struct lws_context* m_context;
-    /** @brief Schedule list */
-    lws_sorted_usec_list_t m_sched_list;
     /** @brief Related wsi */
     struct lws* m_wsi;
     /** @brief Retry policy */
     lws_retry_bo_t m_retry_policy;
-    /** @brief Consecutive retries */
-    uint16_t m_retry_count;
+    /** @brief Protocols */
+    std::array<struct lws_protocols, 2u> m_protocols;
 
-    /** @brief Queue of messages to send */
-    ocpp::helpers::Queue<SendMsg*> m_send_msgs;
+    /** @brief Connected clients */
+    std::map<struct lws*, std::shared_ptr<IClient>> m_clients;
 
     /** @brief Internal thread */
     void process();
 
-    /** @brief libwebsockets connection callback */
-    static void connectCallback(struct lws_sorted_usec_list* sul);
     /** @brief libwebsockets event callback */
     static int eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len);
 };
@@ -133,4 +152,4 @@ class LibWebsocketClient : public IWebsocketClient
 } // namespace websockets
 } // namespace ocpp
 
-#endif // LIBWEBSOCKETCLIENT_H
+#endif // LIBWEBSOCKETSERVER_H

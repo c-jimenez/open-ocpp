@@ -78,7 +78,7 @@ bool LibWebsocketClient::connect(const std::string&        url,
         {
             // Define callback
             static const struct lws_protocols protocols[] = {
-                {"LibWebsocketClient", &LibWebsocketClient::eventCallback, 0, 0, 0, nullptr, 0}, {NULL, NULL, 0, 0, 0, nullptr, 0}};
+                {"LibWebsocketClient", &LibWebsocketClient::eventCallback, 0, 0, 0, nullptr, 0}, {nullptr, nullptr, 0, 0, 0, nullptr, 0}};
 
             // Fill context information
             struct lws_context_creation_info info;
@@ -136,7 +136,11 @@ bool LibWebsocketClient::disconnect()
     {
         // Stop thread
         m_end = true;
-        m_send_msgs.clear();
+        SendMsg* msg;
+        while (m_send_msgs.pop(msg, 0))
+        {
+            delete msg;
+        }
         lws_cancel_service(m_context);
         if (std::this_thread::get_id() != m_thread->get_id())
         {
@@ -174,7 +178,7 @@ bool LibWebsocketClient::send(const void* data, size_t size)
         ret          = m_send_msgs.push(msg);
 
         // Schedule a send
-        lws_cancel_service(m_context);
+        lws_callback_on_writable(m_wsi);
     }
 
     return ret;
@@ -211,7 +215,7 @@ void LibWebsocketClient::process()
 /** @brief libwebsockets connection callback */
 void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 {
-    // Confiure retry policy
+    // Configure retry policy
     client->m_retry_policy = {
         .retry_ms_table       = &client->m_retry_interval,
         .retry_ms_table_count = 1,
@@ -347,14 +351,6 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (client->m_retry_interval != 0)
             {
                 retry = true;
-            }
-            break;
-
-        case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
-            // If connected and not ending schedule a send
-            if (client->m_connected && !client->m_end)
-            {
-                lws_callback_on_writable(client->m_wsi);
             }
             break;
 

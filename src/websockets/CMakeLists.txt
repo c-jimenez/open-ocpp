@@ -9,6 +9,7 @@ add_library(ws STATIC
     Url.cpp
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
+    libwebsockets/LibWebsocketServer.cpp
 
     stubs/WebsocketClientStub.cpp
 )
