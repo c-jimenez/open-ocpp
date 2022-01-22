@@ -60,8 +60,8 @@ class LibWebsocketClient : public IWebsocketClient
     /** @copydoc bool IWebsocketClient::send(const void*, size_t) */
     bool send(const void* data, size_t size) override;
 
-    /** @copydoc void IWebsocketClient::registerListener(IWebsocketClientListener&) */
-    void registerListener(IWebsocketClientListener& listener) override;
+    /** @copydoc void IWebsocketClient::registerListener(IListener&) */
+    void registerListener(IListener& listener) override;
 
   private:
     /** @brief Message to send */
@@ -87,7 +87,7 @@ class LibWebsocketClient : public IWebsocketClient
     };
 
     /** @brief Listener */
-    IWebsocketClientListener* m_listener;
+    IListener* m_listener;
     /** @brief Internal thread */
     std::thread* m_thread;
     /** @brief Indicate the end of processing to the thread */

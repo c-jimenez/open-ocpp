@@ -34,7 +34,7 @@ namespace rpc
 {
 
 /** @brief RPC client implementation */
-class RpcClient : public IRpcClient, public ocpp::websockets::IWebsocketClient::IWebsocketClientListener
+class RpcClient : public IRpcClient, public ocpp::websockets::IWebsocketClient::IListener
 {
   public:
     /** @brief Constructor */

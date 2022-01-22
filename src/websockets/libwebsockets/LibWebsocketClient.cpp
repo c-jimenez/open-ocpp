@@ -184,8 +184,8 @@ bool LibWebsocketClient::send(const void* data, size_t size)
     return ret;
 }
 
-/** @copydoc void IWebsocketClient::registerListener(IWebsocketClientListener&) */
-void LibWebsocketClient::registerListener(IWebsocketClientListener& listener)
+/** @copydoc void IWebsocketClient::registerListener(IListener&) */
+void LibWebsocketClient::registerListener(IListener& listener)
 {
     m_listener = &listener;
 }
