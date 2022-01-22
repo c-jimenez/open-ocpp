@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "MessageDispatcher.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "Logger.h"
 
 #include <filesystem>
@@ -93,14 +93,14 @@ bool MessageDispatcher::dispatchMessage(const std::string&      action,
         else
         {
             // Invalid payload
-            error_code    = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+            error_code    = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
             error_message = validator->lastError();
         }
     }
     else
     {
         // Not implemented
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_NOT_IMPLEMENTED;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_NOT_IMPLEMENTED;
     }
 
     return ret;

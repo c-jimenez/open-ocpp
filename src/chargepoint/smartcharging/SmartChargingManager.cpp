@@ -332,7 +332,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
     }
     else
     {
-        error_code      = ocpp::rpc::IRpcClient::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+        error_code      = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
         response.status = ChargingProfileStatus::Rejected;
     }
 

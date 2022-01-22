@@ -18,7 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "TriggerMessageManager.h"
 #include "Connectors.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "Logger.h"
 
 using namespace ocpp::messages;
@@ -91,7 +91,7 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
         }
         else
         {
-            error_code    = ocpp::rpc::IRpcClient::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
             error_message = "Invalid connector id";
         }
     }

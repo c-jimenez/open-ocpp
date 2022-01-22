@@ -27,7 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 using namespace ocpp::websockets;
 using namespace ocpp::rpc;
 
-class RpcClientListener : public IRpcClient::IRpcClientListener
+class RpcClientListener : public IRpc::IListener, public RpcClient::IListener
 {
   public:
     RpcClientListener()
@@ -44,28 +44,28 @@ class RpcClientListener : public IRpcClient::IRpcClientListener
     }
     virtual ~RpcClientListener() { }
 
-    /** @copydoc void IRpcClientListener::rpcClientConnected() */
+    /** @copydoc void RpcClient::IListener::rpcClientConnected() */
     void rpcClientConnected() override { connected = true; }
 
-    /** @copydoc void IRpcClientListener::rpcClientFailed() */
+    /** @copydoc void RpcClient::IListener::rpcClientFailed() */
     void rpcClientFailed() override { failed = true; }
 
-    /** @copydoc void IRpcClientListener::rpcClientDisconnected() */
-    void rpcClientDisconnected() override { connected = false; }
+    /** @copydoc void IRpc::IListener::rpcDisconnected() */
+    void rpcDisconnected() override { connected = false; }
 
-    /** @copydoc void IRpcClientListener::rpcClientError() */
-    void rpcClientError() override { error = true; }
+    /** @copydoc void IRpc::IListener::rpcError() */
+    void rpcError() override { error = true; }
 
-    /** @copydoc void IRpcClientListener::rpcClientCallReceived(const std::string&,
-                                           const rapidjson::Value&,
-                                           rapidjson::Document&,
-                                           const char*&,
-                                           std::string&) */
-    bool rpcClientCallReceived(const std::string&      action,
-                               const rapidjson::Value& payload,
-                               rapidjson::Document&    response,
-                               const char*&            error_code,
-                               std::string&            error_message) override
+    /** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
+                                                       const rapidjson::Value&,
+                                                       rapidjson::Document&,
+                                                       const char*&,
+                                                       std::string&) */
+    bool rpcCallReceived(const std::string&      action,
+                         const rapidjson::Value& payload,
+                         rapidjson::Document&    response,
+                         const char*&            error_code,
+                         std::string&            error_message) override
     {
         this->action = action;
         rapidjson::StringBuffer                    buffer;
@@ -108,6 +108,7 @@ TEST_SUITE("Initialization, connection/disconnection")
         IWebsocketClient::Credentials credentials;
         RpcClient                     client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
 
         CHECK(client.start(
             WS_URL, credentials, std::chrono::milliseconds(1500u), std::chrono::milliseconds(2500u), std::chrono::milliseconds(3500u)));
@@ -138,6 +139,7 @@ TEST_SUITE("Initialization, connection/disconnection")
         IWebsocketClient::Credentials credentials;
         RpcClient                     client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
 
         websocket.nextCallWillFail();
         CHECK_FALSE(client.start(
@@ -174,6 +176,7 @@ TEST_SUITE("CALL messages")
         WebsocketClientStub websocket;
         RpcClient           client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
         websocket.setConnected();
 
         rapidjson::Document payload;
@@ -209,6 +212,7 @@ TEST_SUITE("CALL messages")
         WebsocketClientStub websocket;
         RpcClient           client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
         websocket.setConnected();
 
         rapidjson::Document payload;
@@ -245,6 +249,7 @@ TEST_SUITE("CALL messages")
         IWebsocketClient::Credentials credentials;
         RpcClient                     client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
         client.start("", credentials);
 
         listener.response = CALLRESULT_PAYLOAD;
@@ -263,11 +268,12 @@ TEST_SUITE("CALL messages")
         IWebsocketClient::Credentials credentials;
         RpcClient                     client(websocket, WS_PROTOCOL);
         client.registerListener(listener);
+        client.registerClientListener(listener);
         client.start("", credentials);
 
         listener.response       = CALLRESULT_PAYLOAD;
         listener.received_error = true;
-        listener.error_code     = IRpcClient::RPC_ERROR_NOT_IMPLEMENTED;
+        listener.error_code     = IRpc::RPC_ERROR_NOT_IMPLEMENTED;
         listener.error_message  = CALLERROR_PAYLOAD;
         websocket.notifyDataReceived(EXPECTED_CALL_MESSAGE_1, strlen(EXPECTED_CALL_MESSAGE_1));
         std::this_thread::sleep_for(std::chrono::milliseconds(50u));

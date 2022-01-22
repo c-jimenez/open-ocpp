@@ -21,7 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IChargePointConfig.h"
 #include "IRequestFifo.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "MessagesConverter.h"
 
 namespace ocpp
@@ -45,10 +45,8 @@ class GenericMessageSender
 {
   public:
     /** @brief Constructor */
-    GenericMessageSender(const ocpp::config::IChargePointConfig& stack_config,
-                         ocpp::rpc::IRpcClient&                  rpc_client,
-                         MessagesConverter&                      messages_converter)
-        : m_stack_config(stack_config), m_rpc_client(rpc_client), m_messages_converter(messages_converter)
+    GenericMessageSender(const ocpp::config::IChargePointConfig& stack_config, ocpp::rpc::IRpc& rpc, MessagesConverter& messages_converter)
+        : m_stack_config(stack_config), m_rpc(rpc), m_messages_converter(messages_converter)
     {
     }
 
@@ -59,7 +57,7 @@ class GenericMessageSender
      * @brief Indicate if the connection with the central system is active
      * @return true if the connection is active, false otherwise
      */
-    bool isConnected() const { return m_rpc_client.isConnected(); }
+    bool isConnected() const { return m_rpc.isConnected(); }
 
     /**
      * @brief Execute a call request
@@ -91,7 +89,7 @@ class GenericMessageSender
                     // Execute call
                     rapidjson::Document resp;
                     resp.Parse("{}");
-                    if (m_rpc_client.call(action, payload, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
+                    if (m_rpc.call(action, payload, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
                     {
                         // Convert response
                         const char* error_code = nullptr;
@@ -143,7 +141,7 @@ class GenericMessageSender
             // Execute call
             rapidjson::Document resp;
             resp.Parse("{}");
-            if (m_rpc_client.call(action, request, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
+            if (m_rpc.call(action, request, resp, static_cast<unsigned int>(m_stack_config.callRequestTimeout().count())))
             {
                 // Convert response
                 const char* error_code = nullptr;
@@ -162,8 +160,8 @@ class GenericMessageSender
   private:
     /** @brief Stack internal configuration */
     const ocpp::config::IChargePointConfig& m_stack_config;
-    /** @brief RPC client */
-    ocpp::rpc::IRpcClient& m_rpc_client;
+    /** @brief RPC */
+    ocpp::rpc::IRpc& m_rpc;
     /** @brief Messages converter */
     MessagesConverter& m_messages_converter;
 };

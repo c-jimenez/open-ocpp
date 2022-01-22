@@ -18,7 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IdTagInfoConverter.h"
 #include "Enums.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 
 using namespace ocpp::types;
 
@@ -42,7 +42,7 @@ bool IdTagInfoConverter::fromJson(const rapidjson::Value& json,
     data.status = AuthorizationStatusHelper.fromString(json["status"].GetString());
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }

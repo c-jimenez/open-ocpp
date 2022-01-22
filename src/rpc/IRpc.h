@@ -16,10 +16,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IRPCCLIENT_H
-#define IRPCCLIENT_H
+#ifndef IRPC_H
+#define IRPC_H
 
-#include "IWebsocketClient.h"
 #include "json.h"
 
 #include <string>
@@ -29,37 +28,16 @@ namespace ocpp
 namespace rpc
 {
 
-/** @brief Interface for RPC client implementations */
-class IRpcClient
+/** @brief Interface for RPC objects implementations */
+class IRpc
 {
   public:
     // Forward declarations
-    class IRpcClientListener;
-    class IRpcClientSpy;
+    class IListener;
+    class ISpy;
 
     /** @brief Destructor */
-    virtual ~IRpcClient() { }
-
-    /**
-     * @brief Start the client
-     * @param url URL to connect to
-     * @param credentials Credentials to use
-     * @param connect_timeout Connection timeout in ms
-     * @param retry_interval Retry interval in ms when connection cannot be established (0 = no retry)
-     * @param ping_interval Interval between 2 websocket PING messages when the socket is idle
-     * @return true if the client has been started, false otherwise
-     */
-    virtual bool start(const std::string&                                     url,
-                       const ocpp::websockets::IWebsocketClient::Credentials& credentials,
-                       std::chrono::milliseconds                              connect_timeout = std::chrono::seconds(5),
-                       std::chrono::milliseconds                              retry_interval  = std::chrono::seconds(5),
-                       std::chrono::milliseconds                              ping_interval   = std::chrono::seconds(5)) = 0;
-
-    /**
-     * @brief Stop the client
-     * @return true if the client has been stopped, false otherwise
-     */
-    virtual bool stop() = 0;
+    virtual ~IRpc() { }
 
     /**
      * @brief Indicate if the connection is active
@@ -73,7 +51,7 @@ class IRpcClient
      * @param payload JSON payload for the action
      * @param response JSON response received
      * @param timeout Response timeout in ms
-     * @return true is a response has been received, false otherwise
+     * @return true if a response has been received, false otherwise
      */
     virtual bool call(const std::string&         action,
                       const rapidjson::Document& payload,
@@ -81,43 +59,29 @@ class IRpcClient
                       unsigned int               timeout = 2000u) = 0;
 
     /**
-     * @brief Register a listener to the client events
+     * @brief Register a listener to the RPC events
      * @param listener Listener object
      */
-    virtual void registerListener(IRpcClientListener& listener) = 0;
+    virtual void registerListener(IListener& listener) = 0;
 
     /**
-     * @brief Register a spy to the client exchanges
+     * @brief Register a spy to the RPC exchanges
      * @param spy Spy object
      */
-    virtual void registerSpy(IRpcClientSpy& spy) = 0;
+    virtual void registerSpy(ISpy& spy) = 0;
 
-    /** @brief Interface for the RPC clients listeners */
-    class IRpcClientListener
+    /** @brief Interface for the RPC listeners */
+    class IListener
     {
       public:
         /** @brief Destructor */
-        virtual ~IRpcClientListener() { }
+        virtual ~IListener() { }
 
-        /**
-         * @brief Called when connection is successfull
-         */
-        virtual void rpcClientConnected() = 0;
+        /** @brief Called when connection is lost */
+        virtual void rpcDisconnected() = 0;
 
-        /**
-         * @brief Called when connection failed
-         */
-        virtual void rpcClientFailed() = 0;
-
-        /**
-         * @brief Called when connection is lost
-         */
-        virtual void rpcClientDisconnected() = 0;
-
-        /**
-         * @brief Called when a critical error occured
-         */
-        virtual void rpcClientError() = 0;
+        /** @brief Called when a critical error occured */
+        virtual void rpcError() = 0;
 
         /**
          * @brief Called when a CALL message has been received
@@ -128,31 +92,31 @@ class IRpcClient
          * @param error_msg Additionnal error message, empty if no error
          * @return true if the call is accepted, false otherwise
          */
-        virtual bool rpcClientCallReceived(const std::string&      action,
-                                           const rapidjson::Value& payload,
-                                           rapidjson::Document&    response,
-                                           const char*&            error_code,
-                                           std::string&            error_message) = 0;
+        virtual bool rpcCallReceived(const std::string&      action,
+                                     const rapidjson::Value& payload,
+                                     rapidjson::Document&    response,
+                                     const char*&            error_code,
+                                     std::string&            error_message) = 0;
     };
 
     /** @brief Interface for the RPC clients spies */
-    class IRpcClientSpy
+    class ISpy
     {
       public:
         /** @brief Destructor */
-        virtual ~IRpcClientSpy() { }
+        virtual ~ISpy() { }
 
         /**
          * @brief Called when a message has been received
          * @param msg Received message
          */
-        virtual void rcpClientMessageReceived(const std::string& msg) = 0;
+        virtual void rcpMessageReceived(const std::string& msg) = 0;
 
         /**
          * @brief Called when a message has been sent
          * @param msg Sent message
          */
-        virtual void rcpClientMessageSent(const std::string& msg) = 0;
+        virtual void rcpMessageSent(const std::string& msg) = 0;
     };
 
     /** @brief RPC error code : NotImplemented */
@@ -180,4 +144,4 @@ class IRpcClient
 } // namespace rpc
 } // namespace ocpp
 
-#endif // IRPCCLIENT_H
+#endif // IRPC_H

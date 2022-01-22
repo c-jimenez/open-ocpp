@@ -18,7 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "SetChargingProfile.h"
 #include "ChargingProfileConverter.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 
 using namespace ocpp::types;
 
@@ -62,7 +62,7 @@ bool SetChargingProfileReqConverter::fromJson(const rapidjson::Value& json,
     ret = ret && charging_profile_converter.fromJson(csChargingProfiles, data.csChargingProfiles, error_code, error_message);
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
 
     return ret;

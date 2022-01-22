@@ -19,9 +19,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef RPCCLIENT_H
 #define RPCCLIENT_H
 
-#include "IRpcClient.h"
 #include "IWebsocketClient.h"
 #include "Queue.h"
+#include "RpcBase.h"
 
 #include <condition_variable>
 #include <mutex>
@@ -34,42 +34,48 @@ namespace rpc
 {
 
 /** @brief RPC client implementation */
-class RpcClient : public IRpcClient, public ocpp::websockets::IWebsocketClient::IListener
+class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::IListener
 {
   public:
+    // Forward declaration
+    class IListener;
+
     /** @brief Constructor */
-    RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol, int initial_transaction_id = 0);
+    RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol);
 
     /** @brief Destructor */
     virtual ~RpcClient();
 
-    // IRpcClient interface
-
-    /** @copydoc bool IRpcClient::start(const std::string&, const std::string&, const Credentials&,
-     *                                  std::chrono::milliseconds, std::chrono::milliseconds, std::chrono::milliseconds) */
+    /**
+     * @brief Start the client
+     * @param url URL to connect to
+     * @param credentials Credentials to use
+     * @param connect_timeout Connection timeout in ms
+     * @param retry_interval Retry interval in ms when connection cannot be established (0 = no retry)
+     * @param ping_interval Interval between 2 websocket PING messages when the socket is idle
+     * @return true if the client has been started, false otherwise
+     */
     bool start(const std::string&                                     url,
                const ocpp::websockets::IWebsocketClient::Credentials& credentials,
                std::chrono::milliseconds                              connect_timeout = std::chrono::seconds(5),
                std::chrono::milliseconds                              retry_interval  = std::chrono::seconds(5),
-               std::chrono::milliseconds                              ping_interval   = std::chrono::seconds(5)) override;
+               std::chrono::milliseconds                              ping_interval   = std::chrono::seconds(5));
 
-    /** @copydoc bool IRpcClient::stop() */
-    bool stop() override;
+    /**
+     * @brief Stop the client
+     * @return true if the client has been stopped, false otherwise
+     */
+    bool stop();
 
-    /** @copydoc bool IRpcClient::isConnected() */
+    /** @brief Register a listener to RPC client events
+     *  @param listener Listener object
+     */
+    void registerClientListener(IListener& listener);
+
+    // IRpc interface
+
+    /** @copydoc bool IRpc::isConnected() */
     bool isConnected() const override;
-
-    /** @copydoc bool IRpcClient::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, unsigned int) */
-    bool call(const std::string&         action,
-              const rapidjson::Document& payload,
-              rapidjson::Document&       response,
-              unsigned int               timeout = 2000u) override;
-
-    /** @copydoc void IRpcClient::registerListener(IRpcClientListener&) */
-    void registerListener(IRpcClientListener& listener) override;
-
-    /** @copydoc void IRpcClient::registerSpy(IRpcClientSpy&) */
-    void registerSpy(IRpcClientSpy& spy) override;
 
     // IWebsocketClientListener interface
 
@@ -88,72 +94,33 @@ class RpcClient : public IRpcClient, public ocpp::websockets::IWebsocketClient::
     /** @copydoc void IWebsocketClientListener::wsClientDataReceived(const void*, size_t) */
     void wsClientDataReceived(const void* data, size_t size) override;
 
+    /** @brief Interface for the RPC clients listeners */
+    class IListener
+    {
+      public:
+        /** @brief Destructor */
+        virtual ~IListener() { }
+
+        /** @brief Called when connection is successfull */
+        virtual void rpcClientConnected() = 0;
+
+        /** @brief Called when connection failed */
+        virtual void rpcClientFailed() = 0;
+    };
+
+  protected:
+    /** @copydoc bool RpcBase::doSend(const std::string&) */
+    bool doSend(const std::string& msg) override;
+
   private:
-    /** @brief Message types */
-    enum class MessageType : unsigned int
-    {
-        CALL       = 2,
-        CALLRESULT = 3,
-        CALLERROR  = 4,
-        INVALID    = 5
-    };
-
-    /** @brief RPC message */
-    struct RpcMessage
-    {
-        RpcMessage(const std::string& _unique_id, const char* _action, const rapidjson::Value& _payload)
-            : unique_id(_unique_id), action(_action), payload()
-        {
-            payload.CopyFrom(_payload, payload.GetAllocator());
-        }
-        RpcMessage(const std::string& _unique_id, const rapidjson::Value& _payload) : unique_id(_unique_id), action(), payload()
-        {
-            payload.CopyFrom(_payload, payload.GetAllocator());
-        }
-        const std::string   unique_id;
-        const std::string   action;
-        rapidjson::Document payload;
-    };
-
     /** @brief Protocol version */
     const std::string m_protocol;
     /** @brief Websocket connexion */
     ocpp::websockets::IWebsocketClient& m_websocket;
     /** @brief Listener */
-    IRpcClientListener* m_listener;
-    /** @brief Spies */
-    std::vector<IRpcClientSpy*> m_spies;
-    /** @brief Transaction id */
-    int m_transaction_id;
-    /** @brief Mutex for concurrent call access */
-    std::mutex m_call_mutex;
-    /** @brief Queue for incomming call requests */
-    ocpp::helpers::Queue<RpcMessage*> m_requests_queue;
-    /** @brief Queue for incomming call results */
-    ocpp::helpers::Queue<RpcMessage*> m_results_queue;
-    /** @brief Reception thread */
-    std::thread* m_rx_thread;
-
-    /** @brief Send a message throug the websocket connection */
-    bool send(const std::string& msg);
-
-    /** @brief Decode a CALL message */
-    bool decodeCall(const std::string& unique_id, const rapidjson::Value& action, const rapidjson::Value& payload);
-
-    /** @brief Decode a CALLRESULT message */
-    bool decodeCallResult(const std::string& unique_id, const rapidjson::Value& payload);
-
-    /** @brief Decode a CALLERROR message */
-    bool decodeCallError(const std::string&      unique_id,
-                         const rapidjson::Value& error,
-                         const rapidjson::Value& message,
-                         const rapidjson::Value& payload);
-
-    /** @brief Send a CALLERROR message */
-    void sendCallError(const std::string& unique_id, const char* error, const std::string& message);
-
-    /** @brief Reception thread */
-    void rxThread();
+    IListener* m_listener;
+    /** @brief Started state */
+    bool m_started;
 };
 
 } // namespace rpc

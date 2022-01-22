@@ -27,7 +27,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessageDispatcher.h"
 #include "MeterValuesManager.h"
 #include "ReservationManager.h"
-#include "RpcClient.h"
 #include "SmartChargingManager.h"
 #include "StatusManager.h"
 #include "TransactionManager.h"
@@ -106,6 +105,9 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
 
     // Uptime timer
     m_uptime_timer.setCallback(std::bind(&ChargePoint::processUptime, this));
+
+    // Random numbers
+    std::srand(time(nullptr));
 }
 
 /** @brief Destructor */
@@ -200,8 +202,9 @@ bool ChargePoint::start()
 
         // Allocate resources
         m_ws_client  = std::unique_ptr<ocpp::websockets::IWebsocketClient>(ocpp::websockets::WebsocketFactory::newClient());
-        m_rpc_client = std::make_unique<ocpp::rpc::RpcClient>(*m_ws_client, "ocpp1.6", std::rand());
+        m_rpc_client = std::make_unique<ocpp::rpc::RpcClient>(*m_ws_client, "ocpp1.6");
         m_rpc_client->registerListener(*this);
+        m_rpc_client->registerClientListener(*this);
         m_rpc_client->registerSpy(*this);
         m_msg_dispatcher = std::make_unique<ocpp::messages::MessageDispatcher>(m_stack_config.jsonSchemasPath());
         m_msg_sender     = std::make_unique<ocpp::messages::GenericMessageSender>(m_stack_config, *m_rpc_client, m_messages_converter);
@@ -571,7 +574,7 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
     return ret;
 }
 
-/** @copydoc void IRpcClientListener::rpcClientConnected() */
+/** @copydoc void RpcClient::IListener::rpcClientConnected() */
 void ChargePoint::rpcClientConnected()
 {
     LOG_INFO << "Connected to Central System";
@@ -580,7 +583,7 @@ void ChargePoint::rpcClientConnected()
     m_events_handler.connectionStateChanged(true);
 }
 
-/** @copydoc void IRpcClientListener::rpcClientFailed() */
+/** @copydoc void RpcClient::IListener::rpcClientFailed() */
 void ChargePoint::rpcClientFailed()
 {
     LOG_ERROR << "Connection failed with Central System";
@@ -600,8 +603,8 @@ void ChargePoint::rpcClientFailed()
     m_events_handler.connectionFailed(last_status);
 }
 
-/** @copydoc void IRpcClientListener::rpcClientDisconnected() */
-void ChargePoint::rpcClientDisconnected()
+/** @copydoc void IRpc::IListener::rpcDisconnected() */
+void ChargePoint::rpcDisconnected()
 {
     LOG_ERROR << "Connection lost with Central System";
     m_status_manager->updateConnectionStatus(false);
@@ -609,35 +612,35 @@ void ChargePoint::rpcClientDisconnected()
     m_events_handler.connectionStateChanged(false);
 }
 
-/** @copydoc void IRpcClientListener::rpcClientError() */
-void ChargePoint::rpcClientError()
+/** @copydoc void IRpc::IListener::rpcError() */
+void ChargePoint::rpcError()
 {
     LOG_ERROR << "Connection error with Central System";
     m_events_handler.connectionStateChanged(false);
 }
 
-/** @copydoc void IRpcClientListener::rpcClientCallReceived(const std::string&,
-                                           const rapidjson::Value&,
-                                           rapidjson::Document&,
-                                           const char*&,
-                                           std::string&) */
-bool ChargePoint::rpcClientCallReceived(const std::string&      action,
-                                        const rapidjson::Value& payload,
-                                        rapidjson::Document&    response,
-                                        const char*&            error_code,
-                                        std::string&            error_message)
+/** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
+                                                   const rapidjson::Value&,
+                                                   rapidjson::Document&,
+                                                   const char*&,
+                                                   std::string&) */
+bool ChargePoint::rpcCallReceived(const std::string&      action,
+                                  const rapidjson::Value& payload,
+                                  rapidjson::Document&    response,
+                                  const char*&            error_code,
+                                  std::string&            error_message)
 {
     return m_msg_dispatcher->dispatchMessage(action, payload, response, error_code, error_message);
 }
 
-/** @copydoc void IRpcClientSpy::rcpClientMessageReceived(const std::string&) */
-void ChargePoint::rcpClientMessageReceived(const std::string& msg)
+/** @copydoc void IRpc::ISpy::rcpMessageReceived(const std::string&) */
+void ChargePoint::rcpMessageReceived(const std::string& msg)
 {
     LOG_COM << "RX : " << msg;
 }
 
-/** @copydoc void IRpcClientSpy::rcpClientMessageSent(const std::string&) */
-void ChargePoint::rcpClientMessageSent(const std::string& msg)
+/** @copydoc void IRpc::ISpy::rcpMessageSent(const std::string&) */
+void ChargePoint::rcpMessageSent(const std::string& msg)
 {
     m_status_manager->resetHeartBeatTimer();
     LOG_COM << "TX : " << msg;
