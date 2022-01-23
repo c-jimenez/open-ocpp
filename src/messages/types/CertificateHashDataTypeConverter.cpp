@@ -18,7 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CertificateHashDataTypeConverter.h"
 #include "Enums.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 
 using namespace ocpp::types;
 

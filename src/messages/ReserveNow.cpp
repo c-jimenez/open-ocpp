@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ReserveNow.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 
 using namespace ocpp::types;
 
@@ -50,7 +50,7 @@ bool ReserveNowReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "reservationId", data.reservationId);
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }

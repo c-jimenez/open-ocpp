@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "StopTransaction.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "IdTagInfoConverter.h"
 #include "MeterValueConverter.h"
 
@@ -71,7 +71,7 @@ bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
     }
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }

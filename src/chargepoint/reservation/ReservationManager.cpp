@@ -21,7 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Connectors.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "IStatusManager.h"
 #include "WorkerThreadPool.h"
 
@@ -261,7 +261,7 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
     }
     else
     {
-        error_code    = ocpp::rpc::IRpcClient::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+        error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
         error_message = "Invalid connector id";
     }
 

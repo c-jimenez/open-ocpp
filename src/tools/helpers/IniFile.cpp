@@ -378,19 +378,19 @@ std::string IniFile::Value::toString() const
 /** @brief Get the value as an integer */
 int IniFile::Value::toInt() const
 {
-    return std::strtol(m_value.c_str(), NULL, 10);
+    return std::strtol(m_value.c_str(), nullptr, 10);
 }
 
 /** @brief Get the value as an unsigned integer */
 unsigned int IniFile::Value::toUInt() const
 {
-    return std::strtoul(m_value.c_str(), NULL, 10);
+    return std::strtoul(m_value.c_str(), nullptr, 10);
 }
 
 /** @brief Get the value as a floating point value */
 double IniFile::Value::toFloat() const
 {
-    return std::strtod(m_value.c_str(), NULL);
+    return std::strtod(m_value.c_str(), nullptr);
 }
 
 /** @brief Get the value as a boolean */

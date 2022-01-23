@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Authorize.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "IdTagInfoConverter.h"
 
 using namespace ocpp::types;

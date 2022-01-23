@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "WebsocketFactory.h"
 #include "LibWebsocketClient.h"
+#include "LibWebsocketServer.h"
 
 namespace ocpp
 {
@@ -28,6 +29,12 @@ namespace websockets
 IWebsocketClient* WebsocketFactory::newClient()
 {
     return new LibWebsocketClient();
+}
+
+/** @brief Instanciate a server websocket */
+IWebsocketServer* WebsocketFactory::newServer()
+{
+    return new LibWebsocketServer();
 }
 
 } // namespace websockets
