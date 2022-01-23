@@ -38,7 +38,7 @@ namespace chargepoint
 AuthentManager::AuthentManager(const ocpp::config::IChargePointConfig&         stack_config,
                                ocpp::config::IOcppConfig&                      ocpp_config,
                                ocpp::database::Database&                       database,
-                               IInternalConfigManager&                         internal_config,
+                               ocpp::config::IInternalConfigManager&           internal_config,
                                const ocpp::messages::GenericMessagesConverter& messages_converter,
                                ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                ocpp::messages::GenericMessageSender&           msg_sender)

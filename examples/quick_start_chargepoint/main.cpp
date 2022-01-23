@@ -22,11 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ChargePointConfig.h"
+#include "ChargePointDemoConfig.h"
 #include "DefaultChargePointEventsHandler.h"
 #include "IChargePoint.h"
-#include "OcppConfig.h"
-#include "StackConfig.h"
 
 #include <cstring>
 #include <filesystem>
@@ -108,8 +106,8 @@ int main(int argc, char* argv[])
 
     // Configuration
     std::filesystem::path path(working_dir);
-    path /= "config.ini";
-    ChargePointConfig config(path);
+    path /= "quick_start_chargepoint.ini";
+    ChargePointDemoConfig config(path);
 
     // Event handler
     DefaultChargePointEventsHandler event_handler(config);

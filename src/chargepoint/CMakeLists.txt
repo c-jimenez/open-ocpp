@@ -1,5 +1,5 @@
 ######################################################
-#           OCPP chargepoint library               #
+#            OCPP chargepoint library                #
 ######################################################
 
 
@@ -10,7 +10,6 @@ add_library(chargepoint STATIC
     authent/AuthentLocalList.cpp
     authent/AuthentManager.cpp
     config/ConfigManager.cpp
-    config/InternalConfigManager.cpp
     connector/Connectors.cpp
     datatransfer/DataTransferManager.cpp
     maintenance/MaintenanceManager.cpp
@@ -28,17 +27,17 @@ add_library(chargepoint STATIC
 target_include_directories(chargepoint PUBLIC interface)
 
 # Private includes
-target_include_directories(chargepoint PRIVATE authent 
-                                               config 
-                                               connector 
+target_include_directories(chargepoint PRIVATE authent
+                                               config
+                                               connector
                                                datatransfer
-                                               interface 
+                                               interface
                                                maintenance
                                                metervalues
                                                reservation
                                                smartcharging
                                                status
-                                               transaction 
+                                               transaction
                                                trigger)
 
 # Dependencies

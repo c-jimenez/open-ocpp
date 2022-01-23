@@ -36,6 +36,7 @@ namespace config
 {
 class IChargePointConfig;
 class IOcppConfig;
+class IInternalConfigManager;
 } // namespace config
 namespace helpers
 {
@@ -48,7 +49,6 @@ namespace chargepoint
 
 class Connectors;
 class IChargePointEventsHandler;
-class IInternalConfigManager;
 
 /** @brief Handle charge point status (boot notification, status notification, heartbeat) */
 class StatusManager
@@ -61,7 +61,7 @@ class StatusManager
     StatusManager(const ocpp::config::IChargePointConfig&         stack_config,
                   ocpp::config::IOcppConfig&                      ocpp_config,
                   IChargePointEventsHandler&                      events_handler,
-                  IInternalConfigManager&                         internal_config,
+                  ocpp::config::IInternalConfigManager&           internal_config,
                   ocpp::helpers::TimerPool&                       timer_pool,
                   ocpp::helpers::WorkerThreadPool&                worker_pool,
                   Connectors&                                     connectors,
@@ -126,7 +126,7 @@ class StatusManager
     /** @brief User defined events handler */
     IChargePointEventsHandler& m_events_handler;
     /** @brief Charge point's internal configuration */
-    IInternalConfigManager& m_internal_config;
+    ocpp::config::IInternalConfigManager& m_internal_config;
     /** @brief Worker thread pool */
     ocpp::helpers::WorkerThreadPool& m_worker_pool;
     /** @brief Charge point's connectors */

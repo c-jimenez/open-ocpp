@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include "DefaultChargePointEventsHandler.h"
-#include "ChargePointConfig.h"
+#include "ChargePointDemoConfig.h"
 #include "String.h"
 
 #include <iostream>
@@ -32,7 +32,7 @@ using namespace std;
 using namespace ocpp::types;
 
 /** @brief Constructor */
-DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointConfig& config)
+DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config)
     : m_config(config),
       m_remote_start_pending(config.ocppConfig().numberOfConnectors()),
       m_remote_stop_pending(m_remote_start_pending.size()),

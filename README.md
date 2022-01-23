@@ -230,7 +230,7 @@ Extract of a quick start main() :
 int main()
 {
     // Configuration
-    ChargePointConfig config("config.ini");
+    ChargePointDemoConfig config("config.ini");
 
     // Event handler
     DefaultChargePointEventsHandler event_handler(config);

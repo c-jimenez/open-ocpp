@@ -203,7 +203,7 @@ class ChargePoint : public IChargePoint,
     /** @brief Database */
     ocpp::database::Database m_database;
     /** @brief Internal configuration manager */
-    InternalConfigManager m_internal_config;
+    ocpp::config::InternalConfigManager m_internal_config;
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
