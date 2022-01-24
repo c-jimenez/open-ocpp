@@ -20,7 +20,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define ICENTRALSYSTEM_H
 
 #include "ICentralSystemConfig.h"
-#include "ICentralSystemEventsHandler.h"
 
 #include <memory>
 
@@ -30,9 +29,15 @@ namespace helpers
 {
 class TimerPool;
 } // namespace helpers
+namespace database
+{
+class Database;
+} // namespace database
 
 namespace centralsystem
 {
+
+class ICentralSystemEventsHandler;
 
 /** @brief Interface for central system implementations */
 class ICentralSystem
@@ -56,6 +61,12 @@ class ICentralSystem
     virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
 
     /**
+     * @brief Get the database of the central system
+     * @return Database of the central system
+     */
+    virtual ocpp::database::Database& getDatabase() = 0;
+
+    /**
      * @brief Reset the central system's internal data (can be done only when the central system is stopped)
      * @return true if the data has been reset, false otherwise
      */
@@ -72,6 +83,23 @@ class ICentralSystem
      * @return true if the central system has been stopped, false otherwise
      */
     virtual bool stop() = 0;
+
+    /** @brief Interface for charge point proxy implementations */
+    class IChargePoint
+    {
+      public:
+        /** @brief Destructor */
+        virtual ~IChargePoint() { }
+
+        /**
+         * @brief Get the charge point identifier
+         * @return charge point identifier
+         */
+        virtual const std::string& identifier() const = 0;
+
+        /** @brief Disconnect the charge point */
+        virtual void disconnect() = 0;
+    };
 };
 
 } // namespace centralsystem

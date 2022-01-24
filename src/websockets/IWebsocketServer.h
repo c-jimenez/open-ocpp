@@ -104,9 +104,10 @@ class IWebsocketServer
 
         /**
          * @brief Disconnect the client
+         * @param notify_disconnected Indicate if the listener must be notified owhen disconnected
          * @return true if the disconnection is successfull, false otherwise
          */
-        virtual bool disconnect() = 0;
+        virtual bool disconnect(bool notify_disconnected = true) = 0;
 
         /**
          * @brief Indicate if the client is connected

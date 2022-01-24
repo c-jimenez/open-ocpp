@@ -19,6 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICENTRALSYSTEMEVENTSHANDLER_H
 #define ICENTRALSYSTEMEVENTSHANDLER_H
 
+#include "ICentralSystem.h"
+
 namespace ocpp
 {
 namespace centralsystem
@@ -30,6 +32,20 @@ class ICentralSystemEventsHandler
   public:
     /** @brief Destructor */
     virtual ~ICentralSystemEventsHandler() { }
+
+    /**
+     * @brief Called to check the charge point credentials for HTTP basic authentication
+     * @param chargepoint_id Charge Point identifier
+     * @param password Password
+     * @return true if the credentials are valid, false otherwise
+     */
+    virtual bool checkCredentials(const std::string& chargepoint_id, const std::string& password) = 0;
+
+    /**
+     * @brief Called when a charge point is connected
+     * @param chargepoint Charge point connection
+     */
+    virtual void chargePointConnected(std::shared_ptr<ICentralSystem::IChargePoint> chargepoint) = 0;
 };
 
 } // namespace centralsystem

@@ -1,0 +1,19 @@
+# Quick start Central System example
+
+## Description
+
+This example simulates a central system which accepts any charge point.
+
+The central system loops on its connected charge points. For each charge point it simulates the following operations :
+
+* Get configuration
+* Trigger messages : status notification, meter values
+
+There is a 10s break between 2 charge points communication.
+
+## Command line
+
+quick_start_centralsystem [-w working_dir] [-r]
+
+* -w : Working directory where to store the configuration file (Default = current directory)
+* -r : Reset all the OCPP persistent data

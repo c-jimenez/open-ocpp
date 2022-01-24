@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "CentralSystemDemoConfig.h"
+#include "DefaultCentralSystemEventsHandler.h"
 #include "ICentralSystem.h"
 
 #include <cstring>
@@ -31,11 +32,6 @@ SOFTWARE.
 #include <thread>
 
 using namespace ocpp::centralsystem;
-
-/** @brief EVent handler */
-class CentralSystemEventHandler : public ICentralSystemEventsHandler
-{
-};
 
 /** @brief Entry point */
 int main(int argc, char* argv[])
@@ -98,7 +94,7 @@ int main(int argc, char* argv[])
     CentralSystemDemoConfig config(path);
 
     // Event handler
-    CentralSystemEventHandler event_handler;
+    DefaultCentralSystemEventsHandler event_handler;
 
     // Instanciate central system
     std::unique_ptr<ICentralSystem> central_system = ICentralSystem::create(config.stackConfig(), event_handler);

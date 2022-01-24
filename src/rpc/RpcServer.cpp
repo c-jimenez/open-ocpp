@@ -103,7 +103,7 @@ void RpcServer::wsClientConnected(const char* uri, std::shared_ptr<ocpp::websock
     std::string           chargepoint_id = uri_path.filename();
 
     // Instanciate client
-    std::shared_ptr<IClient> rpc_client(new IClient(client));
+    std::shared_ptr<Client> rpc_client(new Client(client));
 
     // Notify connection
     m_listener->rpcClientConnected(chargepoint_id, rpc_client);
@@ -116,7 +116,7 @@ void RpcServer::wsServerError()
 }
 
 /** @brief Constructor */
-RpcServer::IClient::IClient(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket) : RpcBase(), m_websocket(websocket)
+RpcServer::Client::Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket) : RpcBase(), m_websocket(websocket)
 {
     // Start processing
     m_websocket->registerListener(*this);
@@ -124,19 +124,25 @@ RpcServer::IClient::IClient(std::shared_ptr<ocpp::websockets::IWebsocketServer::
 }
 
 /** @brief Destructor */
-RpcServer::IClient::~IClient()
+RpcServer::Client::~Client()
 {
     // Disconnect from websocket
-    m_websocket->disconnect();
+    disconnect(false);
 
     // Stop processing
     RpcBase::stop();
 }
 
+/** @brief Disconnect the client */
+bool RpcServer::Client::disconnect(bool notify_disconnected)
+{
+    return m_websocket->disconnect(notify_disconnected);
+}
+
 // IRpc interface
 
 /** @copydoc bool IRpc::isConnected() */
-bool RpcServer::IClient::isConnected() const
+bool RpcServer::Client::isConnected() const
 {
     return m_websocket->isConnected();
 }
@@ -144,19 +150,19 @@ bool RpcServer::IClient::isConnected() const
 // IWebsocketServer::IClient::IListener interface
 
 /** @brief void IWebsocketServer::IClient::IListener::wsClientDisconnected() */
-void RpcServer::IClient::wsClientDisconnected()
+void RpcServer::Client::wsClientDisconnected()
 {
     rpcListener()->rpcDisconnected();
 }
 
 /** @brief void IWebsocketServer::IClient::IListener::wsClientError() */
-void RpcServer::IClient::wsClientError()
+void RpcServer::Client::wsClientError()
 {
     rpcListener()->rpcError();
 }
 
 /** @brief void IWebsocketServer::IClient::IListener::wsClientDataReceived(const void*, size_t) */
-void RpcServer::IClient::wsClientDataReceived(const void* data, size_t size)
+void RpcServer::Client::wsClientDataReceived(const void* data, size_t size)
 {
     // Process data
     processReceivedData(data, size);
@@ -165,7 +171,7 @@ void RpcServer::IClient::wsClientDataReceived(const void* data, size_t size)
 // RpxBase interface
 
 /** @copydoc bool RpcBase::doSend(const std::string&) */
-bool RpcServer::IClient::doSend(const std::string& msg)
+bool RpcServer::Client::doSend(const std::string& msg)
 {
     // Send message
     return m_websocket->send(msg.c_str(), msg.size());

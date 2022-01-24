@@ -62,7 +62,7 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
     /** @brief Cipher list to use for TLSv1.3 connections */
     std::string tlsv13CipherList() const override { return getString("Tlsv13CipherList"); }
     /** @brief ECDH curve to use for TLS connections */
-    std::string tlsvEcdhCurve() const override { return getString("TlsEcdhCurve"); }
+    std::string tlsEcdhCurve() const override { return getString("TlsEcdhCurve"); }
     /** @brief Allow TLS connections using self-signed certificates
      *         (Warning : enabling this feature is not recommended in production) */
     bool tlsAllowSelfSignedCertificates() const override { return getBool("TlsAllowSelfSignedCertificates"); }

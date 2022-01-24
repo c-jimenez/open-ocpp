@@ -49,6 +49,9 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     /** @copydoc ocpp::helpers::TimerPool& ICentralSystem::getTimerPool() */
     ocpp::helpers::TimerPool& getTimerPool() override { return m_timer_pool; }
 
+    /** @copydoc ocpp::database::Database& ICentralSystem::getDatabase() */
+    ocpp::database::Database& getDatabase() override { return m_database; }
+
     /** @copydoc bool ICentralSystem::resetData() */
     bool resetData() override;
 
@@ -63,8 +66,8 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     /** @copydoc bool RpcServer::IListener::rpcCheckCredentials(const std::string&, const std::string&, const std::string&) */
     bool rpcCheckCredentials(const std::string& chargepoint_id, const std::string& user, const std::string& password) override;
 
-    /** @copydoc void RpcServer::IListener::rpcClientConnected(const std::string&, std::shared_ptr<IClient>) */
-    void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<ocpp::rpc::RpcServer::IClient> client) override;
+    /** @copydoc void RpcServer::IListener::rpcClientConnected(const std::string&, std::shared_ptr<Client>) */
+    void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<ocpp::rpc::RpcServer::Client> client) override;
 
     /** @copydoc void RpcServer::IListener::rpcServerError() */
     void rpcServerError() override;

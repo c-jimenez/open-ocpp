@@ -48,7 +48,9 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
     // Communication parameters
 
     /** @brief Listen URL */
-    std::string listenUrl() const override { return getString("ListenUrl"); };
+    std::string listenUrl() const override { return getString("ListenUrl"); }
+    /** @brief Enable HTTP basic authentication */
+    bool httpBasicAuthent() const override { return getBool("HttpBasicAuthent"); }
     /** @brief Call request timeout */
     std::chrono::milliseconds callRequestTimeout() const override { return get<std::chrono::milliseconds>("CallRequestTimeout"); }
     /** @brief Cipher list to use for TLSv1.2 connections */
@@ -56,7 +58,19 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
     /** @brief Cipher list to use for TLSv1.3 connections */
     std::string tlsv13CipherList() const override { return getString("Tlsv13CipherList"); }
     /** @brief ECDH curve to use for TLS connections */
-    std::string tlsvEcdhCurve() const override { return getString("TlsEcdhCurve"); }
+    std::string tlsEcdhCurve() const override { return getString("TlsEcdhCurve"); }
+    /** @brief Server certificate */
+    std::string tlsServerCertificate() const override { return getString("TlsServerCertificate"); }
+    /** @brief Server certificate's private key */
+    std::string tlsServerCertificatePrivateKey() const override { return getString("TlsServerCertificatePrivateKey"); }
+    /** @brief Server certificate's private key passphrase */
+    std::string tlsServerCertificatePrivateKeyPassphrase() const override { return getString("TlsServerCertificatePrivateKeyPassphrase"); }
+    /** @brief Certification Authority signing chain for the server certificate */
+    std::string tlsServerCertificateCa() const override { return getString("TlsServerCertificateCa"); }
+    /** @brief Certification Authority signing chain for the clients certificates */
+    std::string tlsClientCertificateCa() const override { return getString("TlsClientCertificateCa"); }
+    /** @brief Enable client authentication using certificate */
+    bool tlsClientCertificateAuthent() const override { return getBool("TlsClientCertificateAuthent"); }
 
     // Logs
 

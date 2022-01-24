@@ -8,4 +8,4 @@ The following examples are available :
 
 How to run the examples:
 * Customize the *config.ini* file of the selected example with the URL of the Central System and the other connection parameters has well has the OCPP configuration keys
-* Run the exmaple using the **-w** option to specify the path of the configuration file
+* Run the example using the **-w** option to specify the path of the configuration file

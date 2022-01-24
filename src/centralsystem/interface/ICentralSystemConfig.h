@@ -47,12 +47,26 @@ class ICentralSystemConfig
     virtual std::string listenUrl() const = 0;
     /** @brief Call request timeout */
     virtual std::chrono::milliseconds callRequestTimeout() const = 0;
+    /** @brief Enable HTTP basic authentication */
+    virtual bool httpBasicAuthent() const = 0;
     /** @brief Cipher list to use for TLSv1.2 connections */
     virtual std::string tlsv12CipherList() const = 0;
     /** @brief Cipher list to use for TLSv1.3 connections */
     virtual std::string tlsv13CipherList() const = 0;
     /** @brief ECDH curve to use for TLS connections */
-    virtual std::string tlsvEcdhCurve() const = 0;
+    virtual std::string tlsEcdhCurve() const = 0;
+    /** @brief Server certificate */
+    virtual std::string tlsServerCertificate() const = 0;
+    /** @brief Server certificate's private key */
+    virtual std::string tlsServerCertificatePrivateKey() const = 0;
+    /** @brief Server certificate's private key passphrase */
+    virtual std::string tlsServerCertificatePrivateKeyPassphrase() const = 0;
+    /** @brief Certification Authority signing chain for the server certificate */
+    virtual std::string tlsServerCertificateCa() const = 0;
+    /** @brief Certification Authority signing chain for the clients certificates */
+    virtual std::string tlsClientCertificateCa() const = 0;
+    /** @brief Enable client authentication using certificate */
+    virtual bool tlsClientCertificateAuthent() const = 0;
 
     // Log
 

@@ -17,7 +17,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CentralSystem.h"
+#include "ChargePointProxy.h"
 #include "DateTime.h"
+#include "ICentralSystemEventsHandler.h"
 #include "InternalConfigKeys.h"
 #include "Logger.h"
 #include "Version.h"
@@ -77,8 +79,6 @@ CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig& stack_con
 
     // Random numbers
     std::srand(time(nullptr));
-
-    (void)m_events_handler;
 }
 
 /** @brief Destructor */
@@ -156,8 +156,21 @@ bool CentralSystem::start()
         m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
         m_rpc_server->registerServerListener(*this);
 
+        // Configure websocket link
+        ocpp::websockets::IWebsocketServer::Credentials credentials;
+        credentials.http_basic_authent                        = m_stack_config.httpBasicAuthent();
+        credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
+        credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
+        credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
+        credentials.server_certificate                        = m_stack_config.tlsServerCertificate();
+        credentials.server_certificate_private_key            = m_stack_config.tlsServerCertificatePrivateKey();
+        credentials.server_certificate_private_key_passphrase = m_stack_config.tlsServerCertificatePrivateKeyPassphrase();
+        credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
+        credentials.client_certificate_ca                     = m_stack_config.tlsClientCertificateCa();
+        credentials.client_certificate_authent                = m_stack_config.tlsClientCertificateAuthent();
+
         // Start listening
-        ret = true;
+        ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials);
     }
     else
     {
@@ -202,17 +215,29 @@ bool CentralSystem::stop()
 /** @copydoc bool RpcServer::IListener::rpcCheckCredentials(const std::string&, const std::string&, const std::string&) */
 bool CentralSystem::rpcCheckCredentials(const std::string& chargepoint_id, const std::string& user, const std::string& password)
 {
+    bool ret = false;
     LOG_INFO << "Check credentials for Charge Point [" << chargepoint_id << "]";
-    (void)user;
-    (void)password;
-    return true;
+
+    // OCPP protocol force to have user = chargepoint_id
+    if (user == chargepoint_id)
+    {
+        // Check password
+        ret = m_events_handler.checkCredentials(chargepoint_id, password);
+    }
+    return ret;
 }
 
-/** @copydoc void RpcServer::IListener::rpcClientConnected(const std::string&, std::shared_ptr<IClient>) */
-void CentralSystem::rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<ocpp::rpc::RpcServer::IClient> client)
+/** @copydoc void RpcServer::IListener::rpcClientConnected(const std::string&, std::shared_ptr<Client>) */
+void CentralSystem::rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<ocpp::rpc::RpcServer::Client> client)
 {
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
-    client.reset();
+
+    // Instanciate proxy
+    std::shared_ptr<ICentralSystem::IChargePoint> chargepoint(
+        new ChargePointProxy(chargepoint_id, client, m_stack_config.jsonSchemasPath()));
+
+    // Notify connection
+    m_events_handler.chargePointConnected(chargepoint);
 }
 
 /** @copydoc void RpcServer::IListener::rpcServerError() */

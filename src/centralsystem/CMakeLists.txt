@@ -6,13 +6,15 @@
 # Library target
 add_library(centralsystem STATIC
     CentralSystem.cpp
+
+    chargepoint/ChargePointProxy.cpp
 )
 
 # Exported includes
 target_include_directories(centralsystem PUBLIC interface)
 
 # Private includes
-target_include_directories(centralsystem PRIVATE authent
+target_include_directories(centralsystem PRIVATE chargepoint
                                                  config)
 
 # Dependencies
