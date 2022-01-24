@@ -28,7 +28,7 @@ namespace messages
 {
 
 /** @brief Action corresponding to the ClearCache messages */
-static const std::string CLEARCACHE_ACTION = "ClearCache";
+static const std::string CLEAR_CACHE_ACTION = "ClearCache";
 
 /** @brief ClearCache.req message */
 struct ClearCacheReq

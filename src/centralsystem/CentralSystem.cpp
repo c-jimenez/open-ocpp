@@ -51,6 +51,7 @@ CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig& stack_con
       m_worker_pool(2u), // 1 asynchronous timer operations + 1 for asynchronous responses
       m_database(),
       m_internal_config(m_database),
+      m_messages_converter(),
       m_ws_server(),
       m_rpc_server(),
       m_uptime_timer(m_timer_pool, "Uptime timer"),
@@ -233,8 +234,8 @@ void CentralSystem::rpcClientConnected(const std::string& chargepoint_id, std::s
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
 
     // Instanciate proxy
-    std::shared_ptr<ICentralSystem::IChargePoint> chargepoint(
-        new ChargePointProxy(chargepoint_id, client, m_stack_config.jsonSchemasPath()));
+    std::shared_ptr<ICentralSystem::IChargePoint> chargepoint(new ChargePointProxy(
+        chargepoint_id, client, m_stack_config.jsonSchemasPath(), m_messages_converter, m_stack_config.callRequestTimeout()));
 
     // Notify connection
     m_events_handler.chargePointConnected(chargepoint);

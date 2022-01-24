@@ -43,7 +43,7 @@ bool DefaultCentralSystemEventsHandler::checkCredentials(const std::string& char
     cout << "Check credentials for [" << chargepoint_id << "] : " << password << endl;
     return true;
 }
-
+#include <thread>
 /** @copydoc bool ICentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ICentralSystem::IChargePoint>) */
 void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint)
 {

@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CHARGEPOINTPROXY_H
 #define CHARGEPOINTPROXY_H
 
+#include "GenericMessageSender.h"
 #include "ICentralSystem.h"
 #include "MessageDispatcher.h"
 #include "RpcServer.h"
@@ -39,8 +40,14 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
      * @param identifier Charge point's identifier
      * @param rpc RPC connection with the charge point
      * @param schemas_path Path to the JSON schemas needed to validate payloads
+     * @param messages_converter Converter from/to OCPP to/from JSON messages
+     * @param timeout Default call request timeout
      */
-    ChargePointProxy(const std::string& identifier, std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc, const std::string& schemas_path);
+    ChargePointProxy(const std::string&                            identifier,
+                     std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
+                     const std::string&                            schemas_path,
+                     ocpp::messages::MessagesConverter&            messages_converter,
+                     std::chrono::milliseconds                     timeout);
     /** @brief Destructor */
     virtual ~ChargePointProxy();
 
@@ -49,8 +56,133 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @copydoc const std::string& ICentralSystem::IChargePoint::identifier() const */
     const std::string& identifier() const override { return m_identifier; }
 
-    /** @copydoc void ICentralSystem::IChargePoint::disconnect() const */
+    /** @copydoc void ICentralSystem::IChargePoint::setTimeout(std::chrono::milliseconds) */
+    void setTimeout(std::chrono::milliseconds timeout) override;
+
+    /** @copydoc void ICentralSystem::IChargePoint::disconnect() */
     void disconnect() override;
+
+    // OCPP operations
+
+    /** @copydoc bool ICentralSystem::IChargePoint::cancelReservation(int) */
+    bool cancelReservation(int reservation_id) override;
+
+    /** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(int, ocpp::types::AvailabilityType) */
+    ocpp::types::AvailabilityStatus changeAvailability(int connector_id, ocpp::types::AvailabilityType availability) override;
+
+    /** @copydoc ocpp::types::ConfigurationStatus ICentralSystem::IChargePoint::changeConfiguration(const std::string&, const std::string&) */
+    ocpp::types::ConfigurationStatus changeConfiguration(const std::string& key, const std::string& value) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::clearCache() */
+    bool clearCache() override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::clearChargingProfile(const ocpp::types::Optional<int>&,
+                                                                         const ocpp::types::Optional<unsigned int>&,
+                                                                         const ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>&,
+                                                                         const ocpp::types::Optional<unsigned int>&) */
+    bool clearChargingProfile(const ocpp::types::Optional<int>&                                     profile_id,
+                              const ocpp::types::Optional<unsigned int>&                            connector_id,
+                              const ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>& purpose,
+                              const ocpp::types::Optional<unsigned int>&                            stack_level) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::dataTransfer(const std::string&,
+                                                                 const std::string&,
+                                                                 const std::string&,
+                                                                 ocpp::types::DataTransferStatus&,
+                                                                 std::string&) */
+    bool dataTransfer(const std::string&               vendor_id,
+                      const std::string&               message_id,
+                      const std::string&               request_data,
+                      ocpp::types::DataTransferStatus& status,
+                      std::string&                     response_data) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getCompositeSchedule(unsigned int,
+                                                                         std::chrono::seconds,
+                                                                         const ocpp::types::Optional<ocpp::types::ChargingRateUnitType>&,
+                                                                         ocpp::types::Optional<unsigned int>&,
+                                                                         ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                                         ocpp::types::Optional<ocpp::types::ChargingSchedule>&) */
+    bool getCompositeSchedule(unsigned int                                                    connector_id,
+                              std::chrono::seconds                                            duration,
+                              const ocpp::types::Optional<ocpp::types::ChargingRateUnitType>& unit,
+                              ocpp::types::Optional<unsigned int>&                            schedule_connector_id,
+                              ocpp::types::Optional<ocpp::types::DateTime>&                   schedule_start,
+                              ocpp::types::Optional<ocpp::types::ChargingSchedule>&           schedule) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getConfiguration(const std::vector<std::string>&,
+                                                                     std::vector<ocpp::types::KeyValue>&,
+                                                                     std::vector<std::string>&) */
+    bool getConfiguration(const std::vector<std::string>&     keys,
+                          std::vector<ocpp::types::KeyValue>& config_keys,
+                          std::vector<std::string>&           unknown_keys) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getDiagnostics(const std::string&,
+                                                                   const ocpp::types::Optional<unsigned int>&,
+                                                                   const ocpp::types::Optional<std::chrono::seconds>&,
+                                                                   const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                                   const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                                   std::string&) */
+    bool getDiagnostics(const std::string&                                  uri,
+                        const ocpp::types::Optional<unsigned int>&          retries,
+                        const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                        const ocpp::types::Optional<ocpp::types::DateTime>& start,
+                        const ocpp::types::Optional<ocpp::types::DateTime>& stop,
+                        std::string&                                        diagnotic_filename) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getLocalListVersion(int&) */
+    bool getLocalListVersion(int& version) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::remoteStartTransaction(const ocpp::types::Optional<unsigned int>&,
+                                                                           const std::string&,
+                                                                           const ocpp::types::Optional<ocpp::types::ChargingProfile>&) */
+    bool remoteStartTransaction(const ocpp::types::Optional<unsigned int>&                 connector_id,
+                                const std::string&                                         id_tag,
+                                const ocpp::types::Optional<ocpp::types::ChargingProfile>& profile) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::remoteStopTransaction(int) */
+    bool remoteStopTransaction(int transaction_id) override;
+
+    /** @copydoc ocpp::types::ReservationStatus ICentralSystem::IChargePoint::reserveNow(unsigned int,
+                                                                                         const ocpp::types::DateTime&,
+                                                                                         const std::string&,
+                                                                                         const std::string&,
+                                                                                         int)*/
+    ocpp::types::ReservationStatus reserveNow(unsigned int                 connector_id,
+                                              const ocpp::types::DateTime& expiry_date,
+                                              const std::string&           id_tag,
+                                              const std::string&           parent_id_tag,
+                                              int                          reservation_id) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::reset(ocpp::types::ResetType) */
+    bool reset(ocpp::types::ResetType type) override;
+
+    /** @copydoc ocpp::types::UpdateStatus ICentralSystem::IChargePoint::sendLocalList(int,
+                                                                                       const std::vector<ocpp::types::AuthorizationData>&,
+                                                                                       ocpp::types::UpdateType) */
+    ocpp::types::UpdateStatus sendLocalList(int                                                version,
+                                            const std::vector<ocpp::types::AuthorizationData>& authorization_list,
+                                            ocpp::types::UpdateType                            update_type) override;
+
+    /** @copydoc ocpp::types::ChargingProfileStatus ICentralSystem::IChargePoint::setChargingProfile(unsigned int,
+                                                                                                     const ocpp::types::ChargingProfile&) */
+    ocpp::types::ChargingProfileStatus setChargingProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile) override;
+
+    /** @copydoc ocpp::types::TriggerMessageStatus ICentralSystem::IChargePoint::triggerMessage(ocpp::types::MessageTrigger,
+                                                                                                const ocpp::types::Optional<unsigned int>) */
+    ocpp::types::TriggerMessageStatus triggerMessage(ocpp::types::MessageTrigger               message,
+                                                     const ocpp::types::Optional<unsigned int> connector_id) override;
+
+    /** @copydoc ocpp::types::UnlockStatus ICentralSystem::IChargePoint::unlockConnector(unsigned int) */
+    ocpp::types::UnlockStatus unlockConnector(unsigned int connector_id) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::updateFirmware(const std::string&,
+                                                                   const ocpp::types::Optional<unsigned int>&,
+                                                                   const ocpp::types::DateTime&,
+                                                                   const ocpp::types::Optional<std::chrono::seconds>&) */
+    bool updateFirmware(const std::string&                                 uri,
+                        const ocpp::types::Optional<unsigned int>&         retries,
+                        const ocpp::types::DateTime&                       retrieve_date,
+                        const ocpp::types::Optional<std::chrono::seconds>& retry_interval) override;
 
     // IRpc::IListener interface
 
@@ -86,6 +218,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     std::shared_ptr<ocpp::rpc::RpcServer::Client> m_rpc;
     /** @brief Message dispatcher */
     ocpp::messages::MessageDispatcher m_msg_dispatcher;
+    /** @brief Message sender */
+    ocpp::messages::GenericMessageSender m_msg_sender;
 };
 
 } // namespace centralsystem

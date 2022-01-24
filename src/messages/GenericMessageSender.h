@@ -19,7 +19,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef GENERICMESSAGESENDER_H
 #define GENERICMESSAGESENDER_H
 
-#include "IChargePointConfig.h"
 #include "IRequestFifo.h"
 #include "IRpc.h"
 #include "MessagesConverter.h"
@@ -58,6 +57,12 @@ class GenericMessageSender
      * @return true if the connection is active, false otherwise
      */
     bool isConnected() const { return m_rpc.isConnected(); }
+
+    /**
+         * @brief Set the call request timeout
+         * @param timeout New timeout value
+         */
+    void setTimeout(std::chrono::milliseconds timeout) { m_timeout = timeout; }
 
     /**
      * @brief Execute a call request

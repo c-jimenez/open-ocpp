@@ -144,7 +144,7 @@ class IChargePoint
      * @param vendor_id Identifies the vendor specific implementation
      * @param message_id Identifies the message
      * @param request_data Data associated to the request
-     * @param status Response status
+     * @param status Response status (see DataTransferStatus documentation)
      * @param response_data Data associated with the response
      * @return true if the data transfer has been done, false otherwise
      */

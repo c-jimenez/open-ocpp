@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Database.h"
 #include "ICentralSystem.h"
 #include "InternalConfigManager.h"
+#include "MessagesConverter.h"
 #include "RpcServer.h"
 #include "Timer.h"
 #include "TimerPool.h"
@@ -87,6 +88,9 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     ocpp::database::Database m_database;
     /** @brief Internal configuration manager */
     ocpp::config::InternalConfigManager m_internal_config;
+
+    /** @brief Messages converter */
+    ocpp::messages::MessagesConverter m_messages_converter;
 
     /** @brief Websocket server */
     std::unique_ptr<ocpp::websockets::IWebsocketServer> m_ws_server;

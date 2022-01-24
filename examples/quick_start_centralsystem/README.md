@@ -7,6 +7,7 @@ This example simulates a central system which accepts any charge point.
 The central system loops on its connected charge points. For each charge point it simulates the following operations :
 
 * Get configuration
+* Set heartbeat interval to 10s
 * Trigger messages : status notification, meter values
 
 There is a 10s break between 2 charge points communication.

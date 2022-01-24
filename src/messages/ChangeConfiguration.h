@@ -29,7 +29,7 @@ namespace messages
 {
 
 /** @brief Action corresponding to the ChangeConfiguration messages */
-static const std::string CHANGECONFIGURATION_ACTION = "ChangeConfiguration";
+static const std::string CHANGE_CONFIGURATION_ACTION = "ChangeConfiguration";
 
 /** @brief ChangeConfiguration.req message */
 struct ChangeConfigurationReq

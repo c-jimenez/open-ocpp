@@ -31,15 +31,15 @@ namespace chargepoint
 ConfigManager::ConfigManager(ocpp::config::IOcppConfig&                      ocpp_config,
                              const ocpp::messages::GenericMessagesConverter& messages_converter,
                              ocpp::messages::IMessageDispatcher&             msg_dispatcher)
-    : GenericMessageHandler<GetConfigurationReq, GetConfigurationConf>(GETCONFIGURATION_ACTION, messages_converter),
-      GenericMessageHandler<ChangeConfigurationReq, ChangeConfigurationConf>(CHANGECONFIGURATION_ACTION, messages_converter),
+    : GenericMessageHandler<GetConfigurationReq, GetConfigurationConf>(GET_CONFIGURATION_ACTION, messages_converter),
+      GenericMessageHandler<ChangeConfigurationReq, ChangeConfigurationConf>(CHANGE_CONFIGURATION_ACTION, messages_converter),
       m_ocpp_config(ocpp_config),
       m_specific_checks(),
       m_listeners()
 {
-    msg_dispatcher.registerHandler(GETCONFIGURATION_ACTION,
+    msg_dispatcher.registerHandler(GET_CONFIGURATION_ACTION,
                                    *dynamic_cast<GenericMessageHandler<GetConfigurationReq, GetConfigurationConf>*>(this));
-    msg_dispatcher.registerHandler(CHANGECONFIGURATION_ACTION,
+    msg_dispatcher.registerHandler(CHANGE_CONFIGURATION_ACTION,
                                    *dynamic_cast<GenericMessageHandler<ChangeConfigurationReq, ChangeConfigurationConf>*>(this));
 }
 

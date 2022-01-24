@@ -47,6 +47,11 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @copydoc bool ICentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ICentralSystem::IChargePoint>) */
     void chargePointConnected(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint) override;
 
+    // API
+
+    /** @brief Get the list of the connected charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& chargePoints() { return m_chargepoints; }
+
   private:
     /** @brief Connected charge points */
     std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> m_chargepoints;
