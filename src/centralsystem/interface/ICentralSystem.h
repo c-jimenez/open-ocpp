@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "AuthorizationData.h"
 #include "ChargingProfile.h"
 #include "ICentralSystemConfig.h"
+#include "IChargePointRequestHandler.h"
 #include "KeyValue.h"
 
 #include <memory>
@@ -108,6 +109,9 @@ class ICentralSystem
 
         /** @brief Disconnect the charge point */
         virtual void disconnect() = 0;
+
+        /** @brief Register the event handler */
+        virtual void registerHandler(IChargePointRequestHandler& handler) = 0;
 
         // OCPP operations
 

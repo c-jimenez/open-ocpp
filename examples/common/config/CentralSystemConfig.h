@@ -49,10 +49,17 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
 
     /** @brief Listen URL */
     std::string listenUrl() const override { return getString("ListenUrl"); }
-    /** @brief Enable HTTP basic authentication */
-    bool httpBasicAuthent() const override { return getBool("HttpBasicAuthent"); }
     /** @brief Call request timeout */
     std::chrono::milliseconds callRequestTimeout() const override { return get<std::chrono::milliseconds>("CallRequestTimeout"); }
+    /** @brief Boot notification retry interval */
+    std::chrono::seconds bootNotificationRetryInterval() const override
+    {
+        return get<std::chrono::seconds>("BootNotificationRetryInterval");
+    }
+    /** @brief Heartbeat interval */
+    std::chrono::seconds heartbeatInterval() const override { return get<std::chrono::seconds>("HeartbeatInterval"); }
+    /** @brief Enable HTTP basic authentication */
+    bool httpBasicAuthent() const override { return getBool("HttpBasicAuthent"); }
     /** @brief Cipher list to use for TLSv1.2 connections */
     std::string tlsv12CipherList() const override { return getString("Tlsv12CipherList"); }
     /** @brief Cipher list to use for TLSv1.3 connections */

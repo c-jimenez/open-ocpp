@@ -234,8 +234,8 @@ void CentralSystem::rpcClientConnected(const std::string& chargepoint_id, std::s
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
 
     // Instanciate proxy
-    std::shared_ptr<ICentralSystem::IChargePoint> chargepoint(new ChargePointProxy(
-        chargepoint_id, client, m_stack_config.jsonSchemasPath(), m_messages_converter, m_stack_config.callRequestTimeout()));
+    std::shared_ptr<ICentralSystem::IChargePoint> chargepoint(
+        new ChargePointProxy(chargepoint_id, client, m_stack_config.jsonSchemasPath(), m_messages_converter, m_stack_config));
 
     // Notify connection
     m_events_handler.chargePointConnected(chargepoint);

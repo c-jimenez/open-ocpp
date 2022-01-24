@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CHARGEPOINTPROXY_H
 #define CHARGEPOINTPROXY_H
 
+#include "ChargePointHandler.h"
 #include "GenericMessageSender.h"
 #include "ICentralSystem.h"
 #include "MessageDispatcher.h"
@@ -31,7 +32,7 @@ namespace ocpp
 namespace centralsystem
 {
 
-/** @brief Interface for charge point proxy implementations */
+/** @brief Charge point proxy */
 class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::IRpc::IListener, public ocpp::rpc::IRpc::ISpy
 {
   public:
@@ -41,13 +42,13 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
      * @param rpc RPC connection with the charge point
      * @param schemas_path Path to the JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
-     * @param timeout Default call request timeout
+     * @param stack_config Stack configuration
      */
     ChargePointProxy(const std::string&                            identifier,
                      std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                      const std::string&                            schemas_path,
                      ocpp::messages::MessagesConverter&            messages_converter,
-                     std::chrono::milliseconds                     timeout);
+                     const ocpp::config::ICentralSystemConfig&     stack_config);
     /** @brief Destructor */
     virtual ~ChargePointProxy();
 
@@ -61,6 +62,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     /** @copydoc void ICentralSystem::IChargePoint::disconnect() */
     void disconnect() override;
+
+    /** @copydoc void ICentralSystem::IChargePoint::registerHandler(IChargePointRequestHandler&) */
+    void registerHandler(IChargePointRequestHandler& handler) override { m_user_handler = &handler; }
 
     // OCPP operations
 
@@ -220,6 +224,10 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     ocpp::messages::MessageDispatcher m_msg_dispatcher;
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender m_msg_sender;
+    /** @brief Request handler */
+    ChargePointHandler m_handler;
+    /** @brief User request handler */
+    IChargePointRequestHandler* m_user_handler;
 };
 
 } // namespace centralsystem

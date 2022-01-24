@@ -8,7 +8,7 @@ The central system loops on its connected charge points. For each charge point i
 
 * Get configuration
 * Set heartbeat interval to 10s
-* Trigger messages : status notification, meter values
+* Trigger messages : status notification, meter values, heartbeat
 
 There is a 10s break between 2 charge points communication.
 

@@ -7,6 +7,7 @@
 add_library(centralsystem STATIC
     CentralSystem.cpp
 
+    chargepoint/ChargePointHandler.cpp
     chargepoint/ChargePointProxy.cpp
 )
 

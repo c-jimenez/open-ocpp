@@ -155,6 +155,10 @@ int main(int argc, char* argv[])
             trigger_status = chargepoint->triggerMessage(MessageTrigger::MeterValues, 0);
             std::cout << TriggerMessageStatusHelper.toString(trigger_status) << std::endl;
 
+            std::cout << "Trigger heartbeat..." << std::endl;
+            trigger_status = chargepoint->triggerMessage(MessageTrigger::Heartbeat, Optional<unsigned int>());
+            std::cout << TriggerMessageStatusHelper.toString(trigger_status) << std::endl;
+
             std::this_thread::sleep_for(std::chrono::seconds(10));
         }
     }

@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
 #include "GetLocalListVersion.h"
+#include "ICentralSystemConfig.h"
 #include "Logger.h"
 #include "RemoteStartTransaction.h"
 #include "RemoteStopTransaction.h"
@@ -51,8 +52,12 @@ ChargePointProxy::ChargePointProxy(const std::string&                           
                                    std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                                    const std::string&                            schemas_path,
                                    ocpp::messages::MessagesConverter&            messages_converter,
-                                   std::chrono::milliseconds                     timeout)
-    : m_identifier(identifier), m_rpc(rpc), m_msg_dispatcher(schemas_path), m_msg_sender(*m_rpc, messages_converter, timeout)
+                                   const ocpp::config::ICentralSystemConfig&     stack_config)
+    : m_identifier(identifier),
+      m_rpc(rpc),
+      m_msg_dispatcher(schemas_path),
+      m_msg_sender(*m_rpc, messages_converter, stack_config.callRequestTimeout()),
+      m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config)
 {
     m_rpc->registerSpy(*this);
     m_rpc->registerListener(*this);
@@ -750,6 +755,10 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 void ChargePointProxy::rpcDisconnected()
 {
     LOG_WARNING << "[" << m_identifier << "] - Disconnected";
+    if (m_user_handler)
+    {
+        m_user_handler->disconnected();
+    }
 }
 
 /** @copydoc void IRpc::IListener::rpcError() */
