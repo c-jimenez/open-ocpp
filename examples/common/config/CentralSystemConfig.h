@@ -51,6 +51,8 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
     std::string listenUrl() const override { return getString("ListenUrl"); }
     /** @brief Call request timeout */
     std::chrono::milliseconds callRequestTimeout() const override { return get<std::chrono::milliseconds>("CallRequestTimeout"); }
+    /** @brief Websocket PING interval */
+    std::chrono::seconds webSocketPingInterval() const override { return get<std::chrono::seconds>("WebSocketPingInterval"); }
     /** @brief Boot notification retry interval */
     std::chrono::seconds bootNotificationRetryInterval() const override
     {

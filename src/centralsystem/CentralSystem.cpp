@@ -171,7 +171,7 @@ bool CentralSystem::start()
         credentials.client_certificate_authent                = m_stack_config.tlsClientCertificateAuthent();
 
         // Start listening
-        ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials);
+        ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
     }
     else
     {

@@ -47,6 +47,8 @@ class ICentralSystemConfig
     virtual std::string listenUrl() const = 0;
     /** @brief Call request timeout */
     virtual std::chrono::milliseconds callRequestTimeout() const = 0;
+    /** @brief Websocket PING interval */
+    virtual std::chrono::seconds webSocketPingInterval() const = 0;
     /** @brief Boot notification retry interval */
     virtual std::chrono::seconds bootNotificationRetryInterval() const = 0;
     /** @brief Heartbeat interval */
