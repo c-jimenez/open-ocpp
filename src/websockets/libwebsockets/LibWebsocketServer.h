@@ -94,10 +94,10 @@ class LibWebsocketServer : public IWebsocketServer
         /** @brief Destructor */
         virtual ~Client();
 
-        /** @copydoc bool IClient::disconnect() */
-        bool disconnect() override;
+        /** @copydoc bool IClient::disconnect(bool) */
+        bool disconnect(bool notify_disconnected) override;
 
-        /** @copydoc bool IClient::disconnect() */
+        /** @copydoc bool IClient::isConnected() */
         bool isConnected() override;
 
         /** @copydoc bool IClient::send(const void*, size_t) */

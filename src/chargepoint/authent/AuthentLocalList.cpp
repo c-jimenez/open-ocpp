@@ -38,7 +38,7 @@ namespace chargepoint
 /** @brief Constructor */
 AuthentLocalList::AuthentLocalList(ocpp::config::IOcppConfig&                      ocpp_config,
                                    ocpp::database::Database&                       database,
-                                   IInternalConfigManager&                         internal_config,
+                                   ocpp::config::IInternalConfigManager&           internal_config,
                                    const ocpp::messages::GenericMessagesConverter& messages_converter,
                                    ocpp::messages::IMessageDispatcher&             msg_dispatcher)
     : GenericMessageHandler<GetLocalListVersionReq, GetLocalListVersionConf>(GET_LOCAL_LIST_VERSION_ACTION, messages_converter),

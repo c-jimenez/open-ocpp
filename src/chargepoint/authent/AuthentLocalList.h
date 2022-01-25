@@ -32,6 +32,7 @@ namespace config
 {
 class IChargePointConfig;
 class IOcppConfig;
+class IInternalConfigManager;
 } // namespace config
 namespace messages
 {
@@ -42,8 +43,6 @@ class IMessageDispatcher;
 namespace chargepoint
 {
 
-class IInternalConfigManager;
-
 /** @brief Handle charge point authentication local list */
 class AuthentLocalList
     : public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLocalListVersionReq, ocpp::messages::GetLocalListVersionConf>,
@@ -53,7 +52,7 @@ class AuthentLocalList
     /** @brief Constructor */
     AuthentLocalList(ocpp::config::IOcppConfig&                      ocpp_config,
                      ocpp::database::Database&                       database,
-                     IInternalConfigManager&                         internal_config,
+                     ocpp::config::IInternalConfigManager&           internal_config,
                      const ocpp::messages::GenericMessagesConverter& messages_converter,
                      ocpp::messages::IMessageDispatcher&             msg_dispatcher);
 
@@ -98,7 +97,7 @@ class AuthentLocalList
     /** @brief Charge point's database */
     ocpp::database::Database& m_database;
     /** @brief Charge point's internal configuration */
-    IInternalConfigManager& m_internal_config;
+    ocpp::config::IInternalConfigManager& m_internal_config;
 
     /** @brief Current local list version */
     int m_local_list_version;

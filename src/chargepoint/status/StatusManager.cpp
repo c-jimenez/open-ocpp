@@ -45,7 +45,7 @@ namespace chargepoint
 StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         stack_config,
                              ocpp::config::IOcppConfig&                      ocpp_config,
                              IChargePointEventsHandler&                      events_handler,
-                             IInternalConfigManager&                         internal_config,
+                             ocpp::config::IInternalConfigManager&           internal_config,
                              ocpp::helpers::TimerPool&                       timer_pool,
                              ocpp::helpers::WorkerThreadPool&                worker_pool,
                              Connectors&                                     connectors,

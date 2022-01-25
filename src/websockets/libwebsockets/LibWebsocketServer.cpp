@@ -109,37 +109,40 @@ bool LibWebsocketServer::start(const std::string&        url,
             info.protocols             = &m_protocols[0];
             info.retry_and_idle_policy = &m_retry_policy;
             m_credentials              = credentials;
-            if (!m_credentials.tls12_cipher_list.empty())
+            if (m_url.protocol() == "wss")
             {
-                info.ssl_cipher_list = m_credentials.tls12_cipher_list.c_str();
-            }
-            if (!m_credentials.tls13_cipher_list.empty())
-            {
-                info.tls1_3_plus_cipher_list = m_credentials.tls13_cipher_list.c_str();
-            }
-            if (!m_credentials.ecdh_curve.empty())
-            {
-                info.ecdh_curve = m_credentials.ecdh_curve.c_str();
-            }
-            if (!m_credentials.server_certificate.empty())
-            {
-                info.ssl_cert_filepath = m_credentials.server_certificate.c_str();
-            }
-            if (!m_credentials.server_certificate_private_key.empty())
-            {
-                info.ssl_private_key_filepath = m_credentials.server_certificate_private_key.c_str();
-            }
-            if (!m_credentials.server_certificate_private_key_passphrase.empty())
-            {
-                info.ssl_private_key_password = m_credentials.server_certificate_private_key_passphrase.c_str();
-            }
-            if (!m_credentials.server_certificate_ca.empty())
-            {
-                info.ssl_ca_filepath = m_credentials.server_certificate_ca.c_str();
-            }
-            if (m_credentials.client_certificate_authent)
-            {
-                info.options |= LWS_SERVER_OPTION_REQUIRE_VALID_OPENSSL_CLIENT_CERT;
+                if (!m_credentials.tls12_cipher_list.empty())
+                {
+                    info.ssl_cipher_list = m_credentials.tls12_cipher_list.c_str();
+                }
+                if (!m_credentials.tls13_cipher_list.empty())
+                {
+                    info.tls1_3_plus_cipher_list = m_credentials.tls13_cipher_list.c_str();
+                }
+                if (!m_credentials.ecdh_curve.empty())
+                {
+                    info.ecdh_curve = m_credentials.ecdh_curve.c_str();
+                }
+                if (!m_credentials.server_certificate.empty())
+                {
+                    info.ssl_cert_filepath = m_credentials.server_certificate.c_str();
+                }
+                if (!m_credentials.server_certificate_private_key.empty())
+                {
+                    info.ssl_private_key_filepath = m_credentials.server_certificate_private_key.c_str();
+                }
+                if (!m_credentials.server_certificate_private_key_passphrase.empty())
+                {
+                    info.ssl_private_key_password = m_credentials.server_certificate_private_key_passphrase.c_str();
+                }
+                if (!m_credentials.server_certificate_ca.empty())
+                {
+                    info.ssl_ca_filepath = m_credentials.server_certificate_ca.c_str();
+                }
+                if (m_credentials.client_certificate_authent)
+                {
+                    info.options |= LWS_SERVER_OPTION_REQUIRE_VALID_OPENSSL_CLIENT_CERT;
+                }
             }
 
             // Create context
@@ -393,7 +396,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                         if (lws_write(client->m_wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
                         {
                             // Error
-                            client->disconnect();
+                            client->disconnect(true);
                             if (client->m_listener)
                             {
                                 client->m_listener->wsClientError();
@@ -443,11 +446,11 @@ LibWebsocketServer::Client::Client(struct lws* wsi) : m_wsi(wsi), m_connected(tr
 /** @brief Destructor */
 LibWebsocketServer::Client::~Client()
 {
-    disconnect();
+    disconnect(true);
 }
 
-/** @copydoc bool IClient::disconnect() */
-bool LibWebsocketServer::Client::disconnect()
+/** @copydoc bool IClient::disconnect(bool) */
+bool LibWebsocketServer::Client::disconnect(bool notify_disconnected)
 {
     bool ret = false;
 
@@ -457,6 +460,10 @@ bool LibWebsocketServer::Client::disconnect()
         // Disconnect
         m_connected = false;
         ret         = true;
+        if (!notify_disconnected)
+        {
+            m_listener = nullptr;
+        }
 
         // Schedule a close
         lws_callback_on_writable(m_wsi);
@@ -472,7 +479,7 @@ bool LibWebsocketServer::Client::disconnect()
     return ret;
 }
 
-/** @copydoc bool IClient::disconnect() */
+/** @copydoc bool IClient::isConnected() */
 bool LibWebsocketServer::Client::isConnected()
 {
     return m_connected;

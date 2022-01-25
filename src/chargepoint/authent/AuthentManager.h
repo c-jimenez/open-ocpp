@@ -33,6 +33,7 @@ namespace config
 {
 class IChargePointConfig;
 class IOcppConfig;
+class IInternalConfigManager;
 } // namespace config
 namespace messages
 {
@@ -47,7 +48,6 @@ namespace chargepoint
 
 class AuthentCache;
 class AuthentLocalList;
-class IInternalConfigManager;
 
 /** @brief Handle charge point authentication requests */
 class AuthentManager
@@ -57,7 +57,7 @@ class AuthentManager
     AuthentManager(const ocpp::config::IChargePointConfig&         stack_config,
                    ocpp::config::IOcppConfig&                      ocpp_config,
                    ocpp::database::Database&                       database,
-                   IInternalConfigManager&                         internal_config,
+                   ocpp::config::IInternalConfigManager&           internal_config,
                    const ocpp::messages::GenericMessagesConverter& messages_converter,
                    ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                    ocpp::messages::GenericMessageSender&           msg_sender);

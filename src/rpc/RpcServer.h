@@ -33,7 +33,7 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
 {
   public:
     // Forward declarations
-    class IClient;
+    class Client;
     class IListener;
 
     /** @brief Constructor */
@@ -96,20 +96,27 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
          * @param chargepoint_id Charge Point identifier
          * @param client Client connection
          */
-        virtual void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<IClient> client) = 0;
+        virtual void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<Client> client) = 0;
 
         /** @brief Called on critical error */
         virtual void rpcServerError() = 0;
     };
 
     /** @brief RPC server's client connection */
-    class IClient : public RpcBase, public ocpp::websockets::IWebsocketServer::IClient::IListener
+    class Client : public RpcBase, public ocpp::websockets::IWebsocketServer::IClient::IListener
     {
       public:
         /** @brief Constructor */
-        IClient(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket);
+        Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket);
         /** @brief Destructor */
-        virtual ~IClient();
+        virtual ~Client();
+
+        /**
+         * @brief Disconnect the client
+         * @param notify_disconnected Indicate if the listener must be notified when disconnected
+         * @return true if the client has been disconnected, false otherwise
+         */
+        bool disconnect(bool notify_disconnected = true);
 
         // IRpc interface
 

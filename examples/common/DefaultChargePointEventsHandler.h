@@ -29,14 +29,14 @@ SOFTWARE.
 
 #include <vector>
 
-class ChargePointConfig;
+class ChargePointDemoConfig;
 
 /** @brief Default charge point event handlers implementation for the examples */
 class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEventsHandler
 {
   public:
     /** @brief Constructor */
-    DefaultChargePointEventsHandler(ChargePointConfig& config);
+    DefaultChargePointEventsHandler(ChargePointDemoConfig& config);
 
     /** @brief Destructor */
     virtual ~DefaultChargePointEventsHandler();
@@ -133,11 +133,11 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
 
   protected:
     /** @brief Get the configuration */
-    ChargePointConfig& config() { return m_config; }
+    ChargePointDemoConfig& config() { return m_config; }
 
   private:
     /** @brief Configuration */
-    ChargePointConfig& m_config;
+    ChargePointDemoConfig& m_config;
     /** @brief Indicate a pending remote start transaction */
     std::vector<bool> m_remote_start_pending;
     /** @brief Indicate a pending remote stop transaction */

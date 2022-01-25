@@ -23,5 +23,5 @@ ADD_CUSTOM_COMMAND(TARGET quick_start_chargepoint
 )
 ADD_CUSTOM_COMMAND(TARGET quick_start_chargepoint
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/config.ini ${BIN_DIR}/
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/quick_start_chargepoint.ini ${BIN_DIR}/
 )

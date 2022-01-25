@@ -1,6 +1,7 @@
 
 # Common utility class for examples library
 add_library(examples_common STATIC
+    DefaultCentralSystemEventsHandler.cpp
     DefaultChargePointEventsHandler.cpp
 
     config/OcppConfig.cpp
@@ -14,4 +15,5 @@ target_include_directories(examples_common PUBLIC . config simulators)
 target_link_libraries(examples_common
     json
     chargepoint
+    centralsystem
 )

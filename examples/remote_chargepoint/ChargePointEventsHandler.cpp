@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include "ChargePointEventsHandler.h"
-#include "ChargePointConfig.h"
+#include "ChargePointDemoConfig.h"
 #include "IMeter.h"
 #include "ISetpointManager.h"
 #include "String.h"
@@ -34,7 +34,7 @@ using namespace std;
 using namespace ocpp::types;
 
 /** @brief Constructor */
-ChargePointEventsHandler::ChargePointEventsHandler(ChargePointConfig& config)
+ChargePointEventsHandler::ChargePointEventsHandler(ChargePointDemoConfig& config)
     : DefaultChargePointEventsHandler(config), m_meter_simulators(nullptr), m_setpoint_manager(nullptr)
 {
 }

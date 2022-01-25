@@ -805,7 +805,7 @@ bool ChargePoint::doConnect()
     }
     credentials.tls12_cipher_list             = m_stack_config.tlsv12CipherList();
     credentials.tls13_cipher_list             = m_stack_config.tlsv13CipherList();
-    credentials.ecdh_curve                    = m_stack_config.tlsvEcdhCurve();
+    credentials.ecdh_curve                    = m_stack_config.tlsEcdhCurve();
     credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
     credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
     credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();

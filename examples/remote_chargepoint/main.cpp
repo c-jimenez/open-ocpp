@@ -22,14 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ChargePointConfig.h"
+#include "ChargePointDemoConfig.h"
 #include "ChargePointEventsHandler.h"
 #include "IChargePoint.h"
 #include "MainMeterSimulator.h"
 #include "MeterSimulator.h"
-#include "OcppConfig.h"
 #include "SetpointManager.h"
-#include "StackConfig.h"
 #include "String.h"
 
 #include <cstring>
@@ -122,8 +120,8 @@ int main(int argc, char* argv[])
 
     // Configuration
     std::filesystem::path path(working_dir);
-    path /= "config.ini";
-    ChargePointConfig config(path);
+    path /= "remote_chargepoint.ini";
+    ChargePointDemoConfig config(path);
 
     // // Event handler
     ChargePointEventsHandler event_handler(config);

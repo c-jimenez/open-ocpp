@@ -31,7 +31,7 @@ namespace messages
 {
 
 /** @brief Action corresponding to the GetConfiguration messages */
-static const std::string GETCONFIGURATION_ACTION = "GetConfiguration";
+static const std::string GET_CONFIGURATION_ACTION = "GetConfiguration";
 
 /** @brief GetConfiguration.req message */
 struct GetConfigurationReq
