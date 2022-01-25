@@ -1,6 +1,6 @@
 # Open OCPP
 
-**Open OCPP** is an Open Source C++ implementation of the OCPP 1.6 protocol written by the [Open Charge Alliance](https://www.openchargealliance.org/).
+**Open OCPP** is an Open Source C++ implementation of the OCPP 1.6 protocol ([Open Charge Alliance](https://www.openchargealliance.org/)).
 This implementation targets only the Websocket/JSON version of this protocol.
 
 This implementation is based on the following libraries :
@@ -10,13 +10,15 @@ This implementation is based on the following libraries :
 * [rapidjson](https://rapidjson.org/) : JSON serialization/deserialization
 * [doctest](https://github.com/doctest/doctest) : Unit tests
 
-**Table of contents**
+## Table of contents
 
-1. [Features](#features)
-2. [Build](#build)
-3. [Quick start](#quick-start)
-4. [Contributing](#contributing)
-5. [Examples](./examples/README.md)
+* [Features](#features)
+* [Build](#build)
+* [Quick start](#quick-start)
+  + [Charge Point role](#charge-point-role)
+  + [Central System role](#central-system-role)
+* [Contributing](#contributing)
+* [Examples](./examples/README.md)
 
 ## Features
 
@@ -30,9 +32,7 @@ This implementation is based on the following libraries :
 
 As of this version :
 
-* Only websocket client has been implemented
-* Only Charge Point role has been implemented
-* No Charge Point behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress)
+* No Charge Point nor Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress)
 * Nearly all the messages defined in the OCPP 1.6 edition 2 protocol have been implemented
 * Nearly all the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
 
@@ -40,11 +40,18 @@ The user application will have to implement some callbacks to provide the data n
 
 The persistent data handled by **Open OCPP** is stored into a single file which is an [SQLite](https://www.sqlite.org/) database. It contains :
 
-* Internal configuration
-* Persistent data : Central System's registration status, connector state, OCPP transaction related messages when offline, StopTx meter values
-* Badge cache and local list
-* Smart charging profile
-* Logs
+* For Charge Point role :
+
+  + Internal configuration
+  + Persistent data : Central System's registration status, connector state, OCPP transaction related messages when offline, StopTx meter values
+  + Badge cache and local list
+  + Smart charging profile
+  + Logs
+
+* For Central System role :
+
+  + Internal configuration
+  + Logs
 
 The standard OCPP configuration persistency has to be handled by the user application.
 
@@ -56,10 +63,10 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Chare Point role |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
-### Supported OCPP configuration keys
+### Supported OCPP configuration keys (Charge Point role)
 
 In the "Owner" column, "S" means that the configuration key behavior is handled by the stack, "U" means that it must handled by the user application.
 
@@ -160,14 +167,16 @@ And to run the unit tests :
 
 ## Quick start
 
-The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start example](./examples/quick_start_chargepoint/README.md).
+The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md) and the [quick start Central System example](./examples/quick_start_centralsystem/README.md).
 
-The implementation of a program using **Open OCPP** is done in 3 steps :
+### Charge Point role
+
+The implementation of a program using **Open OCPP** in Charge Point role is done in 3 steps :
 * Implementation of the configuration interfaces [IOcppConfig](./src/config/IOcppConfig.h) and [IChargePointConfig](./src/chargepoint/interface/IChargePointConfig.h)
 * Implementation of the event handler interface [IChargePointEventsHandler](./src/chargepoint/interface/IChargePointEventsHandler.h)
 * Instanciation and use of the Charge Point object [IChargePoint](./src/chargepoint/interface/IChargePoint.h)
 
-### Configuration interface
+#### Configuration interface
 
 The configuration interface allow **Open OCPP** to access to the values of the standard OCPP configuration keys and to the user application specific configuration keys.
 
@@ -183,7 +192,7 @@ The configuration interface is split in 2 parts :
 
 In the examples, the interfaces have been implemented to retrieve the values from a file stored into an INI format. This is a simple implementaton which is good to show how to implement these interfaces but which is not the most optimized one since every access to a configuration value implies a conversion from a string. Try to have a better implementation to boost the performances of the software ;)
 
-### Event handler interface
+#### Event handler interface
 
 Most of the OCPP behavior is handled by **Open OCPP** but to complete the implementation of the OCPP standard, some information may be needed by **Open OCPP** (Meter values, change availability permissions...) or some operations may be done by the user application (File upload/download, firmware install...).
 
@@ -193,7 +202,7 @@ Most of the notifications/operations can be left empty if the corresponding OCPP
 
 Please keep in mind that all the calls to the event handler interface are made from different threads managed by **Open OCPP** depending the kind of notification/operation and that the treatment of theses calls must not be blocking (except for file upload/download) since it will have an impact to the global scheduling of **Open OCPP**.
 
-### Charge Point object
+#### Charge Point object
 
 This is the easiest part :)
 
@@ -222,7 +231,7 @@ Once the Charge Point object has been started, **Open OCPP** will continuously t
 
 Connectivity status, registration status and Central System initiated operations will be notified through the event handler interface.
 
-OCPP Charge Point operation are triggered by the Charge Point object interface.
+OCPP Charge Point operations are triggered by the Charge Point object interface.
 
 Extract of a quick start main() :
 
@@ -301,6 +310,161 @@ int main()
 }
 ```
 
+### Central System role
+
+The implementation of a program using **Open OCPP** in Central System role is done in 3 steps :
+* Implementation of the configuration interface [ICentralSystemConfig](./src/centralsystem/interface/ICentralSystemConfig.h)
+* Implementation of the event handler interfaces [ICentralSystemEventsHandler](./src/centralsystem/interface/ICentralSystemEventsHandler.h) and [IChargePointRequestHandler](./src/centralsystem/interface/IChargePointRequestHandler.h)
+* Instanciation and use of the Central System object [ICentralSystem](./src/centralsystem/interface/ICentralSystem.h)
+
+#### Configuration interface
+
+The configuration interface allow **Open OCPP** to access to its configuration values.
+The persistency of the configuration is not handled by **Open OCPP** for 2 main reasons :
+
+* The user application will surely already have a configuration management component
+* The user application may have to access the **Open OCPP** configuration
+
+In the examples, the interface has been implemented to retrieve the values from a file stored into an INI format. This is a simple implementaton which is good to show how to implement this interface but which is not the most optimized one since every access to a configuration value implies a conversion from a string. Try to have a better implementation to boost the performances of the software ;)
+
+#### Event handler interfaces
+
+In Central System role, the OCPP behavior must be implemented by the user application. **Open OCPP** handles all the other layers of the stack (websocket, RPC, JSON serialization/deserialization).
+
+The **Open OCPP** stack will interact with the user application through 2 interfaces :
+
+* [ICentralSystemEventsHandler](./src/centralsystem/interface/ICentralSystemEventsHandler.h) : used for all connection related events (credentials check, connection notification...)
+* [IChargePointRequestHandler](./src/centralsystem/interface/IChargePointRequestHandler.h) : used to handle incoming requests from a Charge Point (boot notification, status notification, start transaction...)
+
+The **ICentralSystemEventsHandler** must be instanciated only once for a Central System implementation.
+
+The **IChargePointRequestHandler** must be instanciated and registered to each connected Charge Point in the **ICentralSystemEventsHandler::chargePointConnected** method implementation.
+
+Example of Charge Point connection handling :
+
+```
+/** @copydoc bool ICentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ICentralSystem::IChargePoint>) */
+void MyCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint)
+{
+    cout << "Charge point [" << chargepoint->identifier() << "] connected" << endl;
+    auto iter_chargepoint = m_chargepoints.find(chargepoint->identifier());
+    if (iter_chargepoint == m_chargepoints.end())
+    {
+        MyChargePointRequestHandler* my_handler = new MyChargePointRequestHandler(*this, chargepoint);
+        chargepoint->registerHandler(*my_handler);
+        m_chargepoints[chargepoint->identifier()] =
+            std::shared_ptr<ChargePointRequestHandler>(my_handler);
+    }
+    else
+    {
+        cout << "Charge point [" << chargepoint->identifier() << "] already connected" << endl;
+        chargepoint.reset();
+    }
+}
+```
+
+Please keep in mind that all the calls to the event handler interface are made from different threads managed by **Open OCPP** depending the kind of notification/operation and that the treatment of theses calls must not be blocking since it will have an impact to the global scheduling of **Open OCPP**.
+
+#### Central System object
+
+This is the easiest part :)
+
+The Central System object is instanciated through a factory interface :
+
+```
+/**
+ * @brief Instanciate a central system
+ * @param stack_config Stack configuration
+ * @param event_handler Stack event handler
+*/
+static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig& stack_config,
+                                              ICentralSystemEventsHandler&              events_handler);
+```
+
+The 2 parameters are the instances of the interfaces you have implemented in the previous steps.
+
+Before starting the Central System object and thus the OCPP stack with the ```start()``` method, you can clear existing persistent data using the following method:
+
+```resetData()``` : clear all the persistent data
+
+Once the Central System object has been started, **Open OCPP** will continuously listen to incoming connections from the Charge Points until a call to the ```stop()``` method which will disconnect all the Charge Points and release the connection.
+
+Connectivity status and Charge Point initiated operations will be notified through the event handler interfaces.
+
+OCPP Central System operations are triggered by the Charge Point proxy interface [ICentralSystem::IChargePoint](./src/centralsystem/interface/ICentralSystem.h) which is instanciated by **Open OCPP** for each connected Charge Point.
+
+Extract of a quick start main() :
+
+```
+int main()
+{
+    // Configuration
+    CentralSystemDemoConfig config("config.ini");
+
+    // Event handler
+    CentralSystemDemoConfig event_handler(config);
+
+    // Instanciate central system
+    std::unique_ptr<ICentralSystem> central_system = ICentralSystem::create(config.stackConfig(), event_handler);
+    central_system->start();
+
+    // From now on the stack is alive :)
+
+    // App loop
+    while (true)
+    {
+        // Wait for at least 1 connected charge point
+        while (event_handler.chargePoints().size() == 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        // For each connected charge point
+        for (auto& iter_chargepoint : event_handler.chargePoints())
+        {
+            {
+                auto chargepoint = iter_chargepoint.second->proxy();
+
+                std::cout << "---------------------------------------------" << std::endl;
+                std::cout << "Charge point : " << chargepoint->identifier() << std::endl;
+                std::cout << "---------------------------------------------" << std::endl;
+
+                std::cout << "Read whole charge point configuration..." << std::endl;
+                std::vector<std::string> keys;
+                std::vector<KeyValue>    config_keys;
+                std::vector<std::string> unknown_keys;
+                if (chargepoint->getConfiguration(keys, config_keys, unknown_keys))
+                {
+                    std::cout << "Configuration keys :" << std::endl;
+                    for (const KeyValue& key_value : config_keys)
+                    {
+                        std::cout << " - " << key_value.key.str() << " = " << (key_value.value.isSet() ? key_value.value.value().str() : "")
+                                  << " " << (key_value.readonly ? "(read-only)" : "") << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "Failed!" << std::endl;
+                }
+
+                std::cout << "Configure heartbeat interval..." << std::endl;
+                ConfigurationStatus config_status = chargepoint->changeConfiguration("HeartbeatInterval", "10");
+                std::cout << ConfigurationStatusHelper.toString(config_status) << std::endl;
+
+                std::cout << "Trigger status notification..." << std::endl;
+                TriggerMessageStatus trigger_status =
+                    chargepoint->triggerMessage(MessageTrigger::StatusNotification, Optional<unsigned int>());
+                std::cout << TriggerMessageStatusHelper.toString(trigger_status) << std::endl;
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+        }
+    }
+
+    return 0;
+}
+```
 
 ## Contributing
 
