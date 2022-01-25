@@ -64,7 +64,7 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     void disconnect() override;
 
     /** @copydoc void ICentralSystem::IChargePoint::registerHandler(IChargePointRequestHandler&) */
-    void registerHandler(IChargePointRequestHandler& handler) override { m_user_handler = &handler; }
+    void registerHandler(IChargePointRequestHandler& handler) override;
 
     // OCPP operations
 

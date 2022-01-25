@@ -80,6 +80,13 @@ void ChargePointProxy::disconnect()
     m_rpc->disconnect(true);
 }
 
+/** @copydoc void ICentralSystem::IChargePoint::registerHandler(IChargePointRequestHandler&) */
+void ChargePointProxy::registerHandler(IChargePointRequestHandler& handler)
+{
+    m_user_handler = &handler;
+    m_handler.registerHandler(handler);
+}
+
 // OCPP operations
 
 /** @copydoc bool ICentralSystem::IChargePoint::cancelReservation(int) */

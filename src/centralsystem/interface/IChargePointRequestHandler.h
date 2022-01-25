@@ -118,7 +118,7 @@ class IChargePointRequestHandler
                                                     int                               meter_start,
                                                     const ocpp::types::Optional<int>& reservation_id,
                                                     const ocpp::types::DateTime&      timestamp,
-                                                    int&                              transaction_id);
+                                                    int&                              transaction_id) = 0;
 
     /**
      * @brief Called when a status notification has been received
