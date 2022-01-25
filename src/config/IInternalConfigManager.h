@@ -23,7 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 namespace ocpp
 {
-namespace chargepoint
+namespace config
 {
 
 /** @brief Interface for internal configuration manager implementations */
@@ -65,7 +65,7 @@ class IInternalConfigManager
     virtual bool getKey(const std::string& key, std::string& value) = 0;
 };
 
-} // namespace chargepoint
+} // namespace config
 } // namespace ocpp
 
 #endif // IINTERNALCONFIGMANAGER_H

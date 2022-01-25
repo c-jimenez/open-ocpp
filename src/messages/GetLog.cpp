@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "GetLog.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "Url.h"
 
 using namespace ocpp::types;
@@ -56,7 +56,7 @@ bool GetLogReqConverter::fromJson(const rapidjson::Value& json, GetLogReq& data,
     ret = ret && extract(log, "latestTimestamp", data.log.latestTimestamp, error_message);
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }

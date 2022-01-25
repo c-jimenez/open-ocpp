@@ -81,15 +81,13 @@ class SmartChargingManager
     // ISmartChargingManager interface
 
     /** @copydoc bool ISmartChargingManager::getSetpoint(unsigned int,
-                                                         ocpp::types::Optional<float>&,
-                                                         unsigned int&,
-                                                         ocpp::types::Optional<float>&,
-                                                         unsigned int&) */
-    bool getSetpoint(unsigned int                  connector_id,
-                     ocpp::types::Optional<float>& charge_point_setpoint,
-                     unsigned int&                 charge_point_number_phases,
-                     ocpp::types::Optional<float>& connector_setpoint,
-                     unsigned int&                 connector_number_phases) override;
+                                                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                         ocpp::types::ChargingRateUnitType) */
+    bool getSetpoint(unsigned int                                               connector_id,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
+                     ocpp::types::ChargingRateUnitType                          unit) override;
 
     /** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ChargingProfile&) */
     bool installTxProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile) override;
@@ -154,16 +152,24 @@ class SmartChargingManager
     void cleanupProfiles();
 
     /** @brief Compute the setpoint of a given connector with a profile list */
-    void computeSetpoint(Connector*                                  connector,
-                         ocpp::types::Optional<float>&               connector_setpoint,
-                         ocpp::types::ChargingRateUnitType&          connector_setpoint_unit,
-                         unsigned int&                               connector_number_phases,
-                         const ProfileDatabase::ChargingProfileList& profiles_list);
+    void computeSetpoint(Connector*                                                 connector,
+                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
+                         ocpp::types::ChargingRateUnitType                          unit,
+                         const ProfileDatabase::ChargingProfileList&                profiles_list);
 
     /** @brief Check if the given profile is active */
     bool isProfileActive(Connector*                                  connector,
                          const ocpp::types::ChargingProfile&         profile,
                          const ocpp::types::ChargingSchedulePeriod*& period);
+
+    /** @brief Fill a setpoint structure with a charging profile and a charging schedule period */
+    void fillSetpoint(ocpp::types::SmartChargingSetpoint&        setpoint,
+                      ocpp::types::ChargingRateUnitType          unit,
+                      const ocpp::types::ChargingProfile&        profile,
+                      const ocpp::types::ChargingSchedulePeriod& period);
+
+    /** @brief Convert charging rate units */
+    float convertToUnit(float value, ocpp::types::ChargingRateUnitType unit, unsigned int number_phases);
 };
 
 } // namespace chargepoint

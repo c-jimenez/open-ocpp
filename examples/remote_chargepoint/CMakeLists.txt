@@ -25,5 +25,5 @@ ADD_CUSTOM_COMMAND(TARGET remote_chargepoint
 )
 ADD_CUSTOM_COMMAND(TARGET remote_chargepoint
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/config.ini ${BIN_DIR}/
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/remote_chargepoint.ini ${BIN_DIR}/
 )

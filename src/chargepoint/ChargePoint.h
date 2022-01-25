@@ -23,9 +23,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Database.h"
 #include "IChargePoint.h"
 #include "IConfigManager.h"
-#include "IRpcClient.h"
 #include "InternalConfigManager.h"
 #include "MessagesConverter.h"
+#include "RpcClient.h"
 #include "Timer.h"
 #include "TimerPool.h"
 #include "WorkerThreadPool.h"
@@ -62,8 +62,9 @@ class MaintenanceManager;
 
 /** @brief Charge point implementation */
 class ChargePoint : public IChargePoint,
-                    public ocpp::rpc::IRpcClient::IRpcClientListener,
-                    public ocpp::rpc::IRpcClient::IRpcClientSpy,
+                    public ocpp::rpc::IRpc::IListener,
+                    public ocpp::rpc::IRpc::ISpy,
+                    public ocpp::rpc::RpcClient::IListener,
                     public IConfigManager::IConfigChangedListener
 {
   public:
@@ -135,51 +136,51 @@ class ChargePoint : public IChargePoint,
     bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
 
     /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
-                                                ocpp::types::Optional<float>&,
-                                                unsigned int&,
-                                                ocpp::types::Optional<float>&,
-                                                unsigned int&) */
-    bool getSetpoint(unsigned int                  connector_id,
-                     ocpp::types::Optional<float>& charge_point_setpoint,
-                     unsigned int&                 charge_point_number_phases,
-                     ocpp::types::Optional<float>& connector_setpoint,
-                     unsigned int&                 connector_number_phases) override;
+                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
+                                                ocpp::types::ChargingRateUnitType) */
+    bool getSetpoint(unsigned int                                               connector_id,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
+                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
+                     ocpp::types::ChargingRateUnitType                          unit) override;
 
     /** @copydoc bool IChargePoint::notifyFirmwareUpdateStatus(bool) */
     bool notifyFirmwareUpdateStatus(bool success) override;
 
-    // IRpcClientListener interface
+    // RpcClient::IListener interface
 
-    /** @copydoc void IRpcClientListener::rpcClientConnected() */
+    /** @copydoc void RpcClient::IListener::rpcClientConnected() */
     void rpcClientConnected() override;
 
-    /** @copydoc void IRpcClientListener::rpcClientFailed() */
+    /** @copydoc void RpcClient::IListener::rpcClientFailed() */
     void rpcClientFailed() override;
 
-    /** @copydoc void IRpcClientListener::rpcClientDisconnected() */
-    void rpcClientDisconnected() override;
+    // IRpc::IListener interface
 
-    /** @copydoc void IRpcClientListener::rpcClientError() */
-    void rpcClientError() override;
+    /** @copydoc void IRpc::IListener::rpcDisconnected() */
+    void rpcDisconnected() override;
 
-    /** @copydoc void IRpcClientListener::rpcClientCallReceived(const std::string&,
-                                           const rapidjson::Value&,
-                                           rapidjson::Document&,
-                                           const char*&,
-                                           std::string&) */
-    bool rpcClientCallReceived(const std::string&      action,
-                               const rapidjson::Value& payload,
-                               rapidjson::Document&    response,
-                               const char*&            error_code,
-                               std::string&            error_message) override;
+    /** @copydoc void IRpc::IListener::rpcError() */
+    void rpcError() override;
 
-    /// IRpcClientSpy interface
+    /** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
+                                                       const rapidjson::Value&,
+                                                       rapidjson::Document&,
+                                                       const char*&,
+                                                       std::string&) */
+    bool rpcCallReceived(const std::string&      action,
+                         const rapidjson::Value& payload,
+                         rapidjson::Document&    response,
+                         const char*&            error_code,
+                         std::string&            error_message) override;
 
-    /** @copydoc void IRpcClientSpy::rcpClientMessageReceived(const std::string&) */
-    void rcpClientMessageReceived(const std::string& msg) override;
+    /// IRpc::ISpy interface
 
-    /** @copydoc void IRpcClientSpy::rcpClientMessageSent(const std::string&) */
-    void rcpClientMessageSent(const std::string& msg) override;
+    /** @copydoc void IRpc::ISpy::rcpMessageReceived(const std::string&) */
+    void rcpMessageReceived(const std::string& msg) override;
+
+    /** @copydoc void IRpc::ISpy::rcpMessageSent(const std::string&) */
+    void rcpMessageSent(const std::string& msg) override;
 
     // IConfigChangedListener interface
 
@@ -202,7 +203,7 @@ class ChargePoint : public IChargePoint,
     /** @brief Database */
     ocpp::database::Database m_database;
     /** @brief Internal configuration manager */
-    InternalConfigManager m_internal_config;
+    ocpp::config::InternalConfigManager m_internal_config;
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
@@ -210,7 +211,7 @@ class ChargePoint : public IChargePoint,
     /** @brief Websocket s*/
     std::unique_ptr<ocpp::websockets::IWebsocketClient> m_ws_client;
     /** @brief RPC client */
-    std::unique_ptr<ocpp::rpc::IRpcClient> m_rpc_client;
+    std::unique_ptr<ocpp::rpc::RpcClient> m_rpc_client;
     /** @brief Message dispatcher */
     std::unique_ptr<ocpp::messages::MessageDispatcher> m_msg_dispatcher;
     /** @brief Message sender */

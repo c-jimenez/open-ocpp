@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "StartTransaction.h"
-#include "IRpcClient.h"
+#include "IRpc.h"
 #include "IdTagInfoConverter.h"
 
 using namespace ocpp::types;
@@ -44,7 +44,7 @@ bool StartTransactionReqConverter::fromJson(const rapidjson::Value& json,
     ret = ret && extract(json, "timestamp", data.timestamp, error_message);
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }
@@ -71,7 +71,7 @@ bool StartTransactionConfConverter::fromJson(const rapidjson::Value& json,
     extract(json, "transactionId", data.transactionId);
     if (!ret)
     {
-        error_code = ocpp::rpc::IRpcClient::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return ret;
 }

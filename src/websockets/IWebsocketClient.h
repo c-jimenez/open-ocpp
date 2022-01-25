@@ -32,7 +32,7 @@ class IWebsocketClient
 {
   public:
     // Forward declarations
-    class IWebsocketClientListener;
+    class IListener;
     struct Credentials;
 
     /** @brief Destructor */
@@ -79,33 +79,25 @@ class IWebsocketClient
      * @brief Register a listener to the websocket events
      * @param listener Listener object
      */
-    virtual void registerListener(IWebsocketClientListener& listener) = 0;
+    virtual void registerListener(IListener& listener) = 0;
 
     /** @brief Interface for the websocket clients listeners */
-    class IWebsocketClientListener
+    class IListener
     {
       public:
         /** @brief Destructor */
-        virtual ~IWebsocketClientListener() { }
+        virtual ~IListener() { }
 
-        /**
-         * @brief Called when connection is successfull
-         */
+        /** @brief Called when connection is successfull */
         virtual void wsClientConnected() = 0;
 
-        /**
-         * @brief Called when connection failed
-         */
+        /** @brief Called when connection failed */
         virtual void wsClientFailed() = 0;
 
-        /**
-         * @brief Called when connection is lost
-         */
+        /** @brief Called when connection is lost */
         virtual void wsClientDisconnected() = 0;
 
-        /**
-         * @brief Called when a critical error occured
-         */
+        /** @brief Called when a critical error occured */
         virtual void wsClientError() = 0;
 
         /**

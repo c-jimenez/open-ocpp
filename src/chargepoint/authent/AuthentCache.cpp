@@ -39,7 +39,7 @@ AuthentCache::AuthentCache(const ocpp::config::IChargePointConfig&         stack
                            ocpp::database::Database&                       database,
                            const ocpp::messages::GenericMessagesConverter& messages_converter,
                            ocpp::messages::IMessageDispatcher&             msg_dispatcher)
-    : GenericMessageHandler<ClearCacheReq, ClearCacheConf>(CLEARCACHE_ACTION, messages_converter),
+    : GenericMessageHandler<ClearCacheReq, ClearCacheConf>(CLEAR_CACHE_ACTION, messages_converter),
       m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),
       m_database(database),
@@ -49,7 +49,7 @@ AuthentCache::AuthentCache(const ocpp::config::IChargePointConfig&         stack
       m_update_query()
 {
     initDatabaseTable();
-    msg_dispatcher.registerHandler(CLEARCACHE_ACTION, *this);
+    msg_dispatcher.registerHandler(CLEAR_CACHE_ACTION, *this);
 }
 
 /** @brief Destructor */

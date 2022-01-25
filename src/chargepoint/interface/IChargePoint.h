@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "SmartChargingSetpoint.h"
 
 #include <memory>
 
@@ -143,7 +144,7 @@ class IChargePoint
      * @param vendor_id Identifies the vendor specific implementation
      * @param message_id Identifies the message
      * @param request_data Data associated to the request
-     * @param status Response status
+     * @param status Response status (see DataTransferStatus documentation)
      * @param response_data Data associated with the response
      * @return true if the data transfer has been done, false otherwise
      */
@@ -164,17 +165,15 @@ class IChargePoint
     /**
      * @brief Get the smart charging setpoints for a connector and the whole charge point
      * @param connector_id Id of the connector
-     * @param charge_point_setpoint Setpoint of the whole charge point in A (not set if no active profile)
-     * @param charge_point_number_phases Number of phases allowed to charge for the whole charge point
-     * @param connector_setpoint Setpoint of the given connector in A (not set if no active profile)
-     * @param connector_number_phases Number of phases allowed to charge for the given connector
+     * @param charge_point_setpoint Setpoint of the whole charge point (not set if no active profile)
+     * @param connector_setpoint Setpoint of the given connector (not set if no active profile)
+     * @param unit Setpoint unit (A or W)
      * @return true if the setpoints have been computed, false otherwise
      */
-    virtual bool getSetpoint(unsigned int                  connector_id,
-                             ocpp::types::Optional<float>& charge_point_setpoint,
-                             unsigned int&                 charge_point_number_phases,
-                             ocpp::types::Optional<float>& connector_setpoint,
-                             unsigned int&                 connector_number_phases) = 0;
+    virtual bool getSetpoint(unsigned int                                               connector_id,
+                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
+                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
+                             ocpp::types::ChargingRateUnitType                          unit = ocpp::types::ChargingRateUnitType::A) = 0;
 
     /**
      * @brief Notify the end of a firmware update operation

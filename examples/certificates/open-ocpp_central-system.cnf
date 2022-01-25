@@ -1,0 +1,25 @@
+[req]
+distinguished_name	= req_distinguished_name
+
+# Stop confirmation prompts. All information is contained below.
+prompt			= no
+
+# The extensions to add to a certificate request
+x509_extensions = v3_ca
+
+[req_distinguished_name]
+countryName =            FR
+stateOrProvinceName =    Savoie
+localityName =           Chambery
+organizationName =       Open OCPP
+organizationalUnitName = Examples
+commonName =             Open OCPP Central System
+emailAddress =           central.system@open-ocpp.org
+
+[v3_ca]
+basicConstraints = CA:FALSE
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = IP:127.0.0.1

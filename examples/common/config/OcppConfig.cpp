@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include "OcppConfig.h"
-#include "StackConfig.h"
+#include "ChargePointConfig.h"
 
 #include <map>
 #include <string>

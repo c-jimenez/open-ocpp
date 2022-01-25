@@ -24,10 +24,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 namespace ocpp
 {
-namespace chargepoint
+namespace config
 {
 
-/** @brief Handle charge point internal configuration */
+/** @brief Handle stack internal configuration */
 class InternalConfigManager : public IInternalConfigManager
 {
   public:
@@ -57,7 +57,7 @@ class InternalConfigManager : public IInternalConfigManager
     void initDatabaseTable();
 
   private:
-    /** @brief Charge point's database */
+    /** @brief Database */
     ocpp::database::Database& m_database;
 
     /** @brief Query to look for a key in the configuration */
@@ -68,7 +68,7 @@ class InternalConfigManager : public IInternalConfigManager
     std::unique_ptr<ocpp::database::Database::Query> m_update_query;
 };
 
-} // namespace chargepoint
+} // namespace config
 } // namespace ocpp
 
 #endif // INTERNALCONFIGMANAGER_H

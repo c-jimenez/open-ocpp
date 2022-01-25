@@ -37,7 +37,7 @@ class ChargePointEventsHandler : public DefaultChargePointEventsHandler
 {
   public:
     /** @brief Constructor */
-    ChargePointEventsHandler(ChargePointConfig& config);
+    ChargePointEventsHandler(ChargePointDemoConfig& config);
 
     /** @brief Destructor */
     virtual ~ChargePointEventsHandler();

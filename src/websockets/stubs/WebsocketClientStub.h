@@ -58,8 +58,8 @@ class WebsocketClientStub : public IWebsocketClient
     /** @copydoc bool IWebsocketClient::send(const void*, size_t) */
     bool send(const void* data, size_t size) override;
 
-    /** @copydoc void IWebsocketClient::registerListener(IWebsocketClientListener&) */
-    void registerListener(IWebsocketClientListener& listener) override;
+    /** @copydoc void IWebsocketClient::registerListener(IListener&) */
+    void registerListener(IListener& listener) override;
 
     /// Stub interface
 
@@ -127,7 +127,7 @@ class WebsocketClientStub : public IWebsocketClient
     /** @brief Sent data size */
     size_t m_sent_size;
     /** @brief Listener */
-    IWebsocketClientListener* m_listener;
+    IListener* m_listener;
     /** @brief Indicate that the next call will fail */
     bool m_next_call_will_fail;
 

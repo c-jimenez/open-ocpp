@@ -45,7 +45,7 @@ namespace chargepoint
 StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         stack_config,
                              ocpp::config::IOcppConfig&                      ocpp_config,
                              IChargePointEventsHandler&                      events_handler,
-                             IInternalConfigManager&                         internal_config,
+                             ocpp::config::IInternalConfigManager&           internal_config,
                              ocpp::helpers::TimerPool&                       timer_pool,
                              ocpp::helpers::WorkerThreadPool&                worker_pool,
                              Connectors&                                     connectors,
@@ -288,7 +288,7 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
     }
     else
     {
-        error_code    = ocpp::rpc::IRpcClient::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+        error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
         error_message = "Invalid connector id";
     }
     return ret;

@@ -106,8 +106,8 @@ bool WebsocketClientStub::send(const void* data, size_t size)
     return returnValue();
 }
 
-/** @copydoc void IWebsocketClient::registerListener(IWebsocketClientListener&) */
-void WebsocketClientStub::registerListener(IWebsocketClientListener& listener)
+/** @copydoc void IWebsocketClient::registerListener(IListener&) */
+void WebsocketClientStub::registerListener(IListener& listener)
 {
     m_listener = &listener;
 }
