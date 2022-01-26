@@ -1,0 +1,23 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: make gcc
+      run: make gcc-native
+    - name: unit tests gcc
+      run: make tests-gcc-native
+    - name: make clang
+      run: make clang-native
+    - name: unit tests clang
+      run: make tests-clang-native
