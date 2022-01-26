@@ -63,18 +63,23 @@ bool ProfileDatabase::clear(ocpp::types::Optional<int>                          
     // Clear all ?
     if (!id.isSet() && !connector_id.isSet() && !purpose.isSet() && !level.isSet())
     {
-        // Clear lists
-        m_chargepoint_max_profiles.clear();
-        m_txdefault_profiles.clear();
-        m_tx_profiles.clear();
-
-        // Clear database
-        auto query = m_database.query("DELETE FROM ChargingProfiles WHERE TRUE;");
-        if (query)
+        // Check existing profiles
+        if (!m_chargepoint_max_profiles.empty() || !m_txdefault_profiles.empty() || !m_tx_profiles.empty())
         {
-            query->exec();
+            // Clear lists
+            m_chargepoint_max_profiles.clear();
+            m_txdefault_profiles.clear();
+            m_tx_profiles.clear();
+
+            // Clear database
+            auto query = m_database.query("DELETE FROM ChargingProfiles WHERE TRUE;");
+            if (query)
+            {
+                query->exec();
+            }
+
+            ret = true;
         }
-        ret = true;
     }
     else if (id.isSet())
     {

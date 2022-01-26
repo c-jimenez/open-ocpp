@@ -47,9 +47,12 @@ bool ClearChargingProfileReqConverter::fromJson(const rapidjson::Value&  json,
                                                 std::string&             error_message)
 {
     extract(json, "id", data.id);
-    bool ret                    = extract(json, "connectorId", data.connectorId, error_message);
-    data.chargingProfilePurpose = ChargingProfilePurposeTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
-    ret                         = ret && extract(json, "stackLevel", data.stackLevel, error_message);
+    bool ret = extract(json, "connectorId", data.connectorId, error_message);
+    if (json.HasMember("chargingProfilePurpose"))
+    {
+        data.chargingProfilePurpose = ChargingProfilePurposeTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
+    }
+    ret = ret && extract(json, "stackLevel", data.stackLevel, error_message);
     if (!ret)
     {
         error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
@@ -62,7 +65,10 @@ bool ClearChargingProfileReqConverter::toJson(const ClearChargingProfileReq& dat
 {
     fill(json, "id", data.id);
     fill(json, "connectorId", data.connectorId);
-    fill(json, "chargingProfilePurpose", ChargingProfilePurposeTypeHelper.toString(data.chargingProfilePurpose));
+    if (data.chargingProfilePurpose.isSet())
+    {
+        fill(json, "chargingProfilePurpose", ChargingProfilePurposeTypeHelper.toString(data.chargingProfilePurpose));
+    }
     fill(json, "stackLevel", data.stackLevel);
     return true;
 }
