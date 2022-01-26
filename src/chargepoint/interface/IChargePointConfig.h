@@ -59,6 +59,14 @@ class IChargePointConfig
     virtual std::string tlsv13CipherList() const = 0;
     /** @brief ECDH curve to use for TLS connections */
     virtual std::string tlsEcdhCurve() const = 0;
+    /** @brief Certification Authority signing chain for the server certificate */
+    virtual std::string tlsServerCertificateCa() const = 0;
+    /** @brief Client certificate */
+    virtual std::string tlsClientCertificate() const = 0;
+    /** @brief Client certificate's private key */
+    virtual std::string tlsClientCertificatePrivateKey() const = 0;
+    /** @brief Client certificate's private key passphrase */
+    virtual std::string tlsClientCertificatePrivateKeyPassphrase() const = 0;
     /** @brief Allow TLS connections using self-signed certificates
      *         (Warning : enabling this feature is not recommended in production) */
     virtual bool tlsAllowSelfSignedCertificates() const = 0;

@@ -76,8 +76,6 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
     std::string tlsServerCertificatePrivateKeyPassphrase() const override { return getString("TlsServerCertificatePrivateKeyPassphrase"); }
     /** @brief Certification Authority signing chain for the server certificate */
     std::string tlsServerCertificateCa() const override { return getString("TlsServerCertificateCa"); }
-    /** @brief Certification Authority signing chain for the clients certificates */
-    std::string tlsClientCertificateCa() const override { return getString("TlsClientCertificateCa"); }
     /** @brief Enable client authentication using certificate */
     bool tlsClientCertificateAuthent() const override { return getBool("TlsClientCertificateAuthent"); }
 
