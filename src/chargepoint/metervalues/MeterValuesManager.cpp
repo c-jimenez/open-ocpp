@@ -421,11 +421,11 @@ void MeterValuesManager::sendMeterValues(unsigned int                           
 
         // Send request
         MeterValuesConf meter_values_conf;
-        m_msg_sender.call(METER_VALUES_ACTION, meter_values_req, meter_values_conf, fifo);
+        m_msg_sender.call(METER_VALUES_ACTION, meter_values_req, meter_values_conf, fifo, connector_id);
     }
 }
 
-/** @brief Compute the measurand list from a CSL confiuration string */
+/** @brief Compute the measurand list from a CSL configuration string */
 std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>> MeterValuesManager::computeMeasurandList(
     const std::string& meter_values, const unsigned int max_count)
 {

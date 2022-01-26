@@ -47,6 +47,7 @@ struct Connector
           status_timer(timer_pool),
           last_notified_status(status),
           transaction_id(0),
+          transaction_id_offline(0),
           transaction_start(),
           transaction_id_tag(),
           reservation_id(0),
@@ -86,6 +87,8 @@ struct Connector
 
     /** @brief Current transaction id */
     int transaction_id;
+    /** @brief Transaction id for offline transactions */
+    int transaction_id_offline;
     /** @brief Start of transaction */
     ocpp::types::DateTime transaction_start;
     /** @brief Id tag associated with the transaction */

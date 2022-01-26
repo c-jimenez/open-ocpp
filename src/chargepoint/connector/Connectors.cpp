@@ -77,6 +77,7 @@ void Connectors::initDatabaseTable()
                                   "[status] INT,"
                                   "[last_notified_status] INT,"
                                   "[transaction_id] INT,"
+                                  "[transaction_id_offline] INT,"
                                   "[transaction_start] BIGINT,"
                                   "[transaction_id_tag] VARCHAR(20),"
                                   "[reservation_id] INT,"
@@ -96,7 +97,7 @@ void Connectors::initDatabaseTable()
     m_find_query   = m_database.query("SELECT * FROM Connectors WHERE id=?;");
     m_insert_query = m_database.query("INSERT INTO Connectors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
     m_update_query = m_database.query("UPDATE Connectors SET [status]=?, [last_notified_status]=?, [transaction_id]=?, "
-                                      "[transaction_start]=?, [transaction_id_tag]=?, [reservation_id]=?, "
+                                      "[transaction_id_offline]=?, [transaction_start]=?, [transaction_id_tag]=?, [reservation_id]=?, "
                                       "[reservation_id_tag]=?, [reservation_parent_id_tag]=?, [reservation_expiry_date]=? WHERE id=?;");
 
     // Load the connector state
@@ -227,17 +228,19 @@ bool Connectors::loadConnector(Connector& connector)
                 connector.status                    = static_cast<ChargePointStatus>(m_find_query->getInt32(1u));
                 connector.last_notified_status      = static_cast<ChargePointStatus>(m_find_query->getInt32(2u));
                 connector.transaction_id            = m_find_query->getInt32(3u);
-                connector.transaction_start         = static_cast<std::time_t>(m_find_query->getInt64(4u));
-                connector.transaction_id_tag        = m_find_query->getString(5u);
-                connector.reservation_id            = m_find_query->getInt32(6u);
-                connector.reservation_id_tag        = m_find_query->getString(7u);
-                connector.reservation_parent_id_tag = m_find_query->getString(8u);
-                connector.reservation_expiry_date   = static_cast<std::time_t>(m_find_query->getInt64(9u));
+                connector.transaction_id_offline    = m_find_query->getInt32(4u);
+                connector.transaction_start         = static_cast<std::time_t>(m_find_query->getInt64(5u));
+                connector.transaction_id_tag        = m_find_query->getString(6u);
+                connector.reservation_id            = m_find_query->getInt32(7u);
+                connector.reservation_id_tag        = m_find_query->getString(8u);
+                connector.reservation_parent_id_tag = m_find_query->getString(9u);
+                connector.reservation_expiry_date   = static_cast<std::time_t>(m_find_query->getInt64(10u));
 
                 LOG_DEBUG << "Connector " << connector.id << " loaded from database : "
                           << "status = " << ChargePointStatusHelper.toString(connector.status)
                           << " - last_notified_status = " << ChargePointStatusHelper.toString(connector.last_notified_status)
                           << " - transaction_id = " << connector.transaction_id
+                          << " - transaction_id_offline = " << connector.transaction_id_offline
                           << " - transaction_start = " << connector.transaction_start.str()
                           << " - transaction_id_tag = " << connector.transaction_id_tag
                           << " - reservation_id = " << connector.reservation_id
@@ -270,13 +273,14 @@ bool Connectors::saveConnector(const Connector& connector)
         m_update_query->bind(0u, static_cast<int>(connector.status));
         m_update_query->bind(1u, static_cast<int>(connector.last_notified_status));
         m_update_query->bind(2u, connector.transaction_id);
-        m_update_query->bind(3u, connector.transaction_start);
-        m_update_query->bind(4u, connector.transaction_id_tag);
-        m_update_query->bind(5u, connector.reservation_id);
-        m_update_query->bind(6u, connector.reservation_id_tag);
-        m_update_query->bind(7u, connector.reservation_parent_id_tag);
-        m_update_query->bind(8u, connector.reservation_expiry_date);
-        m_update_query->bind(9u, connector.id);
+        m_update_query->bind(3u, connector.transaction_id_offline);
+        m_update_query->bind(4u, connector.transaction_start);
+        m_update_query->bind(5u, connector.transaction_id_tag);
+        m_update_query->bind(6u, connector.reservation_id);
+        m_update_query->bind(7u, connector.reservation_id_tag);
+        m_update_query->bind(8u, connector.reservation_parent_id_tag);
+        m_update_query->bind(9u, connector.reservation_expiry_date);
+        m_update_query->bind(10u, connector.id);
         ret = m_update_query->exec();
         if (ret)
         {
@@ -303,12 +307,13 @@ bool Connectors::createConnector(const Connector& connector)
         m_insert_query->bind(1u, static_cast<int>(connector.status));
         m_insert_query->bind(2u, static_cast<int>(connector.last_notified_status));
         m_insert_query->bind(3u, connector.transaction_id);
-        m_insert_query->bind(4u, connector.transaction_start);
-        m_insert_query->bind(5u, connector.transaction_id_tag);
-        m_insert_query->bind(6u, connector.reservation_id);
-        m_insert_query->bind(7u, connector.reservation_id_tag);
-        m_insert_query->bind(8u, connector.reservation_parent_id_tag);
-        m_insert_query->bind(9u, connector.reservation_expiry_date);
+        m_insert_query->bind(4u, connector.transaction_id_offline);
+        m_insert_query->bind(5u, connector.transaction_start);
+        m_insert_query->bind(6u, connector.transaction_id_tag);
+        m_insert_query->bind(7u, connector.reservation_id);
+        m_insert_query->bind(8u, connector.reservation_id_tag);
+        m_insert_query->bind(9u, connector.reservation_parent_id_tag);
+        m_insert_query->bind(10u, connector.reservation_expiry_date);
         ret = m_insert_query->exec();
         if (ret)
         {
