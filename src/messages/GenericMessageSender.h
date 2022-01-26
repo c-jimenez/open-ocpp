@@ -70,10 +70,15 @@ class GenericMessageSender
      * @param request Request payload
      * @param response Response payload
      * @param request_fifo Optional. Pointer to the request FIFO to use when messages cannot be sent.
+     * @param connector_id Optional. Id of the connector associated to the request.
      * @return Result of the call request (See CallResult documentation)
      */
     template <typename RequestType, typename ResponseType>
-    CallResult call(const std::string& action, const RequestType& request, ResponseType& response, IRequestFifo* request_fifo = nullptr)
+    CallResult call(const std::string& action,
+                    const RequestType& request,
+                    ResponseType&      response,
+                    IRequestFifo*      request_fifo = nullptr,
+                    unsigned int       connector_id = 0)
     {
         CallResult ret = CallResult::Failed;
 
@@ -89,7 +94,7 @@ class GenericMessageSender
             if (req_converter->toJson(request, payload))
             {
                 // Check if request_fifo is empty
-                if (!request_fifo || (request_fifo->size() == 0))
+                if (!request_fifo || request_fifo->empty())
                 {
                     // Execute call
                     rapidjson::Document resp;
@@ -110,7 +115,7 @@ class GenericMessageSender
                         // Request cannot be sent or timed out, queue the message inside the FIFO
                         if (request_fifo)
                         {
-                            request_fifo->push(action, payload);
+                            request_fifo->push(connector_id, action, payload);
                             ret = CallResult::Delayed;
                         }
                     }
@@ -118,7 +123,7 @@ class GenericMessageSender
                 else
                 {
                     // FIFO is not empty, queue the message inside the FIFO to ensure the order of the messages
-                    request_fifo->push(action, payload);
+                    request_fifo->push(connector_id, action, payload);
                     ret = CallResult::Delayed;
                 }
             }

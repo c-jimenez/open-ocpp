@@ -42,17 +42,20 @@ class RequestFifo : public ocpp::messages::IRequestFifo
 
     // IRequestFifo interface
 
-    /** @copydoc void IRequestFifo::push(const std::string&, const rapidjson::Document&) const */
-    void push(const std::string& action, const rapidjson::Document& payload) override;
+    /** @copydoc void IRequestFifo::push(unsigned int, const std::string&, const rapidjson::Document&) const */
+    void push(unsigned int connector_id, const std::string& action, const rapidjson::Document& payload) override;
 
-    /** @copydoc bool IRequestFifo::front(std::string&, const rapidjson::Document&) const */
-    bool front(std::string& action, rapidjson::Document& payload) override;
+    /** @copydoc bool IRequestFifo::front(unsigned int&, std::string&, const rapidjson::Document&) const */
+    bool front(unsigned int& connector_id, std::string& action, rapidjson::Document& payload) override;
 
     /** @@copydoc void IRequestFifo::pop() */
     void pop() override;
 
     /** @copydoc size_t IRequestFifo::size() const */
     size_t size() const override;
+
+    /** @copydoc bool IRequestFifo::empty() const */
+    bool empty() const override { return (size() == 0); }
 
     // RequestFifo interface
 
@@ -63,10 +66,15 @@ class RequestFifo : public ocpp::messages::IRequestFifo
         /** @brief Default constructor */
         Entry() : id(0), action(), request() { }
         /** @brief Constructor */
-        Entry(unsigned int _id, std::string _action, std::string _request) : id(_id), action(_action), request(_request) { }
+        Entry(unsigned int _id, unsigned int _connector_id, std::string _action, std::string _request)
+            : id(_id), connector_id(_connector_id), action(_action), request(_request)
+        {
+        }
 
         /** @brief Id */
         unsigned int id;
+        /** @brief Id of the connector related to the request */
+        unsigned int connector_id;
         /** @brief Action */
         std::string action;
         /** @brief Request */

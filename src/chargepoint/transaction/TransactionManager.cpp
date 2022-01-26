@@ -88,7 +88,7 @@ void TransactionManager::updateConnectionStatus(bool is_connected)
     if (is_connected)
     {
         // Check if the FIFO must be emptied
-        if (m_requests_fifo.size() != 0)
+        if (!m_requests_fifo.empty())
         {
             LOG_INFO << "Restart transaction related FIFO processing";
 
@@ -157,8 +157,8 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
 
                 // Send message
                 StartTransactionConf start_transaction_conf;
-                CallResult           result =
-                    m_msg_sender.call(START_TRANSACTION_ACTION, start_transaction_req, start_transaction_conf, &m_requests_fifo);
+                CallResult           result = m_msg_sender.call(
+                    START_TRANSACTION_ACTION, start_transaction_req, start_transaction_conf, &m_requests_fifo, connector_id);
                 if (result == CallResult::Ok)
                 {
                     // Save response status
@@ -185,7 +185,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                     {
                         std::lock_guard<std::mutex> lock(connector->mutex);
                         connector->transaction_id     = start_transaction_conf.transactionId;
-                        connector->transaction_start  = DateTime::now();
+                        connector->transaction_start  = start_transaction_req.timestamp;
                         connector->transaction_id_tag = id_tag;
                         m_connectors.saveConnector(connector->id);
                     }
@@ -261,7 +261,8 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
 
             // Send message
             StopTransactionConf stop_transaction_conf;
-            CallResult result = m_msg_sender.call(STOP_TRANSACTION_ACTION, stop_transaction_req, stop_transaction_conf, &m_requests_fifo);
+            CallResult          result =
+                m_msg_sender.call(STOP_TRANSACTION_ACTION, stop_transaction_req, stop_transaction_conf, &m_requests_fifo, connector_id);
             if (result == CallResult::Ok)
             {
                 // Update id tag information
@@ -392,7 +393,8 @@ void TransactionManager::processFifoRequest()
                 // Get request
                 std::string         action;
                 rapidjson::Document payload;
-                if (m_requests_fifo.front(action, payload))
+                unsigned int        connector_id;
+                if (m_requests_fifo.front(connector_id, action, payload))
                 {
                     LOG_DEBUG << "Request FIFO processing " << action << "retries : " << m_request_retry_count << "/"
                               << m_ocpp_config.transactionMessageAttempts();
@@ -419,14 +421,24 @@ void TransactionManager::processFifoRequest()
                                 m_authent_manager.update(request.idTag, response.idTagInfo);
                             }
 
+                            // Save the offline transaction id
+                            Connector* connector = m_connectors.getConnector(request.connectorId);
+                            if (connector)
+                            {
+                                connector->transaction_id_offline = response.transactionId;
+                                m_connectors.saveConnector(request.connectorId);
+                            }
+
                             // Check if transaction has been rejected by the Central System
                             if (response.idTagInfo.status != AuthorizationStatus::Accepted)
                             {
                                 // Look for the corresponding transaction
-                                Connector* connector = m_connectors.getConnector(request.connectorId);
-                                if (connector && (connector->transaction_id == -1) &&
-                                    (connector->transaction_id_tag == request.idTag.str()))
+                                if (connector && (connector->transaction_id < 0) && (connector->transaction_start == request.timestamp))
                                 {
+                                    // Update current transaction id
+                                    connector->transaction_id = connector->transaction_id_offline;
+                                    m_connectors.saveConnector(request.connectorId);
+
                                     // Notify end of transaction
                                     m_events_handler.transactionDeAuthorized(connector->id);
                                 }
@@ -435,13 +447,40 @@ void TransactionManager::processFifoRequest()
                     }
                     else if (action == STOP_TRANSACTION_ACTION)
                     {
-                        // Stop transaction => ignore response
+                        // Stop transaction => update transaction id if needed and ignore response
+
+                        int stop_transaction_id = payload["transactionId"].GetInt();
+                        if (stop_transaction_id < 0)
+                        {
+                            // Get the offline transaction id
+                            Connector* connector = m_connectors.getConnector(connector_id);
+                            if (connector)
+                            {
+                                payload["transactionId"].SetInt(connector->transaction_id_offline);
+                            }
+                        }
+
                         StopTransactionConf response;
                         res = m_msg_sender.call(action, payload, response);
                     }
                     else if (action == METER_VALUES_ACTION)
                     {
-                        // Meter values => ignore response
+                        // Meter values => update transaction id if needed and ignore response
+
+                        if (payload.HasMember("transactionId"))
+                        {
+                            int meter_transaction_id = payload["transactionId"].GetInt();
+                            if (meter_transaction_id < 0)
+                            {
+                                // Get the offline transaction id
+                                Connector* connector = m_connectors.getConnector(connector_id);
+                                if (connector)
+                                {
+                                    payload["transactionId"].SetInt(connector->transaction_id_offline);
+                                }
+                            }
+                        }
+
                         MeterValuesConf response;
                         res = m_msg_sender.call(action, payload, response);
                     }
@@ -481,7 +520,20 @@ void TransactionManager::processFifoRequest()
                         }
                     }
                 }
-            } while ((m_requests_fifo.size() != 0) && !m_request_retry_timer.isStarted() && m_msg_sender.isConnected());
+            } while (!m_requests_fifo.empty() && !m_request_retry_timer.isStarted() && m_msg_sender.isConnected());
+
+            // Update current transaction ids if needed
+            if (m_requests_fifo.empty())
+            {
+                for (Connector* connector : m_connectors.getConnectors())
+                {
+                    if (connector->transaction_id < 0)
+                    {
+                        connector->transaction_id = connector->transaction_id_offline;
+                        m_connectors.saveConnector(connector->id);
+                    }
+                }
+            }
         }
         else
         {
