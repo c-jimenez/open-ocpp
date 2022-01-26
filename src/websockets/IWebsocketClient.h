@@ -129,6 +129,17 @@ class IWebsocketClient
         /** @brief ECDH curve, leave empty for default
          *         (OpenSSL format, default = system dependent) */
         std::string ecdh_curve;
+        /** @brief Indicate if the below certificates parameters are path to PEM encoded certificate files (false)
+         *         or if they contain directly PEM encoded certificates (true) */
+        bool encoded_pem_certificates;
+        /** @brief Certification Authority signing chain for the server certificate */
+        std::string server_certificate_ca;
+        /** @brief Client certificate */
+        std::string client_certificate;
+        /** @brief Client certificate's private key */
+        std::string client_certificate_private_key;
+        /** @brief Client certificate's private key passphrase */
+        std::string client_certificate_private_key_passphrase;
         /** @brief Allow TLS connections using self-signed certificates
          *         (Warning : enabling this feature is not recommended in production) */
         bool allow_selfsigned_certificates;
