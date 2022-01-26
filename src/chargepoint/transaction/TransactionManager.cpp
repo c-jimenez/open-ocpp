@@ -185,7 +185,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                     {
                         std::lock_guard<std::mutex> lock(connector->mutex);
                         connector->transaction_id     = start_transaction_conf.transactionId;
-                        connector->transaction_start  = DateTime::now();
+                        connector->transaction_start  = start_transaction_req.timestamp;
                         connector->transaction_id_tag = id_tag;
                         m_connectors.saveConnector(connector->id);
                     }
@@ -433,9 +433,12 @@ void TransactionManager::processFifoRequest()
                             if (response.idTagInfo.status != AuthorizationStatus::Accepted)
                             {
                                 // Look for the corresponding transaction
-                                Connector* connector = m_connectors.getConnector(request.connectorId);
-                                if (connector && (connector->transaction_id < 0) && (connector->transaction_id_tag == request.idTag.str()))
+                                if (connector && (connector->transaction_id < 0) && (connector->transaction_start == request.timestamp))
                                 {
+                                    // Update current transaction id
+                                    connector->transaction_id = connector->transaction_id_offline;
+                                    m_connectors.saveConnector(request.connectorId);
+
                                     // Notify end of transaction
                                     m_events_handler.transactionDeAuthorized(connector->id);
                                 }
