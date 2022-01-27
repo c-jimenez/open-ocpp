@@ -312,6 +312,29 @@ class ICentralSystem
                                     const ocpp::types::Optional<unsigned int>&         retries,
                                     const ocpp::types::DateTime&                       retrieve_date,
                                     const ocpp::types::Optional<std::chrono::seconds>& retry_interval) = 0;
+
+        // Security extensions
+
+        /**
+         * @brief Get the log file
+         * @param type Type of log to retrieve
+         * @param request_id Id of the request
+         * @param uri URI where the log file shall be uploaded
+         * @param retries Number of retries
+         * @param retry_interval Interval between 2 retries
+         * @param start Date and time of the oldest logging information to include in the diagnostics
+         * @param stop Date and time of the latest logging information to include in the diagnostics
+         * @param log_filename Name of the diagnostic file which will be uploaded
+         * @return true if the operation has started, false otherwise
+         */
+        virtual bool getLog(ocpp::types::LogEnumType                            type,
+                            int                                                 request_id,
+                            const std::string&                                  uri,
+                            const ocpp::types::Optional<unsigned int>&          retries,
+                            const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                            const ocpp::types::Optional<ocpp::types::DateTime>& start,
+                            const ocpp::types::Optional<ocpp::types::DateTime>& stop,
+                            std::string&                                        log_filename) = 0;
     };
 };
 

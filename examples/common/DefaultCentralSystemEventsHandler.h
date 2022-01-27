@@ -156,6 +156,9 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
 
         // Security extensions
 
+        /** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
+        void logStatusNotification(ocpp::types::UploadLogStatusEnumType status, const ocpp::types::Optional<int>& request_id) override;
+
         /** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
                                                                                 const ocpp::types::DateTime&,
                                                                                 const std::string&) */

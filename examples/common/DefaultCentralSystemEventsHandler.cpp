@@ -297,6 +297,15 @@ ocpp::types::Optional<ocpp::types::IdTagInfo> DefaultCentralSystemEventsHandler:
 
 // Security extensions
 
+/** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType status,
+                                                                                         const ocpp::types::Optional<int>&    request_id)
+{
+    cout << "[" << m_chargepoint->identifier()
+         << "] - Log status notification : status = " << UploadLogStatusEnumTypeHelper.toString(status)
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
+}
+
 /** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
                                                                         const ocpp::types::DateTime&,
                                                                         const std::string&) */
@@ -304,5 +313,6 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEvent
                                                                                              const ocpp::types::DateTime& timestamp,
                                                                                              const std::string&           message)
 {
-    cout << "Security event : timestamp = " << timestamp.str() << " - type = " << type << " - message = " << message << endl;
+    cout << "[" << m_chargepoint->identifier() << "] - Security event : timestamp = " << timestamp.str() << " - type = " << type
+         << " - message = " << message << endl;
 }

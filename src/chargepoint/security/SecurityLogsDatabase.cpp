@@ -129,6 +129,8 @@ bool SecurityLogsDatabase::exportSecurityEvents(const std::string&              
                     export_file << timestamp << "," << type << "," << message << std::endl;
                 } while (query->next());
             }
+
+            ret = true;
         }
         else
         {
