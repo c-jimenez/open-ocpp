@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "IRequestFifo.h"
 #include "IStatusManager.h"
 #include "Logger.h"
 #include "MeterValueConverter.h"
@@ -45,6 +46,7 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
                                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                                        Connectors&                           connectors,
                                        ocpp::messages::GenericMessageSender& msg_sender,
+                                       ocpp::messages::IRequestFifo&         requests_fifo,
                                        IStatusManager&                       status_manager,
                                        ITriggerMessageManager&               trigger_manager,
                                        IConfigManager&                       config_manager)
@@ -55,6 +57,7 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
       m_connectors(connectors),
       m_msg_sender(msg_sender),
       m_status_manager(status_manager),
+      m_requests_fifo(requests_fifo),
       m_clock_aligned_timer(timer_pool, "Clock aligned"),
       m_find_query(nullptr),
       m_delete_query(nullptr),
@@ -89,12 +92,6 @@ MeterValuesManager::~MeterValuesManager()
     {
         m_connectors.getConnector(i)->meter_values_timer.stop();
     }
-}
-
-/** @copydoc void IMeterValuesManager::setTransactionFifo(ocpp::messages::IRequestFifo&) */
-void MeterValuesManager::setTransactionFifo(ocpp::messages::IRequestFifo& requests_fifo)
-{
-    m_requests_fifo = &requests_fifo;
 }
 
 /** @copydoc bool IMeterValuesManager::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
@@ -413,7 +410,7 @@ void MeterValuesManager::sendMeterValues(unsigned int                           
     if (fillMeterValue(connector_id, measurands, meter_value, context))
     {
         // Don't use FIFO for triggered values
-        IRequestFifo* fifo = m_requests_fifo;
+        IRequestFifo* fifo = &m_requests_fifo;
         if (context == ReadingContext::Trigger)
         {
             fifo = nullptr;

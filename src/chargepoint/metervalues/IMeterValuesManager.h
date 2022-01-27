@@ -19,7 +19,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef IMETERVALUESMANAGER_H
 #define IMETERVALUESMANAGER_H
 
-#include "IRequestFifo.h"
 #include "MeterValue.h"
 
 #include <vector>
@@ -35,12 +34,6 @@ class IMeterValuesManager
   public:
     /** @brief Destructor */
     virtual ~IMeterValuesManager() { }
-
-    /**
-     * @brief Set the transaction related requests FIFO to use
-     * @param requests_fifo Transaction related requests FIFO to use
-     */
-    virtual void setTransactionFifo(ocpp::messages::IRequestFifo& requests_fifo) = 0;
 
     /**
      * @brief Send meter values to Central System for a given connector

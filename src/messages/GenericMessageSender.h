@@ -59,9 +59,9 @@ class GenericMessageSender
     bool isConnected() const { return m_rpc.isConnected(); }
 
     /**
-         * @brief Set the call request timeout
-         * @param timeout New timeout value
-         */
+     * @brief Set the call request timeout
+     * @param timeout New timeout value
+     */
     void setTimeout(std::chrono::milliseconds timeout) { m_timeout = timeout; }
 
     /**

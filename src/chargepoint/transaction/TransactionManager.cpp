@@ -26,11 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ISmartChargingManager.h"
 #include "IStatusManager.h"
 #include "Logger.h"
-#include "MeterValues.h"
 #include "ReservationManager.h"
 #include "StartTransaction.h"
 #include "StopTransaction.h"
-#include "WorkerThreadPool.h"
 
 using namespace ocpp::types;
 using namespace ocpp::messages;
@@ -43,14 +41,11 @@ namespace chargepoint
 /** @brief Constructor */
 TransactionManager::TransactionManager(ocpp::config::IOcppConfig&                      ocpp_config,
                                        IChargePointEventsHandler&                      events_handler,
-                                       ocpp::helpers::TimerPool&                       timer_pool,
-                                       ocpp::helpers::WorkerThreadPool&                worker_pool,
-                                       ocpp::database::Database&                       database,
                                        Connectors&                                     connectors,
                                        const ocpp::messages::GenericMessagesConverter& messages_converter,
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        ocpp::messages::GenericMessageSender&           msg_sender,
-                                       IStatusManager&                                 status_manager,
+                                       ocpp::messages::IRequestFifo&                   requests_fifo,
                                        AuthentManager&                                 authent_manager,
                                        ReservationManager&                             reservation_manager,
                                        IMeterValuesManager&                            meter_values_manager,
@@ -59,44 +54,23 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
       GenericMessageHandler<RemoteStopTransactionReq, RemoteStopTransactionConf>(REMOTE_STOP_TRANSACTION_ACTION, messages_converter),
       m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
-      m_worker_pool(worker_pool),
       m_connectors(connectors),
       m_msg_sender(msg_sender),
-      m_status_manager(status_manager),
       m_authent_manager(authent_manager),
       m_reservation_manager(reservation_manager),
       m_meter_values_manager(meter_values_manager),
       m_smart_charging_manager(smart_charging_manager),
-      m_requests_fifo(database),
-      m_request_retry_timer(timer_pool, "Transaction FIFO"),
-      m_request_retry_count(0)
+      m_requests_fifo(requests_fifo)
+
 {
     msg_dispatcher.registerHandler(REMOTE_START_TRANSACTION_ACTION,
                                    *dynamic_cast<GenericMessageHandler<RemoteStartTransactionReq, RemoteStartTransactionConf>*>(this));
     msg_dispatcher.registerHandler(REMOTE_STOP_TRANSACTION_ACTION,
                                    *dynamic_cast<GenericMessageHandler<RemoteStopTransactionReq, RemoteStopTransactionConf>*>(this));
-    m_meter_values_manager.setTransactionFifo(m_requests_fifo);
-    m_request_retry_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&TransactionManager::processFifoRequest, this)); });
 }
 
 /** @brief Destructor */
 TransactionManager::~TransactionManager() { }
-
-/** @brief Update the charge point connection status */
-void TransactionManager::updateConnectionStatus(bool is_connected)
-{
-    if (is_connected)
-    {
-        // Check if the FIFO must be emptied
-        if (!m_requests_fifo.empty())
-        {
-            LOG_INFO << "Restart transaction related FIFO processing";
-
-            // Start processing FIFO requests
-            m_worker_pool.run<void>(std::bind(&TransactionManager::processFifoRequest, this));
-        }
-    }
-}
 
 /** @brief Start a transaction */
 ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned int connector_id, const std::string& id_tag)
@@ -377,170 +351,6 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStopTransacti
              << " : transactionId = " << request.transactionId;
 
     return true;
-}
-
-/** @brief Process a FIFO request */
-void TransactionManager::processFifoRequest()
-{
-    // Check the connection state
-    if (m_msg_sender.isConnected())
-    {
-        // Check registration status
-        if (m_status_manager.getRegistrationStatus() == RegistrationStatus::Accepted)
-        {
-            do
-            {
-                // Get request
-                std::string         action;
-                rapidjson::Document payload;
-                unsigned int        connector_id;
-                if (m_requests_fifo.front(connector_id, action, payload))
-                {
-                    LOG_DEBUG << "Request FIFO processing " << action << "retries : " << m_request_retry_count << "/"
-                              << m_ocpp_config.transactionMessageAttempts();
-
-                    // Send request
-                    CallResult res;
-                    if (action == START_TRANSACTION_ACTION)
-                    {
-                        // Start transaction => result contains validity information
-                        StartTransactionConf response;
-                        res = m_msg_sender.call(action, payload, response);
-                        if (res == CallResult::Ok)
-                        {
-                            // Extract transaction from the request
-                            StartTransactionReq          request;
-                            StartTransactionReqConverter req_converter;
-                            std::string                  error_message;
-                            const char*                  error_code = nullptr;
-                            req_converter.fromJson(payload, request, error_code, error_message);
-
-                            // Update id tag information
-                            if (response.idTagInfo.status != AuthorizationStatus::ConcurrentTx)
-                            {
-                                m_authent_manager.update(request.idTag, response.idTagInfo);
-                            }
-
-                            // Save the offline transaction id
-                            Connector* connector = m_connectors.getConnector(request.connectorId);
-                            if (connector)
-                            {
-                                connector->transaction_id_offline = response.transactionId;
-                                m_connectors.saveConnector(request.connectorId);
-                            }
-
-                            // Check if transaction has been rejected by the Central System
-                            if (response.idTagInfo.status != AuthorizationStatus::Accepted)
-                            {
-                                // Look for the corresponding transaction
-                                if (connector && (connector->transaction_id < 0) && (connector->transaction_start == request.timestamp))
-                                {
-                                    // Update current transaction id
-                                    connector->transaction_id = connector->transaction_id_offline;
-                                    m_connectors.saveConnector(request.connectorId);
-
-                                    // Notify end of transaction
-                                    m_events_handler.transactionDeAuthorized(connector->id);
-                                }
-                            }
-                        }
-                    }
-                    else if (action == STOP_TRANSACTION_ACTION)
-                    {
-                        // Stop transaction => update transaction id if needed and ignore response
-
-                        int stop_transaction_id = payload["transactionId"].GetInt();
-                        if (stop_transaction_id < 0)
-                        {
-                            // Get the offline transaction id
-                            Connector* connector = m_connectors.getConnector(connector_id);
-                            if (connector)
-                            {
-                                payload["transactionId"].SetInt(connector->transaction_id_offline);
-                            }
-                        }
-
-                        StopTransactionConf response;
-                        res = m_msg_sender.call(action, payload, response);
-                    }
-                    else if (action == METER_VALUES_ACTION)
-                    {
-                        // Meter values => update transaction id if needed and ignore response
-
-                        if (payload.HasMember("transactionId"))
-                        {
-                            int meter_transaction_id = payload["transactionId"].GetInt();
-                            if (meter_transaction_id < 0)
-                            {
-                                // Get the offline transaction id
-                                Connector* connector = m_connectors.getConnector(connector_id);
-                                if (connector)
-                                {
-                                    payload["transactionId"].SetInt(connector->transaction_id_offline);
-                                }
-                            }
-                        }
-
-                        MeterValuesConf response;
-                        res = m_msg_sender.call(action, payload, response);
-                    }
-                    else
-                    {
-                        // Unknown action
-                        res = CallResult::Failed;
-                    }
-                    if (res == CallResult::Ok)
-                    {
-                        LOG_DEBUG << "Request succeeded";
-
-                        // Remove request from the FIFO
-                        m_requests_fifo.pop();
-                        m_request_retry_count = 0;
-                    }
-                    else
-                    {
-                        // Update retry count
-                        m_request_retry_count++;
-                        if (m_request_retry_count > m_ocpp_config.transactionMessageAttempts())
-                        {
-                            // Drop message from the FIFO
-                            LOG_DEBUG << "Request failed, drop message";
-                            m_requests_fifo.pop();
-                            m_request_retry_count = 0;
-                        }
-                        else
-                        {
-                            // Schedule next retry
-                            if (m_msg_sender.isConnected())
-                            {
-                                LOG_DEBUG << "Request failed, next retry in " << m_ocpp_config.transactionMessageRetryInterval().count()
-                                          << "second(s)";
-                                m_request_retry_timer.restart(std::chrono::seconds(m_ocpp_config.transactionMessageRetryInterval()), true);
-                            }
-                        }
-                    }
-                }
-            } while (!m_requests_fifo.empty() && !m_request_retry_timer.isStarted() && m_msg_sender.isConnected());
-
-            // Update current transaction ids if needed
-            if (m_requests_fifo.empty())
-            {
-                for (Connector* connector : m_connectors.getConnectors())
-                {
-                    if (connector->transaction_id < 0)
-                    {
-                        connector->transaction_id = connector->transaction_id_offline;
-                        m_connectors.saveConnector(connector->id);
-                    }
-                }
-            }
-        }
-        else
-        {
-            // Wait to be accepted by the Central System
-            m_request_retry_timer.restart(std::chrono::milliseconds(250u), true);
-        }
-    }
 }
 
 } // namespace chargepoint

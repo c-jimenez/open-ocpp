@@ -36,6 +36,7 @@ class IOcppConfig;
 namespace messages
 {
 class GenericMessageSender;
+class IRequestFifo;
 } // namespace messages
 namespace helpers
 {
@@ -64,6 +65,7 @@ class MeterValuesManager : public IMeterValuesManager,
                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                        Connectors&                           connectors,
                        ocpp::messages::GenericMessageSender& msg_sender,
+                       ocpp::messages::IRequestFifo&         requests_fifo,
                        IStatusManager&                       status_manager,
                        ITriggerMessageManager&               trigger_manager,
                        IConfigManager&                       config_manager);
@@ -72,9 +74,6 @@ class MeterValuesManager : public IMeterValuesManager,
     virtual ~MeterValuesManager();
 
     // IMeterValuesManager interface
-
-    /** @copydoc void IMeterValuesManager::setTransactionFifo(ocpp::messages::IRequestFifo&) */
-    void setTransactionFifo(ocpp::messages::IRequestFifo& requests_fifo) override;
 
     /** @copydoc bool IMeterValuesManager::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
     bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
@@ -114,7 +113,7 @@ class MeterValuesManager : public IMeterValuesManager,
     /** @brief Status manager */
     IStatusManager& m_status_manager;
     /** @brief Transaction related requests FIFO */
-    ocpp::messages::IRequestFifo* m_requests_fifo;
+    ocpp::messages::IRequestFifo& m_requests_fifo;
 
     /** @brief Clock-aligned meter values timer */
     ocpp::helpers::Timer m_clock_aligned_timer;

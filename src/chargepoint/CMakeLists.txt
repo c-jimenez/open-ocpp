@@ -14,13 +14,14 @@ add_library(chargepoint STATIC
     datatransfer/DataTransferManager.cpp
     maintenance/MaintenanceManager.cpp
     metervalues/MeterValuesManager.cpp
+    requestfifo/RequestFifo.cpp
+    requestfifo/RequestFifoManager.cpp
     reservation/ReservationManager.cpp
     security/SecurityLogsDatabase.cpp
     security/SecurityManager.cpp
     smartcharging/ProfileDatabase.cpp
     smartcharging/SmartChargingManager.cpp
     status/StatusManager.cpp
-    transaction/RequestFifo.cpp
     transaction/TransactionManager.cpp
     trigger/TriggerMessageManager.cpp
 )
@@ -36,6 +37,7 @@ target_include_directories(chargepoint PRIVATE authent
                                                interface
                                                maintenance
                                                metervalues
+                                               requestfifo
                                                reservation
                                                security
                                                smartcharging

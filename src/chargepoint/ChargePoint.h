@@ -25,6 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IConfigManager.h"
 #include "InternalConfigManager.h"
 #include "MessagesConverter.h"
+#include "RequestFifo.h"
 #include "RpcClient.h"
 #include "Timer.h"
 #include "TimerPool.h"
@@ -60,6 +61,7 @@ class MeterValuesManager;
 class SmartChargingManager;
 class MaintenanceManager;
 class SecurityManager;
+class RequestFifoManager;
 
 /** @brief Charge point implementation */
 class ChargePoint : public IChargePoint,
@@ -216,6 +218,8 @@ class ChargePoint : public IChargePoint,
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
+    /** @brief Requests FIFO */
+    RequestFifo m_requests_fifo;
 
     /** @brief Websocket s*/
     std::unique_ptr<ocpp::websockets::IWebsocketClient> m_ws_client;
@@ -251,6 +255,8 @@ class ChargePoint : public IChargePoint,
     std::unique_ptr<SecurityManager> m_security_manager;
     /** @brief Maintenance manager */
     std::unique_ptr<MaintenanceManager> m_maintenance_manager;
+    /** @brief Requests FIFO manager */
+    std::unique_ptr<RequestFifoManager> m_requests_fifo_manager;
 
     /** @brief Uptime timer */
     ocpp::helpers::Timer m_uptime_timer;
