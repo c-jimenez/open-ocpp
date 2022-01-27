@@ -115,6 +115,11 @@ class IChargePointConfig
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     virtual unsigned int logMaxEntriesCount() const = 0;
+
+    // Security
+
+    /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
+    virtual unsigned int securityLogMaxEntriesCount() const = 0;
 };
 
 } // namespace config

@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "SecurityEvent.h"
 #include "SmartChargingSetpoint.h"
 
 #include <memory>
@@ -182,6 +183,24 @@ class IChargePoint
      * @return true if the notification has been sent, false otherwise
      */
     virtual bool notifyFirmwareUpdateStatus(bool success) = 0;
+
+    // Security extensions
+
+    /**
+     * @brief Log a security event
+     * @param type Type of the security event
+     * @param message Additional information about the occurred security event
+     * @param critical If non-standard security event, indicates its criticity 
+     *                 (only critival events are forward to central system)
+     * @return true if the security evenst has been logged, false otherwise
+     */
+    virtual bool logSecurityEvent(const std::string& type, const std::string& message, bool critical = false) = 0;
+
+    /**
+     * @brief Clear all the security events
+     * @return true if the security evenst have been cleared, false otherwise
+     */
+    virtual bool clearSecurityEvents() = 0;
 };
 
 } // namespace chargepoint

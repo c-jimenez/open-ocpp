@@ -120,6 +120,11 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     unsigned int logMaxEntriesCount() const override { return get<unsigned int>("LogMaxEntriesCount"); }
 
+    // Security
+
+    /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
+    unsigned int securityLogMaxEntriesCount() const override { return get<unsigned int>("SecurityLogMaxEntriesCount"); };
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile& m_config;

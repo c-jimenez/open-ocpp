@@ -104,6 +104,12 @@ class TransactionManager
      */
     bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason);
 
+    /**
+     * @brief Get the request FIFO
+     * @return Request FIFO
+     */
+    ocpp::messages::IRequestFifo& getFifo() { return m_requests_fifo; }
+
     // GenericMessageHandler interface
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,

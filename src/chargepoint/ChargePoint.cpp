@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessageDispatcher.h"
 #include "MeterValuesManager.h"
 #include "ReservationManager.h"
+#include "SecurityManager.h"
 #include "SmartChargingManager.h"
 #include "StatusManager.h"
 #include "TransactionManager.h"
@@ -79,6 +80,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_data_transfer_manager(),
       m_meter_values_manager(),
       m_smart_charging_manager(),
+      m_security_manager(),
       m_maintenance_manager(),
       m_uptime_timer(m_timer_pool, "Uptime timer"),
       m_uptime(0),
@@ -262,6 +264,7 @@ bool ChargePoint::start()
                                                                      *m_smart_charging_manager);
         m_data_transfer_manager =
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
+        m_security_manager = std::make_unique<SecurityManager>(m_stack_config, m_database, *m_msg_sender, m_transaction_manager->getFifo());
         m_maintenance_manager = std::make_unique<MaintenanceManager>(
             m_events_handler, m_worker_pool, m_messages_converter, *m_msg_dispatcher, *m_msg_sender, m_connectors, *m_trigger_manager);
 
@@ -308,6 +311,7 @@ bool ChargePoint::stop()
         m_data_transfer_manager.reset();
         m_meter_values_manager.reset();
         m_smart_charging_manager.reset();
+        m_security_manager.reset();
         m_maintenance_manager.reset();
 
         // Stop connection
@@ -566,6 +570,42 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
         {
             LOG_ERROR << "Charge Point has not been accepted by Central System";
         }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+// Security extensions
+
+/** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
+bool ChargePoint::logSecurityEvent(const std::string& type, const std::string& message, bool critical)
+{
+    bool ret = false;
+
+    if (m_security_manager.get())
+    {
+        ret = m_security_manager->logSecurityEvent(type, message, critical);
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+bool ChargePoint::clearSecurityEvents()
+{
+    bool ret = false;
+
+    if (m_security_manager.get())
+    {
+        ret = m_security_manager->clearSecurityEvents();
     }
     else
     {

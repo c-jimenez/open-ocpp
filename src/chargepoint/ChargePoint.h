@@ -59,6 +59,7 @@ class DataTransferManager;
 class MeterValuesManager;
 class SmartChargingManager;
 class MaintenanceManager;
+class SecurityManager;
 
 /** @brief Charge point implementation */
 class ChargePoint : public IChargePoint,
@@ -146,6 +147,14 @@ class ChargePoint : public IChargePoint,
 
     /** @copydoc bool IChargePoint::notifyFirmwareUpdateStatus(bool) */
     bool notifyFirmwareUpdateStatus(bool success) override;
+
+    // Security extensions
+
+    /** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
+    bool logSecurityEvent(const std::string& type, const std::string& message, bool critical) override;
+
+    /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+    bool clearSecurityEvents() override;
 
     // RpcClient::IListener interface
 
@@ -238,6 +247,8 @@ class ChargePoint : public IChargePoint,
     std::unique_ptr<MeterValuesManager> m_meter_values_manager;
     /** @brief Smart charging manager */
     std::unique_ptr<SmartChargingManager> m_smart_charging_manager;
+    /** @brief Security manager */
+    std::unique_ptr<SecurityManager> m_security_manager;
     /** @brief Maintenance manager */
     std::unique_ptr<MaintenanceManager> m_maintenance_manager;
 

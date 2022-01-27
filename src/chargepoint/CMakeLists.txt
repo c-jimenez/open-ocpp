@@ -15,6 +15,8 @@ add_library(chargepoint STATIC
     maintenance/MaintenanceManager.cpp
     metervalues/MeterValuesManager.cpp
     reservation/ReservationManager.cpp
+    security/SecurityLogsDatabase.cpp
+    security/SecurityManager.cpp
     smartcharging/ProfileDatabase.cpp
     smartcharging/SmartChargingManager.cpp
     status/StatusManager.cpp
@@ -35,6 +37,7 @@ target_include_directories(chargepoint PRIVATE authent
                                                maintenance
                                                metervalues
                                                reservation
+                                               security
                                                smartcharging
                                                status
                                                transaction
