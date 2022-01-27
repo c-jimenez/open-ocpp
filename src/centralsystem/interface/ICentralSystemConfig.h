@@ -69,8 +69,6 @@ class ICentralSystemConfig
     virtual std::string tlsServerCertificatePrivateKeyPassphrase() const = 0;
     /** @brief Certification Authority signing chain for the server certificate */
     virtual std::string tlsServerCertificateCa() const = 0;
-    /** @brief Certification Authority signing chain for the clients certificates */
-    virtual std::string tlsClientCertificateCa() const = 0;
     /** @brief Enable client authentication using certificate */
     virtual bool tlsClientCertificateAuthent() const = 0;
 

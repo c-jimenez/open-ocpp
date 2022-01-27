@@ -167,8 +167,8 @@ bool CentralSystem::start()
         credentials.server_certificate_private_key            = m_stack_config.tlsServerCertificatePrivateKey();
         credentials.server_certificate_private_key_passphrase = m_stack_config.tlsServerCertificatePrivateKeyPassphrase();
         credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
-        credentials.client_certificate_ca                     = m_stack_config.tlsClientCertificateCa();
         credentials.client_certificate_authent                = m_stack_config.tlsClientCertificateAuthent();
+        credentials.encoded_pem_certificates                  = false;
 
         // Start listening
         ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());

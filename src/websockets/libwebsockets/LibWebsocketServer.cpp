@@ -123,21 +123,44 @@ bool LibWebsocketServer::start(const std::string&        url,
                 {
                     info.ecdh_curve = m_credentials.ecdh_curve.c_str();
                 }
-                if (!m_credentials.server_certificate.empty())
+                if (m_credentials.encoded_pem_certificates)
                 {
-                    info.ssl_cert_filepath = m_credentials.server_certificate.c_str();
+                    // Use PEM encoded data
+                    if (!m_credentials.server_certificate.empty())
+                    {
+                        info.server_ssl_cert_mem     = m_credentials.server_certificate.c_str();
+                        info.server_ssl_cert_mem_len = m_credentials.server_certificate.size();
+                    }
+                    if (!m_credentials.server_certificate_private_key.empty())
+                    {
+                        info.server_ssl_private_key_mem     = m_credentials.server_certificate_private_key.c_str();
+                        info.server_ssl_private_key_mem_len = m_credentials.server_certificate_private_key.size();
+                    }
+                    if (!m_credentials.server_certificate_ca.empty())
+                    {
+                        info.server_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
+                        info.server_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                    }
                 }
-                if (!m_credentials.server_certificate_private_key.empty())
+                else
                 {
-                    info.ssl_private_key_filepath = m_credentials.server_certificate_private_key.c_str();
+                    // Load PEM files from filesystem
+                    if (!m_credentials.server_certificate.empty())
+                    {
+                        info.ssl_cert_filepath = m_credentials.server_certificate.c_str();
+                    }
+                    if (!m_credentials.server_certificate_private_key.empty())
+                    {
+                        info.ssl_private_key_filepath = m_credentials.server_certificate_private_key.c_str();
+                    }
+                    if (!m_credentials.server_certificate_ca.empty())
+                    {
+                        info.ssl_ca_filepath = m_credentials.server_certificate_ca.c_str();
+                    }
                 }
                 if (!m_credentials.server_certificate_private_key_passphrase.empty())
                 {
                     info.ssl_private_key_password = m_credentials.server_certificate_private_key_passphrase.c_str();
-                }
-                if (!m_credentials.server_certificate_ca.empty())
-                {
-                    info.ssl_ca_filepath = m_credentials.server_certificate_ca.c_str();
                 }
                 if (m_credentials.client_certificate_authent)
                 {

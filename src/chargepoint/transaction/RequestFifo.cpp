@@ -38,8 +38,8 @@ RequestFifo::RequestFifo(ocpp::database::Database& database)
 /** @brief Destructor */
 RequestFifo::~RequestFifo() { }
 
-/** @copydoc void IRequestFifo::push(const std::string&, const rapidjson::Document&) const */
-void RequestFifo::push(const std::string& action, const rapidjson::Document& payload)
+/** @copydoc void IRequestFifo::push(unsigned int, const std::string&, const rapidjson::Document&) const */
+void RequestFifo::push(unsigned int connector_id, const std::string& action, const rapidjson::Document& payload)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -52,13 +52,14 @@ void RequestFifo::push(const std::string& action, const rapidjson::Document& pay
     std::string request = buffer.GetString();
 
     // Add a new entry to the FIFO
-    m_fifo.emplace(m_id, action, request);
+    m_fifo.emplace(m_id, connector_id, action, request);
     if (m_insert_query)
     {
         m_insert_query->reset();
         m_insert_query->bind(0, m_id);
-        m_insert_query->bind(1, action);
-        m_insert_query->bind(2, request);
+        m_insert_query->bind(1, connector_id);
+        m_insert_query->bind(2, action);
+        m_insert_query->bind(3, request);
         m_insert_query->exec();
     }
 
@@ -66,8 +67,8 @@ void RequestFifo::push(const std::string& action, const rapidjson::Document& pay
     m_id++;
 }
 
-/** @copydoc bool IRequestFifo::front(std::string&, const rapidjson::Document&) const */
-bool RequestFifo::front(std::string& action, rapidjson::Document& payload)
+/** @copydoc bool IRequestFifo::front(unsigned int&, std::string&, const rapidjson::Document&) const */
+bool RequestFifo::front(unsigned int& connector_id, std::string& action, rapidjson::Document& payload)
 {
     bool ret = false;
 
@@ -77,6 +78,7 @@ bool RequestFifo::front(std::string& action, rapidjson::Document& payload)
         // Get entry from FIFO
         const std::string& request_str = m_fifo.front().request;
         action                         = m_fifo.front().action;
+        connector_id                   = m_fifo.front().connector_id;
 
         // Deserialize request
         payload.Parse(request_str.c_str());
@@ -118,6 +120,7 @@ void RequestFifo::initDatabaseTable()
     // Create database
     auto query = m_database.query("CREATE TABLE IF NOT EXISTS RequestFifo ("
                                   "[id]	INT UNSIGNED,"
+                                  "[connector_id] INT UNSIGNED,"
                                   "[action]	VARCHAR(64),"
                                   "[request] VARCHAR(1024),"
                                   "PRIMARY KEY([id]));");
@@ -128,7 +131,7 @@ void RequestFifo::initDatabaseTable()
 
     // Create parametrized queries
     m_delete_query = m_database.query("DELETE FROM RequestFifo WHERE id=?;");
-    m_insert_query = m_database.query("INSERT INTO RequestFifo VALUES (?, ?, ?);");
+    m_insert_query = m_database.query("INSERT INTO RequestFifo VALUES (?, ?, ?, ?);");
 }
 
 /** @brief Load requests from the database */
@@ -143,12 +146,13 @@ void RequestFifo::load()
             do
             {
                 // Extract table data
-                int         id          = query->getUInt32(0);
-                std::string action      = query->getString(1);
-                std::string request_str = query->getString(2);
+                int          id           = query->getUInt32(0);
+                unsigned int connector_id = query->getUInt32(1);
+                std::string  action       = query->getString(2);
+                std::string  request_str  = query->getString(3);
 
                 // Store request inside the FIFO
-                m_fifo.emplace(id, action, request_str);
+                m_fifo.emplace(id, connector_id, action, request_str);
             } while (query->next());
 
             // Prepare for next entry

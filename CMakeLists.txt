@@ -10,6 +10,9 @@ project(OpenOCPP)
 include(CMakeLists_Options.txt)
 
 # Target toolchain definition and specific compiler flags
+if(NOT DEFINED TARGET)
+    set(TARGET native)
+endif()
 include(CMakeLists_${TARGET}.txt)
 
 # Subdirectories

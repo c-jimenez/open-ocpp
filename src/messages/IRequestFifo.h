@@ -37,18 +37,20 @@ class IRequestFifo
 
     /**
      * @brief Queue a request inside the FIFO
+     * @param connector_id Id of the connector related to the request 
      * @param action RPC action for the request
      * @param payload JSON payload of the request
      */
-    virtual void push(const std::string& action, const rapidjson::Document& payload) = 0;
+    virtual void push(unsigned int connector_id, const std::string& action, const rapidjson::Document& payload) = 0;
 
     /**
      * @brief Get the first request from the FIFO
+     * @param connector_id Id of the connector related to the request
      * @param action RPC action for the request
      * @param payload JSON payload of the request
      * @return true if a request has been retrived, false if the FIFO is empty
      */
-    virtual bool front(std::string& action, rapidjson::Document& payload) = 0;
+    virtual bool front(unsigned int& connector_id, std::string& action, rapidjson::Document& payload) = 0;
 
     /** @brief Delete the first request from the FIFO */
     virtual void pop() = 0;
@@ -58,6 +60,12 @@ class IRequestFifo
      * @return Number of requests inside the FIFO
      */
     virtual size_t size() const = 0;
+
+    /**
+     * @brief Indicate if the FIFO is empty
+     * @return true if the FIFO is empty, false otherwise
+     */
+    virtual bool empty() const = 0;
 };
 
 } // namespace messages

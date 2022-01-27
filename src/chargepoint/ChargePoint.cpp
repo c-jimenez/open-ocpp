@@ -803,13 +803,18 @@ bool ChargePoint::doConnect()
         credentials.user     = m_stack_config.chargePointIdentifier();
         credentials.password = authorization_key;
     }
-    credentials.tls12_cipher_list             = m_stack_config.tlsv12CipherList();
-    credentials.tls13_cipher_list             = m_stack_config.tlsv13CipherList();
-    credentials.ecdh_curve                    = m_stack_config.tlsEcdhCurve();
-    credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
-    credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
-    credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();
-    credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
+    credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
+    credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
+    credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
+    credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
+    credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
+    credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
+    credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+    credentials.allow_selfsigned_certificates             = m_stack_config.tlsAllowSelfSignedCertificates();
+    credentials.allow_expired_certificates                = m_stack_config.tlsAllowExpiredCertificates();
+    credentials.accept_untrusted_certificates             = m_stack_config.tlsAcceptNonTrustedCertificates();
+    credentials.skip_server_name_check                    = m_stack_config.tlsSkipServerNameCheck();
+    credentials.encoded_pem_certificates                  = false;
 
     // Start connection process
     return m_rpc_client->start(connection_url,

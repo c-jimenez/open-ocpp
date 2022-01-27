@@ -141,7 +141,7 @@ class MeterValuesManager : public IMeterValuesManager,
                          ocpp::types::ReadingContext                                                                      context,
                          ocpp::types::Optional<int> transaction_id = ocpp::types::Optional<int>());
 
-    /** @brief Compute the measurand list from a CSL confiuration string */
+    /** @brief Compute the measurand list from a CSL configuration string */
     std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>> computeMeasurandList(
         const std::string& meter_values, const unsigned int max_count);
 

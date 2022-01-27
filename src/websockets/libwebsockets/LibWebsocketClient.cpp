@@ -88,17 +88,59 @@ bool LibWebsocketClient::connect(const std::string&        url,
             info.protocols    = protocols;
             info.timeout_secs = static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::seconds>(connect_timeout).count());
             m_credentials     = credentials;
-            if (!m_credentials.tls12_cipher_list.empty())
+            if (m_url.protocol() == "wss")
             {
-                info.ssl_cipher_list = m_credentials.tls12_cipher_list.c_str();
-            }
-            if (!m_credentials.tls13_cipher_list.empty())
-            {
-                info.tls1_3_plus_cipher_list = m_credentials.tls13_cipher_list.c_str();
-            }
-            if (!m_credentials.ecdh_curve.empty())
-            {
-                info.ecdh_curve = m_credentials.ecdh_curve.c_str();
+                if (!m_credentials.tls12_cipher_list.empty())
+                {
+                    info.client_ssl_cipher_list = m_credentials.tls12_cipher_list.c_str();
+                }
+                if (!m_credentials.tls13_cipher_list.empty())
+                {
+                    info.client_tls_1_3_plus_cipher_list = m_credentials.tls13_cipher_list.c_str();
+                }
+                if (!m_credentials.ecdh_curve.empty())
+                {
+                    info.ecdh_curve = m_credentials.ecdh_curve.c_str();
+                }
+                if (m_credentials.encoded_pem_certificates)
+                {
+                    // Use PEM encoded data
+                    if (!m_credentials.server_certificate_ca.empty())
+                    {
+                        info.client_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
+                        info.client_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                    }
+                    if (!m_credentials.client_certificate.empty())
+                    {
+                        info.client_ssl_cert_mem     = m_credentials.client_certificate.c_str();
+                        info.client_ssl_cert_mem_len = m_credentials.client_certificate.size();
+                    }
+                    if (!m_credentials.client_certificate_private_key.empty())
+                    {
+                        info.client_ssl_key_mem     = m_credentials.client_certificate_private_key.c_str();
+                        info.client_ssl_key_mem_len = m_credentials.client_certificate_private_key.size();
+                    }
+                }
+                else
+                {
+                    // Load PEM files from filesystem
+                    if (!m_credentials.server_certificate_ca.empty())
+                    {
+                        info.client_ssl_ca_filepath = m_credentials.server_certificate_ca.c_str();
+                    }
+                    if (!m_credentials.client_certificate.empty())
+                    {
+                        info.client_ssl_cert_filepath = m_credentials.client_certificate.c_str();
+                    }
+                    if (!m_credentials.client_certificate_private_key.empty())
+                    {
+                        info.client_ssl_private_key_filepath = m_credentials.client_certificate_private_key.c_str();
+                    }
+                }
+                if (!m_credentials.client_certificate_private_key_passphrase.empty())
+                {
+                    info.client_ssl_private_key_password = m_credentials.client_certificate_private_key_passphrase.c_str();
+                }
             }
 
             // Create context
