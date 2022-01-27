@@ -307,3 +307,47 @@ bool DefaultChargePointEventsHandler::downloadFile(const std::string& url, const
 
     return ret;
 }
+
+// Security extensions
+
+/** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&) */
+std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType                            type,
+                                                    const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                                                    const ocpp::types::Optional<ocpp::types::DateTime>& stop_time)
+{
+    cout << "Get log : type = " << LogEnumTypeHelper.toString(type) << endl;
+    (void)start_time;
+    (void)stop_time;
+
+    std::string log_file = "";
+    if (type == LogEnumType::SecurityLog)
+    {
+        // Security logs :
+        // if security logs are handled by the Open OCPP stack, just return a path where
+        // the stack can generate the log file, otherwise you'll have to generate your
+        // own log file as for the diagnostics logs
+        if (m_config.stackConfig().securityLogMaxEntriesCount() > 0)
+        {
+            // The stack will generate the log file into the follwing folder
+            log_file = "/tmp/";
+        }
+        else
+        {
+            // You'll have to implement the log file generation and provide the path
+            // to the generated file
+        }
+    }
+    else
+    {
+        // Dianostic logs
+        log_file = "/tmp/diag.zip";
+
+        std::stringstream ss;
+        ss << "zip " << log_file << " " << m_config.stackConfig().databasePath();
+        system(ss.str().c_str());
+    }
+
+    return log_file;
+}

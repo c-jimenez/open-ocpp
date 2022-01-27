@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Database.h"
 #include "DateTime.h"
+#include "Optional.h"
 
 #include <memory>
 
@@ -64,6 +65,19 @@ class SecurityLogsDatabase
      * @return true if the security evenst have been cleared, false otherwise
      */
     bool clear();
+
+    /**
+     * @brief Export security events into a file
+     * @param filepath Path of the log file to generated
+     * @param start_time If set, contains the date and time of the oldest logging information to
+     *                   include in the log file
+     * @param stop_time If set, contains the date and time of the latest logging information to
+     *                  include in the log file
+     * @return true if the export has been done, false otherwise
+     */
+    bool exportSecurityEvents(const std::string&                                  filepath,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& stop_time);
 
   private:
     /** @brief Stack configuration */

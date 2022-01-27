@@ -54,11 +54,18 @@ class SecurityManager : public ISecurityManager
 
     // ISecurityManager interface
 
-    /** @copydoc bool IChargePoint::ISecurityManager::logSecurityEvent(const std::string&, const std::string&, bool) */
+    /** @copydoc bool ISecurityManager::logSecurityEvent(const std::string&, const std::string&, bool) */
     bool logSecurityEvent(const std::string& type, const std::string& message, bool critical = false) override;
 
-    /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+    /** @copydoc bool ISecurityManager::clearSecurityEvents() */
     bool clearSecurityEvents() override;
+
+    /** bool ISecurityManager::exportSecurityEvents(const std::string&,
+                                                    const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                    const ocpp::types::Optional<ocpp::types::DateTime>&) */
+    bool exportSecurityEvents(const std::string&                                  filepath,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
 
   private:
     /** @brief Stack configuration */

@@ -67,7 +67,7 @@ SecurityManager::~SecurityManager() { }
 
 // ISecurityManager interface
 
-/** @copydoc bool IChargePoint::ISecurityManager::logSecurityEvent(const std::string&, const std::string&, bool) */
+/** @copydoc bool ISecurityManager::logSecurityEvent(const std::string&, const std::string&, bool) */
 bool SecurityManager::logSecurityEvent(const std::string& type, const std::string& message, bool critical)
 {
     bool ret = true;
@@ -113,7 +113,7 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
     return ret;
 }
 
-/** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+/** @copydoc bool ISecurityManager::clearSecurityEvents() */
 bool SecurityManager::clearSecurityEvents()
 {
     bool ret = m_security_logs_db.clear();
@@ -123,6 +123,16 @@ bool SecurityManager::clearSecurityEvents()
         logSecurityEvent(SECEVT_SECURITY_LOG_CLEARED, "");
     }
     return ret;
+}
+
+/** bool ISecurityManager::exportSecurityEvents(const std::string&,
+                                                const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                const ocpp::types::Optional<ocpp::types::DateTime>&) */
+bool SecurityManager::exportSecurityEvents(const std::string&                                  filepath,
+                                           const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                                           const ocpp::types::Optional<ocpp::types::DateTime>& stop_time)
+{
+    return m_security_logs_db.exportSecurityEvents(filepath, start_time, stop_time);
 }
 
 } // namespace chargepoint

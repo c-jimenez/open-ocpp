@@ -19,6 +19,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ISECURITYMANAGER_H
 #define ISECURITYMANAGER_H
 
+#include "DateTime.h"
+#include "Optional.h"
+
 #include <string>
 
 namespace ocpp
@@ -48,6 +51,19 @@ class ISecurityManager
      * @return true if the security evenst have been cleared, false otherwise
      */
     virtual bool clearSecurityEvents() = 0;
+
+    /**
+     * @brief Export security events into a file
+     * @param filepath Path of the log file to generated
+     * @param start_time If set, contains the date and time of the oldest logging information to
+     *                   include in the log file
+     * @param stop_time If set, contains the date and time of the latest logging information to
+     *                  include in the log file
+     * @return true if the export has been done, false otherwise
+     */
+    virtual bool exportSecurityEvents(const std::string&                                  filepath,
+                                      const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                                      const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
 };
 
 } // namespace chargepoint

@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointConfig.h"
 #include "Logger.h"
 
+#include <fstream>
 #include <sstream>
 
 using namespace ocpp::database;
@@ -55,7 +56,7 @@ bool SecurityLogsDatabase::log(const std::string& type, const std::string& messa
         ret = m_insert_query->exec();
         if (!ret)
         {
-            LOG_ERROR << "Unable to store security log";
+            LOG_ERROR << "Unable to store security log : " << m_insert_query->lastError();
         }
     }
 
@@ -73,8 +74,70 @@ bool SecurityLogsDatabase::clear()
         ret = m_clear_query->exec();
         if (!ret)
         {
-            LOG_ERROR << "Unable to clear security logs";
+            LOG_ERROR << "Unable to clear security logs : " << m_clear_query->lastError();
         }
+    }
+
+    return ret;
+}
+
+/** @brief Export security events into a file */
+bool SecurityLogsDatabase::exportSecurityEvents(const std::string&                                  filepath,
+                                                const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                                                const ocpp::types::Optional<ocpp::types::DateTime>& stop_time)
+{
+    bool ret = false;
+
+    // Create export file
+    std::fstream export_file(filepath, export_file.out);
+    if (export_file.is_open())
+    {
+        // Create export request
+        std::stringstream select_query;
+        select_query << "SELECT * FROM SecurityLogs WHERE ";
+        if (start_time.isSet() && stop_time.isSet())
+        {
+            select_query << "timestamp >= " << start_time.value().timestamp() << " AND ";
+            select_query << "timestamp <= " << stop_time.value().timestamp() << ";";
+        }
+        else if (start_time.isSet())
+        {
+            select_query << "timestamp >= " << start_time.value().timestamp() << ";";
+        }
+        else if (stop_time.isSet())
+        {
+            select_query << "timestamp <= " << stop_time.value().timestamp() << ";";
+        }
+        else
+        {
+            select_query << "TRUE;";
+        }
+        auto query = m_database.query(select_query.str());
+        if (query && query->exec())
+        {
+            // Header
+            export_file << "Timestamp,Type,Message" << std::endl;
+
+            // Logs
+            if (query->hasRows())
+            {
+                do
+                {
+                    time_t      timestamp = query->getInt64(1);
+                    std::string type      = query->getString(2);
+                    std::string message   = query->getString(3);
+                    export_file << timestamp << "," << type << "," << message << std::endl;
+                } while (query->next());
+            }
+        }
+        else
+        {
+            LOG_ERROR << "Unable to retrieve logs : " << (query ? query->lastError() : m_database.lastError());
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Unable to create export file : " << filepath;
     }
 
     return ret;

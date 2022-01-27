@@ -189,6 +189,22 @@ class IChargePointEventsHandler
      * @return true if the file has been downloaded, false otherwise
      */
     virtual bool downloadFile(const std::string& url, const std::string& file) = 0;
+
+    // Security extensions
+
+    /**
+     * @brief Called on a log request
+     * @param type Type of log to upload
+     * @param start_time If set, contains the date and time of the oldest logging information to
+     *                   include in the log file
+     * @param stop_time If set, contains the date and time of the latest logging information to
+     *                  include in the log file
+     * @return Path to the generated log file to upload to the Central System, or empty
+     *         string if no log are available
+     */
+    virtual std::string getLog(ocpp::types::LogEnumType                            type,
+                               const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                               const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
 };
 
 } // namespace chargepoint

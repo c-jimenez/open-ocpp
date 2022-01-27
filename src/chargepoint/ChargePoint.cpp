@@ -265,8 +265,15 @@ bool ChargePoint::start()
         m_data_transfer_manager =
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
         m_security_manager = std::make_unique<SecurityManager>(m_stack_config, m_database, *m_msg_sender, m_transaction_manager->getFifo());
-        m_maintenance_manager = std::make_unique<MaintenanceManager>(
-            m_events_handler, m_worker_pool, m_messages_converter, *m_msg_dispatcher, *m_msg_sender, m_connectors, *m_trigger_manager);
+        m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
+                                                                     m_events_handler,
+                                                                     m_worker_pool,
+                                                                     m_messages_converter,
+                                                                     *m_msg_dispatcher,
+                                                                     *m_msg_sender,
+                                                                     m_connectors,
+                                                                     *m_trigger_manager,
+                                                                     *m_security_manager);
 
         // Register specific configuration checks
         m_config_manager->registerCheckFunction(
