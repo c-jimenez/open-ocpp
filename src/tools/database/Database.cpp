@@ -154,6 +154,12 @@ bool Database::Query::bind(int number, const std::vector<uint8_t>& value)
     return ret;
 }
 
+/** @brief Bind a boolean value to a query parameter */
+bool Database::Query::bind(int number, bool value)
+{
+    return bind(number, static_cast<int32_t>(value));
+}
+
 /** @brief Bind a floating point value to a query parameter */
 bool Database::Query::bind(int number, double value)
 {
@@ -214,6 +220,20 @@ bool Database::Query::bind(int number, const std::string& value)
     bool ret = false;
 
     int result = sqlite3_bind_text(m_stmt, number + 1, value.c_str(), -1, nullptr);
+    if (result == SQLITE_OK)
+    {
+        ret = true;
+    }
+
+    return ret;
+}
+
+/** @brief Bind a string value to a query parameter */
+bool Database::Query::bind(int number, const char* value)
+{
+    bool ret = false;
+
+    int result = sqlite3_bind_text(m_stmt, number + 1, value, -1, nullptr);
     if (result == SQLITE_OK)
     {
         ret = true;
@@ -292,6 +312,12 @@ std::vector<uint8_t> Database::Query::getBlob(int column) const
     std::vector<uint8_t> value(size);
     memcpy(&value[0], blob, size);
     return value;
+}
+
+/** @brief Get a boolean value from a query result */
+bool Database::Query::getBool(int column) const
+{
+    return static_cast<bool>(getInt32(column));
 }
 
 /** @brief Get a floating point value from a query result */
