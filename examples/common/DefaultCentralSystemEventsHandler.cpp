@@ -294,3 +294,15 @@ ocpp::types::Optional<ocpp::types::IdTagInfo> DefaultCentralSystemEventsHandler:
     }
     return ret;
 }
+
+// Security extensions
+
+/** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
+                                                                        const ocpp::types::DateTime&,
+                                                                        const std::string&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEventNotification(const std::string&           type,
+                                                                                             const ocpp::types::DateTime& timestamp,
+                                                                                             const std::string&           message)
+{
+    cout << "Security event : timestamp = " << timestamp.str() << " - type = " << type << " - message = " << message << endl;
+}

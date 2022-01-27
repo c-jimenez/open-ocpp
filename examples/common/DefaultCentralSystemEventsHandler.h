@@ -154,6 +154,15 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
             ocpp::types::Reason                         reason,
             const std::vector<ocpp::types::MeterValue>& transaction_data) override;
 
+        // Security extensions
+
+        /** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
+                                                                                const ocpp::types::DateTime&,
+                                                                                const std::string&) */
+        void securityEventNotification(const std::string&           type,
+                                       const ocpp::types::DateTime& timestamp,
+                                       const std::string&           message) override;
+
       private:
         /** @brief Event handler */
         DefaultCentralSystemEventsHandler& m_event_handler;

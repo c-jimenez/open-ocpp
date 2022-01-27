@@ -24,6 +24,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ICentralSystemConfig.h"
 #include "IChargePointRequestHandler.h"
 #include "KeyValue.h"
+#include "SecurityEvent.h"
 
 #include <memory>
 
