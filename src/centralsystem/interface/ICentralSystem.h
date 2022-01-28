@@ -316,6 +316,15 @@ class ICentralSystem
         // Security extensions
 
         /**
+         * @brief Request the send of a specific message
+         * @param message Requested message
+         * @param connector_id Id of the connector on which the message applies
+         * @return Operation status (see TriggerMessageStatus documentation)
+         */
+        virtual ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(
+            ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id) = 0;
+
+        /**
          * @brief Get the log file
          * @param type Type of log to retrieve
          * @param request_id Id of the request

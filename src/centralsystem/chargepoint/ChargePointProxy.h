@@ -190,6 +190,11 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     // Security extensions
 
+    /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
+                                                                                                const ocpp::types::Optional<unsigned int>) */
+    ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
+                                                                     const ocpp::types::Optional<unsigned int> connector_id) override;
+
     /** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
                                                            int,
                                                            const std::string&,
