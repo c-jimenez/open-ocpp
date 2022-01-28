@@ -28,7 +28,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MeterValuesManager.h"
 #include "RequestFifoManager.h"
 #include "ReservationManager.h"
-#include "SecurityManager.h"
 #include "SmartChargingManager.h"
 #include "StatusManager.h"
 #include "TransactionManager.h"
@@ -68,6 +67,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_internal_config(m_database),
       m_messages_converter(),
       m_requests_fifo(m_database),
+      m_security_manager(m_stack_config, m_database, m_messages_converter, m_requests_fifo),
       m_ws_client(),
       m_rpc_client(),
       m_msg_dispatcher(),
@@ -82,7 +82,6 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_data_transfer_manager(),
       m_meter_values_manager(),
       m_smart_charging_manager(),
-      m_security_manager(),
       m_maintenance_manager(),
       m_requests_fifo_manager(),
       m_uptime_timer(m_timer_pool, "Uptime timer"),
@@ -265,7 +264,6 @@ bool ChargePoint::start()
                                                                      *m_smart_charging_manager);
         m_data_transfer_manager =
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
-        m_security_manager    = std::make_unique<SecurityManager>(m_stack_config, m_database, *m_msg_sender, m_requests_fifo);
         m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
                                                                      m_events_handler,
                                                                      m_worker_pool,
@@ -274,7 +272,7 @@ bool ChargePoint::start()
                                                                      *m_msg_sender,
                                                                      m_connectors,
                                                                      *m_trigger_manager,
-                                                                     *m_security_manager);
+                                                                     m_security_manager);
 
         m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
                                                                        m_events_handler,
@@ -293,6 +291,9 @@ bool ChargePoint::start()
         m_config_manager->registerCheckFunction(
             "SecurityProfile", std::bind(&ChargePoint::checkSecurityProfileParameter, this, std::placeholders::_1, std::placeholders::_2));
         m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
+
+        // Start security manager
+        m_security_manager.start(*m_msg_sender);
 
         // Start connection
         ret = doConnect();
@@ -329,12 +330,14 @@ bool ChargePoint::stop()
         m_data_transfer_manager.reset();
         m_meter_values_manager.reset();
         m_smart_charging_manager.reset();
-        m_security_manager.reset();
         m_maintenance_manager.reset();
         m_requests_fifo_manager.reset();
 
         // Stop connection
         ret = m_rpc_client->stop();
+
+        // Stop security manager
+        m_security_manager.stop();
 
         // Free resources
         m_ws_client.reset();
@@ -603,35 +606,13 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
 /** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
 bool ChargePoint::logSecurityEvent(const std::string& type, const std::string& message, bool critical)
 {
-    bool ret = false;
-
-    if (m_security_manager.get())
-    {
-        ret = m_security_manager->logSecurityEvent(type, message, critical);
-    }
-    else
-    {
-        LOG_ERROR << "Stack is not started";
-    }
-
-    return ret;
+    return m_security_manager.logSecurityEvent(type, message, critical);
 }
 
 /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
 bool ChargePoint::clearSecurityEvents()
 {
-    bool ret = false;
-
-    if (m_security_manager.get())
-    {
-        ret = m_security_manager->clearSecurityEvents();
-    }
-    else
-    {
-        LOG_ERROR << "Stack is not started";
-    }
-
-    return ret;
+    return m_security_manager.clearSecurityEvents();
 }
 
 /** @copydoc void RpcClient::IListener::rpcClientConnected() */
@@ -733,6 +714,7 @@ void ChargePoint::initDatabase()
     m_internal_config.initDatabaseTable();
     m_connectors.initDatabaseTable();
     m_requests_fifo.initDatabaseTable();
+    m_security_manager.initDatabaseTable();
 
     // Internal keys
     if (!m_internal_config.keyExist(STACK_VERSION_KEY))

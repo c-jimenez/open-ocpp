@@ -33,6 +33,10 @@ namespace messages
 {
 class IRequestFifo;
 class GenericMessageSender;
+class GenericMessagesConverter;
+struct SecurityEventNotificationReq;
+template <typename DataType>
+class IMessageConverter;
 } // namespace messages
 
 // Main namespace
@@ -44,13 +48,22 @@ class SecurityManager : public ISecurityManager
 {
   public:
     /** @brief Constructor */
-    SecurityManager(const ocpp::config::IChargePointConfig& stack_config,
-                    ocpp::database::Database&               database,
-                    ocpp::messages::GenericMessageSender&   msg_sender,
-                    ocpp::messages::IRequestFifo&           requests_fifo);
+    SecurityManager(const ocpp::config::IChargePointConfig&         stack_config,
+                    ocpp::database::Database&                       database,
+                    const ocpp::messages::GenericMessagesConverter& messages_converter,
+                    ocpp::messages::IRequestFifo&                   requests_fifo);
 
     /** @brief Destructor */
     virtual ~SecurityManager();
+
+    /** @brief Initialize the database table */
+    void initDatabaseTable();
+
+    /** @brief Start the security manager */
+    bool start(ocpp::messages::GenericMessageSender& msg_sender);
+
+    /** @brief Stop the security manager */
+    bool stop();
 
     // ISecurityManager interface
 
@@ -68,15 +81,16 @@ class SecurityManager : public ISecurityManager
                               const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
 
   private:
-    /** @brief Stack configuration */
-    const ocpp::config::IChargePointConfig& m_stack_config;
-    /** @brief Message sender */
-    ocpp::messages::GenericMessageSender& m_msg_sender;
     /** @brief Transaction related requests FIFO */
     ocpp::messages::IRequestFifo& m_requests_fifo;
+    /** @brief Message converter for SecurityEventNotificationReq */
+    ocpp::messages::IMessageConverter<ocpp::messages::SecurityEventNotificationReq>& m_security_event_req_converter;
 
     /** @brief Security logs database */
     SecurityLogsDatabase m_security_logs_db;
+
+    /** @brief Message sender */
+    ocpp::messages::GenericMessageSender* m_msg_sender;
 };
 
 } // namespace chargepoint

@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessagesConverter.h"
 #include "RequestFifo.h"
 #include "RpcClient.h"
+#include "SecurityManager.h"
 #include "Timer.h"
 #include "TimerPool.h"
 #include "WorkerThreadPool.h"
@@ -220,6 +221,8 @@ class ChargePoint : public IChargePoint,
     ocpp::messages::MessagesConverter m_messages_converter;
     /** @brief Requests FIFO */
     RequestFifo m_requests_fifo;
+    /** @brief Security manager */
+    SecurityManager m_security_manager;
 
     /** @brief Websocket s*/
     std::unique_ptr<ocpp::websockets::IWebsocketClient> m_ws_client;
@@ -251,8 +254,6 @@ class ChargePoint : public IChargePoint,
     std::unique_ptr<MeterValuesManager> m_meter_values_manager;
     /** @brief Smart charging manager */
     std::unique_ptr<SmartChargingManager> m_smart_charging_manager;
-    /** @brief Security manager */
-    std::unique_ptr<SecurityManager> m_security_manager;
     /** @brief Maintenance manager */
     std::unique_ptr<MaintenanceManager> m_maintenance_manager;
     /** @brief Requests FIFO manager */

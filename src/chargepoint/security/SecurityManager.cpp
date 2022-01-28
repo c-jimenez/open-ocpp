@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "IChargePointConfig.h"
 #include "Logger.h"
+#include "MessagesConverter.h"
 #include "SecurityEvent.h"
 #include "SecurityEventNotification.h"
 
@@ -54,16 +55,60 @@ static const std::map<std::string, bool> s_security_events = {{SECEVT_FIRMWARE_U
                                                               {SECEVT_INVALID_TLS_CIPHER_SUITE, false}};
 
 /** @brief Constructor */
-SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig& stack_config,
-                                 ocpp::database::Database&               database,
-                                 ocpp::messages::GenericMessageSender&   msg_sender,
-                                 ocpp::messages::IRequestFifo&           requests_fifo)
-    : m_stack_config(stack_config), m_msg_sender(msg_sender), m_requests_fifo(requests_fifo), m_security_logs_db(stack_config, database)
+SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&         stack_config,
+                                 ocpp::database::Database&                       database,
+                                 const ocpp::messages::GenericMessagesConverter& messages_converter,
+                                 ocpp::messages::IRequestFifo&                   requests_fifo)
+    : m_requests_fifo(requests_fifo),
+      m_security_event_req_converter(
+          *messages_converter.getRequestConverter<SecurityEventNotificationReq>(SECURITY_EVENT_NOTIFICATION_ACTION)),
+      m_security_logs_db(stack_config, database),
+      m_msg_sender()
 {
 }
 
 /** @brief Destructor */
 SecurityManager::~SecurityManager() { }
+
+/** @brief Initialize the database table */
+void SecurityManager::initDatabaseTable()
+{
+    m_security_logs_db.initDatabaseTable();
+}
+
+/** @brief Start the security manager */
+bool SecurityManager::start(ocpp::messages::GenericMessageSender& msg_sender)
+{
+    bool ret = false;
+
+    // Check if already started
+    if (!m_msg_sender)
+    {
+        // Save communication objects
+        m_msg_sender = &msg_sender;
+
+        ret = true;
+    }
+
+    return ret;
+}
+
+/** @brief Stop the security manager */
+bool SecurityManager::stop()
+{
+    bool ret = false;
+
+    // Check if already started
+    if (m_msg_sender)
+    {
+        // Reset communication objects
+        m_msg_sender = nullptr;
+
+        ret = true;
+    }
+
+    return ret;
+}
 
 // ISecurityManager interface
 
@@ -93,10 +138,25 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
             request.techInfo.value().assign(message);
         }
 
-        SecurityEventNotificationConf response;
-        if (m_msg_sender.call(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, &m_requests_fifo) == CallResult::Failed)
+        if (m_msg_sender)
         {
-            ret = false;
+            // Stack is started, try to send the notification
+            SecurityEventNotificationConf response;
+            if (m_msg_sender->call(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, &m_requests_fifo) == CallResult::Failed)
+            {
+                ret = false;
+            }
+        }
+        else
+        {
+            // Stack is not started, queue the notification
+            rapidjson::Document payload;
+            payload.Parse("{}");
+            m_security_event_req_converter.setAllocator(&payload.GetAllocator());
+            if (m_security_event_req_converter.toJson(request, payload))
+            {
+                m_requests_fifo.push(0, SECURITY_EVENT_NOTIFICATION_ACTION, payload);
+            }
         }
     }
     else
@@ -105,10 +165,7 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
     }
 
     // Store event if logs are enabled
-    if (m_stack_config.securityLogMaxEntriesCount() > 0)
-    {
-        ret = m_security_logs_db.log(type, message, critical, timestamp) && ret;
-    }
+    ret = m_security_logs_db.log(type, message, critical, timestamp) && ret;
 
     return ret;
 }
