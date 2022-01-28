@@ -35,7 +35,6 @@ TriggerMessageManager::TriggerMessageManager(Connectors&                        
     : GenericMessageHandler<TriggerMessageReq, TriggerMessageConf>(TRIGGER_MESSAGE_ACTION, messages_converter),
       GenericMessageHandler<ExtendedTriggerMessageReq, ExtendedTriggerMessageConf>(EXTENDED_TRIGGER_MESSAGE_ACTION, messages_converter),
       m_connectors(connectors),
-      m_msg_dispatcher(msg_dispatcher),
       m_standard_handlers(),
       m_extended_handlers()
 {

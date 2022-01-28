@@ -90,8 +90,6 @@ class TriggerMessageManager
   private:
     /** @brief Charge point's connectors */
     Connectors& m_connectors;
-    /** @brief Message dispatcher */
-    ocpp::messages::IMessageDispatcher& m_msg_dispatcher;
 
     /** @brief Handlers for standard trigger messages */
     std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
