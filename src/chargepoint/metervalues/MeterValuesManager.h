@@ -54,6 +54,7 @@ class IStatusManager;
 /** @brief Handle charge point meter values requests */
 class MeterValuesManager : public IMeterValuesManager,
                            public ITriggerMessageManager::ITriggerMessageHandler,
+                           public ITriggerMessageManager::IExtendedTriggerMessageHandler,
                            public IConfigManager::IConfigChangedListener
 {
   public:
@@ -91,6 +92,9 @@ class MeterValuesManager : public IMeterValuesManager,
 
     /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
 
     // IConfigChangedListener interface
 

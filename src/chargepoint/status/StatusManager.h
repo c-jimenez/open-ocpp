@@ -54,6 +54,7 @@ class IChargePointEventsHandler;
 class StatusManager
     : public IStatusManager,
       public ITriggerMessageManager::ITriggerMessageHandler,
+      public ITriggerMessageManager::IExtendedTriggerMessageHandler,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::ChangeAvailabilityReq, ocpp::messages::ChangeAvailabilityConf>
 {
   public:
@@ -105,6 +106,9 @@ class StatusManager
 
     /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
 
     // GenericMessageHandler interface
 

@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ClearCache.h"
 #include "ClearChargingProfile.h"
 #include "DataTransfer.h"
+#include "ExtendedTriggerMessage.h"
 #include "GetCompositeSchedule.h"
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
@@ -806,6 +807,38 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
         log_filename = resp.fileName;
         LOG_INFO << "[" << m_identifier << "] - Get log : status = " << LogStatusEnumTypeHelper.toString(resp.status)
                  << " - filename = " << resp.fileName.str();
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
+                                                                                                const ocpp::types::Optional<unsigned int>) */
+ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
+                                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+{
+    TriggerMessageStatusEnumType ret = TriggerMessageStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Extended trigger message : requestedMessage = " << MessageTriggerEnumTypeHelper.toString(message)
+             << " - connectorId = " << (connector_id.isSet() ? std::to_string(connector_id) : "not set");
+
+    // Prepare request
+    ExtendedTriggerMessageReq req;
+    req.requestedMessage = message;
+    req.connectorId      = connector_id;
+
+    // Send request
+    ExtendedTriggerMessageConf resp;
+    CallResult         res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Extended trigger message : " << TriggerMessageStatusEnumTypeHelper.toString(resp.status);
     }
     else
     {

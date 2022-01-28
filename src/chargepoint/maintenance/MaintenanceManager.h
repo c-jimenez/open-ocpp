@@ -59,6 +59,7 @@ class IChargePointEventsHandler;
 /** @brief Handle maintenance requests for the charge point */
 class MaintenanceManager
     : public ITriggerMessageManager::ITriggerMessageHandler,
+      public ITriggerMessageManager::IExtendedTriggerMessageHandler,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::ResetReq, ocpp::messages::ResetConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::UnlockConnectorReq, ocpp::messages::UnlockConnectorConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::GetDiagnosticsReq, ocpp::messages::GetDiagnosticsConf>,
@@ -93,6 +94,9 @@ class MaintenanceManager
 
     /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
 
     // GenericMessageHandler interface
 

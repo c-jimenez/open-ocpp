@@ -32,18 +32,26 @@ class ITriggerMessageManager
   public:
     // Forward declaration
     class ITriggerMessageHandler;
+    class IExtendedTriggerMessageHandler;
 
     /** @brief Destructor */
     virtual ~ITriggerMessageManager() { }
 
     /**
-     * @brief Register a handler for a specific trigger request
+     * @brief Register a handler for a specific standard trigger request
      * @param message Type of trigger message requested
      * @param handler Handler to register
      */
     virtual void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) = 0;
 
-    /** @brief Interface for TriggerMessage handlers implementations */
+    /**
+     * @brief Register a handler for a specific extended trigger request
+     * @param message Type of trigger message requested
+     * @param handler Handler to register
+     */
+    virtual void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) = 0;
+
+    /** @brief Interface for standard trigger message handlers implementations */
     class ITriggerMessageHandler
     {
       public:
@@ -51,12 +59,28 @@ class ITriggerMessageManager
         virtual ~ITriggerMessageHandler() { }
 
         /**
-         * @brief Called on reception of a TriggerMessage request
+         * @brief Called on reception of a standard trigger message request
          * @param message Type of trigger message requested
          * @param connector_id Id of the connector concerned by the request
          * @return true if the requested message can be sent, false otherwise
          */
         virtual bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) = 0;
+    };
+
+    /** @brief Interface for extended trigger message handlers implementations */
+    class IExtendedTriggerMessageHandler
+    {
+      public:
+        /** @brief Destructor */
+        virtual ~IExtendedTriggerMessageHandler() { }
+
+        /**
+         * @brief Called on reception of an extended trigger message request
+         * @param message Type of trigger message requested
+         * @param connector_id Id of the connector concerned by the request
+         * @return true if the requested message can be sent, false otherwise
+         */
+        virtual bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) = 0;
     };
 };
 

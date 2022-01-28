@@ -76,6 +76,7 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
     msg_dispatcher.registerHandler(GET_LOG_ACTION, *dynamic_cast<GenericMessageHandler<GetLogReq, GetLogConf>*>(this));
     trigger_manager.registerHandler(MessageTrigger::DiagnosticsStatusNotification, *this);
     trigger_manager.registerHandler(MessageTrigger::FirmwareStatusNotification, *this);
+    trigger_manager.registerHandler(MessageTriggerEnumType::LogStatusNotification, *this);
 }
 
 /** @brief Destructor */
@@ -133,6 +134,35 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
                     // To let some time for the trigger message reply
                     std::this_thread::sleep_for(std::chrono::milliseconds(250u));
                     sendFirmwareStatusNotification();
+                });
+        }
+        break;
+
+        default:
+        {
+            // Unknown message
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+{
+    bool ret = true;
+    (void)connector_id;
+    switch (message)
+    {
+        case MessageTriggerEnumType::LogStatusNotification:
+        {
+            m_worker_pool.run<void>(
+                [this]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    sendLogStatusNotification();
                 });
         }
         break;
