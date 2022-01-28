@@ -16,7 +16,7 @@ This implementation is based on the following libraries :
   + [Key features](#key-features)
   + [Supported OCPP feature profiles](#supported-ocpp-feature-profiles)
   + [Supported OCPP configuration keys](#supported-ocpp-configuration-keys)
-  + [OCPP 1.6 security extensions](#ocpp-1.6-security-extensions)
+  + [OCPP security extensions](#ocpp-security-extensions)
 * [Build](#build)
 * [Quick start](#quick-start)
   + [Charge Point role](#charge-point-role)
@@ -38,7 +38,7 @@ As of this version :
 
 * All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
-* Some Charge Point and Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress, see [OCPP 1.6 security extensions](#ocpp-1.6-security-extensions))
+* Some Charge Point and Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress, see [OCPP security extensions](#ocpp-security-extensions))
 
 The user application will have to implement some callbacks to provide the data needed by **Open OCPP** or to handle OCPP events (boot notification, remote start/stop notifications, meter values...).
 
