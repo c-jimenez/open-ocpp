@@ -68,6 +68,7 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
 
     // Register messages handlers
     trigger_manager.registerHandler(MessageTrigger::MeterValues, *this);
+    trigger_manager.registerHandler(MessageTriggerEnumType::MeterValues, *this);
     m_clock_aligned_timer.setCallback(std::bind(&MeterValuesManager::processClockAligned, this));
 
     // Register configuration change handler
@@ -188,6 +189,18 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
 {
     bool ret = false;
     if (message == MessageTrigger::MeterValues)
+    {
+        processTriggered(connector_id);
+        ret = true;
+    }
+    return ret;
+}
+
+/** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int) */
+bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+{
+    bool ret = false;
+    if (message == MessageTriggerEnumType::MeterValues)
     {
         processTriggered(connector_id);
         ret = true;

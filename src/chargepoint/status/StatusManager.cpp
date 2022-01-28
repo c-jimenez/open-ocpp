@@ -73,6 +73,9 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
     trigger_manager.registerHandler(ocpp::types::MessageTrigger::BootNotification, *this);
     trigger_manager.registerHandler(ocpp::types::MessageTrigger::Heartbeat, *this);
     trigger_manager.registerHandler(ocpp::types::MessageTrigger::StatusNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::BootNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::Heartbeat, *this);
+    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::StatusNotification, *this);
 
     msg_dispatcher.registerHandler(CHANGE_AVAILABILITY_ACTION, *this);
 }
@@ -229,6 +232,58 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsign
         break;
 
         case MessageTrigger::StatusNotification:
+        {
+            m_worker_pool.run<void>(
+                [this, connector_id]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    statusNotificationProcess(connector_id);
+                });
+            break;
+        }
+
+        default:
+        {
+            // Unknown message
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
+bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+{
+    bool ret = true;
+    switch (message)
+    {
+        case MessageTriggerEnumType::BootNotification:
+        {
+            m_worker_pool.run<void>(
+                [this]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    sendBootNotification();
+                });
+        }
+        break;
+
+        case MessageTriggerEnumType::Heartbeat:
+        {
+            m_worker_pool.run<void>(
+                [this]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    heartBeatProcess();
+                });
+        }
+        break;
+
+        case MessageTriggerEnumType::StatusNotification:
         {
             m_worker_pool.run<void>(
                 [this, connector_id]
