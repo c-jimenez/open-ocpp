@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
 #include "GetLocalListVersion.h"
+#include "GetLog.h"
 #include "ICentralSystemConfig.h"
 #include "Logger.h"
 #include "RemoteStartTransaction.h"
@@ -747,6 +748,64 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
     {
         ret = true;
         LOG_INFO << "[" << m_identifier << "] - Update firmware : Accepted";
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+// Security extensions
+
+/** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
+                                                           int,
+                                                           const std::string&,
+                                                           const ocpp::types::Optional<unsigned int>&,
+                                                           const ocpp::types::Optional<std::chrono::seconds>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           std::string&) */
+bool ChargePointProxy::getLog(ocpp::types::LogEnumType                            type,
+                              int                                                 request_id,
+                              const std::string&                                  uri,
+                              const ocpp::types::Optional<unsigned int>&          retries,
+                              const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& start,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& stop,
+                              std::string&                                        log_filename)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Get log : type = " << LogEnumTypeHelper.toString(type) << " - request_id = " << request_id
+             << " - location = " << uri << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set")
+             << " - retry_interval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
+             << " - startTime = " << (start.isSet() ? start.value().str() : "not set")
+             << " - stopTime = " << (stop.isSet() ? stop.value().str() : "not set");
+
+    // Prepare request
+    GetLogReq req;
+    req.logType   = type;
+    req.requestId = request_id;
+    req.retries   = retries;
+    if (retry_interval.isSet())
+    {
+        req.retryInterval = retry_interval.value().count();
+    }
+    req.log.remoteLocation.assign(uri);
+    req.log.oldestTimestamp = start;
+    req.log.latestTimestamp = stop;
+
+    // Send request
+    GetLogConf resp;
+    CallResult res = m_msg_sender.call(GET_LOG_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret          = true;
+        log_filename = resp.fileName;
+        LOG_INFO << "[" << m_identifier << "] - Get log : status = " << LogStatusEnumTypeHelper.toString(resp.status)
+                 << " - filename = " << resp.fileName.str();
     }
     else
     {

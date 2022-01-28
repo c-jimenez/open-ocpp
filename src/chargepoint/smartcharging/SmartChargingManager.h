@@ -42,7 +42,6 @@ namespace messages
 {
 class IMessageDispatcher;
 class GenericMessagesConverter;
-class GenericMessageSender;
 } // namespace messages
 namespace helpers
 {

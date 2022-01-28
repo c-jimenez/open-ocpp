@@ -29,10 +29,8 @@ namespace chargepoint
 
 /** @brief Constructor */
 RequestFifo::RequestFifo(ocpp::database::Database& database)
-    : m_database(database), m_delete_query(), m_insert_query(), m_mutex(), m_fifo(), m_id(0)
+    : m_database(database), m_delete_query(), m_insert_query(), m_mutex(), m_fifo(), m_id(0), m_listener(nullptr)
 {
-    initDatabaseTable();
-    load();
 }
 
 /** @brief Destructor */
@@ -65,6 +63,12 @@ void RequestFifo::push(unsigned int connector_id, const std::string& action, con
 
     // Prepare for next entry
     m_id++;
+
+    // Notify
+    if (m_listener)
+    {
+        m_listener->requestQueued();
+    }
 }
 
 /** @copydoc bool IRequestFifo::front(unsigned int&, std::string&, const rapidjson::Document&) const */
@@ -132,11 +136,20 @@ void RequestFifo::initDatabaseTable()
     // Create parametrized queries
     m_delete_query = m_database.query("DELETE FROM RequestFifo WHERE id=?;");
     m_insert_query = m_database.query("INSERT INTO RequestFifo VALUES (?, ?, ?, ?);");
+
+    // Load data
+    load();
 }
 
 /** @brief Load requests from the database */
 void RequestFifo::load()
 {
+    // Clear FIFO
+    while (!m_fifo.empty())
+    {
+        m_fifo.pop();
+    }
+
     // Query all stored requests
     auto query = m_database.query("SELECT * FROM RequestFifo WHERE TRUE ORDER BY id ASC;");
     if (query.get())

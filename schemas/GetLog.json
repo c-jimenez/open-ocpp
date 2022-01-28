@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:GetLogRequest",
+  "title": "GetLogRequest",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",
+  "properties": {
+    "logType": {
+      "type": "string",
+		"additionalProperties": false,
+		"enum": [
+			"DiagnosticsLog",
+			"SecurityLog"
+		]
+    },
+    "requestId": {
+      "type": "integer"
+    },
+    "retries": {
+      "type": "integer"
+    },
+    "retryInterval": {
+      "type": "integer"
+    },
+	"log": {
+		"type": "object",
+		"properties": {
+			"remoteLocation": {
+				"type": "string",
+				"maxLength": "512"
+			},
+			"oldestTimestamp": {
+				"type": "string",
+				"format": "date-time"
+			},
+			"latestTimestamp": {
+				"type": "string",
+				"format": "date-time"
+			}
+		},
+		"additionalProperties": false,
+		"required": [
+			"remoteLocation"
+		]
+	}
+  },
+  "additionalProperties": false,
+  "required": [
+    "logType",
+    "requestId",
+    "log"
+  ]
+}

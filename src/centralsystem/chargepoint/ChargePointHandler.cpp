@@ -49,6 +49,9 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
       GenericMessageHandler<StartTransactionReq, StartTransactionConf>(START_TRANSACTION_ACTION, messages_converter),
       GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>(STATUS_NOTIFICATION_ACTION, messages_converter),
       GenericMessageHandler<StopTransactionReq, StopTransactionConf>(STOP_TRANSACTION_ACTION, messages_converter),
+      GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>(LOG_STATUS_NOTIFICATION_ACTION, messages_converter),
+      GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>(SECURITY_EVENT_NOTIFICATION_ACTION,
+                                                                                         messages_converter),
       m_identifier(identifier),
       m_stack_config(stack_config),
       m_handler(nullptr)
@@ -71,6 +74,11 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
                                    *dynamic_cast<GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>*>(this));
     msg_dispatcher.registerHandler(STOP_TRANSACTION_ACTION,
                                    *dynamic_cast<GenericMessageHandler<StopTransactionReq, StopTransactionConf>*>(this));
+    msg_dispatcher.registerHandler(LOG_STATUS_NOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(
+        SECURITY_EVENT_NOTIFICATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>*>(this));
 }
 /** @brief Destructor */
 ChargePointHandler::~ChargePointHandler() { }
@@ -426,6 +434,76 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq&
 
         LOG_INFO << "[" << m_identifier << "] - Stop transaction : status = "
                  << (response.idTagInfo.isSet() ? AuthorizationStatusHelper.toString(response.idTagInfo.value().status) : "not set");
+        ret = true;
+    }
+    else
+    {
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
+    }
+
+    return ret;
+}
+
+// Security extensions
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+ *                                                                                ResponseType& response,
+ *                                                                                const char*& error_code,
+ *                                                                                std::string& error_message)
+ */
+bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificationReq& request,
+                                       ocpp::messages::LogStatusNotificationConf&      response,
+                                       const char*&                                    error_code,
+                                       std::string&                                    error_message)
+{
+    bool ret = false;
+    (void)error_message;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Log status notification received : status = " << UploadLogStatusEnumTypeHelper.toString(request.status)
+             << " - requestId = " << (request.requestId.isSet() ? std::to_string(request.requestId) : "not set");
+
+    // Notify request
+    if (m_handler)
+    {
+        m_handler->logStatusNotification(request.status, request.requestId);
+
+        // Empty response
+        (void)response;
+        ret = true;
+    }
+    else
+    {
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
+    }
+
+    return ret;
+}
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+ *                                                                                ResponseType& response,
+ *                                                                                const char*& error_code,
+ *                                                                                std::string& error_message)
+ */
+bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotificationReq& request,
+                                       ocpp::messages::SecurityEventNotificationConf&      response,
+                                       const char*&                                        error_code,
+                                       std::string&                                        error_message)
+{
+    bool ret = false;
+    (void)error_message;
+
+    LOG_INFO << "[" << m_identifier << "] - Security event notification received : type = " << request.type.str()
+             << " -  timestamp = " << request.timestamp.str()
+             << " - techInfo = " << (request.techInfo.isSet() ? request.techInfo.value().str() : "not set");
+
+    // Notify request
+    if (m_handler)
+    {
+        m_handler->securityEventNotification(request.type, request.timestamp, request.techInfo.value());
+
+        // Empty response
+        (void)response;
         ret = true;
     }
     else

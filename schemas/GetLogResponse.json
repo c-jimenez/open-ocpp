@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:GetLogRequestResponse",
+  "title": "GetLogRequestResponse",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+		"additionalProperties": false,
+		"enum": [
+			"Accepted",
+			"Rejected",
+			"AcceptedCanceled"
+		]
+    },
+    "filename": {
+      "type": "string",
+      "maxLength": 255
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "status"
+  ]
+}

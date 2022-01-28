@@ -99,6 +99,14 @@ class Database
         bool bind(int number, const std::vector<uint8_t>& value);
 
         /**
+         * @brief Bind a boolean value to a query parameter
+         * @param number Number of the parameter in the query
+         * @param value Value to bind
+         * @return true if the binding has been done, false otherwise
+         */
+        bool bind(int number, bool value);
+
+        /**
          * @brief Bind a floating point value to a query parameter
          * @param number Number of the parameter in the query
          * @param value Value to bind
@@ -147,6 +155,14 @@ class Database
         bool bind(int number, const std::string& value);
 
         /**
+         * @brief Bind a string value to a query parameter
+         * @param number Number of the parameter in the query
+         * @param value Value to bind
+         * @return true if the binding has been done, false otherwise
+         */
+        bool bind(int number, const char* value);
+
+        /**
          * @brief Execute the query
          * @return true if the query was executed without errors, false otherwise
          */
@@ -183,6 +199,13 @@ class Database
          * @return Pointer to the blob value
          */
         std::vector<uint8_t> getBlob(int column) const;
+
+        /**
+         * @brief Get a boolean value from a query result
+         * @param column Column number of the value in the query result
+         * @return Boolean value
+         */
+        bool getBool(int column) const;
 
         /**
          * @brief Get a floating point value from a query result

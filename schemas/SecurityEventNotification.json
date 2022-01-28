@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:SecurityEventNotificationRequest",
+  "title": "SecurityEventNotificationRequest",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",  
+  "properties": {
+    "type": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "techInfo": {
+      "type": "string",
+      "maxLength": 255
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "timestamp"
+  ]
+}

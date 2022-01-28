@@ -32,7 +32,7 @@ const EnumToStringFromString<UploadLogStatusEnumType> UploadLogStatusEnumTypeHel
     {UploadLogStatusEnumType::NotSupportedOperation, "NotSupportedOperation"},
     {UploadLogStatusEnumType::PermissionDenied, "PermissionDenied"},
     {UploadLogStatusEnumType::Uploaded, "Uploaded"},
-    {UploadLogStatusEnumType::UploadFailure, "UploadFailed"},
+    {UploadLogStatusEnumType::UploadFailure, "UploadFailure"},
     {UploadLogStatusEnumType::Uploading, "Uploading"}};
 
 } // namespace types

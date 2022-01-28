@@ -114,6 +114,15 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     /** @copydoc bool IChargePointEventsHandler::downloadFile(const std::string&, const std::string&) */
     bool downloadFile(const std::string& url, const std::string& file) override;
 
+    // Security extensions
+
+    /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
+                                                               const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                               const ocpp::types::Optional<ocpp::types::DateTime>&) */
+    std::string getLog(ocpp::types::LogEnumType                            type,
+                       const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                       const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
+
     // API
 
     /** @brief Indicate a pending remote start transaction */

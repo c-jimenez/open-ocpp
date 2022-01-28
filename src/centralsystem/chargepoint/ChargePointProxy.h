@@ -188,6 +188,25 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
                         const ocpp::types::DateTime&                       retrieve_date,
                         const ocpp::types::Optional<std::chrono::seconds>& retry_interval) override;
 
+    // Security extensions
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
+                                                           int,
+                                                           const std::string&,
+                                                           const ocpp::types::Optional<unsigned int>&,
+                                                           const ocpp::types::Optional<std::chrono::seconds>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           std::string&) */
+    bool getLog(ocpp::types::LogEnumType                            type,
+                int                                                 request_id,
+                const std::string&                                  uri,
+                const ocpp::types::Optional<unsigned int>&          retries,
+                const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                const ocpp::types::Optional<ocpp::types::DateTime>& start,
+                const ocpp::types::Optional<ocpp::types::DateTime>& stop,
+                std::string&                                        log_filename) override;
+
     // IRpc::IListener interface
 
     /** @copydoc void IRpc::IListener::rpcDisconnected() */
