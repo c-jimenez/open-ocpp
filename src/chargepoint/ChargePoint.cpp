@@ -68,6 +68,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_messages_converter(),
       m_requests_fifo(m_database),
       m_security_manager(m_stack_config, m_database, m_events_handler, m_worker_pool, m_messages_converter, m_requests_fifo),
+      m_reconnect_scheduled(false),
       m_ws_client(),
       m_rpc_client(),
       m_msg_dispatcher(),
@@ -291,12 +292,14 @@ bool ChargePoint::start()
         m_config_manager->registerCheckFunction(
             "SecurityProfile", std::bind(&ChargePoint::checkSecurityProfileParameter, this, std::placeholders::_1, std::placeholders::_2));
         m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
+        m_config_manager->registerConfigChangedListener("SecurityProfile", *this);
 
         // Start security manager
         m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager);
 
         // Start connection
-        ret = doConnect();
+        m_reconnect_scheduled = false;
+        ret                   = doConnect();
     }
     else
     {
@@ -720,13 +723,17 @@ void ChargePoint::configurationValueChanged(const std::string& key)
         if (m_ocpp_config.securityProfile() != 3)
         {
             LOG_INFO << "AuthorizationKey modified, reconnect with new credentials";
-            m_worker_pool.run<void>(
-                [this]
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(500u));
-                    doConnect();
-                });
+            scheduleReconnect();
         }
+    }
+    else if (key == "SecurityProfile")
+    {
+        // Reconnect with new profile
+        LOG_INFO << "SecurityProfile modified, reconnect with new security profile";
+        scheduleReconnect();
+    }
+    else
+    {
     }
 }
 
@@ -819,6 +826,24 @@ void ChargePoint::saveUptime()
     m_internal_config.setKey(TOTAL_DISCONNECTED_TIME_KEY, std::to_string(m_total_disconnected_time));
 }
 
+/** @brief Schedule a reconnection to the Central System */
+void ChargePoint::scheduleReconnect()
+{
+    // Check if a reconnection is not already scheduled
+    if (!m_reconnect_scheduled)
+    {
+        m_reconnect_scheduled = true;
+        m_worker_pool.run<void>(
+            [this]
+            {
+                // Wait to let some time to configure other parameters
+                // => Needed when switching security profiles
+                std::this_thread::sleep_for(std::chrono::seconds(1u));
+                doConnect();
+            });
+    }
+}
+
 /** @brief Start the connection process to the Central System */
 bool ChargePoint::doConnect()
 {
@@ -839,11 +864,6 @@ bool ChargePoint::doConnect()
         connection_url += "/";
     }
     connection_url += m_stack_config.chargePointIdentifier();
-    if (security_profile >= 2)
-    {
-        // Force websocket secure URL
-        ocpp::helpers::replace(connection_url, "ws://", "wss://");
-    }
 
     // Check if URL has changed since last connection
     std::string last_url;
@@ -868,18 +888,24 @@ bool ChargePoint::doConnect()
         credentials.user     = m_stack_config.chargePointIdentifier();
         credentials.password = authorization_key;
     }
-    credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
-    credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
-    credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
-    credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
-    credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
-    credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
-    credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
-    credentials.allow_selfsigned_certificates             = m_stack_config.tlsAllowSelfSignedCertificates();
-    credentials.allow_expired_certificates                = m_stack_config.tlsAllowExpiredCertificates();
-    credentials.accept_untrusted_certificates             = m_stack_config.tlsAcceptNonTrustedCertificates();
-    credentials.skip_server_name_check                    = m_stack_config.tlsSkipServerNameCheck();
-    credentials.encoded_pem_certificates                  = false;
+    if (security_profile != 1)
+    {
+        credentials.tls12_cipher_list     = m_stack_config.tlsv12CipherList();
+        credentials.tls13_cipher_list     = m_stack_config.tlsv13CipherList();
+        credentials.ecdh_curve            = m_stack_config.tlsEcdhCurve();
+        credentials.server_certificate_ca = m_stack_config.tlsServerCertificateCa();
+        if ((security_profile == 0) || (security_profile == 3))
+        {
+            credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
+            credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
+            credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+        }
+        credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
+        credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
+        credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();
+        credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
+        credentials.encoded_pem_certificates      = false;
+    }
 
     // Start connection process
     return m_rpc_client->start(connection_url,
@@ -893,13 +919,16 @@ bool ChargePoint::doConnect()
 ocpp::types::ConfigurationStatus ChargePoint::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
 {
     (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Rejected;
+    ConfigurationStatus ret = ConfigurationStatus::Accepted;
 
-    // Do not allow empty authorization key for security profiles 1 and 2
+    // Authorization key length for security profiles 1 and 2 must be between 32 and 40 bytes
     unsigned int security_profile = m_ocpp_config.securityProfile();
-    if (!(value.empty() && ((security_profile == 1) || (security_profile == 2))))
+    if ((security_profile == 1) || (security_profile == 2))
     {
-        ret = ConfigurationStatus::Accepted;
+        if ((value.size() < 32u) || (value.size() > 40u))
+        {
+            ret = ConfigurationStatus::Rejected;
+        }
     }
 
     return ret;

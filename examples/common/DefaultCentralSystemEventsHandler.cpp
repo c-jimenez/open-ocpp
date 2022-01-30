@@ -66,11 +66,17 @@ void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocp
 /** @brief Remove a charge point from the connected charge points */
 void DefaultCentralSystemEventsHandler::removeChargePoint(const std::string& identifier)
 {
-    auto iter_chargepoint = m_chargepoints.find(identifier);
-    if (iter_chargepoint != m_chargepoints.end())
-    {
-        m_chargepoints.erase(iter_chargepoint);
-    }
+    std::thread t(
+        [this, &identifier]
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            auto iter_chargepoint = m_chargepoints.find(identifier);
+            if (iter_chargepoint != m_chargepoints.end())
+            {
+                m_chargepoints.erase(iter_chargepoint);
+            }
+        });
+    t.detach();
 }
 
 /** @brief Constructor */
@@ -90,13 +96,7 @@ DefaultCentralSystemEventsHandler::ChargePointRequestHandler::~ChargePointReques
 void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::disconnected()
 {
     cout << "[" << m_chargepoint->identifier() << "] - Disconnected" << endl;
-    std::thread t(
-        [this]
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
-            m_event_handler.removeChargePoint(m_chargepoint->identifier());
-        });
-    t.detach();
+    m_event_handler.removeChargePoint(m_chargepoint->identifier());
 }
 
 /** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */

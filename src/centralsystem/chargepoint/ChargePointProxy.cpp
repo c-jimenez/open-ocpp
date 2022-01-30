@@ -50,12 +50,14 @@ namespace centralsystem
 {
 
 /** @brief Constructor */
-ChargePointProxy::ChargePointProxy(const std::string&                            identifier,
+ChargePointProxy::ChargePointProxy(ICentralSystem&                               central_system,
+                                   const std::string&                            identifier,
                                    std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                                    const std::string&                            schemas_path,
                                    ocpp::messages::MessagesConverter&            messages_converter,
                                    const ocpp::config::ICentralSystemConfig&     stack_config)
-    : m_identifier(identifier),
+    : m_central_system(central_system),
+      m_identifier(identifier),
       m_rpc(rpc),
       m_msg_dispatcher(schemas_path),
       m_msg_sender(*m_rpc, messages_converter, stack_config.callRequestTimeout()),
@@ -834,7 +836,7 @@ ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessa
 
     // Send request
     ExtendedTriggerMessageConf resp;
-    CallResult         res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
+    CallResult                 res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
     if (res == CallResult::Ok)
     {
         ret = resp.status;

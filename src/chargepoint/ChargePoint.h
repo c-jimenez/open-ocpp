@@ -226,6 +226,8 @@ class ChargePoint : public IChargePoint,
     RequestFifo m_requests_fifo;
     /** @brief Security manager */
     SecurityManager m_security_manager;
+    /** @brief Indicate that a reconnection process has been scheduled */
+    bool m_reconnect_scheduled;
 
     /** @brief Websocket s*/
     std::unique_ptr<ocpp::websockets::IWebsocketClient> m_ws_client;
@@ -280,6 +282,8 @@ class ChargePoint : public IChargePoint,
     /** @brief Save the uptime counter in database */
     void saveUptime();
 
+    /** @brief Schedule a reconnection to the Central System */
+    void scheduleReconnect();
     /** @brief Start the connection process to the Central System */
     bool doConnect();
 

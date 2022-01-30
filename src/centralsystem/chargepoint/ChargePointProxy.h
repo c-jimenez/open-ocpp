@@ -38,13 +38,15 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
   public:
     /**
      * @brief Constructor
+     * @param central_system Central System instance associated to the charge point
      * @param identifier Charge point's identifier
      * @param rpc RPC connection with the charge point
      * @param schemas_path Path to the JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
      */
-    ChargePointProxy(const std::string&                            identifier,
+    ChargePointProxy(ICentralSystem&                               central_system,
+                     const std::string&                            identifier,
                      std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                      const std::string&                            schemas_path,
                      ocpp::messages::MessagesConverter&            messages_converter,
@@ -53,6 +55,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     virtual ~ChargePointProxy();
 
     // ICentralSystem::IChargePoint interface
+
+    /** @copydoc ICentralSystem&& ICentralSystem::IChargePoint::centralSystem() */
+    ICentralSystem& centralSystem() override { return m_central_system; }
 
     /** @copydoc const std::string& ICentralSystem::IChargePoint::identifier() const */
     const std::string& identifier() const override { return m_identifier; }
@@ -240,6 +245,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     void rcpMessageSent(const std::string& msg) override;
 
   private:
+    /** @brief Central System instance associated to the charge point */
+    ICentralSystem& m_central_system;
     /** @brief Charge point's identifier */
     std::string m_identifier;
     /** @brief RPC connection */

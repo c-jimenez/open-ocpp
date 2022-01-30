@@ -97,6 +97,12 @@ class ICentralSystem
         virtual ~IChargePoint() { }
 
         /**
+         * @brief Get the central system instance associated to the charge point
+         * @return Central system instance associated to the charge point
+         */
+        virtual ICentralSystem& centralSystem() = 0;
+
+        /**
          * @brief Get the charge point identifier
          * @return charge point identifier
          */
