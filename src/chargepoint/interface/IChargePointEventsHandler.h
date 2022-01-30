@@ -193,6 +193,13 @@ class IChargePointEventsHandler
     // Security extensions
 
     /**
+     * @brief Called to generate a CSR in PEM format which will be used by the Central System
+     *        to generate and sign a certificate for the Charge Point
+     * @param csr String to store the generated CSR in PEM format
+     */
+    virtual void generateCsr(std::string& csr) = 0;
+
+    /**
      * @brief Called on a log request
      * @param type Type of log to upload
      * @param start_time If set, contains the date and time of the oldest logging information to

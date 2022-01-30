@@ -116,6 +116,9 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
 
     // Security extensions
 
+    /** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
+    void generateCsr(std::string& csr) override;
+
     /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
                                                                const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                                const ocpp::types::Optional<ocpp::types::DateTime>&) */

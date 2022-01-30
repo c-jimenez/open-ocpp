@@ -159,6 +159,9 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
     bool clearSecurityEvents() override;
 
+    /** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const std::string&) */
+    bool signCertificate(const std::string& csr) override;
+
     // RpcClient::IListener interface
 
     /** @copydoc void RpcClient::IListener::rpcClientConnected() */

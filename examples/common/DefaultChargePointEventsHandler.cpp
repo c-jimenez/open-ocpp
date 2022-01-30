@@ -26,6 +26,7 @@ SOFTWARE.
 #include "ChargePointDemoConfig.h"
 #include "String.h"
 
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -309,6 +310,71 @@ bool DefaultChargePointEventsHandler::downloadFile(const std::string& url, const
 }
 
 // Security extensions
+
+/** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
+void DefaultChargePointEventsHandler::generateCsr(std::string& csr)
+{
+    cout << "Generate CSR requested" << endl;
+
+    // Generata a new public/private key pair
+    std::string generate_params_cmd_line = "openssl ecparam -name prime256v1 -out /tmp/charge_point_key.param";
+    system(generate_params_cmd_line.c_str());
+    std::string generate_key_cmd_line = "openssl ecparam -in /tmp/charge_point_key.param -genkey -noout -out /tmp/charge_point_key.key";
+    system(generate_key_cmd_line.c_str());
+
+    // Create configuration file to generate the CSR
+    std::stringstream csr_config;
+    csr_config << R"([req]
+                     distinguished_name	= req_distinguished_name
+
+                     # Stop confirmation prompts. All information is contained below.
+                     prompt			= no
+
+                     # The extensions to add to a certificate request
+                     x509_extensions = v3_ca
+
+                     [req_distinguished_name]
+                     countryName =            FR
+                     stateOrProvinceName =    Savoie
+                     localityName =           Chambery
+                     organizationName =)"
+               << m_config.ocppConfig().cpoName() << R"(
+                     organizationalUnitName = Open OCPP Charge Points
+                     commonName =)"
+               << m_config.stackConfig().chargePointSerialNumber() << R"(
+                     emailAddress =           charge.point@open-ocpp.org
+ 
+                     [v3_ca]
+                     basicConstraints = CA:FALSE
+                     subjectAltName = @alt_names
+
+                     [alt_names]
+                     DNS.1 = localhost
+                     DNS.2 = IP:127.0.0.1)";
+    std::fstream csr_config_file("/tmp/charge_point_csr.cnf", csr_config_file.out);
+    if (csr_config_file.is_open())
+    {
+        csr_config_file << csr_config.str();
+        csr_config_file.close();
+    }
+
+    // Generate the CSR
+    std::string generate_csr_cmd_line = "openssl req -new -sha256 -key /tmp/charge_point_key.key -extensions v3_ca -config "
+                                        "/tmp/charge_point_csr.cnf -out /tmp/charge_point.csr";
+    system(generate_csr_cmd_line.c_str());
+
+    // Read generated CSR file
+    std::fstream csr_file("/tmp/charge_point.csr", csr_config_file.in | csr_config_file.binary | csr_config_file.ate);
+    if (csr_file.is_open())
+    {
+        auto filesize = csr_file.tellg();
+        csr_file.seekg(0, csr_file.beg);
+        csr.resize(filesize);
+        csr_file.read(&csr[0], filesize);
+
+        csr_file.close();
+    }
+}
 
 /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&,

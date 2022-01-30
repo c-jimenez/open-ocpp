@@ -201,6 +201,13 @@ class IChargePoint
      * @return true if the security evenst have been cleared, false otherwise
      */
     virtual bool clearSecurityEvents() = 0;
+
+    /**
+     * @brief Send a CSR request to sign a certificate
+     * @param csr CSR request in PEM format
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool signCertificate(const std::string& csr) = 0;
 };
 
 } // namespace chargepoint

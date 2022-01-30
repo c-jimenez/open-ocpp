@@ -67,7 +67,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_internal_config(m_database),
       m_messages_converter(),
       m_requests_fifo(m_database),
-      m_security_manager(m_stack_config, m_database, m_messages_converter, m_requests_fifo),
+      m_security_manager(m_stack_config, m_database, m_events_handler, m_worker_pool, m_messages_converter, m_requests_fifo),
       m_ws_client(),
       m_rpc_client(),
       m_msg_dispatcher(),
@@ -293,7 +293,7 @@ bool ChargePoint::start()
         m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
 
         // Start security manager
-        m_security_manager.start(*m_msg_sender);
+        m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager);
 
         // Start connection
         ret = doConnect();
@@ -402,7 +402,7 @@ bool ChargePoint::statusNotification(unsigned int                      connector
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         ret = m_status_manager->updateConnectorStatus(connector_id, status, error_code, info, vendor_id, vendor_error);
     }
@@ -419,7 +419,7 @@ ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_i
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -455,7 +455,7 @@ ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int conn
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -479,7 +479,7 @@ bool ChargePoint::stopTransaction(unsigned int connector_id, const std::string& 
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -511,7 +511,7 @@ bool ChargePoint::dataTransfer(const std::string&               vendor_id,
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -535,7 +535,7 @@ bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<o
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -565,7 +565,7 @@ bool ChargePoint::getSetpoint(unsigned int                                      
 {
     bool ret = false;
 
-    if (m_smart_charging_manager.get())
+    if (m_smart_charging_manager)
     {
         ret = m_smart_charging_manager->getSetpoint(connector_id, charge_point_setpoint, connector_setpoint, unit);
     }
@@ -582,7 +582,7 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -613,6 +613,30 @@ bool ChargePoint::logSecurityEvent(const std::string& type, const std::string& m
 bool ChargePoint::clearSecurityEvents()
 {
     return m_security_manager.clearSecurityEvents();
+}
+
+/** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const std::string&) */
+bool ChargePoint::signCertificate(const std::string& csr)
+{
+    bool ret = false;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_security_manager.signCertificate(csr);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
 }
 
 /** @copydoc void RpcClient::IListener::rpcClientConnected() */
