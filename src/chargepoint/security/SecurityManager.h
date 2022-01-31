@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "DeleteCertificate.h"
 #include "GenericMessageHandler.h"
 #include "GetInstalledCertificateIds.h"
+#include "IConfigManager.h"
 #include "ISecurityManager.h"
 #include "ITriggerMessageManager.h"
 #include "InstallCertificate.h"
@@ -33,6 +34,7 @@ namespace ocpp
 // Forward declarations
 namespace config
 {
+class IOcppConfig;
 class IChargePointConfig;
 } // namespace config
 namespace messages
@@ -65,6 +67,7 @@ class SecurityManager
   public:
     /** @brief Constructor */
     SecurityManager(const ocpp::config::IChargePointConfig&         stack_config,
+                    ocpp::config::IOcppConfig&                      ocpp_config,
                     ocpp::database::Database&                       database,
                     IChargePointEventsHandler&                      events_handler,
                     ocpp::helpers::WorkerThreadPool&                worker_pool,
@@ -80,7 +83,8 @@ class SecurityManager
     /** @brief Start the security manager */
     bool start(ocpp::messages::GenericMessageSender& msg_sender,
                ocpp::messages::IMessageDispatcher&   msg_dispatcher,
-               ITriggerMessageManager&               trigger_manager);
+               ITriggerMessageManager&               trigger_manager,
+               IConfigManager&                       config_manager);
 
     /** @brief Stop the security manager */
     bool stop();
@@ -155,6 +159,8 @@ class SecurityManager
                        std::string&                                 error_message) override;
 
   private:
+    /** @brief Standard OCPP configuration */
+    ocpp::config::IOcppConfig& m_ocpp_config;
     /** @brief User defined events handler */
     IChargePointEventsHandler& m_events_handler;
     /** @brief Worker thread pool */
@@ -169,6 +175,11 @@ class SecurityManager
 
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender* m_msg_sender;
+
+    /** @brief Specific configuration check for parameter : AuthorizationKey */
+    ocpp::types::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
+    /** @brief Specific configuration check for parameter : SecurityProfile */
+    ocpp::types::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
 };
 
 } // namespace chargepoint

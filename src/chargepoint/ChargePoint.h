@@ -289,11 +289,6 @@ class ChargePoint : public IChargePoint,
     void scheduleReconnect();
     /** @brief Start the connection process to the Central System */
     bool doConnect();
-
-    /** @brief Specific configuration check for parameter : AuthorizationKey */
-    ocpp::types::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
-    /** @brief Specific configuration check for parameter : SecurityProfile */
-    ocpp::types::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
 };
 
 } // namespace chargepoint

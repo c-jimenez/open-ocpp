@@ -84,7 +84,8 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_
       m_internal_config(m_database),
       m_messages_converter(),
       m_requests_fifo(m_database),
-      m_security_manager(m_stack_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo),
+      m_security_manager(
+          m_stack_config, m_ocpp_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo),
       m_reconnect_scheduled(false),
       m_ws_client(),
       m_rpc_client(),
@@ -309,16 +310,11 @@ bool ChargePoint::start()
                                                                        *m_authent_manager);
 
         // Register specific configuration checks
-        m_config_manager->registerCheckFunction(
-            "AuthorizationKey",
-            std::bind(&ChargePoint::checkAuthorizationKeyParameter, this, std::placeholders::_1, std::placeholders::_2));
-        m_config_manager->registerCheckFunction(
-            "SecurityProfile", std::bind(&ChargePoint::checkSecurityProfileParameter, this, std::placeholders::_1, std::placeholders::_2));
         m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
         m_config_manager->registerConfigChangedListener("SecurityProfile", *this);
 
         // Start security manager
-        m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager);
+        m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager, *m_config_manager);
 
         // Start connection
         m_reconnect_scheduled = false;
@@ -936,85 +932,6 @@ bool ChargePoint::doConnect()
                                m_stack_config.connectionTimeout(),
                                m_stack_config.retryInterval(),
                                m_ocpp_config.webSocketPingInterval());
-}
-
-/** @brief Specific configuration check for parameter : AuthorizationKey */
-ocpp::types::ConfigurationStatus ChargePoint::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
-{
-    (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Accepted;
-
-    // Authorization key length for security profiles 1 and 2 must be between 32 and 40 bytes
-    unsigned int security_profile = m_ocpp_config.securityProfile();
-    if ((security_profile == 1) || (security_profile == 2))
-    {
-        if ((value.size() < 32u) || (value.size() > 40u))
-        {
-            ret = ConfigurationStatus::Rejected;
-        }
-    }
-
-    return ret;
-}
-
-/** @brief Specific configuration check for parameter : SecurityProfile */
-ocpp::types::ConfigurationStatus ChargePoint::checkSecurityProfileParameter(const std::string& key, const std::string& value)
-{
-    (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Rejected;
-
-    // Do not allow to decrease security profile
-    unsigned int security_profile     = m_ocpp_config.securityProfile();
-    unsigned int new_security_profile = static_cast<unsigned int>(std::atoi(value.c_str()));
-    if (new_security_profile > security_profile)
-    {
-        // Check if new security profile requirements are met
-        switch (new_security_profile)
-        {
-            case 1:
-            {
-                // Basic authent
-                // AuthorizationKey value must no be empty
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Accepted;
-                }
-            }
-            break;
-
-            case 2:
-            {
-                // Basic authent + TLS (server authentication only)
-                // AuthorizationKey value must no be empty
-                // A Central System root certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Accepted;
-                }
-            }
-            break;
-
-            case 3:
-            {
-                // TLS with server and client authentication
-                // A Central System root certificate must be installed
-                // A valid Charge Point certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Rejected;
-                }
-            }
-            break;
-
-            default:
-            {
-                // Invalid security profile
-                break;
-            }
-        }
-    }
-
-    return ret;
 }
 
 } // namespace chargepoint

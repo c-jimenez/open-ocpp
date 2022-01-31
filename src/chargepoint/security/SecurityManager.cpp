@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
+#include "IOcppConfig.h"
 #include "Logger.h"
 #include "MessagesConverter.h"
 #include "SecurityEvent.h"
@@ -59,6 +60,7 @@ static const std::map<std::string, bool> s_security_events = {{SECEVT_FIRMWARE_U
 
 /** @brief Constructor */
 SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&         stack_config,
+                                 ocpp::config::IOcppConfig&                      ocpp_config,
                                  ocpp::database::Database&                       database,
                                  IChargePointEventsHandler&                      events_handler,
                                  ocpp::helpers::WorkerThreadPool&                worker_pool,
@@ -69,6 +71,7 @@ SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&        
       GenericMessageHandler<GetInstalledCertificateIdsReq, GetInstalledCertificateIdsConf>(GET_INSTALLED_CERTIFICATE_IDS_ACTION,
                                                                                            messages_converter),
       GenericMessageHandler<InstallCertificateReq, InstallCertificateConf>(INSTALL_CERTIFICATE_ACTION, messages_converter),
+      m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),
       m_requests_fifo(requests_fifo),
@@ -91,7 +94,8 @@ void SecurityManager::initDatabaseTable()
 /** @brief Start the security manager */
 bool SecurityManager::start(ocpp::messages::GenericMessageSender& msg_sender,
                             ocpp::messages::IMessageDispatcher&   msg_dispatcher,
-                            ITriggerMessageManager&               trigger_manager)
+                            ITriggerMessageManager&               trigger_manager,
+                            IConfigManager&                       config_manager)
 {
     bool ret = false;
 
@@ -112,6 +116,14 @@ bool SecurityManager::start(ocpp::messages::GenericMessageSender& msg_sender,
 
         // Register to trigger messages
         trigger_manager.registerHandler(MessageTriggerEnumType::SignChargePointCertificate, *this);
+
+        // Register specific configuration checks
+        config_manager.registerCheckFunction(
+            "AuthorizationKey",
+            std::bind(&SecurityManager::checkAuthorizationKeyParameter, this, std::placeholders::_1, std::placeholders::_2));
+        config_manager.registerCheckFunction(
+            "SecurityProfile",
+            std::bind(&SecurityManager::checkSecurityProfileParameter, this, std::placeholders::_1, std::placeholders::_2));
 
         ret = true;
     }
@@ -362,6 +374,85 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
     (void)response;
     (void)error_code;
     (void)error_message;
+
+    return ret;
+}
+
+/** @brief Specific configuration check for parameter : AuthorizationKey */
+ocpp::types::ConfigurationStatus SecurityManager::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
+{
+    (void)key;
+    ConfigurationStatus ret = ConfigurationStatus::Accepted;
+
+    // Authorization key length for security profiles 1 and 2 must be between 32 and 40 bytes
+    unsigned int security_profile = m_ocpp_config.securityProfile();
+    if ((security_profile == 1) || (security_profile == 2))
+    {
+        if ((value.size() < 32u) || (value.size() > 40u))
+        {
+            ret = ConfigurationStatus::Rejected;
+        }
+    }
+
+    return ret;
+}
+
+/** @brief Specific configuration check for parameter : SecurityProfile */
+ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(const std::string& key, const std::string& value)
+{
+    (void)key;
+    ConfigurationStatus ret = ConfigurationStatus::Rejected;
+
+    // Do not allow to decrease security profile
+    unsigned int security_profile     = m_ocpp_config.securityProfile();
+    unsigned int new_security_profile = static_cast<unsigned int>(std::atoi(value.c_str()));
+    if (new_security_profile > security_profile)
+    {
+        // Check if new security profile requirements are met
+        switch (new_security_profile)
+        {
+            case 1:
+            {
+                // Basic authent
+                // AuthorizationKey value must no be empty
+                if (!m_ocpp_config.authorizationKey().empty())
+                {
+                    ret = ConfigurationStatus::Accepted;
+                }
+            }
+            break;
+
+            case 2:
+            {
+                // Basic authent + TLS (server authentication only)
+                // AuthorizationKey value must no be empty
+                // A Central System root certificate must be installed
+                if (!m_ocpp_config.authorizationKey().empty())
+                {
+                    ret = ConfigurationStatus::Accepted;
+                }
+            }
+            break;
+
+            case 3:
+            {
+                // TLS with server and client authentication
+                // A Central System root certificate must be installed
+                // A valid Charge Point certificate must be installed
+                if (!m_ocpp_config.authorizationKey().empty())
+                {
+                    ret = ConfigurationStatus::Rejected;
+                }
+            }
+            break;
+
+            default:
+            {
+                // Invalid security profile
+                break;
+            }
+        }
+    }
 
     return ret;
 }
