@@ -87,6 +87,12 @@ class Certificate
     const std::string& serialNumberString() const { return m_serial_number_string; }
 
     /** 
+     * @brief Get the serial number as an hex string
+     * @return Serial number as an hex string
+     */
+    const std::string& serialNumberHexString() const { return m_serial_number_hex_string; }
+
+    /** 
      * @brief Get the date of start of validity 
      * @return Date of start of validity
      */
@@ -209,6 +215,8 @@ class Certificate
     std::vector<uint8_t> m_serial_number;
     /** @brief Serial number as string */
     std::string m_serial_number_string;
+    /** @brief Serial number as an hex string */
+    std::string m_serial_number_hex_string;
     /** @brief Date of start of validity */
     time_t m_validity_from;
     /** @brief Date of end of validity */

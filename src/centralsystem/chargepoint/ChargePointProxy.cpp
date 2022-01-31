@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetCompositeSchedule.h"
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
+#include "GetInstalledCertificateIds.h"
 #include "GetLocalListVersion.h"
 #include "GetLog.h"
 #include "ICentralSystemConfig.h"
@@ -764,7 +765,7 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 // Security extensions
 
 /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
-                                                                                                const ocpp::types::Optional<unsigned int>) */
+                                                                                                            const ocpp::types::Optional<unsigned int>) */
 ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
                                                                                    const ocpp::types::Optional<unsigned int> connector_id)
 {
@@ -786,6 +787,39 @@ ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessa
     {
         ret = resp.status;
         LOG_INFO << "[" << m_identifier << "] - Extended trigger message : " << TriggerMessageStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType,
+                                                                           std::vector<ocpp::types::CertificateHashDataType>&) */
+bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                                  std::vector<ocpp::types::CertificateHashDataType>& certificates)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Get installed certificate ids : certificateType = " << CertificateUseEnumTypeHelper.toString(type);
+
+    // Prepare request
+    GetInstalledCertificateIdsReq req;
+    req.certificateType = type;
+
+    // Send request
+    GetInstalledCertificateIdsConf resp;
+    CallResult                     res = m_msg_sender.call(GET_INSTALLED_CERTIFICATE_IDS_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier
+                 << "] - Get installed certificate ids : status = " << GetInstalledCertificateStatusEnumTypeHelper.toString(resp.status)
+                 << " - count = " << resp.certificateHashData.size();
+        certificates = resp.certificateHashData;
+        ret          = true;
     }
     else
     {

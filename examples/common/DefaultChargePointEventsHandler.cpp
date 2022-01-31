@@ -457,6 +457,36 @@ void DefaultChargePointEventsHandler::generateCsr(std::string& csr)
     }
 }
 
+/** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
+ *                                                                    std::vector<ocpp::websockets::Certificate>&) */
+void DefaultChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
+                                                               std::vector<ocpp::websockets::Certificate>& certificates)
+{
+    cout << "Get installed CA certificates requested : type = " << CertificateUseEnumTypeHelper.toString(type) << endl;
+
+    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (type == CertificateUseEnumType::ManufacturerRootCertificate)
+            {
+                if (ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    certificates.emplace_back(dir_entry.path());
+                }
+            }
+            else
+            {
+                if (ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    certificates.emplace_back(dir_entry.path());
+                }
+            }
+        }
+    }
+}
+
 /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&) */

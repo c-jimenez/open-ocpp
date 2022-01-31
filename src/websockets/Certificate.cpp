@@ -139,14 +139,18 @@ void Certificate::readInfos(Certificate& certificate)
         int                  serial_len         = ASN1_STRING_length(serial_number_asn1);
         const unsigned char* serial             = ASN1_STRING_get0_data(serial_number_asn1);
         std::stringstream    ss_serial;
+        std::stringstream    ss_serial_hex;
         ss_serial << std::hex;
+        ss_serial_hex << std::hex;
         for (int i = 0; i < serial_len; i++)
         {
             ss_serial << std::setw(2) << std::setfill('0') << static_cast<int>(serial[i]) << ":";
+            ss_serial_hex << std::setw(2) << std::setfill('0') << static_cast<int>(serial[i]);
             certificate.m_serial_number.push_back(serial[i]);
         }
         certificate.m_serial_number_string = ss_serial.str();
         certificate.m_serial_number_string.resize(certificate.m_serial_number_string.size() - 1u);
+        certificate.m_serial_number_hex_string = ss_serial_hex.str();
 
         // Extract validity dates
         certificate.m_validity_from = convertAsn1Time(X509_get0_notBefore(cert));

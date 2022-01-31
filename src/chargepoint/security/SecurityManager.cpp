@@ -26,6 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessagesConverter.h"
 #include "SecurityEvent.h"
 #include "SecurityEventNotification.h"
+#include "Sha2.h"
 #include "SignCertificate.h"
 #include "WorkerThreadPool.h"
 
@@ -347,12 +348,46 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
 {
     bool ret = true;
 
+    (void)error_code;
+    (void)error_message;
+
     LOG_INFO << "Get installed certificate ids request received : certificateType = "
              << CertificateUseEnumTypeHelper.toString(request.certificateType);
 
-    (void)response;
-    (void)error_code;
-    (void)error_message;
+    // Prepare response
+    response.status = GetInstalledCertificateStatusEnumType::NotFound;
+
+    // Get the list of installed certificates
+    std::vector<ocpp::websockets::Certificate> certificates;
+    m_events_handler.getInstalledCertificates(request.certificateType, certificates);
+    if (!certificates.empty())
+    {
+        // Compute hashes with SHA-256 algorithm
+        ocpp::websockets::Sha2 sha256;
+
+        // Compute hashes for each certificate
+        for (const auto& certificate : certificates)
+        {
+            if (certificate.isValid())
+            {
+                response.certificateHashData.emplace_back();
+                CertificateHashDataType& hash_data = response.certificateHashData.back();
+                hash_data.hashAlgorithm            = HashAlgorithmEnumType::SHA256;
+                sha256.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
+                hash_data.issuerKeyHash.assign(sha256.resultString());
+                sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
+                hash_data.issuerKeyHash.assign(sha256.resultString());
+                hash_data.serialNumber.assign(certificate.serialNumberHexString());
+            }
+        }
+        if (!response.certificateHashData.empty())
+        {
+            response.status = GetInstalledCertificateStatusEnumType::Accepted;
+        }
+    }
+
+    LOG_INFO << "Get installed certificate ids : status = " << GetInstalledCertificateStatusEnumTypeHelper.toString(response.status)
+             << "count = " << response.certificateHashData.size();
 
     return ret;
 }

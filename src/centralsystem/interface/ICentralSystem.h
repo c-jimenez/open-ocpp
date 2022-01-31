@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "AuthorizationData.h"
 #include "Certificate.h"
+#include "CertificateHashDataType.h"
 #include "ChargingProfile.h"
 #include "ICentralSystemConfig.h"
 #include "IChargePointRequestHandler.h"
@@ -346,6 +347,14 @@ class ICentralSystem
         virtual ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(
             ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id) = 0;
 
+        /**
+         * @brief Get the list of installed CA certificates
+         * @param type Type of CA certificate
+         * @param certificates Certificates information
+         * @return true is the list has been retrieved, false otherwise
+         */
+        virtual bool getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                                std::vector<ocpp::types::CertificateHashDataType>& certificates) = 0;
         /**
          * @brief Get the log file
          * @param type Type of log to retrieve

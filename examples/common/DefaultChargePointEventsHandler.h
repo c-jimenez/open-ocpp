@@ -128,6 +128,11 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     /** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
     void generateCsr(std::string& csr) override;
 
+    /** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
+     *                                                                    std::vector<ocpp::websockets::Certificate>&) */
+    void getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
+                                  std::vector<ocpp::websockets::Certificate>& certificates) override;
+
     /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
                                                                const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                                const ocpp::types::Optional<ocpp::types::DateTime>&) */

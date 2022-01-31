@@ -210,6 +210,14 @@ class IChargePointEventsHandler
     virtual void generateCsr(std::string& csr) = 0;
 
     /**
+     * @brief Called to get the list of installed CA certificates
+     * @param type Type of CA certificate
+     * @param certificates Installed certificates
+     */
+    virtual void getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
+                                          std::vector<ocpp::websockets::Certificate>& certificates) = 0;
+
+    /**
      * @brief Called on a log request
      * @param type Type of log to upload
      * @param start_time If set, contains the date and time of the oldest logging information to

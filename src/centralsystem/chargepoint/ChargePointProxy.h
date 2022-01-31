@@ -196,9 +196,14 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     // Security extensions
 
     /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
-                                                                                                const ocpp::types::Optional<unsigned int>) */
+                                                                                                                const ocpp::types::Optional<unsigned int>) */
     ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
                                                                      const ocpp::types::Optional<unsigned int> connector_id) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType,
+                                                                               std::vector<ocpp::types::CertificateHashDataType>&) */
+    bool getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                    std::vector<ocpp::types::CertificateHashDataType>& certificates) override;
 
     /** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
                                                            int,
