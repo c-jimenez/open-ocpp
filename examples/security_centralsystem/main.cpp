@@ -27,6 +27,8 @@ SOFTWARE.
 #include "ChargePointDatabase.h"
 #include "Database.h"
 #include "ICentralSystem.h"
+#include "TimerPool.h"
+#include "WorkerThreadPool.h"
 
 #include <cstring>
 #include <filesystem>
@@ -119,11 +121,20 @@ int main(int argc, char* argv[])
     // Event handler
     CentralSystemEventsHandler event_handler(chargepoint_db);
 
+    // Use the same timer and worker pool for all the instances
+    std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool = std::make_shared<ocpp::helpers::TimerPool>();
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool =
+        std::make_shared<ocpp::helpers::WorkerThreadPool>(2u); // 1 asynchronous timer operations + 1 for asynchronous jobs/responses
+
     // Instanciate 1 central system per security profile has required by the specification
-    std::unique_ptr<ICentralSystem> central_system_p0 = ICentralSystem::create(config_p0.stackConfig(), event_handler);
-    std::unique_ptr<ICentralSystem> central_system_p1 = ICentralSystem::create(config_p1.stackConfig(), event_handler);
-    std::unique_ptr<ICentralSystem> central_system_p2 = ICentralSystem::create(config_p2.stackConfig(), event_handler);
-    std::unique_ptr<ICentralSystem> central_system_p3 = ICentralSystem::create(config_p3.stackConfig(), event_handler);
+    std::unique_ptr<ICentralSystem> central_system_p0 =
+        ICentralSystem::create(config_p0.stackConfig(), event_handler, timer_pool, worker_pool);
+    std::unique_ptr<ICentralSystem> central_system_p1 =
+        ICentralSystem::create(config_p1.stackConfig(), event_handler, timer_pool, worker_pool);
+    std::unique_ptr<ICentralSystem> central_system_p2 =
+        ICentralSystem::create(config_p2.stackConfig(), event_handler, timer_pool, worker_pool);
+    std::unique_ptr<ICentralSystem> central_system_p3 =
+        ICentralSystem::create(config_p3.stackConfig(), event_handler, timer_pool, worker_pool);
     if (reset_all)
     {
         central_system_p0->resetData();

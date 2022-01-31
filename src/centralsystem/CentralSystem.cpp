@@ -22,8 +22,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ICentralSystemEventsHandler.h"
 #include "InternalConfigKeys.h"
 #include "Logger.h"
+#include "TimerPool.h"
 #include "Version.h"
 #include "WebsocketFactory.h"
+#include "WorkerThreadPool.h"
 
 #include <filesystem>
 #include <iostream>
@@ -40,21 +42,36 @@ namespace centralsystem
 std::unique_ptr<ICentralSystem> ICentralSystem::create(const ocpp::config::ICentralSystemConfig& stack_config,
                                                        ICentralSystemEventsHandler&              events_handler)
 {
-    return std::unique_ptr<ICentralSystem>(new CentralSystem(stack_config, events_handler));
+    std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool = std::make_shared<ocpp::helpers::TimerPool>();
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool =
+        std::make_shared<ocpp::helpers::WorkerThreadPool>(2u); // 1 asynchronous timer operations + 1 for asynchronous jobs/responses
+    return std::unique_ptr<ICentralSystem>(new CentralSystem(stack_config, events_handler, timer_pool, worker_pool));
+}
+
+/** @brief Instanciate a central system with the provided timer and worker pools */
+std::unique_ptr<ICentralSystem> ICentralSystem::create(const ocpp::config::ICentralSystemConfig&        stack_config,
+                                                       ICentralSystemEventsHandler&                     events_handler,
+                                                       std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                       std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
+{
+    return std::unique_ptr<ICentralSystem>(new CentralSystem(stack_config, events_handler, timer_pool, worker_pool));
 }
 
 /** @brief Constructor */
-CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig& stack_config, ICentralSystemEventsHandler& events_handler)
+CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig&        stack_config,
+                             ICentralSystemEventsHandler&                     events_handler,
+                             std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                             std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
     : m_stack_config(stack_config),
       m_events_handler(events_handler),
-      m_timer_pool(),
-      m_worker_pool(2u), // 1 asynchronous timer operations + 1 for asynchronous responses
+      m_timer_pool(timer_pool),
+      m_worker_pool(worker_pool),
       m_database(),
       m_internal_config(m_database),
       m_messages_converter(),
       m_ws_server(),
       m_rpc_server(),
-      m_uptime_timer(m_timer_pool, "Uptime timer"),
+      m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
       m_uptime(0),
       m_total_uptime(0)
 {
@@ -292,7 +309,7 @@ void CentralSystem::processUptime()
     // Save counters
     if ((m_uptime % 15u) == 0)
     {
-        m_worker_pool.run<void>(std::bind(&CentralSystem::saveUptime, this));
+        m_worker_pool->run<void>(std::bind(&CentralSystem::saveUptime, this));
     }
 }
 

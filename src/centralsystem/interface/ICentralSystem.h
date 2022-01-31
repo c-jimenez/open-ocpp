@@ -33,6 +33,7 @@ namespace ocpp
 namespace helpers
 {
 class TimerPool;
+class WorkerThreadPool;
 } // namespace helpers
 namespace database
 {
@@ -56,6 +57,20 @@ class ICentralSystem
     static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig& stack_config,
                                                   ICentralSystemEventsHandler&              events_handler);
 
+    /**
+     * @brief Instanciate a central system with the provided timer and worker pools
+     *        To use when you have to instanciate multiple Central System / Charge Point
+     *        => Allow to reduce thread and memory usage
+     * @param stack_config Stack configuration
+     * @param event_handler Stack event handler
+     * @param timer_pool Timer pool
+     * @param worker_pool Worker thread pool
+     */
+    static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig&        stack_config,
+                                                  ICentralSystemEventsHandler&                     events_handler,
+                                                  std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                  std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
+
     /** @brief Destructor */
     virtual ~ICentralSystem() { }
 
@@ -66,10 +81,10 @@ class ICentralSystem
     virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
 
     /**
-     * @brief Get the database of the central system
-     * @return Database of the central system
+     * @brief Get the worker pool associated to the central system
+     * @return Worker pool associated to the central system
      */
-    virtual ocpp::database::Database& getDatabase() = 0;
+    virtual ocpp::helpers::WorkerThreadPool& getWorkerPool() = 0;
 
     /**
      * @brief Reset the central system's internal data (can be done only when the central system is stopped)

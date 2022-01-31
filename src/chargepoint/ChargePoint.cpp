@@ -30,10 +30,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ReservationManager.h"
 #include "SmartChargingManager.h"
 #include "StatusManager.h"
+#include "TimerPool.h"
 #include "TransactionManager.h"
 #include "TriggerMessageManager.h"
 #include "Version.h"
 #include "WebsocketFactory.h"
+#include "WorkerThreadPool.h"
 
 #include <filesystem>
 #include <iostream>
@@ -51,29 +53,44 @@ std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePo
                                                    ocpp::config::IOcppConfig&              ocpp_config,
                                                    IChargePointEventsHandler&              events_handler)
 {
-    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler));
+    std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool = std::make_shared<ocpp::helpers::TimerPool>();
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool =
+        std::make_shared<ocpp::helpers::WorkerThreadPool>(2u); // 1 asynchronous timer operations + 1 for asynchronous jobs/responses
+    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
+}
+
+/** @brief Instanciate a charge point with the provided timer and worker pools */
+std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePointConfig&          stack_config,
+                                                   ocpp::config::IOcppConfig&                       ocpp_config,
+                                                   IChargePointEventsHandler&                       events_handler,
+                                                   std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                   std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
+{
+    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
 }
 
 /** @brief Constructor */
-ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
-                         ocpp::config::IOcppConfig&              ocpp_config,
-                         IChargePointEventsHandler&              events_handler)
+ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
+                         ocpp::config::IOcppConfig&                       ocpp_config,
+                         IChargePointEventsHandler&                       events_handler,
+                         std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                         std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
     : m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
-      m_timer_pool(),
-      m_worker_pool(2u), // 1 asynchronous timer operations + 1 for asynchronous responses
+      m_timer_pool(timer_pool),
+      m_worker_pool(worker_pool),
       m_database(),
       m_internal_config(m_database),
       m_messages_converter(),
       m_requests_fifo(m_database),
-      m_security_manager(m_stack_config, m_database, m_events_handler, m_worker_pool, m_messages_converter, m_requests_fifo),
+      m_security_manager(m_stack_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo),
       m_reconnect_scheduled(false),
       m_ws_client(),
       m_rpc_client(),
       m_msg_dispatcher(),
       m_msg_sender(),
-      m_connectors(ocpp_config, m_database, m_timer_pool),
+      m_connectors(ocpp_config, m_database, *m_timer_pool.get()),
       m_config_manager(),
       m_status_manager(),
       m_authent_manager(),
@@ -85,7 +102,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_smart_charging_manager(),
       m_maintenance_manager(),
       m_requests_fifo_manager(),
-      m_uptime_timer(m_timer_pool, "Uptime timer"),
+      m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
       m_uptime(0),
       m_disconnected_time(0),
       m_total_uptime(0),
@@ -223,8 +240,8 @@ bool ChargePoint::start()
                                                            m_ocpp_config,
                                                            m_events_handler,
                                                            m_internal_config,
-                                                           m_timer_pool,
-                                                           m_worker_pool,
+                                                           *m_timer_pool.get(),
+                                                           *m_worker_pool.get(),
                                                            m_connectors,
                                                            *m_msg_dispatcher,
                                                            *m_msg_sender,
@@ -232,8 +249,8 @@ bool ChargePoint::start()
                                                            *m_trigger_manager);
         m_reservation_manager    = std::make_unique<ReservationManager>(m_ocpp_config,
                                                                      m_events_handler,
-                                                                     m_timer_pool,
-                                                                     m_worker_pool,
+                                                                     *m_timer_pool.get(),
+                                                                     *m_worker_pool.get(),
                                                                      m_connectors,
                                                                      m_messages_converter,
                                                                      *m_msg_dispatcher,
@@ -242,17 +259,23 @@ bool ChargePoint::start()
         m_meter_values_manager   = std::make_unique<MeterValuesManager>(m_ocpp_config,
                                                                       m_database,
                                                                       m_events_handler,
-                                                                      m_timer_pool,
-                                                                      m_worker_pool,
+                                                                      *m_timer_pool.get(),
+                                                                      *m_worker_pool.get(),
                                                                       m_connectors,
                                                                       *m_msg_sender,
                                                                       m_requests_fifo,
                                                                       *m_status_manager,
                                                                       *m_trigger_manager,
                                                                       *m_config_manager);
-        m_smart_charging_manager = std::make_unique<SmartChargingManager>(
-            m_stack_config, m_ocpp_config, m_database, m_timer_pool, m_worker_pool, m_connectors, m_messages_converter, *m_msg_dispatcher);
-        m_transaction_manager = std::make_unique<TransactionManager>(m_ocpp_config,
+        m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
+                                                                          m_ocpp_config,
+                                                                          m_database,
+                                                                          *m_timer_pool.get(),
+                                                                          *m_worker_pool.get(),
+                                                                          m_connectors,
+                                                                          m_messages_converter,
+                                                                          *m_msg_dispatcher);
+        m_transaction_manager    = std::make_unique<TransactionManager>(m_ocpp_config,
                                                                      m_events_handler,
                                                                      m_connectors,
                                                                      m_messages_converter,
@@ -267,7 +290,7 @@ bool ChargePoint::start()
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
         m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
                                                                      m_events_handler,
-                                                                     m_worker_pool,
+                                                                     *m_worker_pool.get(),
                                                                      m_messages_converter,
                                                                      *m_msg_dispatcher,
                                                                      *m_msg_sender,
@@ -277,8 +300,8 @@ bool ChargePoint::start()
 
         m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
                                                                        m_events_handler,
-                                                                       m_timer_pool,
-                                                                       m_worker_pool,
+                                                                       *m_timer_pool.get(),
+                                                                       *m_worker_pool.get(),
                                                                        m_connectors,
                                                                        *m_msg_sender,
                                                                        m_requests_fifo,
@@ -813,7 +836,7 @@ void ChargePoint::processUptime()
     // Save counters
     if ((m_uptime % 15u) == 0)
     {
-        m_worker_pool.run<void>(std::bind(&ChargePoint::saveUptime, this));
+        m_worker_pool->run<void>(std::bind(&ChargePoint::saveUptime, this));
     }
 }
 
@@ -833,7 +856,7 @@ void ChargePoint::scheduleReconnect()
     if (!m_reconnect_scheduled)
     {
         m_reconnect_scheduled = true;
-        m_worker_pool.run<void>(
+        m_worker_pool->run<void>(
             [this]
             {
                 // Wait to let some time to configure other parameters

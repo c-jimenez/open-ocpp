@@ -29,8 +29,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "RpcClient.h"
 #include "SecurityManager.h"
 #include "Timer.h"
-#include "TimerPool.h"
-#include "WorkerThreadPool.h"
 
 #include <memory>
 
@@ -73,9 +71,11 @@ class ChargePoint : public IChargePoint,
 {
   public:
     /** @brief Constructor */
-    ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
-                ocpp::config::IOcppConfig&              ocpp_config,
-                IChargePointEventsHandler&              events_handler);
+    ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
+                ocpp::config::IOcppConfig&                       ocpp_config,
+                IChargePointEventsHandler&                       events_handler,
+                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
     virtual ~ChargePoint();
@@ -83,7 +83,10 @@ class ChargePoint : public IChargePoint,
     // IChargePoint interface
 
     /** @copydoc ocpp::helpers::TimerPool& IChargePoint::getTimerPool() */
-    ocpp::helpers::TimerPool& getTimerPool() override { return m_timer_pool; }
+    ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
+
+    /** @copydoc ocpp::helpers::WorkerThreadPool& IChargePoint::getWorkerPool() */
+    ocpp::helpers::WorkerThreadPool& getWorkerPool() override { return *m_worker_pool.get(); }
 
     /** @copydoc bool IChargePoint::resetData() */
     bool resetData() override;
@@ -211,9 +214,9 @@ class ChargePoint : public IChargePoint,
     IChargePointEventsHandler& m_events_handler;
 
     /** @brief Timer pool */
-    ocpp::helpers::TimerPool m_timer_pool;
+    std::shared_ptr<ocpp::helpers::TimerPool> m_timer_pool;
     /** @brief Worker thread pool */
-    ocpp::helpers::WorkerThreadPool m_worker_pool;
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 
     /** @brief Database */
     ocpp::database::Database m_database;
