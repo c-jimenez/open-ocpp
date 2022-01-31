@@ -58,6 +58,9 @@ TEST_SUITE("Constructor")
         CHECK_EQ(cert.pemChain().size(), 1u);
         CHECK_EQ(cert.certificateChain().size(), 1u);
 
+        CHECK_EQ(cert.serialNumber().size(), 20u);
+        CHECK_EQ(cert.serialNumberString(), "13:44:aa:78:b4:6b:bc:49:c7:e5:65:b0:df:a5:ef:3c:48:ac:ba:68");
+
         CHECK_EQ(cert.validityFrom(), 1643404209); // Jan 28 22:10:09 2022 GMT
         CHECK_EQ(cert.validityTo(), 1958764209);   // Jan 26 22:10:09 2032 GMT
 
@@ -116,6 +119,9 @@ TEST_SUITE("Constructor")
         CHECK_EQ(cert.validityFrom(), 1643404209); // Jan 28 22:10:09 2022 GMT
         CHECK_EQ(cert.validityTo(), 1958764209);   // Jan 26 22:10:09 2032 GMT
 
+        CHECK_EQ(cert.serialNumber().size(), 20u);
+        CHECK_EQ(cert.serialNumberString(), "53:4d:28:a4:55:19:00:56:67:59:84:3e:92:06:08:63:fc:51:b6:b9");
+
         CHECK_EQ(cert.issuerString(),
                  "C = FR, ST = Savoie, L = Chambery, O = Open OCPP, OU = Examples, CN = Open OCPP Certificate Authority, emailAddress = "
                  "ca@open-ocpp.org");
@@ -165,6 +171,9 @@ TEST_SUITE("Constructor")
     {
         CHECK_EQ(cert.pemChain().size(), expected_chain_size);
         CHECK_EQ(cert.certificateChain().size(), expected_chain_size);
+
+        CHECK_EQ(cert.serialNumber().size(), 20u);
+        CHECK_EQ(cert.serialNumberString(), "13:44:aa:78:b4:6b:bc:49:c7:e5:65:b0:df:a5:ef:3c:48:ac:ba:67");
 
         CHECK_EQ(cert.validityFrom(), 1643404209); // Jan 28 22:10:09 2022 GMT
         CHECK_EQ(cert.validityTo(), 1958764209);   // Jan 26 22:10:09 2032 GMT

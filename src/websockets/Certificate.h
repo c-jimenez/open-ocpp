@@ -75,6 +75,18 @@ class Certificate
     const std::vector<Certificate>& certificateChain() const { return m_certificate_chain; }
 
     /** 
+     * @brief Get the serial number 
+     * @return Serial number
+     */
+    const std::vector<uint8_t>& serialNumber() const { return m_serial_number; }
+
+    /** 
+     * @brief Get the serial number as string
+     * @return Serial number as string
+     */
+    const std::string& serialNumberString() const { return m_serial_number_string; }
+
+    /** 
      * @brief Get the date of start of validity 
      * @return Date of start of validity
      */
@@ -193,6 +205,10 @@ class Certificate
     /** @brief Certificates composing the certificate chain (if any) */
     std::vector<Certificate> m_certificate_chain;
 
+    /** @brief Serial number */
+    std::vector<uint8_t> m_serial_number;
+    /** @brief Serial number as string */
+    std::string m_serial_number_string;
     /** @brief Date of start of validity */
     time_t m_validity_from;
     /** @brief Date of end of validity */

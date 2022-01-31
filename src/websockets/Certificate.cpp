@@ -134,6 +134,20 @@ void Certificate::readInfos(Certificate& certificate)
         // Certificate is valid
         certificate.m_is_valid = true;
 
+        // Extract serial number
+        const ASN1_INTEGER*  serial_number_asn1 = X509_get0_serialNumber(cert);
+        int                  serial_len         = ASN1_STRING_length(serial_number_asn1);
+        const unsigned char* serial             = ASN1_STRING_get0_data(serial_number_asn1);
+        std::stringstream    ss_serial;
+        ss_serial << std::hex;
+        for (int i = 0; i < serial_len; i++)
+        {
+            ss_serial << std::setw(2) << std::setfill('0') << static_cast<int>(serial[i]) << ":";
+            certificate.m_serial_number.push_back(serial[i]);
+        }
+        certificate.m_serial_number_string = ss_serial.str();
+        certificate.m_serial_number_string.resize(certificate.m_serial_number_string.size() - 1u);
+
         // Extract validity dates
         certificate.m_validity_from = convertAsn1Time(X509_get0_notBefore(cert));
         certificate.m_validity_to   = convertAsn1Time(X509_get0_notAfter(cert));
@@ -169,14 +183,14 @@ void Certificate::readInfos(Certificate& certificate)
             certificate.m_pub_key_algo_param = OBJ_nid2sn(pub_key_algo_param_nid);
         }
 
-        std::stringstream ss;
-        ss << std::hex;
+        std::stringstream ss_pubkey;
+        ss_pubkey << std::hex;
         for (int i = 0; i < pklen; i++)
         {
-            ss << std::setw(2) << std::setfill('0') << static_cast<int>(k[i]) << ":";
+            ss_pubkey << std::setw(2) << std::setfill('0') << static_cast<int>(k[i]) << ":";
             certificate.m_pub_key.push_back(k[i]);
         }
-        certificate.m_pub_key_string = ss.str();
+        certificate.m_pub_key_string = ss_pubkey.str();
         certificate.m_pub_key_string.resize(certificate.m_pub_key_string.size() - 1u);
 
         X509_PUBKEY_free(pub_key);
