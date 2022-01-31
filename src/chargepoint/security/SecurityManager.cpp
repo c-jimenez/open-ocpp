@@ -324,14 +324,22 @@ bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& 
 {
     bool ret = true;
 
+    (void)error_code;
+    (void)error_message;
+
     LOG_INFO << "Delete certificate request received : hashAlgorithm = "
              << HashAlgorithmEnumTypeHelper.toString(request.certificateHashData.hashAlgorithm)
              << " - issuerKeyHash = " << request.certificateHashData.issuerKeyHash.str()
-             << " - issuerNameHash = " << request.certificateHashData.issuerNameHash.str();
+             << " - issuerNameHash = " << request.certificateHashData.issuerNameHash.str()
+             << " - serialNumber = " << request.certificateHashData.serialNumber.str();
 
-    (void)response;
-    (void)error_code;
-    (void)error_message;
+    // Delete certificate
+    response.status = m_events_handler.deleteCertificate(request.certificateHashData.hashAlgorithm,
+                                                         request.certificateHashData.issuerNameHash,
+                                                         request.certificateHashData.issuerKeyHash,
+                                                         request.certificateHashData.serialNumber);
+
+    LOG_INFO << "Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(response.status);
 
     return ret;
 }
@@ -374,7 +382,7 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
                 CertificateHashDataType& hash_data = response.certificateHashData.back();
                 hash_data.hashAlgorithm            = HashAlgorithmEnumType::SHA256;
                 sha256.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
-                hash_data.issuerKeyHash.assign(sha256.resultString());
+                hash_data.issuerNameHash.assign(sha256.resultString());
                 sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
                 hash_data.issuerKeyHash.assign(sha256.resultString());
                 hash_data.serialNumber.assign(certificate.serialNumberHexString());
@@ -387,7 +395,7 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
     }
 
     LOG_INFO << "Get installed certificate ids : status = " << GetInstalledCertificateStatusEnumTypeHelper.toString(response.status)
-             << "count = " << response.certificateHashData.size();
+             << " - count = " << response.certificateHashData.size();
 
     return ret;
 }

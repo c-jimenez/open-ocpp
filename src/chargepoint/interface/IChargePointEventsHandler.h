@@ -203,6 +203,19 @@ class IChargePointEventsHandler
                                                                          const ocpp::websockets::Certificate& certificate) = 0;
 
     /**
+     * @brief Called when the Central System request to delete an installed CA certificate
+     * @param hash_algorithm Hash algorithm used for the following parameters
+     * @param issuer_name_hash Hash of the certificate's issuer's name
+     * @param issuer_key_hash Hash of the certificate's public key
+     * @param serial_number Serial number of the certificate
+     * @return Deletion status (see DeleteCertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                           const std::string&                 issuer_name_hash,
+                                                                           const std::string&                 issuer_key_hash,
+                                                                           const std::string&                 serial_number) = 0;
+
+    /**
      * @brief Called to generate a CSR in PEM format which will be used by the Central System
      *        to generate and sign a certificate for the Charge Point
      * @param csr String to store the generated CSR in PEM format

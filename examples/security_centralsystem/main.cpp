@@ -210,6 +210,26 @@ int main(int argc, char* argv[])
                 // Load server CA certificate
                 Certificate server_ca_certificate(std::filesystem::path(config_p2.stackConfig().tlsServerCertificateCa()));
 
+                // Get installed certificates
+                std::vector<CertificateHashDataType> certificates;
+                if (chargepoint->getInstalledCertificateIds(CertificateUseEnumType::CentralSystemRootCertificate, certificates))
+                {
+                    // Delete all installed certificate
+                    std::cout << "[" << chargepoint_id << "] - " << certificates.size() << " installed CA certificate(s)" << std::endl;
+                    for (const CertificateHashDataType& cert : certificates)
+                    {
+                        if (chargepoint->deleteCertificate(cert) != DeleteCertificateStatusEnumType::Accepted)
+                        {
+                            std::cout << "[" << chargepoint_id << "] - Unable to delete CA certificate : " << cert.serialNumber.str()
+                                      << std::endl;
+                        }
+                    }
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to retrieve the list of installed CA certificates" << std::endl;
+                }
+
                 // Install CA certificate
                 CertificateStatusEnumType install_status =
                     chargepoint->installCertificate(CertificateUseEnumType::CentralSystemRootCertificate, server_ca_certificate);

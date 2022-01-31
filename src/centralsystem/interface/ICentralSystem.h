@@ -339,6 +339,13 @@ class ICentralSystem
         // Security extensions
 
         /**
+         * @brief Delete an installed CA certificate
+         * @param certificate Certificate information
+         * @return Operation status (see DeleteCertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) = 0;
+
+        /**
          * @brief Request the send of a specific message
          * @param message Requested message
          * @param connector_id Id of the connector on which the message applies

@@ -195,6 +195,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     // Security extensions
 
+    /** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
+    ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) override;
+
     /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
                                                                                                                 const ocpp::types::Optional<unsigned int>) */
     ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,

@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ClearCache.h"
 #include "ClearChargingProfile.h"
 #include "DataTransfer.h"
+#include "DeleteCertificate.h"
 #include "ExtendedTriggerMessage.h"
 #include "GetCompositeSchedule.h"
 #include "GetConfiguration.h"
@@ -763,6 +764,34 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 }
 
 // Security extensions
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
+ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate(const ocpp::types::CertificateHashDataType& certificate)
+
+{
+    DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::Failed;
+
+    LOG_INFO << "[" << m_identifier << "] - Delete certificate : serialNumber = " << certificate.serialNumber.str();
+
+    // Prepare request
+    DeleteCertificateReq req;
+    req.certificateHashData = certificate;
+
+    // Send request
+    DeleteCertificateConf resp;
+    CallResult            res = m_msg_sender.call(DELETE_CERTIFICATE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
 
 /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
                                                                                                             const ocpp::types::Optional<unsigned int>) */

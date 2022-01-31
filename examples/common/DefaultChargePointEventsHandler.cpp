@@ -32,6 +32,7 @@ SOFTWARE.
 
 using namespace std;
 using namespace ocpp::types;
+using namespace ocpp::websockets;
 
 /** @brief Constructor */
 DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config)
@@ -328,7 +329,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
     if (getNumberOfCaCertificateInstalled(true, true) < m_config.ocppConfig().certificateStoreMaxLength())
     {
         // Compute SHA256 to generate filename
-        ocpp::websockets::Sha2 sha256;
+        Sha2 sha256;
         sha256.compute(certificate.pem().c_str(), certificate.pem().size());
 
         if (type == CertificateUseEnumType::ManufacturerRootCertificate)
@@ -387,6 +388,73 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
     else
     {
         cout << "Maximum number of certificates reached" << endl;
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::HashAlgorithmEnumType,
+                                                                                                           const std::string&,
+                                                                                                           const std::string&,
+                                                                                                           const std::string&) */
+ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::deleteCertificate(
+    ocpp::types::HashAlgorithmEnumType hash_algorithm,
+    const std::string&                 issuer_name_hash,
+    const std::string&                 issuer_key_hash,
+    const std::string&                 serial_number)
+{
+    DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::NotFound;
+
+    cout << "CA certificate deletion requested : hash = " << HashAlgorithmEnumTypeHelper.toString(hash_algorithm)
+         << " - serial number = " << serial_number << endl;
+
+    // Prepare for hash computation
+    Sha2::Type sha_type;
+    if (hash_algorithm == HashAlgorithmEnumType::SHA256)
+    {
+        sha_type = Sha2::Type::SHA256;
+    }
+    else if (hash_algorithm == HashAlgorithmEnumType::SHA384)
+    {
+        sha_type = Sha2::Type::SHA384;
+    }
+    else
+    {
+        sha_type = Sha2::Type::SHA512;
+    }
+
+    // Look for installed certificates
+    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if ((ocpp::helpers::startsWith(filename, "fw_") || ocpp::helpers::startsWith(filename, "cs_")) &&
+                ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                Certificate certificate(dir_entry.path());
+                if (certificate.isValid() && certificate.serialNumberHexString() == serial_number)
+                {
+                    Sha2 sha(sha_type);
+                    sha.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
+                    if (issuer_name_hash == sha.resultString())
+                    {
+                        sha.compute(&certificate.publicKey()[0], certificate.publicKey().size());
+                        if (issuer_key_hash == sha.resultString())
+                        {
+                            if ((filename == m_config.stackConfig().tlsServerCertificateCa()) || !std::filesystem::remove(dir_entry.path()))
+                            {
+                                ret = DeleteCertificateStatusEnumType::Failed;
+                            }
+                            else
+                            {
+                                ret = DeleteCertificateStatusEnumType::Accepted;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return ret;

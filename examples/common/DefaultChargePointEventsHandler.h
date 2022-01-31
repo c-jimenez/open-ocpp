@@ -125,6 +125,15 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType  type,
                                                                  const ocpp::websockets::Certificate& certificate) override;
 
+    /** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::HashAlgorithmEnumType,
+                                                                                                           const std::string&,
+                                                                                                           const std::string&,
+                                                                                                           const std::string&) */
+    ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                   const std::string&                 issuer_name_hash,
+                                                                   const std::string&                 issuer_key_hash,
+                                                                   const std::string&                 serial_number) override;
+
     /** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
     void generateCsr(std::string& csr) override;
 
