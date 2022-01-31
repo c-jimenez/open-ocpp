@@ -90,7 +90,7 @@ class Sha2
 
   private:
     /** @brief Type */
-    const Type& m_type;
+    const Type m_type;
     /** @brief Computation context */
     void* m_context;
     /** @brief Last computation result */

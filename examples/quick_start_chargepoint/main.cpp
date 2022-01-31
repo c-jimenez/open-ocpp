@@ -122,6 +122,7 @@ int main(int argc, char* argv[])
     {
         charge_point->resetData();
     }
+    event_handler.setChargePoint(*charge_point.get());
     charge_point->start();
 
     // From now on the stack is alive :)

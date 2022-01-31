@@ -115,6 +115,7 @@ int main(int argc, char* argv[])
     {
         charge_point->resetData();
     }
+    event_handler.setChargePoint(*charge_point.get());
 
     // Security event can be sent even when the stack has not been started
     // => they are queued (and stored if the functionnality has been enabled) and will automatically forwarded to Central System on connection

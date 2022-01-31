@@ -37,6 +37,7 @@ SOFTWARE.
 
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::websockets;
 
 /** @brief Indicate if a change of configuration has been accepted by the charge point */
 static bool isConfigurationChangeAccepted(ConfigurationStatus status);
@@ -197,6 +198,48 @@ int main(int argc, char* argv[])
                 else
                 {
                     std::cout << "[" << chargepoint_id << "] - Unable to configure AuthorizationKey" << std::endl;
+                }
+            }
+            break;
+
+            case 1:
+            {
+                // Configure for security profile 2 : TLS + HTTP Basic Authentication
+                std::cout << "[" << chargepoint_id << "] - Configuring security profile 2" << std::endl;
+
+                // Load server CA certificate
+                Certificate server_ca_certificate(std::filesystem::path(config_p2.stackConfig().tlsServerCertificateCa()));
+
+                // Install CA certificate
+                CertificateStatusEnumType install_status =
+                    chargepoint->installCertificate(CertificateUseEnumType::CentralSystemRootCertificate, server_ca_certificate);
+                if (install_status == CertificateStatusEnumType::Accepted)
+                {
+                    // Configure new connection URL => Non OCPP standard but necessary to automatize the process
+                    ConfigurationStatus configure_status =
+                        chargepoint->changeConfiguration("ConnexionUrl", config_p2.stackConfig().listenUrl());
+                    if (isConfigurationChangeAccepted(configure_status))
+                    {
+                        // Configure new security profile
+                        configure_status = chargepoint->changeConfiguration("SecurityProfile", "2");
+                        if (isConfigurationChangeAccepted(configure_status))
+                        {
+                            // Update security profile in database
+                            chargepoint_db.setChargePointProfile(chargepoint_id, 2u);
+                        }
+                        else
+                        {
+                            std::cout << "[" << chargepoint_id << "] - Unable to configure SecurityProfile" << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "[" << chargepoint_id << "] - Unable to configure ConnexionUrl" << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to install Central System CA certificate" << std::endl;
                 }
             }
             break;

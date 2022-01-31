@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef DEFAULTCHARGEPOINTEVENTSHANDLER_H
 #define DEFAULTCHARGEPOINTEVENTSHANDLER_H
 
+#include "IChargePoint.h"
 #include "IChargePointEventsHandler.h"
 
 #include <vector>
@@ -40,6 +41,9 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
 
     /** @brief Destructor */
     virtual ~DefaultChargePointEventsHandler();
+
+    /** @brief Set the associated Charge Point instance */
+    void setChargePoint(ocpp::chargepoint::IChargePoint& chargepoint) { m_chargepoint = &chargepoint; }
 
     // IChargePointEventsHandler interface
 
@@ -116,6 +120,11 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
 
     // Security extensions
 
+    /** @copydoc ocpp::types::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType,
+                                                                                                         const ocpp::websockets::Certificate&) */
+    ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType  type,
+                                                                 const ocpp::websockets::Certificate& certificate) override;
+
     /** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
     void generateCsr(std::string& csr) override;
 
@@ -125,6 +134,9 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     std::string getLog(ocpp::types::LogEnumType                            type,
                        const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                        const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
+
+    /** @copydoc bool IChargePointEventsHandler::hasCentralSystemCaCertificateInstalled() */
+    bool hasCentralSystemCaCertificateInstalled() override;
 
     // API
 
@@ -150,12 +162,17 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
   private:
     /** @brief Configuration */
     ChargePointDemoConfig& m_config;
+    /** @brief Associated Charge Point instance */
+    ocpp::chargepoint::IChargePoint* m_chargepoint;
     /** @brief Indicate a pending remote start transaction */
     std::vector<bool> m_remote_start_pending;
     /** @brief Indicate a pending remote stop transaction */
     std::vector<bool> m_remote_stop_pending;
     /** @brief Id tag for the remote start request */
     std::vector<std::string> m_remote_start_id_tag;
+
+    /** @brief Get the number of installed CA certificates */
+    unsigned int getNumberOfCaCertificateInstalled(bool manufacturer, bool central_system);
 };
 
 #endif // DEFAULTCHARGEPOINTEVENTSHANDLER_H

@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "DefaultChargePointEventsHandler.h"
 #include "ChargePointDemoConfig.h"
+#include "Sha2.h"
 #include "String.h"
 
 #include <fstream>
@@ -35,6 +36,7 @@ using namespace ocpp::types;
 /** @brief Constructor */
 DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config)
     : m_config(config),
+      m_chargepoint(nullptr),
       m_remote_start_pending(config.ocppConfig().numberOfConnectors()),
       m_remote_stop_pending(m_remote_start_pending.size()),
       m_remote_start_id_tag(m_remote_start_pending.size())
@@ -311,6 +313,85 @@ bool DefaultChargePointEventsHandler::downloadFile(const std::string& url, const
 
 // Security extensions
 
+/** @copydoc ocpp::types::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType,
+                                                                                                         const ocpp::websockets::Certificate&) */
+ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertificateReceived(
+    ocpp::types::CertificateUseEnumType type, const ocpp::websockets::Certificate& certificate)
+{
+    std::string               ca_filename;
+    CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
+
+    cout << "CA certificate installation requested : type = " << CertificateUseEnumTypeHelper.toString(type)
+         << " - certificate subject = " << certificate.subjectString() << endl;
+
+    // Check number of installed certificates
+    if (getNumberOfCaCertificateInstalled(true, true) < m_config.ocppConfig().certificateStoreMaxLength())
+    {
+        // Compute SHA256 to generate filename
+        ocpp::websockets::Sha2 sha256;
+        sha256.compute(certificate.pem().c_str(), certificate.pem().size());
+
+        if (type == CertificateUseEnumType::ManufacturerRootCertificate)
+        {
+            // Manufacturer => generate a filename to add the new CA
+
+            std::stringstream name;
+            name << "fw_" << sha256.resultString() << ".pem";
+            ca_filename = name.str();
+        }
+        else
+        {
+            // Central System => Check AdditionalRootCertificateCheck configuration key
+
+            if (m_config.ocppConfig().additionalRootCertificateCheck() && (getNumberOfCaCertificateInstalled(false, true) == 0))
+            {
+                // Additionnal checks :
+                // - only 1 CA certificate allowed
+                // - new certificate must be signed by the old one
+
+                // TODO :)
+            }
+
+            std::stringstream name;
+            name << "cs_" << sha256.resultString() << ".pem";
+            ca_filename = name.str();
+        }
+
+        // Check if the certificate must be saved
+        if (!ca_filename.empty())
+        {
+            std::fstream certificate_file(ca_filename, certificate_file.out);
+            if (certificate_file.is_open())
+            {
+                certificate_file << certificate.pem();
+                ret = CertificateStatusEnumType::Accepted;
+                cout << "Certificate saved : " << ca_filename << endl;
+
+                if (type == CertificateUseEnumType::CentralSystemRootCertificate)
+                {
+                    // Use the new certificate
+                    m_config.setStackConfigValue("TlsServerCertificateCa", ca_filename);
+                    if (m_chargepoint)
+                    {
+                        m_chargepoint->reconnect();
+                    }
+                }
+            }
+            else
+            {
+                ret = CertificateStatusEnumType::Failed;
+                cout << "Unable to save certificate : " << ca_filename << endl;
+            }
+        }
+    }
+    else
+    {
+        cout << "Maximum number of certificates reached" << endl;
+    }
+
+    return ret;
+}
+
 /** @copydoc void IChargePointEventsHandler::generateCsr(std::string&) */
 void DefaultChargePointEventsHandler::generateCsr(std::string& csr)
 {
@@ -416,4 +497,31 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
     }
 
     return log_file;
+}
+
+bool DefaultChargePointEventsHandler::hasCentralSystemCaCertificateInstalled()
+{
+    return ((getNumberOfCaCertificateInstalled(false, true) != 0) && (!m_config.stackConfig().tlsServerCertificateCa().empty()));
+}
+
+/** @brief Get the number of installed CA certificates */
+unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(bool manufacturer, bool central_system)
+{
+    unsigned int count = 0;
+    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (manufacturer && ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                count++;
+            }
+            if (central_system && ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                count++;
+            }
+        }
+    }
+    return count;
 }

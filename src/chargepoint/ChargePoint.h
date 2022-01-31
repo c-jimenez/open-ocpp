@@ -100,6 +100,9 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::stop() */
     bool stop() override;
 
+    /** @copydoc bool IChargePoint::reconnect() */
+    bool reconnect() override;
+
     /** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
     ocpp::types::RegistrationStatus getRegistrationStatus() override;
 

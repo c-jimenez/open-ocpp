@@ -108,6 +108,12 @@ class IChargePoint
     virtual bool stop() = 0;
 
     /**
+     * @brief Triggers a reconnexion of the charge point to the Central System
+     * @return true if the reconnexion has been scheduled, false otherwise
+     */
+    virtual bool reconnect() = 0;
+
+    /**
      * @brief Get the registration status of the charge point
      * @return Registration of the charge point
      */

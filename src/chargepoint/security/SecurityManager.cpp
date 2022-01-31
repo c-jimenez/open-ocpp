@@ -17,6 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "SecurityManager.h"
+#include "Certificate.h"
 #include "GenericMessageSender.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
@@ -368,12 +369,24 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
 {
     bool ret = true;
 
+    (void)error_code;
+    (void)error_message;
+
     LOG_INFO << "Install certificate request received : certificateType = "
              << CertificateUseEnumTypeHelper.toString(request.certificateType) << " - certificate size = " << request.certificate.size();
 
-    (void)response;
-    (void)error_code;
-    (void)error_message;
+    // Prepare response
+    response.status = CertificateStatusEnumType::Rejected;
+
+    // Check certificate
+    ocpp::websockets::Certificate certificate(request.certificate.str());
+    if (certificate.isValid())
+    {
+        // Notify new certificate
+        response.status = m_events_handler.caCertificateReceived(request.certificateType, certificate);
+    }
+
+    LOG_INFO << "Install certificate : " << CertificateStatusEnumTypeHelper.toString(response.status);
 
     return ret;
 }
@@ -427,7 +440,7 @@ ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(
                 // Basic authent + TLS (server authentication only)
                 // AuthorizationKey value must no be empty
                 // A Central System root certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
+                if (!m_ocpp_config.authorizationKey().empty() && m_events_handler.hasCentralSystemCaCertificateInstalled())
                 {
                     ret = ConfigurationStatus::Accepted;
                 }

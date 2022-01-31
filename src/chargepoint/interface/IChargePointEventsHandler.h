@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICHARGEPOINTEVENTSHANDLER_H
 #define ICHARGEPOINTEVENTSHANDLER_H
 
+#include "Certificate.h"
 #include "DateTime.h"
 #include "Enums.h"
 #include "MeterValue.h"
@@ -193,6 +194,15 @@ class IChargePointEventsHandler
     // Security extensions
 
     /**
+     * @brief Called when a CA certificate has been received and must be installed
+     * @param type Type of CA certificate
+     * @param certificate CA certificate to install
+     * @return Installation status (see CertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType  type,
+                                                                         const ocpp::websockets::Certificate& certificate) = 0;
+
+    /**
      * @brief Called to generate a CSR in PEM format which will be used by the Central System
      *        to generate and sign a certificate for the Charge Point
      * @param csr String to store the generated CSR in PEM format
@@ -212,6 +222,12 @@ class IChargePointEventsHandler
     virtual std::string getLog(ocpp::types::LogEnumType                            type,
                                const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                                const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
+
+    /**
+     * @brief Called to check if at least 1 Central System root certificate has been installed
+     * @return true if at least 1 certificate has been installed, false otherwise
+     */
+    virtual bool hasCentralSystemCaCertificateInstalled() = 0;
 };
 
 } // namespace chargepoint

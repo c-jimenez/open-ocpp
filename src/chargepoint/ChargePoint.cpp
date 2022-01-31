@@ -317,8 +317,7 @@ bool ChargePoint::start()
         m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager, *m_config_manager);
 
         // Start connection
-        m_reconnect_scheduled = false;
-        ret                   = doConnect();
+        ret = doConnect();
     }
     else
     {
@@ -378,6 +377,26 @@ bool ChargePoint::stop()
     return ret;
 }
 
+/** @copydoc bool IChargePoint::reconnect() */
+bool ChargePoint::reconnect()
+{
+    bool ret = false;
+
+    // Check if it is started
+    if (m_rpc_client)
+    {
+        // Schedule of reconnexion
+        LOG_INFO << "Reconnect asked by user application";
+        scheduleReconnect();
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "Stack stopped";
+    }
+
+    return ret;
+}
 /** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
 ocpp::types::RegistrationStatus ChargePoint::getRegistrationStatus()
 {
@@ -927,6 +946,7 @@ bool ChargePoint::doConnect()
     }
 
     // Start connection process
+    m_reconnect_scheduled = false;
     return m_rpc_client->start(connection_url,
                                credentials,
                                m_stack_config.connectionTimeout(),

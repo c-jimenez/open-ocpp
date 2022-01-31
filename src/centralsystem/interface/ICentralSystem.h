@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define ICENTRALSYSTEM_H
 
 #include "AuthorizationData.h"
+#include "Certificate.h"
 #include "ChargingProfile.h"
 #include "ICentralSystemConfig.h"
 #include "IChargePointRequestHandler.h"
@@ -365,6 +366,15 @@ class ICentralSystem
                             const ocpp::types::Optional<ocpp::types::DateTime>& start,
                             const ocpp::types::Optional<ocpp::types::DateTime>& stop,
                             std::string&                                        log_filename) = 0;
+
+        /**
+         * @brief Install a CA certificate
+         * @param type Type of CA certificate
+         * @param certificate CA certificate to install
+         * @return Operation status (see CertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType  type,
+                                                                          const ocpp::websockets::Certificate& certificate) = 0;
     };
 };
 

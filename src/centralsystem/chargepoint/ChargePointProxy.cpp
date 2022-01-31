@@ -30,6 +30,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetLocalListVersion.h"
 #include "GetLog.h"
 #include "ICentralSystemConfig.h"
+#include "InstallCertificate.h"
 #include "Logger.h"
 #include "RemoteStartTransaction.h"
 #include "RemoteStopTransaction.h"
@@ -762,6 +763,38 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 
 // Security extensions
 
+/** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
+                                                                                                const ocpp::types::Optional<unsigned int>) */
+ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
+                                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+{
+    TriggerMessageStatusEnumType ret = TriggerMessageStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Extended trigger message : requestedMessage = " << MessageTriggerEnumTypeHelper.toString(message)
+             << " - connectorId = " << (connector_id.isSet() ? std::to_string(connector_id) : "not set");
+
+    // Prepare request
+    ExtendedTriggerMessageReq req;
+    req.requestedMessage = message;
+    req.connectorId      = connector_id;
+
+    // Send request
+    ExtendedTriggerMessageConf resp;
+    CallResult                 res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Extended trigger message : " << TriggerMessageStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
 /** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
                                                            int,
                                                            const std::string&,
@@ -818,29 +851,28 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
     return ret;
 }
 
-/** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
-                                                                                                const ocpp::types::Optional<unsigned int>) */
-ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
-                                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+/** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
+                                                                                           const ocpp::websockets::Certificate&) */
+ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::CertificateUseEnumType  type,
+                                                                            const ocpp::websockets::Certificate& certificate)
 {
-    TriggerMessageStatusEnumType ret = TriggerMessageStatusEnumType::Rejected;
+    CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
 
-    LOG_INFO << "[" << m_identifier
-             << "] - Extended trigger message : requestedMessage = " << MessageTriggerEnumTypeHelper.toString(message)
-             << " - connectorId = " << (connector_id.isSet() ? std::to_string(connector_id) : "not set");
+    LOG_INFO << "[" << m_identifier << "] - Install certificate : certificateType = " << CertificateUseEnumTypeHelper.toString(type)
+             << " - certificate subject = " << certificate.subjectString();
 
     // Prepare request
-    ExtendedTriggerMessageReq req;
-    req.requestedMessage = message;
-    req.connectorId      = connector_id;
+    InstallCertificateReq req;
+    req.certificateType = type;
+    req.certificate.assign(certificate.pem());
 
     // Send request
-    ExtendedTriggerMessageConf resp;
-    CallResult                 res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
+    InstallCertificateConf resp;
+    CallResult             res = m_msg_sender.call(INSTALL_CERTIFICATE_ACTION, req, resp);
     if (res == CallResult::Ok)
     {
         ret = resp.status;
-        LOG_INFO << "[" << m_identifier << "] - Extended trigger message : " << TriggerMessageStatusEnumTypeHelper.toString(resp.status);
+        LOG_INFO << "[" << m_identifier << "] - Install certificate : " << CertificateStatusEnumTypeHelper.toString(resp.status);
     }
     else
     {

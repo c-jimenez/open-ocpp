@@ -42,6 +42,9 @@ class ChargePointDemoConfig
     /** @brief Standard OCPP configuration */
     ocpp::config::IOcppConfig& ocppConfig() { return m_ocpp_config; }
 
+    /** @brief Set the value of a stack internal configuration key */
+    void setStackConfigValue(const std::string& key, const std::string& value) { m_stack_config.setConfigValue(key, value); }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile m_config;
