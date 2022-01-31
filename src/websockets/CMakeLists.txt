@@ -7,6 +7,7 @@
 # Library target
 add_library(ws STATIC
     Certificate.cpp
+    Sha2.cpp
     Url.cpp
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
