@@ -26,6 +26,7 @@ SOFTWARE.
 #include "Sha2.h"
 #include "String.h"
 
+#include <fstream>
 #include <iostream>
 #include <thread>
 
@@ -353,24 +354,38 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                 ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
                 ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
                 std::string       certificate_filename = csr_filename + ".crt";
-                std::stringstream generate_params_cmd_line;
-                generate_params_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path
-                                         << " -CAkey " << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
-                system(generate_params_cmd_line.str().c_str());
+                std::stringstream sign_cert_cmd_line;
+                sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
+                                   << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
+                system(sign_cert_cmd_line.str().c_str());
 
                 // Check if the certificate has been generated
                 if (std::filesystem::exists(certificate_filename))
                 {
-                    m_generated_certificate = certificate_filename;
-                    ret                     = true;
+                    // Create bundle
+                    std::string       bundle_filename = certificate_filename + ".bundle";
+                    std::stringstream generate_bundle_cmd_line;
+                    generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
+                    system(generate_bundle_cmd_line.str().c_str());
+                    if (std::filesystem::exists(bundle_filename))
+                    {
+                        m_generated_certificate = bundle_filename;
+                        ret                     = true;
+                    }
+                    else
+                    {
+                        cout << "[" << m_chargepoint->identifier()
+                             << "] - Failed to generate certificate bundle : " << generate_bundle_cmd_line.str();
+                    }
                 }
                 else
                 {
-                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << generate_params_cmd_line.str();
+                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << sign_cert_cmd_line.str();
                 }
 
-                // Remove the temporary file
+                // Remove the temporary files
                 std::filesystem::remove(csr_filename);
+                std::filesystem::remove(certificate_filename);
             }
             else
             {

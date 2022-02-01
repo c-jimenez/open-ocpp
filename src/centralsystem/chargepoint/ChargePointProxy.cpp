@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ChargePointProxy.h"
 #include "CancelReservation.h"
+#include "CertificateSigned.h"
 #include "ChangeAvailability.h"
 #include "ChangeConfiguration.h"
 #include "ClearCache.h"
@@ -764,6 +765,33 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 }
 
 // Security extensions
+
+/** @copydoc bool ICentralSystem::IChargePoint::certificateSigned(const ocpp::x509::Certificate&) */
+bool ChargePointProxy::certificateSigned(const ocpp::x509::Certificate& certificate_chain)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Certificate signed : certificate chain size = " << certificate_chain.pemChain().size();
+
+    // Prepare request
+    CertificateSignedReq req;
+    req.certificateChain.assign(certificate_chain.pem());
+
+    // Send request
+    CertificateSignedConf resp;
+    CallResult            res = m_msg_sender.call(CERTIFICATE_SIGNED_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = (resp.status == CertificateSignedStatusEnumType::Accepted);
+        LOG_INFO << "[" << m_identifier << "] - Certificate signed : " << CertificateSignedStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
 
 /** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
 ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate(const ocpp::types::CertificateHashDataType& certificate)

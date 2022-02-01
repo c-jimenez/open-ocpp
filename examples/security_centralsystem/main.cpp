@@ -269,8 +269,12 @@ int main(int argc, char* argv[])
                 // Configure for security profile 3 : TLS + Client authentication using certificate
                 std::cout << "[" << chargepoint_id << "] - Configuring security profile 2" << std::endl;
 
+                // Load server CA certificate
+                Certificate server_ca_certificate(std::filesystem::path(config_p3.stackConfig().tlsServerCertificateCa()));
+
                 // Configure the name of the CPO
-                ConfigurationStatus configure_status = chargepoint->changeConfiguration("CpoName", "Open OCPP");
+                ConfigurationStatus configure_status =
+                    chargepoint->changeConfiguration("CpoName", server_ca_certificate.subject().organization);
                 if (isConfigurationChangeAccepted(configure_status))
                 {
                     // Trigger the generation of a certificate request by the Charge Point
@@ -290,9 +294,35 @@ int main(int argc, char* argv[])
                             // Install the new certificate
                             std::filesystem::path chargepoint_cert_path(chargepoint_handler->generatedCertificate());
                             Certificate           chargepoint_cert(chargepoint_cert_path);
-                            if (chargepoint_cert.isValid())
+                            if (chargepoint_cert.isValid() && chargepoint_cert.verify())
                             {
-                                std::cout << "[" << chargepoint_id << "] - Ready for next step" << std::endl;
+                                if (chargepoint->certificateSigned(chargepoint_cert))
+                                {
+                                    configure_status =
+                                        chargepoint->changeConfiguration("ConnexionUrl", config_p3.stackConfig().listenUrl());
+                                    if (isConfigurationChangeAccepted(configure_status))
+                                    {
+                                        // Configure new security profile
+                                        configure_status = chargepoint->changeConfiguration("SecurityProfile", "3");
+                                        if (isConfigurationChangeAccepted(configure_status))
+                                        {
+                                            // Update security profile in database
+                                            chargepoint_db.setChargePointProfile(chargepoint_id, 3u);
+                                        }
+                                        else
+                                        {
+                                            std::cout << "[" << chargepoint_id << "] - Unable to configure SecurityProfile" << std::endl;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        std::cout << "[" << chargepoint_id << "] - Unable to configure ConnexionUrl" << std::endl;
+                                    }
+                                }
+                                else
+                                {
+                                    std::cout << "[" << chargepoint_id << "] - Unable to install the generated certificate" << std::endl;
+                                }
                             }
                             else
                             {

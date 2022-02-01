@@ -195,6 +195,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     // Security extensions
 
+    /** @copydoc bool ICentralSystem::IChargePoint::certificateSigned(const ocpp::x509::Certificate&) */
+    bool certificateSigned(const ocpp::x509::Certificate& certificate_chain) override;
+
     /** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
     ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) override;
 

@@ -345,6 +345,13 @@ class ICentralSystem
         // Security extensions
 
         /**
+         * @brief Send a generated certificate chain after a SignCertificate request from the charge point
+         * @param certificate_chain Generated certificate chain
+         * @return true if the certificate chain has been accepted by the charge point, false otherwise
+         */
+        virtual bool certificateSigned(const ocpp::x509::Certificate& certificate_chain) = 0;
+
+        /**
          * @brief Delete an installed CA certificate
          * @param certificate Certificate information
          * @return Operation status (see DeleteCertificateStatusEnumType documentation)
