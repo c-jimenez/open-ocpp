@@ -19,23 +19,17 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CERTIFICATE_H
 #define CERTIFICATE_H
 
-#include <chrono>
-#include <cstdint>
-#include <filesystem>
-#include <string>
-#include <vector>
+#include "X509Document.h"
 
 namespace ocpp
 {
-namespace websockets
+namespace x509
 {
 
 /** @brief Helper class for certificate manipulation */
-class Certificate
+class Certificate : public X509Document
 {
   public:
-    struct Subject;
-
     /**
      * @brief Constructor from PEM file
      * @param pem_file PEM file to load
@@ -52,16 +46,12 @@ class Certificate
     virtual ~Certificate();
 
     /**
-     * @brief Indicate if the certificate is valid
-     * @return true if the certificate is valid, false otherwise
+     * @brief Verify the PEM certificate chain
+     *        The certificate to verify must be the first in list, then the sub-CAs
+     *        if they exists and finally the root-CA
+     * @return true if the PEM certificate chain is valid, false otherwise
      */
-    bool isValid() const { return m_is_valid; }
-
-    /**
-     * @brief Get the PEM encoded data representation of the certificate
-     * @return PEM encoded data representation of the certificate
-     */
-    const std::string& pem() const { return m_pem; }
+    bool verify() const;
 
     /** 
      * @brief Get the PEM encoded data representation of each certificate composing the certificate chain (if any) 
@@ -123,89 +113,12 @@ class Certificate
     const std::vector<std::string>& issuerAltNames() const { return m_issuer_alternate_names; }
 
     /** 
-     * @brief Get the subject 
-     * @return Subject
+     * @brief Indicate if it is a self-signed certificate 
+     * @return true if it is a self signed certificate, false otherwise
      */
-    const Subject& subject() const { return m_subject; }
-
-    /** 
-     * @brief Get the subject string
-     * @return Subject string
-     */
-    const std::string& subjectString() const { return m_subject_string; }
-
-    /** 
-     * @brief Get the subject alternate names
-     * @return Subject alternate names
-     */
-    const std::vector<std::string>& subjectAltNames() const { return m_subject_alternate_names; }
-
-    /** 
-     * @brief Get the signature algorithm 
-     * @return Signature algorithm
-     */
-    const std::string& signatureAlgo() const { return m_sig_algo; }
-
-    /** 
-     * @brief Get the signature hash 
-     * @return Signature hash
-     */
-    const std::string& signatureHash() const { return m_sig_hash; }
-
-    /** 
-     * @brief Get the public key 
-     * @return Public key
-     */
-    const std::vector<uint8_t>& publicKey() const { return m_pub_key; }
-
-    /** 
-     * @brief Get the public key as string
-     * @return Public key as string
-     */
-    const std::string& publicKeyString() const { return m_pub_key_string; }
-
-    /** 
-     * @brief Get the public key algorithm
-     * @return Public key algorithm
-     */
-    const std::string& publicKeyAlgo() const { return m_pub_key_algo; }
-
-    /** 
-     * @brief Get the public key algorithm parameter
-     * @return Public key algorithm parameter
-     */
-    const std::string& publicKeyAlgoParam() const { return m_pub_key_algo_param; }
-
-    /** 
-     * @brief Get the X509v3 extensions
-     * @return X509v3 extensions
-     */
-    const std::vector<std::string>& x509v3Extensions() const { return m_x509v3_extensions; }
-
-    /** @brief Contains subject information */
-    struct Subject
-    {
-        /** @brief Country */
-        std::string country;
-        /** @brief State */
-        std::string state;
-        /** @brief Location */
-        std::string location;
-        /** @brief Organization */
-        std::string organization;
-        /** @brief Organization unit */
-        std::string organization_unit;
-        /** @brief Common name */
-        std::string common_name;
-        /** @brief E-mail address */
-        std::string email_address;
-    };
+    bool isSelfSigned() const { return m_is_self_signed; }
 
   private:
-    /** @brief Indicate if the certificate is valid */
-    bool m_is_valid;
-    /** @brief PEM encoded data representation of the certificate */
-    std::string m_pem;
     /** @brief PEM encoded data representation of each certificate composing the certificate chain (if any) */
     std::vector<std::string> m_pem_chain;
     /** @brief Certificates composing the certificate chain (if any) */
@@ -227,45 +140,19 @@ class Certificate
     std::string m_issuer_string;
     /** @brief Issuer alternate names */
     std::vector<std::string> m_issuer_alternate_names;
-    /** @brief Subject */
-    Subject m_subject;
-    /** @brief Subject string */
-    std::string m_subject_string;
-    /** @brief Subject alternate names */
-    std::vector<std::string> m_subject_alternate_names;
-    /** @brief Signature algorithm */
-    std::string m_sig_algo;
-    /** @brief Signature hash */
-    std::string m_sig_hash;
-    /** @brief Public key */
-    std::vector<uint8_t> m_pub_key;
-    /** @brief Public key as hexadecimal string */
-    std::string m_pub_key_string;
-    /** @brief Public key algorithm */
-    std::string m_pub_key_algo;
-    /** @brief Public key algorithm parameter */
-    std::string m_pub_key_algo_param;
-    /** @brief X509v3 extensions */
-    std::vector<std::string> m_x509v3_extensions;
+    /** @brief Indicate if it is a self-signed certificate */
+    bool m_is_self_signed;
 
     /** @brief Extract all the PEM certificates in the certificate chain */
     void extractPemChain();
 
+    /** @brief Load OpenSSL X509 certificate structure from a PEM encoded data string */
+    static void* loadX509(const std::string& pem_data);
     /** @brief Read X509 informations stored inside a certificate */
     static void readInfos(Certificate& certificate);
-
-    /** @brief Convert a date in ASN1_TIME format to a standard time_t representation */
-    static time_t convertAsn1Time(const void* pasn1_time);
-    /** @brief Convert a string in X509_NAME format to a standard string representation */
-    static std::string convertX509Name(const void* px509_name);
-    /** @brief Convert a list of strings in GENERAL_NAMES format to a standard vector of strings representation */
-    static std::vector<std::string> convertGeneralNames(const void* pgeneral_names);
-
-    /** @brief Parse a subject's string */
-    static void parseSubjectString(const std::string& subject_string, Subject& subject);
 };
 
-} // namespace websockets
+} // namespace x509
 } // namespace ocpp
 
 #endif // CERTIFICATE_H

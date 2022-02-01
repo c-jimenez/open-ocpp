@@ -17,13 +17,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Certificate.h"
+#include "CertificateRequest.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
 #include <fstream>
 #include <iostream>
 using namespace std;
-using namespace ocpp::websockets;
+using namespace ocpp::x509;
 
 /** @brief Test certificate in PEM encoded file format */
 #define CERT_PEM_FILE CERT_DIR "/cert.pem"
@@ -50,7 +51,23 @@ A0xBJizDdeWUD563hEAUmEEi17wZWQIhAOpfl5V3UnuouNBJvnnH7K+Izxig+CBI
 /** @brief Test certificate bundle in PEM encoded file format */
 #define BUNDLE_CERT_PEM_FILE CERT_DIR "/bundle.pem"
 
-TEST_SUITE("Constructor")
+/** @brief Test certificate request in PEM encoded file format */
+#define CERT_REQUEST_PEM_FILE CERT_DIR "/cert_request.pem"
+
+/** @brief Test certificate request in PEM encoded format */
+static std::string CERT_REQUEST_PEM_DATA = std::string(R"(-----BEGIN CERTIFICATE REQUEST-----
+MIIBYDCCAQcCAQAwgaQxCzAJBgNVBAYTAkZSMQ8wDQYDVQQIDAZTYXZvaWUxETAP
+BgNVBAcMCENoYW1iZXJ5MRIwEAYDVQQKDAlPcGVuIE9DUFAxETAPBgNVBAsMCEV4
+YW1wbGVzMR8wHQYDVQQDDBZPcGVuIE9DUFAgQ2hhcmdlIFBvaW50MSkwJwYJKoZI
+hvcNAQkBFhpjaGFyZ2UucG9pbnRAb3Blbi1vY3BwLm9yZzBZMBMGByqGSM49AgEG
+CCqGSM49AwEHA0IABLVagM6gtbSRzktgZ2pd9o8fFxxrhiYKWlYUmZjny/Bl46EK
+4IwOUxjE8yg+TJW2uqi4BLXa3c5bnA/7XWEu8u6gADAKBggqhkjOPQQDAgNHADBE
+AiA9/utT5xsZenKNLyBLSeppamtmmmvvQZi/ADiLY1npzQIgTrevr648pYT/vdoH
+p0lygw5wtygHTZ3+Ve+BFFQVdZQ=
+-----END CERTIFICATE REQUEST-----
+)");
+
+TEST_SUITE("Certificate")
 {
     /** @brief Check fields from test certificate */
     void checkTestCertificateFields(const Certificate& cert)
@@ -93,6 +110,8 @@ TEST_SUITE("Constructor")
         CHECK_EQ(subject_alt_names.size(), 2u);
         CHECK_EQ(subject_alt_names[0u], "localhost");
         CHECK_EQ(subject_alt_names[1u], "127.0.0.1");
+
+        CHECK_FALSE(cert.isSelfSigned());
 
         CHECK_EQ(cert.signatureAlgo(), "ecdsa-with-SHA256");
         CHECK_EQ(cert.signatureHash(), "SHA256");
@@ -149,6 +168,8 @@ TEST_SUITE("Constructor")
         CHECK_EQ(subject_alt_names.size(), 2u);
         CHECK_EQ(subject_alt_names[0u], "localhost");
         CHECK_EQ(subject_alt_names[1u], "127.0.0.1");
+
+        CHECK(cert.isSelfSigned());
 
         CHECK_EQ(cert.signatureAlgo(), "ecdsa-with-SHA256");
         CHECK_EQ(cert.signatureHash(), "SHA256");
@@ -208,6 +229,8 @@ TEST_SUITE("Constructor")
         CHECK_EQ(subject_alt_names[0u], "localhost");
         CHECK_EQ(subject_alt_names[1u], "127.0.0.1");
 
+        CHECK_FALSE(cert.isSelfSigned());
+
         CHECK_EQ(cert.signatureAlgo(), "ecdsa-with-SHA256");
         CHECK_EQ(cert.signatureHash(), "SHA256");
 
@@ -258,5 +281,56 @@ TEST_SUITE("Constructor")
 
         // Check fields
         checkBundleCertificateFields(cert);
+
+        // Check certificate chain validity
+        CHECK(cert.verify());
+    }
+}
+
+TEST_SUITE("Certificate request")
+{
+    /** @brief Check fields from test certificate certificate request */
+    void checkTestCertificateRequestFields(const CertificateRequest& cert)
+    {
+        CHECK_EQ(cert.subjectString(),
+                 "C = FR, ST = Savoie, L = Chambery, O = Open OCPP, OU = Examples, CN = Open OCPP Charge Point, emailAddress = "
+                 "charge.point@open-ocpp.org");
+        const Certificate::Subject& subject = cert.subject();
+        CHECK_EQ(subject.country, "FR");
+        CHECK_EQ(subject.state, "Savoie");
+        CHECK_EQ(subject.location, "Chambery");
+        CHECK_EQ(subject.organization, "Open OCPP");
+        CHECK_EQ(subject.organization_unit, "Examples");
+        CHECK_EQ(subject.common_name, "Open OCPP Charge Point");
+        CHECK_EQ(subject.email_address, "charge.point@open-ocpp.org");
+
+        CHECK_EQ(cert.signatureAlgo(), "ecdsa-with-SHA256");
+
+        CHECK_EQ(cert.publicKey().size(), 65u);
+        CHECK_EQ(cert.publicKeyString(),
+                 "04:b5:5a:80:ce:a0:b5:b4:91:ce:4b:60:67:6a:5d:f6:8f:1f:17:1c:6b:86:26:0a:5a:56:14:99:98:e7:cb:f0:65:e3:a1:0a:e0:8c:0e:53:"
+                 "18:c4:f3:28:3e:4c:95:b6:ba:a8:b8:04:b5:da:dd:ce:5b:9c:0f:fb:5d:61:2e:f2:ee");
+        CHECK_EQ(cert.publicKeyAlgo(), "id-ecPublicKey");
+        CHECK_EQ(cert.publicKeyAlgoParam(), "prime256v1");
+    }
+
+    TEST_CASE("From PEM certificate file")
+    {
+        // Load cert
+        CertificateRequest cert_request(std::filesystem::path(CERT_REQUEST_PEM_FILE));
+        CHECK(cert_request.isValid());
+
+        // Check fields
+        checkTestCertificateRequestFields(cert_request);
+    }
+
+    TEST_CASE("From PEM encoded data")
+    {
+        // Load cert
+        CertificateRequest cert_request(CERT_REQUEST_PEM_DATA);
+        CHECK(cert_request.isValid());
+
+        // Check fields
+        checkTestCertificateRequestFields(cert_request);
     }
 }

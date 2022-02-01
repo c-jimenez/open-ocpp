@@ -25,7 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 namespace ocpp
 {
-namespace websockets
+namespace x509
 {
 
 /** @brief Compute SHA-2 secure hashes */
@@ -97,7 +97,7 @@ class Sha2
     std::vector<uint8_t> m_last_result;
 };
 
-} // namespace websockets
+} // namespace x509
 } // namespace ocpp
 
 #endif // SHA2_H

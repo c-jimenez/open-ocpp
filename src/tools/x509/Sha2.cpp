@@ -25,7 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 namespace ocpp
 {
-namespace websockets
+namespace x509
 {
 
 /** @brief Constructor */
@@ -130,5 +130,5 @@ std::string Sha2::resultString() const
     return ss.str();
 }
 
-} // namespace websockets
+} // namespace x509
 } // namespace ocpp
