@@ -23,6 +23,8 @@ SOFTWARE.
 */
 
 #include "DefaultCentralSystemEventsHandler.h"
+#include "Sha2.h"
+#include "String.h"
 
 #include <iostream>
 #include <thread>
@@ -30,6 +32,7 @@ SOFTWARE.
 using namespace std;
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::x509;
 
 /** @brief Constructor */
 DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler() : m_chargepoints() { }
@@ -315,4 +318,73 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEvent
 {
     cout << "[" << m_chargepoint->identifier() << "] - Security event : timestamp = " << timestamp.str() << " - type = " << type
          << " - message = " << message << endl;
+}
+
+/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertificate(
+    const ocpp::x509::CertificateRequest& certificate_request)
+{
+    bool ret = false;
+    cout << "[" << m_chargepoint->identifier() << "] - Sign certificate : subject = " << certificate_request.subjectString() << endl;
+
+    // Load CA certificate which will sign the request
+    std::filesystem::path ca_cert_path(m_chargepoint->centralSystem().getConfig().tlsServerCertificateCa());
+    Certificate           ca_cert(ca_cert_path);
+    if (ca_cert.isValid())
+    {
+        const X509Document::Subject& ca_subject = ca_cert.subject();
+
+        // Check CPO name and serial number
+        const X509Document::Subject& subject = certificate_request.subject();
+        if ((subject.organization == ca_subject.organization) &&
+            (subject.common_name == getChargePointSerialNumber(m_chargepoint->identifier())))
+        {
+            // Save the request to a temporary file
+            Sha2 sha256;
+            sha256.compute(certificate_request.pem().c_str(), certificate_request.pem().size());
+
+            std::stringstream name;
+            name << "/tmp/csr_" << sha256.resultString() << ".pem";
+            std::string csr_filename = name.str();
+            if (certificate_request.toFile(csr_filename))
+            {
+                // Sign the certificate request to generate a certificate
+                std::string ca_cert_key_path = ca_cert_path;
+                ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
+                ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
+                std::string       certificate_filename = csr_filename + ".crt";
+                std::stringstream generate_params_cmd_line;
+                generate_params_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path
+                                         << " -CAkey " << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
+                system(generate_params_cmd_line.str().c_str());
+
+                // Check if the certificate has been generated
+                if (std::filesystem::exists(certificate_filename))
+                {
+                    m_generated_certificate = certificate_filename;
+                    ret                     = true;
+                }
+                else
+                {
+                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << generate_params_cmd_line.str();
+                }
+
+                // Remove the temporary file
+                std::filesystem::remove(csr_filename);
+            }
+            else
+            {
+                cout << "[" << m_chargepoint->identifier() << "] - Unable to create CSR file : " << csr_filename;
+            }
+        }
+        else
+        {
+            cout << "[" << m_chargepoint->identifier() << "] - Invalid organization or common name" << endl;
+        }
+    }
+    else
+    {
+        cout << "[" << m_chargepoint->identifier() << "] - Unable to load CA certificate : " << ca_cert_path << endl;
+    }
+    return ret;
 }

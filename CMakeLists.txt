@@ -15,8 +15,13 @@ if(NOT DEFINED TARGET)
 endif()
 include(CMakeLists_${TARGET}.txt)
 
-# Subdirectories
+# 3rd party
 add_subdirectory(3rdparty)
+
+# OpenSSL is mandatory
+find_package(OpenSSL REQUIRED COMPONENTS SSL Crypto) 
+
+# Subdirectories
 add_subdirectory(examples)
 add_subdirectory(src)
 

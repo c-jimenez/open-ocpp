@@ -121,9 +121,9 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     // Security extensions
 
     /** @copydoc ocpp::types::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType,
-                                                                                                         const ocpp::websockets::Certificate&) */
-    ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType  type,
-                                                                 const ocpp::websockets::Certificate& certificate) override;
+                                                                                                         const ocpp::x509::Certificate&) */
+    ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType type,
+                                                                 const ocpp::x509::Certificate&      certificate) override;
 
     /** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::HashAlgorithmEnumType,
                                                                                                            const std::string&,
@@ -138,9 +138,8 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     void generateCsr(std::string& csr) override;
 
     /** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
-     *                                                                    std::vector<ocpp::websockets::Certificate>&) */
-    void getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
-                                  std::vector<ocpp::websockets::Certificate>& certificates) override;
+     *                                                                    std::vector<ocpp::x509::Certificate>&) */
+    void getInstalledCertificates(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::x509::Certificate>& certificates) override;
 
     /** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
                                                                const ocpp::types::Optional<ocpp::types::DateTime>&,

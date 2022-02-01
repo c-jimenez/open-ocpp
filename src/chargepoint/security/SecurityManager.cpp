@@ -366,12 +366,12 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
     response.status = GetInstalledCertificateStatusEnumType::NotFound;
 
     // Get the list of installed certificates
-    std::vector<ocpp::websockets::Certificate> certificates;
+    std::vector<ocpp::x509::Certificate> certificates;
     m_events_handler.getInstalledCertificates(request.certificateType, certificates);
     if (!certificates.empty())
     {
         // Compute hashes with SHA-256 algorithm
-        ocpp::websockets::Sha2 sha256;
+        ocpp::x509::Sha2 sha256;
 
         // Compute hashes for each certificate
         for (const auto& certificate : certificates)
@@ -422,7 +422,7 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
     response.status = CertificateStatusEnumType::Rejected;
 
     // Check certificate
-    ocpp::websockets::Certificate certificate(request.certificate.str());
+    ocpp::x509::Certificate certificate(request.certificate.str());
     if (certificate.isValid())
     {
         // Notify new certificate

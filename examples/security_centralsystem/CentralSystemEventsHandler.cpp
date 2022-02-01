@@ -281,3 +281,13 @@ ocpp::types::RegistrationStatus CentralSystemEventsHandler::ChargePointRequestHa
 
     return ret;
 }
+
+/** @brief Get the serial number of the charge point */
+std::string CentralSystemEventsHandler::ChargePointRequestHandler::getChargePointSerialNumber(const std::string& chargepoint_id)
+{
+    std::string  db_serial_number;
+    unsigned int db_security_profile;
+    std::string  db_authent_key;
+    m_chargepoint_db.getChargePoint(chargepoint_id, db_serial_number, db_security_profile, db_authent_key);
+    return db_serial_number;
+}

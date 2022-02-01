@@ -48,6 +48,9 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
 
     // ICentralSystem interface
 
+    /** @copydoc const ocpp::config::ICentralSystemConfig& ICentralSystem::getConfig() */
+    const ocpp::config::ICentralSystemConfig& getConfig() override { return m_stack_config; }
+
     /** @copydoc ocpp::helpers::TimerPool& ICentralSystem::getTimerPool() */
     ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
 

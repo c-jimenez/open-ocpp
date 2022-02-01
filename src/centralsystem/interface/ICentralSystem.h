@@ -77,6 +77,12 @@ class ICentralSystem
     virtual ~ICentralSystem() { }
 
     /**
+     * @brief Get the configuration associated to the central system
+     * @return Configuration associated to the central system
+     */
+    virtual const ocpp::config::ICentralSystemConfig& getConfig() = 0;
+
+    /**
      * @brief Get the timer pool associated to the central system
      * @return Timer pool associated to the central system
      */
@@ -389,8 +395,8 @@ class ICentralSystem
          * @param certificate CA certificate to install
          * @return Operation status (see CertificateStatusEnumType documentation)
          */
-        virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType  type,
-                                                                          const ocpp::websockets::Certificate& certificate) = 0;
+        virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                                          const ocpp::x509::Certificate&      certificate) = 0;
     };
 };
 

@@ -226,9 +226,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
                 std::string&                                        log_filename) override;
 
     /** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
-                                                                                           const ocpp::websockets::Certificate&) */
-    ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType  type,
-                                                              const ocpp::websockets::Certificate& certificate) override;
+                                                                                           const ocpp::x509::Certificate&) */
+    ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                              const ocpp::x509::Certificate&      certificate) override;
 
     // IRpc::IListener interface
 

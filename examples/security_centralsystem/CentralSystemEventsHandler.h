@@ -115,6 +115,10 @@ class CentralSystemEventsHandler : public DefaultCentralSystemEventsHandler
 
         // Security extensions
 
+      protected:
+        /** @brief Get the serial number of the charge point */
+        std::string getChargePointSerialNumber(const std::string& chargepoint_id) override;
+
       private:
         /** @brief Event handler */
         CentralSystemEventsHandler& m_event_handler;

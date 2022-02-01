@@ -27,6 +27,7 @@ target_link_libraries(centralsystem
     helpers
     log
     version
+    x509
 
     dl
 )

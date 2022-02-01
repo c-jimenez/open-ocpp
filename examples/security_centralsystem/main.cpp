@@ -37,7 +37,7 @@ SOFTWARE.
 
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
-using namespace ocpp::websockets;
+using namespace ocpp::x509;
 
 /** @brief Indicate if a change of configuration has been accepted by the charge point */
 static bool isConfigurationChangeAccepted(ConfigurationStatus status);
@@ -261,6 +261,67 @@ int main(int argc, char* argv[])
                 {
                     std::cout << "[" << chargepoint_id << "] - Unable to install Central System CA certificate" << std::endl;
                 }
+            }
+            break;
+
+            case 2:
+            {
+                // Configure for security profile 3 : TLS + Client authentication using certificate
+                std::cout << "[" << chargepoint_id << "] - Configuring security profile 2" << std::endl;
+
+                // Configure the name of the CPO
+                ConfigurationStatus configure_status = chargepoint->changeConfiguration("CpoName", "Open OCPP");
+                if (isConfigurationChangeAccepted(configure_status))
+                {
+                    // Trigger the generation of a certificate request by the Charge Point
+                    TriggerMessageStatusEnumType trigger_status =
+                        chargepoint->extendedTriggerMessage(MessageTriggerEnumType::SignChargePointCertificate, Optional<unsigned int>());
+                    if (trigger_status == TriggerMessageStatusEnumType::Accepted)
+                    {
+                        // Wait for the certificate to be generated
+                        auto start = std::chrono::steady_clock::now();
+                        while (((std::chrono::steady_clock::now() - start) < std::chrono::seconds(5)) &&
+                               chargepoint_handler->generatedCertificate().empty())
+                        {
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                        }
+                        if (!chargepoint_handler->generatedCertificate().empty())
+                        {
+                            // Install the new certificate
+                            std::filesystem::path chargepoint_cert_path(chargepoint_handler->generatedCertificate());
+                            Certificate           chargepoint_cert(chargepoint_cert_path);
+                            if (chargepoint_cert.isValid())
+                            {
+                                std::cout << "[" << chargepoint_id << "] - Ready for next step" << std::endl;
+                            }
+                            else
+                            {
+                                std::cout << "[" << chargepoint_id << "] - Unable to load the generated certificate" << std::endl;
+                            }
+
+                            // Remove generated certificate
+                            std::filesystem::remove(chargepoint_cert_path);
+                        }
+                        else
+                        {
+                            std::cout << "[" << chargepoint_id << "] - Unable to sign the certificate request" << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "[" << chargepoint_id << "] - Unable to trigger the generation of a certificate request" << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to configure CpoName" << std::endl;
+                }
+            }
+            break;
+
+            case 3:
+            {
+                std::cout << "[" << chargepoint_id << "] - Already at the most secured security profile" << std::endl;
             }
             break;
 

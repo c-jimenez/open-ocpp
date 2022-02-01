@@ -199,8 +199,8 @@ class IChargePointEventsHandler
      * @param certificate CA certificate to install
      * @return Installation status (see CertificateStatusEnumType enum)
      */
-    virtual ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType  type,
-                                                                         const ocpp::websockets::Certificate& certificate) = 0;
+    virtual ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType type,
+                                                                         const ocpp::x509::Certificate&      certificate) = 0;
 
     /**
      * @brief Called when the Central System request to delete an installed CA certificate
@@ -227,8 +227,7 @@ class IChargePointEventsHandler
      * @param type Type of CA certificate
      * @param certificates Installed certificates
      */
-    virtual void getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
-                                          std::vector<ocpp::websockets::Certificate>& certificates) = 0;
+    virtual void getInstalledCertificates(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::x509::Certificate>& certificates) = 0;
 
     /**
      * @brief Called on a log request

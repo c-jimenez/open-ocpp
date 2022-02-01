@@ -64,6 +64,9 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         /** @brief Get the charge point proxy */
         std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> proxy() { return m_chargepoint; }
 
+        /** @brief Get the path to the genrated certificate */
+        const std::string& generatedCertificate() { return m_generated_certificate; }
+
         // IChargePointRequestHandler interface
 
         /** @copydoc void IChargePointRequestHandler::disconnected() */
@@ -166,12 +169,26 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
                                        const ocpp::types::DateTime& timestamp,
                                        const std::string&           message) override;
 
+        /** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+        bool signCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;
+
+      protected:
+        /** @brief Get the serial number of the charge point */
+        virtual std::string getChargePointSerialNumber(const std::string& chargepoint_id)
+        {
+            (void)chargepoint_id;
+            return "";
+        }
+
       private:
         /** @brief Event handler */
         DefaultCentralSystemEventsHandler& m_event_handler;
 
         /** @brief Charge point proxy */
         std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> m_chargepoint;
+
+        /** @brief Path to the generated certificate */
+        std::string m_generated_certificate;
     };
 
     /** @brief Get the list of the connected charge points */

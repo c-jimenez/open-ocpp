@@ -915,9 +915,9 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
 }
 
 /** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
-                                                                                           const ocpp::websockets::Certificate&) */
-ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::CertificateUseEnumType  type,
-                                                                            const ocpp::websockets::Certificate& certificate)
+                                                                                           const ocpp::x509::Certificate&) */
+ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                                            const ocpp::x509::Certificate&      certificate)
 {
     CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
 

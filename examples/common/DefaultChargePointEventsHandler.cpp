@@ -32,7 +32,7 @@ SOFTWARE.
 
 using namespace std;
 using namespace ocpp::types;
-using namespace ocpp::websockets;
+using namespace ocpp::x509;
 
 /** @brief Constructor */
 DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config)
@@ -315,9 +315,9 @@ bool DefaultChargePointEventsHandler::downloadFile(const std::string& url, const
 // Security extensions
 
 /** @copydoc ocpp::types::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType,
-                                                                                                         const ocpp::websockets::Certificate&) */
-ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertificateReceived(
-    ocpp::types::CertificateUseEnumType type, const ocpp::websockets::Certificate& certificate)
+                                                                                                     const ocpp::x509::Certificate&) */
+ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType type,
+                                                                                              const ocpp::x509::Certificate& certificate)
 {
     std::string               ca_filename;
     CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
@@ -361,10 +361,8 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
         // Check if the certificate must be saved
         if (!ca_filename.empty())
         {
-            std::fstream certificate_file(ca_filename, certificate_file.out);
-            if (certificate_file.is_open())
+            if (certificate.toFile(ca_filename))
             {
-                certificate_file << certificate.pem();
                 ret = CertificateStatusEnumType::Accepted;
                 cout << "Certificate saved : " << ca_filename << endl;
 
@@ -526,9 +524,9 @@ void DefaultChargePointEventsHandler::generateCsr(std::string& csr)
 }
 
 /** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
- *                                                                    std::vector<ocpp::websockets::Certificate>&) */
-void DefaultChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType         type,
-                                                               std::vector<ocpp::websockets::Certificate>& certificates)
+ *                                                                    std::vector<ocpp::x509::Certificate>&) */
+void DefaultChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType   type,
+                                                               std::vector<ocpp::x509::Certificate>& certificates)
 {
     cout << "Get installed CA certificates requested : type = " << CertificateUseEnumTypeHelper.toString(type) << endl;
 

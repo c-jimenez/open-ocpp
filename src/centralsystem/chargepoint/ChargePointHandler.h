@@ -29,6 +29,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "LogStatusNotification.h"
 #include "MeterValues.h"
 #include "SecurityEventNotification.h"
+#include "SignCertificate.h"
 #include "StartTransaction.h"
 #include "StatusNotification.h"
 #include "StopTransaction.h"
@@ -67,7 +68,8 @@ class ChargePointHandler
       // Security extensions
       public ocpp::messages::GenericMessageHandler<ocpp::messages::LogStatusNotificationReq, ocpp::messages::LogStatusNotificationConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::SecurityEventNotificationReq,
-                                                   ocpp::messages::SecurityEventNotificationConf>
+                                                   ocpp::messages::SecurityEventNotificationConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignCertificateReq, ocpp::messages::SignCertificateConf>
 {
   public:
     /**
@@ -210,6 +212,16 @@ class ChargePointHandler
                        ocpp::messages::SecurityEventNotificationConf&      response,
                        const char*&                                        error_code,
                        std::string&                                        error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::SignCertificateReq& request,
+                       ocpp::messages::SignCertificateConf&      response,
+                       const char*&                              error_code,
+                       std::string&                              error_message) override;
 
   private:
     /** @brief Charge point's identifier */
