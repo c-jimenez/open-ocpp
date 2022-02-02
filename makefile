@@ -29,7 +29,7 @@ gcc-native: $(GCC_NATIVE_BUILD_DIR)/Makefile
 
 tests-gcc-native: $(GCC_NATIVE_BUILD_DIR)/Makefile
 	@echo "Starting gcc-native tests..."
-	@make --silent -C $(GCC_NATIVE_BUILD_DIR) test
+	@make --silent -C $(GCC_NATIVE_BUILD_DIR) test ARGS=--output-on-failure
 	@echo "gcc-native tests done!"
 
 clean-gcc-native:
@@ -55,7 +55,7 @@ clang-native: $(CLANG_NATIVE_BUILD_DIR)/Makefile
 
 tests-clang-native: $(CLANG_NATIVE_BUILD_DIR)/Makefile
 	@echo "Starting clang native tests..."
-	@make --silent -C $(CLANG_NATIVE_BUILD_DIR) test
+	@make --silent -C $(CLANG_NATIVE_BUILD_DIR) test ARGS=--output-on-failure
 	@echo "clang native tests done!"
 
 clean-clang-native:
