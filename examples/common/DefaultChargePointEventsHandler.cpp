@@ -391,6 +391,49 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
     return ret;
 }
 
+/** @copydoc bool IChargePointEventsHandler::chargePointCertificateReceived(const ocpp::x509::Certificate&) */
+bool DefaultChargePointEventsHandler::chargePointCertificateReceived(const ocpp::x509::Certificate& certificate)
+{
+    std::string ca_filename;
+    bool        ret = false;
+
+    cout << "Charge point certificate installation requested : certificate subject = " << certificate.subjectString() << endl;
+
+    // Compute SHA256 to generate filename
+    Sha2 sha256;
+    sha256.compute(certificate.pem().c_str(), certificate.pem().size());
+
+    std::stringstream name;
+    name << "cp_" << sha256.resultString() << ".pem";
+    std::string cert_filename = name.str();
+
+    // Save certificate
+    if (certificate.toFile(cert_filename))
+    {
+        cout << "Certificate saved : " << cert_filename << endl;
+
+        // Retrieve and save the corresponding key/pair with the new certificate
+        std::string cert_key_filename = cert_filename + ".key";
+        std::filesystem::copy("/tmp/charge_point_key.key", cert_key_filename);
+
+        // Use the new certificate
+        m_config.setStackConfigValue("TlsClientCertificate", cert_filename);
+        m_config.setStackConfigValue("TlsClientCertificatePrivateKey", cert_key_filename);
+        if (m_chargepoint)
+        {
+            m_chargepoint->reconnect();
+        }
+
+        ret = true;
+    }
+    else
+    {
+        cout << "Unable to save certificate : " << cert_filename << endl;
+    }
+
+    return ret;
+}
+
 /** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::HashAlgorithmEnumType,
                                                                                                            const std::string&,
                                                                                                            const std::string&,
@@ -597,7 +640,31 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
 
 bool DefaultChargePointEventsHandler::hasCentralSystemCaCertificateInstalled()
 {
+    // A better implementation would also check the validity dates of the certificates
     return ((getNumberOfCaCertificateInstalled(false, true) != 0) && (!m_config.stackConfig().tlsServerCertificateCa().empty()));
+}
+
+/** @copydoc bool IChargePointEventsHandler::hasChargePointCertificateInstalled() */
+bool DefaultChargePointEventsHandler::hasChargePointCertificateInstalled()
+{
+    // A better implementation would also check the validity dates of the certificates
+    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (ocpp::helpers::startsWith(filename, "cp_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                std::string certificate_key = dir_entry.path().string() + ".key";
+                if (std::filesystem::exists(certificate_key) && !m_config.stackConfig().tlsClientCertificate().empty() &&
+                    !m_config.stackConfig().tlsClientCertificatePrivateKey().empty())
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 /** @brief Get the number of installed CA certificates */

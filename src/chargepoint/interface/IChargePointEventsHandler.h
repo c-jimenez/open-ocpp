@@ -203,6 +203,13 @@ class IChargePointEventsHandler
                                                                          const ocpp::x509::Certificate&      certificate) = 0;
 
     /**
+     * @brief Called when a charge point certificate has been received and must be installed
+     * @param certificate Charge point certificate to install
+     * @return true is the certificate has been installed, false otherwise
+     */
+    virtual bool chargePointCertificateReceived(const ocpp::x509::Certificate& certificate) = 0;
+
+    /**
      * @brief Called when the Central System request to delete an installed CA certificate
      * @param hash_algorithm Hash algorithm used for the following parameters
      * @param issuer_name_hash Hash of the certificate's issuer's name
@@ -248,6 +255,12 @@ class IChargePointEventsHandler
      * @return true if at least 1 certificate has been installed, false otherwise
      */
     virtual bool hasCentralSystemCaCertificateInstalled() = 0;
+
+    /**
+     * @brief Called to check if at least 1 Charge Point certificate has been installed
+     * @return true if at least 1 certificate has been installed, false otherwise
+     */
+    virtual bool hasChargePointCertificateInstalled() = 0;
 };
 
 } // namespace chargepoint

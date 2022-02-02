@@ -303,11 +303,26 @@ bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& 
 {
     bool ret = true;
 
-    LOG_INFO << "Certificate signed message received : certificate size = " << request.certificateChain.size();
-
-    (void)response;
     (void)error_code;
     (void)error_message;
+
+    LOG_INFO << "Certificate signed message received : certificate size = " << request.certificateChain.size();
+
+    // Prepare response
+    response.status = CertificateSignedStatusEnumType::Rejected;
+
+    // Check certificate's validity
+    ocpp::x509::Certificate certificate(request.certificateChain);
+    if (certificate.isValid() && certificate.verify())
+    {
+        // Notify new certificate
+        if (m_events_handler.chargePointCertificateReceived(certificate))
+        {
+            response.status = CertificateSignedStatusEnumType::Accepted;
+        }
+    }
+
+    LOG_INFO << "Certificate signed message : " << CertificateSignedStatusEnumTypeHelper.toString(response.status);
 
     return ret;
 }
@@ -495,9 +510,10 @@ ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(
                 // TLS with server and client authentication
                 // A Central System root certificate must be installed
                 // A valid Charge Point certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
+                if (!m_ocpp_config.authorizationKey().empty() && m_events_handler.hasCentralSystemCaCertificateInstalled() &&
+                    m_events_handler.hasChargePointCertificateInstalled())
                 {
-                    ret = ConfigurationStatus::Rejected;
+                    ret = ConfigurationStatus::Accepted;
                 }
             }
             break;
