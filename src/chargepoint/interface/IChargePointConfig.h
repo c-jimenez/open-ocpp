@@ -118,6 +118,8 @@ class IChargePointConfig
 
     // Security
 
+    /** @brief Enabled security event notification */
+    virtual bool securityEventNotificationEnabled() const = 0;
     /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
     virtual unsigned int securityLogMaxEntriesCount() const = 0;
 };

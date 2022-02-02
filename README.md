@@ -154,6 +154,8 @@ In Charge Point role, it can optionnaly handle the storage of the security event
 
 In Charge Point role, the user application can generate custom security events and defines its criticity so that they are forwarded to the Central System.
 
+In Charge Point role, the notification of security events can be enabled or disabled with the IChargePointConfig::securityEventNotificationEnabled() configuration. This can be usefull to disable them when the Central System does not implement the security extensions.
+
 #### Extended trigger messages
 
 **Open OCPP** support this feature for both Charge Point and Central System roles.
