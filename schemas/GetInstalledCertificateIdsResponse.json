@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:GetInstalledCertificateIdsRequest",
+  "title": "GetInstalledCertificateIdsRequest",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "Accepted",
+        "NotFound"
+      ]
+    },
+    "certificateHashData": {
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "properties": {
+			"hashAlgorithm": {
+			  "type": "string",
+			  "additionalProperties": false,
+			  "enum": [
+				"SHA256",
+				"SHA384",
+				"SHA512"
+			  ]
+			},
+			"issuerNameHash": {
+			  "type": "string",
+			  "maxLength": 128
+			},
+			"issuerKeyHash": {
+			  "type": "string",
+			  "maxLength": 128
+			},
+			"serialNumber": {
+			  "type": "string",
+			  "maxLength": 40
+			}
+		  },
+		  "required": [
+			"hashAlgorithm",
+			"issuerNameHash",
+			"issuerKeyHash",
+			"serialNumber"
+		  ]
+      },
+      "minItems": 0
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "status"
+  ]
+}

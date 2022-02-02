@@ -38,13 +38,15 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
   public:
     /**
      * @brief Constructor
+     * @param central_system Central System instance associated to the charge point
      * @param identifier Charge point's identifier
      * @param rpc RPC connection with the charge point
      * @param schemas_path Path to the JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
      */
-    ChargePointProxy(const std::string&                            identifier,
+    ChargePointProxy(ICentralSystem&                               central_system,
+                     const std::string&                            identifier,
                      std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                      const std::string&                            schemas_path,
                      ocpp::messages::MessagesConverter&            messages_converter,
@@ -53,6 +55,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     virtual ~ChargePointProxy();
 
     // ICentralSystem::IChargePoint interface
+
+    /** @copydoc ICentralSystem&& ICentralSystem::IChargePoint::centralSystem() */
+    ICentralSystem& centralSystem() override { return m_central_system; }
 
     /** @copydoc const std::string& ICentralSystem::IChargePoint::identifier() const */
     const std::string& identifier() const override { return m_identifier; }
@@ -190,10 +195,21 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     // Security extensions
 
+    /** @copydoc bool ICentralSystem::IChargePoint::certificateSigned(const ocpp::x509::Certificate&) */
+    bool certificateSigned(const ocpp::x509::Certificate& certificate_chain) override;
+
+    /** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
+    ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) override;
+
     /** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
-                                                                                                const ocpp::types::Optional<unsigned int>) */
+                                                                                                                const ocpp::types::Optional<unsigned int>) */
     ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
                                                                      const ocpp::types::Optional<unsigned int> connector_id) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType,
+                                                                               std::vector<ocpp::types::CertificateHashDataType>&) */
+    bool getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                    std::vector<ocpp::types::CertificateHashDataType>& certificates) override;
 
     /** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
                                                            int,
@@ -211,6 +227,11 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
                 const ocpp::types::Optional<ocpp::types::DateTime>& start,
                 const ocpp::types::Optional<ocpp::types::DateTime>& stop,
                 std::string&                                        log_filename) override;
+
+    /** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
+                                                                                           const ocpp::x509::Certificate&) */
+    ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                              const ocpp::x509::Certificate&      certificate) override;
 
     // IRpc::IListener interface
 
@@ -240,6 +261,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     void rcpMessageSent(const std::string& msg) override;
 
   private:
+    /** @brief Central System instance associated to the charge point */
+    ICentralSystem& m_central_system;
     /** @brief Charge point's identifier */
     std::string m_identifier;
     /** @brief RPC connection */

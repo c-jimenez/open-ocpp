@@ -32,6 +32,7 @@ namespace ocpp
 namespace helpers
 {
 class TimerPool;
+class WorkerThreadPool;
 } // namespace helpers
 
 namespace chargepoint
@@ -51,6 +52,22 @@ class IChargePoint
                                                 ocpp::config::IOcppConfig&              ocpp_config,
                                                 IChargePointEventsHandler&              events_handler);
 
+    /**
+     * @brief Instanciate a charge point with the provided timer and worker pools
+     *        To use when you have to instanciate multiple Central System / Charge Point
+     *        => Allow to reduce thread and memory usage
+     * @param stack_config Stack configuration
+     * @param ocpp_config Standard OCPP configuration
+     * @param event_handler Stack event handler
+     * @param timer_pool Timer pool
+     * @param worker_pool Worker thread pool
+     */
+    static std::unique_ptr<IChargePoint> create(const ocpp::config::IChargePointConfig&          stack_config,
+                                                ocpp::config::IOcppConfig&                       ocpp_config,
+                                                IChargePointEventsHandler&                       events_handler,
+                                                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
+
     /** @brief Destructor */
     virtual ~IChargePoint() { }
 
@@ -59,6 +76,12 @@ class IChargePoint
      * @return Timer pool associated to the charge point
      */
     virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
+
+    /**
+     * @brief Get the worker pool associated to the charge point
+     * @return Worker pool associated to the charge point
+     */
+    virtual ocpp::helpers::WorkerThreadPool& getWorkerPool() = 0;
 
     /**
      * @brief Reset the charge point's internal data (can be done only when the charge point is stopped)
@@ -83,6 +106,12 @@ class IChargePoint
      * @return true if the charge point has been stopped, false otherwise
      */
     virtual bool stop() = 0;
+
+    /**
+     * @brief Triggers a reconnexion of the charge point to the Central System
+     * @return true if the reconnexion has been scheduled, false otherwise
+     */
+    virtual bool reconnect() = 0;
 
     /**
      * @brief Get the registration status of the charge point
@@ -201,6 +230,13 @@ class IChargePoint
      * @return true if the security evenst have been cleared, false otherwise
      */
     virtual bool clearSecurityEvents() = 0;
+
+    /**
+     * @brief Send a CSR request to sign a certificate
+     * @param csr CSR request in PEM format
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool signCertificate(const std::string& csr) = 0;
 };
 
 } // namespace chargepoint

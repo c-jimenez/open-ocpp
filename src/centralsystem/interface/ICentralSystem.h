@@ -20,6 +20,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define ICENTRALSYSTEM_H
 
 #include "AuthorizationData.h"
+#include "Certificate.h"
+#include "CertificateHashDataType.h"
 #include "ChargingProfile.h"
 #include "ICentralSystemConfig.h"
 #include "IChargePointRequestHandler.h"
@@ -33,6 +35,7 @@ namespace ocpp
 namespace helpers
 {
 class TimerPool;
+class WorkerThreadPool;
 } // namespace helpers
 namespace database
 {
@@ -56,8 +59,28 @@ class ICentralSystem
     static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig& stack_config,
                                                   ICentralSystemEventsHandler&              events_handler);
 
+    /**
+     * @brief Instanciate a central system with the provided timer and worker pools
+     *        To use when you have to instanciate multiple Central System / Charge Point
+     *        => Allow to reduce thread and memory usage
+     * @param stack_config Stack configuration
+     * @param event_handler Stack event handler
+     * @param timer_pool Timer pool
+     * @param worker_pool Worker thread pool
+     */
+    static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig&        stack_config,
+                                                  ICentralSystemEventsHandler&                     events_handler,
+                                                  std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                  std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
+
     /** @brief Destructor */
     virtual ~ICentralSystem() { }
+
+    /**
+     * @brief Get the configuration associated to the central system
+     * @return Configuration associated to the central system
+     */
+    virtual const ocpp::config::ICentralSystemConfig& getConfig() = 0;
 
     /**
      * @brief Get the timer pool associated to the central system
@@ -66,10 +89,10 @@ class ICentralSystem
     virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
 
     /**
-     * @brief Get the database of the central system
-     * @return Database of the central system
+     * @brief Get the worker pool associated to the central system
+     * @return Worker pool associated to the central system
      */
-    virtual ocpp::database::Database& getDatabase() = 0;
+    virtual ocpp::helpers::WorkerThreadPool& getWorkerPool() = 0;
 
     /**
      * @brief Reset the central system's internal data (can be done only when the central system is stopped)
@@ -95,6 +118,12 @@ class ICentralSystem
       public:
         /** @brief Destructor */
         virtual ~IChargePoint() { }
+
+        /**
+         * @brief Get the central system instance associated to the charge point
+         * @return Central system instance associated to the charge point
+         */
+        virtual ICentralSystem& centralSystem() = 0;
 
         /**
          * @brief Get the charge point identifier
@@ -316,6 +345,20 @@ class ICentralSystem
         // Security extensions
 
         /**
+         * @brief Send a generated certificate chain after a SignCertificate request from the charge point
+         * @param certificate_chain Generated certificate chain
+         * @return true if the certificate chain has been accepted by the charge point, false otherwise
+         */
+        virtual bool certificateSigned(const ocpp::x509::Certificate& certificate_chain) = 0;
+
+        /**
+         * @brief Delete an installed CA certificate
+         * @param certificate Certificate information
+         * @return Operation status (see DeleteCertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) = 0;
+
+        /**
          * @brief Request the send of a specific message
          * @param message Requested message
          * @param connector_id Id of the connector on which the message applies
@@ -324,6 +367,14 @@ class ICentralSystem
         virtual ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(
             ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id) = 0;
 
+        /**
+         * @brief Get the list of installed CA certificates
+         * @param type Type of CA certificate
+         * @param certificates Certificates information
+         * @return true is the list has been retrieved, false otherwise
+         */
+        virtual bool getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                                std::vector<ocpp::types::CertificateHashDataType>& certificates) = 0;
         /**
          * @brief Get the log file
          * @param type Type of log to retrieve
@@ -344,6 +395,15 @@ class ICentralSystem
                             const ocpp::types::Optional<ocpp::types::DateTime>& start,
                             const ocpp::types::Optional<ocpp::types::DateTime>& stop,
                             std::string&                                        log_filename) = 0;
+
+        /**
+         * @brief Install a CA certificate
+         * @param type Type of CA certificate
+         * @param certificate CA certificate to install
+         * @return Operation status (see CertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                                          const ocpp::x509::Certificate&      certificate) = 0;
     };
 };
 

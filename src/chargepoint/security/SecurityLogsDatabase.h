@@ -49,6 +49,9 @@ class SecurityLogsDatabase
 
     // SecurityLogsDatabase interface
 
+    /** @brief Initialize the database table */
+    void initDatabaseTable();
+
     /**
      * @brief Log a security event
      * @param type Type of the security event
@@ -89,9 +92,6 @@ class SecurityLogsDatabase
     std::unique_ptr<ocpp::database::Database::Query> m_clear_query;
     /** @brief Query to insert a security log */
     std::unique_ptr<ocpp::database::Database::Query> m_insert_query;
-
-    /** @brief Initialize the database table */
-    void initDatabaseTable();
 };
 
 } // namespace chargepoint

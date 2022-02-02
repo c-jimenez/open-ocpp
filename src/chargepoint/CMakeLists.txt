@@ -54,6 +54,7 @@ target_link_libraries(chargepoint
     helpers
     log
     version
+    x509
 
     dl
 )

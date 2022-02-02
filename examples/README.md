@@ -6,6 +6,7 @@ The following examples are available :
 * [Quick start Central System example](./quick_start_centralsystem/README.md)
 * [Quick start Charge Point example](./quick_start_chargepoint/README.md)
 * [Remote Charge Point example](./remote_chargepoint/README.md)
+* [Security Charge Point example](./security_chargepoint/README.md)
 
 How to run the examples:
 * Customize the *config.ini* file of the selected example with the URL of the Central System and the other connection parameters has well has the OCPP configuration keys

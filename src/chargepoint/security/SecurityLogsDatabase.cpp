@@ -35,10 +35,6 @@ namespace chargepoint
 SecurityLogsDatabase::SecurityLogsDatabase(const ocpp::config::IChargePointConfig& stack_config, ocpp::database::Database& database)
     : m_stack_config(stack_config), m_database(database), m_clear_query(), m_insert_query()
 {
-    if (m_stack_config.securityLogMaxEntriesCount() > 0)
-    {
-        initDatabaseTable();
-    }
 }
 
 /** @brief Log a security event */
@@ -151,39 +147,48 @@ SecurityLogsDatabase::~SecurityLogsDatabase() { }
 /** @brief Initialize the database table */
 void SecurityLogsDatabase::initDatabaseTable()
 {
-    // Create database
-    auto query = m_database.query("CREATE TABLE IF NOT EXISTS SecurityLogs ("
-                                  "[id]	INTEGER,"
-                                  "[timestamp] BIGINT,"
-                                  "[type] VARCHAR(50),"
-                                  "[message] VARCHAR(255),"
-                                  "[critical] BOOLEAN,"
-                                  "PRIMARY KEY([id] AUTOINCREMENT));");
-    if (query.get())
+    if (m_stack_config.securityLogMaxEntriesCount() > 0)
     {
-        if (!query->exec())
+        // Create database
+        auto query = m_database.query("CREATE TABLE IF NOT EXISTS SecurityLogs ("
+                                      "[id]	INTEGER,"
+                                      "[timestamp] BIGINT,"
+                                      "[type] VARCHAR(50),"
+                                      "[message] VARCHAR(255),"
+                                      "[critical] BOOLEAN,"
+                                      "PRIMARY KEY([id] AUTOINCREMENT));");
+        if (query.get())
         {
-            LOG_ERROR << "Could not create security logs table  : " << query->lastError();
+            if (!query->exec())
+            {
+                LOG_ERROR << "Could not create security logs table  : " << query->lastError();
+            }
         }
-    }
-    std::stringstream trigger_query;
-    trigger_query << "CREATE TRIGGER delete_oldest_SecurityLogs AFTER INSERT ON SecurityLogs WHEN "
-                     " ((SELECT count() FROM SecurityLogs) > ";
-    trigger_query << m_stack_config.securityLogMaxEntriesCount();
-    trigger_query << ") BEGIN DELETE FROM SecurityLogs WHERE ROWID IN "
-                     "(SELECT ROWID FROM SecurityLogs LIMIT 1);END;";
-    query = m_database.query(trigger_query.str());
-    if (query)
-    {
-        if (!query->exec())
+        std::stringstream trigger_query;
+        trigger_query << "CREATE TRIGGER delete_oldest_SecurityLogs AFTER INSERT ON SecurityLogs WHEN "
+                         " ((SELECT count() FROM SecurityLogs) > ";
+        trigger_query << m_stack_config.securityLogMaxEntriesCount();
+        trigger_query << ") BEGIN DELETE FROM SecurityLogs WHERE ROWID IN "
+                         "(SELECT ROWID FROM SecurityLogs LIMIT 1);END;";
+        query = m_database.query(trigger_query.str());
+        if (query)
         {
-            LOG_ERROR << "Could not create security logs trigger  : " << query->lastError();
+            if (!query->exec())
+            {
+                LOG_ERROR << "Could not create security logs trigger  : " << query->lastError();
+            }
         }
-    }
 
-    // Create parametrized queries
-    m_clear_query  = m_database.query("DELETE FROM SecurityLogs WHERE TRUE;");
-    m_insert_query = m_database.query("INSERT INTO SecurityLogs VALUES (NULL, ?, ?, ?, ?);");
+        // Create parametrized queries
+        m_clear_query  = m_database.query("DELETE FROM SecurityLogs WHERE TRUE;");
+        m_insert_query = m_database.query("INSERT INTO SecurityLogs VALUES (NULL, ?, ?, ?, ?);");
+    }
+    else
+    {
+        // Disable logging
+        m_clear_query.reset();
+        m_insert_query.reset();
+    }
 }
 
 } // namespace chargepoint

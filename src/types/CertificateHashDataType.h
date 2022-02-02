@@ -36,6 +36,8 @@ struct CertificateHashDataType
     CiStringType<128u> issuerNameHash;
     /** @brief Required. Hashed value of the issuers public key */
     CiStringType<128u> issuerKeyHash;
+    /** @brief Required. Required. The serial number of the certificate */
+    CiStringType<40u> serialNumber;
 };
 
 } // namespace types

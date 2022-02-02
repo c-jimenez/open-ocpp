@@ -28,13 +28,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MeterValuesManager.h"
 #include "RequestFifoManager.h"
 #include "ReservationManager.h"
-#include "SecurityManager.h"
 #include "SmartChargingManager.h"
 #include "StatusManager.h"
+#include "TimerPool.h"
 #include "TransactionManager.h"
 #include "TriggerMessageManager.h"
 #include "Version.h"
 #include "WebsocketFactory.h"
+#include "WorkerThreadPool.h"
 
 #include <filesystem>
 #include <iostream>
@@ -52,27 +53,45 @@ std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePo
                                                    ocpp::config::IOcppConfig&              ocpp_config,
                                                    IChargePointEventsHandler&              events_handler)
 {
-    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler));
+    std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool = std::make_shared<ocpp::helpers::TimerPool>();
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool =
+        std::make_shared<ocpp::helpers::WorkerThreadPool>(2u); // 1 asynchronous timer operations + 1 for asynchronous jobs/responses
+    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
+}
+
+/** @brief Instanciate a charge point with the provided timer and worker pools */
+std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePointConfig&          stack_config,
+                                                   ocpp::config::IOcppConfig&                       ocpp_config,
+                                                   IChargePointEventsHandler&                       events_handler,
+                                                   std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                   std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
+{
+    return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
 }
 
 /** @brief Constructor */
-ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
-                         ocpp::config::IOcppConfig&              ocpp_config,
-                         IChargePointEventsHandler&              events_handler)
+ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
+                         ocpp::config::IOcppConfig&                       ocpp_config,
+                         IChargePointEventsHandler&                       events_handler,
+                         std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                         std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
     : m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
-      m_timer_pool(),
-      m_worker_pool(2u), // 1 asynchronous timer operations + 1 for asynchronous responses
+      m_timer_pool(timer_pool),
+      m_worker_pool(worker_pool),
       m_database(),
       m_internal_config(m_database),
       m_messages_converter(),
       m_requests_fifo(m_database),
+      m_security_manager(
+          m_stack_config, m_ocpp_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo),
+      m_reconnect_scheduled(false),
       m_ws_client(),
       m_rpc_client(),
       m_msg_dispatcher(),
       m_msg_sender(),
-      m_connectors(ocpp_config, m_database, m_timer_pool),
+      m_connectors(ocpp_config, m_database, *m_timer_pool.get()),
       m_config_manager(),
       m_status_manager(),
       m_authent_manager(),
@@ -82,10 +101,9 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
       m_data_transfer_manager(),
       m_meter_values_manager(),
       m_smart_charging_manager(),
-      m_security_manager(),
       m_maintenance_manager(),
       m_requests_fifo_manager(),
-      m_uptime_timer(m_timer_pool, "Uptime timer"),
+      m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
       m_uptime(0),
       m_disconnected_time(0),
       m_total_uptime(0),
@@ -223,8 +241,8 @@ bool ChargePoint::start()
                                                            m_ocpp_config,
                                                            m_events_handler,
                                                            m_internal_config,
-                                                           m_timer_pool,
-                                                           m_worker_pool,
+                                                           *m_timer_pool.get(),
+                                                           *m_worker_pool.get(),
                                                            m_connectors,
                                                            *m_msg_dispatcher,
                                                            *m_msg_sender,
@@ -232,8 +250,8 @@ bool ChargePoint::start()
                                                            *m_trigger_manager);
         m_reservation_manager    = std::make_unique<ReservationManager>(m_ocpp_config,
                                                                      m_events_handler,
-                                                                     m_timer_pool,
-                                                                     m_worker_pool,
+                                                                     *m_timer_pool.get(),
+                                                                     *m_worker_pool.get(),
                                                                      m_connectors,
                                                                      m_messages_converter,
                                                                      *m_msg_dispatcher,
@@ -242,17 +260,23 @@ bool ChargePoint::start()
         m_meter_values_manager   = std::make_unique<MeterValuesManager>(m_ocpp_config,
                                                                       m_database,
                                                                       m_events_handler,
-                                                                      m_timer_pool,
-                                                                      m_worker_pool,
+                                                                      *m_timer_pool.get(),
+                                                                      *m_worker_pool.get(),
                                                                       m_connectors,
                                                                       *m_msg_sender,
                                                                       m_requests_fifo,
                                                                       *m_status_manager,
                                                                       *m_trigger_manager,
                                                                       *m_config_manager);
-        m_smart_charging_manager = std::make_unique<SmartChargingManager>(
-            m_stack_config, m_ocpp_config, m_database, m_timer_pool, m_worker_pool, m_connectors, m_messages_converter, *m_msg_dispatcher);
-        m_transaction_manager = std::make_unique<TransactionManager>(m_ocpp_config,
+        m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
+                                                                          m_ocpp_config,
+                                                                          m_database,
+                                                                          *m_timer_pool.get(),
+                                                                          *m_worker_pool.get(),
+                                                                          m_connectors,
+                                                                          m_messages_converter,
+                                                                          *m_msg_dispatcher);
+        m_transaction_manager    = std::make_unique<TransactionManager>(m_ocpp_config,
                                                                      m_events_handler,
                                                                      m_connectors,
                                                                      m_messages_converter,
@@ -265,21 +289,20 @@ bool ChargePoint::start()
                                                                      *m_smart_charging_manager);
         m_data_transfer_manager =
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
-        m_security_manager    = std::make_unique<SecurityManager>(m_stack_config, m_database, *m_msg_sender, m_requests_fifo);
         m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
                                                                      m_events_handler,
-                                                                     m_worker_pool,
+                                                                     *m_worker_pool.get(),
                                                                      m_messages_converter,
                                                                      *m_msg_dispatcher,
                                                                      *m_msg_sender,
                                                                      m_connectors,
                                                                      *m_trigger_manager,
-                                                                     *m_security_manager);
+                                                                     m_security_manager);
 
         m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
                                                                        m_events_handler,
-                                                                       m_timer_pool,
-                                                                       m_worker_pool,
+                                                                       *m_timer_pool.get(),
+                                                                       *m_worker_pool.get(),
                                                                        m_connectors,
                                                                        *m_msg_sender,
                                                                        m_requests_fifo,
@@ -287,12 +310,11 @@ bool ChargePoint::start()
                                                                        *m_authent_manager);
 
         // Register specific configuration checks
-        m_config_manager->registerCheckFunction(
-            "AuthorizationKey",
-            std::bind(&ChargePoint::checkAuthorizationKeyParameter, this, std::placeholders::_1, std::placeholders::_2));
-        m_config_manager->registerCheckFunction(
-            "SecurityProfile", std::bind(&ChargePoint::checkSecurityProfileParameter, this, std::placeholders::_1, std::placeholders::_2));
         m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
+        m_config_manager->registerConfigChangedListener("SecurityProfile", *this);
+
+        // Start security manager
+        m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager, *m_config_manager);
 
         // Start connection
         ret = doConnect();
@@ -329,12 +351,14 @@ bool ChargePoint::stop()
         m_data_transfer_manager.reset();
         m_meter_values_manager.reset();
         m_smart_charging_manager.reset();
-        m_security_manager.reset();
         m_maintenance_manager.reset();
         m_requests_fifo_manager.reset();
 
         // Stop connection
         ret = m_rpc_client->stop();
+
+        // Stop security manager
+        m_security_manager.stop();
 
         // Free resources
         m_ws_client.reset();
@@ -353,6 +377,26 @@ bool ChargePoint::stop()
     return ret;
 }
 
+/** @copydoc bool IChargePoint::reconnect() */
+bool ChargePoint::reconnect()
+{
+    bool ret = false;
+
+    // Check if it is started
+    if (m_rpc_client)
+    {
+        // Schedule of reconnexion
+        LOG_INFO << "Reconnect asked by user application";
+        scheduleReconnect();
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "Stack stopped";
+    }
+
+    return ret;
+}
 /** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
 ocpp::types::RegistrationStatus ChargePoint::getRegistrationStatus()
 {
@@ -399,7 +443,7 @@ bool ChargePoint::statusNotification(unsigned int                      connector
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         ret = m_status_manager->updateConnectorStatus(connector_id, status, error_code, info, vendor_id, vendor_error);
     }
@@ -416,7 +460,7 @@ ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_i
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -452,7 +496,7 @@ ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int conn
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -476,7 +520,7 @@ bool ChargePoint::stopTransaction(unsigned int connector_id, const std::string& 
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
@@ -508,7 +552,7 @@ bool ChargePoint::dataTransfer(const std::string&               vendor_id,
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -532,7 +576,7 @@ bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<o
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -562,7 +606,7 @@ bool ChargePoint::getSetpoint(unsigned int                                      
 {
     bool ret = false;
 
-    if (m_smart_charging_manager.get())
+    if (m_smart_charging_manager)
     {
         ret = m_smart_charging_manager->getSetpoint(connector_id, charge_point_setpoint, connector_setpoint, unit);
     }
@@ -579,7 +623,7 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
 {
     bool ret = false;
 
-    if (m_status_manager.get())
+    if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
@@ -603,28 +647,30 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
 /** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
 bool ChargePoint::logSecurityEvent(const std::string& type, const std::string& message, bool critical)
 {
-    bool ret = false;
-
-    if (m_security_manager.get())
-    {
-        ret = m_security_manager->logSecurityEvent(type, message, critical);
-    }
-    else
-    {
-        LOG_ERROR << "Stack is not started";
-    }
-
-    return ret;
+    return m_security_manager.logSecurityEvent(type, message, critical);
 }
 
 /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
 bool ChargePoint::clearSecurityEvents()
 {
+    return m_security_manager.clearSecurityEvents();
+}
+
+/** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const std::string&) */
+bool ChargePoint::signCertificate(const std::string& csr)
+{
     bool ret = false;
 
-    if (m_security_manager.get())
+    if (m_status_manager)
     {
-        ret = m_security_manager->clearSecurityEvents();
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_security_manager.signCertificate(csr);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
     }
     else
     {
@@ -715,13 +761,23 @@ void ChargePoint::configurationValueChanged(const std::string& key)
         if (m_ocpp_config.securityProfile() != 3)
         {
             LOG_INFO << "AuthorizationKey modified, reconnect with new credentials";
-            m_worker_pool.run<void>(
-                [this]
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(500u));
-                    doConnect();
-                });
+            scheduleReconnect();
         }
+
+        m_security_manager.logSecurityEvent(SECEVT_RECONFIG_SECURITY_PARAMETER, "AuthorizationKey");
+    }
+    else if (key == "SecurityProfile")
+    {
+        // Reconnect with new profile
+        LOG_INFO << "SecurityProfile modified, reconnect with new security profile";
+        scheduleReconnect();
+
+        std::stringstream message;
+        message << "SecurityProfile : " << m_ocpp_config.securityProfile();
+        m_security_manager.logSecurityEvent(SECEVT_RECONFIG_SECURITY_PARAMETER, message.str());
+    }
+    else
+    {
     }
 }
 
@@ -733,6 +789,7 @@ void ChargePoint::initDatabase()
     m_internal_config.initDatabaseTable();
     m_connectors.initDatabaseTable();
     m_requests_fifo.initDatabaseTable();
+    m_security_manager.initDatabaseTable();
 
     // Internal keys
     if (!m_internal_config.keyExist(STACK_VERSION_KEY))
@@ -800,7 +857,7 @@ void ChargePoint::processUptime()
     // Save counters
     if ((m_uptime % 15u) == 0)
     {
-        m_worker_pool.run<void>(std::bind(&ChargePoint::saveUptime, this));
+        m_worker_pool->run<void>(std::bind(&ChargePoint::saveUptime, this));
     }
 }
 
@@ -811,6 +868,24 @@ void ChargePoint::saveUptime()
     m_internal_config.setKey(DISCONNECTED_TIME_KEY, std::to_string(m_disconnected_time));
     m_internal_config.setKey(TOTAL_UPTIME_KEY, std::to_string(m_total_uptime));
     m_internal_config.setKey(TOTAL_DISCONNECTED_TIME_KEY, std::to_string(m_total_disconnected_time));
+}
+
+/** @brief Schedule a reconnection to the Central System */
+void ChargePoint::scheduleReconnect()
+{
+    // Check if a reconnection is not already scheduled
+    if (!m_reconnect_scheduled)
+    {
+        m_reconnect_scheduled = true;
+        m_worker_pool->run<void>(
+            [this]
+            {
+                // Wait to let some time to configure other parameters
+                // => Needed when switching security profiles
+                std::this_thread::sleep_for(std::chrono::seconds(1u));
+                doConnect();
+            });
+    }
 }
 
 /** @brief Start the connection process to the Central System */
@@ -833,11 +908,6 @@ bool ChargePoint::doConnect()
         connection_url += "/";
     }
     connection_url += m_stack_config.chargePointIdentifier();
-    if (security_profile >= 2)
-    {
-        // Force websocket secure URL
-        ocpp::helpers::replace(connection_url, "ws://", "wss://");
-    }
 
     // Check if URL has changed since last connection
     std::string last_url;
@@ -862,101 +932,32 @@ bool ChargePoint::doConnect()
         credentials.user     = m_stack_config.chargePointIdentifier();
         credentials.password = authorization_key;
     }
-    credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
-    credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
-    credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
-    credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
-    credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
-    credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
-    credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
-    credentials.allow_selfsigned_certificates             = m_stack_config.tlsAllowSelfSignedCertificates();
-    credentials.allow_expired_certificates                = m_stack_config.tlsAllowExpiredCertificates();
-    credentials.accept_untrusted_certificates             = m_stack_config.tlsAcceptNonTrustedCertificates();
-    credentials.skip_server_name_check                    = m_stack_config.tlsSkipServerNameCheck();
-    credentials.encoded_pem_certificates                  = false;
+    if (security_profile != 1)
+    {
+        credentials.tls12_cipher_list     = m_stack_config.tlsv12CipherList();
+        credentials.tls13_cipher_list     = m_stack_config.tlsv13CipherList();
+        credentials.ecdh_curve            = m_stack_config.tlsEcdhCurve();
+        credentials.server_certificate_ca = m_stack_config.tlsServerCertificateCa();
+        if ((security_profile == 0) || (security_profile == 3))
+        {
+            credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
+            credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
+            credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+        }
+        credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
+        credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
+        credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();
+        credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
+        credentials.encoded_pem_certificates      = false;
+    }
 
     // Start connection process
+    m_reconnect_scheduled = false;
     return m_rpc_client->start(connection_url,
                                credentials,
                                m_stack_config.connectionTimeout(),
                                m_stack_config.retryInterval(),
                                m_ocpp_config.webSocketPingInterval());
-}
-
-/** @brief Specific configuration check for parameter : AuthorizationKey */
-ocpp::types::ConfigurationStatus ChargePoint::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
-{
-    (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Rejected;
-
-    // Do not allow empty authorization key for security profiles 1 and 2
-    unsigned int security_profile = m_ocpp_config.securityProfile();
-    if (!(value.empty() && ((security_profile == 1) || (security_profile == 2))))
-    {
-        ret = ConfigurationStatus::Accepted;
-    }
-
-    return ret;
-}
-
-/** @brief Specific configuration check for parameter : SecurityProfile */
-ocpp::types::ConfigurationStatus ChargePoint::checkSecurityProfileParameter(const std::string& key, const std::string& value)
-{
-    (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Rejected;
-
-    // Do not allow to decrease security profile
-    unsigned int security_profile     = m_ocpp_config.securityProfile();
-    unsigned int new_security_profile = static_cast<unsigned int>(std::atoi(value.c_str()));
-    if (new_security_profile > security_profile)
-    {
-        // Check if new security profile requirements are met
-        switch (new_security_profile)
-        {
-            case 1:
-            {
-                // Basic authent
-                // AuthorizationKey value must no be empty
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Accepted;
-                }
-            }
-            break;
-
-            case 2:
-            {
-                // Basic authent + TLS (server authentication only)
-                // AuthorizationKey value must no be empty
-                // A Central System root certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Accepted;
-                }
-            }
-            break;
-
-            case 3:
-            {
-                // TLS with server and client authentication
-                // A Central System root certificate must be installed
-                // A valid Charge Point certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty())
-                {
-                    ret = ConfigurationStatus::Rejected;
-                }
-            }
-            break;
-
-            default:
-            {
-                // Invalid security profile
-                break;
-            }
-        }
-    }
-
-    return ret;
 }
 
 } // namespace chargepoint

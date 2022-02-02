@@ -29,35 +29,40 @@ namespace helpers
 /** @brief Space */
 extern const std::string SPACE_STRING;
 
-/** @brief Helper function to trim a string
+/** 
+ *  @brief Helper function to trim a string
  *  @param str String to trim
  *  @param chars Characters to remove from the start and from the end of the string
  *  @return Reference to the trimmed string
 */
 std::string& trim(std::string& str, const std::string& chars = SPACE_STRING);
 
-/** @brief Helper function to trim a string
+/** 
+ *  @brief Helper function to trim a string
  *  @param str String to trim
  *  @param chars Characters to remove from the start of the string
  *  @return Reference to the trimmed string
 */
 std::string& ltrim(std::string& str, const std::string& chars = SPACE_STRING);
 
-/** @brief Helper function to trim a string
+/** 
+ *  @brief Helper function to trim a string
  *  @param str String to trim
  *  @param chars Characters to remove from the end of the string
  *  @return Reference to the trimmed string
 */
 std::string& rtrim(std::string& str, const std::string& chars = SPACE_STRING);
 
-/** @brief Helper function to split a string
+/** 
+ *  @brief Helper function to split a string
  *  @param str String to split
  *  @param separator Separator character
  *  @return Array of splitted substrings
 */
 std::vector<std::string> split(const std::string& str, char separator);
 
-/** @brief Helper function to replace a substring with another into a string
+/** 
+ *  @brief Helper function to replace a substring with another into a string
  *  @param str String where replace
  *  @param what Substring to search
  *  @param with Substring to use as a replacement
@@ -65,6 +70,22 @@ std::vector<std::string> split(const std::string& str, char separator);
  *  @return Reference to [str]
  */
 std::string& replace(std::string& str, const std::string& what, const std::string& with, bool replace_all = true);
+
+/** 
+ * @brief Helper function to check if a string starts with the specified substring
+ * @param str String where to check
+ * @param substr Substring to look for
+ * @return true if the string starts with the specified substring, false otherwise
+ */
+bool startsWith(const std::string& str, const std::string& substr);
+
+/** 
+ * @brief Helper function to check if a string ends with the specified substring
+ * @param str String where to check
+ * @param substr Substring to look for
+ * @return true if the string ends with the specified substring, false otherwise
+ */
+bool endsWith(const std::string& str, const std::string& substr);
 
 } // namespace helpers
 } // namespace ocpp

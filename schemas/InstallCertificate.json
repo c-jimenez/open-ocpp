@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:InstallCertificateRequest",
+  "title": "InstallCertificateRequest",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",  
+  "properties": {
+    "certificateType": {
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "CentralSystemRootCertificate",
+        "ManufacturerRootCertificate"
+      ]
+    },
+    "certificate": {
+      "type": "string",
+      "maxLength": 5500
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "certificateType",
+    "certificate"
+  ]
+}

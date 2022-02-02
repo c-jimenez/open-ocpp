@@ -38,6 +38,9 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
     /** @brief Constructor */
     ChargePointConfig(ocpp::helpers::IniFile& config) : m_config(config) { }
 
+    /** @brief Set the value of a stack internal configuration key */
+    void setConfigValue(const std::string& key, const std::string& value) { m_config.set(STACK_PARAMS, key, value); }
+
     // Paths
 
     /** @brief Path to the database to store persistent data */

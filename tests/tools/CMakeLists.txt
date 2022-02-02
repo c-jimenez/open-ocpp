@@ -49,3 +49,12 @@ add_test(
   NAME test_workerthreadpool
   COMMAND test_workerthreadpool
 )
+
+# Unit tests for X509 library classes
+add_definitions(-DCERT_DIR="${CMAKE_CURRENT_LIST_DIR}")
+add_executable(test_x509 test_x509.cpp)
+target_link_libraries(test_x509 x509 doctest -lstdc++fs)
+add_test(
+  NAME test_x509
+  COMMAND test_x509
+)

@@ -27,9 +27,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessagesConverter.h"
 #include "RequestFifo.h"
 #include "RpcClient.h"
+#include "SecurityManager.h"
 #include "Timer.h"
-#include "TimerPool.h"
-#include "WorkerThreadPool.h"
 
 #include <memory>
 
@@ -72,9 +71,11 @@ class ChargePoint : public IChargePoint,
 {
   public:
     /** @brief Constructor */
-    ChargePoint(const ocpp::config::IChargePointConfig& stack_config,
-                ocpp::config::IOcppConfig&              ocpp_config,
-                IChargePointEventsHandler&              events_handler);
+    ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
+                ocpp::config::IOcppConfig&                       ocpp_config,
+                IChargePointEventsHandler&                       events_handler,
+                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
     virtual ~ChargePoint();
@@ -82,7 +83,10 @@ class ChargePoint : public IChargePoint,
     // IChargePoint interface
 
     /** @copydoc ocpp::helpers::TimerPool& IChargePoint::getTimerPool() */
-    ocpp::helpers::TimerPool& getTimerPool() override { return m_timer_pool; }
+    ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
+
+    /** @copydoc ocpp::helpers::WorkerThreadPool& IChargePoint::getWorkerPool() */
+    ocpp::helpers::WorkerThreadPool& getWorkerPool() override { return *m_worker_pool.get(); }
 
     /** @copydoc bool IChargePoint::resetData() */
     bool resetData() override;
@@ -95,6 +99,9 @@ class ChargePoint : public IChargePoint,
 
     /** @copydoc bool IChargePoint::stop() */
     bool stop() override;
+
+    /** @copydoc bool IChargePoint::reconnect() */
+    bool reconnect() override;
 
     /** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
     ocpp::types::RegistrationStatus getRegistrationStatus() override;
@@ -158,6 +165,9 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
     bool clearSecurityEvents() override;
 
+    /** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const std::string&) */
+    bool signCertificate(const std::string& csr) override;
+
     // RpcClient::IListener interface
 
     /** @copydoc void RpcClient::IListener::rpcClientConnected() */
@@ -207,9 +217,9 @@ class ChargePoint : public IChargePoint,
     IChargePointEventsHandler& m_events_handler;
 
     /** @brief Timer pool */
-    ocpp::helpers::TimerPool m_timer_pool;
+    std::shared_ptr<ocpp::helpers::TimerPool> m_timer_pool;
     /** @brief Worker thread pool */
-    ocpp::helpers::WorkerThreadPool m_worker_pool;
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 
     /** @brief Database */
     ocpp::database::Database m_database;
@@ -220,6 +230,10 @@ class ChargePoint : public IChargePoint,
     ocpp::messages::MessagesConverter m_messages_converter;
     /** @brief Requests FIFO */
     RequestFifo m_requests_fifo;
+    /** @brief Security manager */
+    SecurityManager m_security_manager;
+    /** @brief Indicate that a reconnection process has been scheduled */
+    bool m_reconnect_scheduled;
 
     /** @brief Websocket s*/
     std::unique_ptr<ocpp::websockets::IWebsocketClient> m_ws_client;
@@ -251,8 +265,6 @@ class ChargePoint : public IChargePoint,
     std::unique_ptr<MeterValuesManager> m_meter_values_manager;
     /** @brief Smart charging manager */
     std::unique_ptr<SmartChargingManager> m_smart_charging_manager;
-    /** @brief Security manager */
-    std::unique_ptr<SecurityManager> m_security_manager;
     /** @brief Maintenance manager */
     std::unique_ptr<MaintenanceManager> m_maintenance_manager;
     /** @brief Requests FIFO manager */
@@ -276,13 +288,10 @@ class ChargePoint : public IChargePoint,
     /** @brief Save the uptime counter in database */
     void saveUptime();
 
+    /** @brief Schedule a reconnection to the Central System */
+    void scheduleReconnect();
     /** @brief Start the connection process to the Central System */
     bool doConnect();
-
-    /** @brief Specific configuration check for parameter : AuthorizationKey */
-    ocpp::types::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
-    /** @brief Specific configuration check for parameter : SecurityProfile */
-    ocpp::types::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
 };
 
 } // namespace chargepoint

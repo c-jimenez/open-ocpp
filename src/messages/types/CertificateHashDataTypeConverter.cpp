@@ -48,6 +48,7 @@ bool CertificateHashDataTypeConverter::fromJson(const rapidjson::Value&         
     data.hashAlgorithm = HashAlgorithmEnumTypeHelper.fromString(json["hashAlgorithm"].GetString());
     extract(json, "issuerKeyHash", data.issuerKeyHash);
     extract(json, "issuerNameHash", data.issuerNameHash);
+    extract(json, "serialNumber", data.serialNumber);
     return true;
 }
 
@@ -58,6 +59,7 @@ bool CertificateHashDataTypeConverter::toJson(const ocpp::types::CertificateHash
     fill(json, "hashAlgorithm", HashAlgorithmEnumTypeHelper.toString(data.hashAlgorithm));
     fill(json, "issuerKeyHash", data.issuerKeyHash);
     fill(json, "issuerNameHash", data.issuerNameHash);
+    fill(json, "serialNumber", data.serialNumber);
     return true;
 }
 
