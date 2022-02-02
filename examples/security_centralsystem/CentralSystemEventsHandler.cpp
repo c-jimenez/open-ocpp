@@ -143,15 +143,15 @@ void CentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocpp::cent
     {
         // Check if the charge point is connecting using the expected security profile
         std::string  serial_number;
-        unsigned int security_profile;
+        unsigned int security_profile = 0;
         if (m_chargepoint_db.getChargePoint(chargepoint->identifier(), serial_number, security_profile, authent_key))
         {
-            if (security_profile != getCentralSystemSecurityProfile(chargepoint))
-            {
-                disconnect_chargepoint = true;
-                cout << "[" << chargepoint->identifier() << "] - Invalid security profile" << endl;
-            }
             known_chargepoint = true;
+        }
+        if (security_profile != getCentralSystemSecurityProfile(chargepoint))
+        {
+            disconnect_chargepoint = true;
+            cout << "[" << chargepoint->identifier() << "] - Invalid security profile" << endl;
         }
     }
     else

@@ -321,6 +321,10 @@ bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& 
             response.status = CertificateSignedStatusEnumType::Accepted;
         }
     }
+    else
+    {
+        logSecurityEvent(SECEVT_INVALID_CHARGE_POINT_CERT, "");
+    }
 
     LOG_INFO << "Certificate signed message : " << CertificateSignedStatusEnumTypeHelper.toString(response.status);
 

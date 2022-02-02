@@ -763,12 +763,18 @@ void ChargePoint::configurationValueChanged(const std::string& key)
             LOG_INFO << "AuthorizationKey modified, reconnect with new credentials";
             scheduleReconnect();
         }
+
+        m_security_manager.logSecurityEvent(SECEVT_RECONFIG_SECURITY_PARAMETER, "AuthorizationKey");
     }
     else if (key == "SecurityProfile")
     {
         // Reconnect with new profile
         LOG_INFO << "SecurityProfile modified, reconnect with new security profile";
         scheduleReconnect();
+
+        std::stringstream message;
+        message << "SecurityProfile : " << m_ocpp_config.securityProfile();
+        m_security_manager.logSecurityEvent(SECEVT_RECONFIG_SECURITY_PARAMETER, message.str());
     }
     else
     {

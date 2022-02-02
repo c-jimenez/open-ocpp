@@ -352,6 +352,24 @@ int main(int argc, char* argv[])
             case 3:
             {
                 std::cout << "[" << chargepoint_id << "] - Already at the most secured security profile" << std::endl;
+
+                // Get security logs
+                std::string log_filename;
+                if (chargepoint->getLog(LogEnumType::SecurityLog,
+                                        DateTime::now().timestamp(),
+                                        "ftp://localhost",
+                                        Optional<unsigned int>(),
+                                        Optional<std::chrono::seconds>(),
+                                        Optional<DateTime>(),
+                                        Optional<DateTime>(),
+                                        log_filename))
+                {
+                    std::cout << "[" << chargepoint_id << "] - Logs will be uploaded in the following file : " << log_filename << std::endl;
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to retrieve security logs" << std::endl;
+                }
             }
             break;
 
