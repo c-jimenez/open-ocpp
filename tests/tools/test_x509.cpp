@@ -78,20 +78,8 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.serialNumber().size(), 20u);
         CHECK_EQ(cert.serialNumberString(), "13:44:aa:78:b4:6b:bc:49:c7:e5:65:b0:df:a5:ef:3c:48:ac:ba:68");
 
-        struct tm validity;
-        memset(&validity, 0, sizeof(validity));
-        validity.tm_year = 122;
-        validity.tm_mon  = 0;
-        validity.tm_mday = 28;
-        validity.tm_hour = 22;
-        validity.tm_min  = 10;
-        validity.tm_sec  = 9;
-        time_t timestamp = mktime(&validity);
-        CHECK_EQ(cert.validityFrom(), timestamp); // Jan 28 22:10:09 2022 GMT
-        validity.tm_year = 132;
-        validity.tm_mday = 26;
-        timestamp        = mktime(&validity);
-        CHECK_EQ(cert.validityTo(), timestamp); // Jan 26 22:10:09 2032 GMT
+        CHECK_EQ(cert.validityFrom(), 1643407809); // Jan 28 22:10:09 2022 GMT
+        CHECK_EQ(cert.validityTo(), 1958767809);   // Jan 26 22:10:09 2032 GMT
 
         CHECK_EQ(cert.issuerString(),
                  "C = FR, ST = Savoie, L = Chambery, O = Open OCPP, OU = Examples, CN = Open OCPP Certificate Authority, emailAddress = "
@@ -147,20 +135,8 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.pemChain().size(), 1u);
         CHECK_EQ(cert.certificateChain().size(), 1u);
 
-        struct tm validity;
-        memset(&validity, 0, sizeof(validity));
-        validity.tm_year = 122;
-        validity.tm_mon  = 0;
-        validity.tm_mday = 28;
-        validity.tm_hour = 22;
-        validity.tm_min  = 10;
-        validity.tm_sec  = 9;
-        time_t timestamp = mktime(&validity);
-        CHECK_EQ(cert.validityFrom(), timestamp); // Jan 28 22:10:09 2022 GMT
-        validity.tm_year = 132;
-        validity.tm_mday = 26;
-        timestamp        = mktime(&validity);
-        CHECK_EQ(cert.validityTo(), timestamp); // Jan 26 22:10:09 2032 GMT
+        CHECK_EQ(cert.validityFrom(), 1643407809); // Jan 28 22:10:09 2022 GMT
+        CHECK_EQ(cert.validityTo(), 1958767809);   // Jan 26 22:10:09 2032 GMT
 
         CHECK_EQ(cert.serialNumber().size(), 20u);
         CHECK_EQ(cert.serialNumberString(), "53:4d:28:a4:55:19:00:56:67:59:84:3e:92:06:08:63:fc:51:b6:b9");
@@ -220,20 +196,8 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.serialNumber().size(), 20u);
         CHECK_EQ(cert.serialNumberString(), "13:44:aa:78:b4:6b:bc:49:c7:e5:65:b0:df:a5:ef:3c:48:ac:ba:67");
 
-        struct tm validity;
-        memset(&validity, 0, sizeof(validity));
-        validity.tm_year = 122;
-        validity.tm_mon  = 0;
-        validity.tm_mday = 28;
-        validity.tm_hour = 22;
-        validity.tm_min  = 10;
-        validity.tm_sec  = 9;
-        time_t timestamp = mktime(&validity);
-        CHECK_EQ(cert.validityFrom(), timestamp); // Jan 28 22:10:09 2022 GMT
-        validity.tm_year = 132;
-        validity.tm_mday = 26;
-        timestamp        = mktime(&validity);
-        CHECK_EQ(cert.validityTo(), timestamp); // Jan 26 22:10:09 2032 GMT
+        CHECK_EQ(cert.validityFrom(), 1643407809); // Jan 28 22:10:09 2022 GMT
+        CHECK_EQ(cert.validityTo(), 1958767809);   // Jan 26 22:10:09 2032 GMT
 
         CHECK_EQ(cert.issuerString(),
                  "C = FR, ST = Savoie, L = Chambery, O = Open OCPP, OU = Examples, CN = Open OCPP Certificate Authority, emailAddress = "

@@ -109,7 +109,10 @@ time_t X509Document::convertAsn1Time(const void* pasn1_time)
     const ASN1_TIME* asn1_time = reinterpret_cast<const ASN1_TIME*>(pasn1_time);
     struct tm        tm;
     ASN1_TIME_to_tm(asn1_time, &tm);
-    return mktime(&tm);
+    time_t timestamp = mktime(&tm);
+    timestamp += tm.tm_gmtoff;
+    timestamp -= (tm.tm_isdst * 3600);
+    return timestamp;
 }
 
 /** @brief Convert a string in ASN1_STRING format to a standard string representation */

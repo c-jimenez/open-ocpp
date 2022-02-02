@@ -121,12 +121,12 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ChargingScheduleMaxPeriods | S | None |
 | ConnectorSwitch3to1PhaseSupported | S | None |
 | MaxChargingProfilesInstalled | S | None |
-| AdditionalRootCertificateCheck | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| AdditionalRootCertificateCheck | U | None |
 | AuthorizationKey | S | None |
-| CertificateSignedMaxChainSize | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CertificateStoreMaxLength | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CpoName | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| SecurityProfile | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| CertificateSignedMaxChainSize | S | None |
+| CertificateStoreMaxLength | U | None |
+| CpoName | S | None |
+| SecurityProfile | S | None |
 
 ### OCPP security extensions
 
