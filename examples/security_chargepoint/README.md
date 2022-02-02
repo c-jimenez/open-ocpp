@@ -1,4 +1,13 @@
 # Security Charge Point example
+## Disclaimer
+
+The certificate management implemented in this example does not follow the state of the arts recommendations :
+
+* Secure storage of private keys / authentication credentials
+* No password on private keys
+* ... and surely some more
+
+The choosen implementation has only be made to have a simple and comprehensive example of how to use **Open OCPP** features.
 
 ## Description
 

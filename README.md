@@ -67,7 +67,7 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Chare Point role |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Charge Point role |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
 ### Supported OCPP configuration keys
@@ -86,7 +86,7 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ConnectionTimeOut | S | None |
 | ConnectorPhaseRotation | S | None |
 | ConnectorPhaseRotationMaxLength | S | None |
-| GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (99) + user application configuration keys count to allow to export all the configuration in 1 message |
+| GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (49) + user application configuration keys count to allow to export all the configuration in 1 message |
 | HeartbeatInterval | S | Heartbeat are only sent if no messages have been exchanged since HeartbeatInterval seconds |
 | LightIntensity | U | None |
 | LocalAuthorizeOffline | S | None |
@@ -139,10 +139,9 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 * 2 : TLS with HTTP Basic Authentication
 * 3 : TLS with Client Side Certificates
 
-The OCPP use cases to dynamically switch between Security Profiles is not implemented yet.
-Only the automatic reconnexion when the **AuthorizationKey** parameter has been modified is implemented.
-
-To switch between Security Profiles, the user application will have to : stop the stack, modify the connexion parameters, restart the stack.
+In Charge Point role, the stack will automatically disconnect and then reconnect to the Central System after one of the following parameters has been modified : 
+* **AuthorizationKey**
+* **Security Profile**
 
 #### Security events
 
@@ -159,6 +158,13 @@ In Charge Point role, the user application can generate custom security events a
 
 **Open OCPP** support this feature for both Charge Point and Central System roles.
 
+#### Certificate management messages
+
+**Open OCPP** support this feature for both Charge Point and Central System roles. 
+
+The actual storage of the certificates and their keys must be done by the user application. 
+
+**Open OCPP** provides callbacks and helper classes to ease certificate manipulation and installation.
 
 ## Build
 
