@@ -19,12 +19,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CERTIFICATEREQUEST_H
 #define CERTIFICATEREQUEST_H
 
+#include "Sha2.h"
 #include "X509Document.h"
 
 namespace ocpp
 {
 namespace x509
 {
+
+class PrivateKey;
 
 /** @brief Helper class for certificate request manipulation */
 class CertificateRequest : public X509Document
@@ -41,6 +44,14 @@ class CertificateRequest : public X509Document
      * @param pem_data PEM encoded data
      */
     CertificateRequest(const std::string& pem_data);
+
+    /**
+     * @brief Constructor to generate a certificate request
+     * @param subject Subject of the request
+     * @param private_key Private key to use to sign the request
+     * @param sha Secure hash algorithm to use to sign the request 
+     */
+    CertificateRequest(const Subject& subject, const PrivateKey& private_key, Sha2::Type sha = Sha2::Type::SHA256);
 
     /** @brief Destructor */
     virtual ~CertificateRequest();

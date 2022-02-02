@@ -3,6 +3,7 @@
 add_library(x509 STATIC
     Certificate.cpp
     CertificateRequest.cpp
+    PrivateKey.cpp
     Sha2.cpp
     X509Document.cpp
 )
