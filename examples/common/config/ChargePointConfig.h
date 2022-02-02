@@ -125,7 +125,9 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
 
     // Security
 
-    /** @brief Enabled security event notification */
+    /** @brief Enable internal certificate management : the certificates will be managed by Open OCPP only */
+    bool internalCertificateManagementEnabled() const override { return getBool("InternalCertificateManagementEnabled"); }
+    /** @brief Enable security event notification */
     bool securityEventNotificationEnabled() const override { return getBool("SecurityEventNotificationEnabled"); }
     /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
     unsigned int securityLogMaxEntriesCount() const override { return get<unsigned int>("SecurityLogMaxEntriesCount"); };
