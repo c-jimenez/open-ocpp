@@ -159,6 +159,8 @@ class SecurityManager
                        std::string&                                 error_message) override;
 
   private:
+    /** @brief Stack configuration */
+    const ocpp::config::IChargePointConfig& m_stack_config;
     /** @brief Standard OCPP configuration */
     ocpp::config::IOcppConfig& m_ocpp_config;
     /** @brief User defined events handler */

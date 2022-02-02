@@ -121,12 +121,12 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ChargingScheduleMaxPeriods | S | None |
 | ConnectorSwitch3to1PhaseSupported | S | None |
 | MaxChargingProfilesInstalled | S | None |
-| AdditionalRootCertificateCheck | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| AdditionalRootCertificateCheck | U | None |
 | AuthorizationKey | S | None |
-| CertificateSignedMaxChainSize | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CertificateStoreMaxLength | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CpoName | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| SecurityProfile | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| CertificateSignedMaxChainSize | S | None |
+| CertificateStoreMaxLength | U | None |
+| CpoName | S | None |
+| SecurityProfile | S | None |
 
 ### OCPP security extensions
 
@@ -153,6 +153,8 @@ In Charge Point role, it can optionnaly handle the storage of the security event
 * \>0 = **Open OCPP** will store at max **SecurityLogMaxEntriesCount** (circular log) and will automatically generate the security log as a CSV file
 
 In Charge Point role, the user application can generate custom security events and defines its criticity so that they are forwarded to the Central System.
+
+In Charge Point role, the notification of security events can be enabled or disabled with the IChargePointConfig::securityEventNotificationEnabled() configuration. This can be usefull to disable them when the Central System does not implement the security extensions.
 
 #### Extended trigger messages
 

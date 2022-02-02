@@ -73,6 +73,7 @@ SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&        
       GenericMessageHandler<GetInstalledCertificateIdsReq, GetInstalledCertificateIdsConf>(GET_INSTALLED_CERTIFICATE_IDS_ACTION,
                                                                                            messages_converter),
       GenericMessageHandler<InstallCertificateReq, InstallCertificateConf>(INSTALL_CERTIFICATE_ACTION, messages_converter),
+      m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),
@@ -197,32 +198,35 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
     {
         LOG_WARNING << "Security Event : type = " << type << ", message = " << message;
 
-        SecurityEventNotificationReq request;
-        request.type.assign(type);
-        request.timestamp = timestamp;
-        if (!message.empty())
+        if (m_stack_config.securityEventNotificationEnabled())
         {
-            request.techInfo.value().assign(message);
-        }
-
-        if (m_msg_sender)
-        {
-            // Stack is started, try to send the notification
-            SecurityEventNotificationConf response;
-            if (m_msg_sender->call(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, &m_requests_fifo) == CallResult::Failed)
+            SecurityEventNotificationReq request;
+            request.type.assign(type);
+            request.timestamp = timestamp;
+            if (!message.empty())
             {
-                ret = false;
+                request.techInfo.value().assign(message);
             }
-        }
-        else
-        {
-            // Stack is not started, queue the notification
-            rapidjson::Document payload;
-            payload.Parse("{}");
-            m_security_event_req_converter.setAllocator(&payload.GetAllocator());
-            if (m_security_event_req_converter.toJson(request, payload))
+
+            if (m_msg_sender)
             {
-                m_requests_fifo.push(0, SECURITY_EVENT_NOTIFICATION_ACTION, payload);
+                // Stack is started, try to send the notification
+                SecurityEventNotificationConf response;
+                if (m_msg_sender->call(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, &m_requests_fifo) == CallResult::Failed)
+                {
+                    ret = false;
+                }
+            }
+            else
+            {
+                // Stack is not started, queue the notification
+                rapidjson::Document payload;
+                payload.Parse("{}");
+                m_security_event_req_converter.setAllocator(&payload.GetAllocator());
+                if (m_security_event_req_converter.toJson(request, payload))
+                {
+                    m_requests_fifo.push(0, SECURITY_EVENT_NOTIFICATION_ACTION, payload);
+                }
             }
         }
     }
