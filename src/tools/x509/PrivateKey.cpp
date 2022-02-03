@@ -115,7 +115,7 @@ PrivateKey::PrivateKey(Type type, unsigned int param, const std::string& passphr
             else
             {
                 char* pass = const_cast<char*>(passphrase.c_str());
-                PEM_write_bio_PKCS8PrivateKey(bio, pkey, EVP_aes_128_cbc(), nullptr, 0, nullptr, pass);
+                PEM_write_bio_PKCS8PrivateKey(bio, pkey, EVP_aes_256_cbc(), nullptr, 0, nullptr, pass);
             }
             bio_len = BIO_get_mem_data(bio, &bio_data);
             m_private_pem.insert(0, bio_data, static_cast<size_t>(bio_len));
@@ -167,6 +167,23 @@ bool PrivateKey::publicToFile(const std::filesystem::path& pem_file) const
         ret = true;
     }
     return ret;
+}
+
+/** @brief Get the private key part as unencrypted PEM */
+std::string PrivateKey::privatePemUnencrypted() const
+{
+    std::string pem;
+    EVP_PKEY*   pkey = reinterpret_cast<EVP_PKEY*>(m_openssl_object);
+    if (pkey)
+    {
+        BIO* bio = BIO_new(BIO_s_mem());
+        PEM_write_bio_PKCS8PrivateKey(bio, pkey, nullptr, nullptr, 0, nullptr, nullptr);
+        char* bio_data = nullptr;
+        int   bio_len  = BIO_get_mem_data(bio, &bio_data);
+        pem.insert(0, bio_data, static_cast<size_t>(bio_len));
+        BIO_free(bio);
+    }
+    return pem;
 }
 
 /** @brief Read the key from the PEM encoded data */

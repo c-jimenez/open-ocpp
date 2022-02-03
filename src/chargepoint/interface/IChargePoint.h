@@ -233,7 +233,9 @@ class IChargePoint
 
     /**
      * @brief Send a CSR request to sign a certificate
-     * @param csr CSR request in PEM format
+     * @param csr CSR request in PEM format 
+     *            Ignored (can be left empty) when internal certicate management
+     *            has been enabled
      * @return true if the request has been sent and accepted, false otherwise
      */
     virtual bool signCertificate(const std::string& csr) = 0;

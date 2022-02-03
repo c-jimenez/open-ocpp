@@ -64,8 +64,6 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
     std::string tlsv12CipherList() const override { return getString("Tlsv12CipherList"); }
     /** @brief Cipher list to use for TLSv1.3 connections */
     std::string tlsv13CipherList() const override { return getString("Tlsv13CipherList"); }
-    /** @brief ECDH curve to use for TLS connections */
-    std::string tlsEcdhCurve() const override { return getString("TlsEcdhCurve"); }
     /** @brief Certification Authority signing chain for the server certificate */
     std::string tlsServerCertificateCa() const override { return getString("TlsServerCertificateCa"); }
     /** @brief Client certificate */
@@ -131,6 +129,39 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig
     bool securityEventNotificationEnabled() const override { return getBool("SecurityEventNotificationEnabled"); }
     /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
     unsigned int securityLogMaxEntriesCount() const override { return get<unsigned int>("SecurityLogMaxEntriesCount"); };
+    /** @brief Hash type for certificate request generation : sha256, sha384 or sha512 */
+    virtual std::string clientCertificateRequestHashType() const override { return getString("ClientCertificateRequestHashType"); }
+    /** @brief Key type for certificate request generation : ec or rsa */
+    virtual std::string clientCertificateRequestKeyType() const override { return getString("ClientCertificateRequestKeyType"); }
+    /** @brief Length in bits of the key for certificate request generation 
+     *         if rsa has been selected for key type : minimum 2048 */
+    virtual unsigned int clientCertificateRequestRsaKeyLength() const override
+    {
+        return get<unsigned int>("ClientCertificateRequestRsaKeyLength");
+    };
+    /** @brief Name of the elliptic curve for certificate request generation 
+     *         if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, 
+     *         brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 */
+    virtual std::string clientCertificateRequestEcCurve() const override { return getString("ClientCertificateRequestEcCurve"); }
+    /** @brief Country for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectCountry() const override
+    {
+        return getString("ClientCertificateRequestSubjectCountry");
+    }
+    /** @brief State for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectState() const override { return getString("ClientCertificateRequestSubjectState"); }
+    /** @brief Location for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectLocation() const override
+    {
+        return getString("ClientCertificateRequestSubjectLocation");
+    }
+    /** @brief Organzation unit for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectOrganizationUnit() const override
+    {
+        return getString("ClientCertificateRequestSubjectOrganizationUnit");
+    }
+    /** @brief Email for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectEmail() const override { return getString("ClientCertificateRequestSubjectEmail"); }
 
   private:
     /** @brief Configuration file */

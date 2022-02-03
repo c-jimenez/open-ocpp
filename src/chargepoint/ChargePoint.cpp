@@ -26,6 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MaintenanceManager.h"
 #include "MessageDispatcher.h"
 #include "MeterValuesManager.h"
+#include "PrivateKey.h"
 #include "RequestFifoManager.h"
 #include "ReservationManager.h"
 #include "SmartChargingManager.h"
@@ -936,7 +937,6 @@ bool ChargePoint::doConnect()
     {
         credentials.tls12_cipher_list = m_stack_config.tlsv12CipherList();
         credentials.tls13_cipher_list = m_stack_config.tlsv13CipherList();
-        credentials.ecdh_curve        = m_stack_config.tlsEcdhCurve();
         if ((security_profile == 0) || !m_stack_config.internalCertificateManagementEnabled())
         {
             // Use certificates prodivided by the user application
@@ -956,7 +956,15 @@ bool ChargePoint::doConnect()
         else
         {
             // Use internal certificates
-            credentials.server_certificate_ca    = m_security_manager.getCentralSystemCaCertificates();
+            credentials.server_certificate_ca = m_security_manager.getCentralSystemCaCertificates();
+            if (security_profile == 3)
+            {
+                std::string encrypted_private_key;
+                credentials.client_certificate = m_security_manager.getChargePointCertificate(encrypted_private_key);
+                ocpp::x509::PrivateKey pkey(encrypted_private_key, m_stack_config.tlsClientCertificatePrivateKeyPassphrase());
+                credentials.client_certificate_private_key            = pkey.privatePemUnencrypted();
+                credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+            }
             credentials.encoded_pem_certificates = true;
 
             // Security extension doesn't allow to bypass certificate's checks

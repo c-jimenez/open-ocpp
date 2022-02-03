@@ -419,6 +419,7 @@ bool DefaultChargePointEventsHandler::chargePointCertificateReceived(const ocpp:
         // Use the new certificate
         m_config.setStackConfigValue("TlsClientCertificate", cert_filename);
         m_config.setStackConfigValue("TlsClientCertificatePrivateKey", cert_key_filename);
+        m_config.setStackConfigValue("TlsClientCertificatePrivateKeyPassphrase", "");
         if (m_chargepoint)
         {
             m_chargepoint->reconnect();

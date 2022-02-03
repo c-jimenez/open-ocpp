@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CaCertificatesDatabase.h"
 #include "CertificateSigned.h"
+#include "CpCertificatesDatabase.h"
 #include "DeleteCertificate.h"
 #include "GenericMessageHandler.h"
 #include "GetInstalledCertificateIds.h"
@@ -105,6 +106,13 @@ class SecurityManager
      */
     std::string getCentralSystemCaCertificates();
 
+    /** 
+     * @brief Get the installed Charge Point certificate as PEM encoded data
+     * @param private_key Corresponding private key as PEM encoded data
+     * @return Installed Charge Point certificate as PEM encoded data
+     */
+    std::string getChargePointCertificate(std::string& private_key);
+
     // ISecurityManager interface
 
     /** @copydoc bool ISecurityManager::logSecurityEvent(const std::string&, const std::string&, bool) */
@@ -187,6 +195,8 @@ class SecurityManager
     SecurityLogsDatabase m_security_logs_db;
     /** @brief CA certificates database */
     CaCertificatesDatabase m_ca_certificates_db;
+    /** @brief CP certificates database */
+    CpCertificatesDatabase m_cp_certificates_db;
 
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender* m_msg_sender;
@@ -198,6 +208,9 @@ class SecurityManager
 
     /** @brief Fill the hash information of a certificat */
     void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info);
+
+    /** @brief Generate a new certificate request */
+    std::string generateCertificateRequest();
 };
 
 } // namespace chargepoint

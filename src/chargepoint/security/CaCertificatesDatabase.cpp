@@ -17,6 +17,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CaCertificatesDatabase.h"
+#include "Certificate.h"
+#include "DateTime.h"
 #include "IChargePointConfig.h"
 #include "Logger.h"
 

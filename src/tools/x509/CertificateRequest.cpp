@@ -64,55 +64,76 @@ CertificateRequest::CertificateRequest(const Subject& subject, const PrivateKey&
 
     // Add subject
     X509_NAME* subject_name = X509_NAME_new();
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_countryName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.country.c_str()),
-                               subject.country.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_stateOrProvinceName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.state.c_str()),
-                               subject.state.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_localityName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.location.c_str()),
-                               subject.location.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_organizationName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.organization.c_str()),
-                               subject.organization.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_organizationalUnitName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.organization_unit.c_str()),
-                               subject.organization_unit.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_commonName,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.common_name.c_str()),
-                               subject.common_name.size(),
-                               -1,
-                               0);
-    X509_NAME_add_entry_by_NID(subject_name,
-                               NID_pkcs9_emailAddress,
-                               V_ASN1_UTF8STRING,
-                               reinterpret_cast<const unsigned char*>(subject.email_address.c_str()),
-                               subject.email_address.size(),
-                               -1,
-                               0);
+    if (!subject.country.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_countryName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.country.c_str()),
+                                   subject.country.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.state.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_stateOrProvinceName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.state.c_str()),
+                                   subject.state.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.location.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_localityName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.location.c_str()),
+                                   subject.location.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.organization.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_organizationName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.organization.c_str()),
+                                   subject.organization.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.organization_unit.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_organizationalUnitName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.organization_unit.c_str()),
+                                   subject.organization_unit.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.common_name.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_commonName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.common_name.c_str()),
+                                   subject.common_name.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.email_address.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_pkcs9_emailAddress,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.email_address.c_str()),
+                                   subject.email_address.size(),
+                                   -1,
+                                   0);
+    }
     X509_REQ_set_subject_name(x509_req, subject_name);
     X509_NAME_free(subject_name);
 

@@ -19,11 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CACERTIFICATESDATABASE_H
 #define CACERTIFICATESDATABASE_H
 
-#include "Certificate.h"
 #include "CertificateHashDataType.h"
 #include "Database.h"
-#include "DateTime.h"
-#include "Optional.h"
 
 #include <memory>
 
@@ -34,6 +31,12 @@ namespace config
 {
 class IChargePointConfig;
 } // namespace config
+namespace x509
+{
+class PrivateKey;
+class Certificate;
+class CertificateRequest;
+} // namespace x509
 
 // Main namespace
 namespace chargepoint

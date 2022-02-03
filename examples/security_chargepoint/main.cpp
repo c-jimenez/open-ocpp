@@ -103,72 +103,78 @@ int main(int argc, char* argv[])
     path /= "security_chargepoint.ini";
     ChargePointDemoConfig config(path);
 
-    // Security Profile >= 2 : Look for all the Central System CA certificates installed and choose the most recent
-    std::vector<std::pair<std::string, ocpp::x509::Certificate>> certs;
-    if (config.ocppConfig().securityProfile() >= 2)
+    // Check if certificate management is handled by Open OCPP
+    if (!config.stackConfig().internalCertificateManagementEnabled())
     {
-        for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+        // Security Profile >= 2 : Look for all the Central System CA certificates installed and choose the most recent
+        std::vector<std::pair<std::string, ocpp::x509::Certificate>> certs;
+        if (config.ocppConfig().securityProfile() >= 2)
         {
-            if (!dir_entry.is_directory())
+            for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
             {
-                std::string filename = dir_entry.path().filename();
-                if (ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
+                if (!dir_entry.is_directory())
                 {
-                    certs.emplace_back(dir_entry.path().string(), dir_entry.path());
+                    std::string filename = dir_entry.path().filename();
+                    if (ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
+                    {
+                        certs.emplace_back(dir_entry.path().string(), dir_entry.path());
+                    }
                 }
             }
-        }
-        std::cout << certs.size() << " Central System certificates found" << std::endl;
-        if (certs.size() != 0)
-        {
-            std::sort(certs.begin(),
-                      certs.end(),
-                      [](const std::pair<std::string, ocpp::x509::Certificate>& a, const std::pair<std::string, ocpp::x509::Certificate>& b)
-                      { return a.second.validityFrom() > b.second.validityFrom(); });
-            config.setStackConfigValue("TlsServerCertificateCa", certs[0].first);
-
-            std::cout << "Using : " << certs[0].first
-                      << " - validity from : " << ocpp::types::DateTime(certs[0].second.validityFrom()).str() << std::endl;
-        }
-        else
-        {
-            std::cout << "Security Profile >= 2 without Central System certificate installed : the connection will likely failed"
-                      << std::endl;
-        }
-    }
-
-    // Security Profile = 3 : Look for all the Charge Point certificates installed and choose the most recent
-    certs.clear();
-    if (config.ocppConfig().securityProfile() == 3)
-    {
-        for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
-        {
-            if (!dir_entry.is_directory())
+            std::cout << certs.size() << " Central System certificates found" << std::endl;
+            if (certs.size() != 0)
             {
-                std::string filename = dir_entry.path().filename();
-                if (ocpp::helpers::startsWith(filename, "cp_") && ocpp::helpers::endsWith(filename, ".pem"))
-                {
-                    certs.emplace_back(dir_entry.path().string(), dir_entry.path());
-                }
+                std::sort(
+                    certs.begin(),
+                    certs.end(),
+                    [](const std::pair<std::string, ocpp::x509::Certificate>& a, const std::pair<std::string, ocpp::x509::Certificate>& b)
+                    { return a.second.validityFrom() > b.second.validityFrom(); });
+                config.setStackConfigValue("TlsServerCertificateCa", certs[0].first);
+
+                std::cout << "Using : " << certs[0].first
+                          << " - validity from : " << ocpp::types::DateTime(certs[0].second.validityFrom()).str() << std::endl;
+            }
+            else
+            {
+                std::cout << "Security Profile >= 2 without Central System certificate installed : the connection will likely failed"
+                          << std::endl;
             }
         }
-        std::cout << certs.size() << " Charge Point certificate(s) found" << std::endl;
-        if (certs.size() != 0)
-        {
-            std::sort(certs.begin(),
-                      certs.end(),
-                      [](const std::pair<std::string, ocpp::x509::Certificate>& a, const std::pair<std::string, ocpp::x509::Certificate>& b)
-                      { return a.second.validityFrom() > b.second.validityFrom(); });
-            config.setStackConfigValue("TlsClientCertificate", certs[0].first);
-            config.setStackConfigValue("TlsClientCertificatePrivateKey", certs[0].first + ".key");
 
-            std::cout << "Using : " << certs[0].first
-                      << " - validity from : " << ocpp::types::DateTime(certs[0].second.validityFrom()).str() << std::endl;
-        }
-        else
+        // Security Profile = 3 : Look for all the Charge Point certificates installed and choose the most recent
+        certs.clear();
+        if (config.ocppConfig().securityProfile() == 3)
         {
-            std::cout << "Security Profile == 3 without Charge Point certificate installed : the connection will likely failed"
-                      << std::endl;
+            for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+            {
+                if (!dir_entry.is_directory())
+                {
+                    std::string filename = dir_entry.path().filename();
+                    if (ocpp::helpers::startsWith(filename, "cp_") && ocpp::helpers::endsWith(filename, ".pem"))
+                    {
+                        certs.emplace_back(dir_entry.path().string(), dir_entry.path());
+                    }
+                }
+            }
+            std::cout << certs.size() << " Charge Point certificate(s) found" << std::endl;
+            if (certs.size() != 0)
+            {
+                std::sort(
+                    certs.begin(),
+                    certs.end(),
+                    [](const std::pair<std::string, ocpp::x509::Certificate>& a, const std::pair<std::string, ocpp::x509::Certificate>& b)
+                    { return a.second.validityFrom() > b.second.validityFrom(); });
+                config.setStackConfigValue("TlsClientCertificate", certs[0].first);
+                config.setStackConfigValue("TlsClientCertificatePrivateKey", certs[0].first + ".key");
+
+                std::cout << "Using : " << certs[0].first
+                          << " - validity from : " << ocpp::types::DateTime(certs[0].second.validityFrom()).str() << std::endl;
+            }
+            else
+            {
+                std::cout << "Security Profile == 3 without Charge Point certificate installed : the connection will likely failed"
+                          << std::endl;
+            }
         }
     }
 

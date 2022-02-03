@@ -102,6 +102,12 @@ class PrivateKey
     bool publicToFile(const std::filesystem::path& pem_file) const;
 
     /**
+     * @brief Get the private key part as unencrypted PEM
+     * @return Unencrypted PEM encoded data representation of the private key
+     */
+    std::string privatePemUnencrypted() const;
+
+    /**
      * @brief Get the PEM encoded data representation of the private key
      * @return PEM encoded data representation of the private key
      */
