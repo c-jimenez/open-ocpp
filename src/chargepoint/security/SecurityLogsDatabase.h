@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SECURITYDATABASE_H
-#define SECURITYDATABASE_H
+#ifndef SECURITYLOGSDATABASE_H
+#define SECURITYLOGSDATABASE_H
 
 #include "Database.h"
 #include "DateTime.h"
@@ -97,4 +97,4 @@ class SecurityLogsDatabase
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // SECURITYDATABASE_H
+#endif // SECURITYLOGSDATABASE_H

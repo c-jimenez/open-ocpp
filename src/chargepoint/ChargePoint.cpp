@@ -85,7 +85,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_
       m_messages_converter(),
       m_requests_fifo(m_database),
       m_security_manager(
-          m_stack_config, m_ocpp_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo),
+          m_stack_config, m_ocpp_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo, *this),
       m_reconnect_scheduled(false),
       m_ws_client(),
       m_rpc_client(),
@@ -386,7 +386,7 @@ bool ChargePoint::reconnect()
     if (m_rpc_client)
     {
         // Schedule of reconnexion
-        LOG_INFO << "Reconnect asked by user application";
+        LOG_INFO << "Reconnect triggered";
         scheduleReconnect();
         ret = true;
     }
@@ -934,21 +934,37 @@ bool ChargePoint::doConnect()
     }
     if (security_profile != 1)
     {
-        credentials.tls12_cipher_list     = m_stack_config.tlsv12CipherList();
-        credentials.tls13_cipher_list     = m_stack_config.tlsv13CipherList();
-        credentials.ecdh_curve            = m_stack_config.tlsEcdhCurve();
-        credentials.server_certificate_ca = m_stack_config.tlsServerCertificateCa();
-        if ((security_profile == 0) || (security_profile == 3))
+        credentials.tls12_cipher_list = m_stack_config.tlsv12CipherList();
+        credentials.tls13_cipher_list = m_stack_config.tlsv13CipherList();
+        credentials.ecdh_curve        = m_stack_config.tlsEcdhCurve();
+        if ((security_profile == 0) || !m_stack_config.internalCertificateManagementEnabled())
         {
-            credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
-            credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
-            credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+            // Use certificates prodivided by the user application
+            credentials.server_certificate_ca = m_stack_config.tlsServerCertificateCa();
+            if ((security_profile == 0) || (security_profile == 3))
+            {
+                credentials.client_certificate                        = m_stack_config.tlsClientCertificate();
+                credentials.client_certificate_private_key            = m_stack_config.tlsClientCertificatePrivateKey();
+                credentials.client_certificate_private_key_passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+            }
+            credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
+            credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
+            credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();
+            credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
+            credentials.encoded_pem_certificates      = false;
         }
-        credentials.allow_selfsigned_certificates = m_stack_config.tlsAllowSelfSignedCertificates();
-        credentials.allow_expired_certificates    = m_stack_config.tlsAllowExpiredCertificates();
-        credentials.accept_untrusted_certificates = m_stack_config.tlsAcceptNonTrustedCertificates();
-        credentials.skip_server_name_check        = m_stack_config.tlsSkipServerNameCheck();
-        credentials.encoded_pem_certificates      = false;
+        else
+        {
+            // Use internal certificates
+            credentials.server_certificate_ca    = m_security_manager.getCentralSystemCaCertificates();
+            credentials.encoded_pem_certificates = true;
+
+            // Security extension doesn't allow to bypass certificate's checks
+            credentials.allow_selfsigned_certificates = false;
+            credentials.allow_expired_certificates    = false;
+            credentials.accept_untrusted_certificates = false;
+            credentials.skip_server_name_check        = false;
+        }
     }
 
     // Start connection process

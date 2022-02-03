@@ -37,6 +37,9 @@ SecurityLogsDatabase::SecurityLogsDatabase(const ocpp::config::IChargePointConfi
 {
 }
 
+/** @brief Destructor */
+SecurityLogsDatabase::~SecurityLogsDatabase() { }
+
 /** @brief Log a security event */
 bool SecurityLogsDatabase::log(const std::string& type, const std::string& message, bool critical, const ocpp::types::DateTime& timestamp)
 {
@@ -140,9 +143,6 @@ bool SecurityLogsDatabase::exportSecurityEvents(const std::string&              
 
     return ret;
 }
-
-/** @brief Destructor */
-SecurityLogsDatabase::~SecurityLogsDatabase() { }
 
 /** @brief Initialize the database table */
 void SecurityLogsDatabase::initDatabaseTable()

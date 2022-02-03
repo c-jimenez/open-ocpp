@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "SecurityManager.h"
 #include "Certificate.h"
 #include "GenericMessageSender.h"
+#include "IChargePoint.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
@@ -67,7 +68,8 @@ SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&        
                                  IChargePointEventsHandler&                      events_handler,
                                  ocpp::helpers::WorkerThreadPool&                worker_pool,
                                  const ocpp::messages::GenericMessagesConverter& messages_converter,
-                                 ocpp::messages::IRequestFifo&                   requests_fifo)
+                                 ocpp::messages::IRequestFifo&                   requests_fifo,
+                                 IChargePoint&                                   charge_point)
     : GenericMessageHandler<CertificateSignedReq, CertificateSignedConf>(CERTIFICATE_SIGNED_ACTION, messages_converter),
       GenericMessageHandler<DeleteCertificateReq, DeleteCertificateConf>(DELETE_CERTIFICATE_ACTION, messages_converter),
       GenericMessageHandler<GetInstalledCertificateIdsReq, GetInstalledCertificateIdsConf>(GET_INSTALLED_CERTIFICATE_IDS_ACTION,
@@ -80,7 +82,9 @@ SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&        
       m_requests_fifo(requests_fifo),
       m_security_event_req_converter(
           *messages_converter.getRequestConverter<SecurityEventNotificationReq>(SECURITY_EVENT_NOTIFICATION_ACTION)),
+      m_charge_point(charge_point),
       m_security_logs_db(stack_config, database),
+      m_ca_certificates_db(stack_config, database),
       m_msg_sender(nullptr)
 {
 }
@@ -92,6 +96,7 @@ SecurityManager::~SecurityManager() { }
 void SecurityManager::initDatabaseTable()
 {
     m_security_logs_db.initDatabaseTable();
+    m_ca_certificates_db.initDatabaseTable();
 }
 
 /** @brief Start the security manager */
@@ -176,6 +181,12 @@ bool SecurityManager::signCertificate(const std::string& csr)
     }
 
     return ret;
+}
+
+/** @brief Get the installed Central System CA certificates as PEM encoded data */
+std::string SecurityManager::getCentralSystemCaCertificates()
+{
+    return m_ca_certificates_db.getCertificateListPem(CertificateUseEnumType::CentralSystemRootCertificate);
 }
 
 // ISecurityManager interface
@@ -356,11 +367,19 @@ bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& 
              << " - issuerNameHash = " << request.certificateHashData.issuerNameHash.str()
              << " - serialNumber = " << request.certificateHashData.serialNumber.str();
 
-    // Delete certificate
-    response.status = m_events_handler.deleteCertificate(request.certificateHashData.hashAlgorithm,
-                                                         request.certificateHashData.issuerNameHash,
-                                                         request.certificateHashData.issuerKeyHash,
-                                                         request.certificateHashData.serialNumber);
+    if (m_stack_config.internalCertificateManagementEnabled())
+    {
+        // Delete certificate
+        response.status = m_ca_certificates_db.deleteCertificate(request.certificateHashData);
+    }
+    else
+    {
+        // Notify handler to delete the certificate
+        response.status = m_events_handler.deleteCertificate(request.certificateHashData.hashAlgorithm,
+                                                             request.certificateHashData.issuerNameHash,
+                                                             request.certificateHashData.issuerKeyHash,
+                                                             request.certificateHashData.serialNumber);
+    }
 
     LOG_INFO << "Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(response.status);
 
@@ -388,32 +407,36 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
     // Prepare response
     response.status = GetInstalledCertificateStatusEnumType::NotFound;
 
-    // Get the list of installed certificates
-    std::vector<ocpp::x509::Certificate> certificates;
-    m_events_handler.getInstalledCertificates(request.certificateType, certificates);
-    if (!certificates.empty())
+    if (m_stack_config.internalCertificateManagementEnabled())
     {
-        // Compute hashes with SHA-256 algorithm
-        ocpp::x509::Sha2 sha256;
-
-        // Compute hashes for each certificate
-        for (const auto& certificate : certificates)
-        {
-            if (certificate.isValid())
-            {
-                response.certificateHashData.emplace_back();
-                CertificateHashDataType& hash_data = response.certificateHashData.back();
-                hash_data.hashAlgorithm            = HashAlgorithmEnumType::SHA256;
-                sha256.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
-                hash_data.issuerNameHash.assign(sha256.resultString());
-                sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
-                hash_data.issuerKeyHash.assign(sha256.resultString());
-                hash_data.serialNumber.assign(certificate.serialNumberHexString());
-            }
-        }
+        // Get the list of installed certificates
+        m_ca_certificates_db.getCertificateList(request.certificateType, response.certificateHashData);
         if (!response.certificateHashData.empty())
         {
             response.status = GetInstalledCertificateStatusEnumType::Accepted;
+        }
+    }
+    else
+    {
+        // Notify handler to get the list of installed certificates
+        std::vector<ocpp::x509::Certificate> certificates;
+        m_events_handler.getInstalledCertificates(request.certificateType, certificates);
+        if (!certificates.empty())
+        {
+            // Compute hashes for each certificate
+            for (const auto& certificate : certificates)
+            {
+                if (certificate.isValid())
+                {
+                    response.certificateHashData.emplace_back();
+                    CertificateHashDataType& hash_data = response.certificateHashData.back();
+                    fillHashInfo(certificate, hash_data);
+                }
+            }
+            if (!response.certificateHashData.empty())
+            {
+                response.status = GetInstalledCertificateStatusEnumType::Accepted;
+            }
         }
     }
 
@@ -448,8 +471,46 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
     ocpp::x509::Certificate certificate(request.certificate.str());
     if (certificate.isValid())
     {
-        // Notify new certificate
-        response.status = m_events_handler.caCertificateReceived(request.certificateType, certificate);
+        if (m_stack_config.internalCertificateManagementEnabled())
+        {
+            // Check the number of installed certificate
+            unsigned int certificates_count =
+                m_ca_certificates_db.getCertificateCount(CertificateUseEnumType::CentralSystemRootCertificate, false) +
+                m_ca_certificates_db.getCertificateCount(CertificateUseEnumType::ManufacturerRootCertificate, false);
+            if (certificates_count < m_ocpp_config.certificateStoreMaxLength())
+            {
+                // Additionnal checks
+                if ((request.certificateType == CertificateUseEnumType::ManufacturerRootCertificate) ||
+                    !m_ocpp_config.additionalRootCertificateCheck())
+                {
+                    // Create hash of certificate
+                    CertificateHashDataType hash_data;
+                    fillHashInfo(certificate, hash_data);
+
+                    // Install certificate
+                    if (m_ca_certificates_db.addCertificate(request.certificateType, certificate, hash_data))
+                    {
+                        response.status = CertificateStatusEnumType::Accepted;
+
+                        // Reconnect using the new certificate
+                        if ((request.certificateType == CertificateUseEnumType::CentralSystemRootCertificate) &&
+                            (certificate.validityFrom() <= DateTime::now().timestamp()))
+                        {
+                            m_charge_point.reconnect();
+                        }
+                    }
+                    else
+                    {
+                        response.status = CertificateStatusEnumType::Failed;
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Notify new certificate
+            response.status = m_events_handler.caCertificateReceived(request.certificateType, certificate);
+        }
     }
 
     LOG_INFO << "Install certificate : " << CertificateStatusEnumTypeHelper.toString(response.status);
@@ -506,9 +567,22 @@ ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(
                 // Basic authent + TLS (server authentication only)
                 // AuthorizationKey value must no be empty
                 // A Central System root certificate must be installed
-                if (!m_ocpp_config.authorizationKey().empty() && m_events_handler.hasCentralSystemCaCertificateInstalled())
+                if (!m_ocpp_config.authorizationKey().empty())
                 {
-                    ret = ConfigurationStatus::Accepted;
+                    if (m_stack_config.internalCertificateManagementEnabled())
+                    {
+                        if (m_ca_certificates_db.getCertificateCount(CertificateUseEnumType::CentralSystemRootCertificate, true) > 0)
+                        {
+                            ret = ConfigurationStatus::Accepted;
+                        }
+                    }
+                    else
+                    {
+                        if (m_events_handler.hasCentralSystemCaCertificateInstalled())
+                        {
+                            ret = ConfigurationStatus::Accepted;
+                        }
+                    }
                 }
             }
             break;
@@ -535,6 +609,19 @@ ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(
     }
 
     return ret;
+}
+
+/** @brief Fill the hash information of a certificat */
+void SecurityManager::fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info)
+{
+    // Compute hashes with SHA-256 algorithm
+    ocpp::x509::Sha2 sha256;
+    info.hashAlgorithm = HashAlgorithmEnumType::SHA256;
+    sha256.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
+    info.issuerNameHash.assign(sha256.resultString());
+    sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
+    info.issuerKeyHash.assign(sha256.resultString());
+    info.serialNumber.assign(certificate.serialNumberHexString());
 }
 
 } // namespace chargepoint
