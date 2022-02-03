@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "doctest.h"
 
 #include <filesystem>
+#include <limits>
 
 using namespace ocpp::database;
 
@@ -51,6 +52,7 @@ TEST_SUITE("Database class test suite")
                          "[FloatField]	    REAL,"
                          "[BoolFieldFalse]  BOOLEAN,"
                          "[BoolFieldTrue]   BOOLEAN,"
+                         "[Int64Field]      BIGINT,"
                          "PRIMARY KEY([IntField] AUTOINCREMENT));");
         CHECK_NE(query.get(), nullptr);
         CHECK(query->exec());
@@ -63,12 +65,13 @@ TEST_SUITE("Database class test suite")
 
         for (int i = 0; i < 10; i++)
         {
-            query = db.query("INSERT INTO TestTable VALUES(NULL, ?, ?, ?, ?);");
+            query = db.query("INSERT INTO TestTable VALUES(NULL, ?, ?, ?, ?, ?);");
             CHECK_NE(query.get(), nullptr);
             CHECK(query->bind(0, "Pif paf pouf"));
             CHECK(query->bind(1, 123.456));
             CHECK(query->bind(2, false));
             CHECK(query->bind(3, true));
+            CHECK(query->bind(4, std::numeric_limits<int64_t>::max()));
             CHECK(query->exec());
             CHECK_FALSE(query->hasRows());
         }
@@ -87,6 +90,7 @@ TEST_SUITE("Database class test suite")
             CHECK_EQ(query->getFloat(2), 123.456);
             CHECK_EQ(query->getBool(3), false);
             CHECK_EQ(query->getBool(4), true);
+            CHECK_EQ(query->getInt64(5), std::numeric_limits<int64_t>::max());
         } while (query->next());
         CHECK_EQ(count, 10u);
 
@@ -102,6 +106,7 @@ TEST_SUITE("Database class test suite")
             CHECK_EQ(query->getFloat(2), 123.456);
             CHECK_EQ(query->getBool(3), false);
             CHECK_EQ(query->getBool(4), true);
+            CHECK_EQ(query->getInt64(5), std::numeric_limits<int64_t>::max());
         } while (query->next());
         CHECK_EQ(count, 10u);
 
@@ -121,6 +126,7 @@ TEST_SUITE("Database class test suite")
             CHECK_EQ(query->getFloat(2), 123.456);
             CHECK_EQ(query->getBool(3), false);
             CHECK_EQ(query->getBool(4), true);
+            CHECK_EQ(query->getInt64(5), std::numeric_limits<int64_t>::max());
         } while (query->next());
         CHECK_EQ(count, 5u);
 

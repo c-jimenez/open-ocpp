@@ -199,7 +199,7 @@ bool Database::Query::bind(int number, int64_t value)
 {
     bool ret = false;
 
-    int result = sqlite3_bind_int(m_stmt, number + 1, value);
+    int result = sqlite3_bind_int64(m_stmt, number + 1, value);
     if (result == SQLITE_OK)
     {
         ret = true;
