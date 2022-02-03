@@ -115,7 +115,7 @@ PrivateKey::PrivateKey(Type type, unsigned int param, const std::string& passphr
             else
             {
                 char* pass = const_cast<char*>(passphrase.c_str());
-                PEM_write_bio_PKCS8PrivateKey(bio, pkey, EVP_des_ede3_cbc(), nullptr, 0, nullptr, pass);
+                PEM_write_bio_PKCS8PrivateKey(bio, pkey, EVP_aes_128_cbc(), nullptr, 0, nullptr, pass);
             }
             bio_len = BIO_get_mem_data(bio, &bio_data);
             m_private_pem.insert(0, bio_data, static_cast<size_t>(bio_len));
