@@ -41,6 +41,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Reset.h"
 #include "SendLocalList.h"
 #include "SetChargingProfile.h"
+#include "SignedFirmwareUpdate.h"
 #include "TriggerMessage.h"
 #include "UnlockConnector.h"
 #include "UpdateFirmware.h"
@@ -407,7 +408,7 @@ bool ChargePointProxy::getDiagnostics(const std::string&                        
 
     LOG_INFO << "[" << m_identifier << "] - Get diagnostics : location = " << uri
              << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set")
-             << " - retry_interval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
+             << " - retryInterval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
              << " - startTime = " << (start.isSet() ? start.value().str() : "not set")
              << " - stopTime = " << (stop.isSet() ? stop.value().str() : "not set");
 
@@ -736,7 +737,7 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
 
     LOG_INFO << "[" << m_identifier << "] - Update firmware : location = " << uri
              << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set") << " - retrieveDate = " << retrieve_date.str()
-             << " - retry_interval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set");
+             << " - retryInterval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set");
 
     // Prepare request
     UpdateFirmwareReq req;
@@ -907,7 +908,7 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
 
     LOG_INFO << "[" << m_identifier << "] - Get log : type = " << LogEnumTypeHelper.toString(type) << " - request_id = " << request_id
              << " - location = " << uri << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set")
-             << " - retry_interval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
+             << " - retryInterval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
              << " - startTime = " << (start.isSet() ? start.value().str() : "not set")
              << " - stopTime = " << (stop.isSet() ? stop.value().str() : "not set");
 
@@ -964,6 +965,64 @@ ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp
     {
         ret = resp.status;
         LOG_INFO << "[" << m_identifier << "] - Install certificate : " << CertificateStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::UpdateFirmwareStatusEnumType ICentralSystem::signedUpdateFirmware(
+                                                                  int,
+                                                                  const std::string&,
+                                                                  const ocpp::types::Optional<unsigned int>&,
+                                                                  const ocpp::types::DateTime&,
+                                                                  const ocpp::types::Optional<std::chrono::seconds>&,
+                                                                  const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                                  const ocpp::x509::Certificate&,
+                                                                  const std::string&) */
+ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware(
+    int                                                 request_id,
+    const std::string&                                  uri,
+    const ocpp::types::Optional<unsigned int>&          retries,
+    const ocpp::types::DateTime&                        retrieve_date,
+    const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+    const ocpp::types::Optional<ocpp::types::DateTime>& install_date,
+    const ocpp::x509::Certificate&                      signing_certificate,
+    const std::string&                                  signature)
+{
+    UpdateFirmwareStatusEnumType ret = UpdateFirmwareStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier << "] - Signed firmware update : requestId = " << request_id << " - location = " << uri
+             << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set")
+             << " - retrieveDateTime = " << retrieve_date.str()
+             << " - retryInterval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
+             << " - installDateTime = " << (install_date.isSet() ? install_date.value().str() : "not set")
+             << " - signingCertificate subject = " << signing_certificate.subjectString() << " - signature = " << signature;
+
+    // Prepare request
+    SignedFirmwareUpdateReq req;
+    req.requestId = request_id;
+    req.retries   = retries;
+    if (retry_interval.isSet())
+    {
+        req.retryInterval = retry_interval.value().count();
+    }
+    req.firmware.location.assign(uri);
+    req.firmware.retrieveDateTime = retrieve_date;
+    req.firmware.installDateTime  = install_date;
+    req.firmware.signingCertificate.assign(signing_certificate.pem());
+    req.firmware.signature.assign(signature);
+
+    // Send request
+    SignedFirmwareUpdateConf resp;
+    CallResult               res = m_msg_sender.call(SIGNED_FIRMWARE_UPDATE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Signed firmware update : " << UpdateFirmwareStatusEnumTypeHelper.toString(resp.status);
     }
     else
     {

@@ -38,8 +38,7 @@ struct FirmwareType
     DateTime retrieveDateTime;
     /** @brief Optional. Date and time at which the firmware shall be installed */
     Optional<DateTime> installDateTime;
-    /** @brief Required. Certificate with which the firmware was signed. PEM encoded X.509
-               certificate */
+    /** @brief Required. Certificate with which the firmware was signed. PEM encoded X.509 certificate */
     CiStringType<5500> signingCertificate;
     /** @brief Required. Base64 encoded firmware signature */
     CiStringType<800> signature;

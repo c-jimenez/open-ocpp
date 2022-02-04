@@ -53,6 +53,8 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
       GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>(SECURITY_EVENT_NOTIFICATION_ACTION,
                                                                                          messages_converter),
       GenericMessageHandler<SignCertificateReq, SignCertificateConf>(SIGN_CERTIFICATE_ACTION, messages_converter),
+      GenericMessageHandler<SignedFirmwareStatusNotificationReq, SignedFirmwareStatusNotificationConf>(
+          SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, messages_converter),
       m_identifier(identifier),
       m_stack_config(stack_config),
       m_handler(nullptr)
@@ -82,6 +84,10 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
         *dynamic_cast<GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>*>(this));
     msg_dispatcher.registerHandler(SIGN_CERTIFICATE_ACTION,
                                    *dynamic_cast<GenericMessageHandler<SignCertificateReq, SignCertificateConf>*>(this));
+
+    msg_dispatcher.registerHandler(
+        SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<SignedFirmwareStatusNotificationReq, SignedFirmwareStatusNotificationConf>*>(this));
 }
 /** @brief Destructor */
 ChargePointHandler::~ChargePointHandler() { }
@@ -550,6 +556,40 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq&
 
         LOG_INFO << "[" << m_identifier << "] - Sign certificate : " << GenericStatusEnumTypeHelper.toString(response.status);
 
+        ret = true;
+    }
+    else
+    {
+        error_code = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
+    }
+
+    return ret;
+}
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+ *                                                                                ResponseType& response,
+ *                                                                                const char*& error_code,
+ *                                                                                std::string& error_message)
+ */
+bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
+                                       ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
+                                       const char*&                                               error_code,
+                                       std::string&                                               error_message)
+{
+    bool ret = false;
+    (void)error_message;
+
+    LOG_INFO << "[" << m_identifier << "] - Signed firmware update status notification received : requestId = "
+             << (request.requestId.isSet() ? std::to_string(request.requestId) : "not set")
+             << " -  status = " << FirmwareStatusEnumTypeHelper.toString(request.status);
+
+    // Notify request
+    if (m_handler)
+    {
+        m_handler->signedFirmwareUpdateStatusNotification(request.status, request.requestId);
+
+        // Empty response
+        (void)response;
         ret = true;
     }
     else

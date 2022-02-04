@@ -321,7 +321,7 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEvent
          << " - message = " << message << endl;
 }
 
-/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest&) */
 bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertificate(
     const ocpp::x509::CertificateRequest& certificate_request)
 {
@@ -402,4 +402,14 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
         cout << "[" << m_chargepoint->identifier() << "] - Unable to load CA certificate : " << ca_cert_path << endl;
     }
     return ret;
+}
+
+/** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType,
+                                                                                             const ocpp::types::Optional<int>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwareUpdateStatusNotification(
+    ocpp::types::FirmwareStatusEnumType status, const ocpp::types::Optional<int>& request_id)
+{
+    cout << "[" << m_chargepoint->identifier()
+         << "] - Signed firmware update status notification : status = " << FirmwareStatusEnumTypeHelper.toString(status)
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
 }

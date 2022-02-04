@@ -179,6 +179,14 @@ class IChargePointRequestHandler
      * @return true if the certificate request can be processed, false otherwise
      */
     virtual bool signCertificate(const ocpp::x509::CertificateRequest& certificate_request) = 0;
+
+    /**
+     * @brief Called when a signed firmware update status notification has been received
+     * @param status Firmware update status
+     * @param request_id Request id of the correspondin GetLog request
+     */
+    virtual void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
+                                                        const ocpp::types::Optional<int>&   request_id) = 0;
 };
 
 } // namespace centralsystem
