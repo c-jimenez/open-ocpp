@@ -24,6 +24,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
  *          YY = Minor version number (increase = Minor feature addition)
  *          ZZ = Fix version number (increase = Bug fix(es))
  */
-#define OPEN_OCPP_VERSION "0.4.0"
+#define OPEN_OCPP_VERSION "0.5.0"
 
 #endif // VERSION_H
