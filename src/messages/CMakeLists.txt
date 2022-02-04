@@ -40,6 +40,7 @@ add_library(messages STATIC
     SetChargingProfile.cpp
     SignCertificate.cpp
     SignedFirmwareStatusNotification.cpp
+    SignedFirmwareUpdate.cpp
     StartTransaction.cpp
     StatusNotification.cpp
     StopTransaction.cpp
