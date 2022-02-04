@@ -39,7 +39,7 @@ ChargePointDatabase::ChargePointDatabase(ocpp::database::Database& database)
 /** @brief Destructor */
 ChargePointDatabase::~ChargePointDatabase() { }
 
-/** @brief Add a chare point in database */
+/** @brief Add a charge point in database */
 bool ChargePointDatabase::addChargePoint(const std::string& identifier,
                                          const std::string& serial_number,
                                          const std::string& vendor,

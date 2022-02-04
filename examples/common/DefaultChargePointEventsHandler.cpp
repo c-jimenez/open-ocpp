@@ -23,7 +23,9 @@ SOFTWARE.
 */
 
 #include "DefaultChargePointEventsHandler.h"
+#include "CertificateRequest.h"
 #include "ChargePointDemoConfig.h"
+#include "PrivateKey.h"
 #include "Sha2.h"
 #include "String.h"
 
@@ -35,9 +37,10 @@ using namespace ocpp::types;
 using namespace ocpp::x509;
 
 /** @brief Constructor */
-DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config)
+DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir)
     : m_config(config),
       m_chargepoint(nullptr),
+      m_working_dir(working_dir),
       m_remote_start_pending(config.ocppConfig().numberOfConnectors()),
       m_remote_stop_pending(m_remote_start_pending.size()),
       m_remote_start_id_tag(m_remote_start_pending.size())
@@ -338,7 +341,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
 
             std::stringstream name;
             name << "fw_" << sha256.resultString() << ".pem";
-            ca_filename = name.str();
+            ca_filename = m_working_dir / name.str();
         }
         else
         {
@@ -355,7 +358,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
 
             std::stringstream name;
             name << "cs_" << sha256.resultString() << ".pem";
-            ca_filename = name.str();
+            ca_filename = m_working_dir / name.str();
         }
 
         // Check if the certificate must be saved
@@ -405,7 +408,7 @@ bool DefaultChargePointEventsHandler::chargePointCertificateReceived(const ocpp:
 
     std::stringstream name;
     name << "cp_" << sha256.resultString() << ".pem";
-    std::string cert_filename = name.str();
+    std::string cert_filename = m_working_dir / name.str();
 
     // Save certificate
     if (certificate.toFile(cert_filename))
@@ -419,7 +422,6 @@ bool DefaultChargePointEventsHandler::chargePointCertificateReceived(const ocpp:
         // Use the new certificate
         m_config.setStackConfigValue("TlsClientCertificate", cert_filename);
         m_config.setStackConfigValue("TlsClientCertificatePrivateKey", cert_key_filename);
-        m_config.setStackConfigValue("TlsClientCertificatePrivateKeyPassphrase", "");
         if (m_chargepoint)
         {
             m_chargepoint->reconnect();
@@ -466,7 +468,7 @@ ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::de
     }
 
     // Look for installed certificates
-    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
     {
         if (!dir_entry.is_directory())
         {
@@ -508,63 +510,22 @@ void DefaultChargePointEventsHandler::generateCsr(std::string& csr)
     cout << "Generate CSR requested" << endl;
 
     // Generata a new public/private key pair
-    std::string generate_params_cmd_line = "openssl ecparam -name prime256v1 -out /tmp/charge_point_key.param";
-    system(generate_params_cmd_line.c_str());
-    std::string generate_key_cmd_line = "openssl ecparam -in /tmp/charge_point_key.param -genkey -noout -out /tmp/charge_point_key.key";
-    system(generate_key_cmd_line.c_str());
-
-    // Create configuration file to generate the CSR
-    std::stringstream csr_config;
-    csr_config << R"([req]
-                     distinguished_name	= req_distinguished_name
-
-                     # Stop confirmation prompts. All information is contained below.
-                     prompt			= no
-
-                     # The extensions to add to a certificate request
-                     x509_extensions = v3_ca
-
-                     [req_distinguished_name]
-                     countryName =            FR
-                     stateOrProvinceName =    Savoie
-                     localityName =           Chambery
-                     organizationName =)"
-               << m_config.ocppConfig().cpoName() << R"(
-                     organizationalUnitName = Open OCPP Charge Points
-                     commonName =)"
-               << m_config.stackConfig().chargePointSerialNumber() << R"(
-                     emailAddress =           charge.point@open-ocpp.org
- 
-                     [v3_ca]
-                     basicConstraints = CA:FALSE
-                     subjectAltName = @alt_names
-
-                     [alt_names]
-                     DNS.1 = localhost
-                     DNS.2 = IP:127.0.0.1)";
-    std::fstream csr_config_file("/tmp/charge_point_csr.cnf", csr_config_file.out);
-    if (csr_config_file.is_open())
-    {
-        csr_config_file << csr_config.str();
-        csr_config_file.close();
-    }
+    PrivateKey private_key(PrivateKey::Type::EC,
+                           static_cast<unsigned int>(PrivateKey::Curve::PRIME256_V1),
+                           m_config.stackConfig().tlsClientCertificatePrivateKeyPassphrase());
+    private_key.privateToFile("/tmp/charge_point_key.key");
 
     // Generate the CSR
-    std::string generate_csr_cmd_line = "openssl req -new -sha256 -key /tmp/charge_point_key.key -extensions v3_ca -config "
-                                        "/tmp/charge_point_csr.cnf -out /tmp/charge_point.csr";
-    system(generate_csr_cmd_line.c_str());
-
-    // Read generated CSR file
-    std::fstream csr_file("/tmp/charge_point.csr", csr_config_file.in | csr_config_file.binary | csr_config_file.ate);
-    if (csr_file.is_open())
-    {
-        auto filesize = csr_file.tellg();
-        csr_file.seekg(0, csr_file.beg);
-        csr.resize(filesize);
-        csr_file.read(&csr[0], filesize);
-
-        csr_file.close();
-    }
+    CertificateRequest::Subject subject;
+    subject.country           = m_config.stackConfig().clientCertificateRequestSubjectCountry();
+    subject.state             = m_config.stackConfig().clientCertificateRequestSubjectState();
+    subject.location          = m_config.stackConfig().clientCertificateRequestSubjectLocation();
+    subject.organization      = m_config.ocppConfig().cpoName();
+    subject.organization_unit = m_config.stackConfig().clientCertificateRequestSubjectOrganizationUnit();
+    subject.common_name       = m_config.stackConfig().chargePointSerialNumber();
+    subject.email_address     = m_config.stackConfig().clientCertificateRequestSubjectEmail();
+    CertificateRequest certificate_request(subject, private_key);
+    csr = certificate_request.pem();
 }
 
 /** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
@@ -574,7 +535,7 @@ void DefaultChargePointEventsHandler::getInstalledCertificates(ocpp::types::Cert
 {
     cout << "Get installed CA certificates requested : type = " << CertificateUseEnumTypeHelper.toString(type) << endl;
 
-    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
     {
         if (!dir_entry.is_directory())
         {
@@ -649,7 +610,7 @@ bool DefaultChargePointEventsHandler::hasCentralSystemCaCertificateInstalled()
 bool DefaultChargePointEventsHandler::hasChargePointCertificateInstalled()
 {
     // A better implementation would also check the validity dates of the certificates
-    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
     {
         if (!dir_entry.is_directory())
         {
@@ -672,7 +633,7 @@ bool DefaultChargePointEventsHandler::hasChargePointCertificateInstalled()
 unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(bool manufacturer, bool central_system)
 {
     unsigned int count = 0;
-    for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
     {
         if (!dir_entry.is_directory())
         {

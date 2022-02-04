@@ -28,6 +28,7 @@ SOFTWARE.
 #include "IChargePoint.h"
 #include "IChargePointEventsHandler.h"
 
+#include <filesystem>
 #include <vector>
 
 class ChargePointDemoConfig;
@@ -37,7 +38,7 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
 {
   public:
     /** @brief Constructor */
-    DefaultChargePointEventsHandler(ChargePointDemoConfig& config);
+    DefaultChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir);
 
     /** @brief Destructor */
     virtual ~DefaultChargePointEventsHandler();
@@ -183,6 +184,8 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     ChargePointDemoConfig& m_config;
     /** @brief Associated Charge Point instance */
     ocpp::chargepoint::IChargePoint* m_chargepoint;
+    /** @brief Working directory */
+    std::filesystem::path m_working_dir;
     /** @brief Indicate a pending remote start transaction */
     std::vector<bool> m_remote_start_pending;
     /** @brief Indicate a pending remote stop transaction */

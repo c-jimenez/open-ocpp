@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
         std::vector<std::pair<std::string, ocpp::x509::Certificate>> certs;
         if (config.ocppConfig().securityProfile() >= 2)
         {
-            for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+            for (auto const& dir_entry : std::filesystem::directory_iterator{working_dir})
             {
                 if (!dir_entry.is_directory())
                 {
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
         certs.clear();
         if (config.ocppConfig().securityProfile() == 3)
         {
-            for (auto const& dir_entry : std::filesystem::directory_iterator{std::filesystem::current_path()})
+            for (auto const& dir_entry : std::filesystem::directory_iterator{working_dir})
             {
                 if (!dir_entry.is_directory())
                 {
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
     }
 
     // Event handler
-    DefaultChargePointEventsHandler event_handler(config);
+    DefaultChargePointEventsHandler event_handler(config, working_dir);
 
     // Instanciate charge point
     std::unique_ptr<IChargePoint> charge_point = IChargePoint::create(config.stackConfig(), config.ocppConfig(), event_handler);

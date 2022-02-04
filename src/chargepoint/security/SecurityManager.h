@@ -95,10 +95,16 @@ class SecurityManager
 
     /**
      * @brief Send a CSR request to sign a certificate
-     * @param csr CSR request in PEM format
+     * @param csr CSR request
      * @return true if the request has been sent and accepted, false otherwise
      */
-    bool signCertificate(const std::string& csr);
+    bool signCertificate(const ocpp::x509::CertificateRequest& csr);
+
+    /** 
+     * @brief Generate a new certificate request 
+     * @return true if the request has been sent and accepted, false otherwise 
+     */
+    bool generateCertificateRequest();
 
     /** 
      * @brief Get the installed Central System CA certificates as PEM encoded data
@@ -208,9 +214,6 @@ class SecurityManager
 
     /** @brief Fill the hash information of a certificat */
     void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info);
-
-    /** @brief Generate a new certificate request */
-    std::string generateCertificateRequest();
 };
 
 } // namespace chargepoint

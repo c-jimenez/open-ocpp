@@ -176,38 +176,97 @@ bool SecurityManager::stop()
 }
 
 /** @brief Send a CSR request to sign a certificate */
-bool SecurityManager::signCertificate(const std::string& csr)
+bool SecurityManager::signCertificate(const ocpp::x509::CertificateRequest& csr)
 {
     bool ret = false;
 
-    LOG_INFO << "Sign certificate : csr size = " << csr.size();
+    LOG_INFO << "Sign certificate : valid = " << csr.isValid() << " - subject = " << csr.subjectString();
 
-    // Send request
-    if (m_msg_sender)
+    // Check validity
+    if (csr.isValid())
     {
-        SignCertificateReq sign_certificate_req;
-        if (m_stack_config.internalCertificateManagementEnabled())
+        // Send request
+        if (m_msg_sender)
         {
-            sign_certificate_req.csr.assign(generateCertificateRequest());
+            SignCertificateReq sign_certificate_req;
+            sign_certificate_req.csr.assign(csr.pem());
+
+            SignCertificateConf sign_certificate_conf;
+            if (m_msg_sender->call(SIGN_CERTIFICATE_ACTION, sign_certificate_req, sign_certificate_conf) == CallResult::Ok)
+            {
+                LOG_INFO << "Sign certificate : " << GenericStatusEnumTypeHelper.toString(sign_certificate_conf.status);
+                ret = true;
+            }
         }
         else
         {
-            sign_certificate_req.csr.assign(csr);
-        }
-
-        SignCertificateConf sign_certificate_conf;
-        if (m_msg_sender->call(SIGN_CERTIFICATE_ACTION, sign_certificate_req, sign_certificate_conf) == CallResult::Ok)
-        {
-            LOG_INFO << "Sign certificate : " << GenericStatusEnumTypeHelper.toString(sign_certificate_conf.status);
-            ret = true;
+            LOG_ERROR << "Stack is not started";
         }
     }
     else
     {
-        LOG_ERROR << "Stack is not started";
+        LOG_ERROR << "Invalid certificate request";
     }
 
     return ret;
+}
+
+/** @brief Generate a new certificate request */
+bool SecurityManager::generateCertificateRequest()
+{
+    LOG_INFO << "Generating new certificate request";
+
+    // Generate a private key
+    unsigned int     param    = 0;
+    PrivateKey::Type key_type = PrivateKey::Type::EC;
+    if (m_stack_config.clientCertificateRequestKeyType() == "rsa")
+    {
+        key_type = PrivateKey::Type::RSA;
+        param    = m_stack_config.clientCertificateRequestRsaKeyLength();
+        if (param < 2048u)
+        {
+            param = 2048u;
+        }
+    }
+    else
+    {
+        std::string curve      = m_stack_config.clientCertificateRequestEcCurve();
+        const auto& iter_curve = s_ec_curves.find(curve);
+        if (iter_curve != s_ec_curves.end())
+        {
+            param = iter_curve->second;
+        }
+        else
+        {
+            param = s_ec_curves.at("prime256v1");
+        }
+    }
+    std::string passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
+    PrivateKey  private_key(key_type, param, passphrase);
+
+    // Generate a certificate request
+    CertificateRequest::Subject subject;
+    subject.country           = m_stack_config.clientCertificateRequestSubjectCountry();
+    subject.state             = m_stack_config.clientCertificateRequestSubjectState();
+    subject.location          = m_stack_config.clientCertificateRequestSubjectLocation();
+    subject.organization      = m_ocpp_config.cpoName();
+    subject.organization_unit = m_stack_config.clientCertificateRequestSubjectOrganizationUnit();
+    subject.common_name       = m_stack_config.chargePointSerialNumber();
+    subject.email_address     = m_stack_config.clientCertificateRequestSubjectEmail();
+    Sha2::Type  sha_type      = Sha2::Type::SHA256;
+    std::string sha           = m_stack_config.clientCertificateRequestHashType();
+    const auto& iter_sha      = s_shas.find(sha);
+    if (iter_sha != s_shas.end())
+    {
+        sha_type = iter_sha->second;
+    }
+    CertificateRequest certificate_request(subject, private_key, sha_type);
+
+    // Save request into database
+    m_cp_certificates_db.saveCertificateRequest(certificate_request, private_key);
+
+    // Send to Central System
+    return signCertificate(certificate_request);
 }
 
 /** @brief Get the installed Central System CA certificates as PEM encoded data */
@@ -323,15 +382,23 @@ bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType messa
                 // To let some time for the trigger message reply
                 std::this_thread::sleep_for(std::chrono::milliseconds(100u));
 
-                std::string csr;
-                if (!m_stack_config.internalCertificateManagementEnabled())
+                std::string csr_pem;
+                if (m_stack_config.internalCertificateManagementEnabled())
+                {
+                    // Generate and send CSR
+                    generateCertificateRequest();
+                }
+                else
                 {
                     // Notify application to generate a CSR
-                    m_events_handler.generateCsr(csr);
-                }
+                    m_events_handler.generateCsr(csr_pem);
 
-                // Send the request
-                signCertificate(csr);
+                    // Create request
+                    CertificateRequest csr(csr_pem);
+
+                    // Send the request
+                    signCertificate(csr);
+                }
             });
 
         ret = true;
@@ -712,61 +779,6 @@ void SecurityManager::fillHashInfo(const ocpp::x509::Certificate& certificate, o
     sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
     info.issuerKeyHash.assign(sha256.resultString());
     info.serialNumber.assign(certificate.serialNumberHexString());
-}
-/** @brief Generate a new certificate request */
-std::string SecurityManager::generateCertificateRequest()
-{
-    // Generate a private key
-    unsigned int     param    = 0;
-    PrivateKey::Type key_type = PrivateKey::Type::EC;
-    if (m_stack_config.clientCertificateRequestKeyType() == "rsa")
-    {
-        key_type = PrivateKey::Type::RSA;
-        param    = m_stack_config.clientCertificateRequestRsaKeyLength();
-        if (param < 2048u)
-        {
-            param = 2048u;
-        }
-    }
-    else
-    {
-        std::string curve      = m_stack_config.clientCertificateRequestEcCurve();
-        const auto& iter_curve = s_ec_curves.find(curve);
-        if (iter_curve != s_ec_curves.end())
-        {
-            param = iter_curve->second;
-        }
-        else
-        {
-            param = s_ec_curves.at("prime256v1");
-        }
-    }
-    std::string passphrase = m_stack_config.tlsClientCertificatePrivateKeyPassphrase();
-    PrivateKey  private_key(key_type, param, passphrase);
-
-    // Generate a certificate request
-    CertificateRequest::Subject subject;
-    subject.country           = m_stack_config.clientCertificateRequestSubjectCountry();
-    subject.state             = m_stack_config.clientCertificateRequestSubjectState();
-    subject.location          = m_stack_config.clientCertificateRequestSubjectLocation();
-    subject.organization      = m_ocpp_config.cpoName();
-    subject.organization_unit = m_stack_config.clientCertificateRequestSubjectOrganizationUnit();
-    subject.common_name       = m_stack_config.chargePointSerialNumber();
-    subject.email_address     = m_stack_config.clientCertificateRequestSubjectEmail();
-    Sha2::Type  sha_type      = Sha2::Type::SHA256;
-    std::string sha           = m_stack_config.clientCertificateRequestHashType();
-    const auto& iter_sha      = s_shas.find(sha);
-    if (iter_sha != s_shas.end())
-    {
-        sha_type = iter_sha->second;
-    }
-    CertificateRequest certificate_request(subject, private_key, sha_type);
-
-    // Save request into database
-    m_cp_certificates_db.saveCertificateRequest(certificate_request, private_key);
-
-    // PEM to send to Central System
-    return certificate_request.pem();
 }
 
 } // namespace chargepoint

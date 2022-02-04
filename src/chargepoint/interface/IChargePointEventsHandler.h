@@ -195,6 +195,7 @@ class IChargePointEventsHandler
 
     /**
      * @brief Called when a CA certificate has been received and must be installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @param type Type of CA certificate
      * @param certificate CA certificate to install
      * @return Installation status (see CertificateStatusEnumType enum)
@@ -204,6 +205,7 @@ class IChargePointEventsHandler
 
     /**
      * @brief Called when a charge point certificate has been received and must be installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @param certificate Charge point certificate to install
      * @return true is the certificate has been installed, false otherwise
      */
@@ -211,6 +213,7 @@ class IChargePointEventsHandler
 
     /**
      * @brief Called when the Central System request to delete an installed CA certificate
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @param hash_algorithm Hash algorithm used for the following parameters
      * @param issuer_name_hash Hash of the certificate's issuer's name
      * @param issuer_key_hash Hash of the certificate's public key
@@ -225,12 +228,14 @@ class IChargePointEventsHandler
     /**
      * @brief Called to generate a CSR in PEM format which will be used by the Central System
      *        to generate and sign a certificate for the Charge Point
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @param csr String to store the generated CSR in PEM format
      */
     virtual void generateCsr(std::string& csr) = 0;
 
     /**
      * @brief Called to get the list of installed CA certificates
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @param type Type of CA certificate
      * @param certificates Installed certificates
      */
@@ -252,12 +257,14 @@ class IChargePointEventsHandler
 
     /**
      * @brief Called to check if at least 1 Central System root certificate has been installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @return true if at least 1 certificate has been installed, false otherwise
      */
     virtual bool hasCentralSystemCaCertificateInstalled() = 0;
 
     /**
      * @brief Called to check if at least 1 Charge Point certificate has been installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
      * @return true if at least 1 certificate has been installed, false otherwise
      */
     virtual bool hasChargePointCertificateInstalled() = 0;

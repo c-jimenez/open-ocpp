@@ -657,8 +657,8 @@ bool ChargePoint::clearSecurityEvents()
     return m_security_manager.clearSecurityEvents();
 }
 
-/** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const std::string&) */
-bool ChargePoint::signCertificate(const std::string& csr)
+/** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const ocpp::x509::CertificateRequest&) */
+bool ChargePoint::signCertificate(const ocpp::x509::CertificateRequest& csr)
 {
     bool ret = false;
 
@@ -666,7 +666,45 @@ bool ChargePoint::signCertificate(const std::string& csr)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
-            ret = m_security_manager.signCertificate(csr);
+            if (!m_stack_config.internalCertificateManagementEnabled())
+            {
+                ret = m_security_manager.signCertificate(csr);
+            }
+            else
+            {
+                LOG_ERROR << "Not allowed when internal certificate management is enabled";
+            }
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool IChargePoint::ISecurityManager::signCertificate() */
+bool ChargePoint::signCertificate()
+{
+    bool ret = false;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            if (m_stack_config.internalCertificateManagementEnabled())
+            {
+                ret = m_security_manager.generateCertificateRequest();
+            }
+            else
+            {
+                LOG_ERROR << "Not allowed when internal certificate management is disabled";
+            }
         }
         else
         {
