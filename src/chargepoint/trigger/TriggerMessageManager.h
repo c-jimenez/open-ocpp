@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef TRIGGERMESSAGEMANAGER_H
 #define TRIGGERMESSAGEMANAGER_H
 
+#include "ExtendedTriggerMessage.h"
 #include "GenericMessageHandler.h"
 #include "ITriggerMessageManager.h"
 #include "TriggerMessage.h"
@@ -42,7 +43,8 @@ class Connectors;
 /** @brief Manage TriggerMessage requests */
 class TriggerMessageManager
     : public ITriggerMessageManager,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::TriggerMessageReq, ocpp::messages::TriggerMessageConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::TriggerMessageReq, ocpp::messages::TriggerMessageConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ExtendedTriggerMessageReq, ocpp::messages::ExtendedTriggerMessageConf>
 {
   public:
     /** @brief Constructor */
@@ -58,6 +60,9 @@ class TriggerMessageManager
     /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
     void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) override;
 
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+    void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override;
+
     // GenericMessageHandler interface
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
@@ -70,14 +75,27 @@ class TriggerMessageManager
                        const char*&                             error_code,
                        std::string&                             error_message) override;
 
+    // Security extensions
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
+                       ocpp::messages::ExtendedTriggerMessageConf&      response,
+                       const char*&                                     error_code,
+                       std::string&                                     error_message) override;
+
   private:
     /** @brief Charge point's connectors */
     Connectors& m_connectors;
-    /** @brief Message dispatcher */
-    ocpp::messages::IMessageDispatcher& m_msg_dispatcher;
 
-    /** @brief Handlers */
-    std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_handlers;
+    /** @brief Handlers for standard trigger messages */
+    std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
+
+    /** @brief Handlers for extended trigger messages */
+    std::map<ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
 };
 
 } // namespace chargepoint

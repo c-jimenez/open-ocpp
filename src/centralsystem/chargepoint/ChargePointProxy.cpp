@@ -18,16 +18,22 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ChargePointProxy.h"
 #include "CancelReservation.h"
+#include "CertificateSigned.h"
 #include "ChangeAvailability.h"
 #include "ChangeConfiguration.h"
 #include "ClearCache.h"
 #include "ClearChargingProfile.h"
 #include "DataTransfer.h"
+#include "DeleteCertificate.h"
+#include "ExtendedTriggerMessage.h"
 #include "GetCompositeSchedule.h"
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
+#include "GetInstalledCertificateIds.h"
 #include "GetLocalListVersion.h"
+#include "GetLog.h"
 #include "ICentralSystemConfig.h"
+#include "InstallCertificate.h"
 #include "Logger.h"
 #include "RemoteStartTransaction.h"
 #include "RemoteStopTransaction.h"
@@ -48,12 +54,14 @@ namespace centralsystem
 {
 
 /** @brief Constructor */
-ChargePointProxy::ChargePointProxy(const std::string&                            identifier,
+ChargePointProxy::ChargePointProxy(ICentralSystem&                               central_system,
+                                   const std::string&                            identifier,
                                    std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
                                    const std::string&                            schemas_path,
                                    ocpp::messages::MessagesConverter&            messages_converter,
                                    const ocpp::config::ICentralSystemConfig&     stack_config)
-    : m_identifier(identifier),
+    : m_central_system(central_system),
+      m_identifier(identifier),
       m_rpc(rpc),
       m_msg_dispatcher(schemas_path),
       m_msg_sender(*m_rpc, messages_converter, stack_config.callRequestTimeout()),
@@ -747,6 +755,215 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
     {
         ret = true;
         LOG_INFO << "[" << m_identifier << "] - Update firmware : Accepted";
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+// Security extensions
+
+/** @copydoc bool ICentralSystem::IChargePoint::certificateSigned(const ocpp::x509::Certificate&) */
+bool ChargePointProxy::certificateSigned(const ocpp::x509::Certificate& certificate_chain)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Certificate signed : certificate chain size = " << certificate_chain.pemChain().size();
+
+    // Prepare request
+    CertificateSignedReq req;
+    req.certificateChain.assign(certificate_chain.pem());
+
+    // Send request
+    CertificateSignedConf resp;
+    CallResult            res = m_msg_sender.call(CERTIFICATE_SIGNED_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = (resp.status == CertificateSignedStatusEnumType::Accepted);
+        LOG_INFO << "[" << m_identifier << "] - Certificate signed : " << CertificateSignedStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
+ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate(const ocpp::types::CertificateHashDataType& certificate)
+
+{
+    DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::Failed;
+
+    LOG_INFO << "[" << m_identifier << "] - Delete certificate : serialNumber = " << certificate.serialNumber.str();
+
+    // Prepare request
+    DeleteCertificateReq req;
+    req.certificateHashData = certificate;
+
+    // Send request
+    DeleteCertificateConf resp;
+    CallResult            res = m_msg_sender.call(DELETE_CERTIFICATE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
+                                                                                                            const ocpp::types::Optional<unsigned int>) */
+ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
+                                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+{
+    TriggerMessageStatusEnumType ret = TriggerMessageStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Extended trigger message : requestedMessage = " << MessageTriggerEnumTypeHelper.toString(message)
+             << " - connectorId = " << (connector_id.isSet() ? std::to_string(connector_id) : "not set");
+
+    // Prepare request
+    ExtendedTriggerMessageReq req;
+    req.requestedMessage = message;
+    req.connectorId      = connector_id;
+
+    // Send request
+    ExtendedTriggerMessageConf resp;
+    CallResult                 res = m_msg_sender.call(EXTENDED_TRIGGER_MESSAGE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Extended trigger message : " << TriggerMessageStatusEnumTypeHelper.toString(resp.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType,
+                                                                           std::vector<ocpp::types::CertificateHashDataType>&) */
+bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
+                                                  std::vector<ocpp::types::CertificateHashDataType>& certificates)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - Get installed certificate ids : certificateType = " << CertificateUseEnumTypeHelper.toString(type);
+
+    // Prepare request
+    GetInstalledCertificateIdsReq req;
+    req.certificateType = type;
+
+    // Send request
+    GetInstalledCertificateIdsConf resp;
+    CallResult                     res = m_msg_sender.call(GET_INSTALLED_CERTIFICATE_IDS_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier
+                 << "] - Get installed certificate ids : status = " << GetInstalledCertificateStatusEnumTypeHelper.toString(resp.status)
+                 << " - count = " << resp.certificateHashData.size();
+        certificates = resp.certificateHashData;
+        ret          = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
+                                                           int,
+                                                           const std::string&,
+                                                           const ocpp::types::Optional<unsigned int>&,
+                                                           const ocpp::types::Optional<std::chrono::seconds>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                           std::string&) */
+bool ChargePointProxy::getLog(ocpp::types::LogEnumType                            type,
+                              int                                                 request_id,
+                              const std::string&                                  uri,
+                              const ocpp::types::Optional<unsigned int>&          retries,
+                              const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& start,
+                              const ocpp::types::Optional<ocpp::types::DateTime>& stop,
+                              std::string&                                        log_filename)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Get log : type = " << LogEnumTypeHelper.toString(type) << " - request_id = " << request_id
+             << " - location = " << uri << " - retries = " << (retries.isSet() ? std::to_string(retries) : "not set")
+             << " - retry_interval = " << (retry_interval.isSet() ? std::to_string(retry_interval.value().count()) : "not set")
+             << " - startTime = " << (start.isSet() ? start.value().str() : "not set")
+             << " - stopTime = " << (stop.isSet() ? stop.value().str() : "not set");
+
+    // Prepare request
+    GetLogReq req;
+    req.logType   = type;
+    req.requestId = request_id;
+    req.retries   = retries;
+    if (retry_interval.isSet())
+    {
+        req.retryInterval = retry_interval.value().count();
+    }
+    req.log.remoteLocation.assign(uri);
+    req.log.oldestTimestamp = start;
+    req.log.latestTimestamp = stop;
+
+    // Send request
+    GetLogConf resp;
+    CallResult res = m_msg_sender.call(GET_LOG_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret          = true;
+        log_filename = resp.fileName;
+        LOG_INFO << "[" << m_identifier << "] - Get log : status = " << LogStatusEnumTypeHelper.toString(resp.status)
+                 << " - filename = " << resp.fileName.str();
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
+                                                                                           const ocpp::x509::Certificate&) */
+ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::CertificateUseEnumType type,
+                                                                            const ocpp::x509::Certificate&      certificate)
+{
+    CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier << "] - Install certificate : certificateType = " << CertificateUseEnumTypeHelper.toString(type)
+             << " - certificate subject = " << certificate.subjectString();
+
+    // Prepare request
+    InstallCertificateReq req;
+    req.certificateType = type;
+    req.certificate.assign(certificate.pem());
+
+    // Send request
+    InstallCertificateConf resp;
+    CallResult             res = m_msg_sender.call(INSTALL_CERTIFICATE_ACTION, req, resp);
+    if (res == CallResult::Ok)
+    {
+        ret = resp.status;
+        LOG_INFO << "[" << m_identifier << "] - Install certificate : " << CertificateStatusEnumTypeHelper.toString(resp.status);
     }
     else
     {

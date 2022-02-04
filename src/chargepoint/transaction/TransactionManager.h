@@ -23,8 +23,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageHandler.h"
 #include "RemoteStartTransaction.h"
 #include "RemoteStopTransaction.h"
-#include "RequestFifo.h"
-#include "Timer.h"
 
 namespace ocpp
 {
@@ -38,11 +36,8 @@ namespace messages
 class IMessageDispatcher;
 class GenericMessagesConverter;
 class GenericMessageSender;
+class IRequestFifo;
 } // namespace messages
-namespace helpers
-{
-class WorkerThreadPool;
-} // namespace helpers
 
 // Main namespace
 namespace chargepoint
@@ -54,7 +49,6 @@ class ReservationManager;
 class IChargePointEventsHandler;
 class IMeterValuesManager;
 class ISmartChargingManager;
-class IStatusManager;
 
 /** @brief Handle charge point transaction requests */
 class TransactionManager
@@ -65,14 +59,11 @@ class TransactionManager
     /** @brief Constructor */
     TransactionManager(ocpp::config::IOcppConfig&                      ocpp_config,
                        IChargePointEventsHandler&                      events_handler,
-                       ocpp::helpers::TimerPool&                       timer_pool,
-                       ocpp::helpers::WorkerThreadPool&                worker_pool,
-                       ocpp::database::Database&                       database,
                        Connectors&                                     connectors,
                        const ocpp::messages::GenericMessagesConverter& messages_converter,
                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                        ocpp::messages::GenericMessageSender&           msg_sender,
-                       IStatusManager&                                 status_manager,
+                       ocpp::messages::IRequestFifo&                   requests_fifo,
                        AuthentManager&                                 authent_manager,
                        ReservationManager&                             reservation_manager,
                        IMeterValuesManager&                            meter_values_manager,
@@ -80,12 +71,6 @@ class TransactionManager
 
     /** @brief Destructor */
     virtual ~TransactionManager();
-
-    /**
-     * @brief Update the charge point connection status
-     * @param is_connected true if the charge point is connected to the central system, false otherwise
-     */
-    void updateConnectionStatus(bool is_connected);
 
     /**
      * @brief Start a transaction
@@ -131,14 +116,10 @@ class TransactionManager
     ocpp::config::IOcppConfig& m_ocpp_config;
     /** @brief User defined events handler */
     IChargePointEventsHandler& m_events_handler;
-    /** @brief Worker thread pool */
-    ocpp::helpers::WorkerThreadPool& m_worker_pool;
     /** @brief Charge point's connectors */
     Connectors& m_connectors;
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender& m_msg_sender;
-    /** @brief Status manager */
-    IStatusManager& m_status_manager;
     /** @brief Authentication manager */
     AuthentManager& m_authent_manager;
     /** @brief Reservation manager */
@@ -149,14 +130,7 @@ class TransactionManager
     ISmartChargingManager& m_smart_charging_manager;
 
     /** @brief Transaction related requests FIFO */
-    RequestFifo m_requests_fifo;
-    /** @brief FIFO retry timer */
-    ocpp::helpers::Timer m_request_retry_timer;
-    /** @brief Retry count for the current request */
-    unsigned int m_request_retry_count;
-
-    /** @brief Process a FIFO request */
-    void processFifoRequest();
+    ocpp::messages::IRequestFifo& m_requests_fifo;
 };
 
 } // namespace chargepoint

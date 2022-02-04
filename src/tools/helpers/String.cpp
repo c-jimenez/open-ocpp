@@ -91,5 +91,28 @@ std::string& replace(std::string& str, const std::string& what, const std::strin
     return str;
 }
 
+/** @brief Helper function to check if a string starts with the specified substring */
+bool startsWith(const std::string& str, const std::string& substr)
+{
+    bool ret = false;
+    if (str.size() >= substr.size())
+    {
+        ret = (str.find(substr, 0) == 0);
+    }
+    return ret;
+}
+
+/** @brief Helper function to check if a string ends with the specified substring */
+bool endsWith(const std::string& str, const std::string& substr)
+{
+    bool ret = false;
+    if (str.size() >= substr.size())
+    {
+        size_t start_index = str.size() - substr.size();
+        ret                = (str.find(substr, start_index) == start_index);
+    }
+    return ret;
+}
+
 } // namespace helpers
 } // namespace ocpp

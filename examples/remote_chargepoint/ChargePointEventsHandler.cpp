@@ -34,8 +34,8 @@ using namespace std;
 using namespace ocpp::types;
 
 /** @brief Constructor */
-ChargePointEventsHandler::ChargePointEventsHandler(ChargePointDemoConfig& config)
-    : DefaultChargePointEventsHandler(config), m_meter_simulators(nullptr), m_setpoint_manager(nullptr)
+ChargePointEventsHandler::ChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir)
+    : DefaultChargePointEventsHandler(config, working_dir), m_meter_simulators(nullptr), m_setpoint_manager(nullptr)
 {
 }
 

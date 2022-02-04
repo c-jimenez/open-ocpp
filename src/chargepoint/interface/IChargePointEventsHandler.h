@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICHARGEPOINTEVENTSHANDLER_H
 #define ICHARGEPOINTEVENTSHANDLER_H
 
+#include "Certificate.h"
 #include "DateTime.h"
 #include "Enums.h"
 #include "MeterValue.h"
@@ -189,6 +190,84 @@ class IChargePointEventsHandler
      * @return true if the file has been downloaded, false otherwise
      */
     virtual bool downloadFile(const std::string& url, const std::string& file) = 0;
+
+    // Security extensions
+
+    /**
+     * @brief Called when a CA certificate has been received and must be installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param type Type of CA certificate
+     * @param certificate CA certificate to install
+     * @return Installation status (see CertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType type,
+                                                                         const ocpp::x509::Certificate&      certificate) = 0;
+
+    /**
+     * @brief Called when a charge point certificate has been received and must be installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param certificate Charge point certificate to install
+     * @return true is the certificate has been installed, false otherwise
+     */
+    virtual bool chargePointCertificateReceived(const ocpp::x509::Certificate& certificate) = 0;
+
+    /**
+     * @brief Called when the Central System request to delete an installed CA certificate
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param hash_algorithm Hash algorithm used for the following parameters
+     * @param issuer_name_hash Hash of the certificate's issuer's name
+     * @param issuer_key_hash Hash of the certificate's public key
+     * @param serial_number Serial number of the certificate
+     * @return Deletion status (see DeleteCertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                           const std::string&                 issuer_name_hash,
+                                                                           const std::string&                 issuer_key_hash,
+                                                                           const std::string&                 serial_number) = 0;
+
+    /**
+     * @brief Called to generate a CSR in PEM format which will be used by the Central System
+     *        to generate and sign a certificate for the Charge Point
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param csr String to store the generated CSR in PEM format
+     */
+    virtual void generateCsr(std::string& csr) = 0;
+
+    /**
+     * @brief Called to get the list of installed CA certificates
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param type Type of CA certificate
+     * @param certificates Installed certificates
+     */
+    virtual void getInstalledCertificates(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::x509::Certificate>& certificates) = 0;
+
+    /**
+     * @brief Called on a log request
+     * @param type Type of log to upload
+     * @param start_time If set, contains the date and time of the oldest logging information to
+     *                   include in the log file
+     * @param stop_time If set, contains the date and time of the latest logging information to
+     *                  include in the log file
+     * @return Path to the generated log file to upload to the Central System, or empty
+     *         string if no log are available
+     */
+    virtual std::string getLog(ocpp::types::LogEnumType                            type,
+                               const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
+                               const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
+
+    /**
+     * @brief Called to check if at least 1 Central System root certificate has been installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @return true if at least 1 certificate has been installed, false otherwise
+     */
+    virtual bool hasCentralSystemCaCertificateInstalled() = 0;
+
+    /**
+     * @brief Called to check if at least 1 Charge Point certificate has been installed
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @return true if at least 1 certificate has been installed, false otherwise
+     */
+    virtual bool hasChargePointCertificateInstalled() = 0;
 };
 
 } // namespace chargepoint

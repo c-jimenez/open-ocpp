@@ -32,6 +32,8 @@ namespace messages
 class IRequestFifo
 {
   public:
+    class IListener;
+
     /** @brief Destructor */
     virtual ~IRequestFifo() { }
 
@@ -66,6 +68,23 @@ class IRequestFifo
      * @return true if the FIFO is empty, false otherwise
      */
     virtual bool empty() const = 0;
+
+    /**
+     * @brief Register a listener to FIFO events
+     * @param listener Listener to register
+     */
+    virtual void registerListener(IListener* listener) = 0;
+
+    /** @brief Interface to listener to FIFO events implementations */
+    class IListener
+    {
+      public:
+        /** @brief Destructor */
+        virtual ~IListener() { }
+
+        /** @brief Called when a request has been queued */
+        virtual void requestQueued() = 0;
+    };
 };
 
 } // namespace messages

@@ -25,8 +25,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessagesConverter.h"
 #include "RpcServer.h"
 #include "Timer.h"
-#include "TimerPool.h"
-#include "WorkerThreadPool.h"
 
 #include <memory>
 
@@ -40,18 +38,24 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
 {
   public:
     /** @brief Constructor */
-    CentralSystem(const ocpp::config::ICentralSystemConfig& stack_config, ICentralSystemEventsHandler& events_handler);
+    CentralSystem(const ocpp::config::ICentralSystemConfig&        stack_config,
+                  ICentralSystemEventsHandler&                     events_handler,
+                  std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                  std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
     virtual ~CentralSystem();
 
     // ICentralSystem interface
 
-    /** @copydoc ocpp::helpers::TimerPool& ICentralSystem::getTimerPool() */
-    ocpp::helpers::TimerPool& getTimerPool() override { return m_timer_pool; }
+    /** @copydoc const ocpp::config::ICentralSystemConfig& ICentralSystem::getConfig() */
+    const ocpp::config::ICentralSystemConfig& getConfig() override { return m_stack_config; }
 
-    /** @copydoc ocpp::database::Database& ICentralSystem::getDatabase() */
-    ocpp::database::Database& getDatabase() override { return m_database; }
+    /** @copydoc ocpp::helpers::TimerPool& ICentralSystem::getTimerPool() */
+    ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
+
+    /** @copydoc ocpp::helpers::WorkerThreadPool& ICentralSystem::getWorkerPool() */
+    ocpp::helpers::WorkerThreadPool& getWorkerPool() override { return *m_worker_pool.get(); }
 
     /** @copydoc bool ICentralSystem::resetData() */
     bool resetData() override;
@@ -80,9 +84,9 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     ICentralSystemEventsHandler& m_events_handler;
 
     /** @brief Timer pool */
-    ocpp::helpers::TimerPool m_timer_pool;
+    std::shared_ptr<ocpp::helpers::TimerPool> m_timer_pool;
     /** @brief Worker thread pool */
-    ocpp::helpers::WorkerThreadPool m_worker_pool;
+    std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 
     /** @brief Database */
     ocpp::database::Database m_database;

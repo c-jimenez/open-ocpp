@@ -57,8 +57,6 @@ class IChargePointConfig
     virtual std::string tlsv12CipherList() const = 0;
     /** @brief Cipher list to use for TLSv1.3 connections */
     virtual std::string tlsv13CipherList() const = 0;
-    /** @brief ECDH curve to use for TLS connections */
-    virtual std::string tlsEcdhCurve() const = 0;
     /** @brief Certification Authority signing chain for the server certificate */
     virtual std::string tlsServerCertificateCa() const = 0;
     /** @brief Client certificate */
@@ -115,6 +113,36 @@ class IChargePointConfig
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     virtual unsigned int logMaxEntriesCount() const = 0;
+
+    // Security
+
+    /** @brief Enable internal certificate management : the certificates will be managed by Open OCPP only */
+    virtual bool internalCertificateManagementEnabled() const = 0;
+    /** @brief Enable security event notification */
+    virtual bool securityEventNotificationEnabled() const = 0;
+    /** @brief Maximum number of entries in the security log (0 = no security logs in database) */
+    virtual unsigned int securityLogMaxEntriesCount() const = 0;
+    /** @brief Hash type for certificate request generation : sha256, sha384 or sha512 */
+    virtual std::string clientCertificateRequestHashType() const = 0;
+    /** @brief Key type for certificate request generation : ec or rsa */
+    virtual std::string clientCertificateRequestKeyType() const = 0;
+    /** @brief Length in bits of the key for certificate request generation 
+     *         if rsa has been selected for key type : minimum 2048 */
+    virtual unsigned int clientCertificateRequestRsaKeyLength() const = 0;
+    /** @brief Name of the elliptic curve for certificate request generation 
+     *         if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, 
+     *         brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 */
+    virtual std::string clientCertificateRequestEcCurve() const = 0;
+    /** @brief Country for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectCountry() const = 0;
+    /** @brief State for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectState() const = 0;
+    /** @brief Location for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectLocation() const = 0;
+    /** @brief Organzation unit for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectOrganizationUnit() const = 0;
+    /** @brief Email for the subject field of certificate request generation (can be left empty) */
+    virtual std::string clientCertificateRequestSubjectEmail() const = 0;
 };
 
 } // namespace config

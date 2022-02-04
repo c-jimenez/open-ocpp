@@ -148,37 +148,37 @@ TEST_SUITE("Timers class test suite")
         CHECK(timer2->start(std::chrono::milliseconds(300u)));
         CHECK(timer3->start(std::chrono::milliseconds(100u)));
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 0u);
         CHECK_EQ(calls2, 0u);
         CHECK_EQ(calls3, 1u);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 1u);
         CHECK_EQ(calls2, 0u);
         CHECK_EQ(calls3, 2u);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 1u);
         CHECK_EQ(calls2, 1u);
         CHECK_EQ(calls3, 3u);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 2u);
         CHECK_EQ(calls2, 1u);
         CHECK_EQ(calls3, 4u);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 2u);
         CHECK_EQ(calls2, 1u);
         CHECK_EQ(calls3, 5u);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(105u));
+        std::this_thread::sleep_for(std::chrono::milliseconds(110u));
 
         CHECK_EQ(calls1, 3u);
         CHECK_EQ(calls2, 2u);

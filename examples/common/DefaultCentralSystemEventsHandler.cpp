@@ -23,13 +23,17 @@ SOFTWARE.
 */
 
 #include "DefaultCentralSystemEventsHandler.h"
+#include "Sha2.h"
+#include "String.h"
 
+#include <fstream>
 #include <iostream>
 #include <thread>
 
 using namespace std;
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::x509;
 
 /** @brief Constructor */
 DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler() : m_chargepoints() { }
@@ -66,11 +70,17 @@ void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocp
 /** @brief Remove a charge point from the connected charge points */
 void DefaultCentralSystemEventsHandler::removeChargePoint(const std::string& identifier)
 {
-    auto iter_chargepoint = m_chargepoints.find(identifier);
-    if (iter_chargepoint != m_chargepoints.end())
-    {
-        m_chargepoints.erase(iter_chargepoint);
-    }
+    std::thread t(
+        [this, &identifier]
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            auto iter_chargepoint = m_chargepoints.find(identifier);
+            if (iter_chargepoint != m_chargepoints.end())
+            {
+                m_chargepoints.erase(iter_chargepoint);
+            }
+        });
+    t.detach();
 }
 
 /** @brief Constructor */
@@ -90,13 +100,7 @@ DefaultCentralSystemEventsHandler::ChargePointRequestHandler::~ChargePointReques
 void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::disconnected()
 {
     cout << "[" << m_chargepoint->identifier() << "] - Disconnected" << endl;
-    std::thread t(
-        [this]
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
-            m_event_handler.removeChargePoint(m_chargepoint->identifier());
-        });
-    t.detach();
+    m_event_handler.removeChargePoint(m_chargepoint->identifier());
 }
 
 /** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */
@@ -291,6 +295,111 @@ ocpp::types::Optional<ocpp::types::IdTagInfo> DefaultCentralSystemEventsHandler:
         IdTagInfo& tag_info = ret.value();
         tag_info.status     = AuthorizationStatus::Accepted;
         tag_info.expiryDate = DateTime(DateTime::now().timestamp() + 3600);
+    }
+    return ret;
+}
+
+// Security extensions
+
+/** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType status,
+                                                                                         const ocpp::types::Optional<int>&    request_id)
+{
+    cout << "[" << m_chargepoint->identifier()
+         << "] - Log status notification : status = " << UploadLogStatusEnumTypeHelper.toString(status)
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
+}
+
+/** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
+                                                                        const ocpp::types::DateTime&,
+                                                                        const std::string&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEventNotification(const std::string&           type,
+                                                                                             const ocpp::types::DateTime& timestamp,
+                                                                                             const std::string&           message)
+{
+    cout << "[" << m_chargepoint->identifier() << "] - Security event : timestamp = " << timestamp.str() << " - type = " << type
+         << " - message = " << message << endl;
+}
+
+/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertificate(
+    const ocpp::x509::CertificateRequest& certificate_request)
+{
+    bool ret = false;
+    cout << "[" << m_chargepoint->identifier() << "] - Sign certificate : subject = " << certificate_request.subjectString() << endl;
+
+    // Load CA certificate which will sign the request
+    std::filesystem::path ca_cert_path(m_chargepoint->centralSystem().getConfig().tlsServerCertificateCa());
+    Certificate           ca_cert(ca_cert_path);
+    if (ca_cert.isValid())
+    {
+        const X509Document::Subject& ca_subject = ca_cert.subject();
+
+        // Check CPO name and serial number
+        const X509Document::Subject& subject = certificate_request.subject();
+        if ((subject.organization == ca_subject.organization) &&
+            (subject.common_name == getChargePointSerialNumber(m_chargepoint->identifier())))
+        {
+            // Save the request to a temporary file
+            Sha2 sha256;
+            sha256.compute(certificate_request.pem().c_str(), certificate_request.pem().size());
+
+            std::stringstream name;
+            name << "/tmp/csr_" << sha256.resultString() << ".pem";
+            std::string csr_filename = name.str();
+            if (certificate_request.toFile(csr_filename))
+            {
+                // Sign the certificate request to generate a certificate
+                std::string ca_cert_key_path = ca_cert_path;
+                ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
+                ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
+                std::string       certificate_filename = csr_filename + ".crt";
+                std::stringstream sign_cert_cmd_line;
+                sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
+                                   << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
+                system(sign_cert_cmd_line.str().c_str());
+
+                // Check if the certificate has been generated
+                if (std::filesystem::exists(certificate_filename))
+                {
+                    // Create bundle
+                    std::string       bundle_filename = certificate_filename + ".bundle";
+                    std::stringstream generate_bundle_cmd_line;
+                    generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
+                    system(generate_bundle_cmd_line.str().c_str());
+                    if (std::filesystem::exists(bundle_filename))
+                    {
+                        m_generated_certificate = bundle_filename;
+                        ret                     = true;
+                    }
+                    else
+                    {
+                        cout << "[" << m_chargepoint->identifier()
+                             << "] - Failed to generate certificate bundle : " << generate_bundle_cmd_line.str();
+                    }
+                }
+                else
+                {
+                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << sign_cert_cmd_line.str();
+                }
+
+                // Remove the temporary files
+                std::filesystem::remove(csr_filename);
+                std::filesystem::remove(certificate_filename);
+            }
+            else
+            {
+                cout << "[" << m_chargepoint->identifier() << "] - Unable to create CSR file : " << csr_filename;
+            }
+        }
+        else
+        {
+            cout << "[" << m_chargepoint->identifier() << "] - Invalid organization or common name" << endl;
+        }
+    }
+    else
+    {
+        cout << "[" << m_chargepoint->identifier() << "] - Unable to load CA certificate : " << ca_cert_path << endl;
     }
     return ret;
 }

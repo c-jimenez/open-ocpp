@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "urn:OCPP:1.6:security:2:2020:3:ExtendedTriggerMessageResponse",
+    "title": "ExtendedTriggerMessageResponse",
+    "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+    "type": "object",
+    "properties": {
+        "status": {
+            "type": "string",
+            "additionalProperties": false,
+            "enum": [
+                "Accepted",
+                "Rejected",
+                "NotImplemented"
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "status"
+    ]
+}

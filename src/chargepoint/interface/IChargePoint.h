@@ -19,9 +19,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICHARGEPOINT_H
 #define ICHARGEPOINT_H
 
+#include "CertificateRequest.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "SecurityEvent.h"
 #include "SmartChargingSetpoint.h"
 
 #include <memory>
@@ -31,6 +33,7 @@ namespace ocpp
 namespace helpers
 {
 class TimerPool;
+class WorkerThreadPool;
 } // namespace helpers
 
 namespace chargepoint
@@ -50,6 +53,22 @@ class IChargePoint
                                                 ocpp::config::IOcppConfig&              ocpp_config,
                                                 IChargePointEventsHandler&              events_handler);
 
+    /**
+     * @brief Instanciate a charge point with the provided timer and worker pools
+     *        To use when you have to instanciate multiple Central System / Charge Point
+     *        => Allow to reduce thread and memory usage
+     * @param stack_config Stack configuration
+     * @param ocpp_config Standard OCPP configuration
+     * @param event_handler Stack event handler
+     * @param timer_pool Timer pool
+     * @param worker_pool Worker thread pool
+     */
+    static std::unique_ptr<IChargePoint> create(const ocpp::config::IChargePointConfig&          stack_config,
+                                                ocpp::config::IOcppConfig&                       ocpp_config,
+                                                IChargePointEventsHandler&                       events_handler,
+                                                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
+
     /** @brief Destructor */
     virtual ~IChargePoint() { }
 
@@ -58,6 +77,12 @@ class IChargePoint
      * @return Timer pool associated to the charge point
      */
     virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
+
+    /**
+     * @brief Get the worker pool associated to the charge point
+     * @return Worker pool associated to the charge point
+     */
+    virtual ocpp::helpers::WorkerThreadPool& getWorkerPool() = 0;
 
     /**
      * @brief Reset the charge point's internal data (can be done only when the charge point is stopped)
@@ -82,6 +107,12 @@ class IChargePoint
      * @return true if the charge point has been stopped, false otherwise
      */
     virtual bool stop() = 0;
+
+    /**
+     * @brief Triggers a reconnexion of the charge point to the Central System
+     * @return true if the reconnexion has been scheduled, false otherwise
+     */
+    virtual bool reconnect() = 0;
 
     /**
      * @brief Get the registration status of the charge point
@@ -182,6 +213,39 @@ class IChargePoint
      * @return true if the notification has been sent, false otherwise
      */
     virtual bool notifyFirmwareUpdateStatus(bool success) = 0;
+
+    // Security extensions
+
+    /**
+     * @brief Log a security event
+     * @param type Type of the security event
+     * @param message Additional information about the occurred security event
+     * @param critical If non-standard security event, indicates its criticity 
+     *                 (only critival events are forward to central system)
+     * @return true if the security evenst has been logged, false otherwise
+     */
+    virtual bool logSecurityEvent(const std::string& type, const std::string& message, bool critical = false) = 0;
+
+    /**
+     * @brief Clear all the security events
+     * @return true if the security evenst have been cleared, false otherwise
+     */
+    virtual bool clearSecurityEvents() = 0;
+
+    /**
+     * @brief Send a CSR request to sign a certificate
+     *        (Can be used only if InternalCertificateManagementEnabled = false)
+     * @param csr CSR request
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool signCertificate(const ocpp::x509::CertificateRequest& csr) = 0;
+
+    /**
+     * @brief Send a CSR request to sign a certificate
+     *        (Can be used only if InternalCertificateManagementEnabled = true)
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool signCertificate() = 0;
 };
 
 } // namespace chargepoint

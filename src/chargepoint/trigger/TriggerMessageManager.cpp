@@ -33,11 +33,15 @@ TriggerMessageManager::TriggerMessageManager(Connectors&                        
                                              const ocpp::messages::GenericMessagesConverter& messages_converter,
                                              ocpp::messages::IMessageDispatcher&             msg_dispatcher)
     : GenericMessageHandler<TriggerMessageReq, TriggerMessageConf>(TRIGGER_MESSAGE_ACTION, messages_converter),
+      GenericMessageHandler<ExtendedTriggerMessageReq, ExtendedTriggerMessageConf>(EXTENDED_TRIGGER_MESSAGE_ACTION, messages_converter),
       m_connectors(connectors),
-      m_msg_dispatcher(msg_dispatcher),
-      m_handlers()
+      m_standard_handlers(),
+      m_extended_handlers()
 {
-    m_msg_dispatcher.registerHandler(TRIGGER_MESSAGE_ACTION, *this);
+    msg_dispatcher.registerHandler(TRIGGER_MESSAGE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<TriggerMessageReq, TriggerMessageConf>*>(this));
+    msg_dispatcher.registerHandler(EXTENDED_TRIGGER_MESSAGE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ExtendedTriggerMessageReq, ExtendedTriggerMessageConf>*>(this));
 }
 
 /** @brief Destructor */
@@ -46,7 +50,13 @@ TriggerMessageManager::~TriggerMessageManager() { }
 /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
 void TriggerMessageManager::registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler)
 {
-    m_handlers[message] = &handler;
+    m_standard_handlers[message] = &handler;
+}
+
+/** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+void TriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler)
+{
+    m_extended_handlers[message] = &handler;
 }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
@@ -65,8 +75,8 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
     LOG_INFO << "Trigger message requested : " << trigger_message;
 
     // Look for the corresponding handler
-    auto it = m_handlers.find(request.requestedMessage);
-    if (it == m_handlers.end())
+    auto it = m_standard_handlers.find(request.requestedMessage);
+    if (it == m_standard_handlers.end())
     {
         // No handler => not implemented
         response.status = TriggerMessageStatus::NotImplemented;
@@ -87,6 +97,56 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
             {
                 response.status = TriggerMessageStatus::Rejected;
                 LOG_WARNING << "Trigger message rejected : " << trigger_message;
+            }
+        }
+        else
+        {
+            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_message = "Invalid connector id";
+        }
+    }
+
+    return ret;
+}
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+ *                                                                                ResponseType& response,
+ *                                                                                const char*& error_code,
+ *                                                                                std::string& error_message)
+ */
+bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
+                                          ocpp::messages::ExtendedTriggerMessageConf&      response,
+                                          const char*&                                     error_code,
+                                          std::string&                                     error_message)
+{
+    bool ret = true;
+
+    std::string trigger_message = MessageTriggerEnumTypeHelper.toString(request.requestedMessage);
+    LOG_INFO << "Extended trigger message requested : " << trigger_message;
+
+    // Look for the corresponding handler
+    auto it = m_extended_handlers.find(request.requestedMessage);
+    if (it == m_extended_handlers.end())
+    {
+        // No handler => not implemented
+        response.status = TriggerMessageStatusEnumType::NotImplemented;
+        LOG_WARNING << "Extended trigger message not implemented : " << trigger_message;
+    }
+    else
+    {
+        // Check connector id
+        if (m_connectors.isValid(request.connectorId))
+        {
+            // Call handler
+            if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
+            {
+                response.status = TriggerMessageStatusEnumType::Accepted;
+                LOG_INFO << "Extended trigger message accepted : " << trigger_message;
+            }
+            else
+            {
+                response.status = TriggerMessageStatusEnumType::Rejected;
+                LOG_WARNING << "Extended trigger message rejected : " << trigger_message;
             }
         }
         else

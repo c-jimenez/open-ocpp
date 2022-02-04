@@ -40,6 +40,9 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     /** @brief Destructor */
     virtual ~RequestFifo();
 
+    /** @brief Initialize the database table */
+    void initDatabaseTable();
+
     // IRequestFifo interface
 
     /** @copydoc void IRequestFifo::push(unsigned int, const std::string&, const rapidjson::Document&) const */
@@ -56,6 +59,9 @@ class RequestFifo : public ocpp::messages::IRequestFifo
 
     /** @copydoc bool IRequestFifo::empty() const */
     bool empty() const override { return (size() == 0); }
+
+    /** @copydoc void IRequestFifo::registerListener(IListener*) const */
+    virtual void registerListener(IListener* listener) override { m_listener = listener; }
 
     // RequestFifo interface
 
@@ -96,8 +102,8 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     /** @brief Current id of the request */
     unsigned int m_id;
 
-    /** @brief Initialize the database table */
-    void initDatabaseTable();
+    /** @brief Listener */
+    IListener* m_listener;
 
     /** @brief Load requests from the database */
     void load();

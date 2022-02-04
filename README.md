@@ -4,8 +4,8 @@
 This implementation targets only the Websocket/JSON version of this protocol.
 
 This implementation is based on the following libraries :
+* [OpenSSL](https://www.openssl.org) : TLS communications + certificates management
 * [libwebsockets](https://libwebsockets.org) : Websocket layer
-* [OpenSSL](https://www.openssl.org) : TLS communications
 * [SQLite](https://www.sqlite.org/) : Database / persistency
 * [rapidjson](https://rapidjson.org/) : JSON serialization/deserialization
 * [doctest](https://github.com/doctest/doctest) : Unit tests
@@ -13,6 +13,11 @@ This implementation is based on the following libraries :
 ## Table of contents
 
 * [Features](#features)
+  + [Key features](#key-features)
+  + [Supported OCPP feature profiles](#supported-ocpp-feature-profiles)
+  + [Supported OCPP configuration keys](#supported-ocpp-configuration-keys)
+  + [OCPP security extensions](#ocpp-security-extensions)
+  * [Internal configuration keys](#internal-configuration-keys)
 * [Build](#build)
 * [Quick start](#quick-start)
   + [Charge Point role](#charge-point-role)
@@ -32,9 +37,9 @@ This implementation is based on the following libraries :
 
 As of this version :
 
-* No Charge Point nor Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress)
 * All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
+* Most of Charge Point and Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress, see [OCPP security extensions](#ocpp-security-extensions))
 
 The user application will have to implement some callbacks to provide the data needed by **Open OCPP** or to handle OCPP events (boot notification, remote start/stop notifications, meter values...).
 
@@ -47,6 +52,7 @@ The persistent data handled by **Open OCPP** is stored into a single file which 
   + Badge cache and local list
   + Smart charging profile
   + Logs
+  * X.509 Certificates
 
 * For Central System role :
 
@@ -63,10 +69,12 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Chare Point role |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Charge Point role |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
-### Supported OCPP configuration keys (Charge Point role)
+### Supported OCPP configuration keys
+
+The OCPP configuration keys support applies to Charge Point role only.
 
 In the "Owner" column, "S" means that the configuration key behavior is handled by the stack, "U" means that it must handled by the user application.
 
@@ -80,7 +88,7 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ConnectionTimeOut | S | None |
 | ConnectorPhaseRotation | S | None |
 | ConnectorPhaseRotationMaxLength | S | None |
-| GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (99) + user application configuration keys count to allow to export all the configuration in 1 message |
+| GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (49) + user application configuration keys count to allow to export all the configuration in 1 message |
 | HeartbeatInterval | S | Heartbeat are only sent if no messages have been exchanged since HeartbeatInterval seconds |
 | LightIntensity | U | None |
 | LocalAuthorizeOffline | S | None |
@@ -115,12 +123,130 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ChargingScheduleMaxPeriods | S | None |
 | ConnectorSwitch3to1PhaseSupported | S | None |
 | MaxChargingProfilesInstalled | S | None |
-| AdditionalRootCertificateCheck | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| AdditionalRootCertificateCheck | U/S | Not implemented yet : implemented behavior is the same as if AdditionalRootCertificateCheck = False |
 | AuthorizationKey | S | None |
-| CertificateSignedMaxChainSize | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CertificateStoreMaxLength | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| CpoName | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
-| SecurityProfile | S | OCPP 1.6 security whitepaper edition 2 configuration key : not implemented yet |
+| CertificateSignedMaxChainSize | S | None |
+| CertificateStoreMaxLength | U/S | If internal certificate management is enabled, the stack handle this parameter, otherwise it must be the user application |
+| CpoName | S | None |
+| SecurityProfile | S | None |
+
+### OCPP security extensions
+
+#### Security profiles
+
+**Open OCPP** support the following Security Profiles for both Charge Point and Central System roles :
+
+* 0 : No security profile
+* 1 : Unsecured Transport with HTTP Basic Authentication
+* 2 : TLS with HTTP Basic Authentication
+* 3 : TLS with Client Side Certificates
+
+In Charge Point role, the stack will automatically disconnect and then reconnect using the new parameters to the Central System after one of the following parameters has been modified : 
+* **AuthorizationKey**
+* **Security Profile**
+
+#### Security events
+
+**Open OCPP** support the whole use cases of security events and logging. 
+
+In Charge Point role, it can optionnaly handle the storage of the security event log and the generation of the security log export when the Central System asks it. To enable/disable this feature, you have to modify the **SecurityLogMaxEntriesCount** charge point configuration key :
+
+* 0 = **Open OCPP** will not store security event and the security log must be generated by the user application
+* \>0 = **Open OCPP** will store at max **SecurityLogMaxEntriesCount** (circular log) and will automatically generate the security log as a CSV file
+
+In Charge Point role, the user application can generate custom security events and defines its criticity so that they are forwarded to the Central System.
+
+In Charge Point role, the notification of security events can be enabled or disabled with the **SecurityEventNotificationEnabled** configuration key. This can be usefull to disable them when the Central System does not implement the security extensions.
+
+#### Extended trigger messages
+
+**Open OCPP** support this feature for both Charge Point and Central System roles.
+
+#### Certificate management
+
+**Open OCPP** support this feature for both Charge Point and Central System roles. 
+
+The behavior of this feature is controlled by the **InternalCertificateManagementEnabled** configuration key.
+
+If **InternalCertificateManagementEnabled** is set to **false**, the actual storage of the certificates and their keys must be done by the user application. **Open OCPP** provides callbacks and helper classes to ease certificate manipulation and installation. The user application also has to configure the path to the installed certificates for the establishment of the secure connections using the following configuration keys :
+
+* TlsServerCertificateCa
+* TlsClientCertificate
+* TlsClientCertificatePrivateKey
+* TlsClientCertificatePrivateKeyPassphrase
+
+If **InternalCertificateManagementEnabled** is set to **true**, the storage of certificates and their keys is fully handled by **Open OCPP**. The user application just has to provide a passphrase using the **TlsClientCertificatePrivateKeyPassphrase** configuration key to securily encrypt the certicates' private keys using AES-256-CBC algorithm. **Open OCPP** will automatically use the installed corresponding certificates depending on the configured Security Profile and the certificates validity dates.
+
+### Internal configuration keys
+
+The behavior and the configuration of the **Open OCPP** stack can be modified through configuration keys. Some are specific to an OCPP role and some are common.
+
+#### Common keys
+
+| Key | Type | Description |
+| :---: | :---: | :--- |
+| DatabasePath | string | Path to the database to store persistent data |
+| JsonSchemasPath | string | Path to the JSON schemas to validate the messages |
+| CallRequestTimeout | uint | Call request timeout in milliseconds |
+| Tlsv12CipherList | string | List of authorized ciphers for TLSv1.2 connections (OpenSSL format) |
+| Tlsv13CipherList | string | List of authorized ciphers for TLSv1.3 connections (OpenSSL format) |
+| LogMaxEntriesCount | uint | Maximum number of entries in the log (0 = no logs in database) |
+
+#### Charge Point keys
+
+| Key | Type | Description |
+| :---: | :---: | :--- |
+| ConnexionUrl | string | URL of the Central System |
+| ChargePointIdentifier | string | OCPP Charge Point identifier. Will be concatanated with the **ConnexionUrl** key |
+| ConnectionTimeout | uint | Connection timeout in milliseconds |
+| RetryInterval | uint | Retry interval when connection has failed in milliseconds |
+| ChargeBoxSerialNumber | string | Deprecated. Charge Box serial number for BootNotification message |
+| ChargePointModel | string | Charge Point model for BootNotification message |
+| ChargePointSerialNumber | string | Charge Point serial number for BootNotification message |
+| ChargePointVendor | string | Charge Point vendor for BootNotification message |
+| FirmwareVersion | string | Charge Point firmware version for BootNotification message |
+| Iccid | string | ICCID of the moden's SIM card for BootNotification message |
+| Imsi | string | IMSI of the moden's SIM card for BootNotification message |
+| MeterSerialNumber | string | Main electrical meter serial number for BootNotification message |
+| MeterType | string | Main electrical meter type for BootNotification message |
+| OperatingVoltage | float | Nominal operating voltage (needed for Watt to Amp conversions in smart charging profiles) |
+| AuthentCacheMaxEntriesCount | uint | Maximum number of entries in the authentication cache |
+| TlsServerCertificateCa | string | Path to Certification Authority signing chain to validate the Central System certificate |
+| TlsClientCertificate | string | Path to Charge Point certificate |
+| TlsClientCertificatePrivateKey | string | Path to Charge Point's certificate's private key |
+| TlsClientCertificatePrivateKeyPassphrase | string | Charge Point certificate's private key passphrase |
+| TlsAllowSelfSignedCertificates | bool | Allow TLS connections using self-signed certificates (Warning : enabling this feature is not recommended in production) |
+| TlsAllowExpiredCertificates | bool | Allow TLS connections using expired certificates (Warning : enabling this feature is not recommended in production) |
+| TlsAcceptNonTrustedCertificates | bool | Accept non trusted certificates for TLS connections (Warning : enabling this feature is not recommended in production) |
+| TlsSkipServerNameCheck | bool | Skip server name check in certificates for TLS connections (Warning : enabling this feature is not recommended in production) |
+| InternalCertificateManagementEnabled | bool | If true, certificates are stored inside **Open OCPP** databasen otherwise user application has to handle them|
+| SecurityEventNotificationEnabled | bool | Enable security event notification |
+| SecurityLogMaxEntriesCount | uint | Maximum number of entries in the security log (0 = no security logs in database) |
+| ClientCertificateRequestHashType | string | Hash type for certificate request generation : sha256, sha384 or sha512 |
+| ClientCertificateRequestKeyType | string | Key type for certificate request generation : ec or rsa |
+| ClientCertificateRequestRsaKeyLength | uint | Length in bits of the key for certificate request generation if rsa has been selected for key type : minimum 2048 |
+| ClientCertificateRequestEcCurve | string | Name of the elliptic curve for certificate request generation if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 |
+| ClientCertificateRequestSubjectCountry | string | Country for the subject field of certificate request generation (can be left empty) |
+| ClientCertificateRequestSubjectState | string | State for the subject field of certificate request generation (can be left empty) |
+| ClientCertificateRequestSubjectLocation | string | Location for the subject field of certificate request generation (can be left empty) |
+| ClientCertificateRequestSubjectOrganizationUnit | string | Organization unit for the subject field of certificate request generation (can be left empty) |
+| ClientCertificateRequestSubjectEmail | string | Email for the subject field of certificate request generation (can be left empty) |
+
+#### Central System keys
+
+| Key | Type | Description |
+| :---: | :---: | :--- |
+| ListenUrl | string | URL to listen to incomming  websocket connections |
+| WebSocketPingInterval | uint | Websocket PING interval in seconds |
+| BootNotificationRetryInterval | uint | Boot notification retry interval in second (sent in BootNotificationConf when status is Pending or Rejected) |
+| HeartbeatInterval | uint | Heartbeat interval in seconds (sent in BootNotificationConf when status is Accepted) |
+| HttpBasicAuthent | bool | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method |
+| TlsEcdhCurve | string | ECDH curve to use for TLS connections with EC keys |
+| TlsServerCertificate | string | Path to the Central System's certificate |
+| TlsServerCertificatePrivateKey | string | Path to the Central System's certificate's private key |
+| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
+| TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
+| TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
 
 ## Build
 

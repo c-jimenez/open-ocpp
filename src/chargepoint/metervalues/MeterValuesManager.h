@@ -36,6 +36,7 @@ class IOcppConfig;
 namespace messages
 {
 class GenericMessageSender;
+class IRequestFifo;
 } // namespace messages
 namespace helpers
 {
@@ -53,6 +54,7 @@ class IStatusManager;
 /** @brief Handle charge point meter values requests */
 class MeterValuesManager : public IMeterValuesManager,
                            public ITriggerMessageManager::ITriggerMessageHandler,
+                           public ITriggerMessageManager::IExtendedTriggerMessageHandler,
                            public IConfigManager::IConfigChangedListener
 {
   public:
@@ -64,6 +66,7 @@ class MeterValuesManager : public IMeterValuesManager,
                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                        Connectors&                           connectors,
                        ocpp::messages::GenericMessageSender& msg_sender,
+                       ocpp::messages::IRequestFifo&         requests_fifo,
                        IStatusManager&                       status_manager,
                        ITriggerMessageManager&               trigger_manager,
                        IConfigManager&                       config_manager);
@@ -72,9 +75,6 @@ class MeterValuesManager : public IMeterValuesManager,
     virtual ~MeterValuesManager();
 
     // IMeterValuesManager interface
-
-    /** @copydoc void IMeterValuesManager::setTransactionFifo(ocpp::messages::IRequestFifo&) */
-    void setTransactionFifo(ocpp::messages::IRequestFifo& requests_fifo) override;
 
     /** @copydoc bool IMeterValuesManager::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
     bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
@@ -92,6 +92,9 @@ class MeterValuesManager : public IMeterValuesManager,
 
     /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
 
     // IConfigChangedListener interface
 
@@ -114,7 +117,7 @@ class MeterValuesManager : public IMeterValuesManager,
     /** @brief Status manager */
     IStatusManager& m_status_manager;
     /** @brief Transaction related requests FIFO */
-    ocpp::messages::IRequestFifo* m_requests_fifo;
+    ocpp::messages::IRequestFifo& m_requests_fifo;
 
     /** @brief Clock-aligned meter values timer */
     ocpp::helpers::Timer m_clock_aligned_timer;

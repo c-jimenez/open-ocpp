@@ -37,7 +37,7 @@ class ChargePointEventsHandler : public DefaultChargePointEventsHandler
 {
   public:
     /** @brief Constructor */
-    ChargePointEventsHandler(ChargePointDemoConfig& config);
+    ChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir);
 
     /** @brief Destructor */
     virtual ~ChargePointEventsHandler();

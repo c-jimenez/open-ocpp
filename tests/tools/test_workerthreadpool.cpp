@@ -28,6 +28,7 @@ TEST_SUITE("WorkerThreadPool class test suite")
     {
         WorkerThreadPool worker_thread_pool(3);
 
+        std::mutex   jobs_done_mutex;
         unsigned int jobs_done = 0;
 
         std::mutex              end_job1_mutex;
@@ -43,9 +44,10 @@ TEST_SUITE("WorkerThreadPool class test suite")
         worker_thread_pool.run<void>(job1);
         Waiter<void> waiter1 = worker_thread_pool.run<void>(job1);
 
-        auto job2 = [&jobs_done]
+        auto job2 = [&jobs_done, &jobs_done_mutex]
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(25u));
+            std::lock_guard<std::mutex> lock(jobs_done_mutex);
             jobs_done++;
         };
         worker_thread_pool.run<void>(job2);

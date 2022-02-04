@@ -98,10 +98,6 @@ bool LibWebsocketClient::connect(const std::string&        url,
                 {
                     info.client_tls_1_3_plus_cipher_list = m_credentials.tls13_cipher_list.c_str();
                 }
-                if (!m_credentials.ecdh_curve.empty())
-                {
-                    info.ecdh_curve = m_credentials.ecdh_curve.c_str();
-                }
                 if (m_credentials.encoded_pem_certificates)
                 {
                     // Use PEM encoded data

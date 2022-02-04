@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICHARGEPOINTREQUESTHANDLER_H
 #define ICHARGEPOINTREQUESTHANDLER_H
 
+#include "CertificateRequest.h"
 #include "Enums.h"
 #include "IdTagInfo.h"
 #include "MeterValue.h"
@@ -154,6 +155,30 @@ class IChargePointRequestHandler
                                                                           int                                         transaction_id,
                                                                           ocpp::types::Reason                         reason,
                                                                           const std::vector<ocpp::types::MeterValue>& transaction_data) = 0;
+
+    // Security extensions
+
+    /**
+     * @brief Called when a log status notification has been received
+     * @param status Log status
+     * @param request_id Request id of the correspondin GetLog request
+     */
+    virtual void logStatusNotification(ocpp::types::UploadLogStatusEnumType status, const ocpp::types::Optional<int>& request_id) = 0;
+
+    /**
+     * @brief Called when a security event notification has been received
+     * @param type Type of the security event
+     * @param timestamp Timestamp when the security event has been generated
+     * @param message Additional information about the occurred security event
+     */
+    virtual void securityEventNotification(const std::string& type, const ocpp::types::DateTime& timestamp, const std::string& message) = 0;
+
+    /**
+     * @brief Called when a request to sign a new client certificat has been received
+     * @param certificate_request Certificate request
+     * @return true if the certificate request can be processed, false otherwise
+     */
+    virtual bool signCertificate(const ocpp::x509::CertificateRequest& certificate_request) = 0;
 };
 
 } // namespace centralsystem

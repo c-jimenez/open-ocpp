@@ -26,7 +26,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "FirmwareStatusNotification.h"
 #include "GenericMessageHandler.h"
 #include "Heartbeat.h"
+#include "LogStatusNotification.h"
 #include "MeterValues.h"
+#include "SecurityEventNotification.h"
+#include "SignCertificate.h"
 #include "StartTransaction.h"
 #include "StatusNotification.h"
 #include "StopTransaction.h"
@@ -61,7 +64,12 @@ class ChargePointHandler
       public ocpp::messages::GenericMessageHandler<ocpp::messages::MeterValuesReq, ocpp::messages::MeterValuesConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::StartTransactionReq, ocpp::messages::StartTransactionConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::StatusNotificationReq, ocpp::messages::StatusNotificationConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::StopTransactionReq, ocpp::messages::StopTransactionConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::StopTransactionReq, ocpp::messages::StopTransactionConf>,
+      // Security extensions
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::LogStatusNotificationReq, ocpp::messages::LogStatusNotificationConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::SecurityEventNotificationReq,
+                                                   ocpp::messages::SecurityEventNotificationConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignCertificateReq, ocpp::messages::SignCertificateConf>
 {
   public:
     /**
@@ -180,6 +188,38 @@ class ChargePointHandler
      */
     bool handleMessage(const ocpp::messages::StopTransactionReq& request,
                        ocpp::messages::StopTransactionConf&      response,
+                       const char*&                              error_code,
+                       std::string&                              error_message) override;
+
+    // Security extensions
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::LogStatusNotificationReq& request,
+                       ocpp::messages::LogStatusNotificationConf&      response,
+                       const char*&                                    error_code,
+                       std::string&                                    error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::SecurityEventNotificationReq& request,
+                       ocpp::messages::SecurityEventNotificationConf&      response,
+                       const char*&                                        error_code,
+                       std::string&                                        error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::SignCertificateReq& request,
+                       ocpp::messages::SignCertificateConf&      response,
                        const char*&                              error_code,
                        std::string&                              error_message) override;
 

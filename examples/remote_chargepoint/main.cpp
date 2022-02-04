@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
     ChargePointDemoConfig config(path);
 
     // // Event handler
-    ChargePointEventsHandler event_handler(config);
+    ChargePointEventsHandler event_handler(config, working_dir);
 
     // Instanciate charge point
     std::unique_ptr<IChargePoint> charge_point = IChargePoint::create(config.stackConfig(), config.ocppConfig(), event_handler);
@@ -136,6 +136,7 @@ int main(int argc, char* argv[])
     {
         charge_point->resetData();
     }
+    event_handler.setChargePoint(*charge_point.get());
     charge_point->start();
 
     // From now on the stack is alive :)

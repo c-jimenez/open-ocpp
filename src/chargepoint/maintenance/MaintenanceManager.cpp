@@ -21,8 +21,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "DiagnosticsStatusNotification.h"
 #include "FirmwareStatusNotification.h"
 #include "GenericMessageSender.h"
+#include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
+#include "LogStatusNotification.h"
 #include "Logger.h"
+#include "SecurityManager.h"
 #include "WorkerThreadPool.h"
 
 #include <filesystem>
@@ -36,23 +39,30 @@ namespace chargepoint
 {
 
 /** @brief Constructor */
-MaintenanceManager::MaintenanceManager(IChargePointEventsHandler&                      events_handler,
+MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&         stack_config,
+                                       IChargePointEventsHandler&                      events_handler,
                                        ocpp::helpers::WorkerThreadPool&                worker_pool,
                                        const ocpp::messages::GenericMessagesConverter& messages_converter,
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        ocpp::messages::GenericMessageSender&           msg_sender,
                                        Connectors&                                     connectors,
-                                       ITriggerMessageManager&                         trigger_manager)
+                                       ITriggerMessageManager&                         trigger_manager,
+                                       ISecurityManager&                               security_manager)
     : GenericMessageHandler<ResetReq, ResetConf>(RESET_ACTION, messages_converter),
       GenericMessageHandler<UnlockConnectorReq, UnlockConnectorConf>(UNLOCK_CONNECTOR_ACTION, messages_converter),
       GenericMessageHandler<GetDiagnosticsReq, GetDiagnosticsConf>(GET_DIAGNOSTICS_ACTION, messages_converter),
       GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>(UPDATE_FIRMWARE_ACTION, messages_converter),
+      GenericMessageHandler<GetLogReq, GetLogConf>(GET_LOG_ACTION, messages_converter),
+      m_stack_config(stack_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),
       m_msg_sender(msg_sender),
       m_connectors(connectors),
+      m_security_manager(security_manager),
       m_diagnostics_thread(nullptr),
       m_diagnostics_status(DiagnosticsStatus::Idle),
+      m_logs_status(UploadLogStatusEnumType::Idle),
+      m_logs_request_id(),
       m_firmware_thread(nullptr),
       m_firmware_status(FirmwareStatus::Idle)
 {
@@ -63,8 +73,10 @@ MaintenanceManager::MaintenanceManager(IChargePointEventsHandler&               
                                    *dynamic_cast<GenericMessageHandler<GetDiagnosticsReq, GetDiagnosticsConf>*>(this));
     msg_dispatcher.registerHandler(UPDATE_FIRMWARE_ACTION,
                                    *dynamic_cast<GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>*>(this));
+    msg_dispatcher.registerHandler(GET_LOG_ACTION, *dynamic_cast<GenericMessageHandler<GetLogReq, GetLogConf>*>(this));
     trigger_manager.registerHandler(MessageTrigger::DiagnosticsStatusNotification, *this);
     trigger_manager.registerHandler(MessageTrigger::FirmwareStatusNotification, *this);
+    trigger_manager.registerHandler(MessageTriggerEnumType::LogStatusNotification, *this);
 }
 
 /** @brief Destructor */
@@ -122,6 +134,35 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
                     // To let some time for the trigger message reply
                     std::this_thread::sleep_for(std::chrono::milliseconds(250u));
                     sendFirmwareStatusNotification();
+                });
+        }
+        break;
+
+        default:
+        {
+            // Unknown message
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+{
+    bool ret = true;
+    (void)connector_id;
+    switch (message)
+    {
+        case MessageTriggerEnumType::LogStatusNotification:
+        {
+            m_worker_pool.run<void>(
+                [this]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    sendLogStatusNotification();
                 });
         }
         break;
@@ -272,6 +313,78 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& 
                                                       request.retryInterval,
                                                       request.retrieveDate));
         m_firmware_thread->detach();
+    }
+
+    return true;
+}
+
+// Security extensions
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
+                                       ocpp::messages::GetLogConf&      response,
+                                       const char*&                     error_code,
+                                       std::string&                     error_message)
+{
+    (void)error_code;
+    (void)error_message;
+
+    // Prepare response
+    response.status = LogStatusEnumType::Rejected;
+
+    // Check if a request is already in progress
+    if (!m_diagnostics_thread)
+    {
+        // Notify request
+        std::string local_log_file = m_events_handler.getLog(request.logType, request.log.oldestTimestamp, request.log.latestTimestamp);
+        if (!local_log_file.empty())
+        {
+            std::filesystem::path log_file(local_log_file);
+
+            // Generate the log file
+            if ((request.logType == LogEnumType::SecurityLog) && (m_stack_config.securityLogMaxEntriesCount() > 0))
+            {
+                log_file /= "security_logs.csv";
+                LOG_INFO << "Generate security logs export : " << log_file;
+                if (m_security_manager.exportSecurityEvents(log_file, request.log.oldestTimestamp, request.log.latestTimestamp))
+                {
+                    local_log_file = log_file;
+                }
+                else
+                {
+                    local_log_file = "";
+                }
+            }
+            if (!local_log_file.empty())
+            {
+                // Extract filename for the response
+                response.fileName.assign(log_file.filename().string());
+                response.status = LogStatusEnumType::Accepted;
+
+                // Create a separate thread since the operation can be time consuming
+                m_logs_request_id    = request.requestId;
+                m_diagnostics_thread = new std::thread(std::bind(&MaintenanceManager::processGetLog,
+                                                                 this,
+                                                                 request.logType,
+                                                                 request.log.remoteLocation,
+                                                                 request.retries,
+                                                                 request.retryInterval,
+                                                                 local_log_file));
+                m_diagnostics_thread->detach();
+            }
+        }
+        else
+        {
+            LOG_WARNING << "GetLog : No logs available";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "GetLog operation already in progress";
     }
 
     return true;
@@ -452,6 +565,97 @@ bool MaintenanceManager::sendFirmwareStatusNotification()
     status_req.status = m_firmware_status;
     CallResult ret    = m_msg_sender.call(FIRMWARE_STATUS_NOTIFICATION_ACTION, status_req, status_conf);
     return (ret == CallResult::Ok);
+}
+
+// Security extensions
+
+/** @brief Process the upload of the logs */
+void MaintenanceManager::processGetLog(ocpp::types::LogEnumType            type,
+                                       std::string                         location,
+                                       ocpp::types::Optional<unsigned int> retries,
+                                       ocpp::types::Optional<unsigned int> retry_interval,
+                                       std::string                         local_log_file)
+{
+    // Configure retries
+    unsigned int nb_retries = 1u;
+    if (retries.isSet())
+    {
+        nb_retries = retries;
+    }
+    std::chrono::seconds retry_interval_s(1u);
+    if (retry_interval.isSet())
+    {
+        retry_interval_s = std::chrono::seconds(retry_interval.value());
+    }
+
+    // Compute URL
+    std::string url = location;
+    if (url.back() != '/')
+    {
+        url += "/";
+    }
+    std::filesystem::path log_file(local_log_file);
+    url += log_file.filename();
+
+    LOG_INFO << "GetLog : type = " << LogEnumTypeHelper.toString(type) << " - URL = " << url << " - retries = " << nb_retries
+             << " - retryInterval = " << retry_interval_s.count() << " - log file = " << local_log_file
+             << " - requestId = " << (m_logs_request_id.isSet() ? std::to_string(m_logs_request_id.value()) : "not set");
+
+    // Notify start of operation
+    m_logs_status = UploadLogStatusEnumType::Uploading;
+    sendLogStatusNotification();
+
+    // Upload loop
+    bool success = true;
+    do
+    {
+        success = m_events_handler.uploadFile(local_log_file, url);
+        if (!success)
+        {
+            // Next retry
+            nb_retries--;
+            if (nb_retries != 0)
+            {
+                LOG_WARNING << "GetLog : upload failed (" << nb_retries << " retrie(s) left - next retry in " << retry_interval_s.count()
+                            << "s)";
+                std::this_thread::sleep_for(retry_interval_s);
+            }
+        }
+
+    } while (!success && (nb_retries != 0));
+
+    // Notify end of operation
+    if (success)
+    {
+        m_logs_status = UploadLogStatusEnumType::Uploaded;
+        LOG_INFO << "GetLog : success";
+    }
+    else
+    {
+        m_logs_status = UploadLogStatusEnumType::UploadFailure;
+        LOG_ERROR << "GetLog : failed";
+    }
+    sendLogStatusNotification();
+
+    // Reset status
+    m_logs_status = UploadLogStatusEnumType::Idle;
+    m_logs_request_id.clear();
+
+    // Release thread to allow new diagnostics requests
+    delete m_diagnostics_thread;
+    m_diagnostics_thread = nullptr;
+}
+
+/** @brief Send a log status notification */
+void MaintenanceManager::sendLogStatusNotification()
+{
+    LOG_INFO << "GetLogs status : " << UploadLogStatusEnumTypeHelper.toString(m_logs_status);
+
+    LogStatusNotificationReq status_req;
+    LogStatusNotificationReq status_conf;
+    status_req.status    = m_logs_status;
+    status_req.requestId = m_logs_request_id;
+    m_msg_sender.call(LOG_STATUS_NOTIFICATION_ACTION, status_req, status_conf);
 }
 
 } // namespace chargepoint
