@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Certificate.h"
 #include "CertificateRequest.h"
+#include "PrivateKey.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
@@ -66,6 +67,21 @@ AiA9/utT5xsZenKNLyBLSeppamtmmmvvQZi/ADiLY1npzQIgTrevr648pYT/vdoH
 p0lygw5wtygHTZ3+Ve+BFFQVdZQ=
 -----END CERTIFICATE REQUEST-----
 )");
+
+/** @brief Test RSA key file in PEM encoded file format */
+#define RSA_PEM_FILE CERT_DIR "/rsakey_no_encrypt.pem"
+
+/** @brief Test RSA encrypted key file in PEM encoded file format */
+#define RSA_ENCRYPT_PEM_FILE CERT_DIR "/rsakey_encrypt.pem"
+
+/** @brief Test EC key file in PEM encoded file format */
+#define EC_PEM_FILE CERT_DIR "/eckey_no_encrypt.pem"
+
+/** @brief Test RSA encrypted key file in PEM encoded file format */
+#define EC_ENCRYPT_PEM_FILE CERT_DIR "/eckey_encrypt.pem"
+
+/** @brief Passphrase for PEM encrypted files */
+static constexpr const char* PEM_PASSPHRASE = "test passphrase";
 
 TEST_SUITE("Certificate")
 {
@@ -290,7 +306,7 @@ TEST_SUITE("Certificate")
 TEST_SUITE("Certificate request")
 {
     /** @brief Check fields from test certificate certificate request */
-    void checkTestCertificateRequestFields(const CertificateRequest& cert)
+    void checkTestCertificateRequestFields(const CertificateRequest& cert, bool check_pub_key = true)
     {
         CHECK_EQ(cert.subjectString(),
                  "C = FR, ST = Savoie, L = Chambery, O = Open OCPP, OU = Examples, CN = Open OCPP Charge Point, emailAddress = "
@@ -307,14 +323,18 @@ TEST_SUITE("Certificate request")
         CHECK_EQ(cert.signatureAlgo(), "ecdsa-with-SHA256");
 
         CHECK_EQ(cert.publicKey().size(), 65u);
-        CHECK_EQ(cert.publicKeyString(),
-                 "04:b5:5a:80:ce:a0:b5:b4:91:ce:4b:60:67:6a:5d:f6:8f:1f:17:1c:6b:86:26:0a:5a:56:14:99:98:e7:cb:f0:65:e3:a1:0a:e0:8c:0e:53:"
-                 "18:c4:f3:28:3e:4c:95:b6:ba:a8:b8:04:b5:da:dd:ce:5b:9c:0f:fb:5d:61:2e:f2:ee");
+        if (check_pub_key)
+        {
+            CHECK_EQ(
+                cert.publicKeyString(),
+                "04:b5:5a:80:ce:a0:b5:b4:91:ce:4b:60:67:6a:5d:f6:8f:1f:17:1c:6b:86:26:0a:5a:56:14:99:98:e7:cb:f0:65:e3:a1:0a:e0:8c:0e:53:"
+                "18:c4:f3:28:3e:4c:95:b6:ba:a8:b8:04:b5:da:dd:ce:5b:9c:0f:fb:5d:61:2e:f2:ee");
+        }
         CHECK_EQ(cert.publicKeyAlgo(), "id-ecPublicKey");
         CHECK_EQ(cert.publicKeyAlgoParam(), "prime256v1");
     }
 
-    TEST_CASE("From PEM certificate file")
+    TEST_CASE("From PEM certificate request file")
     {
         // Load cert
         CertificateRequest cert_request(std::filesystem::path(CERT_REQUEST_PEM_FILE));
@@ -332,5 +352,211 @@ TEST_SUITE("Certificate request")
 
         // Check fields
         checkTestCertificateRequestFields(cert_request);
+    }
+
+    TEST_CASE("Generate request")
+    {
+        // Reference request
+        CertificateRequest ref_request(CERT_REQUEST_PEM_DATA);
+        CHECK(ref_request.isValid());
+
+        // Private key
+        PrivateKey pkey(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "Some good passphrase");
+        CHECK(pkey.isValid());
+
+        // Generate request
+        CertificateRequest cert_request(ref_request.subject(), pkey);
+        CHECK(cert_request.isValid());
+
+        // Check fields
+        checkTestCertificateRequestFields(cert_request, false);
+
+        std::fstream f("req.csr", f.out);
+        f << cert_request.pem();
+    }
+}
+
+TEST_SUITE("Private key")
+{
+    TEST_CASE("RSA key from PEM file")
+    {
+        PrivateKey pkey(std::filesystem::path(RSA_PEM_FILE), "");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 2048u);
+        CHECK_EQ(pkey.algo(), "rsaEncryption");
+        CHECK_EQ(pkey.algoParam(), "");
+        CHECK_NE(pkey.object(), nullptr);
+    }
+
+    TEST_CASE("RSA key from PEM encrypted file")
+    {
+        // Valid passphrase
+        PrivateKey pkey(std::filesystem::path(RSA_ENCRYPT_PEM_FILE), PEM_PASSPHRASE);
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 2048u);
+        CHECK_EQ(pkey.algo(), "rsaEncryption");
+        CHECK_EQ(pkey.algoParam(), "");
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Invalid passphrase
+        PrivateKey comp_key(std::filesystem::path(RSA_ENCRYPT_PEM_FILE), "Not the good passphrase");
+        CHECK_FALSE(comp_key.isValid());
+        CHECK(comp_key.privatePem().empty());
+        CHECK(comp_key.publicPem().empty());
+        CHECK_EQ(comp_key.size(), 0);
+        CHECK_EQ(comp_key.algo(), "");
+        CHECK_EQ(comp_key.algoParam(), "");
+        CHECK_EQ(comp_key.object(), nullptr);
+    }
+
+    TEST_CASE("EC key from PEM file")
+    {
+        PrivateKey pkey(std::filesystem::path(EC_PEM_FILE), "");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 256u);
+        CHECK_EQ(pkey.algo(), "id-ecPublicKey");
+        CHECK_EQ(pkey.algoParam(), "prime256v1");
+        CHECK_NE(pkey.object(), nullptr);
+    }
+
+    TEST_CASE("EC key from PEM encrypted file")
+    {
+        // Valid passphrase
+        PrivateKey pkey(std::filesystem::path(EC_ENCRYPT_PEM_FILE), PEM_PASSPHRASE);
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.algo(), "id-ecPublicKey");
+        CHECK_EQ(pkey.algoParam(), "prime256v1");
+        CHECK_EQ(pkey.size(), 256u);
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Invalid passphrase
+        PrivateKey comp_key(std::filesystem::path(EC_ENCRYPT_PEM_FILE), "Not the good passphrase");
+        CHECK_FALSE(comp_key.isValid());
+        CHECK(comp_key.privatePem().empty());
+        CHECK(comp_key.publicPem().empty());
+        CHECK_EQ(comp_key.size(), 0);
+        CHECK_EQ(comp_key.algo(), "");
+        CHECK_EQ(comp_key.algoParam(), "");
+        CHECK_EQ(comp_key.object(), nullptr);
+    }
+
+    TEST_CASE("RSA key generation - no encryption")
+    {
+        // Generate key
+        PrivateKey pkey(PrivateKey::Type::RSA, 2048u, "");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 2048u);
+        CHECK_EQ(pkey.algo(), "rsaEncryption");
+        CHECK_EQ(pkey.algoParam(), "");
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Reload key from PEM data
+        PrivateKey comp_key(pkey.privatePem(), "");
+        CHECK(comp_key.isValid());
+        CHECK_EQ(comp_key.privatePem(), pkey.privatePem());
+        CHECK_EQ(comp_key.publicPem(), pkey.publicPem());
+        CHECK_EQ(comp_key.size(), pkey.size());
+        CHECK_EQ(comp_key.algo(), pkey.algo());
+        CHECK_EQ(comp_key.algoParam(), pkey.algoParam());
+        CHECK_NE(comp_key.object(), nullptr);
+    }
+
+    TEST_CASE("RSA key generation - encryption")
+    {
+        // Generate key
+        PrivateKey pkey(PrivateKey::Type::RSA, 4096u, "This is a passphrase");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 4096u);
+        CHECK_EQ(pkey.algo(), "rsaEncryption");
+        CHECK_EQ(pkey.algoParam(), "");
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Reload key from PEM data - invalid passphrase
+        PrivateKey comp_key(pkey.privatePem(), "Not the good passphrase");
+        CHECK_FALSE(comp_key.isValid());
+        CHECK(comp_key.privatePem().empty());
+        CHECK(comp_key.publicPem().empty());
+        CHECK_EQ(comp_key.size(), 0);
+        CHECK_EQ(comp_key.algo(), "");
+        CHECK_EQ(comp_key.algoParam(), "");
+        CHECK_EQ(comp_key.object(), nullptr);
+
+        // Reload key from PEM data - valid passphrase
+        PrivateKey comp_key2(pkey.privatePem(), "This is a passphrase");
+        CHECK(comp_key2.isValid());
+        CHECK_EQ(comp_key2.privatePem(), pkey.privatePem());
+        CHECK_EQ(comp_key2.publicPem(), pkey.publicPem());
+        CHECK_EQ(comp_key2.size(), pkey.size());
+        CHECK_EQ(comp_key2.algo(), pkey.algo());
+        CHECK_EQ(comp_key2.algoParam(), pkey.algoParam());
+        CHECK_NE(comp_key2.object(), nullptr);
+    }
+
+    TEST_CASE("EC key generation - no encryption")
+    {
+        // Generate key
+        PrivateKey pkey(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 256u);
+        CHECK_EQ(pkey.algo(), "id-ecPublicKey");
+        CHECK_EQ(pkey.algoParam(), "prime256v1");
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Reload key from PEM data
+        PrivateKey comp_key(pkey.privatePem(), "");
+        CHECK(comp_key.isValid());
+        CHECK_EQ(comp_key.privatePem(), pkey.privatePem());
+        CHECK_EQ(comp_key.publicPem(), pkey.publicPem());
+        CHECK_EQ(comp_key.size(), pkey.size());
+        CHECK_EQ(comp_key.algo(), pkey.algo());
+        CHECK_EQ(comp_key.algoParam(), pkey.algoParam());
+        CHECK_NE(comp_key.object(), nullptr);
+    }
+
+    TEST_CASE("EC key generation - encryption")
+    {
+        // Generate key
+        PrivateKey pkey(PrivateKey::Type::EC, PrivateKey::Curve::SECP384_R1, "A real good passphrase");
+        CHECK(pkey.isValid());
+        CHECK_FALSE(pkey.privatePem().empty());
+        CHECK_FALSE(pkey.publicPem().empty());
+        CHECK_EQ(pkey.size(), 384u);
+        CHECK_EQ(pkey.algo(), "id-ecPublicKey");
+        CHECK_EQ(pkey.algoParam(), "secp384r1");
+        CHECK_NE(pkey.object(), nullptr);
+
+        // Reload key from PEM data - invalid passphrase
+        PrivateKey comp_key(pkey.privatePem(), "Not the good passphrase");
+        CHECK_FALSE(comp_key.isValid());
+        CHECK(comp_key.privatePem().empty());
+        CHECK(comp_key.publicPem().empty());
+        CHECK_EQ(comp_key.size(), 0);
+        CHECK_EQ(comp_key.algo(), "");
+        CHECK_EQ(comp_key.algoParam(), "");
+        CHECK_EQ(comp_key.object(), nullptr);
+
+        // Reload key from PEM data - valid passphrase
+        PrivateKey comp_key2(pkey.privatePem(), "A real good passphrase");
+        CHECK(comp_key2.isValid());
+        CHECK_EQ(comp_key2.privatePem(), pkey.privatePem());
+        CHECK_EQ(comp_key2.publicPem(), pkey.publicPem());
+        CHECK_EQ(comp_key2.size(), pkey.size());
+        CHECK_EQ(comp_key2.algo(), pkey.algo());
+        CHECK_EQ(comp_key2.algoParam(), pkey.algoParam());
+        CHECK_NE(comp_key2.object(), nullptr);
     }
 }

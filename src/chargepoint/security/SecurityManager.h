@@ -19,7 +19,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef SECURITYMANAGER_H
 #define SECURITYMANAGER_H
 
+#include "CaCertificatesDatabase.h"
 #include "CertificateSigned.h"
+#include "CpCertificatesDatabase.h"
 #include "DeleteCertificate.h"
 #include "GenericMessageHandler.h"
 #include "GetInstalledCertificateIds.h"
@@ -52,6 +54,7 @@ class WorkerThreadPool;
 namespace chargepoint
 {
 
+class IChargePoint;
 class IChargePointEventsHandler;
 
 /** @brief Handle security operations for the charge point */
@@ -72,7 +75,8 @@ class SecurityManager
                     IChargePointEventsHandler&                      events_handler,
                     ocpp::helpers::WorkerThreadPool&                worker_pool,
                     const ocpp::messages::GenericMessagesConverter& messages_converter,
-                    ocpp::messages::IRequestFifo&                   requests_fifo);
+                    ocpp::messages::IRequestFifo&                   requests_fifo,
+                    IChargePoint&                                   charge_point);
 
     /** @brief Destructor */
     virtual ~SecurityManager();
@@ -91,10 +95,29 @@ class SecurityManager
 
     /**
      * @brief Send a CSR request to sign a certificate
-     * @param csr CSR request in PEM format
+     * @param csr CSR request
      * @return true if the request has been sent and accepted, false otherwise
      */
-    bool signCertificate(const std::string& csr);
+    bool signCertificate(const ocpp::x509::CertificateRequest& csr);
+
+    /** 
+     * @brief Generate a new certificate request 
+     * @return true if the request has been sent and accepted, false otherwise 
+     */
+    bool generateCertificateRequest();
+
+    /** 
+     * @brief Get the installed Central System CA certificates as PEM encoded data
+     * @return Installed Central System CA certificates as PEM encoded data
+     */
+    std::string getCentralSystemCaCertificates();
+
+    /** 
+     * @brief Get the installed Charge Point certificate as PEM encoded data
+     * @param private_key Corresponding private key as PEM encoded data
+     * @return Installed Charge Point certificate as PEM encoded data
+     */
+    std::string getChargePointCertificate(std::string& private_key);
 
     // ISecurityManager interface
 
@@ -171,9 +194,15 @@ class SecurityManager
     ocpp::messages::IRequestFifo& m_requests_fifo;
     /** @brief Message converter for SecurityEventNotificationReq */
     ocpp::messages::IMessageConverter<ocpp::messages::SecurityEventNotificationReq>& m_security_event_req_converter;
+    /** @brief Charge Point */
+    IChargePoint& m_charge_point;
 
     /** @brief Security logs database */
     SecurityLogsDatabase m_security_logs_db;
+    /** @brief CA certificates database */
+    CaCertificatesDatabase m_ca_certificates_db;
+    /** @brief CP certificates database */
+    CpCertificatesDatabase m_cp_certificates_db;
 
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender* m_msg_sender;
@@ -182,6 +211,9 @@ class SecurityManager
     ocpp::types::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
     /** @brief Specific configuration check for parameter : SecurityProfile */
     ocpp::types::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
+
+    /** @brief Fill the hash information of a certificat */
+    void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info);
 };
 
 } // namespace chargepoint

@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef ICHARGEPOINT_H
 #define ICHARGEPOINT_H
 
+#include "CertificateRequest.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
@@ -233,10 +234,18 @@ class IChargePoint
 
     /**
      * @brief Send a CSR request to sign a certificate
-     * @param csr CSR request in PEM format
+     *        (Can be used only if InternalCertificateManagementEnabled = false)
+     * @param csr CSR request
      * @return true if the request has been sent and accepted, false otherwise
      */
-    virtual bool signCertificate(const std::string& csr) = 0;
+    virtual bool signCertificate(const ocpp::x509::CertificateRequest& csr) = 0;
+
+    /**
+     * @brief Send a CSR request to sign a certificate
+     *        (Can be used only if InternalCertificateManagementEnabled = true)
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool signCertificate() = 0;
 };
 
 } // namespace chargepoint

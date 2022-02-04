@@ -126,9 +126,6 @@ class IWebsocketClient
         /** @brief Cipher list for TLSv1.3 connections, leave empty for default
          *         (OpenSSL format, default = system dependent) */
         std::string tls13_cipher_list;
-        /** @brief ECDH curve, leave empty for default
-         *         (OpenSSL format, default = system dependent) */
-        std::string ecdh_curve;
         /** @brief Indicate if the below certificates parameters are path to PEM encoded certificate files (false)
          *         or if they contain directly PEM encoded certificates (true) */
         bool encoded_pem_certificates;

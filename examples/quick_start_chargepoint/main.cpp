@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
     ChargePointDemoConfig config(path);
 
     // Event handler
-    DefaultChargePointEventsHandler event_handler(config);
+    DefaultChargePointEventsHandler event_handler(config, working_dir);
 
     // Instanciate charge point
     std::unique_ptr<IChargePoint> charge_point = IChargePoint::create(config.stackConfig(), config.ocppConfig(), event_handler);

@@ -17,6 +17,8 @@ add_library(chargepoint STATIC
     requestfifo/RequestFifo.cpp
     requestfifo/RequestFifoManager.cpp
     reservation/ReservationManager.cpp
+    security/CaCertificatesDatabase.cpp
+    security/CpCertificatesDatabase.cpp
     security/SecurityLogsDatabase.cpp
     security/SecurityManager.cpp
     smartcharging/ProfileDatabase.cpp

@@ -17,6 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CertificateRequest.h"
+#include "PrivateKey.h"
 
 #include <iomanip>
 #include <sstream>
@@ -41,6 +42,132 @@ CertificateRequest::CertificateRequest(const std::filesystem::path& pem_file) : 
 /** @brief Constructor from PEM data */
 CertificateRequest::CertificateRequest(const std::string& pem_data) : X509Document(pem_data)
 {
+    // Read PEM infos
+    readInfos();
+}
+
+/** @brief Constructor to generate a certificate request */
+CertificateRequest::CertificateRequest(const Subject& subject, const PrivateKey& private_key, Sha2::Type sha)
+    : X509Document(std::string(""))
+{
+    // Check key validity
+    if (!private_key.isValid())
+    {
+        return;
+    }
+
+    // Create X509 request
+    X509_REQ* x509_req = X509_REQ_new();
+
+    // Set version (v3)
+    X509_REQ_set_version(x509_req, 2);
+
+    // Add subject
+    X509_NAME* subject_name = X509_NAME_new();
+    if (!subject.country.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_countryName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.country.c_str()),
+                                   subject.country.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.state.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_stateOrProvinceName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.state.c_str()),
+                                   subject.state.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.location.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_localityName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.location.c_str()),
+                                   subject.location.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.organization.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_organizationName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.organization.c_str()),
+                                   subject.organization.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.organization_unit.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_organizationalUnitName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.organization_unit.c_str()),
+                                   subject.organization_unit.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.common_name.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_commonName,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.common_name.c_str()),
+                                   subject.common_name.size(),
+                                   -1,
+                                   0);
+    }
+    if (!subject.email_address.empty())
+    {
+        X509_NAME_add_entry_by_NID(subject_name,
+                                   NID_pkcs9_emailAddress,
+                                   V_ASN1_UTF8STRING,
+                                   reinterpret_cast<const unsigned char*>(subject.email_address.c_str()),
+                                   subject.email_address.size(),
+                                   -1,
+                                   0);
+    }
+    X509_REQ_set_subject_name(x509_req, subject_name);
+    X509_NAME_free(subject_name);
+
+    // Set key
+    EVP_PKEY* pkey = const_cast<EVP_PKEY*>(reinterpret_cast<const EVP_PKEY*>(private_key.object()));
+    X509_REQ_set_pubkey(x509_req, pkey);
+
+    // Sign request
+    const EVP_MD* digest = nullptr;
+    if (sha == Sha2::Type::SHA256)
+    {
+        digest = EVP_get_digestbynid(NID_sha256);
+    }
+    else if (sha == Sha2::Type::SHA256)
+    {
+        digest = EVP_get_digestbynid(NID_sha384);
+    }
+    else
+    {
+        digest = EVP_get_digestbynid(NID_sha512);
+    }
+    X509_REQ_sign(x509_req, pkey, digest);
+
+    // Convert to PEM
+    BIO* bio = BIO_new(BIO_s_mem());
+    PEM_write_bio_X509_REQ(bio, x509_req);
+    char* bio_data = nullptr;
+    int   bio_len  = BIO_get_mem_data(bio, &bio_data);
+    m_pem.insert(0, bio_data, static_cast<size_t>(bio_len));
+    BIO_free(bio);
+
+    // Release memory
+    X509_REQ_free(x509_req);
+
     // Read PEM infos
     readInfos();
 }
