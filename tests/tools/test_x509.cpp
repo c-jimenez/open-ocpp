@@ -22,10 +22,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
+#include <openssl/bio.h>
+#include <openssl/pem.h>
+
 #include <fstream>
 #include <iostream>
 using namespace std;
 using namespace ocpp::x509;
+
+/** @brief Test CA certificate in PEM encoded file format */
+#define CA_PEM_FILE CERT_DIR "/ca.pem"
 
 /** @brief Test certificate in PEM encoded file format */
 #define CERT_PEM_FILE CERT_DIR "/cert.pem"
@@ -139,10 +145,15 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.publicKeyAlgo(), "id-ecPublicKey");
         CHECK_EQ(cert.publicKeyAlgoParam(), "prime256v1");
 
-        const std::vector<std::string>& extensions = cert.x509v3Extensions();
-        CHECK_EQ(extensions.size(), 2u);
-        CHECK_EQ(extensions[0u], "X509v3 Basic Constraints");
-        CHECK_EQ(extensions[1u], "X509v3 Subject Alternative Name");
+        const std::vector<std::string>& extensions_names = cert.x509v3ExtensionsNames();
+        CHECK_EQ(extensions_names.size(), 2u);
+        CHECK_EQ(extensions_names[0u], "X509v3 Basic Constraints");
+        CHECK_EQ(extensions_names[1u], "X509v3 Subject Alternative Name");
+
+        const Certificate::Extensions& extensions = cert.x509v3Extensions();
+        CHECK(extensions.basic_constraints.present);
+        CHECK_FALSE(extensions.basic_constraints.is_ca);
+        CHECK_EQ(extensions.basic_constraints.path_length, 0);
     }
 
     /** @brief Check fields from bundle CA certificate */
@@ -197,10 +208,15 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.publicKeyAlgo(), "id-ecPublicKey");
         CHECK_EQ(cert.publicKeyAlgoParam(), "prime256v1");
 
-        const std::vector<std::string>& extensions = cert.x509v3Extensions();
-        CHECK_EQ(extensions.size(), 2u);
-        CHECK_EQ(extensions[0u], "X509v3 Basic Constraints");
-        CHECK_EQ(extensions[1u], "X509v3 Subject Alternative Name");
+        const std::vector<std::string>& extensions_names = cert.x509v3ExtensionsNames();
+        CHECK_EQ(extensions_names.size(), 2u);
+        CHECK_EQ(extensions_names[0u], "X509v3 Basic Constraints");
+        CHECK_EQ(extensions_names[1u], "X509v3 Subject Alternative Name");
+
+        const Certificate::Extensions& extensions = cert.x509v3Extensions();
+        CHECK(extensions.basic_constraints.present);
+        CHECK(extensions.basic_constraints.is_ca);
+        CHECK_EQ(extensions.basic_constraints.path_length, 0);
     }
 
     /** @brief Check fields from bundle certificate */
@@ -257,10 +273,15 @@ TEST_SUITE("Certificate")
         CHECK_EQ(cert.publicKeyAlgo(), "id-ecPublicKey");
         CHECK_EQ(cert.publicKeyAlgoParam(), "prime256v1");
 
-        const std::vector<std::string>& extensions = cert.x509v3Extensions();
-        CHECK_EQ(extensions.size(), 2u);
-        CHECK_EQ(extensions[0u], "X509v3 Basic Constraints");
-        CHECK_EQ(extensions[1u], "X509v3 Subject Alternative Name");
+        const std::vector<std::string>& extensions_names = cert.x509v3ExtensionsNames();
+        CHECK_EQ(extensions_names.size(), 2u);
+        CHECK_EQ(extensions_names[0u], "X509v3 Basic Constraints");
+        CHECK_EQ(extensions_names[1u], "X509v3 Subject Alternative Name");
+
+        const Certificate::Extensions& extensions = cert.x509v3Extensions();
+        CHECK(extensions.basic_constraints.present);
+        CHECK_FALSE(extensions.basic_constraints.is_ca);
+        CHECK_EQ(extensions.basic_constraints.path_length, 0);
 
         if (cert.certificateChain().size() > 1u)
         {
@@ -300,6 +321,22 @@ TEST_SUITE("Certificate")
 
         // Check certificate chain validity
         CHECK(cert.verify());
+    }
+
+    TEST_CASE("Verifiy against certificate chain")
+    {
+        // Load cert
+        Certificate cert(std::filesystem::path(CERT_PEM_FILE));
+        CHECK(cert.isValid());
+
+        // Load CA
+        Certificate ca(std::filesystem::path(CA_PEM_FILE));
+        CHECK(ca.isValid());
+        CHECK(ca.isSelfSigned());
+
+        // Check certificate
+        CHECK(cert.verify(ca.certificateChain()));
+        CHECK_FALSE(ca.verify(cert.certificateChain()));
     }
 }
 
@@ -558,5 +595,125 @@ TEST_SUITE("Private key")
         CHECK_EQ(comp_key2.algo(), pkey.algo());
         CHECK_EQ(comp_key2.algoParam(), pkey.algoParam());
         CHECK_NE(comp_key2.object(), nullptr);
+    }
+}
+
+TEST_SUITE("Certificate generation")
+{
+    TEST_CASE("Certificate chain")
+    {
+        // Create new CA
+        PrivateKey pkey_ca(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "A real good passphrase");
+        CHECK(pkey_ca.isValid());
+
+        CertificateRequest::Subject subject_ca;
+        subject_ca.country           = "FR";
+        subject_ca.state             = "Savoie";
+        subject_ca.location          = "Chambery";
+        subject_ca.organization      = "Open OCPP";
+        subject_ca.organization_unit = "Unit tests";
+        subject_ca.common_name       = "Temporary CA";
+        subject_ca.email_address     = "ca.unit.test@open-ocpp.org";
+
+        CertificateRequest::Extensions ca_extensions;
+        ca_extensions.basic_constraints.present     = true;
+        ca_extensions.basic_constraints.is_ca       = true;
+        ca_extensions.basic_constraints.path_length = 3;
+        ca_extensions.subject_alternate_names.push_back("ca.open-ocpp.org");
+        ca_extensions.subject_alternate_names.push_back("10.11.12.13");
+
+        CertificateRequest req_ca(subject_ca, ca_extensions, pkey_ca);
+        CHECK(req_ca.isValid());
+
+        Certificate ca(req_ca, pkey_ca, Sha2::Type::SHA256, 7300u);
+        CHECK(ca.isValid());
+
+        const CertificateRequest::Extensions& ca_extensions_gen = ca.x509v3Extensions();
+        CHECK(ca_extensions_gen.basic_constraints.present);
+        CHECK(ca_extensions_gen.basic_constraints.is_ca);
+        CHECK_EQ(ca_extensions_gen.basic_constraints.path_length, 3);
+        CHECK_EQ(ca.subjectAltNames(), ca_extensions.subject_alternate_names);
+
+        // Create new certificate
+        PrivateKey pkey_cert(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "Another real good passphrase");
+        CHECK(pkey_cert.isValid());
+
+        CertificateRequest::Subject subject_cert;
+        subject_cert.country           = "FR";
+        subject_cert.state             = "Savoie";
+        subject_cert.location          = "Chambery";
+        subject_cert.organization      = "Open OCPP";
+        subject_cert.organization_unit = "Unit tests";
+        subject_cert.common_name       = "UT signing and verifying";
+        subject_cert.email_address     = "unit.test@open-ocpp.org";
+
+        CertificateRequest::Extensions cert_extensions;
+        cert_extensions.basic_constraints.present = true;
+        cert_extensions.basic_constraints.is_ca   = false;
+        cert_extensions.subject_alternate_names.push_back("localhost");
+        cert_extensions.subject_alternate_names.push_back("127.0.0.1");
+
+        CertificateRequest req_cert(subject_cert, cert_extensions, pkey_cert);
+        CHECK(req_cert.isValid());
+
+        Certificate cert(req_cert, ca, pkey_ca, Sha2::Type::SHA256, 7300u);
+        CHECK(cert.isValid());
+
+        CHECK(cert.verify(ca.certificateChain()));
+
+        const CertificateRequest::Extensions& cert_extensions_gen = cert.x509v3Extensions();
+        CHECK(cert_extensions_gen.basic_constraints.present);
+        CHECK_FALSE(cert_extensions_gen.basic_constraints.is_ca);
+        CHECK_EQ(cert.issuerAltNames(), ca.subjectAltNames());
+        CHECK_EQ(cert.subjectAltNames(), cert_extensions.subject_alternate_names);
+    }
+
+    TEST_CASE("Signature")
+    {
+        // Create certificate
+        PrivateKey pkey_cert(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "A real good passphrase");
+        CHECK(pkey_cert.isValid());
+
+        CertificateRequest::Subject subject_cert;
+        subject_cert.country           = "FR";
+        subject_cert.state             = "Savoie";
+        subject_cert.location          = "Chambery";
+        subject_cert.organization      = "Open OCPP";
+        subject_cert.organization_unit = "Unit tests";
+        subject_cert.common_name       = "UT signing and verifying";
+        subject_cert.email_address     = "unit.test@open-ocpp.org";
+
+        CertificateRequest::Extensions cert_extensions;
+        cert_extensions.subject_alternate_names.push_back("localhost");
+        cert_extensions.subject_alternate_names.push_back("127.0.0.1");
+
+        CertificateRequest req_cert(subject_cert, cert_extensions, pkey_cert);
+        CHECK(req_cert.isValid());
+
+        Certificate cert(req_cert, pkey_cert, Sha2::Type::SHA256, 7300u);
+        CHECK(cert.isValid());
+
+        const CertificateRequest::Extensions& cert_extensions_gen = cert.x509v3Extensions();
+        CHECK_FALSE(cert_extensions_gen.basic_constraints.present);
+        CHECK_EQ(cert.issuerAltNames(), cert.subjectAltNames());
+        CHECK_EQ(cert.subjectAltNames(), cert_extensions.subject_alternate_names);
+
+        // Sign a message with the private key
+        std::string data = "Some data buffer with not so interested data but which must signed to ensure both integrity and authenticity "
+                           "of the test input!";
+
+        std::vector<uint8_t> data_signature = pkey_cert.sign(data.c_str(), data.size());
+        CHECK_FALSE(data_signature.empty());
+
+        // Check signature with the certificate
+        CHECK(cert.verify(data_signature, data.c_str(), data.size()));
+
+        // Check modified signature
+        data_signature[24]++;
+        CHECK_FALSE(cert.verify(data_signature, data.c_str(), data.size()));
+
+        // Check restored signature with the certificate
+        data_signature[24]--;
+        CHECK(cert.verify(data_signature, data.c_str(), data.size()));
     }
 }

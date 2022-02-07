@@ -93,6 +93,8 @@ class Sha2
     const Type m_type;
     /** @brief Computation context */
     void* m_context;
+    /** @brief Hash algorithm */
+    const void* m_md;
     /** @brief Last computation result */
     std::vector<uint8_t> m_last_result;
 };

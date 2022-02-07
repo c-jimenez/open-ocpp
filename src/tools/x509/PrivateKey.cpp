@@ -17,12 +17,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "PrivateKey.h"
+#include "sign.h"
 
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 
 #include <openssl/bio.h>
+#include <openssl/evp.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
@@ -137,10 +139,32 @@ PrivateKey::PrivateKey(Type type, unsigned int param, const std::string& passphr
     }
 }
 
+/** @brief Copy constructor */
+PrivateKey::PrivateKey(const PrivateKey& copy)
+    : m_is_valid(false), m_private_pem(copy.privatePemUnencrypted()), m_public_pem(), m_size(0), m_openssl_object(nullptr)
+{
+    // Read the key
+    readKey("");
+}
+
 /** @brief Destructor */
 PrivateKey::~PrivateKey()
 {
     EVP_PKEY_free(reinterpret_cast<EVP_PKEY*>(m_openssl_object));
+}
+
+/** @brief Compute the signature of a buffer using the private key */
+std::vector<uint8_t> PrivateKey::sign(const void* buffer, size_t size, Sha2::Type sha) const
+{
+    EVP_PKEY* pkey = reinterpret_cast<EVP_PKEY*>(m_openssl_object);
+    return ocpp::x509::sign(buffer, size, sha, pkey);
+}
+
+/** @brief Compute the signature of a file using the private key */
+std::vector<uint8_t> PrivateKey::sign(const std::string& filepath, Sha2::Type sha) const
+{
+    EVP_PKEY* pkey = reinterpret_cast<EVP_PKEY*>(m_openssl_object);
+    return ocpp::x509::sign(filepath, sha, pkey);
 }
 
 /** @brief Save the private key part as a PEM encoded file */

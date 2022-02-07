@@ -36,7 +36,7 @@ namespace x509
 {
 
 /** @brief Constructor from PEM file */
-X509Document::X509Document(const std::filesystem::path& pem_file) : m_is_valid(false), m_pem()
+X509Document::X509Document(const std::filesystem::path& pem_file) : m_is_valid(false), m_pem(), m_openssl_object(nullptr)
 {
     // Open PEM file
     std::fstream file(pem_file, file.in | file.binary | file.ate);
@@ -51,7 +51,7 @@ X509Document::X509Document(const std::filesystem::path& pem_file) : m_is_valid(f
 }
 
 /** @brief Constructor from PEM data */
-X509Document::X509Document(const std::string& pem_data) : m_is_valid(false), m_pem(pem_data) { }
+X509Document::X509Document(const std::string& pem_data) : m_is_valid(false), m_pem(pem_data), m_openssl_object(nullptr) { }
 
 /** @brief Destructor */
 X509Document::~X509Document() { }
@@ -124,8 +124,11 @@ std::string X509Document::convertAsn1String(const void* pasn1_string)
     {
         char* c_str = nullptr;
         ASN1_STRING_to_UTF8((unsigned char**)&c_str, asn1_string);
-        str = c_str;
-        OPENSSL_free(c_str);
+        if (c_str)
+        {
+            str = c_str;
+            OPENSSL_free(c_str);
+        }
     }
     else
     {

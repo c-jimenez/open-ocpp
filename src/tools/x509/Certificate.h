@@ -19,12 +19,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CERTIFICATE_H
 #define CERTIFICATE_H
 
+#include "Sha2.h"
 #include "X509Document.h"
 
 namespace ocpp
 {
 namespace x509
 {
+
+class PrivateKey;
+class CertificateRequest;
 
 /** @brief Helper class for certificate manipulation */
 class Certificate : public X509Document
@@ -42,6 +46,35 @@ class Certificate : public X509Document
      */
     Certificate(const std::string& pem_data);
 
+    /**
+     * @brief Constructor from certificate request and signing certificate
+     * @param certificate_request Certificate request to be signed
+     * @param signing_certificate Certificate which will sign the request
+     * @param private_key Private key of the certificate which will sign the request
+     * @param sha Secure hash algorithm to use to sign the request 
+     * @param days New certficate validity in days
+     */
+    Certificate(const CertificateRequest& certificate_request,
+                const Certificate&        signing_certificate,
+                const PrivateKey&         private_key,
+                Sha2::Type                sha,
+                unsigned int              days);
+
+    /**
+     * @brief Constructor for a self-signed certificate from a certificate request
+     * @param certificate_request Certificate request to be signed
+     * @param private_key Private key of the certificate request
+     * @param sha Secure hash algorithm to use to sign the request 
+     * @param days New certficate validity in days
+     */
+    Certificate(const CertificateRequest& certificate_request, const PrivateKey& private_key, Sha2::Type sha, unsigned int days);
+
+    /**
+     * @brief Copy constructor
+     * @param copy Certificate to copy
+     */
+    Certificate(const Certificate& copy);
+
     /** @brief Destructor */
     virtual ~Certificate();
 
@@ -52,6 +85,34 @@ class Certificate : public X509Document
      * @return true if the PEM certificate chain is valid, false otherwise
      */
     bool verify() const;
+
+    /**
+     * @brief Verify the certificate signature against a certificate chain
+     *        The certificate chain must be ordered by the sub-CAs
+     *        if they exists and finally the root-CA
+     * @param ca_chain Certificate chain to use
+     * @return true if certificate signature is valid, false otherwise
+     */
+    bool verify(const std::vector<Certificate>& ca_chain) const;
+
+    /** 
+     * @brief Verify the signature of a buffer using the certificate's public key
+     * @param signature Expected signature
+     * @param buffer Buffer to use
+     * @param size Size in bytes of the buffer
+     * @param sha Secure hash algorithm to use
+     * @return true is the signature is valid, false otherwise
+     */
+    bool verify(const std::vector<uint8_t>& signature, const void* buffer, size_t size, Sha2::Type sha = Sha2::Type::SHA256);
+
+    /** 
+     * @brief Verify the signature of a file using the certificate's public key
+     * @param signature Expected signature
+     * @param filepath Path to the file
+     * @param sha Secure hash algorithm to use
+     * @return true is the signature is valid, false otherwise
+     */
+    bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, Sha2::Type sha);
 
     /** 
      * @brief Get the PEM encoded data representation of each certificate composing the certificate chain (if any) 
@@ -110,7 +171,7 @@ class Certificate : public X509Document
      * @brief Get the issuer alternate names
      * @return Issuer alternate names
      */
-    const std::vector<std::string>& issuerAltNames() const { return m_issuer_alternate_names; }
+    const std::vector<std::string>& issuerAltNames() const { return m_x509v3_extensions.issuer_alternate_names; }
 
     /** 
      * @brief Indicate if it is a self-signed certificate 
@@ -138,18 +199,21 @@ class Certificate : public X509Document
     Subject m_issuer;
     /** @brief Issuer string */
     std::string m_issuer_string;
-    /** @brief Issuer alternate names */
-    std::vector<std::string> m_issuer_alternate_names;
     /** @brief Indicate if it is a self-signed certificate */
     bool m_is_self_signed;
 
     /** @brief Extract all the PEM certificates in the certificate chain */
     void extractPemChain();
+    /** @brief Converts a certificate request to a certificate */
+    void convertCertificateRequest(void* request, const void* issuer, void* key, Sha2::Type sha, unsigned int days);
 
     /** @brief Load OpenSSL X509 certificate structure from a PEM encoded data string */
     static void* loadX509(const std::string& pem_data);
     /** @brief Read X509 informations stored inside a certificate */
     static void readInfos(Certificate& certificate);
+
+    /** @brief Verify a certificate against a chain of certificates */
+    static bool verify(const Certificate& certificate, const std::vector<Certificate>& certificate_chain, size_t start_index);
 };
 
 } // namespace x509
