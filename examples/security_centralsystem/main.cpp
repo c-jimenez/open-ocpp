@@ -22,11 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "Base64.h"
 #include "CentralSystemDemoConfig.h"
 #include "CentralSystemEventsHandler.h"
+#include "Certificate.h"
+#include "CertificateRequest.h"
 #include "ChargePointDatabase.h"
 #include "Database.h"
 #include "ICentralSystem.h"
+#include "PrivateKey.h"
 #include "TimerPool.h"
 #include "WorkerThreadPool.h"
 
@@ -39,8 +43,18 @@ using namespace ocpp::centralsystem;
 using namespace ocpp::types;
 using namespace ocpp::x509;
 
+/** @brief Passphrase for the certificates' private keys */
+static constexpr const char* PRIVATE_KEYS_PASSPHRASE =
+    "It would have been better to have a different passphrase for each certificate...but is simplier for the example!";
+
 /** @brief Indicate if a change of configuration has been accepted by the charge point */
 static bool isConfigurationChangeAccepted(ConfigurationStatus status);
+
+/** @brief Create the certificates for the signed update firmware procedure */
+static void createSignedUpdateFirmwareCertificates(std::filesystem::path fw_update_ca,
+                                                   std::filesystem::path fw_update_ca_key,
+                                                   std::filesystem::path fw_update_cert,
+                                                   std::filesystem::path fw_update_cert_key);
 
 /** @brief Entry point */
 int main(int argc, char* argv[])
@@ -98,6 +112,27 @@ int main(int argc, char* argv[])
 
     std::cout << "Starting central system with :" << std::endl;
     std::cout << "  - working_dir = " << working_dir << std::endl;
+
+    // Generate certificates for signed firmware update
+    std::filesystem::path fw_update_ca(working_dir);
+    fw_update_ca /= "fw_update_ca.pem";
+    std::filesystem::path fw_update_ca_key(working_dir);
+    fw_update_ca_key /= "fw_update_ca.key";
+    std::filesystem::path fw_update_cert(working_dir);
+    fw_update_cert /= "fw_update_cert.pem";
+    std::filesystem::path fw_update_cert_key(working_dir);
+    fw_update_cert_key /= "fw_update_cert_key.key";
+    if (reset_all)
+    {
+        std::filesystem::remove(fw_update_ca);
+        std::filesystem::remove(fw_update_ca_key);
+        std::filesystem::remove(fw_update_cert);
+        std::filesystem::remove(fw_update_cert_key);
+    }
+    if (!std::filesystem::exists(fw_update_ca))
+    {
+        createSignedUpdateFirmwareCertificates(fw_update_ca, fw_update_ca_key, fw_update_cert, fw_update_cert_key);
+    }
 
     // Database for persistency
     static constexpr const char* DATABASE_NAME = "security_centralsystem.db";
@@ -207,7 +242,7 @@ int main(int argc, char* argv[])
                 // Configure for security profile 2 : TLS + HTTP Basic Authentication
                 std::cout << "[" << chargepoint_id << "] - Configuring security profile 2" << std::endl;
 
-                // Load server CA certificate
+                // Load server CA certificates
                 Certificate server_ca_certificate(std::filesystem::path(config_p2.stackConfig().tlsServerCertificateCa()));
 
                 // Get installed certificates
@@ -370,6 +405,55 @@ int main(int argc, char* argv[])
                 {
                     std::cout << "[" << chargepoint_id << "] - Unable to retrieve security logs" << std::endl;
                 }
+
+                // Get installed manufacturer certificates
+                std::vector<CertificateHashDataType> certificates;
+                if (chargepoint->getInstalledCertificateIds(CertificateUseEnumType::ManufacturerRootCertificate, certificates))
+                {
+                    // Delete all installed certificates
+                    std::cout << "[" << chargepoint_id << "] - " << certificates.size() << " installed CA certificate(s)" << std::endl;
+                    for (const CertificateHashDataType& cert : certificates)
+                    {
+                        if (chargepoint->deleteCertificate(cert) != DeleteCertificateStatusEnumType::Accepted)
+                        {
+                            std::cout << "[" << chargepoint_id << "] - Unable to delete CA certificate : " << cert.serialNumber.str()
+                                      << std::endl;
+                        }
+                    }
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to retrieve the list of installed CA certificates" << std::endl;
+                }
+
+                // Install manufacturer CA certificate
+                Certificate               ca_cert(fw_update_ca);
+                CertificateStatusEnumType install_status =
+                    chargepoint->installCertificate(CertificateUseEnumType::ManufacturerRootCertificate, ca_cert);
+                if (install_status == CertificateStatusEnumType::Accepted)
+                {
+                    // Get the signing certificate and its private key
+                    Certificate signing_cert(fw_update_cert);
+                    PrivateKey  signing_cert_key(fw_update_cert_key, PRIVATE_KEYS_PASSPHRASE);
+
+                    // Sign the "firmware" => use security_chargepoint binary
+                    std::vector<uint8_t> signature_bytes = signing_cert_key.sign("security_chargepoint");
+                    std::string          signature       = base64::encode(&signature_bytes[0], signature_bytes.size());
+
+                    // Start a signed firmware update
+                    chargepoint->signedUpdateFirmware(1234,
+                                                      "ftp://localhost/security_chargepoint",
+                                                      Optional<unsigned int>(),
+                                                      DateTime::now(),
+                                                      Optional<std::chrono::seconds>(),
+                                                      DateTime::now(),
+                                                      signing_cert,
+                                                      signature);
+                }
+                else
+                {
+                    std::cout << "[" << chargepoint_id << "] - Unable to install the manufacturer certificate" << std::endl;
+                }
             }
             break;
 
@@ -388,4 +472,60 @@ int main(int argc, char* argv[])
 static bool isConfigurationChangeAccepted(ConfigurationStatus status)
 {
     return ((status == ConfigurationStatus::Accepted) || (status == ConfigurationStatus::RebootRequired));
+}
+
+/** @brief Create the certificates for the signed update firmware procedure */
+static void createSignedUpdateFirmwareCertificates(std::filesystem::path fw_update_ca,
+                                                   std::filesystem::path fw_update_ca_key,
+                                                   std::filesystem::path fw_update_cert,
+                                                   std::filesystem::path fw_update_cert_key)
+{
+    // CA certificate
+    PrivateKey ca_key(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, PRIVATE_KEYS_PASSPHRASE);
+    ca_key.privateToFile(fw_update_ca_key);
+
+    CertificateRequest::Subject ca_subject;
+    ca_subject.country           = "FR";
+    ca_subject.state             = "Savoie";
+    ca_subject.location          = "Chambery";
+    ca_subject.organization      = "Open OCPP";
+    ca_subject.organization_unit = "Examples";
+    ca_subject.common_name       = "Signed firmware update CA";
+    ca_subject.email_address     = "ca.examples@open-ocpp.org";
+
+    CertificateRequest::Extensions ca_extensions;
+    ca_extensions.basic_constraints.present     = true;
+    ca_extensions.basic_constraints.is_ca       = true;
+    ca_extensions.basic_constraints.path_length = 1u;
+    ca_extensions.subject_alternate_names.push_back("localhost");
+    ca_extensions.subject_alternate_names.push_back("127.0.0.1");
+
+    CertificateRequest ca_req(ca_subject, ca_extensions, ca_key);
+
+    Certificate ca_cert(ca_req, ca_key, Sha2::Type::SHA256, 7300u);
+    ca_cert.toFile(fw_update_ca);
+
+    // Signing certificate
+    PrivateKey signing_cert_key(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, PRIVATE_KEYS_PASSPHRASE);
+    signing_cert_key.privateToFile(fw_update_cert_key);
+
+    CertificateRequest::Subject signing_cert_subject;
+    signing_cert_subject.country           = "FR";
+    signing_cert_subject.state             = "Savoie";
+    signing_cert_subject.location          = "Chambery";
+    signing_cert_subject.organization      = "Open OCPP";
+    signing_cert_subject.organization_unit = "Examples";
+    signing_cert_subject.common_name       = "Signed firmware update signing certificate";
+    signing_cert_subject.email_address     = "signing.examples@open-ocpp.org";
+
+    CertificateRequest::Extensions signing_cert_extensions;
+    signing_cert_extensions.basic_constraints.present = true;
+    signing_cert_extensions.basic_constraints.is_ca   = false;
+    signing_cert_extensions.subject_alternate_names.push_back("localhost");
+    signing_cert_extensions.subject_alternate_names.push_back("127.0.0.1");
+
+    CertificateRequest signing_cert_req(signing_cert_subject, signing_cert_extensions, signing_cert_key);
+
+    Certificate signing_cert(signing_cert_req, ca_cert, ca_key, Sha2::Type::SHA256, 7300u);
+    signing_cert.toFile(fw_update_cert);
 }
