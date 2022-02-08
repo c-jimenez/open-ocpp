@@ -2,6 +2,7 @@
 # X509 library
 include_directories(impl)
 add_library(x509 STATIC
+    Base64.cpp
     Certificate.cpp
     CertificateRequest.cpp
     PrivateKey.cpp

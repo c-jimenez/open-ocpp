@@ -16,6 +16,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "Base64.h"
 #include "Certificate.h"
 #include "CertificateRequest.h"
 #include "PrivateKey.h"
@@ -715,5 +716,46 @@ TEST_SUITE("Certificate generation")
         // Check restored signature with the certificate
         data_signature[24]--;
         CHECK(cert.verify(data_signature, data.c_str(), data.size()));
+    }
+}
+
+TEST_SUITE("Base64")
+{
+    TEST_CASE("Encode/Decode nominal")
+    {
+        // Data to encode
+        const std::string input_data =
+            "This string could have been some binary data but it is way more easier to do it with human readable data instead :) !";
+
+        // Expected result
+        const std::string expected_result = "VGhpcyBzdHJpbmcgY291bGQgaGF2ZSBiZWVuIHNvbWUgYmluYXJ5IGRhdGEgYnV0IGl0IGlzIHdheSBtb3JlIGVhc2llci"
+                                            "B0byBkbyBpdCB3aXRoIGh1bWFuIHJlYWRhYmxlIGRhdGEgaW5zdGVhZCA6KSAh";
+
+        // Check encoding
+        CHECK_EQ(ocpp::x509::base64::encode(input_data.c_str(), input_data.size()), expected_result);
+
+        // Check decoding
+        std::vector<uint8_t> decoded_data = ocpp::x509::base64::decode(expected_result);
+        std::string          decoded_data_str(reinterpret_cast<char*>(&decoded_data[0]), decoded_data.size());
+        CHECK_EQ(decoded_data_str, input_data);
+    }
+
+    TEST_CASE("Encode/Decode limits")
+    {
+        // Empty buffer to encode
+        std::string encoded_null = ocpp::x509::base64::encode("hjkl", 0u);
+        CHECK(encoded_null.empty());
+
+        // NULL buffer to encode
+        encoded_null = ocpp::x509::base64::encode(nullptr, 10u);
+        CHECK(encoded_null.empty());
+
+        // Empty buffer to decode
+        std::vector<uint8_t> decoded_null = ocpp::x509::base64::decode("");
+        CHECK(decoded_null.empty());
+
+        // Invalid input data to decode
+        decoded_null = ocpp::x509::base64::decode("VGh");
+        CHECK(decoded_null.empty());
     }
 }
