@@ -25,7 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetLog.h"
 #include "ITriggerMessageManager.h"
 #include "Reset.h"
-#include "SignedFirmwareUpdate.h"
+#include "SignedUpdateFirmware.h"
 #include "UnlockConnector.h"
 #include "UpdateFirmware.h"
 
@@ -72,7 +72,7 @@ class MaintenanceManager
       public ocpp::messages::GenericMessageHandler<ocpp::messages::UpdateFirmwareReq, ocpp::messages::UpdateFirmwareConf>,
       // Security extensions
       public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLogReq, ocpp::messages::GetLogConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignedFirmwareUpdateReq, ocpp::messages::SignedFirmwareUpdateConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignedUpdateFirmwareReq, ocpp::messages::SignedUpdateFirmwareConf>
 {
   public:
     /** @brief Constructor */
@@ -103,7 +103,7 @@ class MaintenanceManager
      * @param status Installation status (see FirmwareStatusEnumType documentation)
      * @return true if the notification has been sent, false otherwise
      */
-    bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status);
+    bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status);
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
@@ -172,8 +172,8 @@ class MaintenanceManager
      *                                                                                const char*& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::SignedFirmwareUpdateReq& request,
-                       ocpp::messages::SignedFirmwareUpdateConf&      response,
+    bool handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
+                       ocpp::messages::SignedUpdateFirmwareConf&      response,
                        const char*&                                   error_code,
                        std::string&                                   error_message) override;
 
@@ -242,7 +242,7 @@ class MaintenanceManager
     void sendLogStatusNotification();
 
     /** @brief Process the signed firmware update */
-    void processSignedFirmwareUpdate(std::string                                  location,
+    void processSignedUpdateFirmware(std::string                                  location,
                                      ocpp::types::Optional<unsigned int>          retries,
                                      ocpp::types::Optional<unsigned int>          retry_interval,
                                      ocpp::types::DateTime                        retrieve_date,

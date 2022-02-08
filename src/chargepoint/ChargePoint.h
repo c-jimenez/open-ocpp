@@ -171,8 +171,8 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::signCertificate() */
     bool signCertificate() override;
 
-    /** @copydoc bool IChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType) */
-    bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status) override;
+    /** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType) */
+    bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) override;
 
     // RpcClient::IListener interface
 

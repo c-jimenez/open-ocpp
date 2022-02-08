@@ -720,8 +720,8 @@ bool ChargePoint::signCertificate()
     return ret;
 }
 
-/** @copydoc bool IChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType) */
-bool ChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status)
+/** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType) */
+bool ChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status)
 {
     bool ret = false;
 
@@ -729,7 +729,7 @@ bool ChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEn
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
-            ret = m_maintenance_manager->notifySignedFirmwareUpdateStatus(status);
+            ret = m_maintenance_manager->notifySignedUpdateFirmwareStatus(status);
         }
         else
         {

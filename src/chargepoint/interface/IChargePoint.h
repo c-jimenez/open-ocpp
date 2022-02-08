@@ -252,7 +252,7 @@ class IChargePoint
      * @param status Installation status (see FirmwareStatusEnumType documentation)
      * @return true if the notification has been sent, false otherwise
      */
-    virtual bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status) = 0;
+    virtual bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) = 0;
 };
 
 } // namespace chargepoint

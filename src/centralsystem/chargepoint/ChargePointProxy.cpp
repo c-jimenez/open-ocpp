@@ -41,7 +41,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Reset.h"
 #include "SendLocalList.h"
 #include "SetChargingProfile.h"
-#include "SignedFirmwareUpdate.h"
+#include "SignedUpdateFirmware.h"
 #include "TriggerMessage.h"
 #include "UnlockConnector.h"
 #include "UpdateFirmware.h"
@@ -1003,7 +1003,7 @@ ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware
              << " - signingCertificate subject = " << signing_certificate.subjectString() << " - signature = " << signature;
 
     // Prepare request
-    SignedFirmwareUpdateReq req;
+    SignedUpdateFirmwareReq req;
     req.requestId = request_id;
     req.retries   = retries;
     if (retry_interval.isSet())
@@ -1017,8 +1017,8 @@ ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware
     req.firmware.signature.assign(signature);
 
     // Send request
-    SignedFirmwareUpdateConf resp;
-    CallResult               res = m_msg_sender.call(SIGNED_FIRMWARE_UPDATE_ACTION, req, resp);
+    SignedUpdateFirmwareConf resp;
+    CallResult               res = m_msg_sender.call(SIGNED_UPDATE_FIRMWARE_ACTION, req, resp);
     if (res == CallResult::Ok)
     {
         ret = resp.status;

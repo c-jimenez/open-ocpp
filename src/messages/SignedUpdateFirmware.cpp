@@ -16,7 +16,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SignedFirmwareUpdate.h"
+#include "SignedUpdateFirmware.h"
 #include "IRpc.h"
 #include "Url.h"
 
@@ -40,8 +40,8 @@ namespace messages
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool SignedFirmwareUpdateReqConverter::fromJson(const rapidjson::Value&  json,
-                                                SignedFirmwareUpdateReq& data,
+bool SignedUpdateFirmwareReqConverter::fromJson(const rapidjson::Value&  json,
+                                                SignedUpdateFirmwareReq& data,
                                                 const char*&             error_code,
                                                 std::string&             error_message)
 {
@@ -66,7 +66,7 @@ bool SignedFirmwareUpdateReqConverter::fromJson(const rapidjson::Value&  json,
 }
 
 /** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
-bool SignedFirmwareUpdateReqConverter::toJson(const SignedFirmwareUpdateReq& data, rapidjson::Document& json)
+bool SignedUpdateFirmwareReqConverter::toJson(const SignedUpdateFirmwareReq& data, rapidjson::Document& json)
 {
     fill(json, "requestId", data.requestId);
     fill(json, "retries", data.retries);
@@ -84,8 +84,8 @@ bool SignedFirmwareUpdateReqConverter::toJson(const SignedFirmwareUpdateReq& dat
 }
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool SignedFirmwareUpdateConfConverter::fromJson(const rapidjson::Value&   json,
-                                                 SignedFirmwareUpdateConf& data,
+bool SignedUpdateFirmwareConfConverter::fromJson(const rapidjson::Value&   json,
+                                                 SignedUpdateFirmwareConf& data,
                                                  const char*&              error_code,
                                                  std::string&              error_message)
 {
@@ -96,7 +96,7 @@ bool SignedFirmwareUpdateConfConverter::fromJson(const rapidjson::Value&   json,
 }
 
 /** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
-bool SignedFirmwareUpdateConfConverter::toJson(const SignedFirmwareUpdateConf& data, rapidjson::Document& json)
+bool SignedUpdateFirmwareConfConverter::toJson(const SignedUpdateFirmwareConf& data, rapidjson::Document& json)
 {
     fill(json, "status", UpdateFirmwareStatusEnumTypeHelper.toString(data.status));
     return true;

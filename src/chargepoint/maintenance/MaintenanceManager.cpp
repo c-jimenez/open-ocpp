@@ -61,7 +61,7 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
       GenericMessageHandler<GetDiagnosticsReq, GetDiagnosticsConf>(GET_DIAGNOSTICS_ACTION, messages_converter),
       GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>(UPDATE_FIRMWARE_ACTION, messages_converter),
       GenericMessageHandler<GetLogReq, GetLogConf>(GET_LOG_ACTION, messages_converter),
-      GenericMessageHandler<SignedFirmwareUpdateReq, SignedFirmwareUpdateConf>(SIGNED_FIRMWARE_UPDATE_ACTION, messages_converter),
+      GenericMessageHandler<SignedUpdateFirmwareReq, SignedUpdateFirmwareConf>(SIGNED_UPDATE_FIRMWARE_ACTION, messages_converter),
       m_stack_config(stack_config),
       m_internal_config(internal_config),
       m_events_handler(events_handler),
@@ -86,8 +86,8 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
     msg_dispatcher.registerHandler(UPDATE_FIRMWARE_ACTION,
                                    *dynamic_cast<GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>*>(this));
     msg_dispatcher.registerHandler(GET_LOG_ACTION, *dynamic_cast<GenericMessageHandler<GetLogReq, GetLogConf>*>(this));
-    msg_dispatcher.registerHandler(SIGNED_FIRMWARE_UPDATE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SignedFirmwareUpdateReq, SignedFirmwareUpdateConf>*>(this));
+    msg_dispatcher.registerHandler(SIGNED_UPDATE_FIRMWARE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SignedUpdateFirmwareReq, SignedUpdateFirmwareConf>*>(this));
     trigger_manager.registerHandler(MessageTrigger::DiagnosticsStatusNotification, *this);
     trigger_manager.registerHandler(MessageTrigger::FirmwareStatusNotification, *this);
     trigger_manager.registerHandler(MessageTriggerEnumType::LogStatusNotification, *this);
@@ -146,7 +146,7 @@ bool MaintenanceManager::notifyFirmwareUpdateStatus(bool success)
 }
 
 /** @brief Notify the end of a signed firmware update operation */
-bool MaintenanceManager::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status)
+bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status)
 {
     // Update status
     m_signed_firmware_status = status;
@@ -465,8 +465,8 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
  *                                                                                const char*& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::SignedFirmwareUpdateReq& request,
-                                       ocpp::messages::SignedFirmwareUpdateConf&      response,
+bool MaintenanceManager::handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
+                                       ocpp::messages::SignedUpdateFirmwareConf&      response,
                                        const char*&                                   error_code,
                                        std::string&                                   error_message)
 {
@@ -517,7 +517,7 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::SignedFirmwareUpdat
                 // Create a separate thread since the operation can be time consuming
                 m_firmware_request_id = request.requestId;
                 m_internal_config.setKey(SIGNED_FW_UPDATE_ID_KEY, std::to_string(request.requestId));
-                m_firmware_thread = new std::thread(std::bind(&MaintenanceManager::processSignedFirmwareUpdate,
+                m_firmware_thread = new std::thread(std::bind(&MaintenanceManager::processSignedUpdateFirmware,
                                                               this,
                                                               request.firmware.location,
                                                               request.retries,
@@ -812,7 +812,7 @@ void MaintenanceManager::sendLogStatusNotification()
 }
 
 /** @brief Process the signed firmware update */
-void MaintenanceManager::processSignedFirmwareUpdate(std::string                                  location,
+void MaintenanceManager::processSignedUpdateFirmware(std::string                                  location,
                                                      ocpp::types::Optional<unsigned int>          retries,
                                                      ocpp::types::Optional<unsigned int>          retry_interval,
                                                      ocpp::types::DateTime                        retrieve_date,
@@ -857,7 +857,7 @@ void MaintenanceManager::processSignedFirmwareUpdate(std::string                
             nb_retries--;
             if (nb_retries != 0)
             {
-                LOG_WARNING << "SignedFirmwareUpdate : download failed (" << nb_retries << " retrie(s) left - next retry in "
+                LOG_WARNING << "SignedUpdateFirmware : download failed (" << nb_retries << " retrie(s) left - next retry in "
                             << retry_interval_s.count() << "s)";
                 std::this_thread::sleep_for(retry_interval_s);
             }
@@ -869,12 +869,12 @@ void MaintenanceManager::processSignedFirmwareUpdate(std::string                
     if (success)
     {
         m_signed_firmware_status = FirmwareStatusEnumType::Downloaded;
-        LOG_INFO << "SignedFirmwareUpdate download : success";
+        LOG_INFO << "SignedUpdateFirmware download : success";
     }
     else
     {
         m_signed_firmware_status = FirmwareStatusEnumType::DownloadFailed;
-        LOG_ERROR << "SignedFirmwareUpdate download : failed";
+        LOG_ERROR << "SignedUpdateFirmware download : failed";
     }
     sendSignedFirmwareStatusNotification();
 
@@ -888,12 +888,12 @@ void MaintenanceManager::processSignedFirmwareUpdate(std::string                
         if (success)
         {
             m_signed_firmware_status = FirmwareStatusEnumType::SignatureVerified;
-            LOG_INFO << "SignedFirmwareUpdate verify : success";
+            LOG_INFO << "SignedUpdateFirmware verify : success";
         }
         else
         {
             m_signed_firmware_status = FirmwareStatusEnumType::InvalidSignature;
-            LOG_ERROR << "SignedFirmwareUpdate verify : failed";
+            LOG_ERROR << "SignedUpdateFirmware verify : failed";
         }
         sendSignedFirmwareStatusNotification();
 
@@ -930,7 +930,7 @@ void MaintenanceManager::processSignedFirmwareUpdate(std::string                
 /** @brief Send a signed firmware status notification */
 bool MaintenanceManager::sendSignedFirmwareStatusNotification()
 {
-    LOG_INFO << "SignedFirmwareUpdate status : " << FirmwareStatusEnumTypeHelper.toString(m_signed_firmware_status);
+    LOG_INFO << "SignedUpdateFirmware status : " << FirmwareStatusEnumTypeHelper.toString(m_signed_firmware_status);
 
     SignedFirmwareStatusNotificationReq  status_req;
     SignedFirmwareStatusNotificationConf status_conf;

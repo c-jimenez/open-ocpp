@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SIGNEDFIRMWAREUPDATE_H
-#define SIGNEDFIRMWAREUPDATE_H
+#ifndef SIGNEDUPDATEFIRMWARE_H
+#define SIGNEDUPDATEFIRMWARE_H
 
 #include "Enums.h"
 #include "FirmwareType.h"
@@ -29,11 +29,11 @@ namespace ocpp
 namespace messages
 {
 
-/** @brief Action corresponding to the SignedFirmwareUpdate messages */
-static const std::string SIGNED_FIRMWARE_UPDATE_ACTION = "SignedFirmwareUpdate";
+/** @brief Action corresponding to the SignedUpdateFirmware messages */
+static const std::string SIGNED_UPDATE_FIRMWARE_ACTION = "SignedUpdateFirmware";
 
-/** @brief SignedFirmwareUpdate.req message */
-struct SignedFirmwareUpdateReq
+/** @brief SignedUpdateFirmware.req message */
+struct SignedUpdateFirmwareReq
 {
     /** @brief Optional. This specifies how many times Charge Point must try to download the
                firmware before giving up. If this field is not present, it is left to Charge Point to
@@ -50,17 +50,17 @@ struct SignedFirmwareUpdateReq
     ocpp::types::FirmwareType firmware;
 };
 
-/** @brief SignedFirmwareUpdate.conf message */
-struct SignedFirmwareUpdateConf
+/** @brief SignedUpdateFirmware.conf message */
+struct SignedUpdateFirmwareConf
 {
     /** @brief Required. This field indicates whether the Charge Point was able to accept the request */
     ocpp::types::UpdateFirmwareStatusEnumType status;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SignedFirmwareUpdate)
+MESSAGE_CONVERTERS(SignedUpdateFirmware)
 
 } // namespace messages
 } // namespace ocpp
 
-#endif // SIGNEDFIRMWAREUPDATE_H
+#endif // SIGNEDUPDATEFIRMWARE_H
