@@ -291,6 +291,7 @@ bool ChargePoint::start()
         m_data_transfer_manager =
             std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
         m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
+                                                                     m_internal_config,
                                                                      m_events_handler,
                                                                      *m_worker_pool.get(),
                                                                      m_messages_converter,
@@ -645,19 +646,19 @@ bool ChargePoint::notifyFirmwareUpdateStatus(bool success)
 
 // Security extensions
 
-/** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
+/** @copydoc bool IChargePoint::logSecurityEvent(const std::string&, const std::string&, bool) */
 bool ChargePoint::logSecurityEvent(const std::string& type, const std::string& message, bool critical)
 {
     return m_security_manager.logSecurityEvent(type, message, critical);
 }
 
-/** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+/** @copydoc bool IChargePoint::clearSecurityEvents() */
 bool ChargePoint::clearSecurityEvents()
 {
     return m_security_manager.clearSecurityEvents();
 }
 
-/** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const ocpp::x509::CertificateRequest&) */
+/** @copydoc bool IChargePoint::signCertificate(const ocpp::x509::CertificateRequest&) */
 bool ChargePoint::signCertificate(const ocpp::x509::CertificateRequest& csr)
 {
     bool ret = false;
@@ -688,7 +689,7 @@ bool ChargePoint::signCertificate(const ocpp::x509::CertificateRequest& csr)
     return ret;
 }
 
-/** @copydoc bool IChargePoint::ISecurityManager::signCertificate() */
+/** @copydoc bool IChargePoint::signCertificate() */
 bool ChargePoint::signCertificate()
 {
     bool ret = false;
@@ -705,6 +706,30 @@ bool ChargePoint::signCertificate()
             {
                 LOG_ERROR << "Not allowed when internal certificate management is disabled";
             }
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool IChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType) */
+bool ChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status)
+{
+    bool ret = false;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_maintenance_manager->notifySignedFirmwareUpdateStatus(status);
         }
         else
         {
@@ -994,7 +1019,7 @@ bool ChargePoint::doConnect()
         else
         {
             // Use internal certificates
-            credentials.server_certificate_ca = m_security_manager.getCentralSystemCaCertificates();
+            credentials.server_certificate_ca = m_security_manager.getCaCertificates(CertificateUseEnumType::CentralSystemRootCertificate);
             if (security_profile == 3)
             {
                 std::string encrypted_private_key;

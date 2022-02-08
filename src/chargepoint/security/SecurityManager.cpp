@@ -269,12 +269,6 @@ bool SecurityManager::generateCertificateRequest()
     return signCertificate(certificate_request);
 }
 
-/** @brief Get the installed Central System CA certificates as PEM encoded data */
-std::string SecurityManager::getCentralSystemCaCertificates()
-{
-    return m_ca_certificates_db.getCertificateListPem(CertificateUseEnumType::CentralSystemRootCertificate);
-}
-
 /** @brief Get the installed Charge Point certificate as PEM encoded data */
 std::string SecurityManager::getChargePointCertificate(std::string& private_key)
 {
@@ -364,6 +358,12 @@ bool SecurityManager::exportSecurityEvents(const std::string&                   
                                            const ocpp::types::Optional<ocpp::types::DateTime>& stop_time)
 {
     return m_security_logs_db.exportSecurityEvents(filepath, start_time, stop_time);
+}
+
+/** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType) */
+std::string SecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType type)
+{
+    return m_ca_certificates_db.getCertificateListPem(type);
 }
 
 // ITriggerMessageManager::ITriggerMessageHandler interface

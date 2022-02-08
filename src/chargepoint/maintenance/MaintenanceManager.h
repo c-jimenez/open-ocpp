@@ -25,6 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetLog.h"
 #include "ITriggerMessageManager.h"
 #include "Reset.h"
+#include "SignedFirmwareUpdate.h"
 #include "UnlockConnector.h"
 #include "UpdateFirmware.h"
 
@@ -36,6 +37,7 @@ namespace ocpp
 namespace config
 {
 class IChargePointConfig;
+class IInternalConfigManager;
 } // namespace config
 namespace messages
 {
@@ -47,6 +49,10 @@ namespace helpers
 {
 class WorkerThreadPool;
 } // namespace helpers
+namespace x509
+{
+class Certificate;
+} // namespace x509
 
 // Main namespace
 namespace chargepoint
@@ -65,11 +71,13 @@ class MaintenanceManager
       public ocpp::messages::GenericMessageHandler<ocpp::messages::GetDiagnosticsReq, ocpp::messages::GetDiagnosticsConf>,
       public ocpp::messages::GenericMessageHandler<ocpp::messages::UpdateFirmwareReq, ocpp::messages::UpdateFirmwareConf>,
       // Security extensions
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLogReq, ocpp::messages::GetLogConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLogReq, ocpp::messages::GetLogConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignedFirmwareUpdateReq, ocpp::messages::SignedFirmwareUpdateConf>
 {
   public:
     /** @brief Constructor */
     MaintenanceManager(const ocpp::config::IChargePointConfig&         stack_config,
+                       ocpp::config::IInternalConfigManager&           internal_config,
                        IChargePointEventsHandler&                      events_handler,
                        ocpp::helpers::WorkerThreadPool&                worker_pool,
                        const ocpp::messages::GenericMessagesConverter& messages_converter,
@@ -89,6 +97,13 @@ class MaintenanceManager
      * @return true if the notification has been sent, false otherwise
      */
     bool notifyFirmwareUpdateStatus(bool success);
+
+    /**
+     * @brief Notify the end of a signed firmware update operation
+     * @param status Installation status (see FirmwareStatusEnumType documentation)
+     * @return true if the notification has been sent, false otherwise
+     */
+    bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status);
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
@@ -152,9 +167,21 @@ class MaintenanceManager
                        const char*&                     error_code,
                        std::string&                     error_message) override;
 
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::SignedFirmwareUpdateReq& request,
+                       ocpp::messages::SignedFirmwareUpdateConf&      response,
+                       const char*&                                   error_code,
+                       std::string&                                   error_message) override;
+
   private:
     /** @brief Stack configuration */
     const ocpp::config::IChargePointConfig& m_stack_config;
+    /** @brief Charge point's internal configuration */
+    ocpp::config::IInternalConfigManager& m_internal_config;
     /** @brief User defined events handler */
     IChargePointEventsHandler& m_events_handler;
     /** @brief Worker thread pool */
@@ -179,6 +206,10 @@ class MaintenanceManager
     std::thread* m_firmware_thread;
     /** @brief Firmware update status */
     ocpp::types::FirmwareStatus m_firmware_status;
+    /** @brief Signed firmware update status */
+    ocpp::types::FirmwareStatusEnumType m_signed_firmware_status;
+    /** @brief Signed firmware update request id */
+    ocpp::types::Optional<int> m_firmware_request_id;
 
     /** @brief Process the upload of the diagnostics */
     void processGetDiagnostics(std::string                         location,
@@ -209,6 +240,18 @@ class MaintenanceManager
 
     /** @brief Send a log status notification */
     void sendLogStatusNotification();
+
+    /** @brief Process the signed firmware update */
+    void processSignedFirmwareUpdate(std::string                                  location,
+                                     ocpp::types::Optional<unsigned int>          retries,
+                                     ocpp::types::Optional<unsigned int>          retry_interval,
+                                     ocpp::types::DateTime                        retrieve_date,
+                                     ocpp::types::Optional<ocpp::types::DateTime> install_date,
+                                     ocpp::x509::Certificate                      signing_certificate,
+                                     std::string                                  signature);
+
+    /** @brief Send a signed firmware status notification */
+    bool sendSignedFirmwareStatusNotification();
 };
 
 } // namespace chargepoint

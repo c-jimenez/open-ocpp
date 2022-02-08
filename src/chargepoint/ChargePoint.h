@@ -159,17 +159,20 @@ class ChargePoint : public IChargePoint,
 
     // Security extensions
 
-    /** @copydoc bool IChargePoint::logSecurityEvent::logSecurityEvent(const std::string&, const std::string&, bool) */
+    /** @copydoc bool IChargePoint::logSecurityEvent(const std::string&, const std::string&, bool) */
     bool logSecurityEvent(const std::string& type, const std::string& message, bool critical) override;
 
-    /** @copydoc bool IChargePoint::ISecurityManager::clearSecurityEvents() */
+    /** @copydoc bool IChargePoint::clearSecurityEvents() */
     bool clearSecurityEvents() override;
 
-    /** @copydoc bool IChargePoint::ISecurityManager::signCertificate(const ocpp::x509::CertificateRequest&) */
+    /** @copydoc bool IChargePoint::signCertificate(const ocpp::x509::CertificateRequest&) */
     bool signCertificate(const ocpp::x509::CertificateRequest& csr) override;
 
-    /** @copydoc bool IChargePoint::ISecurityManager::signCertificate() */
+    /** @copydoc bool IChargePoint::signCertificate() */
     bool signCertificate() override;
+
+    /** @copydoc bool IChargePoint::notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType) */
+    bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status) override;
 
     // RpcClient::IListener interface
 

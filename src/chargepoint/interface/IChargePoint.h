@@ -246,6 +246,13 @@ class IChargePoint
      * @return true if the request has been sent and accepted, false otherwise
      */
     virtual bool signCertificate() = 0;
+
+    /**
+     * @brief Notify the end of a signed firmware update operation
+     * @param status Installation status (see FirmwareStatusEnumType documentation)
+     * @return true if the notification has been sent, false otherwise
+     */
+    virtual bool notifySignedFirmwareUpdateStatus(ocpp::types::FirmwareStatusEnumType status) = 0;
 };
 
 } // namespace chargepoint
