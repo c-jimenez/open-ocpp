@@ -30,7 +30,7 @@ namespace x509
 {
 
 /** @brief Constructor */
-Sha2::Sha2(Type type) : m_type(type), m_context(nullptr), m_md(nullptr), m_last_result()
+Sha2::Sha2(Type type) : m_context(nullptr), m_md(nullptr), m_last_result()
 {
     // Allocate computation context
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
