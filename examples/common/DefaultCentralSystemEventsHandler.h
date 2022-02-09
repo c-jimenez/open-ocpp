@@ -169,8 +169,13 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
                                        const ocpp::types::DateTime& timestamp,
                                        const std::string&           message) override;
 
-        /** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+        /** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest&) */
         bool signCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;
+
+        /** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType,
+                                                                                             const ocpp::types::Optional<int>&) */
+        void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
+                                                    const ocpp::types::Optional<int>&   request_id) override;
 
       protected:
         /** @brief Get the serial number of the charge point */

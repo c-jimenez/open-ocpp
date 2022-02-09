@@ -4,7 +4,7 @@
 The certificate management implemented in this example does not follow the state of the arts recommendations :
 
 * Secure storage of private keys / authentication credentials
-* No password on private keys
+* No password on some private keys
 * ... and surely some more
 
 The choosen implementation has only be made to have a simple and comprehensive example of how to use **Open OCPP** features.
@@ -16,6 +16,8 @@ The central system loops on its connected charge points. For each charge point i
 
 * Configure security profile of the Charge Point from 0 to 3
 * Security events / logging
+* Signed firmware update
+* Certificate management
 
 This example must be used with the **security_chargepoint** example since 1 step of the implementation of the security profile change is non standard : the configuration of the connection URL of the charge point.
 

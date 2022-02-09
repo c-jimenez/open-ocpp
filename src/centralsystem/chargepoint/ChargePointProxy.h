@@ -233,6 +233,24 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
                                                               const ocpp::x509::Certificate&      certificate) override;
 
+    /** @copydoc ocpp::types::UpdateFirmwareStatusEnumType ICentralSystem::signedUpdateFirmware(
+                                                                  int,
+                                                                  const std::string&,
+                                                                  const ocpp::types::Optional<unsigned int>&,
+                                                                  const ocpp::types::DateTime&,
+                                                                  const ocpp::types::Optional<std::chrono::seconds>&,
+                                                                  const ocpp::types::Optional<ocpp::types::DateTime>&,
+                                                                  const ocpp::x509::Certificate&,
+                                                                  const std::string&) */
+    ocpp::types::UpdateFirmwareStatusEnumType signedUpdateFirmware(int                                                 request_id,
+                                                                   const std::string&                                  uri,
+                                                                   const ocpp::types::Optional<unsigned int>&          retries,
+                                                                   const ocpp::types::DateTime&                        retrieve_date,
+                                                                   const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+                                                                   const ocpp::types::Optional<ocpp::types::DateTime>& install_date,
+                                                                   const ocpp::x509::Certificate&                      signing_certificate,
+                                                                   const std::string&                                  signature) override;
+
     // IRpc::IListener interface
 
     /** @copydoc void IRpc::IListener::rpcDisconnected() */

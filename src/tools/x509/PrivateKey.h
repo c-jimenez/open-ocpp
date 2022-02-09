@@ -19,6 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef PRIVATEKEY_H
 #define PRIVATEKEY_H
 
+#include "Sha2.h"
+
 #include <filesystem>
 #include <string>
 
@@ -84,8 +86,32 @@ class PrivateKey
      */
     PrivateKey(Type type, unsigned int param, const std::string& passphrase);
 
+    /**
+     * @brief Copy constructor
+     *        Warning : key encryption is lost
+     * @param copy Key to copy
+     */
+    PrivateKey(const PrivateKey& copy);
+
     /** @brief Destructor */
     virtual ~PrivateKey();
+
+    /**
+     * @brief Compute the signature of a buffer using the private key
+     * @param buffer Buffer to use
+     * @param size Size in bytes of the buffer
+     * @param sha Secure hash algorithm to use
+     * @return Computed signature or empty vector on error
+     */
+    std::vector<uint8_t> sign(const void* buffer, size_t size, Sha2::Type sha = Sha2::Type::SHA256) const;
+
+    /**
+     * @brief Compute the signature of a file using the private key
+     * @param filepath Path to the file
+     * @param sha Secure hash algorithm to use
+     * @return Computed signature or empty vector on error
+     */
+    std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha = Sha2::Type::SHA256) const;
 
     /**
      * @brief Save the private key part as a PEM encoded file

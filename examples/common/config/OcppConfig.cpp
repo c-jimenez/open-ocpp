@@ -99,6 +99,7 @@ static const map<string, int> CONFIGURATION_VALUES = {
     {"CertificateStoreMaxLength", PARAM_READ | PARAM_OCPP},
     {"CpoName", PARAM_READ | PARAM_WRITE | PARAM_OCPP},
     {"SecurityProfile", PARAM_READ_WRITE | PARAM_OCPP},
+    {"SupportedFileTransferProtocols", PARAM_READ | PARAM_OCPP},
 
     ///
     /// Charge point configuration

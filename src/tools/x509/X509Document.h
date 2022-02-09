@@ -34,7 +34,49 @@ namespace x509
 class X509Document
 {
   public:
-    struct Subject;
+    /** @brief Contains subject information */
+    struct Subject
+    {
+        /** @brief Country */
+        std::string country;
+        /** @brief State */
+        std::string state;
+        /** @brief Location */
+        std::string location;
+        /** @brief Organization */
+        std::string organization;
+        /** @brief Organization unit */
+        std::string organization_unit;
+        /** @brief Common name */
+        std::string common_name;
+        /** @brief E-mail address */
+        std::string email_address;
+    };
+
+    /** @brief Contains Basic Constraint extension data */
+    struct BasicConstraints
+    {
+        /** @brief Constructor */
+        BasicConstraints() : present(false), is_ca(false), path_length(0) { }
+
+        /** @brief Indicate if the extension is present */
+        bool present;
+        /** @brief Indicate if CA = true */
+        bool is_ca;
+        /** @brief Path length */
+        unsigned int path_length;
+    };
+
+    /** @brief Contains X509v3 extensions */
+    struct Extensions
+    {
+        /** @brief Basic constraints */
+        BasicConstraints basic_constraints;
+        /** @brief Issuer alternate names */
+        std::vector<std::string> issuer_alternate_names;
+        /** @brief Subject alternate names */
+        std::vector<std::string> subject_alternate_names;
+    };
 
     /**
      * @brief Constructor from PEM file
@@ -86,7 +128,7 @@ class X509Document
      * @brief Get the subject alternate names
      * @return Subject alternate names
      */
-    const std::vector<std::string>& subjectAltNames() const { return m_subject_alternate_names; }
+    const std::vector<std::string>& subjectAltNames() const { return m_x509v3_extensions.subject_alternate_names; }
 
     /** 
      * @brief Get the signature algorithm 
@@ -134,26 +176,19 @@ class X509Document
      * @brief Get the X509v3 extensions
      * @return X509v3 extensions
      */
-    const std::vector<std::string>& x509v3Extensions() const { return m_x509v3_extensions; }
+    const Extensions& x509v3Extensions() const { return m_x509v3_extensions; }
 
-    /** @brief Contains subject information */
-    struct Subject
-    {
-        /** @brief Country */
-        std::string country;
-        /** @brief State */
-        std::string state;
-        /** @brief Location */
-        std::string location;
-        /** @brief Organization */
-        std::string organization;
-        /** @brief Organization unit */
-        std::string organization_unit;
-        /** @brief Common name */
-        std::string common_name;
-        /** @brief E-mail address */
-        std::string email_address;
-    };
+    /** 
+     * @brief Get the X509v3 extensions names
+     * @return X509v3 extensions names
+     */
+    const std::vector<std::string>& x509v3ExtensionsNames() const { return m_x509v3_extensions_names; }
+
+    /**
+     * @brief Get the underlying OpenSSL object
+     * @return Underlying SSL object
+     */
+    const void* object() const { return m_openssl_object; }
 
   protected:
     /** @brief Indicate if the document is valid */
@@ -165,8 +200,6 @@ class X509Document
     Subject m_subject;
     /** @brief Subject string */
     std::string m_subject_string;
-    /** @brief Subject alternate names */
-    std::vector<std::string> m_subject_alternate_names;
     /** @brief Signature algorithm */
     std::string m_sig_algo;
     /** @brief Signature hash */
@@ -182,7 +215,12 @@ class X509Document
     /** @brief Public key algorithm parameter */
     std::string m_pub_key_algo_param;
     /** @brief X509v3 extensions */
-    std::vector<std::string> m_x509v3_extensions;
+    Extensions m_x509v3_extensions;
+    /** @brief X509v3 extensions names*/
+    std::vector<std::string> m_x509v3_extensions_names;
+
+    /** @brief Internal OpenSSL object */
+    void* m_openssl_object;
 
     /** @brief Parse a public key */
     void parsePublicKey(void* ppub_key);

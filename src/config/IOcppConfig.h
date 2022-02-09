@@ -257,6 +257,10 @@ class IOcppConfig
                reconnect using the new configured Security Profile.
                Default, when no security profile is yet configured: 0. */
     virtual unsigned int securityProfile() const = 0;
+
+    /** @brief Comma separated list of supported file transfer protocols for upload AND download
+               Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
+    virtual std::string supportedFileTransferProtocols() const = 0;
 };
 
 } // namespace config

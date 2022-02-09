@@ -268,6 +268,15 @@ class IChargePointEventsHandler
      * @return true if at least 1 certificate has been installed, false otherwise
      */
     virtual bool hasChargePointCertificateInstalled() = 0;
+
+    /**
+     * @brief Called to check the firmware signing certificate against installed Manufacturer CA certificates
+     *        (Not used if InternalCertificateManagementEnabled = true)
+     * @param signing_certificate Certificate to check
+     * @return Check status (see UpdateFirmwareStatusEnumType enum)
+     */
+    virtual ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(
+        const ocpp::x509::Certificate& signing_certificate) = 0;
 };
 
 } // namespace chargepoint

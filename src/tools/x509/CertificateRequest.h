@@ -53,11 +53,32 @@ class CertificateRequest : public X509Document
      */
     CertificateRequest(const Subject& subject, const PrivateKey& private_key, Sha2::Type sha = Sha2::Type::SHA256);
 
+    /**
+     * @brief Constructor to generate a certificate request with extensions
+     * @param subject Subject of the request
+     * @param extensions X509v3 extensions
+     * @param private_key Private key to use to sign the request
+     * @param sha Secure hash algorithm to use to sign the request 
+     */
+    CertificateRequest(const Subject&    subject,
+                       const Extensions& extensions,
+                       const PrivateKey& private_key,
+                       Sha2::Type        sha = Sha2::Type::SHA256);
+
+    /**
+     * @brief Copy constructor
+     * @param copy Certificate request to copy
+     */
+    CertificateRequest(const CertificateRequest& copy);
+
     /** @brief Destructor */
     virtual ~CertificateRequest();
 
+  private:
     /** @brief Read X509 informations stored inside the certificate request */
     void readInfos();
+    /** @brief Create a certificate request */
+    void create(const Subject& subject, const Extensions& extensions, const PrivateKey& private_key, Sha2::Type sha);
 };
 
 } // namespace x509

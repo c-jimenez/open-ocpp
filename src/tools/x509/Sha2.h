@@ -89,10 +89,10 @@ class Sha2
     std::string resultString() const;
 
   private:
-    /** @brief Type */
-    const Type m_type;
     /** @brief Computation context */
     void* m_context;
+    /** @brief Hash algorithm */
+    const void* m_md;
     /** @brief Last computation result */
     std::vector<uint8_t> m_last_result;
 };

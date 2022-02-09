@@ -15,6 +15,7 @@ This example simulates a charge point which uses the messages defined in the sec
 
 * Security events / logging
 * Certificate management and secure connection
+* Signed firmware update
 
 This example must be used with the **security_centralsystem** example since 1 step of the implementation of the security profile change is non standard : the configuration of the connection URL of the charge point.
 

@@ -959,6 +959,25 @@ enum class FirmwareStatusEnumType
 /** @brief Helper to convert a FirmwareStatusEnumType enum to string */
 extern const EnumToStringFromString<FirmwareStatusEnumType> FirmwareStatusEnumTypeHelper;
 
+/** @brief UpdateFirmwareStatusEnumType is used by: SignedUpdateFirmware.conf */
+enum class UpdateFirmwareStatusEnumType
+{
+    /** @brief Accepted this firmware update request. This does not mean the firmware update is successful, the Charge Point will now start
+               the firmware update process */
+    Accepted,
+    /** @brief Firmware update request rejected */
+    Rejected,
+    /** @brief Accepted this firmware update request, but in doing this has canceled an ongoing firmware update */
+    AcceptedCanceled,
+    /** @brief The certificate is invalid */
+    InvalidCertificate,
+    /** @brief Failure end state. The Firmware Signing certificate has been revoked */
+    RevokedCertificate
+};
+
+/** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
+extern const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusEnumTypeHelper;
+
 } // namespace types
 } // namespace ocpp
 
