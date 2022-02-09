@@ -3,15 +3,27 @@
 ######################################################
 
 # Root directory containing the top level CMakeLists.txt file
-ROOT_DIR=$(PWD)
+ROOT_DIR:=$(PWD)
 
 # Generated binary directory
-BIN_DIR=$(ROOT_DIR)/bin
+BIN_DIR:=$(ROOT_DIR)/bin
 
 # Make options
 #VERBOSE="VERBOSE=1"
-PARALLEL_BUILD=-j 4
-DEBUG=ON
+PARALLEL_BUILD:=-j 4
+DEBUG:=ON
+
+# Default target
+default: gcc-native
+
+# Silent makefile if not verbose mode
+$(VERBOSE).SILENT:
+
+# Install prefix
+ifneq ($(strip $(INSTALL_PREFIX)),)
+CMAKE_INSTALL_PREFIX:=-D CMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
+CMAKE_INSTALL_PREFIX_CMD:=--prefix $(INSTALL_PREFIX)
+endif
 
 # Build/clean all targets
 all: gcc-native clang-native
@@ -19,8 +31,8 @@ clean: clean-gcc-native clean-clang-native
 	@-rm -rf $(BIN_DIR)
 
 # Targets for gcc-native build
-GCC_NATIVE_BUILD_DIR=$(ROOT_DIR)/build_gcc_native
-GCC_NATIVE_BIN_DIR=$(BIN_DIR)/gcc_native
+GCC_NATIVE_BUILD_DIR:=$(ROOT_DIR)/build_gcc_native
+GCC_NATIVE_BIN_DIR:=$(BIN_DIR)/gcc_native
 gcc-native: $(GCC_NATIVE_BUILD_DIR)/Makefile
 	@echo "Starting gcc-native build..."
 	@mkdir -p $(GCC_NATIVE_BIN_DIR)
@@ -37,16 +49,20 @@ clean-gcc-native:
 	@-rm -rf $(GCC_NATIVE_BIN_DIR)
 	@echo "gcc-native build cleaned!"
 
+install-gcc-native: gcc-native
+	@echo "Installing Open OCPP library compiled with gcc-native..."
+	@cmake --install $(GCC_NATIVE_BUILD_DIR) $(CMAKE_INSTALL_PREFIX_CMD) --strip
+
 $(GCC_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating gcc-native makefiles..."
 	@mkdir -p $(GCC_NATIVE_BUILD_DIR)
 	@mkdir -p $(GCC_NATIVE_BIN_DIR)
-	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D TARGET=native -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(ROOT_DIR)
+	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D TARGET=native -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
 
 
 # Targets for clang-native build
-CLANG_NATIVE_BUILD_DIR=$(ROOT_DIR)/build_clang_native
-CLANG_NATIVE_BIN_DIR=$(BIN_DIR)/clang_native
+CLANG_NATIVE_BUILD_DIR:=$(ROOT_DIR)/build_clang_native
+CLANG_NATIVE_BIN_DIR:=$(BIN_DIR)/clang_native
 clang-native: $(CLANG_NATIVE_BUILD_DIR)/Makefile
 	@echo "Starting clang native build..."
 	@mkdir -p $(CLANG_NATIVE_BIN_DIR)
@@ -63,8 +79,12 @@ clean-clang-native:
 	@-rm -rf $(CLANG_NATIVE_BIN_DIR)
 	@echo "clang native build cleaned!"
 
+install-clang-native: clang-native
+	@echo "Installing Open OCPP library compiled with clang-native..."
+	@cmake --install $(GCC_NATIVE_BUILD_DIR) $(CMAKE_INSTALL_PREFIX_CMD) --strip
+
 $(CLANG_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating clang-native makefiles..."
 	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)
 	@mkdir -p $(CLANG_NATIVE_BIN_DIR)
-	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(ROOT_DIR)
+	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
