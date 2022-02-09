@@ -39,7 +39,7 @@ As of this version :
 
 * All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
-* Most of Charge Point and Central System behavior related to the OCPP 1.6 security whitepaper edition 2 has been implemented (work in progress, see [OCPP security extensions](#ocpp-security-extensions))
+* All the messages defined in the OCPP 1.6 security whitepaper edition 2 have been implemented
 
 The user application will have to implement some callbacks to provide the data needed by **Open OCPP** or to handle OCPP events (boot notification, remote start/stop notifications, meter values...).
 
@@ -123,12 +123,13 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | ChargingScheduleMaxPeriods | S | None |
 | ConnectorSwitch3to1PhaseSupported | S | None |
 | MaxChargingProfilesInstalled | S | None |
-| AdditionalRootCertificateCheck | U/S | Not implemented yet : implemented behavior is the same as if AdditionalRootCertificateCheck = False |
+| AdditionalRootCertificateCheck | U/S | If internal certificate management is enabled, the stack handle this parameter (implemented behavior for now is the always the one corresponding to AdditionalRootCertificateCheck = False), otherwise it must be the user application |
 | AuthorizationKey | S | None |
 | CertificateSignedMaxChainSize | S | None |
 | CertificateStoreMaxLength | U/S | If internal certificate management is enabled, the stack handle this parameter, otherwise it must be the user application |
 | CpoName | S | None |
 | SecurityProfile | S | None |
+| SupportedFileTransferProtocols | U | None |
 
 ### OCPP security extensions
 
@@ -144,6 +145,8 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 In Charge Point role, the stack will automatically disconnect and then reconnect using the new parameters to the Central System after one of the following parameters has been modified : 
 * **AuthorizationKey**
 * **Security Profile**
+
+**Restriction** : The automatic fallback to old connection parameters if the connection fails after switching to a new security is not implemented yet.
 
 #### Security events
 
@@ -176,6 +179,14 @@ If **InternalCertificateManagementEnabled** is set to **false**, the actual stor
 * TlsClientCertificatePrivateKeyPassphrase
 
 If **InternalCertificateManagementEnabled** is set to **true**, the storage of certificates and their keys is fully handled by **Open OCPP**. The user application just has to provide a passphrase using the **TlsClientCertificatePrivateKeyPassphrase** configuration key to securily encrypt the certicates' private keys using AES-256-CBC algorithm. **Open OCPP** will automatically use the installed corresponding certificates depending on the configured Security Profile and the certificates validity dates.
+
+**Restriction** : The automatic fallback to old certificate if the connection fails after installing new certificate is not implemented yet.
+
+#### Signed firmware update
+
+**Open OCPP** support this feature for both Charge Point and Central System roles.
+
+**Open OCPP** provides helper classes based on OpenSSL to ease private keys, certificate and certificate requests usage : generation, signature, verification. They can be used in the user application callbacks. These helpers can be found in the ocpp::tools::x509 namespace and are widely used in the **Open OCPP** source code and examples.
 
 ### Internal configuration keys
 
