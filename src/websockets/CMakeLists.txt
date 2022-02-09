@@ -5,7 +5,7 @@
 
 
 # Library target
-add_library(ws STATIC
+add_library(ws OBJECT
     Url.cpp
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
@@ -21,7 +21,7 @@ target_include_directories(ws PRIVATE libwebsockets)
 target_include_directories(ws PUBLIC . stubs)
 
 # Dependencies
-target_link_libraries(ws
+target_link_libraries(ws PUBLIC
     websockets
     helpers
     pthread

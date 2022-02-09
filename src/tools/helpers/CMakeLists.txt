@@ -1,6 +1,6 @@
 
 # Helper library
-add_library(helpers STATIC 
+add_library(helpers OBJECT 
     IniFile.cpp
     String.cpp
     Timer.cpp

@@ -4,7 +4,7 @@
 
 
 # Library target
-add_library(centralsystem STATIC
+add_library(centralsystem OBJECT
     CentralSystem.cpp
 
     chargepoint/ChargePointHandler.cpp

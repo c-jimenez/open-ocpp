@@ -4,13 +4,14 @@
 
 
 # Library target
-add_library(config InternalConfigManager.cpp)
+add_library(config OBJECT
+    InternalConfigManager.cpp)
 
 # Exported includes
 target_include_directories(config INTERFACE .)
 
 # Dependencies
-target_link_libraries(config
+target_link_libraries(config PUBLIC
     types
     helpers
     database
