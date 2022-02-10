@@ -50,26 +50,29 @@ endif()
 add_subdirectory(src)
 
 # Open OCPP static library
-add_library(open-ocpp-static STATIC
-    src/version.cpp)
-target_link_libraries(open-ocpp-static
-    centralsystem
-    chargepoint
-    config
-    database
-    messages
-    rpc
-    helpers
-    log
-    version
-    x509
-    json
-    ws
-    websockets
+if(${BUILD_STATIC_LIBRARY})
+    add_library(open-ocpp-static STATIC
+        src/version.cpp)
+    target_link_libraries(open-ocpp-static
+        centralsystem
+        chargepoint
+        config
+        database
+        messages
+        rpc
+        helpers
+        log
+        version
+        x509
+        json
+        ws
+        websockets
 
-    dl
-)
-set_target_properties(open-ocpp-static PROPERTIES OUTPUT_NAME "open-ocpp_static")
+        dl
+    )
+    set_target_properties(open-ocpp-static PROPERTIES OUTPUT_NAME "open-ocpp_static")
+    set(OPEN_OCPP_STATIC_TARGET open-ocpp-static)
+endif()
 
 # Open OCPP dynamic library
 add_library(open-ocpp-dynamic SHARED
@@ -98,7 +101,7 @@ include(GNUInstallDirs)
 
 file(GLOB_RECURSE PUBLIC_HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "src/*.h")
 
-install(TARGETS open-ocpp-static open-ocpp-dynamic
+install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
         EXPORT LibOpenOcppTargets
 
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -120,9 +123,11 @@ configure_file(
 )
 install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
-set(LIB_NAME                "open-ocpp_static")
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/libopen-ocpp.pc.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp_static.pc"
-)
-install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp_static.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+if(${BUILD_STATIC_LIBRARY})
+    set(LIB_NAME                "open-ocpp_static")
+    configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/libopen-ocpp.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp_static.pc"
+    )
+    install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp_static.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif()
