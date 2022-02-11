@@ -8,6 +8,11 @@ project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 pro
                  VERSION 0.5.0
 )
 
+# Definitions for Version.h file
+add_definitions(-DLIBOPENOCPP_MAJOR="${PROJECT_VERSION_MAJOR}")
+add_definitions(-DLIBOPENOCPP_MINOR="${PROJECT_VERSION_MINOR}")
+add_definitions(-DLIBOPENOCPP_FIX="${PROJECT_VERSION_PATCH}")
+
 # Build options
 include(CMakeLists_Options.txt)
 
@@ -118,7 +123,7 @@ set(PKG_CONFIG_CFLAGS       "-I\${includedir}")
 
 set(LIB_NAME                "open-ocpp")
 configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/libopen-ocpp.pc.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/deploy/libopen-ocpp.pc.in"
   "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp.pc"
 )
 install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
@@ -126,7 +131,7 @@ install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp.pc" DESTINATION ${CMAKE_INSTALL_
 if(${BUILD_STATIC_LIBRARY})
     set(LIB_NAME                "open-ocpp_static")
     configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/libopen-ocpp.pc.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/deploy/libopen-ocpp.pc.in"
     "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp_static.pc"
     )
     install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp_static.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)

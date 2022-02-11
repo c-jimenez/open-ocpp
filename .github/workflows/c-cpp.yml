@@ -13,11 +13,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: make gcc
-      run: make gcc-native
-    - name: unit tests gcc
+    - name: make gcc Debug
+      run: make gcc-native BUILD_TYPE=Debug
+    - name: unit tests gcc Debug
       run: make tests-gcc-native
-    - name: make clang
-      run: make clang-native
+    - name: make clang Debug
+      run: make clang-native Debug
     - name: unit tests clang
-      run: make tests-clang-native
+      run: make tests-clang-native BUILD_TYPE=Debug
+    - name: clean
+      run: make clean
+    - name: make gcc Release
+      run: make gcc-native BUILD_TYPE=Release
+    - name: unit tests gcc Release
+      run: make tests-gcc-native
+    - name: make clang Debug
+      run: make clang-native Release
+    - name: unit tests clang
+      run: make tests-clang-native BUILD_TYPE=Release

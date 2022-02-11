@@ -10,14 +10,16 @@ BIN_DIR:=$(ROOT_DIR)/bin
 
 # Make options
 #VERBOSE="VERBOSE=1"
-PARALLEL_BUILD:=-j 4
-DEBUG:=ON
+PARALLEL_BUILD?=-j 4
+
+# Build type can be either Debug or Release
+BUILD_TYPE?=Release
 
 # Default target
 default: gcc-native
 
-# Silent makefile if not verbose mode
-$(VERBOSE).SILENT:
+# Silent makefile
+.SILENT:
 
 # Install prefix
 ifneq ($(strip $(INSTALL_PREFIX)),)
@@ -57,7 +59,7 @@ $(GCC_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating gcc-native makefiles..."
 	@mkdir -p $(GCC_NATIVE_BUILD_DIR)
 	@mkdir -p $(GCC_NATIVE_BIN_DIR)
-	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D TARGET=native -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
+	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
 
 
 # Targets for clang-native build
@@ -87,4 +89,4 @@ $(CLANG_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating clang-native makefiles..."
 	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)
 	@mkdir -p $(CLANG_NATIVE_BIN_DIR)
-	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) -D DEBUG=$(DEBUG) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
+	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)

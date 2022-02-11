@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
         while (true)
         {
             // Check connector state
-            unsigned int connector_id;
+            unsigned int connector_id = 0;
             std::string  id_tag;
             bool         restore = false;
             for (unsigned int i = 1; i <= config.ocppConfig().numberOfConnectors(); i++)

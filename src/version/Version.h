@@ -23,8 +23,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
  *          XX = Major version number (increase = API compatibility broken and/or major feature addition)
  *          YY = Minor version number (increase = Minor feature addition)
  *          ZZ = Fix version number (increase = Bug fix(es))
+ *
+ *          Stack version number is defined in the main CMakeLists.txt file of
+ *          the build tree
  */
-#define OPEN_OCPP_VERSION "0.5.0"
+#define OPEN_OCPP_VERSION LIBOPENOCPP_MAJOR "." LIBOPENOCPP_MINOR "." LIBOPENOCPP_FIX
 
 /** @brief Return the version string of the library */
 extern "C" const char* OPEN_OCPP_Version();

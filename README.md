@@ -309,13 +309,13 @@ The build is based on CMake, the following definitions must be passed to the CMa
 
 * **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file
 * **BIN_DIR** : Output directory for the generated binaries
-* **DEBUG** : If set to ON, use DEBUG compilation flag, otherwise use release compilation flags
+* **CMAKE_BUILD_TYPE** : Can be set to either Debug or Release (Release build produces optimized stripped binaries)
 
 Additionnaly, the **CMakeLists_Options.txt** contains several options that can be switched on/off.
 
 An helper makefile is available at project's level to simplify the use of CMake. Just use the one of the following commands to build using gcc or gcc without cross compilation :
 
-```make gcc-native``` or ```make clang-native```
+```make gcc-native``` or ```make clang-native``` or ```make gcc-native BUILD_TYPE=Debug``` or ```make clang-native BUILD_TYPE=Debug``` 
 
 This makefile also contains the corresponding cleaning targets :
 

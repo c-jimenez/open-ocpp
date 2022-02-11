@@ -10,7 +10,7 @@ add_compile_definitions(LOG_LEVEL=${LOG_LEVEL})
 
 # Static library
 if(NOT DEFINED BUILD_STATIC_LIBRARY)
-    set(BUILD_STATIC_LIBRARY    OFF)
+    set(BUILD_STATIC_LIBRARY    ON)
 endif()
 
 # Unit tests
