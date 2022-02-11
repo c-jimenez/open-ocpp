@@ -364,6 +364,8 @@ Then you wil be able to use the following targets as dependencies for your proje
 
 **Note**: If **Open OCPP** has been installed in a non standard directory, the search path for the ```pkg_search_module``` command must be specified using the following command => ```set(ENV{PKG_CONFIG_PATH} "/your/directory/containing/the/.pc/files")```
 
+See the deploy test [CMakeLists.txt](./tests/deploy/CMakeLists.txt) as an example
+
 ## Quick start
 
 The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md) and the [quick start Central System example](./examples/quick_start_centralsystem/README.md).

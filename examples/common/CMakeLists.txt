@@ -14,4 +14,5 @@ target_include_directories(examples_common PUBLIC . config simulators)
 # Dependencies
 target_link_libraries(examples_common
     open-ocpp-dynamic
+    pthread
 )

@@ -57,6 +57,4 @@ target_link_libraries(chargepoint PUBLIC
     log
     version
     x509
-
-    dl
 )

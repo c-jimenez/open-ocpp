@@ -66,5 +66,4 @@ target_link_libraries(messages PUBLIC
     helpers
     types
     log
-    -lstdc++fs
 )

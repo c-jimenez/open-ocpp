@@ -24,5 +24,4 @@ target_include_directories(ws PUBLIC . stubs)
 target_link_libraries(ws PUBLIC
     websockets
     helpers
-    pthread
 )

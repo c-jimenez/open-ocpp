@@ -28,6 +28,4 @@ target_link_libraries(centralsystem
     log
     version
     x509
-
-    dl
 )

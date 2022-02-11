@@ -72,8 +72,6 @@ if(${BUILD_STATIC_LIBRARY})
         json
         ws
         websockets
-
-        dl
     )
     set_target_properties(open-ocpp-static PROPERTIES OUTPUT_NAME "open-ocpp_static")
     set(OPEN_OCPP_STATIC_TARGET open-ocpp-static)
@@ -97,7 +95,7 @@ target_link_libraries(open-ocpp-dynamic
     ws
     websockets
 
-    dl
+    stdc++fs
 )
 set_target_properties(open-ocpp-dynamic PROPERTIES OUTPUT_NAME "open-ocpp")
 
@@ -107,8 +105,6 @@ include(GNUInstallDirs)
 file(GLOB_RECURSE PUBLIC_HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "src/*.h")
 
 install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
-        EXPORT LibOpenOcppTargets
-
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -117,7 +113,7 @@ install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp
 
 # Generate pkgconfig files
 set(PKG_CONFIG_LIBDIR       "\${prefix}/lib")
-set(PKG_CONFIG_INCLUDEDIR   "\${prefix}/openocpp")
+set(PKG_CONFIG_INCLUDEDIR   "\${prefix}/include/openocpp")
 set(PKG_CONFIG_LIBS         "-L\${libdir}")
 set(PKG_CONFIG_CFLAGS       "-I\${includedir}")
 

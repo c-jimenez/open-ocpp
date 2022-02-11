@@ -53,7 +53,14 @@ clean-gcc-native:
 
 install-gcc-native: gcc-native
 	@echo "Installing Open OCPP library compiled with gcc-native..."
-	@cmake --install $(GCC_NATIVE_BUILD_DIR) $(CMAKE_INSTALL_PREFIX_CMD) --strip
+	@cmake --build $(GCC_NATIVE_BUILD_DIR) --target install --config $(BUILD_TYPE)
+
+tests-install-gcc-native: gcc-native install-gcc-native
+	@echo "Testing Open OCPP library installation with gcc-native..."
+	@mkdir -p $(GCC_NATIVE_BUILD_DIR)/tests/deploy
+	@cd $(GCC_NATIVE_BUILD_DIR)/tests/deploy && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
+	@make --silent -C $(GCC_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
+	@echo "gcc-native build installation checked!"
 
 $(GCC_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating gcc-native makefiles..."
@@ -83,7 +90,14 @@ clean-clang-native:
 
 install-clang-native: clang-native
 	@echo "Installing Open OCPP library compiled with clang-native..."
-	@cmake --install $(GCC_NATIVE_BUILD_DIR) $(CMAKE_INSTALL_PREFIX_CMD) --strip
+	@cmake --build $(CLANG_NATIVE_BUILD_DIR) --target install --config $(BUILD_TYPE)
+
+tests-install-clang-native: clang-native install-clang-native
+	@echo "Testing Open OCPP library installation with clang-native..."
+	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)/tests/deploy
+	@cd $(CLANG_NATIVE_BUILD_DIR)/tests/deploy && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
+	@make --silent -C $(CLANG_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
+	@echo "clang-native build installation checked!"
 
 $(CLANG_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating clang-native makefiles..."
