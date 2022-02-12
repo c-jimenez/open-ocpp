@@ -22,7 +22,7 @@ pkg_search_module(PKG_OPEN_OCPP_STATIC REQUIRED IMPORTED_TARGET libopen-ocpp_sta
 pkg_search_module(PKG_WEBSOCKETS_STATIC REQUIRED IMPORTED_TARGET libwebsockets_static)
 endif()
 
-# Look for OpenSSL and SQlite3
+# Look for OpenSSL
 find_package(OpenSSL REQUIRED COMPONENTS SSL Crypto)
 
 # Test applications
