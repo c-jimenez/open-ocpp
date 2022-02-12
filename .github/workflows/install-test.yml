@@ -1,0 +1,19 @@
+name: Install test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: make gcc install
+      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-gcc tests-install-gcc-native
+    - name: make clang install
+      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-clang tests-install-clang-native

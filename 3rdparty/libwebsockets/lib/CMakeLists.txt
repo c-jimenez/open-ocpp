@@ -169,13 +169,13 @@ if (LWS_WITH_STATIC)
 	target_include_directories(websockets PRIVATE ${LWS_LIB_BUILD_INC_PATHS})
 	target_compile_definitions(websockets PRIVATE LWS_BUILDING_STATIC)
 
-	if (WIN32)
+	#if (WIN32)
 		# Windows uses the same .lib ending for static libraries and shared
 		# library linker files, so rename the static library.
 		set_target_properties(websockets
 			PROPERTIES
 			OUTPUT_NAME websockets_static)
-	endif()
+	#endif()
 	
 endif()
 
@@ -375,4 +375,3 @@ set(LIB_LIST_AT_END ${LIB_LIST_AT_END} PARENT_SCOPE)
 endif()
 set(USE_WOLFSSL ${USE_WOLFSSL} PARENT_SCOPE)
 set(LWS_DEPS_LIB_PATHS ${LWS_DEPS_LIB_PATHS} PARENT_SCOPE)
-

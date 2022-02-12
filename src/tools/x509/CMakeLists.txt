@@ -1,7 +1,7 @@
 
 # X509 library
 include_directories(impl)
-add_library(x509 STATIC
+add_library(x509 OBJECT
     Base64.cpp
     Certificate.cpp
     CertificateRequest.cpp
@@ -12,4 +12,4 @@ add_library(x509 STATIC
     impl/sign.cpp
 )
 target_include_directories(x509 PUBLIC .)
-target_link_libraries(x509 helpers OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(x509 PUBLIC helpers OpenSSL::SSL OpenSSL::Crypto)

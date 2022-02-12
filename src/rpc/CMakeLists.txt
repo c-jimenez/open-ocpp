@@ -4,7 +4,7 @@
 
 
 # Library target
-add_library(rpc STATIC
+add_library(rpc OBJECT
     RpcBase.cpp
     RpcClient.cpp
     RpcServer.cpp
@@ -14,7 +14,7 @@ add_library(rpc STATIC
 target_include_directories(rpc PUBLIC .)
 
 # Dependencies
-target_link_libraries(rpc
+target_link_libraries(rpc PUBLIC
     ws
     json
     helpers

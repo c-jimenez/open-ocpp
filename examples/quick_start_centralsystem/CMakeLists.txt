@@ -20,9 +20,5 @@ target_link_libraries(quick_start_centralsystem
 # Copy to binary directory
 ADD_CUSTOM_COMMAND(TARGET quick_start_centralsystem
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy quick_start_centralsystem ${BIN_DIR}/
-)
-ADD_CUSTOM_COMMAND(TARGET quick_start_centralsystem
-          POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/quick_start_centralsystem.ini ${BIN_DIR}/
 )

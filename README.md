@@ -12,18 +12,41 @@ This implementation is based on the following libraries :
 
 ## Table of contents
 
-* [Features](#features)
-  + [Key features](#key-features)
-  + [Supported OCPP feature profiles](#supported-ocpp-feature-profiles)
-  + [Supported OCPP configuration keys](#supported-ocpp-configuration-keys)
-  + [OCPP security extensions](#ocpp-security-extensions)
-  * [Internal configuration keys](#internal-configuration-keys)
-* [Build](#build)
-* [Quick start](#quick-start)
-  + [Charge Point role](#charge-point-role)
-  + [Central System role](#central-system-role)
-* [Contributing](#contributing)
-* [Examples](./examples/README.md)
+- [Open OCPP](#open-ocpp)
+  - [Table of contents](#table-of-contents)
+  - [Features](#features)
+    - [Key features](#key-features)
+    - [Supported OCPP feature profiles](#supported-ocpp-feature-profiles)
+    - [Supported OCPP configuration keys](#supported-ocpp-configuration-keys)
+    - [OCPP security extensions](#ocpp-security-extensions)
+      - [Security profiles](#security-profiles)
+      - [Security events](#security-events)
+      - [Extended trigger messages](#extended-trigger-messages)
+      - [Certificate management](#certificate-management)
+      - [Signed firmware update](#signed-firmware-update)
+    - [Internal configuration keys](#internal-configuration-keys)
+      - [Common keys](#common-keys)
+      - [Charge Point keys](#charge-point-keys)
+      - [Central System keys](#central-system-keys)
+  - [Build](#build)
+    - [Pre-requisites](#pre-requisites)
+    - [Build options](#build-options)
+  - [Install and use](#install-and-use)
+    - [Installation](#installation)
+    - [Use with CMake](#use-with-cmake)
+  - [Quick start](#quick-start)
+    - [Charge Point role](#charge-point-role)
+      - [Configuration interface](#configuration-interface)
+      - [Event handler interface](#event-handler-interface)
+      - [Charge Point object](#charge-point-object)
+    - [Central System role](#central-system-role)
+      - [Configuration interface](#configuration-interface-1)
+      - [Event handler interfaces](#event-handler-interfaces)
+      - [Central System object](#central-system-object)
+  - [Contributing](#contributing)
+    - [Coding rules](#coding-rules)
+    - [Issues](#issues)
+    - [Workflow](#workflow)
 
 ## Features
 
@@ -142,7 +165,7 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 * 2 : TLS with HTTP Basic Authentication
 * 3 : TLS with Client Side Certificates
 
-In Charge Point role, the stack will automatically disconnect and then reconnect using the new parameters to the Central System after one of the following parameters has been modified : 
+In Charge Point role, the stack will automatically disconnect and then reconnect using the new parameters to the Central System after one of the following parameters has been modified :
 * **AuthorizationKey**
 * **Security Profile**
 
@@ -150,7 +173,7 @@ In Charge Point role, the stack will automatically disconnect and then reconnect
 
 #### Security events
 
-**Open OCPP** support the whole use cases of security events and logging. 
+**Open OCPP** support the whole use cases of security events and logging.
 
 In Charge Point role, it can optionnaly handle the storage of the security event log and the generation of the security log export when the Central System asks it. To enable/disable this feature, you have to modify the **SecurityLogMaxEntriesCount** charge point configuration key :
 
@@ -167,7 +190,7 @@ In Charge Point role, the notification of security events can be enabled or disa
 
 #### Certificate management
 
-**Open OCPP** support this feature for both Charge Point and Central System roles. 
+**Open OCPP** support this feature for both Charge Point and Central System roles.
 
 The behavior of this feature is controlled by the **InternalCertificateManagementEnabled** configuration key.
 
@@ -286,13 +309,13 @@ The build is based on CMake, the following definitions must be passed to the CMa
 
 * **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file
 * **BIN_DIR** : Output directory for the generated binaries
-* **DEBUG** : If set to ON, use DEBUG compilation flag, otherwise use release compilation flags
+* **CMAKE_BUILD_TYPE** : Can be set to either Debug or Release (Release build produces optimized stripped binaries)
 
 Additionnaly, the **CMakeLists_Options.txt** contains several options that can be switched on/off.
 
 An helper makefile is available at project's level to simplify the use of CMake. Just use the one of the following commands to build using gcc or gcc without cross compilation :
 
-```make gcc-native``` or ```make clang-native```
+```make gcc-native``` or ```make clang-native``` or ```make gcc-native BUILD_TYPE=Debug``` or ```make clang-native BUILD_TYPE=Debug``` 
 
 This makefile also contains the corresponding cleaning targets :
 
@@ -301,6 +324,47 @@ This makefile also contains the corresponding cleaning targets :
 And to run the unit tests :
 
 ```make tests-gcc-native``` or ```make tests-clang-native```
+
+The build generates 2 flavors of the **Open OCPP** librairies depending on the needs of your project :
+* Shared : libopen-ocpp.so
+* Static : libopen-ocpp_static.a
+
+**Note**: When using **Open OCPP** in a non GNU LGPL project, the shared library must be used in order to not contaminate your project with the LGPL licence (see [Wikipedia GNU LGPL article](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License#Differences_from_the_GPL))
+
+## Install and use
+### Installation
+
+**Open OCPP** generated libraries and their includes can be installed in the standard system directories using the CMake command :
+
+```cmake --install [build_dir] --strip```
+
+The makefile contains helper targets which can be called if the installation needs to be done in a non standard directory using the variable INSTALL_PREFIX :
+
+```make install-gcc-native INSTALL_PREFIX=/your/directory``` or ```make install-clang-native INSTALL_PREFIX=/your/directory```
+
+If run without the INSTALL_PREFIX variable, it will install in the standard system directories.
+
+**Note**: If INSTALL_PREFIX is used, it must also be defined when building the project with the makefile helper targets.
+
+### Use with CMake
+
+**Open OCPP** installs 2 pkg-config configurations files to ease the use of the library when compiling a CMake project.
+
+To import the library in a CMake project, use the following commands in your CMakeLists.txt file :
+
+```
+find_package(PkgConfig)
+pkg_search_module(PKG_OPEN_OCPP REQUIRED IMPORTED_TARGET libopen-ocpp)
+pkg_search_module(PKG_OPEN_OCPP_STATIC REQUIRED IMPORTED_TARGET libopen-ocpp_static)
+```
+
+Then you wil be able to use the following targets as dependencies for your project :
+
+```target_link_libraries(my_proj PRIVATE PkgConfig::PKG_OPEN_OCPP)``` or ```target_link_libraries(my_proj PRIVATE PkgConfig::PKG_OPEN_OCPP_STATIC)```
+
+**Note**: If **Open OCPP** has been installed in a non standard directory, the search path for the ```pkg_search_module``` command must be specified using the following command => ```set(ENV{PKG_CONFIG_PATH} "/your/directory/containing/the/.pc/files")```
+
+See the deploy test [CMakeLists.txt](./tests/deploy/CMakeLists.txt) as an example
 
 ## Quick start
 

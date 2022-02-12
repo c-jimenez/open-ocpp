@@ -1,0 +1,23 @@
+name: Unit test in Release build
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: make gcc Release
+      run: make gcc-native BUILD_TYPE=Release
+    - name: unit tests gcc Release
+      run: make tests-gcc-native BUILD_TYPE=Release
+    - name: make clang Release
+      run: make clang-native BUILD_TYPE=Release
+    - name: unit tests clang
+      run: make tests-clang-native BUILD_TYPE=Release

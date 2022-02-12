@@ -208,7 +208,8 @@ std::string DefaultChargePointEventsHandler::getDiagnostics(const ocpp::types::O
 
     std::stringstream ss;
     ss << "zip " << diag_file << " " << m_config.stackConfig().databasePath();
-    system(ss.str().c_str());
+    int err = WEXITSTATUS(system(ss.str().c_str()));
+    cout << "Command line : " << ss.str() << " => " << err << endl;
 
     return diag_file;
 }
@@ -594,7 +595,8 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
 
         std::stringstream ss;
         ss << "zip " << log_file << " " << m_config.stackConfig().databasePath();
-        system(ss.str().c_str());
+        int err = WEXITSTATUS(system(ss.str().c_str()));
+        cout << "Command line : " << ss.str() << " => " << err << endl;
     }
 
     return log_file;

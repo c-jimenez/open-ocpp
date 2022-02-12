@@ -21,9 +21,5 @@ target_link_libraries(remote_chargepoint
 # Copy to binary directory
 ADD_CUSTOM_COMMAND(TARGET remote_chargepoint
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy remote_chargepoint ${BIN_DIR}/
-)
-ADD_CUSTOM_COMMAND(TARGET remote_chargepoint
-          POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/remote_chargepoint.ini ${BIN_DIR}/
 )

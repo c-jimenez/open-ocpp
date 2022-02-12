@@ -19,9 +19,5 @@ target_link_libraries(quick_start_chargepoint
 # Copy to binary directory
 ADD_CUSTOM_COMMAND(TARGET quick_start_chargepoint
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy quick_start_chargepoint ${BIN_DIR}/
-)
-ADD_CUSTOM_COMMAND(TARGET quick_start_chargepoint
-          POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/quick_start_chargepoint.ini ${BIN_DIR}/
 )

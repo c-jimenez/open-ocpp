@@ -4,7 +4,7 @@
 
 
 # Library target
-add_library(chargepoint STATIC
+add_library(chargepoint OBJECT
     ChargePoint.cpp
     authent/AuthentCache.cpp
     authent/AuthentLocalList.cpp
@@ -48,7 +48,7 @@ target_include_directories(chargepoint PRIVATE authent
                                                trigger)
 
 # Dependencies
-target_link_libraries(chargepoint
+target_link_libraries(chargepoint PUBLIC
     config
     database
     messages
@@ -57,6 +57,4 @@ target_link_libraries(chargepoint
     log
     version
     x509
-
-    dl
 )

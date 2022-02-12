@@ -2,13 +2,6 @@
 #        Native target toolchain definition and specific compiler flags         #
 #################################################################################
 
-# Optimization flags
-if (DEBUG)
-    set(OPTIMIZATION_FLAGS "-O0 -g -ggdb")
-else()
-    set(OPTIMIZATION_FLAGS "-O2")
-endif()
-
 # Warnings
 set(WARNING_FLAGS "-Wall -Wextra -Werror")
 
@@ -17,5 +10,7 @@ set(C_FLAGS "-std=c11")
 set(CXX_FLAGS "-std=c++17")
 
 # Set compiler flags
-set(CMAKE_C_FLAGS   "${C_FLAGS} ${WARNING_FLAGS} ${OPTIMIZATION_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CXX_FLAGS} ${WARNING_FLAGS} ${OPTIMIZATION_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG     "${C_FLAGS} ${WARNING_FLAGS} -O0 -g3 -ggdb3")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_FLAGS} ${WARNING_FLAGS} -O0 -g3 -ggdb3")
+set(CMAKE_C_FLAGS_RELEASE   "${C_FLAGS} ${WARNING_FLAGS} -O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CXX_FLAGS} ${WARNING_FLAGS} -O2 -DNDEBUG")

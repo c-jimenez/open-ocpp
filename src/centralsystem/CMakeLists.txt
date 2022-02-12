@@ -4,7 +4,7 @@
 
 
 # Library target
-add_library(centralsystem STATIC
+add_library(centralsystem OBJECT
     CentralSystem.cpp
 
     chargepoint/ChargePointHandler.cpp
@@ -28,6 +28,4 @@ target_link_libraries(centralsystem
     log
     version
     x509
-
-    dl
 )

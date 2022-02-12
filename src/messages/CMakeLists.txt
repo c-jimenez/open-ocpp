@@ -4,7 +4,7 @@
 
 
 # Library target
-add_library(messages STATIC
+add_library(messages OBJECT
     MessageDispatcher.cpp
     MessagesConverter.cpp
 
@@ -60,11 +60,10 @@ add_library(messages STATIC
 target_include_directories(messages PUBLIC . types)
 
 # Dependencies
-target_link_libraries(messages
+target_link_libraries(messages PUBLIC
     rpc
     json
     helpers
     types
     log
-    -lstdc++fs
 )

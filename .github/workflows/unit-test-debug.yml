@@ -1,0 +1,23 @@
+name: Unit test in Debug build
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: make gcc Debug
+      run: make gcc-native BUILD_TYPE=Debug
+    - name: unit tests gcc Debug
+      run: make tests-gcc-native BUILD_TYPE=Debug
+    - name: make clang Debug
+      run: make clang-native BUILD_TYPE=Debug
+    - name: unit tests clang
+      run: make tests-clang-native BUILD_TYPE=Debug
