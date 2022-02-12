@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 0.5.0
+                 VERSION 0.6.0
 )
 
 # Definitions for Version.h file
@@ -104,6 +104,8 @@ include(GNUInstallDirs)
 
 file(GLOB_RECURSE PUBLIC_HEADERS
      LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/src/*.h")
+file(GLOB OCPP_SCHEMAS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/schemas/*.json")
 
 install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -111,6 +113,7 @@ install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp)
+install(FILES ${OCPP_SCHEMAS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/schemas)
 
 file(GLOB RAPIDJSON_HEADERS
      LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/*.h")
