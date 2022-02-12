@@ -104,11 +104,11 @@ class StatusManager
 
     // ITriggerMessageHandler interfaces
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
-    bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
     // GenericMessageHandler interface
 

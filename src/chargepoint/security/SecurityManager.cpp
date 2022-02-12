@@ -368,8 +368,8 @@ std::string SecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumTy
 
 // ITriggerMessageManager::ITriggerMessageHandler interface
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
     (void)connector_id;

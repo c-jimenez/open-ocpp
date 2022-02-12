@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define ITRIGGERMESSAGEMANAGER_H
 
 #include "Enums.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -64,7 +65,7 @@ class ITriggerMessageManager
          * @param connector_id Id of the connector concerned by the request
          * @return true if the requested message can be sent, false otherwise
          */
-        virtual bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) = 0;
+        virtual bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) = 0;
     };
 
     /** @brief Interface for extended trigger message handlers implementations */
@@ -80,7 +81,8 @@ class ITriggerMessageManager
          * @param connector_id Id of the connector concerned by the request
          * @return true if the requested message can be sent, false otherwise
          */
-        virtual bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) = 0;
+        virtual bool onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
+                                      const ocpp::types::Optional<unsigned int>& connector_id) = 0;
     };
 };
 

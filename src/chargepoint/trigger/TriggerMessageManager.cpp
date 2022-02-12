@@ -72,7 +72,8 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
     bool ret = true;
 
     std::string trigger_message = MessageTriggerHelper.toString(request.requestedMessage);
-    LOG_INFO << "Trigger message requested : " << trigger_message;
+    LOG_INFO << "Trigger message requested : " << trigger_message
+             << " - connectorId = " << (request.connectorId.isSet() ? std::to_string(request.connectorId) : "not set");
 
     // Look for the corresponding handler
     auto it = m_standard_handlers.find(request.requestedMessage);
@@ -85,7 +86,7 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
     else
     {
         // Check connector id
-        if (m_connectors.isValid(request.connectorId))
+        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
@@ -122,7 +123,8 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerM
     bool ret = true;
 
     std::string trigger_message = MessageTriggerEnumTypeHelper.toString(request.requestedMessage);
-    LOG_INFO << "Extended trigger message requested : " << trigger_message;
+    LOG_INFO << "Extended trigger message requested : " << trigger_message
+             << " - connectorId = " << (request.connectorId.isSet() ? std::to_string(request.connectorId) : "not set");
 
     // Look for the corresponding handler
     auto it = m_extended_handlers.find(request.requestedMessage);
@@ -135,7 +137,7 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerM
     else
     {
         // Check connector id
-        if (m_connectors.isValid(request.connectorId))
+        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
