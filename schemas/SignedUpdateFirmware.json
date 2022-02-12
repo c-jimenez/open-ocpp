@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "id": "urn:OCPP:1.6:security:2:2020:3:SignedUpdateFirmwareRequest",
+  "title": "SignedUpdateFirmwareRequest",
+  "comment": "OCPP 1.6 Security Extension Edition 2 FINAL",
+  "type": "object",
+  "properties": {
+    "retries": {
+      "type": "integer"
+    },
+    "retryInterval": {
+      "type": "integer"
+    },
+    "requestId": {
+      "type": "integer"
+    },
+    "firmware": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "location": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "retrieveDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "installDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signingCertificate": {
+          "type": "string",
+          "maxLength": 5500
+        },
+        "signature": {
+          "type": "string",
+          "maxLength": 800
+        }
+      },
+      "required": [
+        "location",
+        "retrieveDateTime"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "requestId",
+    "firmware"
+  ]
+}

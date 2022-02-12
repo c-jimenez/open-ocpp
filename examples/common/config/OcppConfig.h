@@ -259,6 +259,10 @@ class OcppConfig : public ocpp::config::IOcppConfig
                Default, when no security profile is yet configured: 0. */
     unsigned int securityProfile() const override { return getUInt("SecurityProfile"); }
 
+    /** @brief Comma separated list of supported file transfer protocols for upload AND download
+               Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
+    std::string supportedFileTransferProtocols() const override { return getString("SupportedFileTransferProtocols"); }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile& m_config;

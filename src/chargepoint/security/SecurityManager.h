@@ -107,12 +107,6 @@ class SecurityManager
     bool generateCertificateRequest();
 
     /** 
-     * @brief Get the installed Central System CA certificates as PEM encoded data
-     * @return Installed Central System CA certificates as PEM encoded data
-     */
-    std::string getCentralSystemCaCertificates();
-
-    /** 
      * @brief Get the installed Charge Point certificate as PEM encoded data
      * @param private_key Corresponding private key as PEM encoded data
      * @return Installed Charge Point certificate as PEM encoded data
@@ -134,10 +128,13 @@ class SecurityManager
                               const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                               const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
 
+    /** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType) */
+    std::string getCaCertificates(ocpp::types::CertificateUseEnumType type) override;
+
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
     // GenericMessageHandler interface
 

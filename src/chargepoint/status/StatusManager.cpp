@@ -201,8 +201,8 @@ void StatusManager::resetHeartBeatTimer()
 
 // ITriggerMessageHandler interfaces
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
-bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     switch (message)
@@ -233,13 +233,31 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsign
 
         case MessageTrigger::StatusNotification:
         {
-            m_worker_pool.run<void>(
-                [this, connector_id]
+            if (connector_id.isSet())
+            {
+                unsigned int id = connector_id;
+                m_worker_pool.run<void>(
+                    [this, id]
+                    {
+                        // To let some time for the trigger message reply
+                        std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                        statusNotificationProcess(id);
+                    });
+            }
+            else
+            {
+                for (const Connector* connector : m_connectors.getConnectors())
                 {
-                    // To let some time for the trigger message reply
-                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
-                    statusNotificationProcess(connector_id);
-                });
+                    unsigned int id = connector->id;
+                    m_worker_pool.run<void>(
+                        [this, id]
+                        {
+                            // To let some time for the trigger message reply
+                            std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                            statusNotificationProcess(id);
+                        });
+                }
+            }
             break;
         }
 
@@ -253,8 +271,8 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsign
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     switch (message)
@@ -285,13 +303,31 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message
 
         case MessageTriggerEnumType::StatusNotification:
         {
-            m_worker_pool.run<void>(
-                [this, connector_id]
+            if (connector_id.isSet())
+            {
+                unsigned int id = connector_id;
+                m_worker_pool.run<void>(
+                    [this, id]
+                    {
+                        // To let some time for the trigger message reply
+                        std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                        statusNotificationProcess(id);
+                    });
+            }
+            else
+            {
+                for (const Connector* connector : m_connectors.getConnectors())
                 {
-                    // To let some time for the trigger message reply
-                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
-                    statusNotificationProcess(connector_id);
-                });
+                    unsigned int id = connector->id;
+                    m_worker_pool.run<void>(
+                        [this, id]
+                        {
+                            // To let some time for the trigger message reply
+                            std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                            statusNotificationProcess(id);
+                        });
+                }
+            }
             break;
         }
 

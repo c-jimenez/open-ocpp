@@ -208,7 +208,8 @@ std::string DefaultChargePointEventsHandler::getDiagnostics(const ocpp::types::O
 
     std::stringstream ss;
     ss << "zip " << diag_file << " " << m_config.stackConfig().databasePath();
-    system(ss.str().c_str());
+    int err = WEXITSTATUS(system(ss.str().c_str()));
+    cout << "Command line : " << ss.str() << " => " << err << endl;
 
     return diag_file;
 }
@@ -594,7 +595,8 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
 
         std::stringstream ss;
         ss << "zip " << log_file << " " << m_config.stackConfig().databasePath();
-        system(ss.str().c_str());
+        int err = WEXITSTATUS(system(ss.str().c_str()));
+        cout << "Command line : " << ss.str() << " => " << err << endl;
     }
 
     return log_file;
@@ -627,6 +629,45 @@ bool DefaultChargePointEventsHandler::hasChargePointCertificateInstalled()
         }
     }
     return false;
+}
+
+/** @copydoc ocpp::types::UpdateFirmwareStatusEnumType IChargePointEventsHandler::checkFirmwareSigningCertificate(
+ *                                            const ocpp::x509::Certificate&) */
+ocpp::types::UpdateFirmwareStatusEnumType DefaultChargePointEventsHandler::checkFirmwareSigningCertificate(
+    const ocpp::x509::Certificate& signing_certificate)
+{
+    UpdateFirmwareStatusEnumType ret = UpdateFirmwareStatusEnumType::InvalidCertificate;
+
+    cout << "Check of firmware signing certificate requested : subject = " << signing_certificate.subjectString()
+         << " - issuer = " << signing_certificate.issuerString() << endl;
+
+    // Load all installed Manufacturer CA certificates
+    std::vector<Certificate> ca_certificates;
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                ca_certificates.emplace_back(dir_entry.path());
+            }
+        }
+    }
+    if (!ca_certificates.empty())
+    {
+        // Check signing certificate
+        if (signing_certificate.verify(ca_certificates))
+        {
+            ret = UpdateFirmwareStatusEnumType::Accepted;
+        }
+    }
+    else
+    {
+        cout << "No manufacturer CA installed" << endl;
+    }
+
+    return ret;
 }
 
 /** @brief Get the number of installed CA certificates */

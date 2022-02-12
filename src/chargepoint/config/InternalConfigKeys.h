@@ -42,6 +42,8 @@ static constexpr const char* LAST_CONNECTION_URL_KEY = "LastConnectionUrl";
 static constexpr const char* LAST_REGISTRATION_STATUS_KEY = "LastRegistrationStatus";
 /** @brief Configuration key : local list version */
 static constexpr const char* LOCAL_LIST_VERSION_KEY = "LocalListVersion";
+/** @brief Configuration key : signed firmware update request id */
+static constexpr const char* SIGNED_FW_UPDATE_ID_KEY = "SignedFirmwareUpdateId";
 
 } // namespace chargepoint
 } // namespace ocpp

@@ -41,8 +41,8 @@ TEST_SUITE("WorkerThreadPool class test suite")
             jobs_done++;
         };
 
-        worker_thread_pool.run<void>(job1);
-        Waiter<void> waiter1 = worker_thread_pool.run<void>(job1);
+        Waiter<void> waiter1   = worker_thread_pool.run<void>(job1);
+        Waiter<void> waiter1_1 = worker_thread_pool.run<void>(job1);
 
         auto job2 = [&jobs_done, &jobs_done_mutex]
         {
@@ -63,6 +63,7 @@ TEST_SUITE("WorkerThreadPool class test suite")
         end_job1_var.notify_all();
 
         CHECK(waiter1.wait());
+        CHECK(waiter1_1.wait());
         CHECK_EQ(jobs_done, 7u);
     }
 

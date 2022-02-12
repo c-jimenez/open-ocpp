@@ -321,7 +321,7 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::securityEvent
          << " - message = " << message << endl;
 }
 
-/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest& certificate_request) */
+/** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest&) */
 bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertificate(
     const ocpp::x509::CertificateRequest& certificate_request)
 {
@@ -357,7 +357,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                 std::stringstream sign_cert_cmd_line;
                 sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
                                    << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
-                system(sign_cert_cmd_line.str().c_str());
+                int err = WEXITSTATUS(system(sign_cert_cmd_line.str().c_str()));
+                cout << "Command line : " << sign_cert_cmd_line.str() << " => " << err << endl;
 
                 // Check if the certificate has been generated
                 if (std::filesystem::exists(certificate_filename))
@@ -366,7 +367,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                     std::string       bundle_filename = certificate_filename + ".bundle";
                     std::stringstream generate_bundle_cmd_line;
                     generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
-                    system(generate_bundle_cmd_line.str().c_str());
+                    err = WEXITSTATUS(system(generate_bundle_cmd_line.str().c_str()));
+                    cout << "Command line : " << generate_bundle_cmd_line.str() << " => " << err << endl;
                     if (std::filesystem::exists(bundle_filename))
                     {
                         m_generated_certificate = bundle_filename;
@@ -402,4 +404,14 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
         cout << "[" << m_chargepoint->identifier() << "] - Unable to load CA certificate : " << ca_cert_path << endl;
     }
     return ret;
+}
+
+/** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType,
+                                                                                             const ocpp::types::Optional<int>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwareUpdateStatusNotification(
+    ocpp::types::FirmwareStatusEnumType status, const ocpp::types::Optional<int>& request_id)
+{
+    cout << "[" << m_chargepoint->identifier()
+         << "] - Signed firmware update status notification : status = " << FirmwareStatusEnumTypeHelper.toString(status)
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
 }

@@ -90,11 +90,13 @@ class MeterValuesManager : public IMeterValuesManager,
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int) */
-    bool onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id) override;
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, 
+     *                                                                                 const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id) override;
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, 
+     *                                                                                 const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
     // IConfigChangedListener interface
 

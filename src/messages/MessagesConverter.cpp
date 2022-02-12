@@ -50,6 +50,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "SetChargingProfile.h"
 #include "SignCertificate.h"
 #include "SignedFirmwareStatusNotification.h"
+#include "SignedUpdateFirmware.h"
 #include "StartTransaction.h"
 #include "StatusNotification.h"
 #include "StopTransaction.h"
@@ -107,6 +108,7 @@ MessagesConverter::MessagesConverter()
     REGISTER_CONVERTER(SetChargingProfile);
     REGISTER_CONVERTER(SignCertificate);
     REGISTER_CONVERTER(SignedFirmwareStatusNotification);
+    REGISTER_CONVERTER(SignedUpdateFirmware);
     REGISTER_CONVERTER(StartTransaction);
     REGISTER_CONVERTER(StatusNotification);
     REGISTER_CONVERTER(StopTransaction);
@@ -150,6 +152,7 @@ MessagesConverter::~MessagesConverter()
     DELETE_CONVERTER(SetChargingProfile);
     DELETE_CONVERTER(SignCertificate);
     DELETE_CONVERTER(SignedFirmwareStatusNotification);
+    DELETE_CONVERTER(SignedUpdateFirmware);
     DELETE_CONVERTER(StartTransaction);
     DELETE_CONVERTER(StatusNotification);
     DELETE_CONVERTER(StopTransaction);

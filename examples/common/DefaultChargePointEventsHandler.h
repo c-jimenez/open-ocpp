@@ -158,6 +158,10 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::IChargePointEv
     /** @copydoc bool IChargePointEventsHandler::hasChargePointCertificateInstalled() */
     bool hasChargePointCertificateInstalled() override;
 
+    /** @copydoc ocpp::types::UpdateFirmwareStatusEnumType IChargePointEventsHandler::checkFirmwareSigningCertificate(
+     *                                            const ocpp::x509::Certificate&) */
+    ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(const ocpp::x509::Certificate& signing_certificate) override;
+
     // API
 
     /** @brief Indicate a pending remote start transaction */

@@ -3,7 +3,16 @@
 #################################################################################
 
 # Log level (0 = All logs, 5 = No logs)
-add_compile_definitions(LOG_LEVEL=1)
+if(NOT DEFINED LOG_LEVEL)
+    set(LOG_LEVEL               1)
+endif()
+add_compile_definitions(LOG_LEVEL=${LOG_LEVEL})
+
+# Static library
+option(BUILD_STATIC_LIBRARY "Build Open OCPP as a static library"   OFF)
 
 # Unit tests
-set(BUILD_UNIT_TESTS    ON)
+option(BUILD_UNIT_TESTS     "Build unit tests"                      ON)
+
+# Examples
+option(BUILD_EXAMPLES       "Build examples"                        ON)

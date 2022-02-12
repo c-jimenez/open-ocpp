@@ -19,9 +19,5 @@ target_link_libraries(security_chargepoint
 # Copy to binary directory
 ADD_CUSTOM_COMMAND(TARGET security_chargepoint
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy security_chargepoint ${BIN_DIR}/
-)
-ADD_CUSTOM_COMMAND(TARGET security_chargepoint
-          POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_chargepoint.ini ${BIN_DIR}/
 )

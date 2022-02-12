@@ -64,6 +64,13 @@ class ISecurityManager
     virtual bool exportSecurityEvents(const std::string&                                  filepath,
                                       const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                                       const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
+
+    /**
+     * @brief Get the installed CA certificates as PEM encoded data
+     * @param type Type of certificate
+     * @return Installed CA certificates as PEM encoded data
+     */
+    virtual std::string getCaCertificates(ocpp::types::CertificateUseEnumType type) = 0;
 };
 
 } // namespace chargepoint

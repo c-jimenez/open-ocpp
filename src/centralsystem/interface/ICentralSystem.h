@@ -333,7 +333,7 @@ class ICentralSystem
          * @brief Update the firmware of the charge point
          * @param uri URI where to download the firmware
          * @param retries Number of retries
-         * @param retrieve_date Date and time after which the charge point is allowed to download thefirmware
+         * @param retrieve_date Date and time after which the charge point is allowed to download the firmware
          * @param retry_interval Interval between 2 retries
          * @return true if the operation has started, false otherwise
          */
@@ -404,6 +404,28 @@ class ICentralSystem
          */
         virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
                                                                           const ocpp::x509::Certificate&      certificate) = 0;
+
+        /**
+         * @brief Update the firmware of the charge point
+         * @param request_id Id of the request
+         * @param uri URI where to download the firmware
+         * @param retries Number of retries
+         * @param retrieve_date Date and time at which the charge point must download the firmware
+         * @param retry_interval Interval between 2 retries
+         * @param install_date Date and time at which the charge point must install the firmware
+         * @param signing_certificate Certificate with which the firmware was signed
+         * @param signature Base64 encoded firmware signature
+         * @return Operation status (see UpdateFirmwareStatusEnumType documentation)
+         */
+        virtual ocpp::types::UpdateFirmwareStatusEnumType signedUpdateFirmware(
+            int                                                 request_id,
+            const std::string&                                  uri,
+            const ocpp::types::Optional<unsigned int>&          retries,
+            const ocpp::types::DateTime&                        retrieve_date,
+            const ocpp::types::Optional<std::chrono::seconds>&  retry_interval,
+            const ocpp::types::Optional<ocpp::types::DateTime>& install_date,
+            const ocpp::x509::Certificate&                      signing_certificate,
+            const std::string&                                  signature) = 0;
     };
 };
 

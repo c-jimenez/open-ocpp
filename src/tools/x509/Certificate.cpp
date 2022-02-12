@@ -17,12 +17,18 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Certificate.h"
+#include "CertificateRequest.h"
+#include "PrivateKey.h"
+#include "sign.h"
 
+#include <ctime>
 #include <iomanip>
 #include <sstream>
 
 #include <openssl/bio.h>
+#include <openssl/err.h>
 #include <openssl/pem.h>
+#include <openssl/rand.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
@@ -45,8 +51,57 @@ Certificate::Certificate(const std::string& pem_data) : X509Document(pem_data)
     extractPemChain();
 }
 
+/** @brief Constructor from certificate request and signing certificate */
+Certificate::Certificate(const CertificateRequest& certificate_request,
+                         const Certificate&        signing_certificate,
+                         const PrivateKey&         private_key,
+                         Sha2::Type                sha,
+                         unsigned int              days)
+    : X509Document(std::string(""))
+{
+    // Convert request to certificate
+    X509_REQ*   req          = const_cast<X509_REQ*>(reinterpret_cast<const X509_REQ*>(certificate_request.object()));
+    EVP_PKEY*   pkey         = const_cast<EVP_PKEY*>(reinterpret_cast<const EVP_PKEY*>(private_key.object()));
+    const X509* signing_cert = reinterpret_cast<const X509*>(signing_certificate.object());
+    convertCertificateRequest(req, signing_cert, pkey, sha, days);
+}
+
+/** @brief Constructor for a self-signed certificate from a certificate request */
+Certificate::Certificate(const CertificateRequest& certificate_request, const PrivateKey& private_key, Sha2::Type sha, unsigned int days)
+    : X509Document(std::string(""))
+{
+    // Convert request to certificate
+    X509_REQ* req  = const_cast<X509_REQ*>(reinterpret_cast<const X509_REQ*>(certificate_request.object()));
+    EVP_PKEY* pkey = const_cast<EVP_PKEY*>(reinterpret_cast<const EVP_PKEY*>(private_key.object()));
+    convertCertificateRequest(req, nullptr, pkey, sha, days);
+}
+
+/** @brief Copy constructor */
+Certificate::Certificate(const Certificate& copy)
+    : X509Document(copy),
+      m_pem_chain(copy.m_pem_chain),
+      m_certificate_chain(copy.m_certificate_chain),
+      m_serial_number(copy.m_serial_number),
+      m_serial_number_string(copy.m_serial_number_string),
+      m_serial_number_hex_string(copy.m_serial_number_hex_string),
+      m_validity_from(copy.m_validity_from),
+      m_validity_to(copy.m_validity_to),
+      m_issuer(copy.m_issuer),
+      m_issuer_string(copy.m_issuer_string),
+      m_is_self_signed(copy.m_is_self_signed)
+{
+    // Duplicate OpenSSL object
+    if (copy.m_openssl_object)
+    {
+        m_openssl_object = X509_dup(reinterpret_cast<X509*>(copy.m_openssl_object));
+    }
+}
+
 /** @brief Destructor */
-Certificate::~Certificate() { }
+Certificate::~Certificate()
+{
+    X509_free(reinterpret_cast<X509*>(m_openssl_object));
+}
 
 /** @brief Verify the PEM certificate chain */
 bool Certificate::verify() const
@@ -56,76 +111,40 @@ bool Certificate::verify() const
     // Check if it is a certificate chain
     if (m_certificate_chain.size() > 1u)
     {
-        // Create verify store context
-        X509_STORE_CTX* store_context = X509_STORE_CTX_new();
-
-        // Load certificate to check
-        X509* cert = reinterpret_cast<X509*>(loadX509(m_pem_chain[0]));
-        if (cert)
-        {
-            X509_STORE_CTX_init(store_context, nullptr, cert, nullptr);
-
-            // Create sub-CA certificates stack = not self-signed certificates
-            STACK_OF(X509)* sub_cas = sk_X509_new_null();
-            std::vector<X509*> sub_cas_vec;
-            for (size_t i = 1u; i < m_certificate_chain.size(); i++)
-            {
-                const Certificate& c = m_certificate_chain[i];
-                if (!c.isSelfSigned())
-                {
-                    X509* x509_cert = reinterpret_cast<X509*>(loadX509(c.pem()));
-                    if (x509_cert)
-                    {
-                        sk_X509_push(sub_cas, x509_cert);
-                        sub_cas_vec.push_back(x509_cert);
-                    }
-                }
-            }
-            X509_STORE_CTX_set0_untrusted(store_context, sub_cas);
-
-            // Create CA certificates stack = self-signed certificates
-            STACK_OF(X509)* cas = sk_X509_new_null();
-            std::vector<X509*> cas_vec;
-            for (size_t i = 1u; i < m_certificate_chain.size(); i++)
-            {
-                const Certificate& c = m_certificate_chain[i];
-                if (c.isSelfSigned())
-                {
-                    X509* x509_cert = reinterpret_cast<X509*>(loadX509(c.pem()));
-                    if (x509_cert)
-                    {
-                        sk_X509_push(cas, x509_cert);
-                        cas_vec.push_back(x509_cert);
-                    }
-                }
-            }
-            X509_STORE_CTX_set0_trusted_stack(store_context, cas);
-
-            // Verifiy certificate chain
-            if (X509_verify_cert(store_context) == 1)
-            {
-                ret = true;
-            }
-
-            // Release memory
-            sk_X509_free(cas);
-            for (X509* x509_cert : cas_vec)
-            {
-                X509_free(x509_cert);
-            }
-            sk_X509_free(sub_cas);
-            for (X509* x509_cert : sub_cas_vec)
-            {
-                X509_free(x509_cert);
-            }
-            X509_free(cert);
-        }
-
-        // Release verify context
-        X509_STORE_CTX_free(store_context);
+        ret = verify(*this, m_certificate_chain, 1u);
     }
 
     return ret;
+}
+
+/** @brief Verify the certificate signature against a certificate chain */
+bool Certificate::verify(const std::vector<Certificate>& ca_chain) const
+{
+    bool ret = false;
+
+    // Check if the certificate is valid
+    if (m_is_valid)
+    {
+        ret = verify(*this, ca_chain, 0u);
+    }
+
+    return ret;
+}
+
+/** @brief Verify the signature of a buffer using the certificate's public key */
+bool Certificate::verify(const std::vector<uint8_t>& signature, const void* buffer, size_t size, Sha2::Type sha)
+{
+    X509*     cert = reinterpret_cast<X509*>(m_openssl_object);
+    EVP_PKEY* pkey = X509_get0_pubkey(cert);
+    return ocpp::x509::verify(signature, buffer, size, sha, pkey);
+}
+
+/** @brief Verify the signature of a file using the certificate's public key */
+bool Certificate::verify(const std::vector<uint8_t>& signature, const std::string& filepath, Sha2::Type sha)
+{
+    X509*     cert = reinterpret_cast<X509*>(m_openssl_object);
+    EVP_PKEY* pkey = X509_get0_pubkey(cert);
+    return ocpp::x509::verify(signature, filepath, sha, pkey);
 }
 
 /** @brief Extract all the PEM certificates in the certificate chain */
@@ -185,6 +204,113 @@ void Certificate::extractPemChain()
             m_certificate_chain.emplace_back(*this);
         }
     }
+}
+
+/** @brief Converts a certificate request to a certificate */
+void Certificate::convertCertificateRequest(void* request, const void* issuer, void* key, Sha2::Type sha, unsigned int days)
+{
+    X509_REQ*   cert_request = reinterpret_cast<X509_REQ*>(request);
+    const X509* issuer_cert  = reinterpret_cast<const X509*>(issuer);
+    EVP_PKEY*   private_key  = reinterpret_cast<EVP_PKEY*>(key);
+
+    X509* cert = X509_new();
+
+    // Set version
+    X509_set_version(cert, X509_REQ_get_version(cert_request));
+
+    // Set validity dates
+    ASN1_TIME* validity = ASN1_TIME_new();
+    ASN1_TIME_set(validity, time(nullptr));
+    X509_set1_notBefore(cert, validity);
+    ASN1_TIME_set(validity, time(nullptr) + (days * 24 * 3600));
+    X509_set1_notAfter(cert, validity);
+    ASN1_TIME_free(validity);
+
+    // Set serial number
+    uint8_t serial_bytes[20];
+    RAND_bytes(serial_bytes, sizeof(serial_bytes));
+    ASN1_INTEGER* serial = ASN1_INTEGER_new();
+    ASN1_STRING_set(serial, serial_bytes, sizeof(serial_bytes));
+    X509_set_serialNumber(cert, serial);
+
+    // Set subject and issuer name
+    X509_NAME* issuer_name;
+    if (issuer_cert)
+    {
+        issuer_name = X509_get_subject_name(issuer_cert);
+    }
+    else
+    {
+        issuer_name = X509_REQ_get_subject_name(cert_request);
+    }
+    X509_set_issuer_name(cert, issuer_name);
+    X509_set_subject_name(cert, X509_REQ_get_subject_name(cert_request));
+
+    // Set the public key
+    EVP_PKEY* public_key = X509_REQ_get_pubkey(cert_request);
+    X509_set_pubkey(cert, public_key);
+
+    // Set the extensions
+    STACK_OF(X509_EXTENSION)* extensions = X509_REQ_get_extensions(cert_request);
+    if (extensions)
+    {
+        int extensions_count = X509v3_get_ext_count(extensions);
+        for (int i = 0; i < extensions_count; i++)
+        {
+            X509_EXTENSION* extension = X509v3_get_ext(extensions, i);
+            X509_add_ext(cert, extension, -1);
+            if (!issuer_cert)
+            {
+                if (OBJ_obj2nid(X509_EXTENSION_get_object(extension)) == NID_subject_alt_name)
+                {
+                    X509_EXTENSION_set_object(extension, OBJ_nid2obj(NID_issuer_alt_name));
+                    X509_add_ext(cert, extension, -1);
+                }
+            }
+        }
+        sk_X509_EXTENSION_free(extensions);
+    }
+    if (issuer_cert)
+    {
+        int   crit = 0;
+        int   idx  = 0;
+        void* val  = X509_get_ext_d2i(issuer_cert, NID_subject_alt_name, &crit, &idx);
+        if (val)
+        {
+            X509_add1_ext_i2d(cert, NID_issuer_alt_name, val, crit, 0);
+            OPENSSL_free(val);
+        }
+    }
+
+    // Sign the certificate
+    const EVP_MD* digest = nullptr;
+    if (sha == Sha2::Type::SHA256)
+    {
+        digest = EVP_sha256();
+    }
+    else if (sha == Sha2::Type::SHA384)
+    {
+        digest = EVP_sha384();
+    }
+    else
+    {
+        digest = EVP_sha512();
+    }
+    X509_sign(cert, private_key, digest);
+
+    // Convert to PEM
+    BIO* bio = BIO_new(BIO_s_mem());
+    PEM_write_bio_X509(bio, cert);
+    char* bio_data = nullptr;
+    int   bio_len  = BIO_get_mem_data(bio, &bio_data);
+    m_pem.insert(0, bio_data, static_cast<size_t>(bio_len));
+    BIO_free(bio);
+
+    // Release memory
+    X509_free(cert);
+
+    // Read PEM infos
+    extractPemChain();
 }
 
 /** @brief Load OpenSSL X509 certificate structure from a PEM encoded data string */
@@ -257,23 +383,100 @@ void Certificate::readInfos(Certificate& certificate)
             X509_EXTENSION* extension         = X509v3_get_ext(extensions, i);
             ASN1_OBJECT*    extension_obj     = X509_EXTENSION_get_object(extension);
             int             extension_obj_nid = OBJ_obj2nid(extension_obj);
-            certificate.m_x509v3_extensions.emplace_back(OBJ_nid2ln(extension_obj_nid));
+            certificate.m_x509v3_extensions_names.emplace_back(OBJ_nid2ln(extension_obj_nid));
             if (extension_obj_nid == NID_issuer_alt_name)
             {
-                certificate.m_issuer_alternate_names = convertGeneralNames(X509_get_ext_d2i(cert, NID_issuer_alt_name, NULL, NULL));
+                certificate.m_x509v3_extensions.issuer_alternate_names =
+                    convertGeneralNames(X509_get_ext_d2i(cert, NID_issuer_alt_name, nullptr, nullptr));
             }
             else if (extension_obj_nid == NID_subject_alt_name)
             {
-                certificate.m_subject_alternate_names = convertGeneralNames(X509_get_ext_d2i(cert, NID_subject_alt_name, NULL, NULL));
+                certificate.m_x509v3_extensions.subject_alternate_names =
+                    convertGeneralNames(X509_get_ext_d2i(cert, NID_subject_alt_name, nullptr, nullptr));
+            }
+            else if (extension_obj_nid == NID_basic_constraints)
+            {
+                BASIC_CONSTRAINTS* basic_constraint = (BASIC_CONSTRAINTS*)X509_get_ext_d2i(cert, NID_basic_constraints, nullptr, nullptr);
+                if (basic_constraint)
+                {
+                    certificate.m_x509v3_extensions.basic_constraints.present = true;
+                    if (basic_constraint->ca != 0)
+                    {
+                        certificate.m_x509v3_extensions.basic_constraints.is_ca = true;
+                        if (basic_constraint->pathlen)
+                        {
+                            certificate.m_x509v3_extensions.basic_constraints.path_length = ASN1_INTEGER_get(basic_constraint->pathlen);
+                        }
+                    }
+                }
             }
             else
             {
             }
         }
 
-        X509_free(cert);
+        // Save OpenSSL object
+        certificate.m_openssl_object = cert;
     }
 }
 
+/** @brief Verify a certificate against a chain of certificates */
+bool Certificate::verify(const Certificate& certificate, const std::vector<Certificate>& certificate_chain, size_t start_index)
+{
+    bool ret = false;
+
+    // Create verify store context
+    X509_STORE_CTX* store_context = X509_STORE_CTX_new();
+
+    // Load certificate to check
+    X509_STORE_CTX_init(store_context, nullptr, reinterpret_cast<X509*>(certificate.m_openssl_object), nullptr);
+
+    // Create sub-CA certificates stack = not self-signed certificates
+    STACK_OF(X509)* sub_cas = sk_X509_new_null();
+    for (size_t i = start_index; i < certificate_chain.size(); i++)
+    {
+        const Certificate& c = certificate_chain[i];
+        if (!c.isSelfSigned())
+        {
+            X509* x509_cert = reinterpret_cast<X509*>(c.m_openssl_object);
+            if (x509_cert)
+            {
+                sk_X509_push(sub_cas, x509_cert);
+            }
+        }
+    }
+    X509_STORE_CTX_set0_untrusted(store_context, sub_cas);
+
+    // Create CA certificates stack = self-signed certificates
+    STACK_OF(X509)* cas = sk_X509_new_null();
+    for (size_t i = start_index; i < certificate_chain.size(); i++)
+    {
+        const Certificate& c = certificate_chain[i];
+        if (c.isSelfSigned())
+        {
+            X509* x509_cert = reinterpret_cast<X509*>(c.m_openssl_object);
+            if (x509_cert)
+            {
+                sk_X509_push(cas, x509_cert);
+            }
+        }
+    }
+    X509_STORE_CTX_set0_trusted_stack(store_context, cas);
+
+    // Verify certificate chain
+    if (X509_verify_cert(store_context) == 1)
+    {
+        ret = true;
+    }
+
+    // Release memory
+    sk_X509_free(cas);
+    sk_X509_free(sub_cas);
+
+    // Release verify context
+    X509_STORE_CTX_free(store_context);
+
+    return ret;
+}
 } // namespace x509
 } // namespace ocpp

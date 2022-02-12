@@ -17,21 +17,28 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "MaintenanceManager.h"
+#include "Base64.h"
+#include "Certificate.h"
 #include "Connectors.h"
 #include "DiagnosticsStatusNotification.h"
 #include "FirmwareStatusNotification.h"
 #include "GenericMessageSender.h"
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
+#include "IInternalConfigManager.h"
+#include "InternalConfigKeys.h"
 #include "LogStatusNotification.h"
 #include "Logger.h"
+#include "SecurityEvent.h"
 #include "SecurityManager.h"
+#include "SignedFirmwareStatusNotification.h"
 #include "WorkerThreadPool.h"
 
 #include <filesystem>
 
 using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::x509;
 
 namespace ocpp
 {
@@ -40,6 +47,7 @@ namespace chargepoint
 
 /** @brief Constructor */
 MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&         stack_config,
+                                       ocpp::config::IInternalConfigManager&           internal_config,
                                        IChargePointEventsHandler&                      events_handler,
                                        ocpp::helpers::WorkerThreadPool&                worker_pool,
                                        const ocpp::messages::GenericMessagesConverter& messages_converter,
@@ -53,7 +61,9 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
       GenericMessageHandler<GetDiagnosticsReq, GetDiagnosticsConf>(GET_DIAGNOSTICS_ACTION, messages_converter),
       GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>(UPDATE_FIRMWARE_ACTION, messages_converter),
       GenericMessageHandler<GetLogReq, GetLogConf>(GET_LOG_ACTION, messages_converter),
+      GenericMessageHandler<SignedUpdateFirmwareReq, SignedUpdateFirmwareConf>(SIGNED_UPDATE_FIRMWARE_ACTION, messages_converter),
       m_stack_config(stack_config),
+      m_internal_config(internal_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),
       m_msg_sender(msg_sender),
@@ -64,7 +74,9 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
       m_logs_status(UploadLogStatusEnumType::Idle),
       m_logs_request_id(),
       m_firmware_thread(nullptr),
-      m_firmware_status(FirmwareStatus::Idle)
+      m_firmware_status(FirmwareStatus::Idle),
+      m_signed_firmware_status(FirmwareStatusEnumType::Idle),
+      m_firmware_request_id()
 {
     msg_dispatcher.registerHandler(RESET_ACTION, *dynamic_cast<GenericMessageHandler<ResetReq, ResetConf>*>(this));
     msg_dispatcher.registerHandler(UNLOCK_CONNECTOR_ACTION,
@@ -74,9 +86,35 @@ MaintenanceManager::MaintenanceManager(const ocpp::config::IChargePointConfig&  
     msg_dispatcher.registerHandler(UPDATE_FIRMWARE_ACTION,
                                    *dynamic_cast<GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>*>(this));
     msg_dispatcher.registerHandler(GET_LOG_ACTION, *dynamic_cast<GenericMessageHandler<GetLogReq, GetLogConf>*>(this));
+    msg_dispatcher.registerHandler(SIGNED_UPDATE_FIRMWARE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SignedUpdateFirmwareReq, SignedUpdateFirmwareConf>*>(this));
     trigger_manager.registerHandler(MessageTrigger::DiagnosticsStatusNotification, *this);
     trigger_manager.registerHandler(MessageTrigger::FirmwareStatusNotification, *this);
     trigger_manager.registerHandler(MessageTriggerEnumType::LogStatusNotification, *this);
+    trigger_manager.registerHandler(MessageTriggerEnumType::FirmwareStatusNotification, *this);
+
+    // Get current signed firmware update request id
+    if (!m_internal_config.keyExist(SIGNED_FW_UPDATE_ID_KEY))
+    {
+        m_internal_config.createKey(SIGNED_FW_UPDATE_ID_KEY, "");
+    }
+    else
+    {
+        std::string request_id_str;
+        if (m_internal_config.getKey(SIGNED_FW_UPDATE_ID_KEY, request_id_str))
+        {
+            if (!request_id_str.empty())
+            {
+                m_firmware_request_id = std::atoi(request_id_str.c_str());
+            }
+            LOG_DEBUG << "Signed firmare update request id : "
+                      << (m_firmware_request_id.isSet() ? std::to_string(m_firmware_request_id) : "No signed firmware update in progress");
+        }
+        else
+        {
+            LOG_ERROR << "Unable to retrieve current signed firmare update request id";
+        }
+    }
 }
 
 /** @brief Destructor */
@@ -107,8 +145,25 @@ bool MaintenanceManager::notifyFirmwareUpdateStatus(bool success)
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id)
+/** @brief Notify the end of a signed firmware update operation */
+bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status)
+{
+    // Update status
+    m_signed_firmware_status = status;
+
+    // Send status
+    bool ret = sendSignedFirmwareStatusNotification();
+
+    // Reset status
+    m_signed_firmware_status = FirmwareStatusEnumType::Idle;
+    m_firmware_request_id.clear();
+    m_internal_config.setKey(SIGNED_FW_UPDATE_ID_KEY, "");
+
+    return ret;
+}
+
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     (void)connector_id;
@@ -148,8 +203,9 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
+                                          const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     (void)connector_id;
@@ -163,6 +219,18 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType me
                     // To let some time for the trigger message reply
                     std::this_thread::sleep_for(std::chrono::milliseconds(250u));
                     sendLogStatusNotification();
+                });
+        }
+        break;
+
+        case MessageTriggerEnumType::FirmwareStatusNotification:
+        {
+            m_worker_pool.run<void>(
+                [this]
+                {
+                    // To let some time for the trigger message reply
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250u));
+                    sendSignedFirmwareStatusNotification();
                 });
         }
         break;
@@ -299,8 +367,7 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& 
     (void)error_message;
     (void)response;
 
-    LOG_INFO << "Firmare update requested : location = " << request.location << request.retrieveDate
-             << " - retrieveDate = " << request.retrieveDate.str();
+    LOG_INFO << "Firmare update requested : location = " << request.location << " - retrieveDate = " << request.retrieveDate.str();
 
     // Check if a request is already in progress
     if (!m_firmware_thread)
@@ -313,6 +380,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& 
                                                       request.retryInterval,
                                                       request.retrieveDate));
         m_firmware_thread->detach();
+    }
+    else
+    {
+        LOG_ERROR << "Firmware update already in progress";
     }
 
     return true;
@@ -385,6 +456,89 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
     else
     {
         LOG_ERROR << "GetLog operation already in progress";
+    }
+
+    return true;
+}
+
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+ *                                                                                ResponseType& response,
+ *                                                                                const char*& error_code,
+ *                                                                                std::string& error_message)
+ */
+bool MaintenanceManager::handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
+                                       ocpp::messages::SignedUpdateFirmwareConf&      response,
+                                       const char*&                                   error_code,
+                                       std::string&                                   error_message)
+{
+    (void)error_code;
+    (void)error_message;
+
+    LOG_INFO << "Signed firmare update requested : location = " << request.firmware.location.str()
+             << " - retrieveDate = " << request.firmware.retrieveDateTime.str() << " - signature = " << request.firmware.signature.str();
+
+    // Prepare response
+    response.status = UpdateFirmwareStatusEnumType::Rejected;
+
+    // Check if a request is already in progress
+    if (!m_firmware_thread)
+    {
+        // Check signing certificate
+        std::time_t now = DateTime::now().timestamp();
+        Certificate signing_certificate(request.firmware.signingCertificate);
+        response.status = UpdateFirmwareStatusEnumType::InvalidCertificate;
+        if (signing_certificate.isValid() && (signing_certificate.validityFrom() <= now) && (signing_certificate.validityTo() >= now) &&
+            !signing_certificate.isSelfSigned())
+        {
+            // Check the signature of the signing certificate
+            if (m_stack_config.internalCertificateManagementEnabled())
+            {
+                // Get the installed manufacter CAs to verify the signature of the certificat
+                Certificate manufacturer_cas(m_security_manager.getCaCertificates(CertificateUseEnumType::ManufacturerRootCertificate));
+                if (manufacturer_cas.isValid())
+                {
+                    // Check signature
+                    if (signing_certificate.verify(manufacturer_cas.certificateChain()))
+                    {
+                        response.status = UpdateFirmwareStatusEnumType::Accepted;
+                    }
+                }
+                else
+                {
+                    LOG_ERROR << "No valid Manufacturer CA certificates installed";
+                }
+            }
+            else
+            {
+                // Check certificate signature
+                response.status = m_events_handler.checkFirmwareSigningCertificate(signing_certificate);
+            }
+            if (response.status == UpdateFirmwareStatusEnumType::Accepted)
+            {
+                // Create a separate thread since the operation can be time consuming
+                m_firmware_request_id = request.requestId;
+                m_internal_config.setKey(SIGNED_FW_UPDATE_ID_KEY, std::to_string(request.requestId));
+                m_firmware_thread = new std::thread(std::bind(&MaintenanceManager::processSignedUpdateFirmware,
+                                                              this,
+                                                              request.firmware.location,
+                                                              request.retries,
+                                                              request.retryInterval,
+                                                              request.firmware.retrieveDateTime,
+                                                              request.firmware.installDateTime,
+                                                              signing_certificate,
+                                                              request.firmware.signature));
+                m_firmware_thread->detach();
+            }
+        }
+        if (response.status == UpdateFirmwareStatusEnumType::InvalidCertificate)
+        {
+            // Send a security event
+            m_security_manager.logSecurityEvent(SECEVT_INVALID_FIRMWARE_SIGNING_CERT, "");
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Firmware update already in progress";
     }
 
     return true;
@@ -656,6 +810,135 @@ void MaintenanceManager::sendLogStatusNotification()
     status_req.status    = m_logs_status;
     status_req.requestId = m_logs_request_id;
     m_msg_sender.call(LOG_STATUS_NOTIFICATION_ACTION, status_req, status_conf);
+}
+
+/** @brief Process the signed firmware update */
+void MaintenanceManager::processSignedUpdateFirmware(std::string                                  location,
+                                                     ocpp::types::Optional<unsigned int>          retries,
+                                                     ocpp::types::Optional<unsigned int>          retry_interval,
+                                                     ocpp::types::DateTime                        retrieve_date,
+                                                     ocpp::types::Optional<ocpp::types::DateTime> install_date,
+                                                     ocpp::x509::Certificate                      signing_certificate,
+                                                     std::string                                  signature)
+{
+    // Check retrieve date
+    if (retrieve_date > DateTime::now())
+    {
+        LOG_INFO << "SignedUpdateFirmware : Waiting until retrieve date";
+        m_signed_firmware_status = FirmwareStatusEnumType::DownloadScheduled;
+        sendSignedFirmwareStatusNotification();
+        std::this_thread::sleep_until(std::chrono::system_clock::from_time_t(retrieve_date.timestamp()));
+    }
+
+    // Notify start of download
+    std::string local_firmware_file = m_events_handler.updateFirmwareRequested();
+    m_signed_firmware_status        = FirmwareStatusEnumType::Downloading;
+    sendSignedFirmwareStatusNotification();
+
+    // Configure retries
+    unsigned int nb_retries = 1u;
+    if (retries.isSet())
+    {
+        nb_retries = retries;
+    }
+    std::chrono::seconds retry_interval_s(1u);
+    if (retry_interval.isSet())
+    {
+        retry_interval_s = std::chrono::seconds(retry_interval.value());
+    }
+
+    // Download loop
+    bool success = true;
+    do
+    {
+        success = m_events_handler.downloadFile(location, local_firmware_file);
+        if (!success)
+        {
+            // Next retry
+            nb_retries--;
+            if (nb_retries != 0)
+            {
+                LOG_WARNING << "SignedUpdateFirmware : download failed (" << nb_retries << " retrie(s) left - next retry in "
+                            << retry_interval_s.count() << "s)";
+                std::this_thread::sleep_for(retry_interval_s);
+            }
+        }
+
+    } while (!success && (nb_retries != 0));
+
+    // Notify end of operation
+    if (success)
+    {
+        m_signed_firmware_status = FirmwareStatusEnumType::Downloaded;
+        LOG_INFO << "SignedUpdateFirmware download : success";
+    }
+    else
+    {
+        m_signed_firmware_status = FirmwareStatusEnumType::DownloadFailed;
+        LOG_ERROR << "SignedUpdateFirmware download : failed";
+    }
+    sendSignedFirmwareStatusNotification();
+
+    if (success)
+    {
+        // Verify signature
+        std::vector<uint8_t> decoded_signature = base64::decode(signature);
+        success                                = signing_certificate.verify(decoded_signature, local_firmware_file, Sha2::Type::SHA256);
+
+        // Notify end of operation
+        if (success)
+        {
+            m_signed_firmware_status = FirmwareStatusEnumType::SignatureVerified;
+            LOG_INFO << "SignedUpdateFirmware verify : success";
+        }
+        else
+        {
+            m_signed_firmware_status = FirmwareStatusEnumType::InvalidSignature;
+            LOG_ERROR << "SignedUpdateFirmware verify : failed";
+        }
+        sendSignedFirmwareStatusNotification();
+
+        if (success)
+        {
+            // Check install date
+            if (install_date.isSet() && (install_date.value() > DateTime::now()))
+            {
+                LOG_INFO << "SignedUpdateFirmware : Waiting until install date";
+                m_signed_firmware_status = FirmwareStatusEnumType::InstallScheduled;
+                sendSignedFirmwareStatusNotification();
+                std::this_thread::sleep_until(std::chrono::system_clock::from_time_t(install_date.value().timestamp()));
+            }
+
+            // Notify that firmware is ready to be installed
+            m_signed_firmware_status = FirmwareStatusEnumType::Installing;
+            sendSignedFirmwareStatusNotification();
+            m_events_handler.installFirmware(local_firmware_file);
+        }
+    }
+    if (!success)
+    {
+        // Reset status
+        m_signed_firmware_status = FirmwareStatusEnumType::Idle;
+        m_firmware_request_id.clear();
+        m_internal_config.setKey(SIGNED_FW_UPDATE_ID_KEY, "");
+    }
+
+    // Release thread to allow new firmware update requests
+    delete m_firmware_thread;
+    m_firmware_thread = nullptr;
+}
+
+/** @brief Send a signed firmware status notification */
+bool MaintenanceManager::sendSignedFirmwareStatusNotification()
+{
+    LOG_INFO << "SignedUpdateFirmware status : " << FirmwareStatusEnumTypeHelper.toString(m_signed_firmware_status);
+
+    SignedFirmwareStatusNotificationReq  status_req;
+    SignedFirmwareStatusNotificationConf status_conf;
+    status_req.status    = m_signed_firmware_status;
+    status_req.requestId = m_firmware_request_id;
+    CallResult ret       = m_msg_sender.call(SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, status_req, status_conf);
+    return (ret == CallResult::Ok);
 }
 
 } // namespace chargepoint

@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <iomanip>
 #include <sstream>
 
+#include <openssl/evp.h>
 #include <openssl/sha.h>
 
 namespace ocpp
@@ -29,32 +30,33 @@ namespace x509
 {
 
 /** @brief Constructor */
-Sha2::Sha2(Type type) : m_type(type), m_context(nullptr), m_last_result()
+Sha2::Sha2(Type type) : m_context(nullptr), m_md(nullptr), m_last_result()
 {
     // Allocate computation context
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX_init(ctx);
     if (type == Type::SHA256)
     {
         m_last_result.resize(SHA256_DIGEST_LENGTH);
-        m_context = new SHA256_CTX();
+        m_md = EVP_sha256();
     }
     else if (type == Type::SHA384)
     {
         m_last_result.resize(SHA384_DIGEST_LENGTH);
-        m_context = new SHA512_CTX();
+        m_md = EVP_sha384();
     }
     else
     {
         m_last_result.resize(SHA512_DIGEST_LENGTH);
-        m_context = new SHA512_CTX();
+        m_md = EVP_sha512();
     }
+    m_context = ctx;
 }
 
 /** @brief Destructor */
 Sha2::~Sha2()
 {
-    // void* cannot be deleted using 'delete'
-    // so cast into int* to free memory without destructor call
-    delete reinterpret_cast<int*>(m_context);
+    EVP_MD_CTX_free(reinterpret_cast<EVP_MD_CTX*>(m_context));
 }
 
 /** @brief Compute the SHA of a data buffer */
@@ -68,53 +70,20 @@ std::vector<uint8_t> Sha2::compute(const void* data, size_t size)
 /** @brief Initialize a new computation */
 void Sha2::init()
 {
-    if (m_type == Type::SHA256)
-    {
-        SHA256_Init(reinterpret_cast<SHA256_CTX*>(m_context));
-    }
-    else if (m_type == Type::SHA384)
-    {
-        SHA384_Init(reinterpret_cast<SHA512_CTX*>(m_context));
-    }
-    else
-    {
-        SHA512_Init(reinterpret_cast<SHA512_CTX*>(m_context));
-    }
+    EVP_DigestInit(reinterpret_cast<EVP_MD_CTX*>(m_context), reinterpret_cast<const EVP_MD*>(m_md));
 }
 
 /** @brief Add data to the current computation */
 void Sha2::update(const void* data, size_t size)
 {
-    if (m_type == Type::SHA256)
-    {
-        SHA256_Update(reinterpret_cast<SHA256_CTX*>(m_context), data, size);
-    }
-    else if (m_type == Type::SHA384)
-    {
-        SHA384_Update(reinterpret_cast<SHA512_CTX*>(m_context), data, size);
-    }
-    else
-    {
-        SHA512_Update(reinterpret_cast<SHA512_CTX*>(m_context), data, size);
-    }
+    EVP_DigestUpdate(reinterpret_cast<EVP_MD_CTX*>(m_context), data, size);
 }
 
 /** @brief Finalize the computation */
 std::vector<uint8_t> Sha2::finalize()
 {
-    if (m_type == Type::SHA256)
-    {
-        SHA256_Final(&m_last_result[0], reinterpret_cast<SHA256_CTX*>(m_context));
-    }
-    else if (m_type == Type::SHA384)
-    {
-        SHA384_Final(&m_last_result[0], reinterpret_cast<SHA512_CTX*>(m_context));
-    }
-    else
-    {
-        SHA512_Final(&m_last_result[0], reinterpret_cast<SHA512_CTX*>(m_context));
-    }
-
+    unsigned int size = m_last_result.size();
+    EVP_DigestFinal(reinterpret_cast<EVP_MD_CTX*>(m_context), &m_last_result[0], &size);
     return m_last_result;
 }
 
