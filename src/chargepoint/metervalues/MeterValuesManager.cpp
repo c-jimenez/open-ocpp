@@ -184,11 +184,11 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
     }
 }
 
-/** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int) */
-bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>&) */
+bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (message == MessageTrigger::MeterValues)
+    if (connector_id.isSet() && (message == MessageTrigger::MeterValues))
     {
         processTriggered(connector_id);
         ret = true;
@@ -196,11 +196,12 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int) */
-bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>&) */
+bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
+                                          const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (message == MessageTriggerEnumType::MeterValues)
+    if (connector_id.isSet() && (message == MessageTriggerEnumType::MeterValues))
     {
         processTriggered(connector_id);
         ret = true;

@@ -162,8 +162,8 @@ bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareS
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, unsigned int) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     (void)connector_id;
@@ -203,8 +203,9 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, u
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, unsigned int) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, unsigned int connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
+                                          const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     (void)connector_id;

@@ -50,7 +50,6 @@ bool TriggerMessageReqConverter::fromJson(const rapidjson::Value& json,
                                           std::string&            error_message)
 {
     bool ret;
-    data.connectorId      = 0;
     ret                   = extract(json, "connectorId", data.connectorId, error_message);
     data.requestedMessage = MessageTriggerHelper.fromString(json["requestedMessage"].GetString());
     if (!ret)

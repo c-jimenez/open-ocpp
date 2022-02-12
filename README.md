@@ -325,7 +325,7 @@ And to run the unit tests :
 
 ```make tests-gcc-native``` or ```make tests-clang-native```
 
-The build generates 2 flavors of the **Open OCPP** librairies depending on the needs of your project :
+The build generates 2 flavors of the **Open OCPP** library depending on the needs of your project :
 * Shared : libopen-ocpp.so
 * Static : libopen-ocpp_static.a
 
