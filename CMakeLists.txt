@@ -102,7 +102,8 @@ set_target_properties(open-ocpp-dynamic PROPERTIES OUTPUT_NAME "open-ocpp")
 # Install commands
 include(GNUInstallDirs)
 
-file(GLOB_RECURSE PUBLIC_HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "src/*.h")
+file(GLOB_RECURSE PUBLIC_HEADERS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/src/*.h")
 
 install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -110,6 +111,16 @@ install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp)
+
+file(GLOB RAPIDJSON_HEADERS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/*.h")
+file(GLOB RAPIDJSON_INTERNAL_HEADERS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/internal/*.h")
+file(GLOB RAPIDJSON_ERROR_HEADERS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/error/*.h")
+install(FILES ${RAPIDJSON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson)
+install(FILES ${RAPIDJSON_INTERNAL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/internal)
+install(FILES ${RAPIDJSON_ERROR_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/error)
 
 # Generate pkgconfig files
 set(PKG_CONFIG_LIBDIR       "\${prefix}/lib")

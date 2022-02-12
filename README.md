@@ -329,7 +329,7 @@ The build generates 2 flavors of the **Open OCPP** librairies depending on the n
 * Shared : libopen-ocpp.so
 * Static : libopen-ocpp_static.a
 
-**Note**: When using **Open OCPP** in a non GNU LGPL project, the shared library must be used in order to not contaminate your project with the LGPL licence.
+**Note**: When using **Open OCPP** in a non GNU LGPL project, the shared library must be used in order to not contaminate your project with the LGPL licence (see [Wikipedia GNU LGPL article](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License#Differences_from_the_GPL))
 
 ## Install and use
 ### Installation

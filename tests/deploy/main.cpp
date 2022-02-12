@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ICentralSystemEventsHandler.h"
 #include "IChargePoint.h"
 #include "IChargePointEventsHandler.h"
+#include "json.h"
 
 using namespace ocpp;
 using namespace ocpp::config;
