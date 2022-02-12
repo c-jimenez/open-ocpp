@@ -338,13 +338,15 @@ The build generates 2 flavors of the **Open OCPP** library depending on the need
 
 ```cmake --install [build_dir] --strip```
 
-The makefile contains helper targets which can be called if the installation needs to be done in a non standard directory using the variable INSTALL_PREFIX :
+The makefile contains helper targets which can be called if the installation needs to be done in a non standard directory using the variable *INSTALL_PREFIX* :
 
 ```make install-gcc-native INSTALL_PREFIX=/your/directory``` or ```make install-clang-native INSTALL_PREFIX=/your/directory```
 
-If run without the INSTALL_PREFIX variable, it will install in the standard system directories.
+If run without the *INSTALL_PREFIX* variable, it will install in the standard system directories.
 
-**Note**: If INSTALL_PREFIX is used, it must also be defined when building the project with the makefile helper targets.
+**Note**: If *INSTALL_PREFIX* is used, it must also be defined when building the project with the makefile helper targets.
+
+**Open OCPP** needs the JSON schemas of the OCPP messages during execution. The schemas are installed in the : *INSTALL_DIR*/include/openocpp/schemas directory where *INSTALL_DIR* can be either the standard system directories or the custom directory specified by *INSTALL_PREFIX*.
 
 ### Use with CMake
 
