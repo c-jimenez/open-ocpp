@@ -86,11 +86,6 @@ class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages
      */
     void update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info);
 
-    /**
-     * @brief Clear the cache
-     */
-    void clear();
-
   private:
     /** @brief Stack configuration */
     const ocpp::config::IChargePointConfig& m_stack_config;
@@ -110,6 +105,8 @@ class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages
 
     /** @brief Initialize the database table */
     void initDatabaseTable();
+    /** @brief Clear the cache */
+    void clear();
 };
 
 } // namespace chargepoint

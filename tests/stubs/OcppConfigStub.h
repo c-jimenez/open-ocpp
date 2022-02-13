@@ -22,21 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef OCPPCONFIG_H
-#define OCPPCONFIG_H
+#ifndef OCPPCONFIGSTUB_H
+#define OCPPCONFIGSTUB_H
 
 #include "IOcppConfig.h"
-#include "IniFile.h"
 
-/** @brief Section name for the parameters */
-static const std::string OCPP_PARAMS = "Ocpp";
+#include <map>
 
-/** @brief Interface to retrieve standard OCPP configuration */
-class OcppConfig : public ocpp::config::IOcppConfig
+namespace ocpp
+{
+namespace config
+{
+
+/** @brief Standard OCPP configuration stub for unit tests */
+class OcppConfigStub : public IOcppConfig
 {
   public:
     /** @brief Constructor */
-    OcppConfig(ocpp::helpers::IniFile& config);
+    OcppConfigStub() : m_config() { }
+    /** @brief Destructor */
+    virtual ~OcppConfigStub() { }
+
+    /** @brief Set the value of a standard OCPP configuration key */
+    void setConfigValue(const std::string& key, const std::string& value) { m_config[key] = value; }
 
     ///
     /// Generic getter
@@ -48,14 +56,24 @@ class OcppConfig : public ocpp::config::IOcppConfig
      */
     void getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>& keys,
                           std::vector<ocpp::types::KeyValue>&                values,
-                          std::vector<ocpp::types::CiStringType<50u>>&       unknown_values) override;
+                          std::vector<ocpp::types::CiStringType<50u>>&       unknown_values) override
+    {
+        (void)keys;
+        (void)values;
+        (void)unknown_values;
+    }
 
     ///
     /// Generic setter
     ///
 
     /** @copydoc ConfigurationStatus IOcppConfig::setConfiguration(const std::string&, const std::string&) */
-    ocpp::types::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override;
+    ocpp::types::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override
+    {
+        (void)key;
+        (void)value;
+        return ocpp::types::ConfigurationStatus::Rejected;
+    }
 
     //
     // Specific getters
@@ -208,10 +226,7 @@ class OcppConfig : public ocpp::config::IOcppConfig
     //
 
     /** @brief Interval of inactivity (no OCPP exchanges) with central system after which the Charge Point should send a Heartbeat.req PDU */
-    void heartbeatInterval(std::chrono::seconds interval) override
-    {
-        m_config.set(OCPP_PARAMS, "HeartbeatInterval", ocpp::helpers::IniFile::Value(static_cast<unsigned int>(interval.count())));
-    }
+    void heartbeatInterval(std::chrono::seconds interval) override { m_config["HeartbeatInterval"] = std::to_string(interval.count()); }
 
     //
     // Security extensions
@@ -264,19 +279,65 @@ class OcppConfig : public ocpp::config::IOcppConfig
     std::string supportedFileTransferProtocols() const override { return getString("SupportedFileTransferProtocols"); }
 
   private:
-    /** @brief Configuration file */
-    ocpp::helpers::IniFile& m_config;
+    /** @brief Configuration */
+    std::map<std::string, std::string> m_config;
 
     /** @brief Get a boolean parameter */
-    bool getBool(const std::string& param) const { return m_config.get(OCPP_PARAMS, param).toBool(); }
+    bool getBool(const std::string& param) const
+    {
+        auto iter = m_config.find(param);
+        if (iter != m_config.end())
+        {
+            return (m_config.at(param) == "true");
+        }
+        else
+        {
+            return false;
+        }
+    }
+    /** @brief Get a floating point parameter */
+    double getFloat(const std::string& param) const
+    {
+        auto iter = m_config.find(param);
+        if (iter != m_config.end())
+        {
+            return std::strtod(m_config.at(param).c_str(), nullptr);
+        }
+        else
+        {
+            return 0.;
+        }
+    }
     /** @brief Get a string parameter */
-    std::string getString(const std::string& param) const { return m_config.get(OCPP_PARAMS, param); }
+    std::string getString(const std::string& param) const
+    {
+        auto iter = m_config.find(param);
+        if (iter != m_config.end())
+        {
+            return m_config.at(param);
+        }
+        else
+        {
+            return "";
+        }
+    }
     /** @brief Get a value which can be created from an unsigned integer */
     template <typename T>
     T get(const std::string& param) const
     {
-        return T(m_config.get(OCPP_PARAMS, param).toUInt());
+        auto iter = m_config.find(param);
+        if (iter != m_config.end())
+        {
+            return T(std::strtoul(m_config.at(param).c_str(), nullptr, 10));
+        }
+        else
+        {
+            return T(0);
+        }
     }
 };
 
-#endif // OCPPCONFIG_H
+} // namespace config
+} // namespace ocpp
+
+#endif // OCPPCONFIGSTUB_H

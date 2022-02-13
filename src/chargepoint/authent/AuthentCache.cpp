@@ -105,7 +105,23 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
                 // Extract data
                 bool        expiry_valid = !m_find_query->isNull(3);
                 std::time_t expiry       = m_find_query->getInt64(3);
-                tag_info.parentIdTag.value().assign(m_find_query->getString(2));
+                if (expiry_valid)
+                {
+                    tag_info.expiryDate = DateTime(expiry);
+                }
+                else
+                {
+                    tag_info.expiryDate.clear();
+                }
+                std::string parent = m_find_query->getString(2);
+                if (!parent.empty())
+                {
+                    tag_info.parentIdTag.value().assign(parent);
+                }
+                else
+                {
+                    tag_info.parentIdTag.clear();
+                }
                 tag_info.status = static_cast<AuthorizationStatus>(m_find_query->getInt32(4));
 
                 // Check expiry date
@@ -165,7 +181,14 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     {
                         int entry = m_find_query->getInt32(0);
                         m_update_query->reset();
-                        m_update_query->bind(0, tag_info.parentIdTag.value());
+                        if (tag_info.parentIdTag.isSet())
+                        {
+                            m_update_query->bind(0, tag_info.parentIdTag.value());
+                        }
+                        else
+                        {
+                            m_update_query->bind(0, "");
+                        }
                         if (tag_info.expiryDate.isSet())
                         {
                             m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
@@ -196,7 +219,14 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     {
                         m_insert_query->reset();
                         m_insert_query->bind(0, id_tag);
-                        m_insert_query->bind(1, tag_info.parentIdTag.value());
+                        if (tag_info.parentIdTag.isSet())
+                        {
+                            m_insert_query->bind(1, tag_info.parentIdTag.value());
+                        }
+                        else
+                        {
+                            m_insert_query->bind(1, "");
+                        }
                         if (tag_info.expiryDate.isSet())
                         {
                             m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
@@ -218,16 +248,6 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                 }
             }
         }
-    }
-}
-
-/** @brief Clear the cache */
-void AuthentCache::clear()
-{
-    auto query = m_database.query("DELETE FROM AuthentCache WHERE TRUE;");
-    if (query.get())
-    {
-        query->exec();
     }
 }
 
@@ -269,6 +289,16 @@ void AuthentCache::initDatabaseTable()
     m_delete_query = m_database.query("DELETE FROM AuthentCache WHERE tag=?;");
     m_insert_query = m_database.query("INSERT INTO AuthentCache VALUES (NULL, ?, ?, ?, ?);");
     m_update_query = m_database.query("UPDATE AuthentCache SET [parent]=?, [expiry]=?, [status]=? WHERE id=?;");
+}
+
+/** @brief Clear the cache */
+void AuthentCache::clear()
+{
+    auto query = m_database.query("DELETE FROM AuthentCache WHERE TRUE;");
+    if (query.get())
+    {
+        query->exec();
+    }
 }
 
 } // namespace chargepoint
