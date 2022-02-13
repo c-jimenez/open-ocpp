@@ -94,7 +94,6 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
     if (m_find_query)
     {
         // Execute query
-        m_find_query->reset();
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
@@ -139,6 +138,7 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
                 }
             }
         }
+        m_find_query->reset();
     }
     return ret;
 }
@@ -150,7 +150,6 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
     if (m_find_query)
     {
         // Execute query
-        m_find_query->reset();
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
@@ -162,7 +161,6 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     // Remove entry
                     if (m_delete_query)
                     {
-                        m_delete_query->reset();
                         m_delete_query->bind(0, id_tag);
                         if (!m_delete_query->exec())
                         {
@@ -172,6 +170,7 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                         {
                             LOG_DEBUG << "IdTag [" << id_tag << "] deleted";
                         }
+                        m_delete_query->reset();
                     }
                 }
                 else
@@ -180,7 +179,6 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     if (m_update_query)
                     {
                         int entry = m_find_query->getInt32(0);
-                        m_update_query->reset();
                         if (tag_info.parentIdTag.isSet())
                         {
                             m_update_query->bind(0, tag_info.parentIdTag.value());
@@ -207,6 +205,7 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                         {
                             LOG_DEBUG << "IdTag [" << id_tag << "] updated";
                         }
+                        m_update_query->reset();
                     }
                 }
             }
@@ -217,7 +216,6 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                 {
                     if (m_insert_query)
                     {
-                        m_insert_query->reset();
                         m_insert_query->bind(0, id_tag);
                         if (tag_info.parentIdTag.isSet())
                         {
@@ -244,10 +242,12 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                         {
                             LOG_DEBUG << "IdTag [" << id_tag << "] inserted";
                         }
+                        m_insert_query->reset();
                     }
                 }
             }
         }
+        m_find_query->reset();
     }
 }
 
