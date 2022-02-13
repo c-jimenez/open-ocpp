@@ -89,7 +89,16 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::GetLocalListVersionRe
     (void)error_message;
 
     LOG_INFO << "Local list version requested : " << m_local_list_version;
-    response.listVersion = m_local_list_version;
+
+    // Check local list activation
+    if (m_ocpp_config.localAuthListEnabled())
+    {
+        response.listVersion = m_local_list_version;
+    }
+    else
+    {
+        response.listVersion = -1;
+    }
 
     return true;
 }
@@ -116,32 +125,40 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
     if (m_ocpp_config.localAuthListEnabled())
     {
         // Check local list version
-        if (request.listVersion <= m_local_list_version)
+        if (request.listVersion > m_local_list_version)
         {
-            // Check update type
-            bool success;
-            if (request.updateType == UpdateType::Full)
+            // Check update list size
+            if (request.localAuthorizationList.size() <= m_ocpp_config.sendLocalListMaxLength())
             {
-                success = performFullUpdate(request.localAuthorizationList);
-            }
-            else
-            {
-                success = performPartialUpdate(request.localAuthorizationList);
-            }
-            if (success)
-            {
-                response.status = UpdateStatus::Accepted;
+                // Check update type
+                bool success;
+                if (request.updateType == UpdateType::Full)
+                {
+                    success = performFullUpdate(request.localAuthorizationList);
+                }
+                else
+                {
+                    success = performPartialUpdate(request.localAuthorizationList);
+                }
+                if (success)
+                {
+                    response.status = UpdateStatus::Accepted;
+
+                    // Update local list version
+                    m_local_list_version = request.listVersion;
+                    if (!m_internal_config.setKey(LOCAL_LIST_VERSION_KEY, std::to_string(m_local_list_version)))
+                    {
+                        LOG_ERROR << "Unable to save authent local list version";
+                    }
+                }
+                else
+                {
+                    response.status = UpdateStatus::Failed;
+                }
             }
             else
             {
                 response.status = UpdateStatus::Failed;
-            }
-
-            // Update local list version
-            m_local_list_version = request.listVersion;
-            if (!m_internal_config.setKey(LOCAL_LIST_VERSION_KEY, std::to_string(m_local_list_version)))
-            {
-                LOG_ERROR << "Unable to save authent local list version";
             }
         }
         else
@@ -167,7 +184,6 @@ bool AuthentLocalList::check(const std::string& id_tag, ocpp::types::IdTagInfo& 
     if (m_find_query)
     {
         // Execute query
-        m_find_query->reset();
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
@@ -178,7 +194,23 @@ bool AuthentLocalList::check(const std::string& id_tag, ocpp::types::IdTagInfo& 
                 // Extract data
                 bool        expiry_valid = !m_find_query->isNull(3);
                 std::time_t expiry       = m_find_query->getInt64(3);
-                tag_info.parentIdTag.value().assign(m_find_query->getString(2));
+                if (expiry_valid)
+                {
+                    tag_info.expiryDate = expiry;
+                }
+                else
+                {
+                    tag_info.expiryDate.clear();
+                }
+                std::string parent = m_find_query->getString(2);
+                if (parent.empty())
+                {
+                    tag_info.parentIdTag.clear();
+                }
+                else
+                {
+                    tag_info.parentIdTag.value().assign(parent);
+                }
                 tag_info.status = static_cast<AuthorizationStatus>(m_find_query->getInt32(4));
 
                 // Check expiry date
@@ -190,6 +222,7 @@ bool AuthentLocalList::check(const std::string& id_tag, ocpp::types::IdTagInfo& 
                 }
             }
         }
+        m_find_query->reset();
     }
     return ret;
 }
@@ -231,14 +264,34 @@ bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::Authoriz
 {
     bool ret = true;
 
-    // Clear local list
-    auto query = m_database.query("DELETE FROM AuthentLocalList WHERE TRUE;");
-    if (query)
+    // Check list size
+    if (authorization_datas.size() > m_ocpp_config.localAuthListMaxLength())
     {
-        ret = query->exec();
-        if (!ret)
+        ret = false;
+    }
+    if (ret)
+    {
+        // Check that all the id tag info are specified
+        for (const AuthorizationData& authorization_data : authorization_datas)
         {
-            LOG_ERROR << "Could not clear authent local list table";
+            if (!authorization_data.idTagInfo.isSet())
+            {
+                LOG_ERROR << "IdTagInfo field is mandatory when performing a full update";
+                ret = false;
+            }
+        }
+    }
+    if (ret)
+    {
+        // Clear local list
+        auto query = m_database.query("DELETE FROM AuthentLocalList WHERE TRUE;");
+        if (query)
+        {
+            ret = query->exec();
+            if (!ret)
+            {
+                LOG_ERROR << "Could not clear authent local list table";
+            }
         }
     }
     if (ret)
@@ -248,9 +301,15 @@ bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::Authoriz
         {
             for (const AuthorizationData& authorization_data : authorization_datas)
             {
-                m_insert_query->reset();
                 m_insert_query->bind(0, authorization_data.idTag);
-                m_insert_query->bind(1, authorization_data.idTagInfo.value().parentIdTag.value());
+                if (authorization_data.idTagInfo.value().parentIdTag.isSet())
+                {
+                    m_insert_query->bind(1, authorization_data.idTagInfo.value().parentIdTag.value());
+                }
+                else
+                {
+                    m_insert_query->bind(1, "");
+                }
                 if (authorization_data.idTagInfo.value().expiryDate.isSet())
                 {
                     m_insert_query->bind(2, authorization_data.idTagInfo.value().expiryDate.value().timestamp());
@@ -269,12 +328,14 @@ bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::Authoriz
                 {
                     LOG_DEBUG << "IdTag [" << authorization_data.idTag.str() << "] inserted";
                 }
+                m_insert_query->reset();
             }
         }
     }
 
     return ret;
 }
+
 /** @brief Perform the partial update of the local list */
 bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::AuthorizationData>& authorization_datas)
 {
@@ -289,7 +350,6 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
             if (!authorization_data.idTagInfo.isSet())
             {
                 // Delete entry
-                m_delete_query->reset();
                 m_delete_query->bind(0, authorization_data.idTag);
                 if (!m_delete_query->exec())
                 {
@@ -300,11 +360,11 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                 {
                     LOG_DEBUG << "IdTag [" << authorization_data.idTag.str() << "] deleted";
                 }
+                m_delete_query->reset();
             }
             else
             {
                 // Create or update, check if the entry exists
-                m_find_query->reset();
                 m_find_query->bind(0, authorization_data.idTag);
                 if (m_find_query->exec())
                 {
@@ -312,7 +372,6 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                     {
                         // Update
                         int entry = m_find_query->getInt32(0);
-                        m_update_query->reset();
                         m_update_query->bind(0, authorization_data.idTagInfo.value().parentIdTag.value());
                         if (authorization_data.idTagInfo.value().expiryDate.isSet())
                         {
@@ -332,11 +391,11 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                         {
                             LOG_DEBUG << "IdTag [" << authorization_data.idTag.str() << "] updated";
                         }
+                        m_update_query->reset();
                     }
                     else
                     {
                         // Insert
-                        m_insert_query->reset();
                         m_insert_query->bind(0, authorization_data.idTag);
                         m_insert_query->bind(1, authorization_data.idTagInfo.value().parentIdTag.value());
                         if (authorization_data.idTagInfo.value().expiryDate.isSet())
@@ -357,12 +416,14 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                         {
                             LOG_DEBUG << "IdTag [" << authorization_data.idTag.str() << "] inserted";
                         }
+                        m_insert_query->reset();
                     }
                 }
                 else
                 {
                     ret = false;
                 }
+                m_find_query->reset();
             }
         }
     }

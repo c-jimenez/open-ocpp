@@ -89,7 +89,7 @@ class AuthentManager
     /** @brief Cache */
     AuthentCache& m_cache;
     /** @brief Local list */
-    AuthentLocalList& m_locale_list;
+    AuthentLocalList& m_local_list;
 };
 
 } // namespace chargepoint
