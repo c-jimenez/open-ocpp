@@ -278,6 +278,10 @@ TEST_SUITE("Authentication local list")
         auth_data.idTag.assign("TAG6");
         auth_data.idTagInfo.clear();
         send_req.localAuthorizationList.push_back(auth_data);
+        auth_data.idTag.assign("TAG7");
+        auth_data.idTagInfo.value().status     = AuthorizationStatus::Blocked;
+        auth_data.idTagInfo.value().expiryDate = DateTime(DateTime::now().timestamp() - 1);
+        send_req.localAuthorizationList.push_back(auth_data);
         auth_data.idTag.assign("TAG8");
         auth_data.idTagInfo.value().status = AuthorizationStatus::Blocked;
         auth_data.idTagInfo.value().parentIdTag.value().assign("PARENT_TAG8");
@@ -301,10 +305,7 @@ TEST_SUITE("Authentication local list")
         CHECK_FALSE(tag_info.parentIdTag.isSet());
         CHECK_FALSE(tag_info.expiryDate.isSet());
         CHECK_FALSE(local_list.check("TAG6", tag_info));
-        CHECK(local_list.check("TAG7", tag_info));
-        CHECK_EQ(tag_info.status, AuthorizationStatus::Blocked);
-        CHECK_FALSE(tag_info.parentIdTag.isSet());
-        CHECK_FALSE(tag_info.expiryDate.isSet());
+        CHECK_FALSE(local_list.check("TAG7", tag_info));
         CHECK(local_list.check("TAG8", tag_info));
         CHECK_EQ(tag_info.status, AuthorizationStatus::Blocked);
         CHECK(tag_info.parentIdTag.isSet());

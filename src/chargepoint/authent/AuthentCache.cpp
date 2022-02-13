@@ -153,97 +153,78 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
+            // Convert status
+            AuthorizationStatus status = tag_info.status;
+            if (status == AuthorizationStatus::ConcurrentTx)
+            {
+                status = AuthorizationStatus::Accepted;
+            }
             if (m_find_query->hasRows())
             {
-                // If new status is not Accepted, remove entry from the cache
-                if (tag_info.status != AuthorizationStatus::Accepted)
+                // Update entry
+                if (m_update_query)
                 {
-                    // Remove entry
-                    if (m_delete_query)
+                    int entry = m_find_query->getInt32(0);
+                    if (tag_info.parentIdTag.isSet())
                     {
-                        m_delete_query->bind(0, id_tag);
-                        if (!m_delete_query->exec())
-                        {
-                            LOG_ERROR << "Could not delete IdTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] deleted";
-                        }
-                        m_delete_query->reset();
+                        m_update_query->bind(0, tag_info.parentIdTag.value());
                     }
-                }
-                else
-                {
-                    // Update entry
-                    if (m_update_query)
+                    else
                     {
-                        int entry = m_find_query->getInt32(0);
-                        if (tag_info.parentIdTag.isSet())
-                        {
-                            m_update_query->bind(0, tag_info.parentIdTag.value());
-                        }
-                        else
-                        {
-                            m_update_query->bind(0, "");
-                        }
-                        if (tag_info.expiryDate.isSet())
-                        {
-                            m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
-                        }
-                        else
-                        {
-                            m_update_query->bind(1);
-                        }
-                        m_update_query->bind(2, static_cast<int>(tag_info.status));
-                        m_update_query->bind(3, entry);
-                        if (!m_update_query->exec())
-                        {
-                            LOG_ERROR << "Could not update idTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] updated";
-                        }
-                        m_update_query->reset();
+                        m_update_query->bind(0, "");
                     }
+                    if (tag_info.expiryDate.isSet())
+                    {
+                        m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
+                    }
+                    else
+                    {
+                        m_update_query->bind(1);
+                    }
+                    m_update_query->bind(2, static_cast<int>(status));
+                    m_update_query->bind(3, entry);
+                    if (!m_update_query->exec())
+                    {
+                        LOG_ERROR << "Could not update idTag [" << id_tag << "]";
+                    }
+                    else
+                    {
+                        LOG_DEBUG << "IdTag [" << id_tag << "] updated";
+                    }
+                    m_update_query->reset();
                 }
             }
             else
             {
-                // Create entry only for Accepted status since other status doesn't allow charge
-                if (tag_info.status == AuthorizationStatus::Accepted)
+                if (m_insert_query)
                 {
-                    if (m_insert_query)
+                    m_insert_query->bind(0, id_tag);
+                    if (tag_info.parentIdTag.isSet())
                     {
-                        m_insert_query->bind(0, id_tag);
-                        if (tag_info.parentIdTag.isSet())
-                        {
-                            m_insert_query->bind(1, tag_info.parentIdTag.value());
-                        }
-                        else
-                        {
-                            m_insert_query->bind(1, "");
-                        }
-                        if (tag_info.expiryDate.isSet())
-                        {
-                            m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
-                        }
-                        else
-                        {
-                            m_insert_query->bind(2);
-                        }
-                        m_insert_query->bind(3, static_cast<int>(tag_info.status));
-                        if (!m_insert_query->exec())
-                        {
-                            LOG_ERROR << "Could not insert idTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] inserted";
-                        }
-                        m_insert_query->reset();
+                        m_insert_query->bind(1, tag_info.parentIdTag.value());
                     }
+                    else
+                    {
+                        m_insert_query->bind(1, "");
+                    }
+                    if (tag_info.expiryDate.isSet())
+                    {
+                        m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
+                    }
+                    else
+                    {
+                        m_insert_query->bind(2);
+                    }
+                    m_insert_query->bind(3, static_cast<int>(status));
+                    if (!m_insert_query->exec())
+                    {
+                        LOG_ERROR << "Could not insert idTag [" << id_tag << "]";
+                    }
+                    else
+                    {
+                        LOG_DEBUG << "IdTag [" << id_tag << "] inserted";
+                    }
+                    m_insert_query->reset();
                 }
             }
         }

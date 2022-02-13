@@ -2,6 +2,7 @@
 # Stubs for the unit tests
 add_library(unit_tests_stubs STATIC
     MessageDispatcherStub.cpp
+    RpcStub.cpp
     WebsocketClientStub.cpp
 )
 target_include_directories(unit_tests_stubs PUBLIC . )

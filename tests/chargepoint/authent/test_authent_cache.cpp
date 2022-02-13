@@ -63,33 +63,18 @@ TEST_SUITE("Authentication cache")
 
         // Check empty and unknown
         IdTagInfo tag_info_r;
+        IdTagInfo tag_info_w;
         CHECK_FALSE(cache.check("", tag_info_r));
         CHECK_FALSE(cache.check("TAG1", tag_info_r));
 
-        // Check that only "Accepted" status generates a valid cache entry
+        // Check entry status
         IdToken parent_tag_1;
         parent_tag_1.assign("PARENT_TAG_1");
 
-        IdTagInfo tag_info_w;
+        // Check entry without expiry and parent
         tag_info_w.status      = AuthorizationStatus::Blocked;
         tag_info_w.parentIdTag = parent_tag_1;
         tag_info_w.expiryDate  = DateTime(DateTime::now().timestamp() + 1000);
-        cache.update("TAG1", tag_info_w);
-        CHECK_FALSE(cache.check("TAG1", tag_info_r));
-
-        tag_info_w.status = AuthorizationStatus::ConcurrentTx;
-        cache.update("TAG1", tag_info_w);
-        CHECK_FALSE(cache.check("TAG1", tag_info_r));
-
-        tag_info_w.status = AuthorizationStatus::Expired;
-        cache.update("TAG1", tag_info_w);
-        CHECK_FALSE(cache.check("TAG1", tag_info_r));
-
-        tag_info_w.status = AuthorizationStatus::Invalid;
-        cache.update("TAG1", tag_info_w);
-        CHECK_FALSE(cache.check("TAG1", tag_info_r));
-
-        tag_info_w.status = AuthorizationStatus::Accepted;
         cache.update("TAG1", tag_info_w);
         CHECK(cache.check("TAG1", tag_info_r));
         CHECK_EQ(tag_info_r.status, tag_info_w.status);
@@ -97,6 +82,7 @@ TEST_SUITE("Authentication cache")
         CHECK_EQ(tag_info_r.expiryDate.value().timestamp(), tag_info_w.expiryDate.value().timestamp());
 
         // Check entry without expiry and parent
+        tag_info_w.status = AuthorizationStatus::Accepted;
         tag_info_w.parentIdTag.clear();
         tag_info_w.expiryDate.clear();
         cache.update("TAG1", tag_info_w);
@@ -136,9 +122,10 @@ TEST_SUITE("Authentication cache")
         CHECK(cache.check("TAG4", tag_info_r));
         CHECK(cache.check("TAG5", tag_info_r));
 
+        tag_info_w.status = AuthorizationStatus::ConcurrentTx;
         cache.update("TAG6", tag_info_w);
         CHECK(cache.check("TAG6", tag_info_r));
-        CHECK_EQ(tag_info_r.status, tag_info_w.status);
+        CHECK_EQ(tag_info_r.status, AuthorizationStatus::Accepted);
         CHECK_FALSE(tag_info_r.parentIdTag.isSet());
         CHECK_FALSE(tag_info_r.expiryDate.isSet());
 
@@ -149,11 +136,6 @@ TEST_SUITE("Authentication cache")
         CHECK(cache.check("TAG5", tag_info_r));
         CHECK(cache.check("TAG6", tag_info_r));
 
-        // Check that update with other value than "Accepted" removes from cache
-        tag_info_w.status = AuthorizationStatus::Invalid;
-        cache.update("TAG3", tag_info_w);
-        CHECK_FALSE(cache.check("TAG3", tag_info_r));
-
         // Check expiry date
         tag_info_w.expiryDate = DateTime(DateTime::now().timestamp() - 1);
         cache.update("TAG4", tag_info_w);
@@ -161,7 +143,7 @@ TEST_SUITE("Authentication cache")
 
         CHECK_FALSE(cache.check("TAG1", tag_info_r));
         CHECK(cache.check("TAG2", tag_info_r));
-        CHECK_FALSE(cache.check("TAG3", tag_info_r));
+        CHECK(cache.check("TAG3", tag_info_r));
         CHECK_FALSE(cache.check("TAG4", tag_info_r));
         CHECK(cache.check("TAG5", tag_info_r));
         CHECK(cache.check("TAG6", tag_info_r));
@@ -180,6 +162,13 @@ TEST_SUITE("Authentication cache")
         CHECK_EQ(clear_resp.status, ClearCacheStatus::Accepted);
         CHECK_EQ(error_code, nullptr);
         CHECK(error_message.empty());
+
+        CHECK_FALSE(cache.check("TAG1", tag_info_r));
+        CHECK_FALSE(cache.check("TAG2", tag_info_r));
+        CHECK_FALSE(cache.check("TAG3", tag_info_r));
+        CHECK_FALSE(cache.check("TAG4", tag_info_r));
+        CHECK_FALSE(cache.check("TAG5", tag_info_r));
+        CHECK_FALSE(cache.check("TAG6", tag_info_r));
 
         ocpp_config.setConfigValue("AuthorizationCacheEnabled", "false");
 

@@ -45,7 +45,7 @@ AuthentManager::AuthentManager(const ocpp::config::IChargePointConfig&         s
     : m_ocpp_config(ocpp_config),
       m_msg_sender(msg_sender),
       m_cache(*new AuthentCache(stack_config, ocpp_config, database, messages_converter, msg_dispatcher)),
-      m_locale_list(*new AuthentLocalList(ocpp_config, database, internal_config, messages_converter, msg_dispatcher))
+      m_local_list(*new AuthentLocalList(ocpp_config, database, internal_config, messages_converter, msg_dispatcher))
 {
 }
 
@@ -53,7 +53,7 @@ AuthentManager::AuthentManager(const ocpp::config::IChargePointConfig&         s
 AuthentManager::~AuthentManager()
 {
     delete &m_cache;
-    delete &m_locale_list;
+    delete &m_local_list;
 }
 
 /** @brief Ask for authorization of operation */
@@ -66,24 +66,28 @@ ocpp::types::AuthorizationStatus AuthentManager::authorize(const std::string& id
     bool is_connected = m_msg_sender.isConnected();
 
     // Authorize procedure
+    parent_id = "";
     do
     {
-        bool found         = false;
-        bool in_local_list = false;
+        bool found = false;
 
         // Default = no retry, not authorized
         retry  = false;
         status = AuthorizationStatus::Invalid;
 
-        // Check if local authorizaton is enabled
+        // Check if local authorization is enabled
         if ((is_connected && m_ocpp_config.localPreAuthorize()) || (!is_connected && m_ocpp_config.localAuthorizeOffline()))
         {
             // Check local authorization list
             IdTagInfo tag_info;
             if (m_ocpp_config.localAuthListEnabled())
             {
-                found         = m_locale_list.check(id_tag, tag_info);
-                in_local_list = found;
+                found = m_local_list.check(id_tag, tag_info);
+                if (found)
+                {
+                    status    = tag_info.status;
+                    parent_id = (tag_info.parentIdTag.isSet() ? tag_info.parentIdTag.value().str() : "");
+                }
                 LOG_DEBUG << "IdTag [" << id_tag << "] found in local list : " << found;
             }
 
@@ -96,7 +100,12 @@ ocpp::types::AuthorizationStatus AuthentManager::authorize(const std::string& id
                     if (found)
                     {
                         status    = tag_info.status;
-                        parent_id = tag_info.parentIdTag.value();
+                        parent_id = (tag_info.parentIdTag.isSet() ? tag_info.parentIdTag.value().str() : "");
+                        if (is_connected && (status != AuthorizationStatus::Accepted))
+                        {
+                            // Online check is required to try to obtain an up to date status
+                            found = false;
+                        }
                     }
                     LOG_DEBUG << "IdTag [" << id_tag << "] found in cache : " << found;
                 }
@@ -119,14 +128,18 @@ ocpp::types::AuthorizationStatus AuthentManager::authorize(const std::string& id
                 if (result == CallResult::Ok)
                 {
                     // Get result
-                    status    = authorize_conf.idTagInfo.status;
-                    parent_id = authorize_conf.idTagInfo.parentIdTag.value();
+                    status = authorize_conf.idTagInfo.status;
+                    if (authorize_conf.idTagInfo.parentIdTag.isSet())
+                    {
+                        parent_id = authorize_conf.idTagInfo.parentIdTag.value();
+                    }
+                    else
+                    {
+                        parent_id = "";
+                    }
 
                     // Update cache
-                    if (!in_local_list && m_ocpp_config.authorizationCacheEnabled())
-                    {
-                        m_cache.update(id_tag, authorize_conf.idTagInfo);
-                    }
+                    update(id_tag, authorize_conf.idTagInfo);
                 }
                 else
                 {
@@ -166,7 +179,7 @@ void AuthentManager::update(const std::string& id_tag, const ocpp::types::IdTagI
         if (m_ocpp_config.localAuthListEnabled())
         {
             IdTagInfo unused_tag_info;
-            in_local_list = m_locale_list.check(id_tag, unused_tag_info);
+            in_local_list = m_local_list.check(id_tag, unused_tag_info);
         }
         if (!in_local_list)
         {
