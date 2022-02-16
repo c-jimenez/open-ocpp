@@ -94,8 +94,6 @@ target_link_libraries(open-ocpp-dynamic
     json
     ws
     websockets
-
-    stdc++fs
 )
 set_target_properties(open-ocpp-dynamic PROPERTIES OUTPUT_NAME "open-ocpp")
 

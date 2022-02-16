@@ -41,12 +41,13 @@ if(${BUILD_STATIC_LIBRARY})
 add_executable(test_install_static main.cpp)
 target_link_libraries(test_install_static
             PkgConfig::PKG_OPEN_OCPP_STATIC
+)
+target_link_libraries(PkgConfig::PKG_OPEN_OCPP_STATIC INTERFACE
             PkgConfig::PKG_WEBSOCKETS_STATIC
             OpenSSL::SSL
             OpenSSL::Crypto
             sqlite3
             pthread
-            stdc++fs
-)
+            stdc++fs)
 
 endif()
