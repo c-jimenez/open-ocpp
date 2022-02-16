@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.13)
 
 # Build options
 include(../../CMakeLists_Options.txt)
+enable_testing()
 
 # Target toolchain definition and specific compiler flags
 if(NOT DEFINED TARGET)
@@ -35,6 +36,10 @@ target_link_libraries(test_install_dynamic
             pthread
             stdc++fs
 )
+add_test(
+  NAME test_install_dynamic
+  COMMAND test_install_dynamic
+)
 
 if(${BUILD_STATIC_LIBRARY})
 
@@ -49,5 +54,9 @@ target_link_libraries(PkgConfig::PKG_OPEN_OCPP_STATIC INTERFACE
             sqlite3
             pthread
             stdc++fs)
+add_test(
+  NAME test_install_static
+  COMMAND test_install_static
+)
 
 endif()

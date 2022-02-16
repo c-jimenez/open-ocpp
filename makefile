@@ -60,6 +60,7 @@ tests-install-gcc-native: gcc-native install-gcc-native
 	@mkdir -p $(GCC_NATIVE_BUILD_DIR)/tests/deploy
 	@cd $(GCC_NATIVE_BUILD_DIR)/tests/deploy && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
 	@make --silent -C $(GCC_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
+	@make --silent -C $(GCC_NATIVE_BUILD_DIR)/tests/deploy test ARGS=--output-on-failure
 	@echo "gcc-native build installation checked!"
 
 $(GCC_NATIVE_BUILD_DIR)/Makefile:
@@ -97,6 +98,7 @@ tests-install-clang-native: clang-native install-clang-native
 	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)/tests/deploy
 	@cd $(CLANG_NATIVE_BUILD_DIR)/tests/deploy && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D TARGET=native -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
 	@make --silent -C $(CLANG_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
+	@make --silent -C $(CLANG_NATIVE_BUILD_DIR)/tests/deploy test ARGS=--output-on-failure
 	@echo "clang-native build installation checked!"
 
 $(CLANG_NATIVE_BUILD_DIR)/Makefile:
