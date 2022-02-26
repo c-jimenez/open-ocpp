@@ -30,7 +30,7 @@ TEST_SUITE("Timers class test suite")
     TEST_CASE("Standard operations - multi shots")
     {
         TimerPool              pool;
-        std::unique_ptr<Timer> timer(pool.createTimer());
+        std::unique_ptr<Timer> timer(pool.createTimer("test_timer"));
         unsigned int           calls    = 0;
         auto                   callback = [&calls] { calls++; };
         timer->setCallback(callback);
@@ -48,6 +48,7 @@ TEST_SUITE("Timers class test suite")
         CHECK_FALSE(timer->isStarted());
         CHECK(timer->start(std::chrono::milliseconds(10u)));
         CHECK(timer->stop());
+        CHECK_EQ(pool.getTimer("test_timer"), timer.get());
     }
 
     TEST_CASE("Standard operations - single shot")

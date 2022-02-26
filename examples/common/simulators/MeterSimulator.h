@@ -35,7 +35,7 @@ class MeterSimulator : public IMeter
 {
   public:
     /** @brief Constructor */
-    MeterSimulator(ocpp::helpers::TimerPool& timer_pool, unsigned int phases_count);
+    MeterSimulator(ocpp::helpers::ITimerPool& timer_pool, unsigned int phases_count);
 
     /** @brief Destructor */
     virtual ~MeterSimulator();

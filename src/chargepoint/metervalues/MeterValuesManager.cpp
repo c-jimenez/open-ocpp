@@ -42,7 +42,7 @@ namespace chargepoint
 MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocpp_config,
                                        ocpp::database::Database&             database,
                                        IChargePointEventsHandler&            events_handler,
-                                       ocpp::helpers::TimerPool&             timer_pool,
+                                       ocpp::helpers::ITimerPool&            timer_pool,
                                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                                        Connectors&                           connectors,
                                        ocpp::messages::GenericMessageSender& msg_sender,
@@ -58,7 +58,7 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
       m_msg_sender(msg_sender),
       m_status_manager(status_manager),
       m_requests_fifo(requests_fifo),
-      m_clock_aligned_timer(timer_pool, "Clock aligned"),
+      m_clock_aligned_timer(timer_pool, CLOCK_ALIGNED_TIMER_NAME),
       m_find_query(nullptr),
       m_delete_query(nullptr),
       m_insert_query(nullptr)
@@ -124,7 +124,7 @@ void MeterValuesManager::startSampledMeterValues(unsigned int connector_id)
 {
     // Get interval from configuration
     std::chrono::seconds interval = m_ocpp_config.meterValueSampleInterval();
-    if (interval >= std::chrono::seconds(0))
+    if (interval > std::chrono::seconds(0))
     {
         // Get connector
         Connector* connector = m_connectors.getConnector(connector_id);
@@ -239,7 +239,7 @@ void MeterValuesManager::configureClockAlignedTimer(void)
 
     // Get interval from configuration
     std::chrono::seconds interval = m_ocpp_config.clockAlignedDataInterval();
-    if (interval >= std::chrono::seconds(0))
+    if (interval > std::chrono::seconds(0))
     {
         LOG_INFO << "Configure clock aligned meter values : interval in seconds = " << interval.count();
 
@@ -285,43 +285,34 @@ void MeterValuesManager::processClockAligned(void)
                     LOG_DEBUG << "Clock aligned meter values : " << meter_values;
 
                     // For each connector
-                    std::vector<int> transaction_ids;
                     for (const Connector* connector : m_connectors.getConnectors())
                     {
                         sendMeterValues(connector->id, measurands, ReadingContext::SampleClock);
-                        if (connector->transaction_id != 0)
-                        {
-                            transaction_ids.push_back(connector->transaction_id);
-                        }
                     }
-                    if (!transaction_ids.empty())
+
+                    // Process transaction sampled meter value configuration
+                    meter_values        = m_ocpp_config.stopTxnAlignedData();
+                    measurands_max_size = m_ocpp_config.stopTxnAlignedDataMaxLength();
+                    measurands          = computeMeasurandList(meter_values, measurands_max_size);
+                    if (!measurands.empty() && m_insert_query)
                     {
-                        // Process transaction sampled meter value configuration
-                        meter_values        = m_ocpp_config.stopTxnAlignedData();
-                        measurands_max_size = m_ocpp_config.stopTxnAlignedDataMaxLength();
-                        measurands          = computeMeasurandList(meter_values, measurands_max_size);
-                        if (!measurands.empty() && m_insert_query)
+                        LOG_DEBUG << "Clock aligned transaction meter values : " << meter_values;
+
+                        // Fill meter value
+                        MeterValue meter_value;
+                        for (const Connector* connector : m_connectors.getConnectors())
                         {
-                            LOG_DEBUG << "Clock aligned transaction meter values : " << meter_values;
-
-                            // Fill meter value
-                            MeterValue meter_value;
-                            for (const Connector* connector : m_connectors.getConnectors())
+                            if ((connector->transaction_id != 0) &&
+                                fillMeterValue(connector->id, measurands, meter_value, ReadingContext::SampleClock))
                             {
-                                if (fillMeterValue(connector->id, measurands, meter_value, ReadingContext::SampleClock))
-                                {
-                                    // Serialize value
-                                    std::string meter_value_str = serialize(meter_value);
+                                // Serialize value
+                                std::string meter_value_str = serialize(meter_value);
 
-                                    // Store into database
-                                    for (int transaction_id : transaction_ids)
-                                    {
-                                        m_insert_query->reset();
-                                        m_insert_query->bind(0u, transaction_id);
-                                        m_insert_query->bind(1u, meter_value_str);
-                                        m_insert_query->exec();
-                                    }
-                                }
+                                // Store into database
+                                m_insert_query->reset();
+                                m_insert_query->bind(0u, connector->transaction_id);
+                                m_insert_query->bind(1u, meter_value_str);
+                                m_insert_query->exec();
                             }
                         }
                     }
@@ -411,7 +402,7 @@ void MeterValuesManager::processTriggered(unsigned int connector_id)
 void MeterValuesManager::sendMeterValues(unsigned int                                              connector_id,
                                          const std::vector<std::pair<Measurand, Optional<Phase>>>& measurands,
                                          ocpp::types::ReadingContext                               context,
-                                         ocpp::types::Optional<int>                                transaction_id)
+                                         const ocpp::types::Optional<int>&                         transaction_id)
 {
     // Prepare request
     MeterValuesReq meter_values_req;
@@ -489,6 +480,7 @@ bool MeterValuesManager::fillMeterValue(
     ocpp::types::ReadingContext                                                                      context)
 {
     meter_value.timestamp = DateTime::now();
+    meter_value.sampledValue.clear();
     for (const auto& measurand : measurands)
     {
         unsigned int count = meter_value.sampledValue.size();

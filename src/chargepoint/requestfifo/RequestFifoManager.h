@@ -54,7 +54,7 @@ class RequestFifoManager : public ocpp::messages::IRequestFifo::IListener
     /** @brief Constructor */
     RequestFifoManager(ocpp::config::IOcppConfig&            ocpp_config,
                        IChargePointEventsHandler&            events_handler,
-                       ocpp::helpers::TimerPool&             timer_pool,
+                       ocpp::helpers::ITimerPool&            timer_pool,
                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                        Connectors&                           connectors,
                        ocpp::messages::GenericMessageSender& msg_sender,

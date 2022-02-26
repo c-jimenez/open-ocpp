@@ -33,13 +33,20 @@ bool RpcStub::call(const std::string&         action,
                    rapidjson::Document&       response,
                    std::chrono::milliseconds  timeout)
 {
-    (void)action;
-    (void)payload;
     (void)timeout;
 
-    response.CopyFrom(m_response, response.GetAllocator());
+    bool ret = false;
+    if (m_connected)
+    {
+        rapidjson::Document* doc = new rapidjson::Document();
+        doc->CopyFrom(payload, doc->GetAllocator());
+        m_calls.emplace_back(action, doc);
+        response.CopyFrom(m_response, response.GetAllocator());
 
-    return !m_call_will_fail;
+        ret = !m_call_will_fail;
+    }
+
+    return ret;
 }
 
 /** @brief Set the next response */

@@ -40,7 +40,7 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     /** @brief Constructor */
     CentralSystem(const ocpp::config::ICentralSystemConfig&        stack_config,
                   ICentralSystemEventsHandler&                     events_handler,
-                  std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                  std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                   std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
@@ -51,8 +51,8 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     /** @copydoc const ocpp::config::ICentralSystemConfig& ICentralSystem::getConfig() */
     const ocpp::config::ICentralSystemConfig& getConfig() override { return m_stack_config; }
 
-    /** @copydoc ocpp::helpers::TimerPool& ICentralSystem::getTimerPool() */
-    ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
+    /** @copydoc ocpp::helpers::ITimerPool& ICentralSystem::getTimerPool() */
+    ocpp::helpers::ITimerPool& getTimerPool() override { return *m_timer_pool.get(); }
 
     /** @copydoc ocpp::helpers::WorkerThreadPool& ICentralSystem::getWorkerPool() */
     ocpp::helpers::WorkerThreadPool& getWorkerPool() override { return *m_worker_pool.get(); }
@@ -84,7 +84,7 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     ICentralSystemEventsHandler& m_events_handler;
 
     /** @brief Timer pool */
-    std::shared_ptr<ocpp::helpers::TimerPool> m_timer_pool;
+    std::shared_ptr<ocpp::helpers::ITimerPool> m_timer_pool;
     /** @brief Worker thread pool */
     std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 

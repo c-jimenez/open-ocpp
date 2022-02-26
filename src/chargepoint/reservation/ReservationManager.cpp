@@ -39,7 +39,7 @@ namespace chargepoint
 /** @brief Constructor */
 ReservationManager::ReservationManager(ocpp::config::IOcppConfig&                      ocpp_config,
                                        IChargePointEventsHandler&                      events_handler,
-                                       ocpp::helpers::TimerPool&                       timer_pool,
+                                       ocpp::helpers::ITimerPool&                      timer_pool,
                                        ocpp::helpers::WorkerThreadPool&                worker_pool,
                                        Connectors&                                     connectors,
                                        const ocpp::messages::GenericMessagesConverter& messages_converter,

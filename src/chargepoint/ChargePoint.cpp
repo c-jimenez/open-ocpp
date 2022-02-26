@@ -54,7 +54,7 @@ std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePo
                                                    ocpp::config::IOcppConfig&              ocpp_config,
                                                    IChargePointEventsHandler&              events_handler)
 {
-    std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool = std::make_shared<ocpp::helpers::TimerPool>();
+    std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool(new ocpp::helpers::TimerPool());
     std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool =
         std::make_shared<ocpp::helpers::WorkerThreadPool>(2u); // 1 asynchronous timer operations + 1 for asynchronous jobs/responses
     return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
@@ -64,7 +64,7 @@ std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePo
 std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePointConfig&          stack_config,
                                                    ocpp::config::IOcppConfig&                       ocpp_config,
                                                    IChargePointEventsHandler&                       events_handler,
-                                                   std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                   std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                                                    std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
 {
     return std::unique_ptr<IChargePoint>(new ChargePoint(stack_config, ocpp_config, events_handler, timer_pool, worker_pool));
@@ -74,7 +74,7 @@ std::unique_ptr<IChargePoint> IChargePoint::create(const ocpp::config::IChargePo
 ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
                          ocpp::config::IOcppConfig&                       ocpp_config,
                          IChargePointEventsHandler&                       events_handler,
-                         std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                         std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                          std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool)
     : m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),

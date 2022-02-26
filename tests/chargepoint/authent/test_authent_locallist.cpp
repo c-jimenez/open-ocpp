@@ -16,7 +16,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../authent/AuthentLocalList.h"
+#include "AuthentLocalList.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "Database.h"
 #include "GenericMessagesConverter.h"
@@ -55,8 +55,8 @@ TEST_SUITE("Authentication local list")
         MessageDispatcherStub    msg_dispatcher;
 
         ocpp_config.setConfigValue("LocalAuthListEnabled", "true");
-        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5u");
-        ocpp_config.setConfigValue("SendLocalListMaxLength", "3u");
+        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5");
+        ocpp_config.setConfigValue("SendLocalListMaxLength", "3");
         internal_config.initDatabaseTable();
 
         AuthentLocalList local_list(ocpp_config, database, internal_config, msg_converter, msg_dispatcher);
@@ -205,8 +205,8 @@ TEST_SUITE("Authentication local list")
         MessageDispatcherStub    msg_dispatcher;
 
         ocpp_config.setConfigValue("LocalAuthListEnabled", "true");
-        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5u");
-        ocpp_config.setConfigValue("SendLocalListMaxLength", "5u");
+        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5");
+        ocpp_config.setConfigValue("SendLocalListMaxLength", "5");
         internal_config.initDatabaseTable();
 
         AuthentLocalList local_list(ocpp_config, database, internal_config, msg_converter, msg_dispatcher);
@@ -322,8 +322,8 @@ TEST_SUITE("Authentication local list")
         MessageDispatcherStub    msg_dispatcher;
 
         ocpp_config.setConfigValue("LocalAuthListEnabled", "false");
-        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5u");
-        ocpp_config.setConfigValue("SendLocalListMaxLength", "3u");
+        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5");
+        ocpp_config.setConfigValue("SendLocalListMaxLength", "3");
         internal_config.initDatabaseTable();
 
         AuthentLocalList local_list(ocpp_config, database, internal_config, msg_converter, msg_dispatcher);

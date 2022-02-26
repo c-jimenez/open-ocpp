@@ -217,11 +217,15 @@ class WorkerThreadPool
         std::shared_ptr<IJob> job(new Job<ReturnType>(func));
 
         // Add the job to the queue
-        m_job_queue.push(job);
+        queue(job);
 
         // Create the waiter object
         return Waiter<ReturnType>(job);
     }
+
+  protected:
+    /** @brief Add a job to the queue */
+    virtual void queue(const std::shared_ptr<IJob>& job) { m_job_queue.push(job); }
 
   private:
     /** @brief Indicate that the threads must stop */

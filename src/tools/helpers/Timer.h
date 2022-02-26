@@ -27,7 +27,7 @@ namespace ocpp
 namespace helpers
 {
 
-class TimerPool;
+class ITimerPool;
 
 /** @brief Timer */
 class Timer
@@ -40,10 +40,7 @@ class Timer
      * @param pool Pool which will handle the timer
      * @param name Name of the timer
      */
-    Timer(TimerPool& pool, const char* name = "");
-
-    /** @brief Copy constructor */
-    Timer(const Timer& timer);
+    Timer(ITimerPool& pool, const char* name = "");
 
     /** @brief Destructor */
     virtual ~Timer();
@@ -74,7 +71,13 @@ class Timer
      * @brief Indicate if the timer is started
      * @return true if the timer is started, false otherwise
      */
-    bool isStarted() const;
+    bool isStarted() const { return m_started; }
+
+    /**
+     * @brief Indicate if it is a single shot timer
+     * @return true if it is a single shot timer, false otherwise
+     */
+    bool isSingleShot() const { return m_single_shot; }
 
     /**
      * @brief Set the timer's callback
@@ -83,14 +86,26 @@ class Timer
     void setCallback(std::function<void()> callback);
 
     /**
+     * @brief Get the timer's callback
+     * @return Function called when the timer elapse
+     */
+    const std::function<void()>& getCallback() const { return m_callback; }
+
+    /**
      * @brief Get the timer's interval
      * @return Timer's interval
      */
-    std::chrono::milliseconds getInterval() const;
+    const std::chrono::milliseconds& getInterval() const { return m_interval; }
+
+    /**
+     * @brief Get the timer's name
+     * @return Timer's name
+     */
+    const std::string& getName() const { return m_name; }
 
   private:
     /** @brief Timer pool */
-    TimerPool& m_pool;
+    ITimerPool& m_pool;
     /** @brief Name */
     const std::string m_name;
     /** @brief Indicate if the timer is a single shot timer */
