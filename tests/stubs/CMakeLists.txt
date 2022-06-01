@@ -19,7 +19,7 @@ target_include_directories(unit_tests_stubs PUBLIC .
     ${CMAKE_SOURCE_DIR}/src/chargepoint/requestfifo
     ${CMAKE_SOURCE_DIR}/src/chargepoint/reservation
     ${CMAKE_SOURCE_DIR}/src/chargepoint/security
-    ${CMAKE_SOURCE_DIR}/src/chargepoint/ssmartcharging
+    ${CMAKE_SOURCE_DIR}/src/chargepoint/smartcharging
     ${CMAKE_SOURCE_DIR}/src/chargepoint/status
     ${CMAKE_SOURCE_DIR}/src/chargepoint/transaction
     ${CMAKE_SOURCE_DIR}/src/chargepoint/trigger
