@@ -35,7 +35,7 @@ namespace chargepoint
 struct Connector
 {
     /** @brief Constructor */
-    Connector(unsigned int _id, ocpp::helpers::TimerPool& timer_pool)
+    Connector(unsigned int _id, ocpp::helpers::ITimerPool& timer_pool)
         : id(_id),
           mutex(),
           status(ocpp::types::ChargePointStatus::Available),

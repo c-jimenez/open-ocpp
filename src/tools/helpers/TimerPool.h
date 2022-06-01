@@ -19,6 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef TIMERPOOL_H
 #define TIMERPOOL_H
 
+#include "ITimerPool.h"
+
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -34,7 +36,7 @@ namespace helpers
 class Timer;
 
 /** @brief Handle a pool of timers */
-class TimerPool
+class TimerPool : public ITimerPool
 {
     friend class Timer;
 
@@ -44,8 +46,11 @@ class TimerPool
     /** @brief Destructor */
     virtual ~TimerPool();
 
-    /** @brief Create a timer */
-    Timer* createTimer();
+    /** @copydoc Timer* ITimerPool::createTimer(const char*) */
+    Timer* createTimer(const char* name = "") override;
+
+    /** @copydoc Timer* ITimerPool::getTimer(const std::string&) */
+    Timer* getTimer(const std::string& timer_name) override;
 
   private:
     /** @brief Indicate that the timers must stop */
@@ -60,21 +65,26 @@ class TimerPool
     std::chrono::time_point<std::chrono::system_clock> m_wake_up_time_point;
     /** @brief Timers thread */
     std::thread m_thread;
-    /** @brief List of active timers */
+    /** @brief List of registered timers */
     std::list<Timer*> m_timers;
+    /** @brief List of active timers */
+    std::list<Timer*> m_active_timers;
 
     /** @brief Timers thread loop */
     void threadLoop();
     /** @brief Compute next wakeup time point */
     void computeNextWakeupTimepoint();
-    /** @brief Lock access to the timers */
-    void lock();
-    /** @brief Unlock access to the timers */
-    void unlock();
-    /** @brief Add timer to the list of active timers */
-    void addTimer(Timer* timer);
-    /** @brief Remove timer from the list of active timers */
-    void removeTimer(Timer* timer);
+
+    /** @copydoc void ITimerPool::addTimer(Timer*) */
+    void registerTimer(Timer* timer) override;
+    /** @copydoc void ITimerPool::lock() */
+    void lock() override;
+    /** @copydoc void ITimerPool::unlock() */
+    void unlock() override;
+    /** @copydoc void ITimerPool::addTimer(Timer*) */
+    void addTimer(Timer* timer) override;
+    /** @copydoc void ITimerPool::removeTimer(Timer*) */
+    void removeTimer(Timer* timer) override;
 };
 
 } // namespace helpers

@@ -23,10 +23,10 @@ SOFTWARE.
 */
 
 #include "MeterSimulator.h"
-#include "TimerPool.h"
+#include "ITimerPool.h"
 
 /** @brief Constructor */
-MeterSimulator::MeterSimulator(ocpp::helpers::TimerPool& timer_pool, unsigned int phases_count)
+MeterSimulator::MeterSimulator(ocpp::helpers::ITimerPool& timer_pool, unsigned int phases_count)
     : m_update_timer(timer_pool),
       m_phases_count(phases_count),
       m_voltages(m_phases_count),

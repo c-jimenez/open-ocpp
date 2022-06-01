@@ -9,7 +9,7 @@ endif()
 add_compile_definitions(LOG_LEVEL=${LOG_LEVEL})
 
 # Static library
-option(BUILD_STATIC_LIBRARY "Build Open OCPP as a static library"   OFF)
+option(BUILD_STATIC_LIBRARY "Build Open OCPP as a static library"   ON)
 
 # Unit tests
 option(BUILD_UNIT_TESTS     "Build unit tests"                      ON)

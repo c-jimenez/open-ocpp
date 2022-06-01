@@ -73,7 +73,7 @@ class OcppConfig : public ocpp::config::IOcppConfig
                beforehand like a local action to start a transaction. */
     bool authorizeRemoteTxRequests() const override { return getBool("AuthorizeRemoteTxRequests"); }
     /** @brief Number of times to blink Charge Point lighting when signalling */
-    unsigned int blinkRepeat() const override { return getUInt("BlinkRepeat"); }
+    unsigned int blinkRepeat() const override { return get<unsigned int>("BlinkRepeat"); }
     /** @brief Size (in seconds) of the clock-aligned data interval. This is the size (in seconds) of the set of evenly spaced aggregation intervals
                per day, starting at 00:00:00 (midnight). For example, a value of 900 (15 minutes) indicates that every day should be broken into
                96 15-minute intervals.
@@ -104,30 +104,30 @@ class OcppConfig : public ocpp::config::IOcppConfig
                Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS */
     std::string connectorPhaseRotation() const override { return getString("ConnectorPhaseRotation"); }
     /** @brief Maximum number of items in a ConnectorPhaseRotation Configuration Key. */
-    unsigned int connectorPhaseRotationMaxLength() const override { return getUInt("ConnectorPhaseRotationMaxLength"); }
+    unsigned int connectorPhaseRotationMaxLength() const override { return get<unsigned int>("ConnectorPhaseRotationMaxLength"); }
     /** @brief Maximum number of requested configuration keys in a GetConfiguration.req PDU. */
-    unsigned int getConfigurationMaxKeys() const override { return getUInt("GetConfigurationMaxKeys"); }
+    unsigned int getConfigurationMaxKeys() const override { return get<unsigned int>("GetConfigurationMaxKeys"); }
     /** @brief Interval of inactivity (no OCPP exchanges) with central system after which the Charge Point should send a Heartbeat.req PDU */
     std::chrono::seconds heartbeatInterval() const override { return get<std::chrono::seconds>("HeartbeatInterval"); }
     /** @brief Percentage of maximum intensity at which to illuminate Charge Point lighting */
-    unsigned int lightIntensity() const override { return getUInt("LightIntensity"); }
+    unsigned int lightIntensity() const override { return get<unsigned int>("LightIntensity"); }
     /** @brief Whether the Charge Point, when offline, will start a transaction for locally-authorized identifiers. */
     bool localAuthorizeOffline() const override { return getBool("LocalAuthorizeOffline"); }
     /** @brief Whether the Charge Point, when online, will start a transaction for locally-authorized identifiers without waiting for or
                requesting an Authorize.conf from the Central System */
     bool localPreAuthorize() const override { return getBool("LocalPreAuthorize"); }
     /** @brief Maximum energy in Wh delivered when an identifier is invalidated by the Central System after start of a transaction. */
-    unsigned int maxEnergyOnInvalidId() const override { return getUInt("MaxEnergyOnInvalidId"); }
+    unsigned int maxEnergyOnInvalidId() const override { return get<unsigned int>("MaxEnergyOnInvalidId"); }
     /** @brief Clock-aligned measurand(s) to be included in a MeterValues.req PDU, every ClockAlignedDataInterval seconds */
     std::string meterValuesAlignedData() const override { return getString("MeterValuesAlignedData"); }
     /** @brief Maximum number of items in a MeterValuesAlignedData Configuration Key. */
-    unsigned int meterValuesAlignedDataMaxLength() const override { return getUInt("MeterValuesAlignedDataMaxLength"); }
+    unsigned int meterValuesAlignedDataMaxLength() const override { return get<unsigned int>("MeterValuesAlignedDataMaxLength"); }
     /** @brief Sampled measurands to be included in a MeterValues.req PDU, every MeterValueSampleInterval seconds. Where
                applicable, the Measurand is combined with the optional phase; for instance: Voltage.L1
                Default: "Energy.Active.Import.Register" */
     std::string meterValuesSampledData() const override { return getString("MeterValuesSampledData"); }
     /** @brief Maximum number of items in a MeterValuesSampledData Configuration Key. */
-    unsigned int meterValuesSampledDataMaxLength() const override { return getUInt("MeterValuesSampledDataMaxLength"); }
+    unsigned int meterValuesSampledDataMaxLength() const override { return get<unsigned int>("MeterValuesSampledDataMaxLength"); }
     /** @brief Interval between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. For charging
                session data (ConnectorId>0), samples are acquired and transmitted periodically at this interval from the start of the charging
                transaction.
@@ -137,9 +137,9 @@ class OcppConfig : public ocpp::config::IOcppConfig
                Central System. */
     std::chrono::seconds minimumStatusDuration() const override { return get<std::chrono::seconds>("MinimumStatusDuration"); }
     /** @brief The number of physical charging connectors of this Charge Point. */
-    unsigned int numberOfConnectors() const override { return getUInt("NumberOfConnectors"); }
+    unsigned int numberOfConnectors() const override { return get<unsigned int>("NumberOfConnectors"); }
     /** @brief Number of times to retry an unsuccessful reset of the Charge Point. */
-    unsigned int resetRetries() const override { return getUInt("ResetRetries"); }
+    unsigned int resetRetries() const override { return get<unsigned int>("ResetRetries"); }
     /** @brief When set to true, the Charge Point SHALL administratively stop the transaction when the cable is unplugged from the EV. */
     bool stopTransactionOnEVSideDisconnect() const override { return getBool("StopTransactionOnEVSideDisconnect"); }
     /** @brief whether the Charge Point will stop an ongoing transaction when it receives a non- Accepted authorization status in a
@@ -149,19 +149,19 @@ class OcppConfig : public ocpp::config::IOcppConfig
                PDU for every ClockAlignedDataInterval of the Transaction */
     std::string stopTxnAlignedData() const override { return getString("StopTxnAlignedData"); }
     /** @brief Maximum number of items in a StopTxnAlignedData Configuration Key. */
-    unsigned int stopTxnAlignedDataMaxLength() const override { return getUInt("StopTxnAlignedDataMaxLength"); }
+    unsigned int stopTxnAlignedDataMaxLength() const override { return get<unsigned int>("StopTxnAlignedDataMaxLength"); }
     /** @brief Sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every
                MeterValueSampleInterval seconds from the start of the charging session */
     std::string stopTxnSampledData() const override { return getString("StopTxnSampledData"); }
     /** @brief Maximum number of items in a StopTxnSampledData Configuration Key.*/
-    unsigned int stopTxnSampledDataMaxLength() const override { return getUInt("StopTxnSampledDataMaxLength"); }
+    unsigned int stopTxnSampledDataMaxLength() const override { return get<unsigned int>("StopTxnSampledDataMaxLength"); }
     /** @brief A list of supported Feature Profiles. Possible profile identifiers: Core, FirmwareManagement, LocalAuthListManagement,
                Reservation, SmartCharging and RemoteTrigger. */
     std::string supportedFeatureProfiles() const override { return getString("SupportedFeatureProfiles"); }
     /** @brief Maximum number of items in a SupportedFeatureProfiles Configuration Key. */
-    unsigned int supportedFeatureProfilesMaxLength() const override { return getUInt("SupportedFeatureProfilesMaxLength"); }
+    unsigned int supportedFeatureProfilesMaxLength() const override { return get<unsigned int>("SupportedFeatureProfilesMaxLength"); }
     /** @brief How often the Charge Point should try to submit a transaction-related message when the Central System fails to process it. */
-    unsigned int transactionMessageAttempts() const override { return getUInt("TransactionMessageAttempts"); }
+    unsigned int transactionMessageAttempts() const override { return get<unsigned int>("TransactionMessageAttempts"); }
     /** @brief How long the Charge Point should wait before resubmitting a transaction-related message that the Central System failed to
                process. */
     std::chrono::seconds transactionMessageRetryInterval() const override
@@ -180,9 +180,9 @@ class OcppConfig : public ocpp::config::IOcppConfig
     /** @brief whether the Local Authorization List is enabled */
     bool localAuthListEnabled() const override { return getBool("LocalAuthListEnabled"); }
     /** @brief Maximum number of identifications that can be stored in the Local Authorization List */
-    unsigned int localAuthListMaxLength() const override { return getUInt("LocalAuthListMaxLength"); }
+    unsigned int localAuthListMaxLength() const override { return get<unsigned int>("LocalAuthListMaxLength"); }
     /** @brief Maximum number of identifications that can be send in a single SendLocalList.req */
-    unsigned int sendLocalListMaxLength() const override { return getUInt("SendLocalListMaxLength"); }
+    unsigned int sendLocalListMaxLength() const override { return get<unsigned int>("SendLocalListMaxLength"); }
 
     // Reservation Profile
 
@@ -193,15 +193,15 @@ class OcppConfig : public ocpp::config::IOcppConfig
 
     /** @brief Max StackLevel of a ChargingProfile. The number defined also indicates the max allowed number of installed charging
                schedules per Charging Profile Purposes. */
-    unsigned int chargeProfileMaxStackLevel() const override { return getUInt("ChargeProfileMaxStackLevel"); }
+    unsigned int chargeProfileMaxStackLevel() const override { return get<unsigned int>("ChargeProfileMaxStackLevel"); }
     /** @brief A list of supported quantities for use in a ChargingSchedule. Allowed values: 'Current' and 'Power' */
     std::string chargingScheduleAllowedChargingRateUnit() const override { return getString("ChargingScheduleAllowedChargingRateUnit"); }
     /** @brief Maximum number of periods that may be defined per ChargingSchedule. */
-    unsigned int chargingScheduleMaxPeriods() const override { return getUInt("ChargingScheduleMaxPeriods"); }
+    unsigned int chargingScheduleMaxPeriods() const override { return get<unsigned int>("ChargingScheduleMaxPeriods"); }
     /** @brief If defined and true, this Charge Point support switching from 3 to 1 phase during a Transaction. */
     bool connectorSwitch3to1PhaseSupported() const override { return getBool("ConnectorSwitch3to1PhaseSupported"); }
     /** @brief Maximum number of Charging profiles installed at a time */
-    unsigned int maxChargingProfilesInstalled() const override { return getUInt("MaxChargingProfilesInstalled"); }
+    unsigned int maxChargingProfilesInstalled() const override { return get<unsigned int>("MaxChargingProfilesInstalled"); }
 
     //
     // Specific setters
@@ -240,10 +240,10 @@ class OcppConfig : public ocpp::config::IOcppConfig
 
     /** @brief This configuration key can be used to limit the size of the 'certificateChain' field from the CertificateSigned.req PDU. The value
                of this configuration key has a maximum limit of 10.000 characters. */
-    unsigned int certificateSignedMaxChainSize() const override { return getUInt("CertificateSignedMaxChainSize"); }
+    unsigned int certificateSignedMaxChainSize() const override { return get<unsigned int>("CertificateSignedMaxChainSize"); }
 
     /** @brief Maximum number of Root/CA certificates that can be installed in the Charge Point. */
-    unsigned int certificateStoreMaxLength() const override { return getUInt("CertificateStoreMaxLength"); }
+    unsigned int certificateStoreMaxLength() const override { return get<unsigned int>("CertificateStoreMaxLength"); }
 
     /** @brief This configuration key contains CPO name (or an organization trusted by the CPO) as used in the Charge Point Certificate. This
                is the CPO name that is to be used in a CSR send via: SignCertificate.req */
@@ -257,7 +257,7 @@ class OcppConfig : public ocpp::config::IOcppConfig
                After the security profile was successfully changed, the Charge Point disconnects from the Central System and SHALL
                reconnect using the new configured Security Profile.
                Default, when no security profile is yet configured: 0. */
-    unsigned int securityProfile() const override { return getUInt("SecurityProfile"); }
+    unsigned int securityProfile() const override { return get<unsigned int>("SecurityProfile"); }
 
     /** @brief Comma separated list of supported file transfer protocols for upload AND download
                Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
@@ -269,8 +269,6 @@ class OcppConfig : public ocpp::config::IOcppConfig
 
     /** @brief Get a boolean parameter */
     bool getBool(const std::string& param) const { return m_config.get(OCPP_PARAMS, param).toBool(); }
-    /** @brief Get an unsigned integer parameter */
-    unsigned int getUInt(const std::string& param) const { return m_config.get(OCPP_PARAMS, param).toUInt(); }
     /** @brief Get a string parameter */
     std::string getString(const std::string& param) const { return m_config.get(OCPP_PARAMS, param); }
     /** @brief Get a value which can be created from an unsigned integer */

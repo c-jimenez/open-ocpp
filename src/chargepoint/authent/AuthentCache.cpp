@@ -94,7 +94,6 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
     if (m_find_query)
     {
         // Execute query
-        m_find_query->reset();
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
@@ -105,7 +104,23 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
                 // Extract data
                 bool        expiry_valid = !m_find_query->isNull(3);
                 std::time_t expiry       = m_find_query->getInt64(3);
-                tag_info.parentIdTag.value().assign(m_find_query->getString(2));
+                if (expiry_valid)
+                {
+                    tag_info.expiryDate = DateTime(expiry);
+                }
+                else
+                {
+                    tag_info.expiryDate.clear();
+                }
+                std::string parent = m_find_query->getString(2);
+                if (!parent.empty())
+                {
+                    tag_info.parentIdTag.value().assign(parent);
+                }
+                else
+                {
+                    tag_info.parentIdTag.clear();
+                }
                 tag_info.status = static_cast<AuthorizationStatus>(m_find_query->getInt32(4));
 
                 // Check expiry date
@@ -123,6 +138,7 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
                 }
             }
         }
+        m_find_query->reset();
     }
     return ret;
 }
@@ -134,100 +150,85 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
     if (m_find_query)
     {
         // Execute query
-        m_find_query->reset();
         m_find_query->bind(0, id_tag);
         if (m_find_query->exec())
         {
+            // Convert status
+            AuthorizationStatus status = tag_info.status;
+            if (status == AuthorizationStatus::ConcurrentTx)
+            {
+                status = AuthorizationStatus::Accepted;
+            }
             if (m_find_query->hasRows())
             {
-                // If new status is not Accepted, remove entry from the cache
-                if (tag_info.status != AuthorizationStatus::Accepted)
+                // Update entry
+                if (m_update_query)
                 {
-                    // Remove entry
-                    if (m_delete_query)
+                    int entry = m_find_query->getInt32(0);
+                    if (tag_info.parentIdTag.isSet())
                     {
-                        m_delete_query->reset();
-                        m_delete_query->bind(0, id_tag);
-                        if (!m_delete_query->exec())
-                        {
-                            LOG_ERROR << "Could not delete IdTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] deleted";
-                        }
-                    }
-                }
-                else
-                {
-                    // Update entry
-                    if (m_update_query)
-                    {
-                        int entry = m_find_query->getInt32(0);
-                        m_update_query->reset();
                         m_update_query->bind(0, tag_info.parentIdTag.value());
-                        if (tag_info.expiryDate.isSet())
-                        {
-                            m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
-                        }
-                        else
-                        {
-                            m_update_query->bind(1);
-                        }
-                        m_update_query->bind(2, static_cast<int>(tag_info.status));
-                        m_update_query->bind(3, entry);
-                        if (!m_update_query->exec())
-                        {
-                            LOG_ERROR << "Could not update idTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] updated";
-                        }
                     }
+                    else
+                    {
+                        m_update_query->bind(0, "");
+                    }
+                    if (tag_info.expiryDate.isSet())
+                    {
+                        m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
+                    }
+                    else
+                    {
+                        m_update_query->bind(1);
+                    }
+                    m_update_query->bind(2, static_cast<int>(status));
+                    m_update_query->bind(3, entry);
+                    if (!m_update_query->exec())
+                    {
+                        LOG_ERROR << "Could not update idTag [" << id_tag << "]";
+                    }
+                    else
+                    {
+                        LOG_DEBUG << "IdTag [" << id_tag << "] updated";
+                    }
+                    m_update_query->reset();
                 }
             }
             else
             {
-                // Create entry only for Accepted status since other status doesn't allow charge
-                if (tag_info.status == AuthorizationStatus::Accepted)
+                if (m_insert_query)
                 {
-                    if (m_insert_query)
+                    m_insert_query->bind(0, id_tag);
+                    if (tag_info.parentIdTag.isSet())
                     {
-                        m_insert_query->reset();
-                        m_insert_query->bind(0, id_tag);
                         m_insert_query->bind(1, tag_info.parentIdTag.value());
-                        if (tag_info.expiryDate.isSet())
-                        {
-                            m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
-                        }
-                        else
-                        {
-                            m_insert_query->bind(2);
-                        }
-                        m_insert_query->bind(3, static_cast<int>(tag_info.status));
-                        if (!m_insert_query->exec())
-                        {
-                            LOG_ERROR << "Could not insert idTag [" << id_tag << "]";
-                        }
-                        else
-                        {
-                            LOG_DEBUG << "IdTag [" << id_tag << "] inserted";
-                        }
                     }
+                    else
+                    {
+                        m_insert_query->bind(1, "");
+                    }
+                    if (tag_info.expiryDate.isSet())
+                    {
+                        m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
+                    }
+                    else
+                    {
+                        m_insert_query->bind(2);
+                    }
+                    m_insert_query->bind(3, static_cast<int>(status));
+                    if (!m_insert_query->exec())
+                    {
+                        LOG_ERROR << "Could not insert idTag [" << id_tag << "]";
+                    }
+                    else
+                    {
+                        LOG_DEBUG << "IdTag [" << id_tag << "] inserted";
+                    }
+                    m_insert_query->reset();
                 }
             }
         }
-    }
-}
-
-/** @brief Clear the cache */
-void AuthentCache::clear()
-{
-    auto query = m_database.query("DELETE FROM AuthentCache WHERE TRUE;");
-    if (query.get())
-    {
-        query->exec();
+        m_find_query->reset();
     }
 }
 
@@ -269,6 +270,16 @@ void AuthentCache::initDatabaseTable()
     m_delete_query = m_database.query("DELETE FROM AuthentCache WHERE tag=?;");
     m_insert_query = m_database.query("INSERT INTO AuthentCache VALUES (NULL, ?, ?, ?, ?);");
     m_update_query = m_database.query("UPDATE AuthentCache SET [parent]=?, [expiry]=?, [status]=? WHERE id=?;");
+}
+
+/** @brief Clear the cache */
+void AuthentCache::clear()
+{
+    auto query = m_database.query("DELETE FROM AuthentCache WHERE TRUE;");
+    if (query.get())
+    {
+        query->exec();
+    }
 }
 
 } // namespace chargepoint

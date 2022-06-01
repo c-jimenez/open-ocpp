@@ -10,8 +10,6 @@ add_library(ws OBJECT
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
     libwebsockets/LibWebsocketServer.cpp
-
-    stubs/WebsocketClientStub.cpp
 )
 
 # Private includes

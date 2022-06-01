@@ -8,7 +8,8 @@
             "type": "shell",
             "command": "make",
             "args": [
-                "gcc-native"
+                "gcc-native",
+                "BUILD_TYPE=Debug"
             ],
             "problemMatcher": "$gcc",
             "group": {
@@ -30,7 +31,8 @@
             "type": "shell",
             "command": "make",
             "args": [
-                "clean-gcc-native"
+                "clean-gcc-native",
+                "BUILD_TYPE=Debug"
             ],
             "group": "build"
         }

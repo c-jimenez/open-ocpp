@@ -61,7 +61,7 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     bool empty() const override { return (size() == 0); }
 
     /** @copydoc void IRequestFifo::registerListener(IListener*) const */
-    virtual void registerListener(IListener* listener) override { m_listener = listener; }
+    void registerListener(IListener* listener) override { m_listener = listener; }
 
     // RequestFifo interface
 
