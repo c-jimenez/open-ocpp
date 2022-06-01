@@ -66,6 +66,48 @@ class Optional
     }
 
     /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the content are equals, false otherwise
+     */
+    bool operator==(const T& value) const { return (m_is_set && (m_value == value)); }
+
+    /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the content are equals, false otherwise
+     */
+    bool operator==(const Optional& value) const { return ((m_is_set == value.m_is_set) && (m_value == value.m_value)); }
+
+    /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the value is less than the one to compare with, false otherwise
+     */
+    bool operator<(const T& value) const { return (m_is_set && (m_value < value)); }
+
+    /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the value is less than the one to compare with, false otherwise
+     */
+    bool operator<(const Optional& value) const { return ((m_is_set == value.m_is_set) && (m_value < value.m_value)); }
+
+    /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the value is greater than the one to compare with, false otherwise
+     */
+    bool operator>(const T& value) const { return (m_is_set && (m_value > value)); }
+
+    /**
+     * @brief Comparison operator
+     * @param value Value to compare
+     * @return true if the value is greater than the one to compare with, false otherwise
+     */
+    bool operator>(const Optional& value) const { return ((m_is_set == value.m_is_set) && (m_value > value.m_value)); }
+
+    /**
      * @brief Implicit conversion operator
      * @return Underlying parameter
      */

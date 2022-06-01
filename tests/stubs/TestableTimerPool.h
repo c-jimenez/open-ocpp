@@ -16,64 +16,35 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIMERPOOL_H
-#define TIMERPOOL_H
+#ifndef TESTABLETIMERPOOL_H
+#define TESTABLETIMERPOOL_H
 
 #include "ITimerPool.h"
 
-#include <chrono>
-#include <condition_variable>
-#include <functional>
 #include <list>
-#include <mutex>
-#include <thread>
 
 namespace ocpp
 {
 namespace helpers
 {
 
-class Timer;
-
-/** @brief Handle a pool of timers */
-class TimerPool : public ITimerPool
+/** @brief Testable pool of timers which can be used for unit tests */
+class TestableTimerPool : public ITimerPool
 {
-    friend class Timer;
-
   public:
     /** @brief Constructor */
-    TimerPool();
+    TestableTimerPool();
     /** @brief Destructor */
-    virtual ~TimerPool();
+    virtual ~TestableTimerPool();
 
     /** @copydoc Timer* ITimerPool::createTimer(const char*) */
     Timer* createTimer(const char* name = "") override;
-
     /** @copydoc Timer* ITimerPool::getTimer(const std::string&) */
     Timer* getTimer(const std::string& timer_name) override;
 
   private:
-    /** @brief Indicate that the timers must stop */
-    bool m_stop;
-    /** @brief Indicate that the next wakeup time has changed */
-    bool m_update_wakeup_time;
-    /** @brief Mutex for wakeup condition */
-    std::mutex m_wakeup_mutex;
-    /** @brief Wakeup condition */
-    std::condition_variable m_wakeup_cond;
-    /** @brief Next wakeup time point */
-    std::chrono::time_point<std::chrono::system_clock> m_wake_up_time_point;
-    /** @brief Timers thread */
-    std::thread m_thread;
     /** @brief List of registered timers */
     std::list<Timer*> m_timers;
-    /** @brief List of active timers */
-    std::list<Timer*> m_active_timers;
-
-    /** @brief Timers thread loop */
-    void threadLoop();
-    /** @brief Compute next wakeup time point */
-    void computeNextWakeupTimepoint();
 
     /** @copydoc void ITimerPool::addTimer(Timer*) */
     void registerTimer(Timer* timer) override;
@@ -90,4 +61,4 @@ class TimerPool : public ITimerPool
 } // namespace helpers
 } // namespace ocpp
 
-#endif // TIMERPOOL_H
+#endif // TESTABLETIMERPOOL_H

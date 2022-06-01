@@ -38,7 +38,7 @@ namespace chargepoint
 SmartChargingManager::SmartChargingManager(const ocpp::config::IChargePointConfig&         stack_config,
                                            ocpp::config::IOcppConfig&                      ocpp_config,
                                            ocpp::database::Database&                       database,
-                                           ocpp::helpers::TimerPool&                       timer_pool,
+                                           ocpp::helpers::ITimerPool&                      timer_pool,
                                            ocpp::helpers::WorkerThreadPool&                worker_pool,
                                            Connectors&                                     connectors,
                                            const ocpp::messages::GenericMessagesConverter& messages_converter,

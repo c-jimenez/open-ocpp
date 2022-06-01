@@ -32,7 +32,8 @@ TimerPool::TimerPool()
       m_wakeup_cond(),
       m_wake_up_time_point(std::chrono::system_clock::now() + std::chrono::hours(2400u)),
       m_thread(std::bind(&TimerPool::threadLoop, this)),
-      m_timers()
+      m_timers(),
+      m_active_timers()
 {
 }
 
@@ -45,10 +46,27 @@ TimerPool::~TimerPool()
     m_thread.join();
 }
 
-/** @brief Create a timer */
-Timer* TimerPool::createTimer()
+/** @copydoc Timer* ITimerPool::createTimer(const char*) */
+Timer* TimerPool::createTimer(const char* name)
 {
-    return new Timer(*this);
+    return new Timer(*this, name);
+}
+
+/** @copydoc Timer* ITimerPool::getTimer(const std::string&) */
+Timer* TimerPool::getTimer(const std::string& timer_name)
+{
+    Timer* timer = nullptr;
+
+    std::lock_guard<std::mutex> lock(m_wakeup_mutex);
+    for (Timer* t : m_timers)
+    {
+        if (t->m_name == timer_name)
+        {
+            timer = t;
+            break;
+        }
+    }
+    return timer;
 }
 
 /** @brief TimerPool thread loop */
@@ -73,11 +91,11 @@ void TimerPool::threadLoop()
         else
         {
             // Timer has elapsed
-            Timer* timer = m_timers.front();
+            Timer* timer = m_active_timers.front();
             if (timer->m_single_shot)
             {
                 // Single shot : remove timer from the list
-                m_timers.pop_front();
+                m_active_timers.pop_front();
 
                 // Timer is now stopped
                 timer->m_started = false;
@@ -101,7 +119,7 @@ void TimerPool::threadLoop()
 void TimerPool::computeNextWakeupTimepoint()
 {
     // New wakeup time point
-    if (m_timers.empty())
+    if (m_active_timers.empty())
     {
         // Next wakeup in 100days
         m_wake_up_time_point = std::chrono::system_clock::now() + std::chrono::hours(2400u);
@@ -109,12 +127,19 @@ void TimerPool::computeNextWakeupTimepoint()
     else
     {
         // Re-order timer list
-        m_timers.sort([](const Timer* a, const Timer* b) { return (a->m_wake_up_time_point < b->m_wake_up_time_point); });
-        m_wake_up_time_point = m_timers.front()->m_wake_up_time_point;
+        m_active_timers.sort([](const Timer* a, const Timer* b) { return (a->m_wake_up_time_point < b->m_wake_up_time_point); });
+        m_wake_up_time_point = m_active_timers.front()->m_wake_up_time_point;
     }
 }
 
-/** @brief Lock access to the timers */
+/** @copydoc void ITimerPool::addTimer(Timer*) */
+void TimerPool::registerTimer(Timer* timer)
+{
+    std::lock_guard<std::mutex> lock(m_wakeup_mutex);
+    m_timers.push_back(timer);
+}
+
+/** @copydoc void ITimerPool::lock() */
 void TimerPool::lock()
 {
     if (std::this_thread::get_id() != m_thread.get_id())
@@ -123,7 +148,7 @@ void TimerPool::lock()
     }
 }
 
-/** @brief Unlock access to the timers */
+/** @copydoc void ITimerPool::unlock() */
 void TimerPool::unlock()
 {
     if (std::this_thread::get_id() != m_thread.get_id())
@@ -132,7 +157,7 @@ void TimerPool::unlock()
     }
 }
 
-/** @brief Add timer to the list of active timers */
+/** @copydoc void ITimerPool::addTimer(Timer*) */
 void TimerPool::addTimer(Timer* timer)
 {
     // Check if the timer shall wakeup before
@@ -145,17 +170,14 @@ void TimerPool::addTimer(Timer* timer)
     }
 
     // Add timer to the list
-    m_timers.push_back(timer);
-
-    // Timer is now started
-    timer->m_started = true;
+    m_active_timers.push_back(timer);
 }
 
-/** @brief Remove timer from the list of active timers */
+/** @copydoc void ITimerPool::removeTimer(Timer*) */
 void TimerPool::removeTimer(Timer* timer)
 {
     // Check if the timer is the next timer to wakeup
-    if (timer == m_timers.front())
+    if (timer == m_active_timers.front())
     {
         // Trigger update of wakeup timepoint
         m_update_wakeup_time = true;
@@ -163,10 +185,7 @@ void TimerPool::removeTimer(Timer* timer)
     }
 
     // Remove timer from the list
-    m_timers.remove(timer);
-
-    // Timer is now stopped
-    timer->m_started = false;
+    m_active_timers.remove(timer);
 }
 
 } // namespace helpers

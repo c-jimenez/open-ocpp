@@ -41,7 +41,7 @@ class Connectors
 {
   public:
     /** @brief Constructor */
-    Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::Database& database, ocpp::helpers::TimerPool& timer_pool);
+    Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::Database& database, ocpp::helpers::ITimerPool& timer_pool);
 
     /**
      * @brief Indicate if a connector id is valid
@@ -96,7 +96,7 @@ class Connectors
     /** @brief Charge point's database */
     ocpp::database::Database& m_database;
     /** @brief Timer pool */
-    ocpp::helpers::TimerPool& m_timer_pool;
+    ocpp::helpers::ITimerPool& m_timer_pool;
 
     /** @brief List of available connectors */
     std::vector<Connector*> m_connectors;

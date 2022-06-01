@@ -62,7 +62,7 @@ class MeterValuesManager : public IMeterValuesManager,
     MeterValuesManager(ocpp::config::IOcppConfig&            ocpp_config,
                        ocpp::database::Database&             database,
                        IChargePointEventsHandler&            events_handler,
-                       ocpp::helpers::TimerPool&             timer_pool,
+                       ocpp::helpers::ITimerPool&            timer_pool,
                        ocpp::helpers::WorkerThreadPool&      worker_pool,
                        Connectors&                           connectors,
                        ocpp::messages::GenericMessageSender& msg_sender,
@@ -102,6 +102,9 @@ class MeterValuesManager : public IMeterValuesManager,
 
     /** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */
     void configurationValueChanged(const std::string& key) override;
+
+    /** @brief Name of the clock aligned timer */
+    static constexpr const char* CLOCK_ALIGNED_TIMER_NAME = "Clock Aligned";
 
   private:
     /** @brief Standard OCPP configuration */
@@ -144,7 +147,7 @@ class MeterValuesManager : public IMeterValuesManager,
     void sendMeterValues(unsigned int                                                                                     connector_id,
                          const std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>>& measurands,
                          ocpp::types::ReadingContext                                                                      context,
-                         ocpp::types::Optional<int> transaction_id = ocpp::types::Optional<int>());
+                         const ocpp::types::Optional<int>& transaction_id = ocpp::types::Optional<int>());
 
     /** @brief Compute the measurand list from a CSL configuration string */
     std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>> computeMeasurandList(

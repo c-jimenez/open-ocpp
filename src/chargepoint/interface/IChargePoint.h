@@ -32,7 +32,7 @@ namespace ocpp
 {
 namespace helpers
 {
-class TimerPool;
+class ITimerPool;
 class WorkerThreadPool;
 } // namespace helpers
 
@@ -66,7 +66,7 @@ class IChargePoint
     static std::unique_ptr<IChargePoint> create(const ocpp::config::IChargePointConfig&          stack_config,
                                                 ocpp::config::IOcppConfig&                       ocpp_config,
                                                 IChargePointEventsHandler&                       events_handler,
-                                                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                                                 std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
@@ -76,7 +76,7 @@ class IChargePoint
      * @brief Get the timer pool associated to the charge point
      * @return Timer pool associated to the charge point
      */
-    virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
+    virtual ocpp::helpers::ITimerPool& getTimerPool() = 0;
 
     /**
      * @brief Get the worker pool associated to the charge point

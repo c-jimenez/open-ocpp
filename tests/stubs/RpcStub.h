@@ -21,6 +21,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IRpc.h"
 
+#include <memory>
+#include <vector>
+
 namespace ocpp
 {
 namespace rpc
@@ -62,6 +65,10 @@ class RpcStub : public IRpc
     IRpc::IListener* getListener() { return m_listener; }
     /** @brief Get the spy */
     IRpc::ISpy* getSpy() { return m_spy; }
+    /** @brief Get the list of calls */
+    const std::vector<std::pair<std::string, std::unique_ptr<rapidjson::Document>>>& getCalls() const { return m_calls; }
+    /** @brief Clear the list of calls */
+    void clearCalls() { m_calls.clear(); }
 
   private:
     /** @brief Connectivity state */
@@ -74,6 +81,8 @@ class RpcStub : public IRpc
     bool m_call_will_fail;
     /** @brief Next response */
     rapidjson::Document m_response;
+    /** @brief Calls */
+    std::vector<std::pair<std::string, std::unique_ptr<rapidjson::Document>>> m_calls;
 };
 
 } // namespace rpc

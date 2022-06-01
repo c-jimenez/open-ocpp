@@ -42,7 +42,7 @@ bool RemoteStartTransactionReqConverter::fromJson(const rapidjson::Value&    jso
                                                   std::string&               error_message)
 {
     bool ret = extract(json, "connectorId", data.connectorId, error_message);
-    if (ret && (data.connectorId == 0))
+    if (ret && (data.connectorId == 0u))
     {
         error_message = "connectorId field must be > 0";
     }

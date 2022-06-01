@@ -74,7 +74,7 @@ class ChargePoint : public IChargePoint,
     ChargePoint(const ocpp::config::IChargePointConfig&          stack_config,
                 ocpp::config::IOcppConfig&                       ocpp_config,
                 IChargePointEventsHandler&                       events_handler,
-                std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                 std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
@@ -82,8 +82,8 @@ class ChargePoint : public IChargePoint,
 
     // IChargePoint interface
 
-    /** @copydoc ocpp::helpers::TimerPool& IChargePoint::getTimerPool() */
-    ocpp::helpers::TimerPool& getTimerPool() override { return *m_timer_pool.get(); }
+    /** @copydoc ocpp::helpers::ITimerPool& IChargePoint::getTimerPool() */
+    ocpp::helpers::ITimerPool& getTimerPool() override { return *m_timer_pool.get(); }
 
     /** @copydoc ocpp::helpers::WorkerThreadPool& IChargePoint::getWorkerPool() */
     ocpp::helpers::WorkerThreadPool& getWorkerPool() override { return *m_worker_pool.get(); }
@@ -223,7 +223,7 @@ class ChargePoint : public IChargePoint,
     IChargePointEventsHandler& m_events_handler;
 
     /** @brief Timer pool */
-    std::shared_ptr<ocpp::helpers::TimerPool> m_timer_pool;
+    std::shared_ptr<ocpp::helpers::ITimerPool> m_timer_pool;
     /** @brief Worker thread pool */
     std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 

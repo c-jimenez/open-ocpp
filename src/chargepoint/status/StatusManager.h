@@ -63,7 +63,7 @@ class StatusManager
                   ocpp::config::IOcppConfig&                      ocpp_config,
                   IChargePointEventsHandler&                      events_handler,
                   ocpp::config::IInternalConfigManager&           internal_config,
-                  ocpp::helpers::TimerPool&                       timer_pool,
+                  ocpp::helpers::ITimerPool&                      timer_pool,
                   ocpp::helpers::WorkerThreadPool&                worker_pool,
                   Connectors&                                     connectors,
                   ocpp::messages::IMessageDispatcher&             msg_dispatcher,

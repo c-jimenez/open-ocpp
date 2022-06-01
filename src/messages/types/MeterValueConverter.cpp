@@ -42,10 +42,6 @@ bool MeterValueConverter::fromJson(const rapidjson::Value&  json,
     {
         data.sampledValue.emplace_back();
         SampledValue& sampled_value = data.sampledValue.back();
-        sampled_value.context       = ReadingContext::SamplePeriodic;
-        sampled_value.format        = ValueFormat::Raw;
-        sampled_value.measurand     = Measurand::EnergyActiveImportRegister;
-        sampled_value.location      = Location::Outlet;
 
         extract(*it_sampled, "value", sampled_value.value);
         if ((*it_sampled).HasMember("context"))

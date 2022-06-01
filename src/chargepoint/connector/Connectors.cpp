@@ -28,7 +28,7 @@ namespace chargepoint
 {
 
 /** @brief Constructor */
-Connectors::Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::Database& database, ocpp::helpers::TimerPool& timer_pool)
+Connectors::Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::Database& database, ocpp::helpers::ITimerPool& timer_pool)
     : m_ocpp_config(ocpp_config),
       m_database(database),
       m_timer_pool(timer_pool),

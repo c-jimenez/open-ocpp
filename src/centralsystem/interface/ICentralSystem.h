@@ -34,7 +34,7 @@ namespace ocpp
 {
 namespace helpers
 {
-class TimerPool;
+class ITimerPool;
 class WorkerThreadPool;
 } // namespace helpers
 namespace database
@@ -70,7 +70,7 @@ class ICentralSystem
      */
     static std::unique_ptr<ICentralSystem> create(const ocpp::config::ICentralSystemConfig&        stack_config,
                                                   ICentralSystemEventsHandler&                     events_handler,
-                                                  std::shared_ptr<ocpp::helpers::TimerPool>        timer_pool,
+                                                  std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                                                   std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
@@ -86,7 +86,7 @@ class ICentralSystem
      * @brief Get the timer pool associated to the central system
      * @return Timer pool associated to the central system
      */
-    virtual ocpp::helpers::TimerPool& getTimerPool() = 0;
+    virtual ocpp::helpers::ITimerPool& getTimerPool() = 0;
 
     /**
      * @brief Get the worker pool associated to the central system

@@ -17,7 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Timer.h"
-#include "TimerPool.h"
+#include "ITimerPool.h"
 
 namespace ocpp
 {
@@ -25,7 +25,7 @@ namespace helpers
 {
 
 /** @brief Constructor */
-Timer::Timer(TimerPool& pool, const char* name)
+Timer::Timer(ITimerPool& pool, const char* name)
     : m_pool(pool),
       m_name(name),
       m_single_shot(false),
@@ -34,18 +34,7 @@ Timer::Timer(TimerPool& pool, const char* name)
       m_started(false),
       m_callback()
 {
-}
-
-/** @brief Copy constructor */
-Timer::Timer(const Timer& timer)
-    : m_pool(timer.m_pool),
-      m_name(timer.m_name),
-      m_single_shot(timer.m_single_shot),
-      m_interval(timer.m_interval),
-      m_wake_up_time_point(timer.m_wake_up_time_point),
-      m_started(timer.m_started),
-      m_callback(timer.m_callback)
-{
+    m_pool.registerTimer(this);
 }
 
 /** @brief Destructor */
@@ -72,6 +61,9 @@ bool Timer::start(std::chrono::milliseconds interval, bool single_shot)
 
         // Add timer to the list
         m_pool.addTimer(this);
+
+        // Timer is now started
+        m_started = true;
 
         ret = true;
     }
@@ -105,6 +97,9 @@ bool Timer::restart(std::chrono::milliseconds interval, bool single_shot)
     // Add timer to the list
     m_pool.addTimer(this);
 
+    // Timer is now started
+    m_started = true;
+
     ret = true;
 
     // Unlock timers
@@ -127,6 +122,9 @@ bool Timer::stop()
         // Remove timer from the list
         m_pool.removeTimer(this);
 
+        // Timer is now stopped
+        m_started = false;
+
         ret = true;
     }
 
@@ -134,12 +132,6 @@ bool Timer::stop()
     m_pool.unlock();
 
     return ret;
-}
-
-/** @brief Indicate if the timer is started */
-bool Timer::isStarted() const
-{
-    return m_started;
 }
 
 /** @brief Set the timer's callback */
@@ -153,12 +145,6 @@ void Timer::setCallback(std::function<void()> callback)
 
     // Unlock timers
     m_pool.unlock();
-}
-
-/** @brief Get the timer's interval */
-std::chrono::milliseconds Timer::getInterval() const
-{
-    return m_interval;
 }
 
 } // namespace helpers

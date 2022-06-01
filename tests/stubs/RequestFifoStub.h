@@ -16,34 +16,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef REQUESTFIFO_H
-#define REQUESTFIFO_H
+#ifndef REQUESTFIFOSTUB_H
+#define REQUESTFIFOSTUB_H
 
-#include "Database.h"
 #include "IRequestFifo.h"
 
-#include <mutex>
 #include <queue>
 
 namespace ocpp
 {
-namespace chargepoint
+namespace messages
 {
 
-/** @brief Handle in-order retransmission of request and persistency across reboots */
-class RequestFifo : public ocpp::messages::IRequestFifo
+/** @brief Request FIFO stub for unit tests */
+class RequestFifoStub : public IRequestFifo
 {
   public:
     /** @brief Constructor */
-    RequestFifo(ocpp::database::Database& database);
-
+    RequestFifoStub();
     /** @brief Destructor */
-    virtual ~RequestFifo();
-
-    /** @brief Initialize the database table */
-    void initDatabaseTable();
-
-    // IRequestFifo interface
+    virtual ~RequestFifoStub();
 
     /** @copydoc void IRequestFifo::push(unsigned int, const std::string&, const rapidjson::Document&) const */
     void push(unsigned int connector_id, const std::string& action, const rapidjson::Document& payload) override;
@@ -55,7 +47,7 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     void pop() override;
 
     /** @copydoc size_t IRequestFifo::size() const */
-    size_t size() const override;
+    size_t size() const override { return m_fifo.size(); }
 
     /** @copydoc bool IRequestFifo::empty() const */
     bool empty() const override { return (size() == 0); }
@@ -63,53 +55,42 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     /** @copydoc void IRequestFifo::registerListener(IListener*) const */
     void registerListener(IListener* listener) override { m_listener = listener; }
 
-    // RequestFifo interface
+    // API
+
+    /** @brief Clear the fifo */
+    void clear();
+
+    /** @brief Get the listener */
+    IListener* getListener() { return m_listener; }
 
   private:
     /** @brief FIFO entry */
     struct Entry
     {
         /** @brief Default constructor */
-        Entry() : id(0), action(), request() { }
+        Entry() : connector_id(0), action(), request() { }
         /** @brief Constructor */
-        Entry(unsigned int _id, unsigned int _connector_id, std::string _action, std::string _request)
-            : id(_id), connector_id(_connector_id), action(_action), request(_request)
+        Entry(unsigned int _connector_id, std::string _action, const rapidjson::Document& _request)
+            : connector_id(_connector_id), action(_action), request()
         {
+            request.CopyFrom(_request, request.GetAllocator());
         }
 
-        /** @brief Id */
-        unsigned int id;
         /** @brief Id of the connector related to the request */
         unsigned int connector_id;
         /** @brief Action */
         std::string action;
         /** @brief Request */
-        std::string request;
+        rapidjson::Document request;
     };
 
-    /** @brief Charge point's database */
-    ocpp::database::Database& m_database;
-
-    /** @brief Query to delete a request */
-    std::unique_ptr<ocpp::database::Database::Query> m_delete_query;
-    /** @brief Query to insert a request */
-    std::unique_ptr<ocpp::database::Database::Query> m_insert_query;
-
-    /** @brief Protect simultaneous access to FIFO */
-    mutable std::mutex m_mutex;
     /** @brief FIFO */
     std::queue<Entry> m_fifo;
-    /** @brief Current id of the request */
-    unsigned int m_id;
-
     /** @brief Listener */
     IListener* m_listener;
-
-    /** @brief Load requests from the database */
-    void load();
 };
 
-} // namespace chargepoint
+} // namespace messages
 } // namespace ocpp
 
-#endif // REQUESTFIFO_H
+#endif // REQUESTFIFOSTUB_H

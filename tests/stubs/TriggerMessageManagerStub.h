@@ -1,0 +1,77 @@
+/*
+Copyright (c) 2020 Cedric Jimenez
+This file is part of OpenOCPP.
+
+OpenOCPP is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+OpenOCPP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#ifndef TRIGGERMESSAGEMANAGERSTUB_H
+#define TRIGGERMESSAGEMANAGERSTUB_H
+
+#include "ITriggerMessageManager.h"
+
+#include <map>
+
+namespace ocpp
+{
+namespace chargepoint
+{
+
+/** @brief TriggerMessage manager stub for unit tests */
+class TriggerMessageManagerStub : public ITriggerMessageManager
+{
+  public:
+    /** @brief Constructor */
+    TriggerMessageManagerStub() : m_standard_handlers() { }
+    /** @brief Destructor */
+    virtual ~TriggerMessageManagerStub() { }
+
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
+    void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) override
+    {
+        m_standard_handlers[message] = &handler;
+    }
+
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+    void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override
+    {
+        m_extended_handlers[message] = &handler;
+    }
+
+    // API
+
+    /** @brief Check if a handler has been registered for a message */
+    bool isMessageHandlerRegistered(ocpp::types::MessageTrigger message) const
+    {
+        return (m_standard_handlers.find(message) != m_standard_handlers.end());
+    }
+
+    /** @brief Check if a handler has been registered for a message */
+    bool isMessageHandlerRegistered(ocpp::types::MessageTriggerEnumType message) const
+    {
+        return (m_extended_handlers.find(message) != m_extended_handlers.end());
+    }
+
+  private:
+    /** @brief Handlers for standard trigger messages */
+    std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
+
+    /** @brief Handlers for extended trigger messages */
+    std::map<ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
+};
+
+} // namespace chargepoint
+} // namespace ocpp
+
+#endif // TRIGGERMESSAGEMANAGERSTUB_H

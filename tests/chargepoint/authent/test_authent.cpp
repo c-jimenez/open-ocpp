@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../authent/AuthentLocalList.h"
-#include "../authent/AuthentManager.h"
+#include "AuthentLocalList.h"
+#include "AuthentManager.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "Authorize.h"
 #include "ChargePointConfigStub.h"
@@ -75,8 +75,8 @@ TEST_SUITE("Authentication component")
         cp_config.setConfigValue("AuthentCacheMaxEntriesCount", "5");
         ocpp_config.setConfigValue("AuthorizationCacheEnabled", "true");
         ocpp_config.setConfigValue("LocalAuthListEnabled", "true");
-        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5u");
-        ocpp_config.setConfigValue("SendLocalListMaxLength", "5u");
+        ocpp_config.setConfigValue("LocalAuthListMaxLength", "5");
+        ocpp_config.setConfigValue("SendLocalListMaxLength", "5");
         ocpp_config.setConfigValue("LocalAuthorizeOffline", "true");
         ocpp_config.setConfigValue("LocalPreAuthorize", "true");
         internal_config.initDatabaseTable();
