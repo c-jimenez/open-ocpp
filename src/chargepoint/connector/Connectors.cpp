@@ -95,7 +95,7 @@ void Connectors::initDatabaseTable()
 
     // Create parametrized queries
     m_find_query   = m_database.query("SELECT * FROM Connectors WHERE id=?;");
-    m_insert_query = m_database.query("INSERT INTO Connectors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+    m_insert_query = m_database.query("INSERT INTO Connectors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
     m_update_query = m_database.query("UPDATE Connectors SET [status]=?, [last_notified_status]=?, [transaction_id]=?, "
                                       "[transaction_id_offline]=?, [transaction_start]=?, [transaction_id_tag]=?, [reservation_id]=?, "
                                       "[reservation_id_tag]=?, [reservation_parent_id_tag]=?, [reservation_expiry_date]=? WHERE id=?;");
