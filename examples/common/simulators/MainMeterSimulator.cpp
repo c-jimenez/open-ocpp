@@ -52,7 +52,7 @@ std::vector<unsigned int> MainMeterSimulator::getCurrents()
     for (auto& meter : m_child_meters)
     {
         std::vector<unsigned int> child_currents = meter->getCurrents();
-        for (size_t i = 0; i < child_currents.size(); i++)
+        for (std::size_t i = 0; i < child_currents.size(); i++)
         {
             currents[i] += child_currents[i];
         }
@@ -67,7 +67,7 @@ std::vector<unsigned int> MainMeterSimulator::getInstantPowers()
     for (auto& meter : m_child_meters)
     {
         std::vector<unsigned int> child_powers = meter->getInstantPowers();
-        for (size_t i = 0; i < child_powers.size(); i++)
+        for (std::size_t i = 0; i < child_powers.size(); i++)
         {
             powers[i] += child_powers[i];
         }
