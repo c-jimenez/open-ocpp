@@ -372,10 +372,10 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
                 status = ChargePointStatus::Available;
             }
             m_worker_pool.run<void>([this, connector_id, status] { updateConnectorStatus(connector_id, status); });
-            ret = true;
         }
 
         LOG_INFO << "Change availability " << AvailabilityStatusHelper.toString(response.status);
+        ret = true;
     }
     else
     {
