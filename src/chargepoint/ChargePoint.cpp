@@ -469,13 +469,37 @@ ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_i
             Connector* connector = m_connectors.getConnector(connector_id);
             if (connector)
             {
-                // Check for reservation
+                // Authorize reason
                 if (connector->status == ChargePointStatus::Reserved)
                 {
+                    // Authorize request to start a transaction on a reserved connector
                     ret = m_reservation_manager->isTransactionAllowed(connector_id, id_tag);
+                }
+                else if (connector->transaction_id != 0)
+                {
+                    // Authorize request to stop a transaction
+                    if (id_tag == connector->transaction_id_tag)
+                    {
+                        // Same id tag which did start the transaction
+                        parent_id = connector->transaction_parent_id_tag;
+                        ret       = AuthorizationStatus::Accepted;
+                    }
+                    else
+                    {
+                        // Send authorize request to compare the parent id tags
+                        if (!connector->transaction_parent_id_tag.empty())
+                        {
+                            ret = m_authent_manager->authorize(id_tag, parent_id);
+                            if ((ret != AuthorizationStatus::Accepted) || (parent_id != connector->transaction_parent_id_tag))
+                            {
+                                ret = AuthorizationStatus::Invalid;
+                            }
+                        }
+                    }
                 }
                 else
                 {
+                    // Authorize request to start a transaction
                     ret = m_authent_manager->authorize(id_tag, parent_id);
                 }
             }
