@@ -93,6 +93,8 @@ struct Connector
     ocpp::types::DateTime transaction_start;
     /** @brief Id tag associated with the transaction */
     std::string transaction_id_tag;
+    /** @brief Parent id tag associated with the transaction */
+    std::string transaction_parent_id_tag;
 
     // Reservation data
 

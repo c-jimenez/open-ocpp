@@ -158,9 +158,10 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                     // Update status from response
                     {
                         std::lock_guard<std::mutex> lock(connector->mutex);
-                        connector->transaction_id     = start_transaction_conf.transactionId;
-                        connector->transaction_start  = start_transaction_req.timestamp;
-                        connector->transaction_id_tag = id_tag;
+                        connector->transaction_id            = start_transaction_conf.transactionId;
+                        connector->transaction_start         = start_transaction_req.timestamp;
+                        connector->transaction_id_tag        = id_tag;
+                        connector->transaction_parent_id_tag = start_transaction_conf.idTagInfo.parentIdTag.value().str();
                         m_connectors.saveConnector(connector->id);
                     }
 
@@ -223,9 +224,10 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
             // Reset transaction id
             {
                 std::lock_guard<std::mutex> lock(connector->mutex);
-                connector->transaction_id     = 0;
-                connector->transaction_id_tag = "";
-                connector->transaction_start  = 0;
+                connector->transaction_id            = 0;
+                connector->transaction_id_tag        = "";
+                connector->transaction_parent_id_tag = "";
+                connector->transaction_start         = 0;
                 m_connectors.saveConnector(connector->id);
             }
 

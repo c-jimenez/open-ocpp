@@ -105,12 +105,12 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | :---: | :---: | :--- |
 | AllowOfflineTxForUnknownId | S | None |
 | AuthorizationCacheEnabled | S | None |
-| AuthorizeRemoteTxRequests | S | None |
+| AuthorizeRemoteTxRequests | U | None |
 | BlinkRepeat | U | None |
 | ClockAlignedDataInterval | S | None |
-| ConnectionTimeOut | S | None |
-| ConnectorPhaseRotation | S | None |
-| ConnectorPhaseRotationMaxLength | S | None |
+| ConnectionTimeOut | U | None |
+| ConnectorPhaseRotation | U | None |
+| ConnectorPhaseRotationMaxLength | U | None |
 | GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (49) + user application configuration keys count to allow to export all the configuration in 1 message |
 | HeartbeatInterval | S | Heartbeat are only sent if no messages have been exchanged since HeartbeatInterval seconds |
 | LightIntensity | U | None |
