@@ -312,7 +312,7 @@ bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::Authoriz
                 }
                 if (authorization_data.idTagInfo.value().expiryDate.isSet())
                 {
-                    m_insert_query->bind(2, authorization_data.idTagInfo.value().expiryDate.value().timestamp());
+                    m_insert_query->bind(2, static_cast<int64_t>(authorization_data.idTagInfo.value().expiryDate.value().timestamp()));
                 }
                 else
                 {
@@ -375,7 +375,8 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                         m_update_query->bind(0, authorization_data.idTagInfo.value().parentIdTag.value());
                         if (authorization_data.idTagInfo.value().expiryDate.isSet())
                         {
-                            m_update_query->bind(1, authorization_data.idTagInfo.value().expiryDate.value().timestamp());
+                            m_update_query->bind(1,
+                                                 static_cast<int64_t>(authorization_data.idTagInfo.value().expiryDate.value().timestamp()));
                         }
                         else
                         {
@@ -400,7 +401,8 @@ bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::Autho
                         m_insert_query->bind(1, authorization_data.idTagInfo.value().parentIdTag.value());
                         if (authorization_data.idTagInfo.value().expiryDate.isSet())
                         {
-                            m_insert_query->bind(2, authorization_data.idTagInfo.value().expiryDate.value().timestamp());
+                            m_insert_query->bind(2,
+                                                 static_cast<int64_t>(authorization_data.idTagInfo.value().expiryDate.value().timestamp()));
                         }
                         else
                         {

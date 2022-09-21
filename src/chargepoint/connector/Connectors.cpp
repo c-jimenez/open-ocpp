@@ -278,13 +278,13 @@ bool Connectors::saveConnector(const Connector& connector)
         m_update_query->bind(1u, static_cast<int>(connector.last_notified_status));
         m_update_query->bind(2u, connector.transaction_id);
         m_update_query->bind(3u, connector.transaction_id_offline);
-        m_update_query->bind(4u, connector.transaction_start);
+        m_update_query->bind(4u, static_cast<int64_t>(connector.transaction_start));
         m_update_query->bind(5u, connector.transaction_id_tag);
         m_update_query->bind(6u, connector.transaction_parent_id_tag);
         m_update_query->bind(7u, connector.reservation_id);
         m_update_query->bind(8u, connector.reservation_id_tag);
         m_update_query->bind(9u, connector.reservation_parent_id_tag);
-        m_update_query->bind(10u, connector.reservation_expiry_date);
+        m_update_query->bind(10u, static_cast<int64_t>(connector.reservation_expiry_date));
         m_update_query->bind(11u, connector.id);
         ret = m_update_query->exec();
         if (ret)
@@ -313,13 +313,13 @@ bool Connectors::createConnector(const Connector& connector)
         m_insert_query->bind(2u, static_cast<int>(connector.last_notified_status));
         m_insert_query->bind(3u, connector.transaction_id);
         m_insert_query->bind(4u, connector.transaction_id_offline);
-        m_insert_query->bind(5u, connector.transaction_start);
+        m_insert_query->bind(5u, static_cast<int64_t>(connector.transaction_start));
         m_insert_query->bind(6u, connector.transaction_id_tag);
         m_insert_query->bind(7u, connector.transaction_parent_id_tag);
         m_insert_query->bind(8u, connector.reservation_id);
         m_insert_query->bind(9u, connector.reservation_id_tag);
         m_insert_query->bind(10u, connector.reservation_parent_id_tag);
-        m_insert_query->bind(11u, connector.reservation_expiry_date);
+        m_insert_query->bind(11u, static_cast<int64_t>(connector.reservation_expiry_date));
         ret = m_insert_query->exec();
         if (ret)
         {
