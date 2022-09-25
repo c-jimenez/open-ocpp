@@ -150,8 +150,8 @@ bool CpCertificatesDatabase::installCertificate(unsigned int request_id, const o
     {
         // Install certificate
         m_update_csr_to_cert_query->reset();
-        m_update_csr_to_cert_query->bind(0, certificate.validityFrom());
-        m_update_csr_to_cert_query->bind(1, certificate.validityTo());
+        m_update_csr_to_cert_query->bind(0, static_cast<int64_t>(certificate.validityFrom()));
+        m_update_csr_to_cert_query->bind(1, static_cast<int64_t>(certificate.validityTo()));
         m_update_csr_to_cert_query->bind(2, certificate.pem());
         m_update_csr_to_cert_query->bind(3, request_id);
         if (m_update_csr_to_cert_query->exec())
@@ -179,8 +179,8 @@ bool CpCertificatesDatabase::isValidCertificateInstalled()
     {
         // Find valid certificates
         m_list_query->reset();
-        m_list_query->bind(0, DateTime::now().timestamp());
-        m_list_query->bind(1, DateTime::now().timestamp());
+        m_list_query->bind(0, static_cast<int64_t>(DateTime::now().timestamp()));
+        m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
         ret = (m_list_query->exec() && m_list_query->hasRows());
 
         // Reset all queries
@@ -199,8 +199,8 @@ std::string CpCertificatesDatabase::getChargePointCertificate(std::string& priva
     {
         // Find valid certificates
         m_list_query->reset();
-        m_list_query->bind(0, DateTime::now().timestamp());
-        m_list_query->bind(1, DateTime::now().timestamp());
+        m_list_query->bind(0, static_cast<int64_t>(DateTime::now().timestamp()));
+        m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
         if (m_list_query->exec() && m_list_query->hasRows())
         {
             // Get only the first = most recent

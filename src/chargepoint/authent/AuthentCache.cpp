@@ -175,7 +175,7 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     }
                     if (tag_info.expiryDate.isSet())
                     {
-                        m_update_query->bind(1, tag_info.expiryDate.value().timestamp());
+                        m_update_query->bind(1, static_cast<int64_t>(tag_info.expiryDate.value().timestamp()));
                     }
                     else
                     {
@@ -209,7 +209,7 @@ void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInf
                     }
                     if (tag_info.expiryDate.isSet())
                     {
-                        m_insert_query->bind(2, tag_info.expiryDate.value().timestamp());
+                        m_insert_query->bind(2, static_cast<int64_t>(tag_info.expiryDate.value().timestamp()));
                     }
                     else
                     {
