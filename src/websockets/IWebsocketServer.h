@@ -103,6 +103,12 @@ class IWebsocketServer
         virtual ~IClient() { }
 
         /**
+         * @brief Get the IP address of the client
+         * @return IP address of the client
+         */
+        virtual const std::string& ipAddress() const = 0;
+
+        /**
          * @brief Disconnect the client
          * @param notify_disconnected Indicate if the listener must be notified owhen disconnected
          * @return true if the disconnection is successfull, false otherwise

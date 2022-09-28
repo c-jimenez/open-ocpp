@@ -77,6 +77,12 @@ ChargePointProxy::~ChargePointProxy() { }
 
 // ICentralSystem::IChargePoint interface
 
+/** @copydoc const std::string& ICentralSystem::IChargePoint::ipAddress() const */
+const std::string& ChargePointProxy::ipAddress() const
+{
+    return m_rpc->ipAddress();
+}
+
 /** @copydoc void ICentralSystem::IChargePoint::setTimeout(std::chrono::milliseconds) */
 void ChargePointProxy::setTimeout(std::chrono::milliseconds timeout)
 {
