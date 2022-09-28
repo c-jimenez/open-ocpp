@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGEPOINTPROXY_H
-#define CHARGEPOINTPROXY_H
+#ifndef OPENOCPP_CHARGEPOINTPROXY_H
+#define OPENOCPP_CHARGEPOINTPROXY_H
 
 #include "ChargePointHandler.h"
 #include "GenericMessageSender.h"
@@ -301,4 +301,4 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // CHARGEPOINTPROXY_H
+#endif // OPENOCPP_CHARGEPOINTPROXY_H

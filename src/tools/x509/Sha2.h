@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SHA2_H
-#define SHA2_H
+#ifndef OPENOCPP_SHA2_H
+#define OPENOCPP_SHA2_H
 
 #include <cstdint>
 #include <string>
@@ -100,4 +100,4 @@ class Sha2
 } // namespace x509
 } // namespace ocpp
 
-#endif // SHA2_H
+#endif // OPENOCPP_SHA2_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPTIONAL_H
-#define OPTIONAL_H
+#ifndef OPENOCPP_OPTIONAL_H
+#define OPENOCPP_OPTIONAL_H
 
 namespace ocpp
 {
@@ -158,4 +158,4 @@ class Optional
 } // namespace types
 } // namespace ocpp
 
-#endif // OPTIONAL_H
+#endif // OPENOCPP_OPTIONAL_H

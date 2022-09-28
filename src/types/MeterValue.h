@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METERVALUE_H
-#define METERVALUE_H
+#ifndef OPENOCPP_METERVALUE_H
+#define OPENOCPP_METERVALUE_H
 
 #include "DateTime.h"
 #include "Optional.h"
@@ -43,4 +43,4 @@ struct MeterValue
 } // namespace types
 } // namespace ocpp
 
-#endif // METERVALUE_H
+#endif // OPENOCPP_METERVALUE_H

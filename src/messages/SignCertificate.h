@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SIGNCERTIFICATE_H
-#define SIGNCERTIFICATE_H
+#ifndef OPENOCPP_SIGNCERTIFICATE_H
+#define OPENOCPP_SIGNCERTIFICATE_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -53,4 +53,4 @@ MESSAGE_CONVERTERS(SignCertificate)
 } // namespace messages
 } // namespace ocpp
 
-#endif // SIGNCERTIFICATE_H
+#endif // OPENOCPP_SIGNCERTIFICATE_H

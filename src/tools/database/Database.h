@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef OPENOCPP_DATABASE_H
+#define OPENOCPP_DATABASE_H
 
 #include <cstdint>
 #include <memory>
@@ -266,4 +266,4 @@ class Database
 } // namespace database
 } // namespace ocpp
 
-#endif // DATABASE_H
+#endif // OPENOCPP_DATABASE_H

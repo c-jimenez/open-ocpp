@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CANCELRESERVATION
-#define CANCELRESERVATION
+#ifndef OPENOCPP_CANCELRESERVATION_H
+#define OPENOCPP_CANCELRESERVATION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -53,4 +53,4 @@ MESSAGE_CONVERTERS(CancelReservation)
 } // namespace messages
 } // namespace ocpp
 
-#endif // CANCELRESERVATION_H
+#endif // OPENOCPP_CANCELRESERVATION_H

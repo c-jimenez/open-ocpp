@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLEARCHARGINGPROFILE_H
-#define CLEARCHARGINGPROFILE_H
+#ifndef OPENOCPP_CLEARCHARGINGPROFILE_H
+#define OPENOCPP_CLEARCHARGINGPROFILE_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -63,4 +63,4 @@ MESSAGE_CONVERTERS(ClearChargingProfile)
 } // namespace messages
 } // namespace ocpp
 
-#endif // CLEARCHARGINGPROFILE_H
+#endif // OPENOCPP_CLEARCHARGINGPROFILE_H

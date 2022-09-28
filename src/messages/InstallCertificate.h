@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INSTALLCERTIFICATE_H
-#define INSTALLCERTIFICATE_H
+#ifndef OPENOCPP_INSTALLCERTIFICATE_H
+#define OPENOCPP_INSTALLCERTIFICATE_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -55,4 +55,4 @@ MESSAGE_CONVERTERS(InstallCertificate)
 } // namespace messages
 } // namespace ocpp
 
-#endif // INSTALLCERTIFICATE_H
+#endif // OPENOCPP_INSTALLCERTIFICATE_H

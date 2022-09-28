@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICENTRALSYSTEMCONFIG_H
-#define ICENTRALSYSTEMCONFIG_H
+#ifndef OPENOCPP_ICENTRALSYSTEMCONFIG_H
+#define OPENOCPP_ICENTRALSYSTEMCONFIG_H
 
 #include <chrono>
 #include <string>
@@ -81,4 +81,4 @@ class ICentralSystemConfig
 } // namespace config
 } // namespace ocpp
 
-#endif // ICENTRALSYSTEMCONFIG_H
+#endif // OPENOCPP_ICENTRALSYSTEMCONFIG_H

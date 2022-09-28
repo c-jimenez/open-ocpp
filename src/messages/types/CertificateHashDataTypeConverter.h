@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CERTIFICATEHASHDATATYPECONVERTER_H
-#define CERTIFICATEHASHDATATYPECONVERTER_H
+#ifndef OPENOCPP_CERTIFICATEHASHDATATYPECONVERTER_H
+#define OPENOCPP_CERTIFICATEHASHDATATYPECONVERTER_H
 
 #include "CertificateHashDataType.h"
 #include "IMessageConverter.h"
@@ -48,4 +48,4 @@ class CertificateHashDataTypeConverter : public IMessageConverter<ocpp::types::C
 } // namespace messages
 } // namespace ocpp
 
-#endif // CERTIFICATEHASHDATATYPECONVERTER_H
+#endif // OPENOCPP_CERTIFICATEHASHDATATYPECONVERTER_H

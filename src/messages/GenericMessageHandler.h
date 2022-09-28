@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GENERICMESSAGEHANDLER_H
-#define GENERICMESSAGEHANDLER_H
+#ifndef OPENOCPP_GENERICMESSAGEHANDLER_H
+#define OPENOCPP_GENERICMESSAGEHANDLER_H
 
 #include "GenericMessagesConverter.h"
 #include "IMessageConverter.h"
@@ -93,4 +93,4 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
 } // namespace messages
 } // namespace ocpp
 
-#endif // GENERICMESSAGEHANDLER_H
+#endif // OPENOCPP_GENERICMESSAGEHANDLER_H

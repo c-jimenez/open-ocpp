@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SETCHARGINGPROFILE_H
-#define SETCHARGINGPROFILE_H
+#ifndef OPENOCPP_SETCHARGINGPROFILE_H
+#define OPENOCPP_SETCHARGINGPROFILE_H
 
 #include "ChargingProfile.h"
 #include "Enums.h"
@@ -57,4 +57,4 @@ MESSAGE_CONVERTERS(SetChargingProfile)
 } // namespace messages
 } // namespace ocpp
 
-#endif // SETCHARGINGPROFILE_H
+#endif // OPENOCPP_SETCHARGINGPROFILE_H

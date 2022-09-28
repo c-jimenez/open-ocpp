@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOGPARAMETERSTYPE_H
-#define LOGPARAMETERSTYPE_H
+#ifndef OPENOCPP_LOGPARAMETERSTYPE_H
+#define OPENOCPP_LOGPARAMETERSTYPE_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -46,4 +46,4 @@ struct LogParametersType
 } // namespace types
 } // namespace ocpp
 
-#endif // LOGPARAMETERSTYPE_H
+#endif // OPENOCPP_LOGPARAMETERSTYPE_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGINGPROFILE_H
-#define CHARGINGPROFILE_H
+#ifndef OPENOCPP_CHARGINGPROFILE_H
+#define OPENOCPP_CHARGINGPROFILE_H
 
 #include "ChargingSchedule.h"
 #include "DateTime.h"
@@ -61,4 +61,4 @@ struct ChargingProfile
 } // namespace types
 } // namespace ocpp
 
-#endif // CHARGINGPROFILE_H
+#endif // OPENOCPP_CHARGINGPROFILE_H

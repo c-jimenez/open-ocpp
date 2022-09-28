@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SECURITYMANAGER_H
-#define SECURITYMANAGER_H
+#ifndef OPENOCPP_SECURITYMANAGER_H
+#define OPENOCPP_SECURITYMANAGER_H
 
 #include "CaCertificatesDatabase.h"
 #include "CertificateSigned.h"
@@ -216,4 +216,4 @@ class SecurityManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // SECURITYMANAGER_H
+#endif // OPENOCPP_SECURITYMANAGER_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSACTIONMANAGER_H
-#define TRANSACTIONMANAGER_H
+#ifndef OPENOCPP_TRANSACTIONMANAGER_H
+#define OPENOCPP_TRANSACTIONMANAGER_H
 
 #include "Enums.h"
 #include "GenericMessageHandler.h"
@@ -136,4 +136,4 @@ class TransactionManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // TRANSACTIONMANAGER_H
+#endif // OPENOCPP_TRANSACTIONMANAGER_H

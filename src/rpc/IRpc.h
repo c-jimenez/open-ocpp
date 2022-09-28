@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IRPC_H
-#define IRPC_H
+#ifndef OPENOCPP_IRPC_H
+#define OPENOCPP_IRPC_H
 
 #include "json.h"
 
@@ -145,4 +145,4 @@ class IRpc
 } // namespace rpc
 } // namespace ocpp
 
-#endif // IRPC_H
+#endif // OPENOCPP_IRPC_H

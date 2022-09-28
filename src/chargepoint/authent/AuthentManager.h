@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTHENTMANAGER_H
-#define AUTHENTMANAGER_H
+#ifndef OPENOCPP_AUTHENTMANAGER_H
+#define OPENOCPP_AUTHENTMANAGER_H
 
 #include "Enums.h"
 #include "IdTagInfo.h"
@@ -95,4 +95,4 @@ class AuthentManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // AUTHENTMANAGER_H
+#endif // OPENOCPP_AUTHENTMANAGER_H

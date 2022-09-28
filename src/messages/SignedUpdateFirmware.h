@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SIGNEDUPDATEFIRMWARE_H
-#define SIGNEDUPDATEFIRMWARE_H
+#ifndef OPENOCPP_SIGNEDUPDATEFIRMWARE_H
+#define OPENOCPP_SIGNEDUPDATEFIRMWARE_H
 
 #include "Enums.h"
 #include "FirmwareType.h"
@@ -63,4 +63,4 @@ MESSAGE_CONVERTERS(SignedUpdateFirmware)
 } // namespace messages
 } // namespace ocpp
 
-#endif // SIGNEDUPDATEFIRMWARE_H
+#endif // OPENOCPP_SIGNEDUPDATEFIRMWARE_H

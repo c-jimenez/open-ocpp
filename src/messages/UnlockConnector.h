@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UNLOCKCONNECTOR_H
-#define UNLOCKCONNECTOR_H
+#ifndef OPENOCPP_UNLOCKCONNECTOR_H
+#define OPENOCPP_UNLOCKCONNECTOR_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -50,4 +50,4 @@ MESSAGE_CONVERTERS(UnlockConnector)
 } // namespace messages
 } // namespace ocpp
 
-#endif // UNLOCKCONNECTOR_H
+#endif // OPENOCPP_UNLOCKCONNECTOR_H

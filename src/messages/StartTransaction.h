@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STARTTRANSACTION_H
-#define STARTTRANSACTION_H
+#ifndef OPENOCPP_STARTTRANSACTION_H
+#define OPENOCPP_STARTTRANSACTION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -64,4 +64,4 @@ MESSAGE_CONVERTERS(StartTransaction)
 } // namespace messages
 } // namespace ocpp
 
-#endif // STARTTRANSACTION_H
+#endif // OPENOCPP_STARTTRANSACTION_H

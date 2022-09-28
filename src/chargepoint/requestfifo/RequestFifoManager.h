@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef REQUESTFIFOMANAGER_H
-#define REQUESTFIFOMANAGER_H
+#ifndef OPENOCPP_REQUESTFIFOMANAGER_H
+#define OPENOCPP_REQUESTFIFOMANAGER_H
 
 #include "IRequestFifo.h"
 #include "Timer.h"
@@ -106,4 +106,4 @@ class RequestFifoManager : public ocpp::messages::IRequestFifo::IListener
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // REQUESTFIFOMANAGER_H
+#endif // OPENOCPP_REQUESTFIFOMANAGER_H

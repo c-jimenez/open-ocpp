@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SIGNEDFIRMWARESTATUSNOTIFICATION_H
-#define SIGNEDFIRMWARESTATUSNOTIFICATION_H
+#ifndef OPENOCPP_SIGNEDFIRMWARESTATUSNOTIFICATION_H
+#define OPENOCPP_SIGNEDFIRMWARESTATUSNOTIFICATION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -55,4 +55,4 @@ MESSAGE_CONVERTERS(SignedFirmwareStatusNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // SIGNEDFIRMWARESTATUSNOTIFICATION_H
+#endif // OPENOCPP_SIGNEDFIRMWARESTATUSNOTIFICATION_H

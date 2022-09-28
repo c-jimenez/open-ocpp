@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICENTRALSYSTEM_H
-#define ICENTRALSYSTEM_H
+#ifndef OPENOCPP_ICENTRALSYSTEM_H
+#define OPENOCPP_ICENTRALSYSTEM_H
 
 #include "AuthorizationData.h"
 #include "Certificate.h"
@@ -438,4 +438,4 @@ class ICentralSystem
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // ICENTRALSYSTEM_H
+#endif // OPENOCPP_ICENTRALSYSTEM_H

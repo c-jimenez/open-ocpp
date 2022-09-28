@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IDTOKEN_H
-#define IDTOKEN_H
+#ifndef OPENOCPP_IDTOKEN_H
+#define OPENOCPP_IDTOKEN_H
 
 #include "CiStringType.h"
 
@@ -33,4 +33,4 @@ typedef CiStringType<20u> IdToken;
 } // namespace types
 } // namespace ocpp
 
-#endif // IDTOKEN_H
+#endif // OPENOCPP_IDTOKEN_H

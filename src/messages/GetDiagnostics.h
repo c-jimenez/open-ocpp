@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETDIAGNOSTICS_H
-#define GETDIAGNOSTICS_H
+#ifndef OPENOCPP_GETDIAGNOSTICS_H
+#define OPENOCPP_GETDIAGNOSTICS_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -70,4 +70,4 @@ MESSAGE_CONVERTERS(GetDiagnostics)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETDIAGNOSTICS_H
+#endif // OPENOCPP_GETDIAGNOSTICS_H

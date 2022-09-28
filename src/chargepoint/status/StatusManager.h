@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATUSMANAGER_H
-#define STATUSMANAGER_H
+#ifndef OPENOCPP_STATUSMANAGER_H
+#define OPENOCPP_STATUSMANAGER_H
 
 #include "ChangeAvailability.h"
 #include "GenericMessageHandler.h"
@@ -161,4 +161,4 @@ class StatusManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // STATUSMANAGER_H
+#endif // OPENOCPP_STATUSMANAGER_H

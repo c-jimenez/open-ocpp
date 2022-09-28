@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef JSON_H
-#define JSON_H
+#ifndef OPENOCPP_JSON_H
+#define OPENOCPP_JSON_H
 
 // Disable GCC warnings
 #ifdef __GNUC__
@@ -60,4 +60,4 @@ class parse_exception : public std::logic_error
 #pragma GCC diagnostic pop
 #endif // __GNUC__
 
-#endif // JSON_H
+#endif // OPENOCPP_JSON_H

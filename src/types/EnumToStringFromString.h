@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENUMTOSTRINGFROMSTRING_H
-#define ENUMTOSTRINGFROMSTRING_H
+#ifndef OPENOCPP_ENUMTOSTRINGFROMSTRING_H
+#define OPENOCPP_ENUMTOSTRINGFROMSTRING_H
 
 #include "String.h"
 
@@ -120,4 +120,4 @@ std::vector<EnumType> EnumsFromCsl(const std::string& csl, const EnumToStringFro
 } // namespace types
 } // namespace ocpp
 
-#endif // ENUMTOSTRINGFROMSTRING_H
+#endif // OPENOCPP_ENUMTOSTRINGFROMSTRING_H

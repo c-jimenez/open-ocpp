@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGEDISPATCHER_H
-#define MESSAGEDISPATCHER_H
+#ifndef OPENOCPP_MESSAGEDISPATCHER_H
+#define OPENOCPP_MESSAGEDISPATCHER_H
 
 #include "IMessageDispatcher.h"
 #include "JsonValidator.h"
@@ -66,4 +66,4 @@ class MessageDispatcher : public IMessageDispatcher
 } // namespace messages
 } // namespace ocpp
 
-#endif // MESSAGEDISPATCHER_H
+#endif // OPENOCPP_MESSAGEDISPATCHER_H

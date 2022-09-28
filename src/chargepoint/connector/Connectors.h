@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTORS_H
-#define CONNECTORS_H
+#ifndef OPENOCPP_CONNECTORS_H
+#define OPENOCPP_CONNECTORS_H
 
 #include "Connector.h"
 #include "Database.h"
@@ -121,4 +121,4 @@ class Connectors
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CONNECTORS_H
+#endif // OPENOCPP_CONNECTORS_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef WORKERTHREADPOOL_H
-#define WORKERTHREADPOOL_H
+#ifndef OPENOCPP_WORKERTHREADPOOL_H
+#define OPENOCPP_WORKERTHREADPOOL_H
 
 #include "Queue.h"
 
@@ -242,4 +242,4 @@ class WorkerThreadPool
 } // namespace helpers
 } // namespace ocpp
 
-#endif // WORKERTHREADPOOL_H
+#endif // OPENOCPP_WORKERTHREADPOOL_H

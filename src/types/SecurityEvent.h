@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SECURITYEVENT_H
-#define SECURITYEVENT_H
+#ifndef OPENOCPP_SECURITYEVENT_H
+#define OPENOCPP_SECURITYEVENT_H
 
 namespace ocpp
 {
@@ -69,4 +69,4 @@ static constexpr const char* SECEVT_INVALID_TLS_CIPHER_SUITE = "InvalidTLSCipher
 } // namespace types
 } // namespace ocpp
 
-#endif // SECURITYEVENT_H
+#endif // OPENOCPP_SECURITYEVENT_H
