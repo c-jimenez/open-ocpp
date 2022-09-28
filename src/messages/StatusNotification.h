@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATUSNOTIFICATION_H
-#define STATUSNOTIFICATION_H
+#ifndef OPENOCPP_STATUSNOTIFICATION_H
+#define OPENOCPP_STATUSNOTIFICATION_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -67,4 +67,4 @@ MESSAGE_CONVERTERS(StatusNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // STATUSNOTIFICATION_H
+#endif // OPENOCPP_STATUSNOTIFICATION_H

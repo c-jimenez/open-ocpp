@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROFILEDATABASE_H
-#define PROFILEDATABASE_H
+#ifndef OPENOCPP_PROFILEDATABASE_H
+#define OPENOCPP_PROFILEDATABASE_H
 
 #include "ChargingProfile.h"
 #include "Database.h"
@@ -134,4 +134,4 @@ class ProfileDatabase
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // PROFILEDATABASE_H
+#endif // OPENOCPP_PROFILEDATABASE_H

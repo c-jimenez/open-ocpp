@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SECURITYEVENTNOTIFICATION_H
-#define SECURITYEVENTNOTIFICATION_H
+#ifndef OPENOCPP_SECURITYEVENTNOTIFICATION_H
+#define OPENOCPP_SECURITYEVENTNOTIFICATION_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -55,4 +55,4 @@ MESSAGE_CONVERTERS(SecurityEventNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // SECURITYEVENTNOTIFICATION_H
+#endif // OPENOCPP_SECURITYEVENTNOTIFICATION_H

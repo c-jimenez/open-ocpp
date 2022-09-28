@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STRING_H
-#define STRING_H
+#ifndef OPENOCPP_STRING_H
+#define OPENOCPP_STRING_H
 
 #include <string>
 #include <vector>
@@ -90,4 +90,4 @@ bool endsWith(const std::string& str, const std::string& substr);
 } // namespace helpers
 } // namespace ocpp
 
-#endif // STRING_H
+#endif // OPENOCPP_STRING_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef REMOTESTARTTRANSACTION_H
-#define REMOTESTARTTRANSACTION_H
+#ifndef OPENOCPP_REMOTESTARTTRANSACTION_H
+#define OPENOCPP_REMOTESTARTTRANSACTION_H
 
 #include "ChargingProfile.h"
 #include "Enums.h"
@@ -60,4 +60,4 @@ MESSAGE_CONVERTERS(RemoteStartTransaction)
 } // namespace messages
 } // namespace ocpp
 
-#endif // REMOTESTARTTRANSACTION_H
+#endif // OPENOCPP_REMOTESTARTTRANSACTION_H

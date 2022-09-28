@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CENTRALSYSTEM_H
-#define CENTRALSYSTEM_H
+#ifndef OPENOCPP_CENTRALSYSTEM_H
+#define OPENOCPP_CENTRALSYSTEM_H
 
 #include "Database.h"
 #include "ICentralSystem.h"
@@ -119,4 +119,4 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // CENTRALSYSTEM_H
+#endif // OPENOCPP_CENTRALSYSTEM_H

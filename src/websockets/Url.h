@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef URL_H
-#define URL_H
+#ifndef OPENOCPP_URL_H
+#define OPENOCPP_URL_H
 
 #include <string>
 
@@ -118,4 +118,4 @@ class Url
 } // namespace websockets
 } // namespace ocpp
 
-#endif // URL_H
+#endif // OPENOCPP_URL_H

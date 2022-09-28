@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CERTIFICATEHASHDATATYPE_H
-#define CERTIFICATEHASHDATATYPE_H
+#ifndef OPENOCPP_CERTIFICATEHASHDATATYPE_H
+#define OPENOCPP_CERTIFICATEHASHDATATYPE_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -43,4 +43,4 @@ struct CertificateHashDataType
 } // namespace types
 } // namespace ocpp
 
-#endif // CERTIFICATEHASHDATATYPE_H
+#endif // OPENOCPP_CERTIFICATEHASHDATATYPE_H

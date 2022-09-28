@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IREQUESTFIFO_H
-#define IREQUESTFIFO_H
+#ifndef OPENOCPP_IREQUESTFIFO_H
+#define OPENOCPP_IREQUESTFIFO_H
 
 #include "json.h"
 
@@ -90,4 +90,4 @@ class IRequestFifo
 } // namespace messages
 } // namespace ocpp
 
-#endif // IREQUESTFIFO_H
+#endif // OPENOCPP_IREQUESTFIFO_H

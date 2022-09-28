@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESERVENOW_H
-#define RESERVENOW_H
+#ifndef OPENOCPP_RESERVENOW_H
+#define OPENOCPP_RESERVENOW_H
 
 #include "DateTime.h"
 #include "Enums.h"
@@ -64,4 +64,4 @@ MESSAGE_CONVERTERS(ReserveNow)
 } // namespace messages
 } // namespace ocpp
 
-#endif // RESERVENOW_H
+#endif // OPENOCPP_RESERVENOW_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef OPENOCPP_QUEUE_H
+#define OPENOCPP_QUEUE_H
 
 #include <chrono>
 #include <condition_variable>
@@ -188,4 +188,4 @@ class Queue
 } // namespace helpers
 } // namespace ocpp
 
-#endif // QUEUE_H
+#endif // OPENOCPP_QUEUE_H

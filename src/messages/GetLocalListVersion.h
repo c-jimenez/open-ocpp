@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETLOCALLISTVERSION_H
-#define GETLOCALLISTVERSION_H
+#ifndef OPENOCPP_GETLOCALLISTVERSION_H
+#define OPENOCPP_GETLOCALLISTVERSION_H
 
 #include "IMessageConverter.h"
 
@@ -49,4 +49,4 @@ MESSAGE_CONVERTERS(GetLocalListVersion)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETLOCALLISTVERSION_H
+#endif // OPENOCPP_GETLOCALLISTVERSION_H

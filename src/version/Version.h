@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef OPENOCPP_VERSION_H
+#define OPENOCPP_VERSION_H
 
 /** @brief Stack version in the form XX.YY.ZZ where
  *          XX = Major version number (increase = API compatibility broken and/or major feature addition)
@@ -32,4 +32,4 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 /** @brief Return the version string of the library */
 extern "C" const char* OPEN_OCPP_Version();
 
-#endif // VERSION_H
+#endif // OPENOCPP_VERSION_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETCONFIGURATION_H
-#define GETCONFIGURATION_H
+#ifndef OPENOCPP_GETCONFIGURATION_H
+#define OPENOCPP_GETCONFIGURATION_H
 
 #include "CiStringType.h"
 #include "IMessageConverter.h"
@@ -55,4 +55,4 @@ MESSAGE_CONVERTERS(GetConfiguration)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETCONFIGURATION_H
+#endif // OPENOCPP_GETCONFIGURATION_H

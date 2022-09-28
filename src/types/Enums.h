@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENUMS_H
-#define ENUMS_H
+#ifndef OPENOCPP_ENUMS_H
+#define OPENOCPP_ENUMS_H
 
 #include "EnumToStringFromString.h"
 
@@ -981,4 +981,4 @@ extern const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmware
 } // namespace types
 } // namespace ocpp
 
-#endif // ENUMS_H
+#endif // OPENOCPP_ENUMS_H

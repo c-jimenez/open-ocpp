@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INIFILE_H
-#define INIFILE_H
+#ifndef OPENOCPP_INIFILE_H
+#define OPENOCPP_INIFILE_H
 
 #include <map>
 #include <string>
@@ -175,4 +175,4 @@ class IniFile
 } // namespace helpers
 } // namespace ocpp
 
-#endif // INIFILE_H
+#endif // OPENOCPP_INIFILE_H

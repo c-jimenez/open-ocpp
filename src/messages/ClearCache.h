@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLEARCACHE_H
-#define CLEARCACHE_H
+#ifndef OPENOCPP_CLEARCACHE_H
+#define OPENOCPP_CLEARCACHE_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -50,4 +50,4 @@ MESSAGE_CONVERTERS(ClearCache)
 } // namespace messages
 } // namespace ocpp
 
-#endif // CLEARCACHE_H
+#endif // OPENOCPP_CLEARCACHE_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HEARTBEAT_H
-#define HEARTBEAT_H
+#ifndef OPENOCPP_HEARTBEAT_H
+#define OPENOCPP_HEARTBEAT_H
 
 #include "DateTime.h"
 #include "IMessageConverter.h"
@@ -49,4 +49,4 @@ MESSAGE_CONVERTERS(Heartbeat)
 } // namespace messages
 } // namespace ocpp
 
-#endif // HEARTBEAT_H
+#endif // OPENOCPP_HEARTBEAT_H

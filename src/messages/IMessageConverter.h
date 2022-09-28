@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMESSAGECONVERTER_H
-#define IMESSAGECONVERTER_H
+#ifndef OPENOCPP_IMESSAGECONVERTER_H
+#define OPENOCPP_IMESSAGECONVERTER_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -289,4 +289,4 @@ class IMessageConverter
 } // namespace messages
 } // namespace ocpp
 
-#endif // IMESSAGECONVERTER_H
+#endif // OPENOCPP_IMESSAGECONVERTER_H

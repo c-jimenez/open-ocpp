@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICHARGEPOINTEVENTSHANDLER_H
-#define ICHARGEPOINTEVENTSHANDLER_H
+#ifndef OPENOCPP_ICHARGEPOINTEVENTSHANDLER_H
+#define OPENOCPP_ICHARGEPOINTEVENTSHANDLER_H
 
 #include "Certificate.h"
 #include "DateTime.h"
@@ -282,4 +282,4 @@ class IChargePointEventsHandler
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // ICHARGEPOINTEVENTSHANDLER_H
+#endif // OPENOCPP_ICHARGEPOINTEVENTSHANDLER_H

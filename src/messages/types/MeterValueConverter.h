@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METERVALUECONVERTER_H
-#define METERVALUECONVERTER_H
+#ifndef OPENOCPP_METERVALUECONVERTER_H
+#define OPENOCPP_METERVALUECONVERTER_H
 
 #include "IMessageConverter.h"
 #include "MeterValue.h"
@@ -48,4 +48,4 @@ class MeterValueConverter : public IMessageConverter<ocpp::types::MeterValue>
 } // namespace messages
 } // namespace ocpp
 
-#endif // METERVALUECONVERTER_H
+#endif // OPENOCPP_METERVALUECONVERTER_H

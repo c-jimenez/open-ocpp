@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGESCONVERTER_H
-#define MESSAGESCONVERTER_H
+#ifndef OPENOCPP_MESSAGESCONVERTER_H
+#define OPENOCPP_MESSAGESCONVERTER_H
 
 #include "GenericMessagesConverter.h"
 
@@ -39,4 +39,4 @@ class MessagesConverter : public GenericMessagesConverter
 } // namespace messages
 } // namespace ocpp
 
-#endif // MESSAGESCONVERTER_H
+#endif // OPENOCPP_MESSAGESCONVERTER_H

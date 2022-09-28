@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BOOTNOTIFICATION_H
-#define BOOTNOTIFICATION_H
+#ifndef OPENOCPP_BOOTNOTIFICATION_H
+#define OPENOCPP_BOOTNOTIFICATION_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -84,4 +84,4 @@ MESSAGE_CONVERTERS(BootNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // BOOTNOTIFICATION_H
+#endif // OPENOCPP_BOOTNOTIFICATION_H

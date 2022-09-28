@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESERVATIONMANAGER_H
-#define RESERVATIONMANAGER_H
+#ifndef OPENOCPP_RESERVATIONMANAGER_H
+#define OPENOCPP_RESERVATIONMANAGER_H
 
 #include "CancelReservation.h"
 #include "Enums.h"
@@ -134,4 +134,4 @@ class ReservationManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // RESERVATIONMANAGER_H
+#endif // OPENOCPP_RESERVATIONMANAGER_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RPCBASE_H
-#define RPCBASE_H
+#ifndef OPENOCPP_RPCBASE_H
+#define OPENOCPP_RPCBASE_H
 
 #include "IRpc.h"
 #include "Queue.h"
@@ -140,4 +140,4 @@ class RpcBase : public IRpc
 } // namespace rpc
 } // namespace ocpp
 
-#endif // RPCBASE_H
+#endif // OPENOCPP_RPCBASE_H

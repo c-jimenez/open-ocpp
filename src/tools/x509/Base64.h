@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BASE64_H
-#define BASE64_H
+#ifndef OPENOCPP_BASE64_H
+#define OPENOCPP_BASE64_H
 
 #include <cstdint>
 #include <string>
@@ -50,4 +50,4 @@ std::vector<uint8_t> decode(const std::string& b64_str);
 } // namespace x509
 } // namespace ocpp
 
-#endif // BASE64_H
+#endif // OPENOCPP_BASE64_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SAMPLEDVALUE_H
-#define SAMPLEDVALUE_H
+#ifndef OPENOCPP_SAMPLEDVALUE_H
+#define OPENOCPP_SAMPLEDVALUE_H
 
 #include "Enums.h"
 #include "Optional.h"
@@ -58,4 +58,4 @@ struct SampledValue
 } // namespace types
 } // namespace ocpp
 
-#endif // SAMPLEDVALUE_H
+#endif // OPENOCPP_SAMPLEDVALUE_H

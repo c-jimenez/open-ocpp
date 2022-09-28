@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESET_H
-#define RESET_H
+#ifndef OPENOCPP_RESET_H
+#define OPENOCPP_RESET_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -50,4 +50,4 @@ MESSAGE_CONVERTERS(Reset)
 } // namespace messages
 } // namespace ocpp
 
-#endif // RESET_H
+#endif // OPENOCPP_RESET_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGINGSCHEDULECONVERTER_H
-#define CHARGINGSCHEDULECONVERTER_H
+#ifndef OPENOCPP_CHARGINGSCHEDULECONVERTER_H
+#define OPENOCPP_CHARGINGSCHEDULECONVERTER_H
 
 #include "ChargingSchedule.h"
 #include "IMessageConverter.h"
@@ -48,4 +48,4 @@ class ChargingScheduleConverter : public IMessageConverter<ocpp::types::Charging
 } // namespace messages
 } // namespace ocpp
 
-#endif // CHARGINGSCHEDULECONVERTER_H
+#endif // OPENOCPP_CHARGINGSCHEDULECONVERTER_H

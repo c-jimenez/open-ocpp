@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UPDATEFIRMWARE_H
-#define UPDATEFIRMWARE_H
+#ifndef OPENOCPP_UPDATEFIRMWARE_H
+#define OPENOCPP_UPDATEFIRMWARE_H
 
 #include "DateTime.h"
 #include "IMessageConverter.h"
@@ -63,4 +63,4 @@ MESSAGE_CONVERTERS(UpdateFirmware)
 } // namespace messages
 } // namespace ocpp
 
-#endif // UPDATEFIRMWARE_H
+#endif // OPENOCPP_UPDATEFIRMWARE_H

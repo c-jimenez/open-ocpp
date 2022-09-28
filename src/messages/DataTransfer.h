@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DATATRANSFER_H
-#define DATATRANSFER_H
+#ifndef OPENOCPP_DATATRANSFER_H
+#define OPENOCPP_DATATRANSFER_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -58,4 +58,4 @@ MESSAGE_CONVERTERS(DataTransfer)
 } // namespace messages
 } // namespace ocpp
 
-#endif // DATATRANSFER_H
+#endif // OPENOCPP_DATATRANSFER_H

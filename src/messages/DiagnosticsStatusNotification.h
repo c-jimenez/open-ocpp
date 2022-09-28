@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DIAGNOSTICSTATUSNOTIFICATION_H
-#define DIAGNOSTICSTATUSNOTIFICATION_H
+#ifndef OPENOCPP_DIAGNOSTICSTATUSNOTIFICATION_H
+#define OPENOCPP_DIAGNOSTICSTATUSNOTIFICATION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -49,4 +49,4 @@ MESSAGE_CONVERTERS(DiagnosticsStatusNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // DIAGNOSTICSTATUSNOTIFICATION_H
+#endif // OPENOCPP_DIAGNOSTICSTATUSNOTIFICATION_H

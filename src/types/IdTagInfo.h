@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IDTAGINFO_H
-#define IDTAGINFO_H
+#ifndef OPENOCPP_IDTAGINFO_H
+#define OPENOCPP_IDTAGINFO_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -49,4 +49,4 @@ struct IdTagInfo
 } // namespace types
 } // namespace ocpp
 
-#endif // IDTAGINFO_H
+#endif // OPENOCPP_IDTAGINFO_H

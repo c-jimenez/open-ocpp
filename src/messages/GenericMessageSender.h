@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GENERICMESSAGESENDER_H
-#define GENERICMESSAGESENDER_H
+#ifndef OPENOCPP_GENERICMESSAGESENDER_H
+#define OPENOCPP_GENERICMESSAGESENDER_H
 
 #include "IRequestFifo.h"
 #include "IRpc.h"
@@ -179,4 +179,4 @@ class GenericMessageSender
 } // namespace messages
 } // namespace ocpp
 
-#endif // GENERICMESSAGESENDER_H
+#endif // OPENOCPP_GENERICMESSAGESENDER_H

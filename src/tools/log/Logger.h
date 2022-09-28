@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef OPENOCPP_LOGGER_H
+#define OPENOCPP_LOGGER_H
 
 #include "FilenameMacro.h"
 
@@ -190,4 +190,4 @@ class NullLogger
 } // namespace log
 } // namespace ocpp
 
-#endif // LOGDATABASE_H
+#endif // OPENOCPP_LOGDATABASE_H

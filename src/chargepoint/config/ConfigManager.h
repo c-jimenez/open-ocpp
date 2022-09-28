@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIGMANAGER_H
-#define CONFIGMANAGER_H
+#ifndef OPENOCPP_CONFIGMANAGER_H
+#define OPENOCPP_CONFIGMANAGER_H
 
 #include "ChangeConfiguration.h"
 #include "Enums.h"
@@ -96,4 +96,4 @@ class ConfigManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CONFIGMANAGER_H
+#endif // OPENOCPP_CONFIGMANAGER_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ISECURITYMANAGER_H
-#define ISECURITYMANAGER_H
+#ifndef OPENOCPP_ISECURITYMANAGER_H
+#define OPENOCPP_ISECURITYMANAGER_H
 
 #include "DateTime.h"
 #include "Optional.h"
@@ -76,4 +76,4 @@ class ISecurityManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // ISECURITYMANAGER_H
+#endif // OPENOCPP_ISECURITYMANAGER_H

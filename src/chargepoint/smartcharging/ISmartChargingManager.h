@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ISMARTCHARGINGMANAGER_H
-#define ISMARTCHARGINGMANAGER_H
+#ifndef OPENOCPP_ISMARTCHARGINGMANAGER_H
+#define OPENOCPP_ISMARTCHARGINGMANAGER_H
 
 #include "ChargingProfile.h"
 #include "SmartChargingSetpoint.h"
@@ -72,4 +72,4 @@ class ISmartChargingManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // ISMARTCHARGINGMANAGER_H
+#endif // OPENOCPP_ISMARTCHARGINGMANAGER_H

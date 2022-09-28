@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIBWEBSOCKETCLIENT_H
-#define LIBWEBSOCKETCLIENT_H
+#ifndef OPENOCPP_LIBWEBSOCKETCLIENT_H
+#define OPENOCPP_LIBWEBSOCKETCLIENT_H
 
 #include "IWebsocketClient.h"
 #include "Queue.h"
@@ -133,4 +133,4 @@ class LibWebsocketClient : public IWebsocketClient
 } // namespace websockets
 } // namespace ocpp
 
-#endif // LIBWEBSOCKETCLIENT_H
+#endif // OPENOCPP_LIBWEBSOCKETCLIENT_H

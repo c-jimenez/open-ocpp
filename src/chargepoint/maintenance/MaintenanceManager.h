@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINTENANCEMANAGER_H
-#define MAINTENANCEMANAGER_H
+#ifndef OPENOCPP_MAINTENANCEMANAGER_H
+#define OPENOCPP_MAINTENANCEMANAGER_H
 
 #include "Enums.h"
 #include "GenericMessageHandler.h"
@@ -257,4 +257,4 @@ class MaintenanceManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // MAINTENANCEMANAGER_H
+#endif // OPENOCPP_MAINTENANCEMANAGER_H

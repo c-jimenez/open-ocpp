@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICENTRALSYSTEMEVENTSHANDLER_H
-#define ICENTRALSYSTEMEVENTSHANDLER_H
+#ifndef OPENOCPP_ICENTRALSYSTEMEVENTSHANDLER_H
+#define OPENOCPP_ICENTRALSYSTEMEVENTSHANDLER_H
 
 #include "ICentralSystem.h"
 
@@ -51,4 +51,4 @@ class ICentralSystemEventsHandler
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // ICENTRALSYSTEMEVENTSHANDLER_H
+#endif // OPENOCPP_ICENTRALSYSTEMEVENTSHANDLER_H

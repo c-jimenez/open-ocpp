@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIMERPOOL_H
-#define TIMERPOOL_H
+#ifndef OPENOCPP_TIMERPOOL_H
+#define OPENOCPP_TIMERPOOL_H
 
 #include "ITimerPool.h"
 
@@ -90,4 +90,4 @@ class TimerPool : public ITimerPool
 } // namespace helpers
 } // namespace ocpp
 
-#endif // TIMERPOOL_H
+#endif // OPENOCPP_TIMERPOOL_H

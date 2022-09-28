@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGEPOINT_H
-#define CHARGEPOINT_H
+#ifndef OPENOCPP_CHARGEPOINT_H
+#define OPENOCPP_CHARGEPOINT_H
 
 #include "Connectors.h"
 #include "Database.h"
@@ -303,4 +303,4 @@ class ChargePoint : public IChargePoint,
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CHARGEPOINT_H
+#endif // OPENOCPP_CHARGEPOINT_H

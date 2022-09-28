@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILENAMEMACRO_H
-#define FILENAMEMACRO_H
+#ifndef OPENOCPP_FILENAMEMACRO_H
+#define OPENOCPP_FILENAMEMACRO_H
 
 //
 // __FILENAME__ macro to retrieve the file name without its path
@@ -72,4 +72,4 @@ struct const_expr_value
 } // namespace log
 } // namespace ocpp
 
-#endif // FILENAMEMACRO_H
+#endif // OPENOCPP_FILENAMEMACRO_H

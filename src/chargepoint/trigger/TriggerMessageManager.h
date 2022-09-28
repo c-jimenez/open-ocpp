@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRIGGERMESSAGEMANAGER_H
-#define TRIGGERMESSAGEMANAGER_H
+#ifndef OPENOCPP_TRIGGERMESSAGEMANAGER_H
+#define OPENOCPP_TRIGGERMESSAGEMANAGER_H
 
 #include "ExtendedTriggerMessage.h"
 #include "GenericMessageHandler.h"
@@ -101,4 +101,4 @@ class TriggerMessageManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // TRIGGERMESSAGEMANAGER_H
+#endif // OPENOCPP_TRIGGERMESSAGEMANAGER_H

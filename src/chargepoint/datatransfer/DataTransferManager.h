@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DATATRANSFERMANAGER_H
-#define DATATRANSFERMANAGER_H
+#ifndef OPENOCPP_DATATRANSFERMANAGER_H
+#define OPENOCPP_DATATRANSFERMANAGER_H
 
 #include "DataTransfer.h"
 #include "Enums.h"
@@ -89,4 +89,4 @@ class DataTransferManager : public ocpp::messages::GenericMessageHandler<ocpp::m
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // DATATRANSFERMANAGER_H
+#endif // OPENOCPP_DATATRANSFERMANAGER_H

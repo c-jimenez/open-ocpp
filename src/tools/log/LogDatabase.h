@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOGDATABASE_H
-#define LOGDATABASE_H
+#ifndef OPENOCPP_LOGDATABASE_H
+#define OPENOCPP_LOGDATABASE_H
 
 #include "Database.h"
 
@@ -61,4 +61,4 @@ class LogDatabase
 } // namespace log
 } // namespace ocpp
 
-#endif // LOGDATABASE_H
+#endif // OPENOCPP_LOGDATABASE_H

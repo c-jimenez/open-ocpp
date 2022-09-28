@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CPCERTIFICATESDATABASE_H
-#define CPCERTIFICATESDATABASE_H
+#ifndef OPENOCPP_CPCERTIFICATESDATABASE_H
+#define OPENOCPP_CPCERTIFICATESDATABASE_H
 
 #include "Database.h"
 
@@ -112,4 +112,4 @@ class CpCertificatesDatabase
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CPCERTIFICATESDATABASE_H
+#endif // OPENOCPP_CPCERTIFICATESDATABASE_H

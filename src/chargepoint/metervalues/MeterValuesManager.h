@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METERVALUESMANAGER_H
-#define METERVALUESMANAGER_H
+#ifndef OPENOCPP_METERVALUESMANAGER_H
+#define OPENOCPP_METERVALUESMANAGER_H
 
 #include "Database.h"
 #include "Enums.h"
@@ -170,4 +170,4 @@ class MeterValuesManager : public IMeterValuesManager,
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // METERVALUESMANAGER_H
+#endif // OPENOCPP_METERVALUESMANAGER_H

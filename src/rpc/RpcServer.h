@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RPCSERVER_H
-#define RPCSERVER_H
+#ifndef OPENOCPP_RPCSERVER_H
+#define OPENOCPP_RPCSERVER_H
 
 #include "IWebsocketServer.h"
 #include "Queue.h"
@@ -163,4 +163,4 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
 } // namespace rpc
 } // namespace ocpp
 
-#endif // RPCSERVER_H
+#endif // OPENOCPP_RPCSERVER_H

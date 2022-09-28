@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IDTAGINFOCONVERTER_H
-#define IDTAGINFOCONVERTER_H
+#ifndef OPENOCPP_IDTAGINFOCONVERTER_H
+#define OPENOCPP_IDTAGINFOCONVERTER_H
 
 #include "IMessageConverter.h"
 #include "IdTagInfo.h"
@@ -45,4 +45,4 @@ class IdTagInfoConverter : public IMessageConverter<ocpp::types::IdTagInfo>
 } // namespace messages
 } // namespace ocpp
 
-#endif // IDTAGINFOCONVERTER_H
+#endif // OPENOCPP_IDTAGINFOCONVERTER_H
