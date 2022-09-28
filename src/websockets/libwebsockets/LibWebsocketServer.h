@@ -89,10 +89,14 @@ class LibWebsocketServer : public IWebsocketServer
         /**
          * @brief Constructor
          * @param wsi Client socket
+         * @param ip_address IP address
         */
-        Client(struct lws* wsi);
+        Client(struct lws* wsi, const char* ip_address);
         /** @brief Destructor */
         virtual ~Client();
+
+        /** @copydoc const std::string& IClient::ipAddress(bool) const */
+        const std::string& ipAddress() const override;
 
         /** @copydoc bool IClient::disconnect(bool) */
         bool disconnect(bool notify_disconnected) override;
@@ -109,6 +113,8 @@ class LibWebsocketServer : public IWebsocketServer
       private:
         /** @brief Client socket */
         struct lws* m_wsi;
+        /** @brief IP address */
+        const std::string m_ip_address;
         /** @brief Connection status */
         bool m_connected;
         /** @brief Listener */

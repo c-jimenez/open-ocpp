@@ -112,6 +112,12 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
         virtual ~Client();
 
         /**
+         * @brief Get the IP address of the client
+         * @return IP address of the client
+         */
+        const std::string& ipAddress() const;
+
+        /**
          * @brief Disconnect the client
          * @param notify_disconnected Indicate if the listener must be notified when disconnected
          * @return true if the client has been disconnected, false otherwise

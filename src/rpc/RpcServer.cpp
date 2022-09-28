@@ -133,6 +133,12 @@ RpcServer::Client::~Client()
     RpcBase::stop();
 }
 
+/** @brief Get the IP address of the client */
+const std::string& RpcServer::Client::ipAddress() const
+{
+    return m_websocket->ipAddress();
+}
+
 /** @brief Disconnect the client */
 bool RpcServer::Client::disconnect(bool notify_disconnected)
 {

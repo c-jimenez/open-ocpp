@@ -365,8 +365,12 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 
         case LWS_CALLBACK_ESTABLISHED:
         {
+            // Get client IP address
+            char ip_address[64];
+            lws_get_peer_simple(wsi, ip_address, sizeof(ip_address));
+
             // Instanciate a new client
-            std::shared_ptr<IClient> client(new Client(wsi));
+            std::shared_ptr<IClient> client(new Client(wsi, ip_address));
             server->m_clients[wsi] = client;
 
             // Notify connection
@@ -465,11 +469,20 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 }
 
 /** @brief Constructor */
-LibWebsocketServer::Client::Client(struct lws* wsi) : m_wsi(wsi), m_connected(true), m_listener(nullptr), m_send_msgs() { }
+LibWebsocketServer::Client::Client(struct lws* wsi, const char* ip_address)
+    : m_wsi(wsi), m_ip_address(ip_address), m_connected(true), m_listener(nullptr), m_send_msgs()
+{
+}
 /** @brief Destructor */
 LibWebsocketServer::Client::~Client()
 {
     disconnect(true);
+}
+
+/** @copydoc const std::string& IClient::ipAddress(bool) const */
+const std::string& LibWebsocketServer::Client::ipAddress() const
+{
+    return m_ip_address;
 }
 
 /** @copydoc bool IClient::disconnect(bool) */

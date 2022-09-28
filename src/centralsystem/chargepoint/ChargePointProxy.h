@@ -59,6 +59,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @copydoc ICentralSystem&& ICentralSystem::IChargePoint::centralSystem() */
     ICentralSystem& centralSystem() override { return m_central_system; }
 
+    /** @copydoc const std::string& ICentralSystem::IChargePoint::ipAddress() const */
+    const std::string& ipAddress() const override;
+
     /** @copydoc const std::string& ICentralSystem::IChargePoint::identifier() const */
     const std::string& identifier() const override { return m_identifier; }
 

@@ -126,6 +126,12 @@ class ICentralSystem
         virtual ICentralSystem& centralSystem() = 0;
 
         /**
+         * @brief Get the IP address of the charge point
+         * @return IP address of the charge point
+         */
+        virtual const std::string& ipAddress() const = 0;
+
+        /**
          * @brief Get the charge point identifier
          * @return charge point identifier
          */
