@@ -182,15 +182,16 @@ TEST_SUITE("CALL messages")
         rapidjson::Document payload;
         payload.Parse(CALL_PAYLOAD);
 
-        rapidjson::Document                        response;
+        rapidjson::Document                        rpc_frame;
+        rapidjson::Value                           response;
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 
-        CHECK_FALSE(client.call(ACTION, payload, response, std::chrono::milliseconds(0)));
+        CHECK_FALSE(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(0)));
         CHECK(websocket.sendCalled());
         CHECK_EQ(strcmp(reinterpret_cast<const char*>(websocket.sentData()), EXPECTED_CALL_MESSAGE_0), 0);
 
-        CHECK_FALSE(client.call(ACTION, payload, response, std::chrono::milliseconds(0)));
+        CHECK_FALSE(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(0)));
         CHECK_EQ(strcmp(reinterpret_cast<const char*>(websocket.sentData()), EXPECTED_CALL_MESSAGE_1), 0);
 
         std::thread response_thread(
@@ -199,7 +200,7 @@ TEST_SUITE("CALL messages")
                 std::this_thread::sleep_for(std::chrono::milliseconds(25u));
                 websocket.notifyDataReceived(EXPECTED_CALLRESULT_MESSAGE_2, strlen(EXPECTED_CALLRESULT_MESSAGE_2));
             });
-        CHECK(client.call(ACTION, payload, response, std::chrono::milliseconds(50)));
+        CHECK(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(50)));
         CHECK_EQ(strcmp(reinterpret_cast<const char*>(websocket.sentData()), EXPECTED_CALL_MESSAGE_2), 0);
         response.Accept(writer);
         CHECK_EQ(strcmp(buffer.GetString(), CALLRESULT_PAYLOAD), 0);
@@ -216,17 +217,18 @@ TEST_SUITE("CALL messages")
         websocket.setConnected();
 
         rapidjson::Document payload;
-        rapidjson::Document response;
+        rapidjson::Document rpc_frame;
+        rapidjson::Value    response;
 
         auto start = std::chrono::steady_clock::now();
-        CHECK_FALSE(client.call(ACTION, payload, response, std::chrono::milliseconds(0)));
+        CHECK_FALSE(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(0)));
         auto                          end  = std::chrono::steady_clock::now();
         std::chrono::duration<double> diff = end - start;
         CHECK_LT(diff, std::chrono::milliseconds(5u));
         CHECK(websocket.sendCalled());
 
         start = std::chrono::steady_clock::now();
-        CHECK_FALSE(client.call(ACTION, payload, response, std::chrono::milliseconds(100)));
+        CHECK_FALSE(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(100)));
         end  = std::chrono::steady_clock::now();
         diff = end - start;
         CHECK_GT(diff, std::chrono::milliseconds(99u));
@@ -238,7 +240,7 @@ TEST_SUITE("CALL messages")
                 std::this_thread::sleep_for(std::chrono::milliseconds(100u));
                 websocket.notifyDataReceived(EXPECTED_CALLRESULT_MESSAGE_2, strlen(EXPECTED_CALLRESULT_MESSAGE_2));
             });
-        CHECK_FALSE(client.call(ACTION, payload, response, std::chrono::milliseconds(50)));
+        CHECK_FALSE(client.call(ACTION, payload, rpc_frame, response, std::chrono::milliseconds(50)));
         response_thread.join();
     }
 

@@ -41,10 +41,11 @@ class RpcStub : public IRpc
     /** @copydoc bool IRpc::isConnected() */
     bool isConnected() const override { return m_connected; }
 
-    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&,rapidjson::Value&, std::chrono::milliseconds) */
     bool call(const std::string&         action,
               const rapidjson::Document& payload,
-              rapidjson::Document&       response,
+              rapidjson::Document&       rpc_frame,
+              rapidjson::Value&          response,
               std::chrono::milliseconds  timeout) override;
 
     /** @copydoc void IRpc::registerListener(IListener&) */

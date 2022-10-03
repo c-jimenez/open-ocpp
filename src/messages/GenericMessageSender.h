@@ -97,14 +97,14 @@ class GenericMessageSender
                 if (!request_fifo || request_fifo->empty())
                 {
                     // Execute call
-                    rapidjson::Document resp;
-                    resp.Parse("{}");
-                    if (m_rpc.call(action, payload, resp, m_timeout))
+                    rapidjson::Document rpc_frame;
+                    rapidjson::Value    resp;
+                    if (m_rpc.call(action, payload, rpc_frame, resp, m_timeout))
                     {
                         // Convert response
                         const char* error_code = nullptr;
                         std::string error_message;
-                        resp_converter->setAllocator(&resp.GetAllocator());
+                        resp_converter->setAllocator(&rpc_frame.GetAllocator());
                         if (resp_converter->fromJson(resp, response, error_code, error_message))
                         {
                             ret = CallResult::Ok;
@@ -149,14 +149,14 @@ class GenericMessageSender
         if (resp_converter)
         {
             // Execute call
-            rapidjson::Document resp;
-            resp.Parse("{}");
-            if (m_rpc.call(action, request, resp, m_timeout))
+            rapidjson::Document rpc_frame;
+            rapidjson::Value    resp;
+            if (m_rpc.call(action, request, rpc_frame, resp, m_timeout))
             {
                 // Convert response
                 const char* error_code = nullptr;
                 std::string error_message;
-                resp_converter->setAllocator(&resp.GetAllocator());
+                resp_converter->setAllocator(&rpc_frame.GetAllocator());
                 if (resp_converter->fromJson(resp, response, error_code, error_message))
                 {
                     ret = CallResult::Ok;

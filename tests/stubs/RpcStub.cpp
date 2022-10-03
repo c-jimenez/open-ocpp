@@ -27,10 +27,11 @@ RpcStub::RpcStub() : m_connected(false), m_listener(nullptr), m_spy(nullptr), m_
 /** @brief Destructor */
 RpcStub::~RpcStub() { }
 
-/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&, std::chrono::milliseconds) */
 bool RpcStub::call(const std::string&         action,
                    const rapidjson::Document& payload,
-                   rapidjson::Document&       response,
+                   rapidjson::Document&       rpc_frame,
+                   rapidjson::Value&          response,
                    std::chrono::milliseconds  timeout)
 {
     (void)timeout;
@@ -41,7 +42,8 @@ bool RpcStub::call(const std::string&         action,
         rapidjson::Document* doc = new rapidjson::Document();
         doc->CopyFrom(payload, doc->GetAllocator());
         m_calls.emplace_back(action, doc);
-        response.CopyFrom(m_response, response.GetAllocator());
+        rpc_frame.CopyFrom(m_response, rpc_frame.GetAllocator());
+        response.CopyFrom(m_response, rpc_frame.GetAllocator());
 
         ret = !m_call_will_fail;
     }
