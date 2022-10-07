@@ -36,7 +36,9 @@ enum class CallResult
     /** @brief Message will be sent later */
     Delayed,
     /** @brief Message cannot be send or no response has been received */
-    Failed
+    Failed,
+    /** @brief A call error message has been received */
+    Error
 };
 
 /** @brief Generic message sender with C++ data type to JSON conversion */
@@ -80,6 +82,46 @@ class GenericMessageSender
                     IRequestFifo*      request_fifo = nullptr,
                     unsigned int       connector_id = 0)
     {
+        std::string error;
+        std::string message;
+        return call(action, request, response, error, message, request_fifo, connector_id);
+    }
+
+    /**
+     * @brief Execute a call request
+     * @param action RPC action for the request
+     * @param request Request payload
+     * @param response Response payload
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return Result of the call request (See CallResult documentation)
+     */
+    template <typename RequestType, typename ResponseType>
+    CallResult call(const std::string& action, const RequestType& request, ResponseType& response, std::string& error, std::string& message)
+    {
+        return call(action, request, response, error, message, nullptr, 0);
+    }
+
+    /**
+     * @brief Execute a call request
+     * @param action RPC action for the request
+     * @param request Request payload
+     * @param response Response payload
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @param request_fifo Pointer to the request FIFO to use when messages cannot be sent.
+     * @param connector_id Id of the connector associated to the request.
+     * @return Result of the call request (See CallResult documentation)
+     */
+    template <typename RequestType, typename ResponseType>
+    CallResult call(const std::string& action,
+                    const RequestType& request,
+                    ResponseType&      response,
+                    std::string&       error,
+                    std::string&       message,
+                    IRequestFifo*      request_fifo,
+                    unsigned int       connector_id)
+    {
         CallResult ret = CallResult::Failed;
 
         // Get converters
@@ -99,15 +141,23 @@ class GenericMessageSender
                     // Execute call
                     rapidjson::Document rpc_frame;
                     rapidjson::Value    resp;
-                    if (m_rpc.call(action, payload, rpc_frame, resp, m_timeout))
+                    if (m_rpc.call(action, payload, rpc_frame, resp, error, message, m_timeout))
                     {
-                        // Convert response
-                        const char* error_code = nullptr;
-                        std::string error_message;
-                        resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                        if (resp_converter->fromJson(resp, response, error_code, error_message))
+                        // Check error
+                        if (error.empty())
                         {
-                            ret = CallResult::Ok;
+                            // Convert response
+                            const char* error_code = nullptr;
+                            std::string error_message;
+                            resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                            if (resp_converter->fromJson(resp, response, error_code, error_message))
+                            {
+                                ret = CallResult::Ok;
+                            }
+                        }
+                        else
+                        {
+                            ret = CallResult::Error;
                         }
                     }
                     else
@@ -151,15 +201,25 @@ class GenericMessageSender
             // Execute call
             rapidjson::Document rpc_frame;
             rapidjson::Value    resp;
-            if (m_rpc.call(action, request, rpc_frame, resp, m_timeout))
+            std::string         error;
+            std::string         message;
+            if (m_rpc.call(action, request, rpc_frame, resp, error, message, m_timeout))
             {
-                // Convert response
-                const char* error_code = nullptr;
-                std::string error_message;
-                resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                if (resp_converter->fromJson(resp, response, error_code, error_message))
+                // Check error
+                if (error.empty())
                 {
-                    ret = CallResult::Ok;
+                    // Convert response
+                    const char* error_code = nullptr;
+                    std::string error_message;
+                    resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                    if (resp_converter->fromJson(resp, response, error_code, error_message))
+                    {
+                        ret = CallResult::Ok;
+                    }
+                }
+                else
+                {
+                    ret = CallResult::Error;
                 }
             }
         }

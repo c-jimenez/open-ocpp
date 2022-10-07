@@ -23,15 +23,21 @@ namespace ocpp
 namespace rpc
 {
 /** @brief Constructor */
-RpcStub::RpcStub() : m_connected(false), m_listener(nullptr), m_spy(nullptr), m_call_will_fail(false), m_response() { }
+RpcStub::RpcStub()
+    : m_connected(false), m_listener(nullptr), m_spy(nullptr), m_call_will_fail(false), m_response(), m_error(), m_message(), m_calls()
+{
+}
 /** @brief Destructor */
 RpcStub::~RpcStub() { }
 
-/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&, std::chrono::milliseconds) */
+/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&,
+                             std::string&, std::string&, std::chrono::milliseconds) */
 bool RpcStub::call(const std::string&         action,
                    const rapidjson::Document& payload,
                    rapidjson::Document&       rpc_frame,
                    rapidjson::Value&          response,
+                   std::string&               error,
+                   std::string&               message,
                    std::chrono::milliseconds  timeout)
 {
     (void)timeout;
@@ -44,6 +50,8 @@ bool RpcStub::call(const std::string&         action,
         m_calls.emplace_back(action, doc);
         rpc_frame.CopyFrom(m_response, rpc_frame.GetAllocator());
         response.CopyFrom(m_response, rpc_frame.GetAllocator());
+        error   = m_error;
+        message = m_message;
 
         ret = !m_call_will_fail;
     }

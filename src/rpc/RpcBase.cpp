@@ -45,11 +45,14 @@ RpcBase::~RpcBase()
     stop();
 }
 
-/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&, std::chrono::milliseconds) */
+/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&,
+ *                           std::string&, std::string&, std::chrono::milliseconds) */
 bool RpcBase::call(const std::string&         action,
                    const rapidjson::Document& payload,
                    rapidjson::Document&       rpc_frame,
                    rapidjson::Value&          response,
+                   std::string&               error,
+                   std::string&               message,
                    std::chrono::milliseconds  timeout)
 {
     bool ret = false;
@@ -113,6 +116,16 @@ bool RpcBase::call(const std::string&         action,
             {
                 rpc_frame.Swap(rpc_message->rpc_frame);
                 response.Swap(rpc_message->payload);
+                error.clear();
+                message.clear();
+                if (!rpc_message->error.IsNull())
+                {
+                    error = rpc_message->error.GetString();
+                }
+                if (!rpc_message->message.IsNull())
+                {
+                    message = rpc_message->message.GetString();
+                }
                 delete rpc_message;
             }
             else
@@ -324,19 +337,21 @@ bool RpcBase::decodeCallResult(const std::string& unique_id, rapidjson::Document
 }
 
 /** @brief Decode a CALLERROR message */
-bool RpcBase::decodeCallError(const std::string&      unique_id,
-                              rapidjson::Document&    rpc_frame,
-                              const rapidjson::Value& error,
-                              const rapidjson::Value& message,
-                              const rapidjson::Value& payload)
+bool RpcBase::decodeCallError(const std::string&   unique_id,
+                              rapidjson::Document& rpc_frame,
+                              rapidjson::Value&    error,
+                              rapidjson::Value&    message,
+                              rapidjson::Value&    payload)
 {
     bool ret = false;
 
     // Check types
     if (error.IsString() && message.IsString() && payload.IsObject())
     {
-        (void)unique_id;
-        (void)rpc_frame;
+        // Add error to the queue
+        RpcMessage* msg = new RpcMessage(unique_id, rpc_frame, payload, &error, &message);
+        m_results_queue.push(msg);
+
         ret = true;
     }
 
