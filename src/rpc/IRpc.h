@@ -50,13 +50,19 @@ class IRpc
      * @brief Call a remote action and wait for its response
      * @param action Remote action
      * @param payload JSON payload for the action
+     * @param rpc_frame Full JSON response received
      * @param response JSON response received
+     * @param error Error code (empty if no error)
+     * @param message Error message (empty if no error)
      * @param timeout Response timeout
      * @return true if a response has been received, false otherwise
      */
     virtual bool call(const std::string&         action,
                       const rapidjson::Document& payload,
-                      rapidjson::Document&       response,
+                      rapidjson::Document&       rpc_frame,
+                      rapidjson::Value&          response,
+                      std::string&               error,
+                      std::string&               message,
                       std::chrono::milliseconds  timeout = std::chrono::seconds(2)) = 0;
 
     /**

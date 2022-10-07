@@ -41,10 +41,14 @@ class RpcStub : public IRpc
     /** @copydoc bool IRpc::isConnected() */
     bool isConnected() const override { return m_connected; }
 
-    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&,
+     *                           std::string&, std::string&, std::chrono::milliseconds) */
     bool call(const std::string&         action,
               const rapidjson::Document& payload,
-              rapidjson::Document&       response,
+              rapidjson::Document&       rpc_frame,
+              rapidjson::Value&          response,
+              std::string&               error,
+              std::string&               message,
               std::chrono::milliseconds  timeout) override;
 
     /** @copydoc void IRpc::registerListener(IListener&) */
@@ -61,6 +65,10 @@ class RpcStub : public IRpc
     void setCallWilFail(bool call_will_fail) { m_call_will_fail = call_will_fail; }
     /** @brief Set the next response */
     void setResponse(const rapidjson::Document& response);
+    /** @brief Set the next error */
+    void setError(const std::string& error) { m_error = error; }
+    /** @brief Set the next error messae */
+    void setMessage(const std::string& message) { m_message = message; }
     /** @brief Get the listener */
     IRpc::IListener* getListener() { return m_listener; }
     /** @brief Get the spy */
@@ -81,6 +89,10 @@ class RpcStub : public IRpc
     bool m_call_will_fail;
     /** @brief Next response */
     rapidjson::Document m_response;
+    /** @brief Next error */
+    std::string m_error;
+    /** @brief Next error message */
+    std::string m_message;
     /** @brief Calls */
     std::vector<std::pair<std::string, std::unique_ptr<rapidjson::Document>>> m_calls;
 };
