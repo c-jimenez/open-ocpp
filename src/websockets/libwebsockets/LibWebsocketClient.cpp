@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "LibWebsocketClient.h"
 
+#include <csignal>
 #include <cstdint>
 #include <functional>
 #include <iostream>
@@ -233,6 +234,12 @@ void LibWebsocketClient::process()
 {
     // Save this pointer for further callbacks
     client = this;
+
+    // Mask SIG_PIPE signal
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGPIPE);
+    pthread_sigmask(SIG_BLOCK, &set, NULL);
 
     // Event loop
     int ret = 0;
