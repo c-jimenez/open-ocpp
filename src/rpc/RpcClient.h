@@ -115,6 +115,8 @@ class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::ILi
     IListener* m_listener;
     /** @brief Started state */
     bool m_started;
+    /** @brief Mutex for concurrent stop access */
+    std::mutex m_stop_mutex;
 };
 
 } // namespace rpc
