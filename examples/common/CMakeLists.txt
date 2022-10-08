@@ -3,6 +3,7 @@
 add_library(examples_common OBJECT
     DefaultCentralSystemEventsHandler.cpp
     DefaultChargePointEventsHandler.cpp
+    DefaultLocalControllerEventsHandler.cpp
 
     config/OcppConfig.cpp
 
