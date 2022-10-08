@@ -67,8 +67,8 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
       m_boot_notification_timer(timer_pool, "Boot notification"),
       m_heartbeat_timer(timer_pool, "Heartbeat")
 {
-    m_boot_notification_timer.setCallback(std::bind(&StatusManager::bootNotificationProcess, this));
-    m_heartbeat_timer.setCallback(std::bind(&StatusManager::heartBeatProcess, this));
+    m_boot_notification_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::bootNotificationProcess, this)); });
+    m_heartbeat_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::heartBeatProcess, this)); });
 
     trigger_manager.registerHandler(ocpp::types::MessageTrigger::BootNotification, *this);
     trigger_manager.registerHandler(ocpp::types::MessageTrigger::Heartbeat, *this);
@@ -178,7 +178,9 @@ bool StatusManager::updateConnectorStatus(unsigned int                      conn
                     connector->status_timer.stop();
                     if (connector->status != connector->last_notified_status)
                     {
-                        connector->status_timer.setCallback([connector_id, this] { statusNotificationProcess(connector_id); });
+                        connector->status_timer.setCallback(
+                            [this, connector_id]
+                            { m_worker_pool.run<void>(std::bind(&StatusManager::statusNotificationProcess, this, connector_id)); });
                         connector->status_timer.start(std::chrono::milliseconds(duration), true);
                     }
                 }

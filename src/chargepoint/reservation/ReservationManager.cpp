@@ -311,7 +311,7 @@ void ReservationManager::checkExpiries()
         if ((connector->status == ChargePointStatus::Reserved) && (connector->reservation_expiry_date <= now))
         {
             // End reservation
-            endReservation(connector->id, false);
+            m_worker_pool.run<void>(std::bind(&ReservationManager::endReservation, this, connector->id, false));
         }
     }
 }
