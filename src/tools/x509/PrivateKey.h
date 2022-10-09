@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PRIVATEKEY_H
-#define PRIVATEKEY_H
+#ifndef OPENOCPP_PRIVATEKEY_H
+#define OPENOCPP_PRIVATEKEY_H
 
 #include "Sha2.h"
 
@@ -202,4 +202,4 @@ class PrivateKey
 } // namespace x509
 } // namespace ocpp
 
-#endif // PRIVATEKEY_H
+#endif // OPENOCPP_PRIVATEKEY_H

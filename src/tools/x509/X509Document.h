@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef X509DOCUMENT_H
-#define X509DOCUMENT_H
+#ifndef OPENOCPP_X509DOCUMENT_H
+#define OPENOCPP_X509DOCUMENT_H
 
 #include <chrono>
 #include <cstdint>
@@ -240,4 +240,4 @@ class X509Document
 } // namespace x509
 } // namespace ocpp
 
-#endif // X509DOCUMENT_H
+#endif // OPENOCPP_X509DOCUMENT_H

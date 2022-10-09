@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTHORIZATIONDATACONVERTER_H
-#define AUTHORIZATIONDATACONVERTER_H
+#ifndef OPENOCPP_AUTHORIZATIONDATACONVERTER_H
+#define OPENOCPP_AUTHORIZATIONDATACONVERTER_H
 
 #include "AuthorizationData.h"
 #include "IMessageConverter.h"
@@ -48,4 +48,4 @@ class AuthorizationDataConverter : public IMessageConverter<ocpp::types::Authori
 } // namespace messages
 } // namespace ocpp
 
-#endif // AUTHORIZATIONDATACONVERTER_H
+#endif // OPENOCPP_AUTHORIZATIONDATACONVERTER_H

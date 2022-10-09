@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IOCPPCONFIG_H
-#define IOCPPCONFIG_H
+#ifndef OPENOCPP_IOCPPCONFIG_H
+#define OPENOCPP_IOCPPCONFIG_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -266,4 +266,4 @@ class IOcppConfig
 } // namespace config
 } // namespace ocpp
 
-#endif // IOCPPCONFIG_H
+#endif // OPENOCPP_IOCPPCONFIG_H

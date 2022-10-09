@@ -16,13 +16,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CENTRALSYSTEM_H
-#define CENTRALSYSTEM_H
+#ifndef OPENOCPP_CENTRALSYSTEM_H
+#define OPENOCPP_CENTRALSYSTEM_H
 
 #include "Database.h"
 #include "ICentralSystem.h"
 #include "InternalConfigManager.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 #include "RpcServer.h"
 #include "Timer.h"
 
@@ -95,6 +96,8 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
+    /** @brief Messages validator */
+    ocpp::messages::MessagesValidator m_messages_validator;
 
     /** @brief Websocket server */
     std::unique_ptr<ocpp::websockets::IWebsocketServer> m_ws_server;
@@ -119,4 +122,4 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // CENTRALSYSTEM_H
+#endif // OPENOCPP_CENTRALSYSTEM_H

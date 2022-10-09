@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGEPOINTHANDLER_H
-#define CHARGEPOINTHANDLER_H
+#ifndef OPENOCPP_CHARGEPOINTHANDLER_H
+#define OPENOCPP_CHARGEPOINTHANDLER_H
 
 #include "Authorize.h"
 #include "BootNotification.h"
@@ -248,4 +248,4 @@ class ChargePointHandler
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // CHARGEPOINTHANDLER_H
+#endif // OPENOCPP_CHARGEPOINTHANDLER_H

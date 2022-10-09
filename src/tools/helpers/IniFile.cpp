@@ -69,7 +69,7 @@ bool IniFile::load(const std::string& path, bool sync)
                     auto it = m_data.find(section);
                     if (it == m_data.end())
                     {
-                        m_data[section] = std::map<std::string, std::string>();
+                        m_data[section] = std::unordered_map<std::string, std::string>();
                     }
                 }
                 else
@@ -224,7 +224,7 @@ void IniFile::set(const std::string& section, const std::string& name, const Val
     }
     else
     {
-        std::map<std::string, std::string> new_section;
+        std::unordered_map<std::string, std::string> new_section;
         new_section[name] = value;
         m_data[section]   = new_section;
     }

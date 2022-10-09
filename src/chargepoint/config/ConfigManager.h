@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIGMANAGER_H
-#define CONFIGMANAGER_H
+#ifndef OPENOCPP_CONFIGMANAGER_H
+#define OPENOCPP_CONFIGMANAGER_H
 
 #include "ChangeConfiguration.h"
 #include "Enums.h"
@@ -25,7 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetConfiguration.h"
 #include "IConfigManager.h"
 
-#include <map>
+#include <unordered_map>
 
 namespace ocpp
 {
@@ -88,12 +88,12 @@ class ConfigManager
     /** @brief Standard OCPP configuration */
     ocpp::config::IOcppConfig& m_ocpp_config;
     /** @brief Specific check functions */
-    std::map<std::string, ConfigurationValueCheckFunc> m_specific_checks;
+    std::unordered_map<std::string, ConfigurationValueCheckFunc> m_specific_checks;
     /** @brief Configuration listeners */
-    std::map<std::string, IConfigChangedListener*> m_listeners;
+    std::unordered_map<std::string, IConfigChangedListener*> m_listeners;
 };
 
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CONFIGMANAGER_H
+#endif // OPENOCPP_CONFIGMANAGER_H

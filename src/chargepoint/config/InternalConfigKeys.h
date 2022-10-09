@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INTERNALCONFIGKEYS_H
-#define INTERNALCONFIGKEYS_H
+#ifndef OPENOCPP_INTERNALCONFIGKEYS_H
+#define OPENOCPP_INTERNALCONFIGKEYS_H
 
 namespace ocpp
 {
@@ -48,4 +48,4 @@ static constexpr const char* SIGNED_FW_UPDATE_ID_KEY = "SignedFirmwareUpdateId";
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // INTERNALCONFIGKEYS_H
+#endif // OPENOCPP_INTERNALCONFIGKEYS_H

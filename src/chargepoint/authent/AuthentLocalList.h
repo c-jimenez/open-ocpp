@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTHENTLOCALLIST_H
-#define AUTHENTLOCALLIST_H
+#ifndef OPENOCPP_AUTHENTLOCALLIST_H
+#define OPENOCPP_AUTHENTLOCALLIST_H
 
 #include "Database.h"
 #include "Enums.h"
@@ -122,4 +122,4 @@ class AuthentLocalList
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // AUTHENTLOCALLIST_H
+#endif // OPENOCPP_AUTHENTLOCALLIST_H

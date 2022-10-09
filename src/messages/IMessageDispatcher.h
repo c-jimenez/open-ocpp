@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMESSAGEDISPATCHER_H
-#define IMESSAGEDISPATCHER_H
+#ifndef OPENOCPP_IMESSAGEDISPATCHER_H
+#define OPENOCPP_IMESSAGEDISPATCHER_H
 
 #include "json.h"
 
@@ -88,4 +88,4 @@ class IMessageDispatcher
 } // namespace messages
 } // namespace ocpp
 
-#endif // IMESSAGEDISPATCHER_H
+#endif // OPENOCPP_IMESSAGEDISPATCHER_H

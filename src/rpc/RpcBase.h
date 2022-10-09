@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RPCBASE_H
-#define RPCBASE_H
+#ifndef OPENOCPP_RPCBASE_H
+#define OPENOCPP_RPCBASE_H
 
 #include "IRpc.h"
 #include "Queue.h"
@@ -44,10 +44,14 @@ class RpcBase : public IRpc
 
     // IRpc interface
 
-    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+    /** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&,
+     *                           std::string&, std::string&, std::chrono::milliseconds) */
     bool call(const std::string&         action,
               const rapidjson::Document& payload,
-              rapidjson::Document&       response,
+              rapidjson::Document&       rpc_frame,
+              rapidjson::Value&          response,
+              std::string&               error,
+              std::string&               message,
               std::chrono::milliseconds  timeout = std::chrono::seconds(2)) override;
 
     /** @copydoc void IRpc::registerListener(IListener&) */
@@ -86,18 +90,34 @@ class RpcBase : public IRpc
     /** @brief RPC message */
     struct RpcMessage
     {
-        RpcMessage(const std::string& _unique_id, const char* _action, const rapidjson::Value& _payload)
-            : unique_id(_unique_id), action(_action), payload()
+        RpcMessage(const std::string& _unique_id, const char* _action, rapidjson::Document& _rpc_frame, rapidjson::Value& _payload)
+            : unique_id(_unique_id), action(_action), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
         {
-            payload.CopyFrom(_payload, payload.GetAllocator());
+            payload.Swap(_payload);
         }
-        RpcMessage(const std::string& _unique_id, const rapidjson::Value& _payload) : unique_id(_unique_id), action(), payload()
+        RpcMessage(const std::string&   _unique_id,
+                   rapidjson::Document& _rpc_frame,
+                   rapidjson::Value&    _payload,
+                   rapidjson::Value*    _error   = nullptr,
+                   rapidjson::Value*    _message = nullptr)
+            : unique_id(_unique_id), action(), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
         {
-            payload.CopyFrom(_payload, payload.GetAllocator());
+            payload.Swap(_payload);
+            if (_error)
+            {
+                error.Swap(*_error);
+            }
+            if (_message)
+            {
+                message.Swap(*_message);
+            }
         }
         const std::string   unique_id;
         const std::string   action;
-        rapidjson::Document payload;
+        rapidjson::Document rpc_frame;
+        rapidjson::Value    payload;
+        rapidjson::Value    error;
+        rapidjson::Value    message;
     };
 
     /** @brief RPC listener */
@@ -119,16 +139,20 @@ class RpcBase : public IRpc
     bool send(const std::string& msg);
 
     /** @brief Decode a CALL message */
-    bool decodeCall(const std::string& unique_id, const rapidjson::Value& action, const rapidjson::Value& payload);
+    bool decodeCall(const std::string&      unique_id,
+                    rapidjson::Document&    rpc_frame,
+                    const rapidjson::Value& action,
+                    rapidjson::Value&       payload);
 
     /** @brief Decode a CALLRESULT message */
-    bool decodeCallResult(const std::string& unique_id, const rapidjson::Value& payload);
+    bool decodeCallResult(const std::string& unique_id, rapidjson::Document& rpc_frame, rapidjson::Value& payload);
 
     /** @brief Decode a CALLERROR message */
-    bool decodeCallError(const std::string&      unique_id,
-                         const rapidjson::Value& error,
-                         const rapidjson::Value& message,
-                         const rapidjson::Value& payload);
+    bool decodeCallError(const std::string&   unique_id,
+                         rapidjson::Document& rpc_frame,
+                         rapidjson::Value&    error,
+                         rapidjson::Value&    message,
+                         rapidjson::Value&    payload);
 
     /** @brief Send a CALLERROR message */
     void sendCallError(const std::string& unique_id, const char* error, const std::string& message);
@@ -140,4 +164,4 @@ class RpcBase : public IRpc
 } // namespace rpc
 } // namespace ocpp
 
-#endif // RPCBASE_H
+#endif // OPENOCPP_RPCBASE_H

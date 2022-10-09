@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ITRIGGERMESSAGEMANAGER_H
-#define ITRIGGERMESSAGEMANAGER_H
+#ifndef OPENOCPP_ITRIGGERMESSAGEMANAGER_H
+#define OPENOCPP_ITRIGGERMESSAGEMANAGER_H
 
 #include "Enums.h"
 #include "Optional.h"
@@ -89,4 +89,4 @@ class ITriggerMessageManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // ITRIGGERMESSAGEMANAGER_H
+#endif // OPENOCPP_ITRIGGERMESSAGEMANAGER_H

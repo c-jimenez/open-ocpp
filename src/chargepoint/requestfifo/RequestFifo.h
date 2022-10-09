@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef REQUESTFIFO_H
-#define REQUESTFIFO_H
+#ifndef OPENOCPP_REQUESTFIFO_H
+#define OPENOCPP_REQUESTFIFO_H
 
 #include "Database.h"
 #include "IRequestFifo.h"
@@ -112,4 +112,4 @@ class RequestFifo : public ocpp::messages::IRequestFifo
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // REQUESTFIFO_H
+#endif // OPENOCPP_REQUESTFIFO_H

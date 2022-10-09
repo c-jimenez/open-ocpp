@@ -58,14 +58,14 @@ namespace centralsystem
 ChargePointProxy::ChargePointProxy(ICentralSystem&                               central_system,
                                    const std::string&                            identifier,
                                    std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                                   const std::string&                            schemas_path,
+                                   const ocpp::messages::MessagesValidator&      messages_validator,
                                    ocpp::messages::MessagesConverter&            messages_converter,
                                    const ocpp::config::ICentralSystemConfig&     stack_config)
     : m_central_system(central_system),
       m_identifier(identifier),
       m_rpc(rpc),
-      m_msg_dispatcher(schemas_path),
-      m_msg_sender(*m_rpc, messages_converter, stack_config.callRequestTimeout()),
+      m_msg_dispatcher(messages_validator),
+      m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config)
 {
     m_rpc->registerSpy(*this);
@@ -76,6 +76,12 @@ ChargePointProxy::ChargePointProxy(ICentralSystem&                              
 ChargePointProxy::~ChargePointProxy() { }
 
 // ICentralSystem::IChargePoint interface
+
+/** @copydoc const std::string& ICentralSystem::IChargePoint::ipAddress() const */
+const std::string& ChargePointProxy::ipAddress() const
+{
+    return m_rpc->ipAddress();
+}
 
 /** @copydoc void ICentralSystem::IChargePoint::setTimeout(std::chrono::milliseconds) */
 void ChargePointProxy::setTimeout(std::chrono::milliseconds timeout)

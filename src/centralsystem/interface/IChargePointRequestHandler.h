@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICHARGEPOINTREQUESTHANDLER_H
-#define ICHARGEPOINTREQUESTHANDLER_H
+#ifndef OPENOCPP_ICHARGEPOINTREQUESTHANDLER_H
+#define OPENOCPP_ICHARGEPOINTREQUESTHANDLER_H
 
 #include "CertificateRequest.h"
 #include "Enums.h"
@@ -192,4 +192,4 @@ class IChargePointRequestHandler
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // ICHARGEPOINTREQUESTHANDLER_H
+#endif // OPENOCPP_ICHARGEPOINTREQUESTHANDLER_H

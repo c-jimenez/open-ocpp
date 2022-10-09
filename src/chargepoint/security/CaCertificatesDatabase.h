@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CACERTIFICATESDATABASE_H
-#define CACERTIFICATESDATABASE_H
+#ifndef OPENOCPP_CACERTIFICATESDATABASE_H
+#define OPENOCPP_CACERTIFICATESDATABASE_H
 
 #include "CertificateHashDataType.h"
 #include "Database.h"
@@ -121,4 +121,4 @@ class CaCertificatesDatabase
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CACERTIFICATESDATABASE_H
+#endif // OPENOCPP_CACERTIFICATESDATABASE_H

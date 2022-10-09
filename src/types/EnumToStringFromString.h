@@ -16,12 +16,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENUMTOSTRINGFROMSTRING_H
-#define ENUMTOSTRINGFROMSTRING_H
+#ifndef OPENOCPP_ENUMTOSTRINGFROMSTRING_H
+#define OPENOCPP_ENUMTOSTRINGFROMSTRING_H
 
 #include "String.h"
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace ocpp
@@ -83,9 +83,9 @@ class EnumToStringFromString
 
   private:
     /** @brief Map for enum to string conversion */
-    std::map<EnumType, std::string> m_enum_to_string;
+    std::unordered_map<EnumType, std::string> m_enum_to_string;
     /** @brief Map for string to enum conversion */
-    std::map<std::string, EnumType> m_string_to_enum;
+    std::unordered_map<std::string, EnumType> m_string_to_enum;
 };
 
 /** @brief Helper function to get an enum list from a CSL string */
@@ -120,4 +120,4 @@ std::vector<EnumType> EnumsFromCsl(const std::string& csl, const EnumToStringFro
 } // namespace types
 } // namespace ocpp
 
-#endif // ENUMTOSTRINGFROMSTRING_H
+#endif // OPENOCPP_ENUMTOSTRINGFROMSTRING_H

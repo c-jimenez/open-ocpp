@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EXTENDEDTRIGGERMESSAGE_H
-#define EXTENDEDTRIGGERMESSAGE_H
+#ifndef OPENOCPP_EXTENDEDTRIGGERMESSAGE_H
+#define OPENOCPP_EXTENDEDTRIGGERMESSAGE_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -55,4 +55,4 @@ MESSAGE_CONVERTERS(ExtendedTriggerMessage)
 } // namespace messages
 } // namespace ocpp
 
-#endif // EXTENDEDTRIGGERMESSAGE_H
+#endif // OPENOCPP_EXTENDEDTRIGGERMESSAGE_H

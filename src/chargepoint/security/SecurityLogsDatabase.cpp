@@ -48,7 +48,7 @@ bool SecurityLogsDatabase::log(const std::string& type, const std::string& messa
     if (m_insert_query)
     {
         m_insert_query->reset();
-        m_insert_query->bind(0, timestamp);
+        m_insert_query->bind(0, static_cast<int64_t>(timestamp));
         m_insert_query->bind(1, type);
         m_insert_query->bind(2, message);
         m_insert_query->bind(3, critical);

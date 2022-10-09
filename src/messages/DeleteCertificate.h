@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DELETECERTIFICATE_H
-#define DELETECERTIFICATE_H
+#ifndef OPENOCPP_DELETECERTIFICATE_H
+#define OPENOCPP_DELETECERTIFICATE_H
 
 #include "CertificateHashDataType.h"
 #include "Enums.h"
@@ -51,4 +51,4 @@ MESSAGE_CONVERTERS(DeleteCertificate)
 } // namespace messages
 } // namespace ocpp
 
-#endif // DELETECERTIFICATE_H
+#endif // OPENOCPP_DELETECERTIFICATE_H

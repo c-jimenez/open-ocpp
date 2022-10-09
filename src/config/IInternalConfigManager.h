@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IINTERNALCONFIGMANAGER_H
-#define IINTERNALCONFIGMANAGER_H
+#ifndef OPENOCPP_IINTERNALCONFIGMANAGER_H
+#define OPENOCPP_IINTERNALCONFIGMANAGER_H
 
 #include <string>
 
@@ -68,4 +68,4 @@ class IInternalConfigManager
 } // namespace config
 } // namespace ocpp
 
-#endif // IINTERNALCONFIGMANAGER_H
+#endif // OPENOCPP_IINTERNALCONFIGMANAGER_H

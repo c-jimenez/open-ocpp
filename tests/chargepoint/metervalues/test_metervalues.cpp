@@ -24,6 +24,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Database.h"
 #include "GenericMessageSender.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 #include "MeterValues.h"
 #include "OcppConfigStub.h"
 #include "RequestFifoStub.h"
@@ -52,8 +53,9 @@ ChargePointEventsHandlerStub event_handler;
 RpcStub                      rpc;
 TestableWorkerThreadPool     worker_pool;
 RequestFifoStub              requests_fifo;
+MessagesValidator            msgs_validator;
 MessagesConverter            msgs_converter;
-GenericMessageSender         msg_sender(rpc, msgs_converter, std::chrono::milliseconds(1000));
+GenericMessageSender         msg_sender(rpc, msgs_converter, msgs_validator, std::chrono::milliseconds(1000));
 TriggerMessageManagerStub    trigger_mgr;
 StatusManagerStub            status_mgr;
 ConfigManagerStub            config_mgr;
@@ -259,6 +261,8 @@ TEST_SUITE("Metervalues component")
     {
         std::filesystem::remove(DATABASE_PATH);
         CHECK(database.open(DATABASE_PATH));
+
+        CHECK(msgs_validator.load(SCHEMAS_DIR));
     }
 
     TEST_CASE("Setup config")
@@ -857,6 +861,11 @@ TEST_SUITE("Metervalues component")
 
         // Accepted by Central System
         status_mgr.forceRegistrationStatus(RegistrationStatus::Accepted);
+
+        // Response
+        rapidjson::Document json_resp;
+        json_resp.Parse("{}");
+        rpc.setResponse(json_resp);
 
         // Send meter values on connector 2
         std::vector<MeterValue> meter_values;

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETLOG_H
-#define GETLOG_H
+#ifndef OPENOCPP_GETLOG_H
+#define OPENOCPP_GETLOG_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -69,4 +69,4 @@ MESSAGE_CONVERTERS(GetLog)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETLOG_H
+#endif // OPENOCPP_GETLOG_H

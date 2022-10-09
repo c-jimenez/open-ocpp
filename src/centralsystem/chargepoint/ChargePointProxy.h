@@ -16,13 +16,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGEPOINTPROXY_H
-#define CHARGEPOINTPROXY_H
+#ifndef OPENOCPP_CHARGEPOINTPROXY_H
+#define OPENOCPP_CHARGEPOINTPROXY_H
 
 #include "ChargePointHandler.h"
 #include "GenericMessageSender.h"
 #include "ICentralSystem.h"
 #include "MessageDispatcher.h"
+#include "MessagesValidator.h"
 #include "RpcServer.h"
 
 #include <memory>
@@ -41,14 +42,14 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
      * @param central_system Central System instance associated to the charge point
      * @param identifier Charge point's identifier
      * @param rpc RPC connection with the charge point
-     * @param schemas_path Path to the JSON schemas needed to validate payloads
+     * @param messages_validator JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
      */
     ChargePointProxy(ICentralSystem&                               central_system,
                      const std::string&                            identifier,
                      std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                     const std::string&                            schemas_path,
+                     const ocpp::messages::MessagesValidator&      messages_validator,
                      ocpp::messages::MessagesConverter&            messages_converter,
                      const ocpp::config::ICentralSystemConfig&     stack_config);
     /** @brief Destructor */
@@ -58,6 +59,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 
     /** @copydoc ICentralSystem&& ICentralSystem::IChargePoint::centralSystem() */
     ICentralSystem& centralSystem() override { return m_central_system; }
+
+    /** @copydoc const std::string& ICentralSystem::IChargePoint::ipAddress() const */
+    const std::string& ipAddress() const override;
 
     /** @copydoc const std::string& ICentralSystem::IChargePoint::identifier() const */
     const std::string& identifier() const override { return m_identifier; }
@@ -298,4 +302,4 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // CHARGEPOINTPROXY_H
+#endif // OPENOCPP_CHARGEPOINTPROXY_H

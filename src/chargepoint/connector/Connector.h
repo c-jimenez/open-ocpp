@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTOR_H
-#define CONNECTOR_H
+#ifndef OPENOCPP_CONNECTOR_H
+#define OPENOCPP_CONNECTOR_H
 
 #include "DateTime.h"
 #include "Enums.h"
@@ -116,4 +116,4 @@ struct Connector
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CONNECTOR_H
+#endif // OPENOCPP_CONNECTOR_H

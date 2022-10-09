@@ -17,8 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTHENTCACHE_H
-#define AUTHENTCACHE_H
+#ifndef OPENOCPP_AUTHENTCACHE_H
+#define OPENOCPP_AUTHENTCACHE_H
 
 #include "ClearCache.h"
 #include "Database.h"
@@ -112,4 +112,4 @@ class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // AUTHENTCACHE_H
+#endif // OPENOCPP_AUTHENTCACHE_H

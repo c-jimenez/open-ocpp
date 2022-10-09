@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SMARTCHARGINGSETPOINT_H
-#define SMARTCHARGINGSETPOINT_H
+#ifndef OPENOCPP_SMARTCHARGINGSETPOINT_H
+#define OPENOCPP_SMARTCHARGINGSETPOINT_H
 
 #include "Optional.h"
 
@@ -40,4 +40,4 @@ struct SmartChargingSetpoint
 } // namespace types
 } // namespace ocpp
 
-#endif // SMARTCHARGINGSETPOINT_H
+#endif // OPENOCPP_SMARTCHARGINGSETPOINT_H

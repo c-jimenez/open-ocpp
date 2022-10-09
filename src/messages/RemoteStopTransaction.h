@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef REMOTESTOPTRANSACTION_H
-#define REMOTESTOPTRANSACTION_H
+#ifndef OPENOCPP_REMOTESTOPTRANSACTION_H
+#define OPENOCPP_REMOTESTOPTRANSACTION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -52,4 +52,4 @@ MESSAGE_CONVERTERS(RemoteStopTransaction)
 } // namespace messages
 } // namespace ocpp
 
-#endif // REMOTESTOPTRANSACTION_H
+#endif // OPENOCPP_REMOTESTOPTRANSACTION_H

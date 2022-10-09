@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICHARGEPOINTCONFIG_H
-#define ICHARGEPOINTCONFIG_H
+#ifndef OPENOCPP_ICHARGEPOINTCONFIG_H
+#define OPENOCPP_ICHARGEPOINTCONFIG_H
 
 #include <chrono>
 #include <string>
@@ -148,4 +148,4 @@ class IChargePointConfig
 } // namespace config
 } // namespace ocpp
 
-#endif // ICHARGEPOINTCONFIG_H
+#endif // OPENOCPP_ICHARGEPOINTCONFIG_H

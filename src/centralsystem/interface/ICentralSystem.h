@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICENTRALSYSTEM_H
-#define ICENTRALSYSTEM_H
+#ifndef OPENOCPP_ICENTRALSYSTEM_H
+#define OPENOCPP_ICENTRALSYSTEM_H
 
 #include "AuthorizationData.h"
 #include "Certificate.h"
@@ -124,6 +124,12 @@ class ICentralSystem
          * @return Central system instance associated to the charge point
          */
         virtual ICentralSystem& centralSystem() = 0;
+
+        /**
+         * @brief Get the IP address of the charge point
+         * @return IP address of the charge point
+         */
+        virtual const std::string& ipAddress() const = 0;
 
         /**
          * @brief Get the charge point identifier
@@ -432,4 +438,4 @@ class ICentralSystem
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // ICENTRALSYSTEM_H
+#endif // OPENOCPP_ICENTRALSYSTEM_H

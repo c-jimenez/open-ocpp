@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FIRMWARETYPE_H
-#define FIRMWARETYPE_H
+#ifndef OPENOCPP_FIRMWARETYPE_H
+#define OPENOCPP_FIRMWARETYPE_H
 
 #include "CiStringType.h"
 #include "DateTime.h"
@@ -47,4 +47,4 @@ struct FirmwareType
 } // namespace types
 } // namespace ocpp
 
-#endif // FIRMWARETYPE_H
+#endif // OPENOCPP_FIRMWARETYPE_H

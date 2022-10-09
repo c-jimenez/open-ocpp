@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOGSTATUSNOTIFICATION_H
-#define LOGSTATUSNOTIFICATION_H
+#ifndef OPENOCPP_LOGSTATUSNOTIFICATION_H
+#define OPENOCPP_LOGSTATUSNOTIFICATION_H
 
 #include "Enums.h"
 #include "IMessageConverter.h"
@@ -53,4 +53,4 @@ MESSAGE_CONVERTERS(LogStatusNotification)
 } // namespace messages
 } // namespace ocpp
 
-#endif // LOGSTATUSNOTIFICATION_H
+#endif // OPENOCPP_LOGSTATUSNOTIFICATION_H

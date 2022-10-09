@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETINSTALLEDCERTIFICATEIDS_H
-#define GETINSTALLEDCERTIFICATEIDS_H
+#ifndef OPENOCPP_GETINSTALLEDCERTIFICATEIDS_H
+#define OPENOCPP_GETINSTALLEDCERTIFICATEIDS_H
 
 #include "CertificateHashDataType.h"
 #include "Enums.h"
@@ -56,4 +56,4 @@ MESSAGE_CONVERTERS(GetInstalledCertificateIds)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETINSTALLEDCERTIFICATEIDS_H
+#endif // OPENOCPP_GETINSTALLEDCERTIFICATEIDS_H

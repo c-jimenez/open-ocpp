@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef JSONVALIDATOR_H
-#define JSONVALIDATOR_H
+#ifndef OPENOCPP_JSONVALIDATOR_H
+#define OPENOCPP_JSONVALIDATOR_H
 
 #include "json.h"
 
@@ -50,8 +50,6 @@ class JsonValidator
   private:
     /** @brief Schema document */
     std::unique_ptr<rapidjson::SchemaDocument> m_schema;
-    /** @brief Schema validator */
-    std::unique_ptr<rapidjson::SchemaValidator> m_validator;
     /** @brief Last error message */
     std::string m_last_error;
 };
@@ -59,4 +57,4 @@ class JsonValidator
 } // namespace json
 } // namespace ocpp
 
-#endif // JSONVALIDATOR_H
+#endif // OPENOCPP_JSONVALIDATOR_H

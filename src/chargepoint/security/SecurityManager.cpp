@@ -33,7 +33,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "SignCertificate.h"
 #include "WorkerThreadPool.h"
 
-#include <map>
+#include <unordered_map>
 
 using namespace ocpp::types;
 using namespace ocpp::messages;
@@ -45,27 +45,27 @@ namespace chargepoint
 {
 
 /** @brief Criticity for each standard OCPP security event */
-static const std::map<std::string, bool> s_security_events = {{SECEVT_FIRMWARE_UPDATED, true},
-                                                              {SECEVT_FAILED_AUTHENT_AT_CENTRAL_SYSTEM, false},
-                                                              {SECEVT_CENTRAL_SYSTEM_FAILED_TO_AUTHENT, false},
-                                                              {SECEVT_SETTING_SYSTEM_TIME, true},
-                                                              {SECEVT_STARTUP_OF_DEVICE, true},
-                                                              {SECEVT_RESET_REBOOT, true},
-                                                              {SECEVT_SECURITY_LOG_CLEARED, true},
-                                                              {SECEVT_RECONFIG_SECURITY_PARAMETER, false},
-                                                              {SECEVT_MEMORY_EXHAUSTION, true},
-                                                              {SECEVT_INVALID_MESSAGES, false},
-                                                              {SECEVT_ATTEMPTED_REPLAY_ATTACKS, false},
-                                                              {SECEVT_TAMPER_DETECTION_ACTIVATED, true},
-                                                              {SECEVT_INVALID_FIRMWARE_SIGNATURE, false},
-                                                              {SECEVT_INVALID_FIRMWARE_SIGNING_CERT, false},
-                                                              {SECEVT_INVALID_CENTRAL_SYSTEM_CERT, false},
-                                                              {SECEVT_INVALID_CHARGE_POINT_CERT, false},
-                                                              {SECEVT_INVALID_TLS_VERSION, false},
-                                                              {SECEVT_INVALID_TLS_CIPHER_SUITE, false}};
+static const std::unordered_map<std::string, bool> s_security_events = {{SECEVT_FIRMWARE_UPDATED, true},
+                                                                        {SECEVT_FAILED_AUTHENT_AT_CENTRAL_SYSTEM, false},
+                                                                        {SECEVT_CENTRAL_SYSTEM_FAILED_TO_AUTHENT, false},
+                                                                        {SECEVT_SETTING_SYSTEM_TIME, true},
+                                                                        {SECEVT_STARTUP_OF_DEVICE, true},
+                                                                        {SECEVT_RESET_REBOOT, true},
+                                                                        {SECEVT_SECURITY_LOG_CLEARED, true},
+                                                                        {SECEVT_RECONFIG_SECURITY_PARAMETER, false},
+                                                                        {SECEVT_MEMORY_EXHAUSTION, true},
+                                                                        {SECEVT_INVALID_MESSAGES, false},
+                                                                        {SECEVT_ATTEMPTED_REPLAY_ATTACKS, false},
+                                                                        {SECEVT_TAMPER_DETECTION_ACTIVATED, true},
+                                                                        {SECEVT_INVALID_FIRMWARE_SIGNATURE, false},
+                                                                        {SECEVT_INVALID_FIRMWARE_SIGNING_CERT, false},
+                                                                        {SECEVT_INVALID_CENTRAL_SYSTEM_CERT, false},
+                                                                        {SECEVT_INVALID_CHARGE_POINT_CERT, false},
+                                                                        {SECEVT_INVALID_TLS_VERSION, false},
+                                                                        {SECEVT_INVALID_TLS_CIPHER_SUITE, false}};
 
 /** @brief Elliptic curves for certificate request generation */
-static const std::map<std::string, unsigned int> s_ec_curves = {
+static const std::unordered_map<std::string, unsigned int> s_ec_curves = {
     {"prime256v1", static_cast<unsigned int>(PrivateKey::Curve::PRIME256_V1)},
     {"secp256k1", static_cast<unsigned int>(PrivateKey::Curve::SECP256_K1)},
     {"secp384r1", static_cast<unsigned int>(PrivateKey::Curve::SECP384_R1)},
@@ -75,7 +75,7 @@ static const std::map<std::string, unsigned int> s_ec_curves = {
     {"brainpoolP512t1", static_cast<unsigned int>(PrivateKey::Curve::BRAINPOOLP512_T1)}};
 
 /** @brief Secure hashes for certificate request generation */
-static const std::map<std::string, Sha2::Type> s_shas = {
+static const std::unordered_map<std::string, Sha2::Type> s_shas = {
     {"sha256", Sha2::Type::SHA256}, {"sha384", Sha2::Type::SHA384}, {"sha512", Sha2::Type::SHA512}};
 
 /** @brief Constructor */

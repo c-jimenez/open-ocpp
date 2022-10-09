@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHANGECONFIGURATION_H
-#define CHANGECONFIGURATION_H
+#ifndef OPENOCPP_CHANGECONFIGURATION_H
+#define OPENOCPP_CHANGECONFIGURATION_H
 
 #include "CiStringType.h"
 #include "Enums.h"
@@ -53,4 +53,4 @@ MESSAGE_CONVERTERS(ChangeConfiguration)
 } // namespace messages
 } // namespace ocpp
 
-#endif // CHANGECONFIGURATION_H
+#endif // OPENOCPP_CHANGECONFIGURATION_H

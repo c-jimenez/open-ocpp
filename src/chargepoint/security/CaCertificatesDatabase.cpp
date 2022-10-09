@@ -146,7 +146,7 @@ void CaCertificatesDatabase::getCertificateList(ocpp::types::CertificateUseEnumT
         // List certificates
         m_list_query->reset();
         m_list_query->bind(0, static_cast<unsigned int>(type));
-        m_list_query->bind(1, std::numeric_limits<std::time_t>::max());
+        m_list_query->bind(1, static_cast<int64_t>(std::numeric_limits<std::time_t>::max()));
         m_list_query->bind(2, 0);
         if (m_list_query->exec() && m_list_query->hasRows())
         {
@@ -177,8 +177,8 @@ std::string CaCertificatesDatabase::getCertificateListPem(ocpp::types::Certifica
         // List certificates
         m_list_query->reset();
         m_list_query->bind(0, static_cast<unsigned int>(type));
-        m_list_query->bind(1, DateTime::now().timestamp());
-        m_list_query->bind(2, DateTime::now().timestamp());
+        m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
+        m_list_query->bind(2, static_cast<int64_t>(DateTime::now().timestamp()));
         if (m_list_query->exec() && m_list_query->hasRows())
         {
             // Read data
@@ -217,8 +217,8 @@ unsigned int CaCertificatesDatabase::getCertificateCount(ocpp::types::Certificat
         }
         m_count_query->reset();
         m_count_query->bind(0, static_cast<unsigned int>(type));
-        m_count_query->bind(1, validity_from);
-        m_count_query->bind(2, validity_to);
+        m_count_query->bind(1, static_cast<int64_t>(validity_from));
+        m_count_query->bind(2, static_cast<int64_t>(validity_to));
         if (m_count_query->exec() && m_count_query->hasRows())
         {
             // Read count
@@ -249,8 +249,8 @@ bool CaCertificatesDatabase::addCertificate(ocpp::types::CertificateUseEnumType 
             // Add certificate
             m_insert_query->reset();
             m_insert_query->bind(0, static_cast<unsigned int>(type));
-            m_insert_query->bind(1, certificate.validityFrom());
-            m_insert_query->bind(2, certificate.validityTo());
+            m_insert_query->bind(1, static_cast<int64_t>(certificate.validityFrom()));
+            m_insert_query->bind(2, static_cast<int64_t>(certificate.validityTo()));
             m_insert_query->bind(3, hash_data.issuerNameHash);
             m_insert_query->bind(4, hash_data.issuerKeyHash);
             m_insert_query->bind(5, hash_data.serialNumber);

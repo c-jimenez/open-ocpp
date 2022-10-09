@@ -7,6 +7,7 @@
 add_library(messages OBJECT
     MessageDispatcher.cpp
     MessagesConverter.cpp
+    MessagesValidator.cpp
 
     Authorize.cpp
     BootNotification.cpp

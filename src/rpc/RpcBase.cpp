@@ -45,10 +45,14 @@ RpcBase::~RpcBase()
     stop();
 }
 
-/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, std::chrono::milliseconds) */
+/** @copydoc bool IRpc::call(const std::string&, const rapidjson::Document&, rapidjson::Document&, rapidjson::Value&,
+ *                           std::string&, std::string&, std::chrono::milliseconds) */
 bool RpcBase::call(const std::string&         action,
                    const rapidjson::Document& payload,
-                   rapidjson::Document&       response,
+                   rapidjson::Document&       rpc_frame,
+                   rapidjson::Value&          response,
+                   std::string&               error,
+                   std::string&               message,
                    std::chrono::milliseconds  timeout)
 {
     bool ret = false;
@@ -110,7 +114,18 @@ bool RpcBase::call(const std::string&         action,
             // Extract response
             if (rpc_message)
             {
-                response.CopyFrom(rpc_message->payload, response.GetAllocator());
+                rpc_frame.Swap(rpc_message->rpc_frame);
+                response.Swap(rpc_message->payload);
+                error.clear();
+                message.clear();
+                if (!rpc_message->error.IsNull())
+                {
+                    error = rpc_message->error.GetString();
+                }
+                if (!rpc_message->message.IsNull())
+                {
+                    message = rpc_message->message.GetString();
+                }
                 delete rpc_message;
             }
             else
@@ -233,14 +248,14 @@ void RpcBase::processReceivedData(const void* data, size_t size)
                     switch (msg_type)
                     {
                         case MessageType::CALL:
-                            valid = decodeCall(unique_id, rpc_frame[2], rpc_frame[3]);
+                            valid = decodeCall(unique_id, rpc_frame, rpc_frame[2], rpc_frame[3]);
                             break;
                         case MessageType::CALLRESULT:
-                            valid = decodeCallResult(unique_id, rpc_frame[2]);
+                            valid = decodeCallResult(unique_id, rpc_frame, rpc_frame[2]);
                             break;
                         case MessageType::CALLERROR:
                         default:
-                            valid = decodeCallError(unique_id, rpc_frame[2], rpc_frame[3], rpc_frame[4]);
+                            valid = decodeCallError(unique_id, rpc_frame, rpc_frame[2], rpc_frame[3], rpc_frame[4]);
                             break;
                     }
                     if (!valid)
@@ -283,7 +298,10 @@ bool RpcBase::send(const std::string& msg)
 }
 
 /** @brief Decode a CALL message */
-bool RpcBase::decodeCall(const std::string& unique_id, const rapidjson::Value& action, const rapidjson::Value& payload)
+bool RpcBase::decodeCall(const std::string&      unique_id,
+                         rapidjson::Document&    rpc_frame,
+                         const rapidjson::Value& action,
+                         rapidjson::Value&       payload)
 {
     bool ret = false;
 
@@ -291,7 +309,7 @@ bool RpcBase::decodeCall(const std::string& unique_id, const rapidjson::Value& a
     if (action.IsString() && payload.IsObject())
     {
         // Add request to the queue
-        RpcMessage* msg = new RpcMessage(unique_id, action.GetString(), payload);
+        RpcMessage* msg = new RpcMessage(unique_id, action.GetString(), rpc_frame, payload);
         m_requests_queue.push(msg);
 
         ret = true;
@@ -301,7 +319,7 @@ bool RpcBase::decodeCall(const std::string& unique_id, const rapidjson::Value& a
 }
 
 /** @brief Decode a CALLRESULT message */
-bool RpcBase::decodeCallResult(const std::string& unique_id, const rapidjson::Value& payload)
+bool RpcBase::decodeCallResult(const std::string& unique_id, rapidjson::Document& rpc_frame, rapidjson::Value& payload)
 {
     bool ret = false;
 
@@ -309,7 +327,7 @@ bool RpcBase::decodeCallResult(const std::string& unique_id, const rapidjson::Va
     if (payload.IsObject())
     {
         // Add result to the queue
-        RpcMessage* msg = new RpcMessage(unique_id, payload);
+        RpcMessage* msg = new RpcMessage(unique_id, rpc_frame, payload);
         m_results_queue.push(msg);
 
         ret = true;
@@ -319,17 +337,21 @@ bool RpcBase::decodeCallResult(const std::string& unique_id, const rapidjson::Va
 }
 
 /** @brief Decode a CALLERROR message */
-bool RpcBase::decodeCallError(const std::string&      unique_id,
-                              const rapidjson::Value& error,
-                              const rapidjson::Value& message,
-                              const rapidjson::Value& payload)
+bool RpcBase::decodeCallError(const std::string&   unique_id,
+                              rapidjson::Document& rpc_frame,
+                              rapidjson::Value&    error,
+                              rapidjson::Value&    message,
+                              rapidjson::Value&    payload)
 {
     bool ret = false;
 
     // Check types
     if (error.IsString() && message.IsString() && payload.IsObject())
     {
-        (void)unique_id;
+        // Add error to the queue
+        RpcMessage* msg = new RpcMessage(unique_id, rpc_frame, payload, &error, &message);
+        m_results_queue.push(msg);
+
         ret = true;
     }
 

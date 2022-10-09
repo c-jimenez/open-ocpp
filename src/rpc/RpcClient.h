@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RPCCLIENT_H
-#define RPCCLIENT_H
+#ifndef OPENOCPP_RPCCLIENT_H
+#define OPENOCPP_RPCCLIENT_H
 
 #include "IWebsocketClient.h"
 #include "RpcBase.h"
@@ -115,9 +115,11 @@ class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::ILi
     IListener* m_listener;
     /** @brief Started state */
     bool m_started;
+    /** @brief Mutex for concurrent stop access */
+    std::mutex m_stop_mutex;
 };
 
 } // namespace rpc
 } // namespace ocpp
 
-#endif // RPCCLIENT_H
+#endif // OPENOCPP_RPCCLIENT_H

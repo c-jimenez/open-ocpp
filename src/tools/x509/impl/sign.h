@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SIGN_H
-#define SIGN_H
+#ifndef OPENOCPP_SIGN_H
+#define OPENOCPP_SIGN_H
 
 #include "Sha2.h"
 
@@ -71,4 +71,4 @@ bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, 
 } // namespace x509
 } // namespace ocpp
 
-#endif // SIGN_H
+#endif // OPENOCPP_SIGN_H

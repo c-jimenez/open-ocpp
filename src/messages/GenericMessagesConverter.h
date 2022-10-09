@@ -16,11 +16,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GENERICMESSAGESCONVERTER_H
-#define GENERICMESSAGESCONVERTER_H
+#ifndef OPENOCPP_GENERICMESSAGESCONVERTER_H
+#define OPENOCPP_GENERICMESSAGESCONVERTER_H
 
-#include <map>
 #include <string>
+#include <unordered_map>
 namespace ocpp
 {
 namespace messages
@@ -95,12 +95,12 @@ class GenericMessagesConverter
 
   private:
     /** @brief Request converters */
-    std::map<std::string, void*> m_req_converters;
+    std::unordered_map<std::string, void*> m_req_converters;
     /** @brief Response converters */
-    std::map<std::string, void*> m_resp_converters;
+    std::unordered_map<std::string, void*> m_resp_converters;
 };
 
 } // namespace messages
 } // namespace ocpp
 
-#endif // GENERICMESSAGESCONVERTER_H
+#endif // OPENOCPP_GENERICMESSAGESCONVERTER_H

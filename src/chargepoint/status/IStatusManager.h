@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ISTATUSMANAGER_H
-#define ISTATUSMANAGER_H
+#ifndef OPENOCPP_ISTATUSMANAGER_H
+#define OPENOCPP_ISTATUSMANAGER_H
 
 #include "Enums.h"
 
@@ -73,4 +73,4 @@ class IStatusManager
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // ISTATUSMANAGER_H
+#endif // OPENOCPP_ISTATUSMANAGER_H

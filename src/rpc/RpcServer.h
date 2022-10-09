@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RPCSERVER_H
-#define RPCSERVER_H
+#ifndef OPENOCPP_RPCSERVER_H
+#define OPENOCPP_RPCSERVER_H
 
 #include "IWebsocketServer.h"
 #include "Queue.h"
@@ -112,6 +112,12 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
         virtual ~Client();
 
         /**
+         * @brief Get the IP address of the client
+         * @return IP address of the client
+         */
+        const std::string& ipAddress() const;
+
+        /**
          * @brief Disconnect the client
          * @param notify_disconnected Indicate if the listener must be notified when disconnected
          * @return true if the client has been disconnected, false otherwise
@@ -157,4 +163,4 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
 } // namespace rpc
 } // namespace ocpp
 
-#endif // RPCSERVER_H
+#endif // OPENOCPP_RPCSERVER_H

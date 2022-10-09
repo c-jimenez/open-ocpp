@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTHORIZATIONDATA_H
-#define AUTHORIZATIONDATA_H
+#ifndef OPENOCPP_AUTHORIZATIONDATA_H
+#define OPENOCPP_AUTHORIZATIONDATA_H
 
 #include "IdTagInfo.h"
 #include "IdToken.h"
@@ -44,4 +44,4 @@ struct AuthorizationData
 } // namespace types
 } // namespace ocpp
 
-#endif // AUTHORIZATIONDATA_H
+#endif // OPENOCPP_AUTHORIZATIONDATA_H

@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETCOMPOSITESCHEDULE_H
-#define GETCOMPOSITESCHEDULE_H
+#ifndef OPENOCPP_GETCOMPOSITESCHEDULE_H
+#define OPENOCPP_GETCOMPOSITESCHEDULE_H
 
 #include "ChargingSchedule.h"
 #include "Enums.h"
@@ -70,4 +70,4 @@ MESSAGE_CONVERTERS(GetCompositeSchedule)
 } // namespace messages
 } // namespace ocpp
 
-#endif // GETCOMPOSITESCHEDULE_H
+#endif // OPENOCPP_GETCOMPOSITESCHEDULE_H

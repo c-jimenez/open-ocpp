@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIBWEBSOCKETSERVER_H
-#define LIBWEBSOCKETSERVER_H
+#ifndef OPENOCPP_LIBWEBSOCKETSERVER_H
+#define OPENOCPP_LIBWEBSOCKETSERVER_H
 
 #include "IWebsocketServer.h"
 #include "Queue.h"
@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <array>
 #include <condition_variable>
-#include <map>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 
 namespace ocpp
 {
@@ -89,10 +89,14 @@ class LibWebsocketServer : public IWebsocketServer
         /**
          * @brief Constructor
          * @param wsi Client socket
+         * @param ip_address IP address
         */
-        Client(struct lws* wsi);
+        Client(struct lws* wsi, const char* ip_address);
         /** @brief Destructor */
         virtual ~Client();
+
+        /** @copydoc const std::string& IClient::ipAddress(bool) const */
+        const std::string& ipAddress() const override;
 
         /** @copydoc bool IClient::disconnect(bool) */
         bool disconnect(bool notify_disconnected) override;
@@ -109,6 +113,8 @@ class LibWebsocketServer : public IWebsocketServer
       private:
         /** @brief Client socket */
         struct lws* m_wsi;
+        /** @brief IP address */
+        const std::string m_ip_address;
         /** @brief Connection status */
         bool m_connected;
         /** @brief Listener */
@@ -140,7 +146,7 @@ class LibWebsocketServer : public IWebsocketServer
     std::array<struct lws_protocols, 2u> m_protocols;
 
     /** @brief Connected clients */
-    std::map<struct lws*, std::shared_ptr<IClient>> m_clients;
+    std::unordered_map<struct lws*, std::shared_ptr<IClient>> m_clients;
 
     /** @brief Internal thread */
     void process();
@@ -152,4 +158,4 @@ class LibWebsocketServer : public IWebsocketServer
 } // namespace websockets
 } // namespace ocpp
 
-#endif // LIBWEBSOCKETSERVER_H
+#endif // OPENOCPP_LIBWEBSOCKETSERVER_H

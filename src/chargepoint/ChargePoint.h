@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGEPOINT_H
-#define CHARGEPOINT_H
+#ifndef OPENOCPP_CHARGEPOINT_H
+#define OPENOCPP_CHARGEPOINT_H
 
 #include "Connectors.h"
 #include "Database.h"
@@ -25,6 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IConfigManager.h"
 #include "InternalConfigManager.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 #include "RequestFifo.h"
 #include "RpcClient.h"
 #include "SecurityManager.h"
@@ -234,6 +235,8 @@ class ChargePoint : public IChargePoint,
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
+    /** @brief Messaes validator */
+    ocpp::messages::MessagesValidator m_messages_validator;
     /** @brief Requests FIFO */
     RequestFifo m_requests_fifo;
     /** @brief Security manager */
@@ -303,4 +306,4 @@ class ChargePoint : public IChargePoint,
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // CHARGEPOINT_H
+#endif // OPENOCPP_CHARGEPOINT_H

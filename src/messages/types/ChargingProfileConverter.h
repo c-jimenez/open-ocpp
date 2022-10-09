@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CHARGINGPROFILECONVERTER_H
-#define CHARGINGPROFILECONVERTER_H
+#ifndef OPENOCPP_CHARGINGPROFILECONVERTER_H
+#define OPENOCPP_CHARGINGPROFILECONVERTER_H
 
 #include "ChargingProfile.h"
 #include "IMessageConverter.h"
@@ -48,4 +48,4 @@ class ChargingProfileConverter : public IMessageConverter<ocpp::types::ChargingP
 } // namespace messages
 } // namespace ocpp
 
-#endif // CHARGINGPROFILECONVERTER_H
+#endif // OPENOCPP_CHARGINGPROFILECONVERTER_H

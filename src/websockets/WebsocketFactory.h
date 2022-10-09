@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef WEBSOCKETFACTORY_H
-#define WEBSOCKETFACTORY_H
+#ifndef OPENOCPP_WEBSOCKETFACTORY_H
+#define OPENOCPP_WEBSOCKETFACTORY_H
 
 #include "IWebsocketClient.h"
 #include "IWebsocketServer.h"
@@ -40,4 +40,4 @@ class WebsocketFactory
 } // namespace websockets
 } // namespace ocpp
 
-#endif // WEBSOCKETFACTORY_H
+#endif // OPENOCPP_WEBSOCKETFACTORY_H

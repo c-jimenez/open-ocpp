@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CERTIFICATEREQUEST_H
-#define CERTIFICATEREQUEST_H
+#ifndef OPENOCPP_CERTIFICATEREQUEST_H
+#define OPENOCPP_CERTIFICATEREQUEST_H
 
 #include "Sha2.h"
 #include "X509Document.h"
@@ -84,4 +84,4 @@ class CertificateRequest : public X509Document
 } // namespace x509
 } // namespace ocpp
 
-#endif // CERTIFICATEREQUEST_H
+#endif // OPENOCPP_CERTIFICATEREQUEST_H

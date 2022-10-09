@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CISTRINGTYPE_H
-#define CISTRINGTYPE_H
+#ifndef OPENOCPP_CISTRINGTYPE_H
+#define OPENOCPP_CISTRINGTYPE_H
 
 #include <string>
 
@@ -196,4 +196,4 @@ class CiStringType : public ICiStringType
 } // namespace types
 } // namespace ocpp
 
-#endif // CISTRINGTYPE_H
+#endif // OPENOCPP_CISTRINGTYPE_H
