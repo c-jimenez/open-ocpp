@@ -20,24 +20,29 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_MESSAGEDISPATCHER_H
 
 #include "IMessageDispatcher.h"
-#include "JsonValidator.h"
 
-#include <map>
 #include <memory>
+#include <unordered_map>
 
 namespace ocpp
 {
+namespace json
+{
+class JsonValidator;
+} // namespace json
 namespace messages
 {
+
+class MessagesValidator;
 
 /** @brief Messages dispatcher */
 class MessageDispatcher : public IMessageDispatcher
 {
   public:
     /** @brief Constructor
-     *  @param schemas_path Path to the JSON schemas needed to validate payloads
+     *  @param messages_validator JSON schemas needed to validate payloads
      */
-    MessageDispatcher(const std::string& schemas_path);
+    MessageDispatcher(const MessagesValidator& messages_validator);
 
     /** @brief Destructor */
     virtual ~MessageDispatcher();
@@ -57,10 +62,10 @@ class MessageDispatcher : public IMessageDispatcher
                          std::string&            error_message) override;
 
   private:
-    /** @brief Path to the JSON schemas needed to validate payloads */
-    const std::string m_schemas_path;
+    /** @brief JSON schemas needed to validate payloads */
+    const MessagesValidator& m_messages_validator;
     /** @brief Handlers */
-    std::map<std::string, std::pair<std::shared_ptr<ocpp::json::JsonValidator>, IMessageHandler*>> m_handlers;
+    std::unordered_map<std::string, std::pair<ocpp::json::JsonValidator*, IMessageHandler*>> m_handlers;
 };
 
 } // namespace messages

@@ -84,6 +84,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_
       m_database(),
       m_internal_config(m_database),
       m_messages_converter(),
+      m_messages_validator(),
       m_requests_fifo(m_database),
       m_security_manager(
           m_stack_config, m_ocpp_config, m_database, m_events_handler, *m_worker_pool.get(), m_messages_converter, m_requests_fifo, *this),
@@ -218,108 +219,117 @@ bool ChargePoint::start()
         LOG_INFO << "Starting OCPP stack v" << OPEN_OCPP_VERSION << " - Central System : " << m_stack_config.connexionUrl()
                  << " - Charge Point identifier : " << m_stack_config.chargePointIdentifier();
 
-        // Start uptime counter
-        m_uptime            = 0;
-        m_disconnected_time = 0;
-        m_internal_config.setKey(START_DATE_KEY, DateTime::now().str());
-        m_uptime_timer.start(std::chrono::seconds(1u));
+        // Load validator
+        ret = m_messages_validator.load(m_stack_config.jsonSchemasPath());
+        if (ret)
+        {
+            // Start uptime counter
+            m_uptime            = 0;
+            m_disconnected_time = 0;
+            m_internal_config.setKey(START_DATE_KEY, DateTime::now().str());
+            m_uptime_timer.start(std::chrono::seconds(1u));
 
-        // Allocate resources
-        m_ws_client  = std::unique_ptr<ocpp::websockets::IWebsocketClient>(ocpp::websockets::WebsocketFactory::newClient());
-        m_rpc_client = std::make_unique<ocpp::rpc::RpcClient>(*m_ws_client, "ocpp1.6");
-        m_rpc_client->registerListener(*this);
-        m_rpc_client->registerClientListener(*this);
-        m_rpc_client->registerSpy(*this);
-        m_msg_dispatcher = std::make_unique<ocpp::messages::MessageDispatcher>(m_stack_config.jsonSchemasPath());
-        m_msg_sender     = std::make_unique<ocpp::messages::GenericMessageSender>(
-            *m_rpc_client, m_messages_converter, m_stack_config.callRequestTimeout());
+            // Allocate resources
+            m_ws_client  = std::unique_ptr<ocpp::websockets::IWebsocketClient>(ocpp::websockets::WebsocketFactory::newClient());
+            m_rpc_client = std::make_unique<ocpp::rpc::RpcClient>(*m_ws_client, "ocpp1.6");
+            m_rpc_client->registerListener(*this);
+            m_rpc_client->registerClientListener(*this);
+            m_rpc_client->registerSpy(*this);
+            m_msg_dispatcher = std::make_unique<ocpp::messages::MessageDispatcher>(m_messages_validator);
+            m_msg_sender     = std::make_unique<ocpp::messages::GenericMessageSender>(
+                *m_rpc_client, m_messages_converter, m_stack_config.callRequestTimeout());
 
-        m_config_manager  = std::make_unique<ConfigManager>(m_ocpp_config, m_messages_converter, *m_msg_dispatcher);
-        m_trigger_manager = std::make_unique<TriggerMessageManager>(m_connectors, m_messages_converter, *m_msg_dispatcher);
-        m_authent_manager = std::make_unique<AuthentManager>(
-            m_stack_config, m_ocpp_config, m_database, m_internal_config, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
-        m_status_manager         = std::make_unique<StatusManager>(m_stack_config,
-                                                           m_ocpp_config,
-                                                           m_events_handler,
-                                                           m_internal_config,
-                                                           *m_timer_pool.get(),
-                                                           *m_worker_pool.get(),
-                                                           m_connectors,
-                                                           *m_msg_dispatcher,
-                                                           *m_msg_sender,
-                                                           m_messages_converter,
-                                                           *m_trigger_manager);
-        m_reservation_manager    = std::make_unique<ReservationManager>(m_ocpp_config,
-                                                                     m_events_handler,
-                                                                     *m_timer_pool.get(),
-                                                                     *m_worker_pool.get(),
-                                                                     m_connectors,
-                                                                     m_messages_converter,
-                                                                     *m_msg_dispatcher,
-                                                                     *m_status_manager,
-                                                                     *m_authent_manager);
-        m_meter_values_manager   = std::make_unique<MeterValuesManager>(m_ocpp_config,
-                                                                      m_database,
-                                                                      m_events_handler,
-                                                                      *m_timer_pool.get(),
-                                                                      *m_worker_pool.get(),
-                                                                      m_connectors,
-                                                                      *m_msg_sender,
-                                                                      m_requests_fifo,
-                                                                      *m_status_manager,
-                                                                      *m_trigger_manager,
-                                                                      *m_config_manager);
-        m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
-                                                                          m_ocpp_config,
+            m_config_manager  = std::make_unique<ConfigManager>(m_ocpp_config, m_messages_converter, *m_msg_dispatcher);
+            m_trigger_manager = std::make_unique<TriggerMessageManager>(m_connectors, m_messages_converter, *m_msg_dispatcher);
+            m_authent_manager = std::make_unique<AuthentManager>(
+                m_stack_config, m_ocpp_config, m_database, m_internal_config, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
+            m_status_manager         = std::make_unique<StatusManager>(m_stack_config,
+                                                               m_ocpp_config,
+                                                               m_events_handler,
+                                                               m_internal_config,
+                                                               *m_timer_pool.get(),
+                                                               *m_worker_pool.get(),
+                                                               m_connectors,
+                                                               *m_msg_dispatcher,
+                                                               *m_msg_sender,
+                                                               m_messages_converter,
+                                                               *m_trigger_manager);
+            m_reservation_manager    = std::make_unique<ReservationManager>(m_ocpp_config,
+                                                                         m_events_handler,
+                                                                         *m_timer_pool.get(),
+                                                                         *m_worker_pool.get(),
+                                                                         m_connectors,
+                                                                         m_messages_converter,
+                                                                         *m_msg_dispatcher,
+                                                                         *m_status_manager,
+                                                                         *m_authent_manager);
+            m_meter_values_manager   = std::make_unique<MeterValuesManager>(m_ocpp_config,
                                                                           m_database,
+                                                                          m_events_handler,
                                                                           *m_timer_pool.get(),
                                                                           *m_worker_pool.get(),
                                                                           m_connectors,
-                                                                          m_messages_converter,
-                                                                          *m_msg_dispatcher);
-        m_transaction_manager    = std::make_unique<TransactionManager>(m_ocpp_config,
-                                                                     m_events_handler,
-                                                                     m_connectors,
-                                                                     m_messages_converter,
-                                                                     *m_msg_dispatcher,
-                                                                     *m_msg_sender,
-                                                                     m_requests_fifo,
-                                                                     *m_authent_manager,
-                                                                     *m_reservation_manager,
-                                                                     *m_meter_values_manager,
-                                                                     *m_smart_charging_manager);
-        m_data_transfer_manager =
-            std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
-        m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
-                                                                     m_internal_config,
-                                                                     m_events_handler,
-                                                                     *m_worker_pool.get(),
-                                                                     m_messages_converter,
-                                                                     *m_msg_dispatcher,
-                                                                     *m_msg_sender,
-                                                                     m_connectors,
-                                                                     *m_trigger_manager,
-                                                                     m_security_manager);
+                                                                          *m_msg_sender,
+                                                                          m_requests_fifo,
+                                                                          *m_status_manager,
+                                                                          *m_trigger_manager,
+                                                                          *m_config_manager);
+            m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
+                                                                              m_ocpp_config,
+                                                                              m_database,
+                                                                              *m_timer_pool.get(),
+                                                                              *m_worker_pool.get(),
+                                                                              m_connectors,
+                                                                              m_messages_converter,
+                                                                              *m_msg_dispatcher);
+            m_transaction_manager    = std::make_unique<TransactionManager>(m_ocpp_config,
+                                                                         m_events_handler,
+                                                                         m_connectors,
+                                                                         m_messages_converter,
+                                                                         *m_msg_dispatcher,
+                                                                         *m_msg_sender,
+                                                                         m_requests_fifo,
+                                                                         *m_authent_manager,
+                                                                         *m_reservation_manager,
+                                                                         *m_meter_values_manager,
+                                                                         *m_smart_charging_manager);
+            m_data_transfer_manager =
+                std::make_unique<DataTransferManager>(m_events_handler, m_messages_converter, *m_msg_dispatcher, *m_msg_sender);
+            m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
+                                                                         m_internal_config,
+                                                                         m_events_handler,
+                                                                         *m_worker_pool.get(),
+                                                                         m_messages_converter,
+                                                                         *m_msg_dispatcher,
+                                                                         *m_msg_sender,
+                                                                         m_connectors,
+                                                                         *m_trigger_manager,
+                                                                         m_security_manager);
 
-        m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
-                                                                       m_events_handler,
-                                                                       *m_timer_pool.get(),
-                                                                       *m_worker_pool.get(),
-                                                                       m_connectors,
-                                                                       *m_msg_sender,
-                                                                       m_requests_fifo,
-                                                                       *m_status_manager,
-                                                                       *m_authent_manager);
+            m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
+                                                                           m_events_handler,
+                                                                           *m_timer_pool.get(),
+                                                                           *m_worker_pool.get(),
+                                                                           m_connectors,
+                                                                           *m_msg_sender,
+                                                                           m_requests_fifo,
+                                                                           *m_status_manager,
+                                                                           *m_authent_manager);
 
-        // Register specific configuration checks
-        m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
-        m_config_manager->registerConfigChangedListener("SecurityProfile", *this);
+            // Register specific configuration checks
+            m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
+            m_config_manager->registerConfigChangedListener("SecurityProfile", *this);
 
-        // Start security manager
-        m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager, *m_config_manager);
+            // Start security manager
+            m_security_manager.start(*m_msg_sender, *m_msg_dispatcher, *m_trigger_manager, *m_config_manager);
 
-        // Start connection
-        ret = doConnect();
+            // Start connection
+            ret = doConnect();
+        }
+        else
+        {
+            LOG_ERROR << "Unable to load all the messages validators";
+        }
     }
     else
     {
