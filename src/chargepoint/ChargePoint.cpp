@@ -237,7 +237,7 @@ bool ChargePoint::start()
             m_rpc_client->registerSpy(*this);
             m_msg_dispatcher = std::make_unique<ocpp::messages::MessageDispatcher>(m_messages_validator);
             m_msg_sender     = std::make_unique<ocpp::messages::GenericMessageSender>(
-                *m_rpc_client, m_messages_converter, m_stack_config.callRequestTimeout());
+                *m_rpc_client, m_messages_converter, m_messages_validator, m_stack_config.callRequestTimeout());
 
             m_config_manager  = std::make_unique<ConfigManager>(m_ocpp_config, m_messages_converter, *m_msg_dispatcher);
             m_trigger_manager = std::make_unique<TriggerMessageManager>(m_connectors, m_messages_converter, *m_msg_dispatcher);
