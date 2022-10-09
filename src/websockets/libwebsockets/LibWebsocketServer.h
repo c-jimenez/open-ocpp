@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <array>
 #include <condition_variable>
-#include <map>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 
 namespace ocpp
 {
@@ -146,7 +146,7 @@ class LibWebsocketServer : public IWebsocketServer
     std::array<struct lws_protocols, 2u> m_protocols;
 
     /** @brief Connected clients */
-    std::map<struct lws*, std::shared_ptr<IClient>> m_clients;
+    std::unordered_map<struct lws*, std::shared_ptr<IClient>> m_clients;
 
     /** @brief Internal thread */
     void process();

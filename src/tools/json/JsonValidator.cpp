@@ -26,7 +26,7 @@ namespace json
 {
 
 /** @brief Constructor */
-JsonValidator::JsonValidator() : m_schema(nullptr), m_validator(nullptr), m_last_error() { }
+JsonValidator::JsonValidator() : m_schema(nullptr), m_last_error() { }
 
 /** @brief Destructor */
 JsonValidator::~JsonValidator() { }
@@ -43,7 +43,7 @@ bool JsonValidator::init(const std::string& schema_file)
     {
         // Read the whole file
         std::string     json;
-        char            buffer[256u];
+        char            buffer[1024u];
         std::streamsize size;
         do
         {
@@ -60,7 +60,6 @@ bool JsonValidator::init(const std::string& schema_file)
         {
             // Instanciate validator
             m_schema     = std::make_unique<rapidjson::SchemaDocument>(schema_doc);
-            m_validator  = std::make_unique<rapidjson::SchemaValidator>(*(m_schema.get()));
             m_last_error = "";
             ret          = true;
         }
@@ -74,21 +73,21 @@ bool JsonValidator::isValid(const rapidjson::Value& json_document)
 {
     bool ret = false;
 
-    if (m_validator.get())
+    // Instanciate validator
+    rapidjson::SchemaValidator validator(*(m_schema.get()));
+
+    // Validate document
+    ret = json_document.Accept(validator);
+    if (!ret)
     {
-        m_validator->Reset();
-        ret = json_document.Accept((*(m_validator.get())));
-        if (!ret)
+        const char* invalid_keyword = validator.GetInvalidSchemaKeyword();
+        if (invalid_keyword)
         {
-            const char* invalid_keyword = m_validator->GetInvalidSchemaKeyword();
-            if (invalid_keyword)
-            {
-                m_last_error = "Error on keyword : " + std::string(invalid_keyword);
-            }
-            else
-            {
-                m_last_error = "Unknown error";
-            }
+            m_last_error = "Error on keyword : " + std::string(invalid_keyword);
+        }
+        else
+        {
+            m_last_error = "Unknown error";
         }
     }
 

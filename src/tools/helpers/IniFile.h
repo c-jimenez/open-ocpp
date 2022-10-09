@@ -19,8 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_INIFILE_H
 #define OPENOCPP_INIFILE_H
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace ocpp
@@ -169,7 +169,7 @@ class IniFile
     bool m_sync;
 
     /** @brief Data */
-    std::map<std::string, std::map<std::string, std::string>> m_data;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> m_data;
 };
 
 } // namespace helpers

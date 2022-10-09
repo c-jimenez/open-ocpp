@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRequestFifo.h"
 #include "IRpc.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 
 namespace ocpp
 {
@@ -46,8 +47,11 @@ class GenericMessageSender
 {
   public:
     /** @brief Constructor */
-    GenericMessageSender(ocpp::rpc::IRpc& rpc, MessagesConverter& messages_converter, std::chrono::milliseconds timeout)
-        : m_rpc(rpc), m_messages_converter(messages_converter), m_timeout(timeout)
+    GenericMessageSender(ocpp::rpc::IRpc&          rpc,
+                         MessagesConverter&        messages_converter,
+                         const MessagesValidator&  messages_validator,
+                         std::chrono::milliseconds timeout)
+        : m_rpc(rpc), m_messages_converter(messages_converter), m_messages_validator(messages_validator), m_timeout(timeout)
     {
     }
 
@@ -146,13 +150,18 @@ class GenericMessageSender
                         // Check error
                         if (error.empty())
                         {
-                            // Convert response
-                            const char* error_code = nullptr;
-                            std::string error_message;
-                            resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                            if (resp_converter->fromJson(resp, response, error_code, error_message))
+                            // Validate response
+                            ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, false);
+                            if (validator && validator->isValid(resp))
                             {
-                                ret = CallResult::Ok;
+                                // Convert response
+                                const char* error_code = nullptr;
+                                std::string error_message;
+                                resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                                if (resp_converter->fromJson(resp, response, error_code, error_message))
+                                {
+                                    ret = CallResult::Ok;
+                                }
                             }
                         }
                         else
@@ -208,13 +217,18 @@ class GenericMessageSender
                 // Check error
                 if (error.empty())
                 {
-                    // Convert response
-                    const char* error_code = nullptr;
-                    std::string error_message;
-                    resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                    if (resp_converter->fromJson(resp, response, error_code, error_message))
+                    // Validate response
+                    ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, false);
+                    if (validator && validator->isValid(resp))
                     {
-                        ret = CallResult::Ok;
+                        // Convert response
+                        const char* error_code = nullptr;
+                        std::string error_message;
+                        resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                        if (resp_converter->fromJson(resp, response, error_code, error_message))
+                        {
+                            ret = CallResult::Ok;
+                        }
                     }
                 }
                 else
@@ -232,6 +246,8 @@ class GenericMessageSender
     ocpp::rpc::IRpc& m_rpc;
     /** @brief Messages converter */
     MessagesConverter& m_messages_converter;
+    /** @brief Messages validator */
+    const MessagesValidator& m_messages_validator;
     /** @brief Request timeout */
     std::chrono::milliseconds m_timeout;
 };

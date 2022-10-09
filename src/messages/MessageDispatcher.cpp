@@ -18,7 +18,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "MessageDispatcher.h"
 #include "IRpc.h"
+#include "JsonValidator.h"
 #include "Logger.h"
+#include "MessagesValidator.h"
 
 #include <filesystem>
 
@@ -28,7 +30,9 @@ namespace messages
 {
 
 /** @brief Constructor */
-MessageDispatcher::MessageDispatcher(const std::string& schemas_path) : m_schemas_path(schemas_path), m_handlers() { }
+MessageDispatcher::MessageDispatcher(const MessagesValidator& messages_validator) : m_messages_validator(messages_validator), m_handlers()
+{
+}
 
 /** @brief Destructor */
 MessageDispatcher::~MessageDispatcher() { }
@@ -41,23 +45,21 @@ bool MessageDispatcher::registerHandler(const std::string& action, IMessageHandl
     // Check if handler exists for this action
     if (m_handlers.find(action) == m_handlers.end())
     {
-        // Load the payload validator
-        std::shared_ptr<ocpp::json::JsonValidator> validator = std::make_shared<ocpp::json::JsonValidator>();
-        std::filesystem::path                      filepath(m_schemas_path);
-        filepath.append(action + ".json");
-        if (validator->init(filepath))
+        // Get the payload validator
+        ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, true);
+        if (validator)
         {
-            LOG_DEBUG << "[" << action << "] Validator loaded : " << filepath;
+            LOG_DEBUG << "[" << action << "] Validator loaded";
 
             // Add handler
-            std::pair<std::shared_ptr<ocpp::json::JsonValidator>, IMessageHandler*> handler_data(validator, &handler);
+            std::pair<ocpp::json::JsonValidator*, IMessageHandler*> handler_data(validator, &handler);
 
             m_handlers[action] = handler_data;
             ret                = true;
         }
         else
         {
-            LOG_ERROR << "[" << action << "] Unable to load validator : " << filepath;
+            LOG_ERROR << "[" << action << "] Unable to load validator";
         }
     }
 
@@ -83,8 +85,8 @@ bool MessageDispatcher::dispatchMessage(const std::string&      action,
     {
         // Check payload
         auto&                                      handler_data = it->second;
-        std::shared_ptr<ocpp::json::JsonValidator> validator    = handler_data.first;
-        if (validator->isValid(payload))
+        ocpp::json::JsonValidator*                 validator    = handler_data.first;
+        if (validator && validator->isValid(payload))
         {
             // Call handler
             IMessageHandler* handler = handler_data.second;

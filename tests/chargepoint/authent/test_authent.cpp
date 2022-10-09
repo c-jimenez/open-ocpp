@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "InternalConfigManager.h"
 #include "MessageDispatcherStub.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 #include "OcppConfigStub.h"
 #include "RpcStub.h"
 #include "doctest.h"
@@ -46,6 +47,7 @@ Database              database;
 ChargePointConfigStub cp_config;
 OcppConfigStub        ocpp_config;
 InternalConfigManager internal_config(database);
+MessagesValidator     msgs_validator;
 
 /** @brief Prepare a response to an Authorize request */
 static void setAuthorizeResponse(RpcStub& rpc, const IdTagInfo& tag_info)
@@ -68,6 +70,8 @@ TEST_SUITE("Authentication component")
     {
         std::filesystem::remove(DATABASE_PATH);
         CHECK(database.open(DATABASE_PATH));
+
+        CHECK(msgs_validator.load(SCHEMAS_DIR));
     }
 
     TEST_CASE("Setup config")
@@ -121,7 +125,7 @@ TEST_SUITE("Authentication component")
         MessagesConverter     msgs_converter;
         MessageDispatcherStub msg_dispatcher;
         RpcStub               rpc;
-        GenericMessageSender  msg_sender(rpc, msgs_converter, std::chrono::milliseconds(1000));
+        GenericMessageSender  msg_sender(rpc, msgs_converter, msgs_validator, std::chrono::milliseconds(1000));
 
         ocpp_config.setConfigValue("LocalPreAuthorize", "false");
         rpc.setConnected(true);
@@ -167,7 +171,7 @@ TEST_SUITE("Authentication component")
         MessagesConverter     msgs_converter;
         MessageDispatcherStub msg_dispatcher;
         RpcStub               rpc;
-        GenericMessageSender  msg_sender(rpc, msgs_converter, std::chrono::milliseconds(1000));
+        GenericMessageSender  msg_sender(rpc, msgs_converter, msgs_validator, std::chrono::milliseconds(1000));
 
         ocpp_config.setConfigValue("LocalPreAuthorize", "true");
         rpc.setConnected(true);
@@ -263,7 +267,7 @@ TEST_SUITE("Authentication component")
         MessagesConverter     msgs_converter;
         MessageDispatcherStub msg_dispatcher;
         RpcStub               rpc;
-        GenericMessageSender  msg_sender(rpc, msgs_converter, std::chrono::milliseconds(1000));
+        GenericMessageSender  msg_sender(rpc, msgs_converter, msgs_validator, std::chrono::milliseconds(1000));
 
         ocpp_config.setConfigValue("LocalAuthorizeOffline", "false");
         rpc.setConnected(false);
@@ -305,7 +309,7 @@ TEST_SUITE("Authentication component")
         MessagesConverter     msgs_converter;
         MessageDispatcherStub msg_dispatcher;
         RpcStub               rpc;
-        GenericMessageSender  msg_sender(rpc, msgs_converter, std::chrono::milliseconds(1000));
+        GenericMessageSender  msg_sender(rpc, msgs_converter, msgs_validator, std::chrono::milliseconds(1000));
 
         ocpp_config.setConfigValue("LocalAuthorizeOffline", "true");
         rpc.setConnected(false);

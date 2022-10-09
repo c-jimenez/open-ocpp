@@ -50,8 +50,6 @@ class JsonValidator
   private:
     /** @brief Schema document */
     std::unique_ptr<rapidjson::SchemaDocument> m_schema;
-    /** @brief Schema validator */
-    std::unique_ptr<rapidjson::SchemaValidator> m_validator;
     /** @brief Last error message */
     std::string m_last_error;
 };
