@@ -70,6 +70,7 @@ LocalController::LocalController(const ocpp::config::ILocalControllerConfig&    
       m_database(),
       m_internal_config(m_database),
       m_messages_converter(),
+      m_messages_validator(),
       m_ws_server(),
       m_rpc_server(),
       m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
@@ -165,31 +166,41 @@ bool LocalController::start()
     {
         LOG_INFO << "Starting OCPP stack v" << OPEN_OCPP_VERSION << " - Listen URL : " << m_stack_config.listenUrl();
 
-        // Start uptime counter
-        m_uptime = 0;
-        m_internal_config.setKey(START_DATE_KEY, DateTime::now().str());
-        m_uptime_timer.start(std::chrono::seconds(1u));
+        // Load validator
+        ret = m_messages_validator.load(m_stack_config.jsonSchemasPath());
+        if (ret)
+        {
 
-        // Allocate resources
-        m_ws_server  = std::unique_ptr<ocpp::websockets::IWebsocketServer>(ocpp::websockets::WebsocketFactory::newServer());
-        m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
-        m_rpc_server->registerServerListener(*this);
+            // Start uptime counter
+            m_uptime = 0;
+            m_internal_config.setKey(START_DATE_KEY, DateTime::now().str());
+            m_uptime_timer.start(std::chrono::seconds(1u));
 
-        // Configure websocket link
-        ocpp::websockets::IWebsocketServer::Credentials credentials;
-        credentials.http_basic_authent                        = m_stack_config.httpBasicAuthent();
-        credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
-        credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
-        credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
-        credentials.server_certificate                        = m_stack_config.tlsServerCertificate();
-        credentials.server_certificate_private_key            = m_stack_config.tlsServerCertificatePrivateKey();
-        credentials.server_certificate_private_key_passphrase = m_stack_config.tlsServerCertificatePrivateKeyPassphrase();
-        credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
-        credentials.client_certificate_authent                = m_stack_config.tlsClientCertificateAuthent();
-        credentials.encoded_pem_certificates                  = false;
+            // Allocate resources
+            m_ws_server  = std::unique_ptr<ocpp::websockets::IWebsocketServer>(ocpp::websockets::WebsocketFactory::newServer());
+            m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
+            m_rpc_server->registerServerListener(*this);
 
-        // Start listening
-        ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
+            // Configure websocket link
+            ocpp::websockets::IWebsocketServer::Credentials credentials;
+            credentials.http_basic_authent                        = m_stack_config.httpBasicAuthent();
+            credentials.tls12_cipher_list                         = m_stack_config.tlsv12CipherList();
+            credentials.tls13_cipher_list                         = m_stack_config.tlsv13CipherList();
+            credentials.ecdh_curve                                = m_stack_config.tlsEcdhCurve();
+            credentials.server_certificate                        = m_stack_config.tlsServerCertificate();
+            credentials.server_certificate_private_key            = m_stack_config.tlsServerCertificatePrivateKey();
+            credentials.server_certificate_private_key_passphrase = m_stack_config.tlsServerCertificatePrivateKeyPassphrase();
+            credentials.server_certificate_ca                     = m_stack_config.tlsServerCertificateCa();
+            credentials.client_certificate_authent                = m_stack_config.tlsClientCertificateAuthent();
+            credentials.encoded_pem_certificates                  = false;
+
+            // Start listening
+            ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
+        }
+        else
+        {
+            LOG_ERROR << "Unable to load all the messages validators";
+        }
     }
     else
     {
@@ -252,11 +263,10 @@ void LocalController::rpcClientConnected(const std::string& chargepoint_id, std:
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
 
     // Instanciate proxys
-    CentralSystemProxy* centralsystem =
-        new CentralSystemProxy(chargepoint_id, m_stack_config.jsonSchemasPath(), m_messages_converter, m_stack_config);
+    CentralSystemProxy* centralsystem = new CentralSystemProxy(chargepoint_id, m_messages_validator, m_messages_converter, m_stack_config);
     std::shared_ptr<IChargePointProxy> chargepoint(new ChargePointProxy(chargepoint_id,
                                                                         client,
-                                                                        m_stack_config.jsonSchemasPath(),
+                                                                        m_messages_validator,
                                                                         m_messages_converter,
                                                                         m_stack_config,
                                                                         std::shared_ptr<ICentralSystemProxy>(centralsystem)));

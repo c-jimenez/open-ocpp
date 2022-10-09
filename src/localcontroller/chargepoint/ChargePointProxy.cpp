@@ -31,14 +31,14 @@ namespace localcontroller
 /** @brief Constructor */
 ChargePointProxy::ChargePointProxy(const std::string&                            identifier,
                                    std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                                   const std::string&                            schemas_path,
+                                   const ocpp::messages::MessagesValidator&      messages_validator,
                                    ocpp::messages::MessagesConverter&            messages_converter,
                                    const ocpp::config::ILocalControllerConfig&   stack_config,
                                    std::shared_ptr<ICentralSystemProxy>          central_system)
     : m_identifier(identifier),
       m_rpc(rpc),
-      m_msg_dispatcher(schemas_path),
-      m_msg_sender(*m_rpc, messages_converter, stack_config.callRequestTimeout()),
+      m_msg_dispatcher(messages_validator),
+      m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_central_system(central_system),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher, *central_system.get()),
       m_listener(nullptr)

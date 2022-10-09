@@ -24,6 +24,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointProxy.h"
 #include "Logger.h"
 #include "MessageDispatcher.h"
+#include "MessagesValidator.h"
 #include "RpcServer.h"
 
 namespace ocpp
@@ -43,14 +44,14 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
      * @brief Constructor
      * @param identifier Charge point's identifier
      * @param rpc RPC connection with the charge point
-     * @param schemas_path Path to the JSON schemas needed to validate payloads
+     * @param messages_validator JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
      * @param central_system Proxy to forward requests to the central system
      */
     ChargePointProxy(const std::string&                            identifier,
                      std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                     const std::string&                            schemas_path,
+                     const ocpp::messages::MessagesValidator&      messages_validator,
                      ocpp::messages::MessagesConverter&            messages_converter,
                      const ocpp::config::ILocalControllerConfig&   stack_config,
                      std::shared_ptr<ICentralSystemProxy>          central_system);

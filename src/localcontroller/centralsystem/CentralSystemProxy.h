@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "ICentralSystemProxy.h"
 #include "MessageDispatcher.h"
+#include "MessagesValidator.h"
 #include "RpcClient.h"
 
 namespace ocpp
@@ -45,12 +46,12 @@ class CentralSystemProxy : public ICentralSystemProxy,
     /**
      * @brief Constructor
      * @param identifier Charge point's identifier
-     * @param schemas_path Path to the JSON schemas needed to validate payloads
+     * @param messages_validator JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
      */
     CentralSystemProxy(const std::string&                          identifier,
-                       const std::string&                          schemas_path,
+                       const ocpp::messages::MessagesValidator&    messages_validator,
                        ocpp::messages::MessagesConverter&          messages_converter,
                        const ocpp::config::ILocalControllerConfig& stack_config);
 

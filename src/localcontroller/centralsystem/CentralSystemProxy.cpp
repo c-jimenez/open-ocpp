@@ -32,15 +32,15 @@ namespace localcontroller
 
 /** @brief Constructor */
 CentralSystemProxy::CentralSystemProxy(const std::string&                          identifier,
-                                       const std::string&                          schemas_path,
+                                       const ocpp::messages::MessagesValidator&    messages_validator,
                                        ocpp::messages::MessagesConverter&          messages_converter,
                                        const ocpp::config::ILocalControllerConfig& stack_config)
     : m_identifier(identifier),
       m_stack_config(stack_config),
       m_websocket(ocpp::websockets::WebsocketFactory::newClient()),
       m_rpc(*m_websocket, "ocpp1.6"),
-      m_msg_dispatcher(schemas_path),
-      m_msg_sender(m_rpc, messages_converter, stack_config.callRequestTimeout()),
+      m_msg_dispatcher(messages_validator),
+      m_msg_sender(m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher),
       m_listener(nullptr)
 {

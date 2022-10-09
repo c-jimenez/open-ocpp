@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ILocalController.h"
 #include "InternalConfigManager.h"
 #include "MessagesConverter.h"
+#include "MessagesValidator.h"
 #include "RpcServer.h"
 #include "Timer.h"
 
@@ -95,6 +96,8 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
+    /** @brief Messages validator */
+    ocpp::messages::MessagesValidator m_messages_validator;
 
     /** @brief Websocket server */
     std::unique_ptr<ocpp::websockets::IWebsocketServer> m_ws_server;
