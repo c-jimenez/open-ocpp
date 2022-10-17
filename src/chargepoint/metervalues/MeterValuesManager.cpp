@@ -431,7 +431,9 @@ void MeterValuesManager::sendMeterValues(unsigned int                           
 std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>> MeterValuesManager::computeMeasurandList(
     const std::string& meter_values, const unsigned int max_count)
 {
-    std::vector<std::string> measurands = ocpp::helpers::split(meter_values, ',');
+    std::string trimmed_meter_values(meter_values);
+    ocpp::helpers::replace(trimmed_meter_values, " ", "");
+    std::vector<std::string> measurands = ocpp::helpers::split(trimmed_meter_values, ',');
     if (measurands.size() > max_count)
     {
         measurands.resize(max_count);
