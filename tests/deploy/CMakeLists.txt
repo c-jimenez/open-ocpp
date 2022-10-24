@@ -34,7 +34,7 @@ target_link_libraries(test_install_dynamic
             OpenSSL::Crypto
             sqlite3
             pthread
-            stdc++fs
+            
 )
 add_test(
   NAME test_install_dynamic
@@ -53,7 +53,7 @@ target_link_libraries(PkgConfig::PKG_OPEN_OCPP_STATIC INTERFACE
             OpenSSL::Crypto
             sqlite3
             pthread
-            stdc++fs)
+            )
 add_test(
   NAME test_install_static
   COMMAND test_install_static
