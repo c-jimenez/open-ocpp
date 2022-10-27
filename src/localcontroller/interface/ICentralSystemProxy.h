@@ -21,20 +21,47 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Authorize.h"
 #include "BootNotification.h"
+#include "CancelReservation.h"
+#include "CertificateSigned.h"
+#include "ChangeAvailability.h"
+#include "ChangeConfiguration.h"
+#include "ClearCache.h"
+#include "ClearChargingProfile.h"
 #include "DataTransfer.h"
+#include "DeleteCertificate.h"
 #include "DiagnosticsStatusNotification.h"
+#include "ExtendedTriggerMessage.h"
 #include "FirmwareStatusNotification.h"
+#include "GetCompositeSchedule.h"
+#include "GetConfiguration.h"
+#include "GetDiagnostics.h"
+#include "GetInstalledCertificateIds.h"
+#include "GetLocalListVersion.h"
+#include "GetLog.h"
 #include "Heartbeat.h"
 #include "ILocalControllerProxyEventsHandler.h"
 #include "IWebsocketClient.h"
+#include "InstallCertificate.h"
 #include "LogStatusNotification.h"
 #include "MeterValues.h"
+#include "RemoteStartTransaction.h"
+#include "RemoteStopTransaction.h"
+#include "ReserveNow.h"
+#include "Reset.h"
 #include "SecurityEventNotification.h"
+#include "SendLocalList.h"
+#include "SetChargingProfile.h"
 #include "SignCertificate.h"
 #include "SignedFirmwareStatusNotification.h"
+#include "SignedUpdateFirmware.h"
 #include "StartTransaction.h"
 #include "StatusNotification.h"
 #include "StopTransaction.h"
+#include "TriggerMessage.h"
+#include "UnlockConnector.h"
+#include "UpdateFirmware.h"
+
+#include <functional>
 
 namespace ocpp
 {
@@ -267,6 +294,248 @@ class ICentralSystemProxy
                       ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
                       std::string&                                               error,
                       std::string&                                               message) = 0;
+
+    /**
+     * @brief Register a handler for the CancelReservation request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the ChangeAvailability request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the ChangeConfiguration request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the ClearCache request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, const char*&, std::string&)> handler) = 0;
+
+    /**
+     * @brief Register a handler for the ClearChargingProfile request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the DataTransfer request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetCompositeSchedule request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetConfiguration request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetDiagnostics request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetLocalListVersion request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the RemoteStartTransaction request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the RemoteStopTransaction request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the ReserveNow request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, const char*&, std::string&)> handler) = 0;
+
+    /**
+     * @brief Register a handler for the Reset request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, const char*&, std::string&)> handler) = 0;
+
+    /**
+     * @brief Register a handler for the SendLocalList request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the SetChargingProfile request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the TriggerMessage request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the UnlockConnector request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the UpdateFirmware request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the CertificateSigned request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the DeleteCertificate request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the ExtendedTriggerMessage request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetInstalledCertificateIds request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&,
+                                                    ocpp::messages::GetInstalledCertificateIdsConf&,
+                                                    const char*&,
+                                                    std::string&)> handler) = 0;
+
+    /**
+     * @brief Register a handler for the GetLog request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, const char*&, std::string&)> handler) = 0;
+
+    /**
+     * @brief Register a handler for the InstallCertificate request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, const char*&, std::string&)>
+            handler) = 0;
+
+    /**
+     * @brief Register a handler for the SignedUpdateFirmware request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, const char*&, std::string&)>
+            handler) = 0;
 };
 
 } // namespace localcontroller

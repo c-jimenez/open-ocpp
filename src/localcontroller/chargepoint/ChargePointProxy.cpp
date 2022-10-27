@@ -37,11 +37,13 @@ ChargePointProxy::ChargePointProxy(const std::string&                           
                                    std::shared_ptr<ICentralSystemProxy>          central_system)
     : m_identifier(identifier),
       m_rpc(rpc),
+      m_messages_converter(messages_converter),
       m_msg_dispatcher(messages_validator),
       m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_central_system(central_system),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher, *central_system.get()),
-      m_listener(nullptr)
+      m_listener(nullptr),
+      m_user_handlers()
 {
     m_rpc->registerSpy(*this);
     m_rpc->registerListener(*this);
@@ -399,6 +401,139 @@ bool ChargePointProxy::call(const ocpp::messages::SignedUpdateFirmwareReq& reque
 {
     return call(SIGNED_UPDATE_FIRMWARE_ACTION, request, response, error, message);
 }
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, const char*&, std::string&)> handler)
+{
+    return registerHandler(AUTHORIZE_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(BOOT_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(DATA_TRANSFER_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&, 
+                                         ocpp::messages::DiagnosticsStatusNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
+                                                          ocpp::messages::DiagnosticsStatusNotificationConf&,
+                                                          const char*&,
+                                                          std::string&)> handler)
+{
+    return registerHandler(DIAGNOSTIC_STATUS_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&, 
+                                         ocpp::messages::FirmwareStatusNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::FirmwareStatusNotificationReq&, ocpp::messages::FirmwareStatusNotificationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(FIRMWARE_STATUS_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, const char*&, std::string&)> handler)
+{
+    return registerHandler(HEARTBEAT_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, const char*&, std::string&)> handler)
+{
+    return registerHandler(METER_VALUES_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(START_TRANSACTION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(STATUS_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(STOP_TRANSACTION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(LOG_STATUS_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&, 
+                                         ocpp::messages::SecurityEventNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::SecurityEventNotificationReq&, ocpp::messages::SecurityEventNotificationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(SECURITY_EVENT_NOTIFICATION_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(
+    std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(SIGN_CERTIFICATE_ACTION, handler);
+}
+
+/** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&, 
+                                         ocpp::messages::SignedFirmwareStatusNotificationConf&, const char*&, std::string&)>) */
+bool ChargePointProxy::registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
+                                                          ocpp::messages::SignedFirmwareStatusNotificationConf&,
+                                                          const char*&,
+                                                          std::string&)> handler)
+{
+    return registerHandler(SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, handler);
+}
+
 // IRpc::IListener interface
 
 /** @copydoc void IRpc::IListener::rpcDisconnected() */

@@ -61,7 +61,7 @@ void DefaultLocalControllerEventsHandler::chargePointConnected(std::shared_ptr<o
         credentials.allow_expired_certificates    = true;
         credentials.allow_selfsigned_certificates = true;
         credentials.skip_server_name_check        = true;
-        chargepoint->centralSystemProxy()->connect("ws://127.0.0.1:8081/openocpp/", credentials);
+        chargepoint->centralSystemProxy()->connect("wss://127.0.0.1:8081/ocpp/", credentials);
     }
     else
     {

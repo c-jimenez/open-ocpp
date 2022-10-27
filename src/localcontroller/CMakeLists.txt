@@ -18,7 +18,8 @@ add_library(localcontroller OBJECT
 target_include_directories(localcontroller PUBLIC interface)
 
 # Private includes
-target_include_directories(localcontroller PRIVATE centralsystem
+target_include_directories(localcontroller PRIVATE .
+                                                   centralsystem
                                                    chargepoint
                                                    config)
 

@@ -39,10 +39,12 @@ CentralSystemProxy::CentralSystemProxy(const std::string&                       
       m_stack_config(stack_config),
       m_websocket(ocpp::websockets::WebsocketFactory::newClient()),
       m_rpc(*m_websocket, "ocpp1.6"),
+      m_messages_converter(messages_converter),
       m_msg_dispatcher(messages_validator),
       m_msg_sender(m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher),
-      m_listener(nullptr)
+      m_listener(nullptr),
+      m_user_handlers()
 {
     m_rpc.registerSpy(*this);
     m_rpc.registerListener(*this);
@@ -265,6 +267,245 @@ bool CentralSystemProxy::call(const ocpp::messages::SignedFirmwareStatusNotifica
                               std::string&                                               message)
 {
     return call(SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, request, response, error, message);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(CANCEL_RESERVATION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(CHANGE_AVAILABILITY_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(CHANGE_CONFIGURATION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(CLEAR_CACHE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(CLEAR_CHARGING_PROFILE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(DATA_TRANSFER_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(GET_COMPOSITE_SCHEDULE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(GET_CONFIGURATION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(GET_DIAGNOSTICS_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(GET_LOCAL_LIST_VERSION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(REMOTE_START_TRANSACTION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(REMOTE_STOP_TRANSACTION_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(RESERVE_NOW_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, const char*&, std::string&)> handler)
+{
+    return registerHandler(RESET_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(SEND_LOCAL_LIST_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(SET_CHARGING_PROFILE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(TRIGGER_MESSAGE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(UNLOCK_CONNECTOR_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(UPDATE_FIRMWARE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(CERTIFICATE_SIGNED_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(DELETE_CERTIFICATE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(EXTENDED_TRIGGER_MESSAGE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&, ocpp::messages::GetInstalledCertificateIdsConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::GetInstalledCertificateIdsReq&, ocpp::messages::GetInstalledCertificateIdsConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(GET_INSTALLED_CERTIFICATE_IDS_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, const char*&, std::string&)> handler)
+{
+    return registerHandler(GET_LOG_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, const char*&, std::string&)>
+        handler)
+{
+    return registerHandler(INSTALL_CERTIFICATE_ACTION, handler);
+}
+
+/** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, const char*&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(
+    std::function<bool(
+        const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, const char*&, std::string&)> handler)
+
+{
+    return registerHandler(SIGNED_UPDATE_FIRMWARE_ACTION, handler);
 }
 
 // IRpc::IListener interface

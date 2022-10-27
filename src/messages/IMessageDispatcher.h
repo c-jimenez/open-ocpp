@@ -42,9 +42,10 @@ class IMessageDispatcher
      * @brief Register a message handler for a specific action
      * @param action Action
      * @param handler Message handler
-     * @return false if a handler is already regstered for this action, true otherwise
+     * @param allow_replace Indicate if the replacement of an already registered is allowed
+     * @return false if a handler is already registered for this action, true otherwise
      */
-    virtual bool registerHandler(const std::string& action, IMessageHandler& handler) = 0;
+    virtual bool registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace = false) = 0;
 
     /**
      * @brief Dispatch a received action to the registered handler

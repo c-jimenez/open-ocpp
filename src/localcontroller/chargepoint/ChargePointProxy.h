@@ -26,6 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessageDispatcher.h"
 #include "MessagesValidator.h"
 #include "RpcServer.h"
+#include "UserMessageHandler.h"
 
 namespace ocpp
 {
@@ -320,6 +321,100 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
               std::string&                                   error,
               std::string&                                   message) override;
 
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, const char*&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, const char*&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&, 
+                                         ocpp::messages::DiagnosticsStatusNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
+                                            ocpp::messages::DiagnosticsStatusNotificationConf&,
+                                            const char*&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&, 
+                                         ocpp::messages::FirmwareStatusNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
+                                            ocpp::messages::FirmwareStatusNotificationConf&,
+                                            const char*&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, const char*&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, const char*&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, const char*&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, const char*&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, const char*&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, const char*&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&, 
+                                         ocpp::messages::SecurityEventNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
+                                            ocpp::messages::SecurityEventNotificationConf&,
+                                            const char*&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, const char*&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, const char*&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&, 
+                                         ocpp::messages::SignedFirmwareStatusNotificationConf&, const char*&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
+                                            ocpp::messages::SignedFirmwareStatusNotificationConf&,
+                                            const char*&,
+                                            std::string&)> handler) override;
+
     // IRpc::IListener interface
 
     /** @copydoc void IRpc::IListener::rpcDisconnected() */
@@ -352,6 +447,8 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
     std::string m_identifier;
     /** @brief RPC connection */
     std::shared_ptr<ocpp::rpc::RpcServer::Client> m_rpc;
+    /** @brief Messages converter */
+    ocpp::messages::MessagesConverter& m_messages_converter;
     /** @brief Message dispatcher */
     ocpp::messages::MessageDispatcher m_msg_dispatcher;
     /** @brief Message sender */
@@ -362,6 +459,8 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
     ChargePointHandler m_handler;
     /** @brief Listener to the proxy events */
     ILocalControllerProxyEventsHandler* m_listener;
+    /** @brief User message handlers */
+    std::vector<std::shared_ptr<ocpp::messages::IMessageDispatcher::IMessageHandler>> m_user_handlers;
 
     /**
      * @brief Execute a call request
@@ -388,6 +487,22 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
         }
 
         return ret;
+    }
+
+    /**
+     * @brief Register a user handler for an incoming request
+     * @param action RPC action for the request
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    template <typename RequestType, typename ResponseType>
+    bool registerHandler(const std::string&                                                                 action,
+                         std::function<bool(const RequestType&, ResponseType&, const char*&, std::string&)> handler)
+    {
+        UserMessageHandler<RequestType, ResponseType>* msg_handler =
+            new UserMessageHandler<RequestType, ResponseType>(action, m_messages_converter, handler);
+        m_user_handlers.push_back(std::shared_ptr<ocpp::messages::IMessageDispatcher::IMessageHandler>(msg_handler));
+        return m_msg_dispatcher.registerHandler(action, *msg_handler, true);
     }
 };
 
