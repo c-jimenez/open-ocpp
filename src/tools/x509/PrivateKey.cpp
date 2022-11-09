@@ -28,6 +28,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+#if (OPENSSL_VERSION_NUMBER >= 0x30000000L)
+// OpenSSL 3.x
+#include <openssl/core_names.h>
+#endif // OPENSSL_VERSION_NUMBER
 
 namespace ocpp
 {
@@ -255,9 +259,19 @@ void PrivateKey::readKeySizeAlgo(void* pevp_pk)
     m_algo           = OBJ_nid2sn(key_type_nid);
     if (key_base_id == EVP_PKEY_EC)
     {
-        EC_KEY*         ec_key = EVP_PKEY_get0_EC_KEY(pkey);
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
+        // OpenSSL 1.1.1.x
+        const EC_KEY*   ec_key = EVP_PKEY_get0_EC_KEY(pkey);
         const EC_GROUP* group  = EC_KEY_get0_group(ec_key);
         m_algo_param           = OBJ_nid2sn(EC_GROUP_get_curve_name(group));
+#else
+        // OpenSSL 3.x
+        char   curve_name[64];
+        size_t len = 0;
+        EVP_PKEY_get_utf8_string_param(pkey, OSSL_PKEY_PARAM_GROUP_NAME, curve_name, sizeof(curve_name), &len);
+        curve_name[sizeof(curve_name) - 1u] = 0;
+        m_algo_param                        = curve_name;
+#endif // OPENSSL_VERSION_NUMBER
     }
 }
 
