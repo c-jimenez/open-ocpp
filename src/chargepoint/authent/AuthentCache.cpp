@@ -57,12 +57,12 @@ AuthentCache::~AuthentCache() { }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool AuthentCache::handleMessage(const ocpp::messages::ClearCacheReq& request,
                                  ocpp::messages::ClearCacheConf&      response,
-                                 const char*&                         error_code,
+                                 std::string&                         error_code,
                                  std::string&                         error_message)
 {
     (void)request;

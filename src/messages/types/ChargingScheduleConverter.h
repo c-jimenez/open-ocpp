@@ -33,11 +33,11 @@ class ChargingScheduleConverter : public IMessageConverter<ocpp::types::Charging
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::ChargingSchedule&,
-     *                                                                    const char*&,
+     *                                                                    std::string&,
      *                                                                    std::string&) */
     bool fromJson(const rapidjson::Value&        json,
                   ocpp::types::ChargingSchedule& data,
-                  const char*&                   error_code,
+                  std::string&                   error_code,
                   std::string&                   error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::toJson(const ocpp::types::ChargingSchedule&,

@@ -39,8 +39,8 @@ const EnumToStringFromString<LogStatusEnumType> LogStatusEnumTypeHelper = {{LogS
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool GetLogReqConverter::fromJson(const rapidjson::Value& json, GetLogReq& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool GetLogReqConverter::fromJson(const rapidjson::Value& json, GetLogReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret;
     data.logType = LogEnumTypeHelper.fromString(json["logType"].GetString());
@@ -61,7 +61,7 @@ bool GetLogReqConverter::fromJson(const rapidjson::Value& json, GetLogReq& data,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetLogReqConverter::toJson(const GetLogReq& data, rapidjson::Document& json)
 {
     fill(json, "logType", LogEnumTypeHelper.toString(data.logType));
@@ -78,8 +78,8 @@ bool GetLogReqConverter::toJson(const GetLogReq& data, rapidjson::Document& json
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& data, std::string& error_code, std::string& error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -88,7 +88,7 @@ bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& dat
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetLogConfConverter::toJson(const GetLogConf& data, rapidjson::Document& json)
 {
     fill(json, "status", LogStatusEnumTypeHelper.toString(data.status));

@@ -33,11 +33,11 @@ class AuthorizationDataConverter : public IMessageConverter<ocpp::types::Authori
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::AuthorizationData&,
-     *                                                                    const char*&,
+     *                                                                    std::string&,
      *                                                                    std::string&) */
     bool fromJson(const rapidjson::Value&         json,
                   ocpp::types::AuthorizationData& data,
-                  const char*&                    error_code,
+                  std::string&                    error_code,
                   std::string&                    error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::toJson(const ocpp::types::AuthorizationData&,

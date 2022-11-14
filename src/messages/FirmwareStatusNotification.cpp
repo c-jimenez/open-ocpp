@@ -40,10 +40,10 @@ const EnumToStringFromString<FirmwareStatus> FirmwareStatusHelper = {{FirmwareSt
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool FirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&        json,
                                                       FirmwareStatusNotificationReq& data,
-                                                      const char*&                   error_code,
+                                                      std::string&                   error_code,
                                                       std::string&                   error_message)
 {
     (void)error_code;
@@ -52,17 +52,17 @@ bool FirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&   
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool FirmwareStatusNotificationReqConverter::toJson(const FirmwareStatusNotificationReq& data, rapidjson::Document& json)
 {
     fill(json, "status", FirmwareStatusHelper.toString(data.status));
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool FirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&         json,
                                                        FirmwareStatusNotificationConf& data,
-                                                       const char*&                    error_code,
+                                                       std::string&                    error_code,
                                                        std::string&                    error_message)
 {
     (void)json;
@@ -72,7 +72,7 @@ bool FirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&  
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool FirmwareStatusNotificationConfConverter::toJson(const FirmwareStatusNotificationConf& data, rapidjson::Document& json)
 {
     (void)json;

@@ -76,12 +76,12 @@ AuthentLocalList::~AuthentLocalList() { }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool AuthentLocalList::handleMessage(const ocpp::messages::GetLocalListVersionReq& request,
                                      ocpp::messages::GetLocalListVersionConf&      response,
-                                     const char*&                                  error_code,
+                                     std::string&                                  error_code,
                                      std::string&                                  error_message)
 {
     (void)request;
@@ -105,12 +105,12 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::GetLocalListVersionRe
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& request,
                                      ocpp::messages::SendLocalListConf&      response,
-                                     const char*&                            error_code,
+                                     std::string&                            error_code,
                                      std::string&                            error_message)
 {
     (void)request;

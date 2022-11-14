@@ -33,11 +33,11 @@ class MeterValueConverter : public IMessageConverter<ocpp::types::MeterValue>
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::MeterValue&,
-     *                                                                    const char*&,
+     *                                                                    std::string&,
      *                                                                    std::string&) */
     bool fromJson(const rapidjson::Value&  json,
                   ocpp::types::MeterValue& data,
-                  const char*&             error_code,
+                  std::string&             error_code,
                   std::string&             error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::toJson(const ocpp::types::MeterValue&,

@@ -386,7 +386,7 @@ void RpcBase::rxThread()
         // Notify call
         rapidjson::Document response;
         std::string         error;
-        const char*         error_code = nullptr;
+        std::string         error_code;
         response.Parse("{}");
         if (m_rpc_listener->rpcCallReceived(rpc_message->action, rpc_message->payload, response, error_code, error))
         {
@@ -409,11 +409,11 @@ void RpcBase::rxThread()
         else
         {
             // Error
-            if (!error_code)
+            if (error_code.empty())
             {
                 error_code = RPC_ERROR_GENERIC;
             }
-            sendCallError(rpc_message->unique_id, error_code, error);
+            sendCallError(rpc_message->unique_id, error_code.c_str(), error);
         }
 
         // Free resources

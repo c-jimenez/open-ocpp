@@ -93,12 +93,12 @@ ChargePointHandler::~ChargePointHandler() { }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& request,
                                        ocpp::messages::AuthorizeConf&      response,
-                                       const char*&                        error_code,
+                                       std::string&                        error_code,
                                        std::string&                        error_message)
 {
     return forward(AUTHORIZE_ACTION, request, response, error_code, error_message);
@@ -106,12 +106,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& reque
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq& request,
                                        ocpp::messages::BootNotificationConf&      response,
-                                       const char*&                               error_code,
+                                       std::string&                               error_code,
                                        std::string&                               error_message)
 {
     return forward(BOOT_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -119,12 +119,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& request,
                                        ocpp::messages::DataTransferConf&      response,
-                                       const char*&                           error_code,
+                                       std::string&                           error_code,
                                        std::string&                           error_message)
 {
     return forward(DATA_TRANSFER_ACTION, request, response, error_code, error_message);
@@ -132,12 +132,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& re
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNotificationReq& request,
                                        ocpp::messages::DiagnosticsStatusNotificationConf&      response,
-                                       const char*&                                            error_code,
+                                       std::string&                                            error_code,
                                        std::string&                                            error_message)
 {
     return forward(DIAGNOSTIC_STATUS_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -145,12 +145,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNo
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotificationReq& request,
                                        ocpp::messages::FirmwareStatusNotificationConf&      response,
-                                       const char*&                                         error_code,
+                                       std::string&                                         error_code,
                                        std::string&                                         error_message)
 {
     return forward(FIRMWARE_STATUS_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -158,12 +158,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotif
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& request,
                                        ocpp::messages::HeartbeatConf&      response,
-                                       const char*&                        error_code,
+                                       std::string&                        error_code,
                                        std::string&                        error_message)
 {
     return forward(HEARTBEAT_ACTION, request, response, error_code, error_message);
@@ -171,12 +171,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& reque
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& request,
                                        ocpp::messages::MeterValuesConf&      response,
-                                       const char*&                          error_code,
+                                       std::string&                          error_code,
                                        std::string&                          error_message)
 {
     return forward(METER_VALUES_ACTION, request, response, error_code, error_message);
@@ -184,12 +184,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& req
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq& request,
                                        ocpp::messages::StartTransactionConf&      response,
-                                       const char*&                               error_code,
+                                       std::string&                               error_code,
                                        std::string&                               error_message)
 {
     return forward(START_TRANSACTION_ACTION, request, response, error_code, error_message);
@@ -197,12 +197,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationReq& request,
                                        ocpp::messages::StatusNotificationConf&      response,
-                                       const char*&                                 error_code,
+                                       std::string&                                 error_code,
                                        std::string&                                 error_message)
 {
     return forward(STATUS_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -210,12 +210,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationR
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq& request,
                                        ocpp::messages::StopTransactionConf&      response,
-                                       const char*&                              error_code,
+                                       std::string&                              error_code,
                                        std::string&                              error_message)
 {
     return forward(STOP_TRANSACTION_ACTION, request, response, error_code, error_message);
@@ -225,12 +225,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq&
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificationReq& request,
                                        ocpp::messages::LogStatusNotificationConf&      response,
-                                       const char*&                                    error_code,
+                                       std::string&                                    error_code,
                                        std::string&                                    error_message)
 {
     return forward(LOG_STATUS_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -238,12 +238,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificati
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotificationReq& request,
                                        ocpp::messages::SecurityEventNotificationConf&      response,
-                                       const char*&                                        error_code,
+                                       std::string&                                        error_code,
                                        std::string&                                        error_message)
 {
     return forward(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, error_code, error_message);
@@ -251,12 +251,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotifi
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq& request,
                                        ocpp::messages::SignCertificateConf&      response,
-                                       const char*&                              error_code,
+                                       std::string&                              error_code,
                                        std::string&                              error_message)
 {
     return forward(SIGN_CERTIFICATE_ACTION, request, response, error_code, error_message);
@@ -264,12 +264,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq&
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
                                        ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
-                                       const char*&                                               error_code,
+                                       std::string&                                               error_code,
                                        std::string&                                               error_message)
 {
     return forward(SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, request, response, error_code, error_message);

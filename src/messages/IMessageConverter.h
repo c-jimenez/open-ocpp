@@ -45,7 +45,7 @@ class IMessageConverter
      * @param error_message Error message in case of invalid input
      * @return true the object has been converted, false otherwise
      */
-    virtual bool fromJson(const rapidjson::Value& json, DataType& data, const char*& error_code, std::string& error_message) = 0;
+    virtual bool fromJson(const rapidjson::Value& json, DataType& data, std::string& error_code, std::string& error_message) = 0;
 
     /**
      * @brief Convert a C++ data type to a JSON object
@@ -273,7 +273,7 @@ class IMessageConverter
     class MessageType##ReqConverter : public IMessageConverter<MessageType##Req>                                                           \
     {                                                                                                                                      \
       public:                                                                                                                              \
-        bool fromJson(const rapidjson::Value& json, MessageType##Req& data, const char*& error_code, std::string& error_message) override; \
+        bool fromJson(const rapidjson::Value& json, MessageType##Req& data, std::string& error_code, std::string& error_message) override; \
         bool toJson(const MessageType##Req& data, rapidjson::Document& json) override;                                                     \
     };                                                                                                                                     \
     class MessageType##ConfConverter : public IMessageConverter<MessageType##Conf>                                                         \
@@ -281,7 +281,7 @@ class IMessageConverter
       public:                                                                                                                              \
         bool fromJson(const rapidjson::Value& json,                                                                                        \
                       MessageType##Conf&      data,                                                                                        \
-                      const char*&            error_code,                                                                                  \
+                      std::string&            error_code,                                                                                  \
                       std::string&            error_message) override;                                                                                \
         bool toJson(const MessageType##Conf& data, rapidjson::Document& json) override;                                                    \
     };

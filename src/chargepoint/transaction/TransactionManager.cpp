@@ -260,12 +260,12 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
 bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
                                        ocpp::messages::RemoteStartTransactionConf&      response,
-                                       const char*&                                     error_code,
+                                       std::string&                                     error_code,
                                        std::string&                                     error_message)
 {
     (void)error_code;
@@ -314,12 +314,12 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool TransactionManager::handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
                                        ocpp::messages::RemoteStopTransactionConf&      response,
-                                       const char*&                                    error_code,
+                                       std::string&                                    error_code,
                                        std::string&                                    error_message)
 {
     (void)error_code;

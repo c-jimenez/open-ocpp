@@ -93,22 +93,22 @@ class TransactionManager
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
                        ocpp::messages::RemoteStartTransactionConf&      response,
-                       const char*&                                     error_code,
+                       std::string&                                     error_code,
                        std::string&                                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
                        ocpp::messages::RemoteStopTransactionConf&      response,
-                       const char*&                                    error_code,
+                       std::string&                                    error_code,
                        std::string&                                    error_message) override;
 
   private:

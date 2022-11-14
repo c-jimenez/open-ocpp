@@ -443,7 +443,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the BootNotification request
@@ -451,7 +451,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -460,7 +460,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -470,7 +470,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
                                                     ocpp::messages::DiagnosticsStatusNotificationConf&,
-                                                    const char*&,
+                                                    std::string&,
                                                     std::string&)> handler) = 0;
 
     /**
@@ -480,7 +480,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
                                                     ocpp::messages::FirmwareStatusNotificationConf&,
-                                                    const char*&,
+                                                    std::string&,
                                                     std::string&)> handler) = 0;
 
     /**
@@ -489,7 +489,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the MeterValues request
@@ -497,7 +497,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -506,7 +506,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -516,7 +516,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -525,7 +525,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -535,7 +535,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -545,7 +545,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
                                                     ocpp::messages::SecurityEventNotificationConf&,
-                                                    const char*&,
+                                                    std::string&,
                                                     std::string&)> handler) = 0;
 
     /**
@@ -554,7 +554,7 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -564,7 +564,7 @@ class IChargePointProxy
      */
     virtual bool registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
                                                     ocpp::messages::SignedFirmwareStatusNotificationConf&,
-                                                    const char*&,
+                                                    std::string&,
                                                     std::string&)> handler) = 0;
 };
 

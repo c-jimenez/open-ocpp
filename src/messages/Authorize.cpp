@@ -36,8 +36,8 @@ const EnumToStringFromString<AuthorizationStatus> AuthorizationStatusHelper = {{
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool AuthorizeReqConverter::fromJson(const rapidjson::Value& json, AuthorizeReq& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool AuthorizeReqConverter::fromJson(const rapidjson::Value& json, AuthorizeReq& data, std::string& error_code, std::string& error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -45,17 +45,17 @@ bool AuthorizeReqConverter::fromJson(const rapidjson::Value& json, AuthorizeReq&
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool AuthorizeReqConverter::toJson(const AuthorizeReq& data, rapidjson::Document& json)
 {
     fill(json, "idTag", data.idTag);
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool AuthorizeConfConverter::fromJson(const rapidjson::Value& json,
                                       AuthorizeConf&          data,
-                                      const char*&            error_code,
+                                      std::string&            error_code,
                                       std::string&            error_message)
 {
     IdTagInfoConverter id_tag_info_converter;
@@ -63,7 +63,7 @@ bool AuthorizeConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Document& json)
 {
     IdTagInfoConverter id_tag_info_converter;

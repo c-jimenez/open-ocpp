@@ -26,10 +26,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SecurityEventNotificationReqConverter::fromJson(const rapidjson::Value&       json,
                                                      SecurityEventNotificationReq& data,
-                                                     const char*&                  error_code,
+                                                     std::string&                  error_code,
                                                      std::string&                  error_message)
 {
     extract(json, "type", data.type);
@@ -42,7 +42,7 @@ bool SecurityEventNotificationReqConverter::fromJson(const rapidjson::Value&    
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SecurityEventNotificationReqConverter::toJson(const SecurityEventNotificationReq& data, rapidjson::Document& json)
 {
     fill(json, "type", data.type);
@@ -51,10 +51,10 @@ bool SecurityEventNotificationReqConverter::toJson(const SecurityEventNotificati
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SecurityEventNotificationConfConverter::fromJson(const rapidjson::Value&        json,
                                                       SecurityEventNotificationConf& data,
-                                                      const char*&                   error_code,
+                                                      std::string&                   error_code,
                                                       std::string&                   error_message)
 {
     (void)json;
@@ -64,7 +64,7 @@ bool SecurityEventNotificationConfConverter::fromJson(const rapidjson::Value&   
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SecurityEventNotificationConfConverter::toJson(const SecurityEventNotificationConf& data, rapidjson::Document& json)
 {
     (void)json;

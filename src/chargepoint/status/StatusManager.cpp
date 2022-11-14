@@ -347,12 +347,12 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
                                   ocpp::messages::ChangeAvailabilityConf&      response,
-                                  const char*&                                 error_code,
+                                  std::string&                                 error_code,
                                   std::string&                                 error_message)
 {
     bool ret = false;

@@ -411,12 +411,12 @@ bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType messa
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& request,
                                     ocpp::messages::CertificateSignedConf&      response,
-                                    const char*&                                error_code,
+                                    std::string&                                error_code,
                                     std::string&                                error_message)
 {
     bool ret                 = true;
@@ -495,12 +495,12 @@ bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& 
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& request,
                                     ocpp::messages::DeleteCertificateConf&      response,
-                                    const char*&                                error_code,
+                                    std::string&                                error_code,
                                     std::string&                                error_message)
 {
     bool ret = true;
@@ -535,12 +535,12 @@ bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& 
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificateIdsReq& request,
                                     ocpp::messages::GetInstalledCertificateIdsConf&      response,
-                                    const char*&                                         error_code,
+                                    std::string&                                         error_code,
                                     std::string&                                         error_message)
 {
     bool ret = true;
@@ -595,12 +595,12 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq& request,
                                     ocpp::messages::InstallCertificateConf&      response,
-                                    const char*&                                 error_code,
+                                    std::string&                                 error_code,
                                     std::string&                                 error_message)
 {
     bool ret = true;

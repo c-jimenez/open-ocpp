@@ -34,7 +34,7 @@ class UserMessageHandler : public ocpp::messages::GenericMessageHandler<RequestT
 {
   public:
     /** @brief Message handler function*/
-    typedef std::function<bool(const RequestType&, ResponseType&, const char*&, std::string&)> HandlerFunc;
+    typedef std::function<bool(const RequestType&, ResponseType&, std::string&, std::string&)> HandlerFunc;
 
     /** @brief Constructor */
     UserMessageHandler(const std::string&                              action,
@@ -51,11 +51,11 @@ class UserMessageHandler : public ocpp::messages::GenericMessageHandler<RequestT
      * @brief Handle an incoming call request
      * @param request Payload of the request
      * @param response Payload of the response
-     * @param error_code Standard error code, set to nullptr if no error
+     * @param error_code Standard error code, empty if no error
      * @param error_msg Additionnal error message, empty if no error
      * @return true if the call is accepted, false otherwise
      */
-    bool handleMessage(const RequestType& request, ResponseType& response, const char*& error_code, std::string& error_message) override
+    bool handleMessage(const RequestType& request, ResponseType& response, std::string& error_code, std::string& error_message) override
     {
         return m_user_handler(request, response, error_code, error_message);
     }

@@ -36,17 +36,17 @@ const EnumToStringFromString<DeleteCertificateStatusEnumType> DeleteCertificateS
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool DeleteCertificateReqConverter::fromJson(const rapidjson::Value& json,
                                              DeleteCertificateReq&   data,
-                                             const char*&            error_code,
+                                             std::string&            error_code,
                                              std::string&            error_message)
 {
     CertificateHashDataTypeConverter certificate_hash_converter;
     return certificate_hash_converter.fromJson(json["certificateHashData"], data.certificateHashData, error_code, error_message);
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool DeleteCertificateReqConverter::toJson(const DeleteCertificateReq& data, rapidjson::Document& json)
 {
     CertificateHashDataTypeConverter certificate_hash_converter;
@@ -58,10 +58,10 @@ bool DeleteCertificateReqConverter::toJson(const DeleteCertificateReq& data, rap
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool DeleteCertificateConfConverter::fromJson(const rapidjson::Value& json,
                                               DeleteCertificateConf&  data,
-                                              const char*&            error_code,
+                                              std::string&            error_code,
                                               std::string&            error_message)
 {
     (void)error_code;
@@ -70,7 +70,7 @@ bool DeleteCertificateConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool DeleteCertificateConfConverter::toJson(const DeleteCertificateConf& data, rapidjson::Document& json)
 {
     fill(json, "status", DeleteCertificateStatusEnumTypeHelper.toString(data.status));

@@ -61,7 +61,7 @@ void DefaultLocalControllerEventsHandler::chargePointConnected(std::shared_ptr<o
         // Specific handling of heartbeat message
         auto heartbeat_handler = [p_chargepoint](const ocpp::messages::HeartbeatReq& request,
                                                  ocpp::messages::HeartbeatConf&      response,
-                                                 const char*&                        error_code,
+                                                 std::string&                        error_code,
                                                  std::string&                        error_message)
         {
             bool ret         = true;
@@ -71,12 +71,10 @@ void DefaultLocalControllerEventsHandler::chargePointConnected(std::shared_ptr<o
                 std::cout << "[" << chargepoint->identifier() << "] - Heartbeat received" << std::endl;
 
                 // Forward message
-                std::string error;
-                ret = chargepoint->centralSystemProxy()->call(request, response, error, error_message);
+                ret = chargepoint->centralSystemProxy()->call(request, response, error_code, error_message);
                 if (!ret)
                 {
                     std::cout << "[" << chargepoint->identifier() << "] - Unable to forward heartbeat" << std::endl;
-                    error_code = error.c_str();
                 }
             }
             return ret;

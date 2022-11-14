@@ -45,10 +45,10 @@ const EnumToStringFromString<TriggerMessageStatusEnumType> TriggerMessageStatusE
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ExtendedTriggerMessageReqConverter::fromJson(const rapidjson::Value&    json,
                                                   ExtendedTriggerMessageReq& data,
-                                                  const char*&               error_code,
+                                                  std::string&               error_code,
                                                   std::string&               error_message)
 {
     bool ret;
@@ -62,7 +62,7 @@ bool ExtendedTriggerMessageReqConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ExtendedTriggerMessageReqConverter::toJson(const ExtendedTriggerMessageReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
@@ -70,10 +70,10 @@ bool ExtendedTriggerMessageReqConverter::toJson(const ExtendedTriggerMessageReq&
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ExtendedTriggerMessageConfConverter::fromJson(const rapidjson::Value&     json,
                                                    ExtendedTriggerMessageConf& data,
-                                                   const char*&                error_code,
+                                                   std::string&                error_code,
                                                    std::string&                error_message)
 {
     (void)error_code;
@@ -82,7 +82,7 @@ bool ExtendedTriggerMessageConfConverter::fromJson(const rapidjson::Value&     j
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ExtendedTriggerMessageConfConverter::toJson(const ExtendedTriggerMessageConf& data, rapidjson::Document& json)
 {
     fill(json, "status", TriggerMessageStatusEnumTypeHelper.toString(data.status));

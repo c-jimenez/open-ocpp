@@ -69,12 +69,12 @@ bool MessageDispatcher::registerHandler(const std::string& action, IMessageHandl
 /** @copydoc bool IMessageDispatcher::dispatchMessage(const std::string&,
                                                           const rapidjson::Value&,
                                                           rapidjson::Document&,
-                                                          const char*&,
+                                                          std::string&,
                                                           std::string&) */
 bool MessageDispatcher::dispatchMessage(const std::string&      action,
                                         const rapidjson::Value& payload,
                                         rapidjson::Document&    response,
-                                        const char*&            error_code,
+                                        std::string&            error_code,
                                         std::string&            error_message)
 {
     bool ret = false;
@@ -84,8 +84,8 @@ bool MessageDispatcher::dispatchMessage(const std::string&      action,
     if (it != m_handlers.end())
     {
         // Check payload
-        auto&                                      handler_data = it->second;
-        ocpp::json::JsonValidator*                 validator    = handler_data.first;
+        auto&                      handler_data = it->second;
+        ocpp::json::JsonValidator* validator    = handler_data.first;
         if (validator && validator->isValid(payload))
         {
             // Call handler

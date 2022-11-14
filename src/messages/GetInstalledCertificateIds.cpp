@@ -39,10 +39,10 @@ const EnumToStringFromString<GetInstalledCertificateStatusEnumType> GetInstalled
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetInstalledCertificateIdsReqConverter::fromJson(const rapidjson::Value&        json,
                                                       GetInstalledCertificateIdsReq& data,
-                                                      const char*&                   error_code,
+                                                      std::string&                   error_code,
                                                       std::string&                   error_message)
 {
     (void)error_code;
@@ -51,17 +51,17 @@ bool GetInstalledCertificateIdsReqConverter::fromJson(const rapidjson::Value&   
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetInstalledCertificateIdsReqConverter::toJson(const GetInstalledCertificateIdsReq& data, rapidjson::Document& json)
 {
     fill(json, "certificateType", CertificateUseEnumTypeHelper.toString(data.certificateType));
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetInstalledCertificateIdsConfConverter::fromJson(const rapidjson::Value&         json,
                                                        GetInstalledCertificateIdsConf& data,
-                                                       const char*&                    error_code,
+                                                       std::string&                    error_code,
                                                        std::string&                    error_message)
 {
     bool ret    = true;
@@ -80,7 +80,7 @@ bool GetInstalledCertificateIdsConfConverter::fromJson(const rapidjson::Value&  
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetInstalledCertificateIdsConfConverter::toJson(const GetInstalledCertificateIdsConf& data, rapidjson::Document& json)
 {
     bool ret = true;

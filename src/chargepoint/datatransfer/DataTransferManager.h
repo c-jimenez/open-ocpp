@@ -71,12 +71,12 @@ class DataTransferManager : public ocpp::messages::GenericMessageHandler<ocpp::m
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::DataTransferReq& request,
                        ocpp::messages::DataTransferConf&      response,
-                       const char*&                           error_code,
+                       std::string&                           error_code,
                        std::string&                           error_message) override;
 
   private:

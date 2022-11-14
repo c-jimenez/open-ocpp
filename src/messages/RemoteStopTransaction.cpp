@@ -26,10 +26,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool RemoteStopTransactionReqConverter::fromJson(const rapidjson::Value&   json,
                                                  RemoteStopTransactionReq& data,
-                                                 const char*&              error_code,
+                                                 std::string&              error_code,
                                                  std::string&              error_message)
 {
     (void)error_code;
@@ -38,17 +38,17 @@ bool RemoteStopTransactionReqConverter::fromJson(const rapidjson::Value&   json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool RemoteStopTransactionReqConverter::toJson(const RemoteStopTransactionReq& data, rapidjson::Document& json)
 {
     fill(json, "transactionId", data.transactionId);
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool RemoteStopTransactionConfConverter::fromJson(const rapidjson::Value&    json,
                                                   RemoteStopTransactionConf& data,
-                                                  const char*&               error_code,
+                                                  std::string&               error_code,
                                                   std::string&               error_message)
 {
     (void)error_code;
@@ -57,7 +57,7 @@ bool RemoteStopTransactionConfConverter::fromJson(const rapidjson::Value&    jso
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool RemoteStopTransactionConfConverter::toJson(const RemoteStopTransactionConf& data, rapidjson::Document& json)
 {
     fill(json, "status", RemoteStartStopStatusHelper.toString(data.status));

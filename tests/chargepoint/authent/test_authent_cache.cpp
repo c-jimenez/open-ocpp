@@ -151,16 +151,16 @@ TEST_SUITE("Authentication cache")
         // Check clear cache request
         ClearCacheReq  clear_req;
         ClearCacheConf clear_resp;
-        const char*    error_code = nullptr;
+        std::string    error_code;
         std::string    error_message;
         CHECK(cache.handleMessage(clear_req, clear_resp, error_code, error_message));
         CHECK_EQ(clear_resp.status, ClearCacheStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(cache.handleMessage(clear_req, clear_resp, error_code, error_message));
         CHECK_EQ(clear_resp.status, ClearCacheStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK_FALSE(cache.check("TAG1", tag_info_r));
@@ -174,7 +174,7 @@ TEST_SUITE("Authentication cache")
 
         CHECK(cache.handleMessage(clear_req, clear_resp, error_code, error_message));
         CHECK_EQ(clear_resp.status, ClearCacheStatus::Rejected);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
     }
 

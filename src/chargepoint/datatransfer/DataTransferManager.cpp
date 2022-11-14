@@ -79,12 +79,12 @@ bool DataTransferManager::dataTransfer(const std::string&               vendor_i
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool DataTransferManager::handleMessage(const ocpp::messages::DataTransferReq& request,
                                         ocpp::messages::DataTransferConf&      response,
-                                        const char*&                           error_code,
+                                        std::string&                           error_code,
                                         std::string&                           error_message)
 {
     (void)error_code;

@@ -34,10 +34,10 @@ const EnumToStringFromString<ClearCacheStatus> ClearCacheStatusHelper = {{ClearC
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ClearCacheReqConverter::fromJson(const rapidjson::Value& json,
                                       ClearCacheReq&          data,
-                                      const char*&            error_code,
+                                      std::string&            error_code,
                                       std::string&            error_message)
 {
     (void)json;
@@ -47,7 +47,7 @@ bool ClearCacheReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ClearCacheReqConverter::toJson(const ClearCacheReq& data, rapidjson::Document& json)
 {
     (void)data;
@@ -55,10 +55,10 @@ bool ClearCacheReqConverter::toJson(const ClearCacheReq& data, rapidjson::Docume
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ClearCacheConfConverter::fromJson(const rapidjson::Value& json,
                                        ClearCacheConf&         data,
-                                       const char*&            error_code,
+                                       std::string&            error_code,
                                        std::string&            error_message)
 {
     (void)error_code;
@@ -67,7 +67,7 @@ bool ClearCacheConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ClearCacheConfConverter::toJson(const ClearCacheConf& data, rapidjson::Document& json)
 {
     fill(json, "status", ClearCacheStatusHelper.toString(data.status));

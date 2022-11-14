@@ -301,7 +301,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -311,7 +311,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -321,7 +321,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -330,7 +330,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the ClearChargingProfile request
@@ -339,7 +339,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -348,7 +348,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -358,7 +358,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -367,7 +367,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -376,7 +376,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -386,7 +386,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -396,7 +396,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -406,7 +406,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -415,7 +415,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the Reset request
@@ -423,7 +423,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the SendLocalList request
@@ -431,7 +431,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -441,7 +441,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -450,7 +450,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -459,7 +459,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -468,7 +468,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -477,7 +477,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -486,7 +486,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, const char*&, std::string&)>
+        std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -496,7 +496,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -506,7 +506,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&,
                                                     ocpp::messages::GetInstalledCertificateIdsConf&,
-                                                    const char*&,
+                                                    std::string&,
                                                     std::string&)> handler) = 0;
 
     /**
@@ -515,7 +515,7 @@ class ICentralSystemProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, const char*&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, std::string&, std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the InstallCertificate request
@@ -524,7 +524,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -534,7 +534,7 @@ class ICentralSystemProxy
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, const char*&, std::string&)>
+            bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, std::string&, std::string&)>
             handler) = 0;
 };
 

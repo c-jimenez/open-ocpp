@@ -26,10 +26,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetLocalListVersionReqConverter::fromJson(const rapidjson::Value& json,
                                                GetLocalListVersionReq& data,
-                                               const char*&            error_code,
+                                               std::string&            error_code,
                                                std::string&            error_message)
 {
     (void)json;
@@ -39,7 +39,7 @@ bool GetLocalListVersionReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetLocalListVersionReqConverter::toJson(const GetLocalListVersionReq& data, rapidjson::Document& json)
 {
     (void)data;
@@ -47,10 +47,10 @@ bool GetLocalListVersionReqConverter::toJson(const GetLocalListVersionReq& data,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetLocalListVersionConfConverter::fromJson(const rapidjson::Value&  json,
                                                 GetLocalListVersionConf& data,
-                                                const char*&             error_code,
+                                                std::string&             error_code,
                                                 std::string&             error_message)
 {
     (void)error_code;
@@ -59,7 +59,7 @@ bool GetLocalListVersionConfConverter::fromJson(const rapidjson::Value&  json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetLocalListVersionConfConverter::toJson(const GetLocalListVersionConf& data, rapidjson::Document& json)
 {
     fill(json, "listVersion", data.listVersion);
