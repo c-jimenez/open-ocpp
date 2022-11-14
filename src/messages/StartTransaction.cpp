@@ -27,10 +27,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool StartTransactionReqConverter::fromJson(const rapidjson::Value& json,
                                             StartTransactionReq&    data,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     bool ret = extract(json, "connectorId", data.connectorId, error_message);
@@ -49,7 +49,7 @@ bool StartTransactionReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool StartTransactionReqConverter::toJson(const StartTransactionReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
@@ -60,10 +60,10 @@ bool StartTransactionReqConverter::toJson(const StartTransactionReq& data, rapid
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool StartTransactionConfConverter::fromJson(const rapidjson::Value& json,
                                              StartTransactionConf&   data,
-                                             const char*&            error_code,
+                                             std::string&            error_code,
                                              std::string&            error_message)
 {
     IdTagInfoConverter id_tag_info_converter;
@@ -76,7 +76,7 @@ bool StartTransactionConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool StartTransactionConfConverter::toJson(const StartTransactionConf& data, rapidjson::Document& json)
 {
     IdTagInfoConverter id_tag_info_converter;

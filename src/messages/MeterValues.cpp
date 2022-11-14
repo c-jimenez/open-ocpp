@@ -96,10 +96,10 @@ const EnumToStringFromString<UnitOfMeasure> UnitOfMeasureHelper = {{UnitOfMeasur
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool MeterValuesReqConverter::fromJson(const rapidjson::Value& json,
                                        MeterValuesReq&         data,
-                                       const char*&            error_code,
+                                       std::string&            error_code,
                                        std::string&            error_message)
 {
     bool ret = extract(json, "connectorId", data.connectorId, error_message);
@@ -116,7 +116,7 @@ bool MeterValuesReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Document& json)
 {
     bool ret = true;
@@ -139,10 +139,10 @@ bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Docu
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool MeterValuesConfConverter::fromJson(const rapidjson::Value& json,
                                         MeterValuesConf&        data,
-                                        const char*&            error_code,
+                                        std::string&            error_code,
                                         std::string&            error_message)
 {
     (void)json;
@@ -152,7 +152,7 @@ bool MeterValuesConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool MeterValuesConfConverter::toJson(const MeterValuesConf& data, rapidjson::Document& json)
 {
     (void)data;

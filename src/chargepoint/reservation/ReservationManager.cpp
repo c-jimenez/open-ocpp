@@ -162,12 +162,12 @@ ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsign
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& request,
                                        ocpp::messages::ReserveNowConf&      response,
-                                       const char*&                         error_code,
+                                       std::string&                         error_code,
                                        std::string&                         error_message)
 {
     bool ret = false;
@@ -270,12 +270,12 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ReservationManager::handleMessage(const ocpp::messages::CancelReservationReq& request,
                                        ocpp::messages::CancelReservationConf&      response,
-                                       const char*&                                error_code,
+                                       std::string&                                error_code,
                                        std::string&                                error_message)
 {
     (void)error_code;

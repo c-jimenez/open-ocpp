@@ -155,7 +155,7 @@ class GenericMessageSender
                             if (validator && validator->isValid(resp))
                             {
                                 // Convert response
-                                const char* error_code = nullptr;
+                                std::string error_code;
                                 std::string error_message;
                                 resp_converter->setAllocator(&rpc_frame.GetAllocator());
                                 if (resp_converter->fromJson(resp, response, error_code, error_message))
@@ -222,7 +222,7 @@ class GenericMessageSender
                     if (validator && validator->isValid(resp))
                     {
                         // Convert response
-                        const char* error_code = nullptr;
+                        std::string error_code;
                         std::string error_message;
                         resp_converter->setAllocator(&rpc_frame.GetAllocator());
                         if (resp_converter->fromJson(resp, response, error_code, error_message))

@@ -175,12 +175,12 @@ void SmartChargingManager::clearTxProfiles(unsigned int connector_id)
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SmartChargingManager::handleMessage(const ocpp::messages::ClearChargingProfileReq& request,
                                          ocpp::messages::ClearChargingProfileConf&      response,
-                                         const char*&                                   error_code,
+                                         std::string&                                   error_code,
                                          std::string&                                   error_message)
 {
     (void)error_code;
@@ -213,12 +213,12 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::ClearChargingProf
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfileReq& request,
                                          ocpp::messages::SetChargingProfileConf&      response,
-                                         const char*&                                 error_code,
+                                         std::string&                                 error_code,
                                          std::string&                                 error_message)
 {
     bool ret = false;
@@ -343,12 +343,12 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeScheduleReq& request,
                                          ocpp::messages::GetCompositeScheduleConf&      response,
-                                         const char*&                                   error_code,
+                                         std::string&                                   error_code,
                                          std::string&                                   error_message)
 {
     (void)request;

@@ -68,11 +68,11 @@ TEST_SUITE("Authentication local list")
         // Check version
         GetLocalListVersionReq  version_req;
         GetLocalListVersionConf version_resp;
-        const char*             error_code = nullptr;
+        std::string             error_code;
         std::string             error_message;
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 0);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check send local list with too much data
@@ -101,24 +101,24 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Failed);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 0);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Send local list with valid data
         send_req.localAuthorizationList.pop_back();
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 1);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check contents
@@ -150,12 +150,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 2);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK_FALSE(local_list.check("TAG1", tag_info));
@@ -174,12 +174,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Failed);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 2);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Send a list which is too large
@@ -188,12 +188,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Failed);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 2);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
     }
 
@@ -214,11 +214,11 @@ TEST_SUITE("Authentication local list")
         // Check version
         GetLocalListVersionReq  version_req;
         GetLocalListVersionConf version_resp;
-        const char*             error_code = nullptr;
+        std::string             error_code;
         std::string             error_message;
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 2);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check send local list with valid data
@@ -244,12 +244,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 3);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check contents
@@ -291,12 +291,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, 4);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check contents
@@ -331,11 +331,11 @@ TEST_SUITE("Authentication local list")
         // Check version
         GetLocalListVersionReq  version_req;
         GetLocalListVersionConf version_resp;
-        const char*             error_code = nullptr;
+        std::string             error_code;
         std::string             error_message;
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, -1);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         // Check send local list
@@ -350,12 +350,12 @@ TEST_SUITE("Authentication local list")
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::NotSupported);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
 
         CHECK(local_list.handleMessage(version_req, version_resp, error_code, error_message));
         CHECK_EQ(version_resp.listVersion, -1);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
     }
 

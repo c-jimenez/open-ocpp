@@ -33,11 +33,11 @@ class ChargingProfileConverter : public IMessageConverter<ocpp::types::ChargingP
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::ChargingProfile&,
-     *                                                                    const char*&,
+     *                                                                    std::string&,
      *                                                                    std::string&) */
     bool fromJson(const rapidjson::Value&       json,
                   ocpp::types::ChargingProfile& data,
-                  const char*&                  error_code,
+                  std::string&                  error_code,
                   std::string&                  error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::toJson(const ocpp::types::ChargingProfile&,

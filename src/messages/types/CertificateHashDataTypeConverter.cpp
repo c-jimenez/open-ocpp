@@ -36,11 +36,11 @@ namespace messages
 
 /** @bcopydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::fromJson(const rapidjson::Value&,
  *                                                                     ocpp::types::CertificateHashDataType&,
- *                                                                     const char*&,
+ *                                                                     std::string&,
  *                                                                     std::string&) */
 bool CertificateHashDataTypeConverter::fromJson(const rapidjson::Value&               json,
                                                 ocpp::types::CertificateHashDataType& data,
-                                                const char*&                          error_code,
+                                                std::string&                          error_code,
                                                 std::string&                          error_message)
 {
     (void)error_code;

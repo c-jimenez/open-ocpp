@@ -28,11 +28,11 @@ namespace messages
 
 /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::fromJson(const rapidjson::Value&,
  *                                                                    ocpp::types::MeterValue&,
- *                                                                    const char*&,
+ *                                                                    std::string&,
  *                                                                    std::string&) */
 bool MeterValueConverter::fromJson(const rapidjson::Value&  json,
                                    ocpp::types::MeterValue& data,
-                                   const char*&             error_code,
+                                   std::string&             error_code,
                                    std::string&             error_message)
 {
     bool ret = extract(json, "timestamp", data.timestamp, error_message);

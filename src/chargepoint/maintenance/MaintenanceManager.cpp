@@ -247,12 +247,12 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool MaintenanceManager::handleMessage(const ocpp::messages::ResetReq& request,
                                        ocpp::messages::ResetConf&      response,
-                                       const char*&                    error_code,
+                                       std::string&                    error_code,
                                        std::string&                    error_message)
 {
     (void)error_code;
@@ -277,12 +277,12 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::ResetReq& request,
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool MaintenanceManager::handleMessage(const ocpp::messages::UnlockConnectorReq& request,
                                        ocpp::messages::UnlockConnectorConf&      response,
-                                       const char*&                              error_code,
+                                       std::string&                              error_code,
                                        std::string&                              error_message)
 {
     (void)error_code;
@@ -309,12 +309,12 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UnlockConnectorReq&
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool MaintenanceManager::handleMessage(const ocpp::messages::GetDiagnosticsReq& request,
                                        ocpp::messages::GetDiagnosticsConf&      response,
-                                       const char*&                             error_code,
+                                       std::string&                             error_code,
                                        std::string&                             error_message)
 {
     (void)error_code;
@@ -355,12 +355,12 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetDiagnosticsReq& 
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& request,
                                        ocpp::messages::UpdateFirmwareConf&      response,
-                                       const char*&                             error_code,
+                                       std::string&                             error_code,
                                        std::string&                             error_message)
 {
     (void)error_code;
@@ -393,12 +393,12 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& 
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
 bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
                                        ocpp::messages::GetLogConf&      response,
-                                       const char*&                     error_code,
+                                       std::string&                     error_code,
                                        std::string&                     error_message)
 {
     (void)error_code;
@@ -463,12 +463,12 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool MaintenanceManager::handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
                                        ocpp::messages::SignedUpdateFirmwareConf&      response,
-                                       const char*&                                   error_code,
+                                       std::string&                                   error_code,
                                        std::string&                                   error_message)
 {
     (void)error_code;

@@ -129,7 +129,7 @@ void RequestFifoManager::processFifoRequest()
                             StartTransactionReq          request;
                             StartTransactionReqConverter req_converter;
                             std::string                  error_message;
-                            const char*                  error_code = nullptr;
+                            std::string                  error_code;
                             req_converter.fromJson(payload, request, error_code, error_message);
 
                             // Update id tag information

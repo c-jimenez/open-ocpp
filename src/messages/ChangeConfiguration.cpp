@@ -35,10 +35,10 @@ const EnumToStringFromString<ConfigurationStatus> ConfigurationStatusHelper = {{
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ChangeConfigurationReqConverter::fromJson(const rapidjson::Value& json,
                                                ChangeConfigurationReq& data,
-                                               const char*&            error_code,
+                                               std::string&            error_code,
                                                std::string&            error_message)
 {
     (void)error_code;
@@ -48,7 +48,7 @@ bool ChangeConfigurationReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ChangeConfigurationReqConverter::toJson(const ChangeConfigurationReq& data, rapidjson::Document& json)
 {
     fill(json, "key", data.key);
@@ -56,10 +56,10 @@ bool ChangeConfigurationReqConverter::toJson(const ChangeConfigurationReq& data,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ChangeConfigurationConfConverter::fromJson(const rapidjson::Value&  json,
                                                 ChangeConfigurationConf& data,
-                                                const char*&             error_code,
+                                                std::string&             error_code,
                                                 std::string&             error_message)
 {
     (void)error_code;
@@ -68,7 +68,7 @@ bool ChangeConfigurationConfConverter::fromJson(const rapidjson::Value&  json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ChangeConfigurationConfConverter::toJson(const ChangeConfigurationConf& data, rapidjson::Document& json)
 {
     fill(json, "status", ConfigurationStatusHelper.toString(data.status));

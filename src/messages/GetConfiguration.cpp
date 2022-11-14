@@ -26,10 +26,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetConfigurationReqConverter::fromJson(const rapidjson::Value& json,
                                             GetConfigurationReq&    data,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     if (json.HasMember("key"))
@@ -48,7 +48,7 @@ bool GetConfigurationReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetConfigurationReqConverter::toJson(const GetConfigurationReq& data, rapidjson::Document& json)
 {
     if (data.key.isSet())
@@ -64,10 +64,10 @@ bool GetConfigurationReqConverter::toJson(const GetConfigurationReq& data, rapid
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetConfigurationConfConverter::fromJson(const rapidjson::Value& json,
                                              GetConfigurationConf&   data,
-                                             const char*&            error_code,
+                                             std::string&            error_code,
                                              std::string&            error_message)
 {
     (void)error_code;
@@ -99,7 +99,7 @@ bool GetConfigurationConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetConfigurationConfConverter::toJson(const GetConfigurationConf& data, rapidjson::Document& json)
 {
     if (data.configurationKey.isSet())

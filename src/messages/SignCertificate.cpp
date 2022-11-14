@@ -34,10 +34,10 @@ const EnumToStringFromString<GenericStatusEnumType> GenericStatusEnumTypeHelper 
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SignCertificateReqConverter::fromJson(const rapidjson::Value& json,
                                            SignCertificateReq&     data,
-                                           const char*&            error_code,
+                                           std::string&            error_code,
                                            std::string&            error_message)
 {
     (void)error_code;
@@ -46,17 +46,17 @@ bool SignCertificateReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SignCertificateReqConverter::toJson(const SignCertificateReq& data, rapidjson::Document& json)
 {
     fill(json, "csr", data.csr);
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SignCertificateConfConverter::fromJson(const rapidjson::Value& json,
                                             SignCertificateConf&    data,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     (void)error_code;
@@ -65,7 +65,7 @@ bool SignCertificateConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SignCertificateConfConverter::toJson(const SignCertificateConf& data, rapidjson::Document& json)
 {
     fill(json, "status", GenericStatusEnumTypeHelper.toString(data.status));

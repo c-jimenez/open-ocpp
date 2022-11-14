@@ -38,10 +38,10 @@ const EnumToStringFromString<UpdateStatus> UpdateStatusHelper = {{UpdateStatus::
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SendLocalListReqConverter::fromJson(const rapidjson::Value& json,
                                          SendLocalListReq&       data,
-                                         const char*&            error_code,
+                                         std::string&            error_code,
                                          std::string&            error_message)
 {
     bool ret = true;
@@ -63,7 +63,7 @@ bool SendLocalListReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SendLocalListReqConverter::toJson(const SendLocalListReq& data, rapidjson::Document& json)
 {
     bool ret = true;
@@ -86,10 +86,10 @@ bool SendLocalListReqConverter::toJson(const SendLocalListReq& data, rapidjson::
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SendLocalListConfConverter::fromJson(const rapidjson::Value& json,
                                           SendLocalListConf&      data,
-                                          const char*&            error_code,
+                                          std::string&            error_code,
                                           std::string&            error_message)
 {
     (void)error_code;
@@ -98,7 +98,7 @@ bool SendLocalListConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool SendLocalListConfConverter::toJson(const SendLocalListConf& data, rapidjson::Document& json)
 {
     fill(json, "status", UpdateStatusHelper.toString(data.status));

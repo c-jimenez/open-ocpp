@@ -576,7 +576,7 @@ std::string MeterValuesManager::serialize(const ocpp::types::MeterValue& meter_v
 /** @brief Deserialize a meter value from a string */
 bool MeterValuesManager::deserialize(const std::string& meter_value_str, ocpp::types::MeterValue& meter_value)
 {
-    const char*         error_code = nullptr;
+    std::string         error_code;
     std::string         error_message;
     rapidjson::Document meter_value_json;
     meter_value_json.Parse(meter_value_str.c_str());

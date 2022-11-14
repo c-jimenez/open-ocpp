@@ -825,12 +825,12 @@ void ChargePoint::rpcError()
 /** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
                                                    const rapidjson::Value&,
                                                    rapidjson::Document&,
-                                                   const char*&,
+                                                   std::string&,
                                                    std::string&) */
 bool ChargePoint::rpcCallReceived(const std::string&      action,
                                   const rapidjson::Value& payload,
                                   rapidjson::Document&    response,
-                                  const char*&            error_code,
+                                  std::string&            error_code,
                                   std::string&            error_message)
 {
     return m_msg_dispatcher->dispatchMessage(action, payload, response, error_code, error_message);

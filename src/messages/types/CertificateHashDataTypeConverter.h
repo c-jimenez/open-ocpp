@@ -33,11 +33,11 @@ class CertificateHashDataTypeConverter : public IMessageConverter<ocpp::types::C
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::fromJson(const rapidjson::Value&,
     *                                                                                   ocpp::types::CertificateHashDataType&,
-    *                                                                                   const char*&,
+    *                                                                                   std::string&,
     *                                                                                   std::string&) */
     bool fromJson(const rapidjson::Value&               json,
                   ocpp::types::CertificateHashDataType& data,
-                  const char*&                          error_code,
+                  std::string&                          error_code,
                   std::string&                          error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::toJson(const ocpp::types::CertificateHashDataType&,

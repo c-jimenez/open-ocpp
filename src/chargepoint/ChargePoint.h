@@ -194,12 +194,12 @@ class ChargePoint : public IChargePoint,
     /** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
                                                        const rapidjson::Value&,
                                                        rapidjson::Document&,
-                                                       const char*&,
+                                                       std::string&,
                                                        std::string&) */
     bool rpcCallReceived(const std::string&      action,
                          const rapidjson::Value& payload,
                          rapidjson::Document&    response,
-                         const char*&            error_code,
+                         std::string&            error_code,
                          std::string&            error_message) override;
 
     /// IRpc::ISpy interface

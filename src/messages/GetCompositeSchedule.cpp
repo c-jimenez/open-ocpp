@@ -35,10 +35,10 @@ const EnumToStringFromString<GetCompositeScheduleStatus> GetCompositeScheduleSta
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&  json,
                                                 GetCompositeScheduleReq& data,
-                                                const char*&             error_code,
+                                                std::string&             error_code,
                                                 std::string&             error_message)
 {
     bool ret = extract(json, "connectorId", data.connectorId, error_message);
@@ -54,7 +54,7 @@ bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
@@ -66,10 +66,10 @@ bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& dat
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&   json,
                                                  GetCompositeScheduleConf& data,
-                                                 const char*&              error_code,
+                                                 std::string&              error_code,
                                                  std::string&              error_message)
 {
     data.status = GetCompositeScheduleStatusHelper.fromString(json["status"].GetString());
@@ -80,14 +80,14 @@ bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&   json,
         ChargingScheduleConverter charging_schedule_converter;
         ret = charging_schedule_converter.fromJson(json[""], data.chargingSchedule.value(), error_code, error_message);
     }
-    if (!ret && !error_code)
+    if (!ret && error_code.empty())
     {
         error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
     }
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& data, rapidjson::Document& json)
 {
     bool ret = true;

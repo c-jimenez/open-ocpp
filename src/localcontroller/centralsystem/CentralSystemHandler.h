@@ -121,264 +121,264 @@ class CentralSystemHandler
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::CancelReservationReq& request,
                        ocpp::messages::CancelReservationConf&      response,
-                       const char*&                                error_code,
+                       std::string&                                error_code,
                        std::string&                                error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
                        ocpp::messages::ChangeAvailabilityConf&      response,
-                       const char*&                                 error_code,
+                       std::string&                                 error_code,
                        std::string&                                 error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
                        ocpp::messages::ChangeConfigurationConf&      response,
-                       const char*&                                  error_code,
+                       std::string&                                  error_code,
                        std::string&                                  error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ClearCacheReq& request,
                        ocpp::messages::ClearCacheConf&      response,
-                       const char*&                         error_code,
+                       std::string&                         error_code,
                        std::string&                         error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ClearChargingProfileReq& request,
                        ocpp::messages::ClearChargingProfileConf&      response,
-                       const char*&                                   error_code,
+                       std::string&                                   error_code,
                        std::string&                                   error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::DataTransferReq& request,
                        ocpp::messages::DataTransferConf&      response,
-                       const char*&                           error_code,
+                       std::string&                           error_code,
                        std::string&                           error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetCompositeScheduleReq& request,
                        ocpp::messages::GetCompositeScheduleConf&      response,
-                       const char*&                                   error_code,
+                       std::string&                                   error_code,
                        std::string&                                   error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetConfigurationReq& request,
                        ocpp::messages::GetConfigurationConf&      response,
-                       const char*&                               error_code,
+                       std::string&                               error_code,
                        std::string&                               error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetDiagnosticsReq& request,
                        ocpp::messages::GetDiagnosticsConf&      response,
-                       const char*&                             error_code,
+                       std::string&                             error_code,
                        std::string&                             error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetLocalListVersionReq& request,
                        ocpp::messages::GetLocalListVersionConf&      response,
-                       const char*&                                  error_code,
+                       std::string&                                  error_code,
                        std::string&                                  error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
                        ocpp::messages::RemoteStartTransactionConf&      response,
-                       const char*&                                     error_code,
+                       std::string&                                     error_code,
                        std::string&                                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
                        ocpp::messages::RemoteStopTransactionConf&      response,
-                       const char*&                                    error_code,
+                       std::string&                                    error_code,
                        std::string&                                    error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ReserveNowReq& request,
                        ocpp::messages::ReserveNowConf&      response,
-                       const char*&                         error_code,
+                       std::string&                         error_code,
                        std::string&                         error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ResetReq& request,
                        ocpp::messages::ResetConf&      response,
-                       const char*&                    error_code,
+                       std::string&                    error_code,
                        std::string&                    error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::SendLocalListReq& request,
                        ocpp::messages::SendLocalListConf&      response,
-                       const char*&                            error_code,
+                       std::string&                            error_code,
                        std::string&                            error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::SetChargingProfileReq& request,
                        ocpp::messages::SetChargingProfileConf&      response,
-                       const char*&                                 error_code,
+                       std::string&                                 error_code,
                        std::string&                                 error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::TriggerMessageReq& request,
                        ocpp::messages::TriggerMessageConf&      response,
-                       const char*&                             error_code,
+                       std::string&                             error_code,
                        std::string&                             error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::UnlockConnectorReq& request,
                        ocpp::messages::UnlockConnectorConf&      response,
-                       const char*&                              error_code,
+                       std::string&                              error_code,
                        std::string&                              error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::UpdateFirmwareReq& request,
                        ocpp::messages::UpdateFirmwareConf&      response,
-                       const char*&                             error_code,
+                       std::string&                             error_code,
                        std::string&                             error_message) override;
 
     // Security extensions
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::CertificateSignedReq& request,
                        ocpp::messages::CertificateSignedConf&      response,
-                       const char*&                                error_code,
+                       std::string&                                error_code,
                        std::string&                                error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::DeleteCertificateReq& request,
                        ocpp::messages::DeleteCertificateConf&      response,
-                       const char*&                                error_code,
+                       std::string&                                error_code,
                        std::string&                                error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
                        ocpp::messages::ExtendedTriggerMessageConf&      response,
-                       const char*&                                     error_code,
+                       std::string&                                     error_code,
                        std::string&                                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetInstalledCertificateIdsReq& request,
                        ocpp::messages::GetInstalledCertificateIdsConf&      response,
-                       const char*&                                         error_code,
+                       std::string&                                         error_code,
                        std::string&                                         error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetLogReq& request,
                        ocpp::messages::GetLogConf&      response,
-                       const char*&                     error_code,
+                       std::string&                     error_code,
                        std::string&                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::InstallCertificateReq& request,
                        ocpp::messages::InstallCertificateConf&      response,
-                       const char*&                                 error_code,
+                       std::string&                                 error_code,
                        std::string&                                 error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
                        ocpp::messages::SignedUpdateFirmwareConf&      response,
-                       const char*&                                   error_code,
+                       std::string&                                   error_code,
                        std::string&                                   error_message) override;
 
   private:
@@ -392,12 +392,12 @@ class CentralSystemHandler
      * @param action RPC action for the request
      * @param request Request payload
      * @param response Response payload
-     * @param error Error code to return to the Charge Point, set to nullptr if no error
+     * @param error Error code to return to the Charge Point, empty if no error
      * @param message Error message to return to the Charge Point, empty if no error
      * @return true if the request has been sent and a response has been received, false otherwise
      */
     template <typename RequestType, typename ResponseType>
-    bool forward(const std::string& action, const RequestType& request, ResponseType& response, const char*& error, std::string& message)
+    bool forward(const std::string& action, const RequestType& request, ResponseType& response, std::string& error, std::string& message)
     {
         bool ret = false;
 

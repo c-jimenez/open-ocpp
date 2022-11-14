@@ -64,7 +64,7 @@ ConfigManagerStub            config_mgr;
 static bool deserializeMeterValue(const rapidjson::Document& payload, MeterValuesReq& meter_value)
 {
     std::string             error_message;
-    const char*             error_code = nullptr;
+    std::string             error_code;
     MeterValuesReqConverter meter_value_conv;
     meter_value.meterValue.clear();
     return meter_value_conv.fromJson(payload, meter_value, error_code, error_message);

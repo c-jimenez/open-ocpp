@@ -35,10 +35,10 @@ const EnumToStringFromString<RemoteStartStopStatus> RemoteStartStopStatusHelper 
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool RemoteStartTransactionReqConverter::fromJson(const rapidjson::Value&    json,
                                                   RemoteStartTransactionReq& data,
-                                                  const char*&               error_code,
+                                                  std::string&               error_code,
                                                   std::string&               error_message)
 {
     bool ret = extract(json, "connectorId", data.connectorId, error_message);
@@ -59,7 +59,7 @@ bool RemoteStartTransactionReqConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool RemoteStartTransactionReqConverter::toJson(const RemoteStartTransactionReq& data, rapidjson::Document& json)
 {
     bool ret = true;
@@ -80,10 +80,10 @@ bool RemoteStartTransactionReqConverter::toJson(const RemoteStartTransactionReq&
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool RemoteStartTransactionConfConverter::fromJson(const rapidjson::Value&     json,
                                                    RemoteStartTransactionConf& data,
-                                                   const char*&                error_code,
+                                                   std::string&                error_code,
                                                    std::string&                error_message)
 {
     (void)error_code;
@@ -92,7 +92,7 @@ bool RemoteStartTransactionConfConverter::fromJson(const rapidjson::Value&     j
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool RemoteStartTransactionConfConverter::toJson(const RemoteStartTransactionConf& data, rapidjson::Document& json)
 {
     fill(json, "status", RemoteStartStopStatusHelper.toString(data.status));
