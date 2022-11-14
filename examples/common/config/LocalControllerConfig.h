@@ -49,17 +49,12 @@ class LocalControllerConfig : public ocpp::config::ILocalControllerConfig
 
     /** @brief Listen URL */
     std::string listenUrl() const override { return getString("ListenUrl"); }
+    /** @brief Connection URL */
+    std::string connexionUrl() const { return getString("ConnexionUrl"); };
     /** @brief Call request timeout */
     std::chrono::milliseconds callRequestTimeout() const override { return get<std::chrono::milliseconds>("CallRequestTimeout"); }
     /** @brief Websocket PING interval */
     std::chrono::seconds webSocketPingInterval() const override { return get<std::chrono::seconds>("WebSocketPingInterval"); }
-    /** @brief Boot notification retry interval */
-    std::chrono::seconds bootNotificationRetryInterval() const override
-    {
-        return get<std::chrono::seconds>("BootNotificationRetryInterval");
-    }
-    /** @brief Heartbeat interval */
-    std::chrono::seconds heartbeatInterval() const override { return get<std::chrono::seconds>("HeartbeatInterval"); }
     /** @brief Enable HTTP basic authentication */
     bool httpBasicAuthent() const override { return getBool("HttpBasicAuthent"); }
     /** @brief Cipher list to use for TLSv1.2 connections */
@@ -78,6 +73,12 @@ class LocalControllerConfig : public ocpp::config::ILocalControllerConfig
     std::string tlsServerCertificateCa() const override { return getString("TlsServerCertificateCa"); }
     /** @brief Enable client authentication using certificate */
     bool tlsClientCertificateAuthent() const override { return getBool("TlsClientCertificateAuthent"); }
+    /** @brief Client certificate */
+    std::string tlsClientCertificate() const { return getString("TlsClientCertificate"); }
+    /** @brief Client certificate's private key */
+    std::string tlsClientCertificatePrivateKey() const { return getString("TlsClientCertificatePrivateKey"); }
+    /** @brief Client certificate's private key passphrase */
+    std::string tlsClientCertificatePrivateKeyPassphrase() const { return getString("TlsClientCertificatePrivateKeyPassphrase"); }
 
     // Logs
 

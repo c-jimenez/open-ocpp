@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
     LocalControllerDemoConfig config(path);
 
     // Event handler
-    DefaultLocalControllerEventsHandler event_handler;
+    DefaultLocalControllerEventsHandler event_handler(config.stackConfig());
 
     // Instanciate local controller
     std::unique_ptr<ILocalController> local_controller = ILocalController::create(config.stackConfig(), event_handler);

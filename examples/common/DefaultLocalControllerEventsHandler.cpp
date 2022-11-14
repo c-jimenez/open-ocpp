@@ -31,7 +31,10 @@ using namespace std;
 using namespace ocpp::localcontroller;
 
 /** @brief Constructor */
-DefaultLocalControllerEventsHandler::DefaultLocalControllerEventsHandler() : m_mutex(), m_chargepoints() { }
+DefaultLocalControllerEventsHandler::DefaultLocalControllerEventsHandler(LocalControllerConfig& config)
+    : m_config(config), m_mutex(), m_chargepoints()
+{
+}
 
 /** @brief Destructor */
 DefaultLocalControllerEventsHandler::~DefaultLocalControllerEventsHandler() { }
@@ -53,15 +56,57 @@ void DefaultLocalControllerEventsHandler::chargePointConnected(std::shared_ptr<o
     auto iter_chargepoint = m_chargepoints.find(chargepoint->identifier());
     if (iter_chargepoint == m_chargepoints.end())
     {
-        m_chargepoints[chargepoint->identifier()] =
-            std::make_shared<DefaultLocalControllerEventsHandler::LocalControllerProxyEventsHandler>(*this, chargepoint);
-        m_mutex.unlock();
+        std::weak_ptr<ocpp::localcontroller::IChargePointProxy> p_chargepoint = chargepoint;
+
+        // Specific handling of heartbeat message
+        auto heartbeat_handler = [p_chargepoint](const ocpp::messages::HeartbeatReq& request,
+                                                 ocpp::messages::HeartbeatConf&      response,
+                                                 const char*&                        error_code,
+                                                 std::string&                        error_message)
+        {
+            bool ret         = true;
+            auto chargepoint = p_chargepoint.lock();
+            if (chargepoint)
+            {
+                std::cout << "[" << chargepoint->identifier() << "] - Heartbeat received" << std::endl;
+
+                // Forward message
+                std::string error;
+                ret = chargepoint->centralSystemProxy()->call(request, response, error, error_message);
+                if (!ret)
+                {
+                    std::cout << "[" << chargepoint->identifier() << "] - Unable to forward heartbeat" << std::endl;
+                    error_code = error.c_str();
+                }
+            }
+            return ret;
+        };
+        chargepoint->registerHandler(heartbeat_handler);
+
+        // Open connection to the Central System
         ocpp::websockets::IWebsocketClient::Credentials credentials;
-        credentials.accept_untrusted_certificates = true;
-        credentials.allow_expired_certificates    = true;
-        credentials.allow_selfsigned_certificates = true;
-        credentials.skip_server_name_check        = true;
-        chargepoint->centralSystemProxy()->connect("wss://127.0.0.1:8081/ocpp/", credentials);
+        credentials.accept_untrusted_certificates             = false;
+        credentials.allow_expired_certificates                = false;
+        credentials.allow_selfsigned_certificates             = false;
+        credentials.skip_server_name_check                    = false;
+        credentials.encoded_pem_certificates                  = false;
+        credentials.tls12_cipher_list                         = m_config.tlsv12CipherList();
+        credentials.tls13_cipher_list                         = m_config.tlsv13CipherList();
+        credentials.server_certificate_ca                     = m_config.tlsServerCertificateCa();
+        credentials.client_certificate                        = m_config.tlsClientCertificate();
+        credentials.client_certificate_private_key            = m_config.tlsClientCertificatePrivateKey();
+        credentials.client_certificate_private_key_passphrase = m_config.tlsClientCertificatePrivateKeyPassphrase();
+        if (!chargepoint->centralSystemProxy()->connect(m_config.connexionUrl(), credentials))
+        {
+            cout << "Charge point [" << chargepoint->identifier() << "] unable to start connection to Central System" << endl;
+            chargepoint.reset();
+        }
+        else
+        {
+            m_chargepoints[chargepoint->identifier()] =
+                std::make_shared<DefaultLocalControllerEventsHandler::LocalControllerProxyEventsHandler>(*this, chargepoint);
+        }
+        m_mutex.unlock();
     }
     else
     {

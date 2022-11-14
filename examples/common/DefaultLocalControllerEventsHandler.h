@@ -26,6 +26,7 @@ SOFTWARE.
 #define DEFAULTLOCALCONTROLLEREVENTSHANDLER_H
 
 #include "ILocalControllerEventsHandler.h"
+#include "LocalControllerConfig.h"
 
 #include <map>
 #include <mutex>
@@ -35,7 +36,7 @@ class DefaultLocalControllerEventsHandler : public ocpp::localcontroller::ILocal
 {
   public:
     /** @brief Constructor */
-    DefaultLocalControllerEventsHandler();
+    DefaultLocalControllerEventsHandler(LocalControllerConfig& config);
 
     /** @brief Destructor */
     virtual ~DefaultLocalControllerEventsHandler();
@@ -96,6 +97,8 @@ class DefaultLocalControllerEventsHandler : public ocpp::localcontroller::ILocal
     void removeChargePoint(const std::string& identifier);
 
   private:
+    /** @brief Configuration */
+    LocalControllerConfig& m_config;
     /** @brief Mutex to protect the list of the charge points */
     std::mutex m_mutex;
     /** @brief Connected charge points */

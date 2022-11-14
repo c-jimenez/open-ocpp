@@ -36,7 +36,7 @@ class LocalControllerDemoConfig
     LocalControllerDemoConfig(const std::string& config_file) : m_config(config_file), m_stack_config(m_config) { }
 
     /** @brief Stack internal configuration */
-    ocpp::config::ILocalControllerConfig& stackConfig() { return m_stack_config; }
+    LocalControllerConfig& stackConfig() { return m_stack_config; }
 
   private:
     /** @brief Configuration file */
