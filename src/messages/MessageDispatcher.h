@@ -47,8 +47,8 @@ class MessageDispatcher : public IMessageDispatcher
     /** @brief Destructor */
     virtual ~MessageDispatcher();
 
-    /** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&) */
-    bool registerHandler(const std::string& action, IMessageHandler& handler) override;
+    /** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&, bool) */
+    bool registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace = false) override;
 
     /** @copydoc bool IMessageDispatcher::dispatchMessage(const std::string&,
                                                           const rapidjson::Value&,

@@ -17,7 +17,7 @@
             "type": "gdb",
             "request": "launch",
             "name": "x86 test debug",
-            "target": "${workspaceRoot}/build_gcc_native/tests/tools/test_logs",
+            "target": "${workspaceRoot}/build_gcc_native/tests/chargepoint/metervalues/test_metervalues",
             "cwd": "${workspaceRoot}",
             "valuesFormatting": "parseText"
         }

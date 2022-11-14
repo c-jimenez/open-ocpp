@@ -56,7 +56,7 @@ This implementation is based on the following libraries :
 * Websockets (Client or Server)
 * OCPP-J RPC
 * JSON messages serialization/deserialization
-* OCPP role (Charge Point or Central System)
+* OCPP role (Charge Point, Central System or Local Controller)
 
 As of this version :
 
@@ -77,7 +77,7 @@ The persistent data handled by **Open OCPP** is stored into a single file which 
   + Logs
   * X.509 Certificates
 
-* For Central System role :
+* For Central System or Local Controller role :
 
   + Internal configuration
   + Logs
@@ -282,6 +282,21 @@ The behavior and the configuration of the **Open OCPP** stack can be modified th
 | TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
 | TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
 
+#### Local Controller keys
+
+| Key | Type | Description |
+| :---: | :---: | :--- |
+| ListenUrl | string | URL to listen to incomming  websocket connections |
+| WebSocketPingInterval | uint | Websocket PING interval in seconds |
+| HttpBasicAuthent | bool | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method |
+| TlsEcdhCurve | string | ECDH curve to use for TLS connections with EC keys |
+| TlsServerCertificate | string | Path to the Central System's certificate |
+| TlsServerCertificatePrivateKey | string | Path to the Central System's certificate's private key |
+| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
+| TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
+| TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
+| DisconnectFromCpWhenCsDisconnected | bool | If set to true, the Charge Point is automatically disconnected when the connection to the Central System cannot be established or is lost |
+
 ## Build
 
 ### Pre-requisites
@@ -370,7 +385,7 @@ See the deploy test [CMakeLists.txt](./tests/deploy/CMakeLists.txt) as an exampl
 
 ## Quick start
 
-The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md) and the [quick start Central System example](./examples/quick_start_centralsystem/README.md).
+The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md), the [quick start Central System example](./examples/quick_start_centralsystem/README.md) and the [quick start Local Controller example](./examples/quick_start_localcontroller/README.md).
 
 ### Charge Point role
 

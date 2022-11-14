@@ -61,6 +61,7 @@ if(${BUILD_STATIC_LIBRARY})
     target_link_libraries(open-ocpp-static
         centralsystem
         chargepoint
+        localcontroller
         config
         database
         messages
@@ -83,6 +84,7 @@ add_library(open-ocpp-dynamic SHARED
 target_link_libraries(open-ocpp-dynamic
     centralsystem
     chargepoint
+    localcontroller
     config
     database
     messages
