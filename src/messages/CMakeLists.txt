@@ -50,11 +50,13 @@ add_library(messages OBJECT
     UpdateFirmware.cpp
 
     types/AuthorizationDataConverter.cpp
+    types/CertificateHashDataChainTypeConverter.cpp
     types/CertificateHashDataTypeConverter.cpp
     types/ChargingProfileConverter.cpp
     types/ChargingScheduleConverter.cpp
     types/IdTagInfoConverter.cpp
     types/MeterValueConverter.cpp
+    types/OcspRequestDataTypeConverter.cpp
 )
 
 # Exported includes

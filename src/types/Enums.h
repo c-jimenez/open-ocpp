@@ -978,24 +978,6 @@ enum class UpdateFirmwareStatusEnumType
 /** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
 extern const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusEnumTypeHelper;
 
-/** @brief Status of an authorization response */
-enum class AuthorizationStatusEnumType
-{
-    /** @brief Identifier is allowed for charging */
-    Accepted,
-    /** @brief Identifier has been blocked. Not allowed for charging */
-    Blocked,
-    /** @brief Identifier is already involved in another transaction and multiple transactions are not allowed */
-    ConcurrentTx,
-    /** @brief Identifier has expired. Not allowed for charging */
-    Expired,
-    /** @brief Identifier is invalid. Not allowed for charging */
-    Invalid
-};
-
-/** @brief Helper to convert a AuthorizationStatusEnumType enum to string */
-extern const EnumToStringFromString<AuthorizationStatusEnumType> AuthorizationStatusEnumTypeHelper;
-
 /** @brief Status of the EV Contract certificate */
 enum class AuthorizeCertificateStatusEnumType
 {
