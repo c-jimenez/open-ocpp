@@ -978,6 +978,128 @@ enum class UpdateFirmwareStatusEnumType
 /** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
 extern const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusEnumTypeHelper;
 
+/** @brief Status of an authorization response */
+enum class AuthorizationStatusEnumType
+{
+    /** @brief Identifier is allowed for charging */
+    Accepted,
+    /** @brief Identifier has been blocked. Not allowed for charging */
+    Blocked,
+    /** @brief Identifier is already involved in another transaction and multiple transactions are not allowed */
+    ConcurrentTx,
+    /** @brief Identifier has expired. Not allowed for charging */
+    Expired,
+    /** @brief Identifier is invalid. Not allowed for charging */
+    Invalid
+};
+
+/** @brief Helper to convert a AuthorizationStatusEnumType enum to string */
+extern const EnumToStringFromString<AuthorizationStatusEnumType> AuthorizationStatusEnumTypeHelper;
+
+/** @brief Status of the EV Contract certificate */
+enum class AuthorizeCertificateStatusEnumType
+{
+    /** @brief Positive response */
+    Accepted,
+    /** @brief Identifier has been blocked. Not allowed for charging */
+    SignatureError,
+    /** @brief If the OEMProvisioningCert in the CertificateInstallationReq, the Contract Certificate in the CertificateUpdateReq, or the
+               ContractCertificate in the PaymentDetailsReq is expired */
+    CertificateExpired,
+    /** @brief Used when the SECC or Central System matches the ContractCertificate contained in a CertificateUpdateReq or PaymentDetailsReq
+               with a CRL and the Contract Certificate is marked as revoked, OR when the SECC or Central System matches the OEM Provisioning
+               Certificate contained in a CertificateInstallationReq with a CRL and the OEM Provisioning Certificate is marked as revoked.
+               The revocation status can alternatively be obtained through an OCSP responder */
+    CertificateRevoked,
+    /** @brief If the new certificate cannot be retrieved from secondary actor within the specified timeout */
+    NoCertificateAvailable,
+    /** @brief If the ContractSignatureCertChain contained in the CertificateInstallationReq message is not valid */
+    CertChainError,
+    /** @brief If the EMAID provided by EVCC during CertificateUpdateReq is not accepted by secondary actor */
+    ContractCancelled
+};
+
+/** @brief Helper to convert a AuthorizeCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<AuthorizeCertificateStatusEnumType> AuthorizeCertificateStatusEnumTypeHelper;
+
+/** @brief Action to apply on a certificate */
+enum class CertificateActionEnumType
+{
+    /** @brief Install the provided certificate */
+    Install,
+    /** @brief Update the provided certificate */
+    Update
+};
+
+/** @brief Helper to convert a CertificateActionEnumType enum to string */
+extern const EnumToStringFromString<CertificateActionEnumType> CertificateActionEnumTypeHelper;
+
+/** @brief Usage of a certificate */
+enum class GetCertificateIdUseEnumType
+{
+    /** @brief Use for certificate of the V2G Root */
+    V2GRootCertificate,
+    /** @brief Use for certificate from an eMobility Service provider. To support PnC charging with contracts from service providers that not derived
+               their certificates from the V2G root */
+    MORootCertificate,
+    /** @brief ISO 15118 V2G certificate chain (excluding the V2GRootCertificate) */
+    V2GCertificateChain
+};
+
+/** @brief Helper to convert a GetCertificateIdUseEnumType enum to string */
+extern const EnumToStringFromString<GetCertificateIdUseEnumType> GetCertificateIdUseEnumTypeHelper;
+
+/** @brief Status of a certificate */
+enum class GetCertificateStatusEnumType
+{
+    /** @brief Successfully retrieved the OCSP certificate status */
+    Accepted,
+    /** @brief Failed to retrieve the OCSP certificate status */
+    Failed
+};
+
+/** @brief Helper to convert a GetCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<GetCertificateStatusEnumType> GetCertificateStatusEnumTypeHelper;
+
+/** @brief Status of a certificate installation */
+enum class InstallCertificateStatusEnumType
+{
+    /** @brief The installation of the certificate succeeded */
+    Accepted,
+    /** @brief The certificate is invalid and/or incorrect OR the CSO tries to install more certificates than allowed */
+    Rejected,
+    /** @brief The certificate is valid and correct, but there is another reason the installation did not succeed */
+    Failed
+};
+
+/** @brief Helper to convert a InstallCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<InstallCertificateStatusEnumType> InstallCertificateStatusEnumTypeHelper;
+
+/** @brief Usage of a certificate to install */
+enum class InstallCertificateUseEnumType
+{
+    /** @brief Use for certificate of the V2G Root, a V2G Charge Point Certificate MUST be derived from one of the installed V2GRootCertificate
+               certificates */
+    V2GRootCertificate,
+    /** @brief Use for certificate from an eMobility Service */
+    MORootCertificate
+};
+
+/** @brief Helper to convert a InstallCertificateUseEnumType enum to string */
+extern const EnumToStringFromString<InstallCertificateUseEnumType> InstallCertificateUseEnumTypeHelper;
+
+/** @brief Iso15118EVCertificateStatusEnumType is used by: get15118EVCertificate:Get15118EVCertificate.conf */
+enum class Iso15118EVCertificateStatusEnumType
+{
+    /** @brief exiResponse included. This is no indication whether the update was successful, just that the message was processed properly */
+    Accepted,
+    /** @brief Processing of the message was not successful, no exiResponse included */
+    Failed
+};
+
+/** @brief Helper to convert a Iso15118EVCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<Iso15118EVCertificateStatusEnumType> Iso15118EVCertificateStatusEnumTypeHelper;
+
 } // namespace types
 } // namespace ocpp
 
