@@ -31,6 +31,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "DiagnosticsStatusNotification.h"
 #include "ExtendedTriggerMessage.h"
 #include "FirmwareStatusNotification.h"
+#include "Get15118EVCertificate.h"
+#include "GetCertificateStatus.h"
 #include "GetCompositeSchedule.h"
 #include "GetConfiguration.h"
 #include "GetDiagnostics.h"
@@ -39,6 +41,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetLog.h"
 #include "Heartbeat.h"
 #include "InstallCertificate.h"
+#include "Iso15118Authorize.h"
+#include "Iso15118GetInstalledCertificateIds.h"
+#include "Iso15118InstallCertificate.h"
+#include "Iso15118TriggerMessage.h"
 #include "LogStatusNotification.h"
 #include "MeterValues.h"
 #include "RemoteStartTransaction.h"
@@ -89,6 +95,8 @@ MessagesConverter::MessagesConverter()
     REGISTER_CONVERTER(DiagnosticsStatusNotification);
     REGISTER_CONVERTER(ExtendedTriggerMessage);
     REGISTER_CONVERTER(FirmwareStatusNotification);
+    REGISTER_CONVERTER(Get15118EVCertificate);
+    REGISTER_CONVERTER(GetCertificateStatus);
     REGISTER_CONVERTER(GetCompositeSchedule);
     REGISTER_CONVERTER(GetConfiguration);
     REGISTER_CONVERTER(GetDiagnostics);
@@ -97,6 +105,10 @@ MessagesConverter::MessagesConverter()
     REGISTER_CONVERTER(GetLog);
     REGISTER_CONVERTER(Heartbeat);
     REGISTER_CONVERTER(InstallCertificate);
+    REGISTER_CONVERTER(Iso15118Authorize);
+    REGISTER_CONVERTER(Iso15118GetInstalledCertificateIds);
+    REGISTER_CONVERTER(Iso15118InstallCertificate);
+    REGISTER_CONVERTER(Iso15118TriggerMessage);
     REGISTER_CONVERTER(LogStatusNotification);
     REGISTER_CONVERTER(MeterValues);
     REGISTER_CONVERTER(RemoteStartTransaction);
@@ -133,6 +145,8 @@ MessagesConverter::~MessagesConverter()
     DELETE_CONVERTER(DiagnosticsStatusNotification);
     DELETE_CONVERTER(ExtendedTriggerMessage);
     DELETE_CONVERTER(FirmwareStatusNotification);
+    DELETE_CONVERTER(Get15118EVCertificate);
+    DELETE_CONVERTER(GetCertificateStatus);
     DELETE_CONVERTER(GetCompositeSchedule);
     DELETE_CONVERTER(GetConfiguration);
     DELETE_CONVERTER(GetDiagnostics);
@@ -141,6 +155,10 @@ MessagesConverter::~MessagesConverter()
     DELETE_CONVERTER(GetLog);
     DELETE_CONVERTER(Heartbeat);
     DELETE_CONVERTER(InstallCertificate);
+    DELETE_CONVERTER(Iso15118Authorize);
+    DELETE_CONVERTER(Iso15118GetInstalledCertificateIds);
+    DELETE_CONVERTER(Iso15118InstallCertificate);
+    DELETE_CONVERTER(Iso15118TriggerMessage);
     DELETE_CONVERTER(LogStatusNotification);
     DELETE_CONVERTER(MeterValues);
     DELETE_CONVERTER(RemoteStartTransaction);

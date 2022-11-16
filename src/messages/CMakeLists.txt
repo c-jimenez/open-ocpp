@@ -23,6 +23,8 @@ add_library(messages OBJECT
     ExtendedTriggerMessage.cpp
     FirmwareStatusNotification.cpp
     GetConfiguration.cpp
+    Get15118EVCertificate.cpp
+    GetCertificateStatus.cpp
     GetCompositeSchedule.cpp
     GetDiagnostics.cpp
     GetInstalledCertificateIds.cpp
@@ -30,6 +32,10 @@ add_library(messages OBJECT
     GetLog.cpp
     Heartbeat.cpp
     InstallCertificate.cpp
+    Iso15118Authorize.cpp
+    Iso15118GetInstalledCertificateIds.cpp
+    Iso15118InstallCertificate.cpp
+    Iso15118TriggerMessage.cpp
     LogStatusNotification.cpp
     MeterValues.cpp
     RemoteStartTransaction.cpp
@@ -55,6 +61,7 @@ add_library(messages OBJECT
     types/ChargingProfileConverter.cpp
     types/ChargingScheduleConverter.cpp
     types/IdTagInfoConverter.cpp
+    types/IdTokenInfoTypeConverter.cpp
     types/MeterValueConverter.cpp
     types/OcspRequestDataTypeConverter.cpp
 )
