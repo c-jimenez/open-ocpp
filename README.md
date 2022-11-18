@@ -153,6 +153,11 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | CpoName | S | None |
 | SecurityProfile | S | None |
 | SupportedFileTransferProtocols | U | None |
+| CentralContractValidationAllowed | S | None
+| CertSigningWaitMinimum | S | None |
+| CertSigningRepeatTimes | S | None |
+| ContractValidationOffline | U/S | The stack will notify the user application for contract validation depending on the value of this parameter
+| ISO15118PnCEnabled | S | None |
 
 ### OCPP security extensions
 

@@ -17,9 +17,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "TransactionManager.h"
-#include "AuthentManager.h"
 #include "Connectors.h"
 #include "GenericMessageSender.h"
+#include "IAuthentManager.h"
 #include "IChargePointEventsHandler.h"
 #include "IMeterValuesManager.h"
 #include "IOcppConfig.h"
@@ -46,7 +46,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        ocpp::messages::GenericMessageSender&           msg_sender,
                                        ocpp::messages::IRequestFifo&                   requests_fifo,
-                                       AuthentManager&                                 authent_manager,
+                                       IAuthentManager&                                authent_manager,
                                        ReservationManager&                             reservation_manager,
                                        IMeterValuesManager&                            meter_values_manager,
                                        ISmartChargingManager&                          smart_charging_manager)

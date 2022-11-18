@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "DataTransferManager.h"
 #include "GenericMessageSender.h"
 #include "InternalConfigKeys.h"
+#include "Iso15118Manager.h"
 #include "Logger.h"
 #include "MaintenanceManager.h"
 #include "MessageDispatcher.h"
@@ -105,6 +106,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_
       m_smart_charging_manager(),
       m_maintenance_manager(),
       m_requests_fifo_manager(),
+      m_iso15118_manager(),
       m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
       m_uptime(0),
       m_disconnected_time(0),
@@ -247,8 +249,8 @@ bool ChargePoint::start()
                                                                m_ocpp_config,
                                                                m_events_handler,
                                                                m_internal_config,
-                                                               *m_timer_pool.get(),
-                                                               *m_worker_pool.get(),
+                                                               *m_timer_pool,
+                                                               *m_worker_pool,
                                                                m_connectors,
                                                                *m_msg_dispatcher,
                                                                *m_msg_sender,
@@ -256,8 +258,8 @@ bool ChargePoint::start()
                                                                *m_trigger_manager);
             m_reservation_manager    = std::make_unique<ReservationManager>(m_ocpp_config,
                                                                          m_events_handler,
-                                                                         *m_timer_pool.get(),
-                                                                         *m_worker_pool.get(),
+                                                                         *m_timer_pool,
+                                                                         *m_worker_pool,
                                                                          m_connectors,
                                                                          m_messages_converter,
                                                                          *m_msg_dispatcher,
@@ -266,8 +268,8 @@ bool ChargePoint::start()
             m_meter_values_manager   = std::make_unique<MeterValuesManager>(m_ocpp_config,
                                                                           m_database,
                                                                           m_events_handler,
-                                                                          *m_timer_pool.get(),
-                                                                          *m_worker_pool.get(),
+                                                                          *m_timer_pool,
+                                                                          *m_worker_pool,
                                                                           m_connectors,
                                                                           *m_msg_sender,
                                                                           m_requests_fifo,
@@ -277,8 +279,8 @@ bool ChargePoint::start()
             m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
                                                                               m_ocpp_config,
                                                                               m_database,
-                                                                              *m_timer_pool.get(),
-                                                                              *m_worker_pool.get(),
+                                                                              *m_timer_pool,
+                                                                              *m_worker_pool,
                                                                               m_connectors,
                                                                               m_messages_converter,
                                                                               *m_msg_dispatcher);
@@ -298,7 +300,7 @@ bool ChargePoint::start()
             m_maintenance_manager = std::make_unique<MaintenanceManager>(m_stack_config,
                                                                          m_internal_config,
                                                                          m_events_handler,
-                                                                         *m_worker_pool.get(),
+                                                                         *m_worker_pool,
                                                                          m_messages_converter,
                                                                          *m_msg_dispatcher,
                                                                          *m_msg_sender,
@@ -308,13 +310,21 @@ bool ChargePoint::start()
 
             m_requests_fifo_manager = std::make_unique<RequestFifoManager>(m_ocpp_config,
                                                                            m_events_handler,
-                                                                           *m_timer_pool.get(),
-                                                                           *m_worker_pool.get(),
+                                                                           *m_timer_pool,
+                                                                           *m_worker_pool,
                                                                            m_connectors,
                                                                            *m_msg_sender,
                                                                            m_requests_fifo,
                                                                            *m_status_manager,
                                                                            *m_authent_manager);
+            m_iso15118_manager      = std::make_unique<Iso15118Manager>(m_ocpp_config,
+                                                                   m_events_handler,
+                                                                   *m_timer_pool,
+                                                                   *m_worker_pool,
+                                                                   m_messages_converter,
+                                                                   *m_msg_sender,
+                                                                   *m_authent_manager,
+                                                                   *m_data_transfer_manager);
 
             // Register specific configuration checks
             m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);
@@ -365,6 +375,7 @@ bool ChargePoint::stop()
         m_smart_charging_manager.reset();
         m_maintenance_manager.reset();
         m_requests_fifo_manager.reset();
+        m_iso15118_manager.reset();
 
         // Stop connection
         ret = m_rpc_client->stop();
@@ -764,6 +775,121 @@ bool ChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEn
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
             ret = m_maintenance_manager->notifySignedUpdateFirmwareStatus(status);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+// ISO 15118 PnC extensions
+
+/** @copydoc ocpp::types::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
+                                                                    const std::string&,
+                                                                    const std::vector<ocpp::types::OcspRequestDataType>&,
+                                                                    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) */
+ocpp::types::AuthorizationStatus ChargePoint::iso15118Authorize(
+    const ocpp::x509::Certificate&                                          certificate,
+    const std::string&                                                      id_token,
+    const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status)
+{
+    AuthorizationStatus ret = AuthorizationStatus::Invalid;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_iso15118_manager->authorize(certificate, id_token, cert_hash_data, cert_status);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePoint::iso15118GetEVCertificate(
+                                                                              const std::string& iso15118_schema_version,
+                                                                              ocpp::types::CertificateActionEnumType action,
+                                                                              const std::string&                     exi_request,
+                                                                              std::string&) */
+ocpp::types::Iso15118EVCertificateStatusEnumType ChargePoint::iso15118GetEVCertificate(const std::string& iso15118_schema_version,
+                                                                                       ocpp::types::CertificateActionEnumType action,
+                                                                                       const std::string&                     exi_request,
+                                                                                       std::string&                           exi_response)
+{
+    Iso15118EVCertificateStatusEnumType ret = Iso15118EVCertificateStatusEnumType::Failed;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_iso15118_manager->get15118EVCertificate(iso15118_schema_version, action, exi_request, exi_response);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePoint::iso15118GetCertificateStatus(
+                                                                           const ocpp::types::OcspRequestDataType& ocsp_request,
+                                                                           std::string&) */
+ocpp::types::GetCertificateStatusEnumType ChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
+                                                                                    std::string&                            ocsp_result)
+{
+    GetCertificateStatusEnumType ret = GetCertificateStatusEnumType::Failed;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_iso15118_manager->getCertificateStatus(ocsp_request, ocsp_result);
+        }
+        else
+        {
+            LOG_ERROR << "Charge Point has not been accepted by Central System";
+        }
+    }
+    else
+    {
+        LOG_ERROR << "Stack is not started";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool IChargePoint::iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
+bool ChargePoint::iso15118SignCertificate(const ocpp::x509::CertificateRequest& csr)
+{
+    bool ret = false;
+
+    if (m_status_manager)
+    {
+        if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
+        {
+            ret = m_iso15118_manager->signCertificate(csr);
         }
         else
         {

@@ -17,8 +17,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ReservationManager.h"
-#include "AuthentManager.h"
 #include "Connectors.h"
+#include "IAuthentManager.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
 #include "IRpc.h"
@@ -45,7 +45,7 @@ ReservationManager::ReservationManager(ocpp::config::IOcppConfig&               
                                        const ocpp::messages::GenericMessagesConverter& messages_converter,
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        IStatusManager&                                 status_manager,
-                                       AuthentManager&                                 authent_manager)
+                                       IAuthentManager&                                authent_manager)
     : GenericMessageHandler<ReserveNowReq, ReserveNowConf>(RESERVE_NOW_ACTION, messages_converter),
       GenericMessageHandler<CancelReservationReq, CancelReservationConf>(CANCEL_RESERVATION_ACTION, messages_converter),
       m_ocpp_config(ocpp_config),

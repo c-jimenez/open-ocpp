@@ -17,9 +17,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "RequestFifoManager.h"
-#include "AuthentManager.h"
 #include "Connectors.h"
 #include "GenericMessageSender.h"
+#include "IAuthentManager.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
 #include "IStatusManager.h"
@@ -47,7 +47,7 @@ RequestFifoManager::RequestFifoManager(ocpp::config::IOcppConfig&            ocp
                                        ocpp::messages::GenericMessageSender& msg_sender,
                                        ocpp::messages::IRequestFifo&         requests_fifo,
                                        IStatusManager&                       status_manager,
-                                       AuthentManager&                       authent_manager)
+                                       IAuthentManager&                      authent_manager)
     : m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),

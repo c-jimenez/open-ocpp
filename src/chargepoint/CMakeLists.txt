@@ -12,6 +12,7 @@ add_library(chargepoint OBJECT
     config/ConfigManager.cpp
     connector/Connectors.cpp
     datatransfer/DataTransferManager.cpp
+    iso15118/Iso15118Manager.cpp
     maintenance/MaintenanceManager.cpp
     metervalues/MeterValuesManager.cpp
     requestfifo/RequestFifo.cpp
@@ -37,6 +38,7 @@ target_include_directories(chargepoint PRIVATE authent
                                                connector
                                                datatransfer
                                                interface
+                                               iso15118
                                                maintenance
                                                metervalues
                                                requestfifo

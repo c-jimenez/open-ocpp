@@ -292,6 +292,74 @@ ocpp::types::UpdateFirmwareStatusEnumType ChargePointEventsHandlerStub::checkFir
     return UpdateFirmwareStatusEnumType::Accepted;
 }
 
+// ISO 15118 PnC extensions
+
+/** @copydoc bool IChargePointEventsHandler::iso15118CheckEvCertificate(const ocpp::x509::Certificate&) */
+bool ChargePointEventsHandlerStub::iso15118CheckEvCertificate(const ocpp::x509::Certificate& certificate)
+{
+    m_calls["iso15118CheckEvCertificate"] = {{"certificate", certificate.pem()}};
+    return true;
+}
+
+/** @copydoc bool IChargePointEventsHandler::iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate&) */
+bool ChargePointEventsHandlerStub::iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate& certificate)
+{
+    m_calls["iso15118ChargePointCertificateReceived"] = {{"certificate", certificate.pem()}};
+    return true;
+}
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&) */
+ocpp::types::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118DeleteCertificate(
+    ocpp::types::HashAlgorithmEnumType hash_algorithm,
+    const std::string&                 issuer_name_hash,
+    const std::string&                 issuer_key_hash,
+    const std::string&                 serial_number)
+{
+    m_calls["iso15118ChargePointCertificateReceived"] = {{"hash_algorithm", HashAlgorithmEnumTypeHelper.toString(hash_algorithm)},
+                                                         {"issuer_name_hash", issuer_name_hash},
+                                                         {"issuer_key_hash", issuer_key_hash},
+                                                         {"serial_number", serial_number}};
+    return DeleteCertificateStatusEnumType::Accepted;
+}
+
+/** @copydoc void IChargePointEventsHandler::iso15118GetInstalledCertificates(
+                                    bool,
+                                    bool,
+                                    bool,
+                                    std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>) */
+void ChargePointEventsHandlerStub::iso15118GetInstalledCertificates(
+    bool v2g_root_certificate,
+    bool mo_root_certificate,
+    bool v2g_certificate_chain,
+    std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>
+        certificates)
+{
+    (void)certificates;
+    m_calls["iso15118GetInstalledCertificates"] = {{"v2g_root_certificate", std::to_string(v2g_root_certificate)},
+                                                   {"mo_root_certificate", std::to_string(mo_root_certificate)},
+                                                   {"v2g_certificate_chain", std::to_string(v2g_certificate_chain)}};
+}
+
+/** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
+                                    ocpp::types::InstallCertificateUseEnumType type,
+                                    const ocpp::x509::Certificate&) */
+ocpp::types::InstallCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118CertificateReceived(
+    ocpp::types::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
+{
+    m_calls["iso15118CertificateReceived"] = {{"type", InstallCertificateUseEnumTypeHelper.toString(type)},
+                                              {"certificate", certificate.pem()}};
+    return InstallCertificateStatusEnumType::Accepted;
+}
+
+/** @copydoc void IChargePointEventsHandler::iso15118GenerateCsr(std::string&) */
+void ChargePointEventsHandlerStub::iso15118GenerateCsr(std::string& csr)
+{
+    m_calls["iso15118GenerateCsr"] = {{"csr", csr}};
+}
+
 /** @brief Indicate if a method has been called and returns the parameters used for the call */
 bool ChargePointEventsHandlerStub::methodCalled(const std::string method_name, std::map<std::string, std::string>& params)
 {
