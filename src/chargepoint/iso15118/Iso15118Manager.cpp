@@ -17,6 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Iso15118Manager.h"
+#include "CertificateRequest.h"
 #include "CertificateSigned.h"
 #include "DeleteCertificate.h"
 #include "Get15118EVCertificate.h"
@@ -24,15 +25,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IAuthentManager.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "ISecurityManager.h"
 #include "ITimerPool.h"
 #include "Iso15118Authorize.h"
 #include "Iso15118GetInstalledCertificateIds.h"
 #include "Iso15118InstallCertificate.h"
 #include "Iso15118TriggerMessage.h"
+#include "SecurityEvent.h"
 #include "SignCertificate.h"
 #include "WorkerThreadPool.h"
-
-#include "CertificateRequest.h"
 
 #include <thread>
 
@@ -53,13 +54,15 @@ Iso15118Manager::Iso15118Manager(ocpp::config::IOcppConfig&                     
                                  const ocpp::messages::GenericMessagesConverter& messages_converter,
                                  ocpp::messages::GenericMessageSender&           msg_sender,
                                  IAuthentManager&                                authent_manager,
-                                 IDataTransferManager&                           datatransfer_manager)
+                                 IDataTransferManager&                           datatransfer_manager,
+                                 ISecurityManager&                               security_manager)
     : m_ocpp_config(ocpp_config),
       m_events_handler(events_handler),
       m_worker_pool(worker_pool),
       m_messages_converter(messages_converter),
       m_msg_sender(msg_sender),
       m_authent_manager(authent_manager),
+      m_security_manager(security_manager),
       m_last_csr(),
       m_csr_sign_retries(0),
       m_csr_timer(timer_pool, "ISO15118 CSR timer")
@@ -275,6 +278,7 @@ void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request
     LOG_INFO << "[ISO15118] Certificate signed message received : certificate size = " << request.certificateChain.size();
 
     // Prepare response
+    bool send_security_event = true;
     response.status = CertificateSignedStatusEnumType::Rejected;
 
     // Check certificate's size
@@ -289,9 +293,16 @@ void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request
             {
                 // Stop timeout timer
                 m_csr_timer.stop();
+                send_security_event = false;
                 response.status = CertificateSignedStatusEnumType::Accepted;
             }
         }
+    }
+
+    // Triggers a security event
+    if (send_security_event)
+    {
+        m_security_manager.logSecurityEvent(SECEVT_INVALID_CHARGE_POINT_CERT, "");
     }
 
     LOG_INFO << "[ISO15118] Certificate signed message : " << CertificateSignedStatusEnumTypeHelper.toString(response.status);
@@ -315,7 +326,7 @@ void Iso15118Manager::handle(const ocpp::messages::DeleteCertificateReq& request
     LOG_INFO << "[ISO15118] Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(response.status);
 }
 
-/** @brief Handle a Iso15118GetInstalledCertificateIds request */
+/** @brief Handle an Iso15118GetInstalledCertificateIds request */
 void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertificateIdsReq& request,
                              ocpp::messages::Iso15118GetInstalledCertificateIdsConf&      response)
 {
@@ -389,7 +400,7 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
              << " - count = " << response.certificateHashDataChain.size();
 }
 
-/** @brief Handle a InstallCertificate request */
+/** @brief Handle an InstallCertificate request */
 void Iso15118Manager::handle(const ocpp::messages::Iso15118InstallCertificateReq& request,
                              ocpp::messages::Iso15118InstallCertificateConf&      response)
 {

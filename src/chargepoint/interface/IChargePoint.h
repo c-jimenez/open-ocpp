@@ -273,7 +273,7 @@ class IChargePoint
         const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
         ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
 
-    /** 
+    /**
      * @brief Get or update an ISO15118 EV certificate 
      * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
      * @param action Defines whether certificate needs to be installed or updated

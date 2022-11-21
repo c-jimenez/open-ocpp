@@ -22,7 +22,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ChargePointHandler.h"
 #include "GenericMessageSender.h"
 #include "ICentralSystem.h"
+#include "Iso15118.h"
+#include "Logger.h"
 #include "MessageDispatcher.h"
+#include "MessagesConverter.h"
 #include "MessagesValidator.h"
 #include "RpcServer.h"
 
@@ -255,6 +258,30 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
                                                                    const ocpp::x509::Certificate&                      signing_certificate,
                                                                    const std::string&                                  signature) override;
 
+    // ISO 15118 PnC extensions
+
+    /** @copydoc bool ICentralSystem::IChargePoint::iso15118CertificateSigned(const ocpp::x509::Certificate&) */
+    bool iso15118CertificateSigned(const ocpp::x509::Certificate& certificate_chain) override;
+
+    /** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118DeleteCertificate(
+                                const ocpp::types::CertificateHashDataType&) */
+    ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
+        const ocpp::types::CertificateHashDataType& certificate) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>&,
+                                                                                       std::vector<ocpp::types::CertificateHashDataChainType>&) */
+    bool iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>& types,
+                                            std::vector<ocpp::types::CertificateHashDataChainType>&      certificates) override;
+
+    /** @copydoc ocpp::types::InstallCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118CertificateSigned(
+                                                                ocpp::types::InstallCertificateUseEnumType,
+                                                                const ocpp::x509::Certificate&) */
+    ocpp::types::InstallCertificateStatusEnumType iso15118InstallCertificate(ocpp::types::InstallCertificateUseEnumType type,
+                                                                             const ocpp::x509::Certificate& certificate) override;
+
+    /** @copydoc bool ICentralSystem::IChargePoint::iso15118TriggerSignCertificate() */
+    bool iso15118TriggerSignCertificate() override;
+
     // IRpc::IListener interface
 
     /** @copydoc void IRpc::IListener::rpcDisconnected() */
@@ -295,8 +322,77 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     ocpp::messages::GenericMessageSender m_msg_sender;
     /** @brief Request handler */
     ChargePointHandler m_handler;
+    /** @brief Messages converters */
+    const ocpp::messages::MessagesConverter& m_messages_converter;
     /** @brief User request handler */
     IChargePointRequestHandler* m_user_handler;
+
+    /**
+     * @brief Generic ISO15118 request sender
+     * @param type_id Type of message
+     * @param action Action correspondin to the message
+     * @param request Request to send
+     * @param response Received response
+     * @return true if the message has been sent and a response has been received, false otherwise
+     */
+    template <typename RequestType, typename ResponseType>
+    bool send(const std::string& type_id, const std::string& action, const RequestType& request, ResponseType& response)
+    {
+        bool ret = false;
+
+        // Get converters
+        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+
+        // Prepare request
+        ocpp::messages::DataTransferReq req;
+        req.vendorId.assign(ocpp::messages::ISO15118_VENDOR_ID);
+        req.messageId.value().assign(action);
+
+        // Convert request to JSON
+        rapidjson::Document                        json_req;
+        rapidjson::StringBuffer                    buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        req_converter->toJson(request, json_req);
+        json_req.Accept(writer);
+        req.data.value() = buffer.GetString();
+
+        // Send request
+        ocpp::messages::DataTransferConf resp;
+        if (m_msg_sender.call(ocpp::messages::DATA_TRANSFER_ACTION, req, resp) == ocpp::messages::CallResult::Ok)
+        {
+            if (resp.status == ocpp::types::DataTransferStatus::Accepted)
+            {
+                try
+                {
+                    // Parse JSON
+                    rapidjson::Document json_resp;
+                    json_resp.Parse(resp.data.value().c_str());
+                    if (!json_resp.HasParseError())
+                    {
+                        // Convert response from JSON
+                        std::string error_code;
+                        std::string error_message;
+                        ret = resp_converter->fromJson(json_resp, response, error_code, error_message);
+                    }
+                    else
+                    {
+                        LOG_ERROR << "[ISO15118] << " << action << " : Invalid JSON received";
+                    }
+                }
+                catch (const std::exception&)
+                {
+                    LOG_ERROR << "[ISO15118] << " << action << " : Invalid JSON received";
+                }
+            }
+            else
+            {
+                LOG_ERROR << "[ISO15118] Data transfer error : " << ocpp::types::DataTransferStatusHelper.toString(resp.status);
+            }
+        }
+
+        return ret;
+    }
 };
 
 } // namespace centralsystem

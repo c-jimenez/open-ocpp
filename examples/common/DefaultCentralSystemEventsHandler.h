@@ -177,6 +177,38 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
                                                     const ocpp::types::Optional<int>&   request_id) override;
 
+        // ISO 15118 PnC extensions
+
+        /** @copydoc ocpp::types::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
+                                                          const ocpp::x509::Certificate&,
+                                                          const std::string&,
+                                                          const std::vector<ocpp::types::OcspRequestDataType>&,
+                                                          ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) override; */
+        ocpp::types::IdTokenInfoType iso15118Authorize(
+            const ocpp::x509::Certificate&                                          certificate,
+            const std::string&                                                      id_token,
+            const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+            ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
+
+        /** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
+                                                          const std::string&,
+                                                          ocpp::types::CertificateActionEnumType,
+                                                          const std::string&,
+                                                          std::string&) */
+        ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
+                                                                                  ocpp::types::CertificateActionEnumType action,
+                                                                                  const std::string&                     exi_request,
+                                                                                  std::string& exi_response) override;
+
+        /** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
+                                                          const ocpp::types::OcspRequestDataType&,
+                                                          std::string&) */
+        ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
+                                                                               std::string& ocsp_result) override;
+
+        /** @copydoc bool iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
+        bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;
+
       protected:
         /** @brief Get the serial number of the charge point */
         virtual std::string getChargePointSerialNumber(const std::string& chargepoint_id)

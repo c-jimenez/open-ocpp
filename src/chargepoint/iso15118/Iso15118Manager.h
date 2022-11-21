@@ -26,6 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessagesConverter.h"
 #include "IDataTransferManager.h"
 #include "IdTokenInfoType.h"
+#include "Iso15118.h"
 #include "Logger.h"
 #include "OcspRequestDataType.h"
 #include "Timer.h"
@@ -64,6 +65,7 @@ namespace chargepoint
 
 class IAuthentManager;
 class IChargePointEventsHandler;
+class ISecurityManager;
 
 /** @brief Handle charge point ISO15118 requests */
 class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
@@ -77,7 +79,8 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
                     const ocpp::messages::GenericMessagesConverter& messages_converter,
                     ocpp::messages::GenericMessageSender&           msg_sender,
                     IAuthentManager&                                authent_manager,
-                    IDataTransferManager&                           datatransfer_manager);
+                    IDataTransferManager&                           datatransfer_manager,
+                    ISecurityManager&                               security_manager);
 
     /** @brief Destructor */
     virtual ~Iso15118Manager();
@@ -149,15 +152,14 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
     ocpp::messages::GenericMessageSender& m_msg_sender;
     /** @brief Authentication manager */
     IAuthentManager& m_authent_manager;
+    /** @brief Security manager */
+    ISecurityManager& m_security_manager;
     /** @brief Last CSR request to sign */
     std::string m_last_csr;
     /** @brief Number of retries to sign a CSR request */
     unsigned int m_csr_sign_retries;
     /** @brief Timer for sign certificate operations */
     ocpp::helpers::Timer m_csr_timer;
-
-    /** @brief Vendor id for ISO 15118 PnC extensions messages */
-    static constexpr const char* ISO15118_VENDOR_ID = "org.openchargealliance.iso15118pnc";
 
     /**
      * @brief Generic ISO15118 request sender
@@ -178,7 +180,7 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
 
         // Prepare request
         ocpp::messages::DataTransferReq req;
-        req.vendorId.assign(ISO15118_VENDOR_ID);
+        req.vendorId.assign(ocpp::messages::ISO15118_VENDOR_ID);
         req.messageId.value().assign(action);
 
         // Convert request to JSON
@@ -292,10 +294,10 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
     void handle(const ocpp::messages::CertificateSignedReq& request, ocpp::messages::CertificateSignedConf& response);
     /** @brief Handle a DeleteCertificate request */
     void handle(const ocpp::messages::DeleteCertificateReq& request, ocpp::messages::DeleteCertificateConf& response);
-    /** @brief Handle a Iso15118GetInstalledCertificateIds request */
+    /** @brief Handle an Iso15118GetInstalledCertificateIds request */
     void handle(const ocpp::messages::Iso15118GetInstalledCertificateIdsReq& request,
                 ocpp::messages::Iso15118GetInstalledCertificateIdsConf&      response);
-    /** @brief Handle a InstallCertificate request */
+    /** @brief Handle an InstallCertificate request */
     void handle(const ocpp::messages::Iso15118InstallCertificateReq& request, ocpp::messages::Iso15118InstallCertificateConf& response);
     /** @brief Handle a TriggerMessage request */
     void handle(const ocpp::messages::Iso15118TriggerMessageReq& request, ocpp::messages::Iso15118TriggerMessageConf& response);

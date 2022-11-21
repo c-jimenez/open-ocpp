@@ -19,10 +19,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_ICHARGEPOINTREQUESTHANDLER_H
 #define OPENOCPP_ICHARGEPOINTREQUESTHANDLER_H
 
+#include "Certificate.h"
 #include "CertificateRequest.h"
 #include "Enums.h"
 #include "IdTagInfo.h"
+#include "IdTokenInfoType.h"
 #include "MeterValue.h"
+#include "OcspRequestDataType.h"
 
 #include <vector>
 
@@ -187,6 +190,53 @@ class IChargePointRequestHandler
      */
     virtual void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
                                                         const ocpp::types::Optional<int>&   request_id) = 0;
+
+    // ISO 15118 PnC extensions
+
+    /**
+     * @brief Called to authorize an ISO15118 transaction
+     * @param certificate The X.509 certificated presented by EV
+     * @param id_token This contains the identifier that needs to be authorized
+     * @param cert_hash_data Contains the information needed to verify the EV Contract Certificate via OCSP
+     * @param cert_status Certificate status information. - if all certificates are 
+     *                    valid: return 'Accepted'. - if one of the certificates was revoked,
+     *                    return 'CertificateRevoked
+     * @return Authorization status (see AuthorizationStatus type)
+    */
+    virtual ocpp::types::IdTokenInfoType iso15118Authorize(
+        const ocpp::x509::Certificate&                                          certificate,
+        const std::string&                                                      id_token,
+        const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
+
+    /**
+     * @brief Called when the Charge Point wants to get or update an ISO15118 EV certificate 
+     * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
+     * @param action Defines whether certificate needs to be installed or updated
+     * @param exi_request Raw CertificateInstallationReq request from EV, Base64 encoded
+     * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
+     * @return Operation status (see Iso15118EVCertificateStatusEnumType enum) 
+     */
+    virtual ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
+                                                                                      ocpp::types::CertificateActionEnumType action,
+                                                                                      const std::string&                     exi_request,
+                                                                                      std::string& exi_response) = 0;
+
+    /**
+     * @brief Called when the CHarge Point wants to get the validity status of an ISO15118 certificate
+     * @param ocsp_request Indicates the certificate of which the status is requested
+     * @param ocsp_result OCSPResponse class as defined in IETF RFC 6960. DER encoded (as defined in IETF RFC 6960), and then base64 encoded
+     * @return Operation status (see GetCertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
+                                                                                   std::string&                            ocsp_result) = 0;
+
+    /**
+     * @brief Called when a request to sign a new ISO15118 client certificat has been received
+     * @param certificate_request Certificate request
+     * @return true if the certificate request can be processed, false otherwise
+     */
+    virtual bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& certificate_request) = 0;
 };
 
 } // namespace centralsystem

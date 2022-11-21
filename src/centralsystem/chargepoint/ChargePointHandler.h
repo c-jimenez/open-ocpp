@@ -25,8 +25,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "DiagnosticsStatusNotification.h"
 #include "FirmwareStatusNotification.h"
 #include "GenericMessageHandler.h"
+#include "Get15118EVCertificate.h"
+#include "GetCertificateStatus.h"
 #include "Heartbeat.h"
+#include "Iso15118Authorize.h"
 #include "LogStatusNotification.h"
+#include "Logger.h"
+#include "MessagesConverter.h"
 #include "MeterValues.h"
 #include "SecurityEventNotification.h"
 #include "SignCertificate.h"
@@ -241,8 +246,83 @@ class ChargePointHandler
     const std::string m_identifier;
     /** @brief Stack configuration */
     const ocpp::config::ICentralSystemConfig& m_stack_config;
+    /** @brief Messages converters */
+    const ocpp::messages::GenericMessagesConverter& m_messages_converter;
     /** @brief Request handler */
     IChargePointRequestHandler* m_handler;
+
+    // ISO 15118 PnC extensions
+
+    /**
+     * @brief Generic ISO15118 request handler
+     * @param type_id Type of message
+     * @param request_data Data associated to the request
+     * @param response_data Data associated with the response
+     * @return Response status (see DataTransferStatus enum)
+     */
+    template <typename RequestType, typename ResponseType>
+    ocpp::types::DataTransferStatus handleMessage(const std::string& type_id, const std::string& request_data, std::string& response_data)
+    {
+        ocpp::types::DataTransferStatus                  status         = ocpp::types::DataTransferStatus::Rejected;
+        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        try
+        {
+            // Parse JSON
+            rapidjson::Document request;
+            request.Parse(request_data.c_str());
+            if (!request.HasParseError())
+            {
+                // Convert request from JSON
+                RequestType req;
+                std::string error_code;
+                std::string error_message;
+                if (req_converter->fromJson(request, req, error_code, error_message))
+                {
+                    // Handle message
+                    ResponseType resp;
+                    handleMessage(req, resp);
+
+                    // Convert response to JSON
+                    rapidjson::Document response;
+                    response.Parse("{}");
+                    if (resp_converter->toJson(resp, response))
+                    {
+
+                        // Serialize response
+                        rapidjson::StringBuffer                    buffer;
+                        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+                        response.Accept(writer);
+                        response_data = buffer.GetString();
+
+                        status = ocpp::types::DataTransferStatus::Accepted;
+                    }
+                }
+                else
+                {
+                    LOG_ERROR << "[ISO15118] << " << type_id << " : Invalid JSON received";
+                }
+            }
+            else
+            {
+                LOG_ERROR << "[ISO15118] << " << type_id << " : Invalid JSON received";
+            }
+        }
+        catch (const std::exception&)
+        {
+            LOG_ERROR << "[ISO15118] << " << type_id << " : Invalid JSON received";
+        }
+        return status;
+    }
+
+    /** @brief Handle an Iso15118Authorize request */
+    void handleMessage(const ocpp::messages::Iso15118AuthorizeReq& request, ocpp::messages::Iso15118AuthorizeConf& response);
+    /** @brief Handle a Get15118EVCertificate request */
+    void handleMessage(const ocpp::messages::Get15118EVCertificateReq& request, ocpp::messages::Get15118EVCertificateConf& response);
+    /** @brief Handle a GetCertificateStatus request */
+    void handleMessage(const ocpp::messages::GetCertificateStatusReq& request, ocpp::messages::GetCertificateStatusConf& response);
+    /** @brief Handle a SignCertificate request */
+    void handleMessage(const ocpp::messages::SignCertificateReq& request, ocpp::messages::SignCertificateConf& response);
 };
 
 } // namespace centralsystem

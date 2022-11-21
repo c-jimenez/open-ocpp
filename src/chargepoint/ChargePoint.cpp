@@ -324,7 +324,8 @@ bool ChargePoint::start()
                                                                    m_messages_converter,
                                                                    *m_msg_sender,
                                                                    *m_authent_manager,
-                                                                   *m_data_transfer_manager);
+                                                                   *m_data_transfer_manager,
+                                                                   m_security_manager);
 
             // Register specific configuration checks
             m_config_manager->registerConfigChangedListener("AuthorizationKey", *this);

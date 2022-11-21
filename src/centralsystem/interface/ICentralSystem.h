@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "AuthorizationData.h"
 #include "Certificate.h"
+#include "CertificateHashDataChainType.h"
 #include "CertificateHashDataType.h"
 #include "ChargingProfile.h"
 #include "ICentralSystemConfig.h"
@@ -432,6 +433,47 @@ class ICentralSystem
             const ocpp::types::Optional<ocpp::types::DateTime>& install_date,
             const ocpp::x509::Certificate&                      signing_certificate,
             const std::string&                                  signature) = 0;
+
+        // ISO 15118 PnC extensions
+
+        /**
+         * @brief Send a generated certificate chain after an ISO15118 SignCertificate request from the charge point
+         * @param certificate_chain Generated certificate chain
+         * @return true if the certificate chain has been accepted by the charge point, false otherwise
+         */
+        virtual bool iso15118CertificateSigned(const ocpp::x509::Certificate& certificate_chain) = 0;
+
+        /**
+         * @brief Delete an installed ISO15118 CA certificate
+         * @param certificate Certificate information
+         * @return Operation status (see DeleteCertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
+            const ocpp::types::CertificateHashDataType& certificate) = 0;
+
+        /**
+         * @brief Get the list of installed ISO15118 CA certificates
+         * @param types Type of CA certificates
+         * @param certificates Certificates information
+         * @return true is the list has been retrieved, false otherwise
+         */
+        virtual bool iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>& types,
+                                                        std::vector<ocpp::types::CertificateHashDataChainType>&      certificates) = 0;
+
+        /**
+         * @brief Install an ISO15118 CA certificate
+         * @param type Type of CA certificate
+         * @param certificate CA certificate to install
+         * @return Operation status (see InstallCertificateStatusEnumType documentation)
+         */
+        virtual ocpp::types::InstallCertificateStatusEnumType iso15118InstallCertificate(ocpp::types::InstallCertificateUseEnumType type,
+                                                                                         const ocpp::x509::Certificate& certificate) = 0;
+
+        /**
+         * @brief Request the send of an ISO15118 SignCertificate request from the charge point
+         * @return true if the request has been accepted by the charge point, false otherwise
+         */
+        virtual bool iso15118TriggerSignCertificate() = 0;
     };
 };
 
