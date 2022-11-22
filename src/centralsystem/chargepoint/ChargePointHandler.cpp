@@ -195,8 +195,8 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& re
         if (request.messageId.value() == ISO15118_AUTHORIZE_ACTION)
         {
             // Iso15118Authorize
-            response.status =
-                handleMessage<Iso15118AuthorizeReq, Iso15118AuthorizeConf>("Authorize", request.data.value(), response.data.value());
+            response.status = handleMessage<Iso15118AuthorizeReq, Iso15118AuthorizeConf>(
+                "Iso15118Authorize", request.data.value(), response.data.value());
         }
         else if (request.messageId.value() == GET_15118_EV_CERTIFICATE_ACTION)
         {
@@ -224,6 +224,7 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& re
         }
 
         message_handled = true;
+        ret             = true;
     }
 
     // Notify message if it hasn't been handled already

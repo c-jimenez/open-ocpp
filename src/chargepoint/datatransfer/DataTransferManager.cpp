@@ -102,7 +102,8 @@ bool DataTransferManager::handleMessage(const ocpp::messages::DataTransferReq& r
     if (handler != m_handlers.cend())
     {
         // Notify handler
-        handler->second->onDataTransferRequest(request.vendorId, request.messageId.value(), request.data, response.data.value());
+        response.status =
+            handler->second->onDataTransferRequest(request.vendorId, request.messageId.value(), request.data, response.data.value());
     }
     else
     {

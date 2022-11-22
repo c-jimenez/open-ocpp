@@ -28,6 +28,7 @@ SOFTWARE.
 #include "ICentralSystemEventsHandler.h"
 #include "IChargePointRequestHandler.h"
 
+#include <filesystem>
 #include <map>
 
 /** @brief Default central system event handlers implementation for the examples */
@@ -35,7 +36,9 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
 {
   public:
     /** @brief Constructor */
-    DefaultCentralSystemEventsHandler();
+    DefaultCentralSystemEventsHandler(std::filesystem::path iso_v2g_root_ca    = "",
+                                      std::filesystem::path iso_mo_root_ca     = "",
+                                      bool                  set_pending_status = false);
 
     /** @brief Destructor */
     virtual ~DefaultCentralSystemEventsHandler();
@@ -231,12 +234,42 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @brief Get the list of the connected charge points */
     std::map<std::string, std::shared_ptr<ChargePointRequestHandler>>& chargePoints() { return m_chargepoints; }
 
+    /** @brief Get the list of the pending charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& pendingChargePoints()
+    {
+        return m_pending_chargepoints;
+    }
+
+    /** @brief Get the list of the accepted charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& acceptedChargePoints()
+    {
+        return m_accepted_chargepoints;
+    }
+
+    /** @brief Path to the V2G root CA */
+    std::filesystem::path& v2gRootCA() { return m_iso_v2g_root_ca; }
+    /** @brief Path to the MO root CA */
+    std::filesystem::path& moRootCA() { return m_iso_mo_root_ca; }
+
+    /** @brief Indicate if the charge point must be set on pending status upon connection */
+    bool setPendingEnabled() const { return m_set_pending_status; }
+
     /** @brief Remove a charge point from the connected charge points */
     void removeChargePoint(const std::string& identifier);
 
   private:
+    /** @brief Path to the V2G root CA */
+    std::filesystem::path m_iso_v2g_root_ca;
+    /** @brief Path to the MO root CA */
+    std::filesystem::path m_iso_mo_root_ca;
+    /** @brief Indicate if the charge point must be set on pending status upon connection */
+    bool m_set_pending_status;
     /** @brief Connected charge points */
     std::map<std::string, std::shared_ptr<ChargePointRequestHandler>> m_chargepoints;
+    /** @brief Pending charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> m_pending_chargepoints;
+    /** @brief Accepted charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> m_accepted_chargepoints;
 };
 
 #endif // DEFAULTCENTRALSYSTEMEVENTSHANDLER_H

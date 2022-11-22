@@ -823,23 +823,23 @@ ocpp::types::AuthorizationStatus ChargePoint::iso15118Authorize(
     return ret;
 }
 
-/** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePoint::iso15118GetEVCertificate(
-                                                                              const std::string& iso15118_schema_version,
-                                                                              ocpp::types::CertificateActionEnumType action,
-                                                                              const std::string&                     exi_request,
-                                                                              std::string&) */
-ocpp::types::Iso15118EVCertificateStatusEnumType ChargePoint::iso15118GetEVCertificate(const std::string& iso15118_schema_version,
-                                                                                       ocpp::types::CertificateActionEnumType action,
-                                                                                       const std::string&                     exi_request,
-                                                                                       std::string&                           exi_response)
+/** @copydoc bool IChargePoint::iso15118GetEVCertificate(const std::string&,
+                                                             ocpp::types::CertificateActionEnumType,
+                                                             const std::string&,
+                                                             std::string&) */
+bool ChargePoint::iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
+                                           ocpp::types::CertificateActionEnumType action,
+                                           const std::string&                     exi_request,
+                                           std::string&                           exi_response)
 {
-    Iso15118EVCertificateStatusEnumType ret = Iso15118EVCertificateStatusEnumType::Failed;
+    bool ret = false;
 
     if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
-            ret = m_iso15118_manager->get15118EVCertificate(iso15118_schema_version, action, exi_request, exi_response);
+            ret = (m_iso15118_manager->get15118EVCertificate(iso15118_schema_version, action, exi_request, exi_response) ==
+                   Iso15118EVCertificateStatusEnumType::Accepted);
         }
         else
         {
@@ -854,19 +854,16 @@ ocpp::types::Iso15118EVCertificateStatusEnumType ChargePoint::iso15118GetEVCerti
     return ret;
 }
 
-/** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePoint::iso15118GetCertificateStatus(
-                                                                           const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                           std::string&) */
-ocpp::types::GetCertificateStatusEnumType ChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                                    std::string&                            ocsp_result)
+/** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType&, std::string&) */
+bool ChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
 {
-    GetCertificateStatusEnumType ret = GetCertificateStatusEnumType::Failed;
+    bool ret = false;
 
     if (m_status_manager)
     {
         if (m_status_manager->getRegistrationStatus() != RegistrationStatus::Rejected)
         {
-            ret = m_iso15118_manager->getCertificateStatus(ocsp_request, ocsp_result);
+            ret = (m_iso15118_manager->getCertificateStatus(ocsp_request, ocsp_result) == GetCertificateStatusEnumType::Accepted);
         }
         else
         {

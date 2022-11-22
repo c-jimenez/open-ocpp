@@ -279,21 +279,20 @@ class IChargePoint
      * @param action Defines whether certificate needs to be installed or updated
      * @param exi_request Raw CertificateInstallationReq request from EV, Base64 encoded
      * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
-     * @return Operation status (see Iso15118EVCertificateStatusEnumType enum) 
+     * @return true if the processing of the message has been successful and an EXI response has been included, false otherwise 
      */
-    virtual ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
-                                                                                      ocpp::types::CertificateActionEnumType action,
-                                                                                      const std::string&                     exi_request,
-                                                                                      std::string& exi_response) = 0;
+    virtual bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
+                                          ocpp::types::CertificateActionEnumType action,
+                                          const std::string&                     exi_request,
+                                          std::string&                           exi_response) = 0;
 
     /**
      * @brief Get the status of an ISO15118 certificate
      * @param ocsp_request Indicates the certificate of which the status is requested
      * @param ocsp_result OCSPResponse class as defined in IETF RFC 6960. DER encoded (as defined in IETF RFC 6960), and then base64 encoded
-     * @return Operation status (see GetCertificateStatusEnumType enum)
+     * @return true if the status of the certificate has been successfully retrieved, false otherwise 
      */
-    virtual ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                                   std::string&                            ocsp_result) = 0;
+    virtual bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) = 0;
 
     /**
      * @brief Send a CSR request to sign an ISO15118 certificate

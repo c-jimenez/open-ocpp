@@ -63,6 +63,7 @@ As of this version :
 * All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
 * All the messages defined in the OCPP 1.6 security whitepaper edition 2 have been implemented
+* All the messages defined in the Using ISO 15118 Plug & Charge with OCPP 1.6 Application Note v1.0 have been implemented
 
 The user application will have to implement some callbacks to provide the data needed by **Open OCPP** or to handle OCPP events (boot notification, remote start/stop notifications, meter values...).
 
@@ -215,6 +216,24 @@ If **InternalCertificateManagementEnabled** is set to **true**, the storage of c
 **Open OCPP** support this feature for both Charge Point and Central System roles.
 
 **Open OCPP** provides helper classes based on OpenSSL to ease private keys, certificate and certificate requests usage : generation, signature, verification. They can be used in the user application callbacks. These helpers can be found in the ocpp::tools::x509 namespace and are widely used in the **Open OCPP** source code and examples.
+
+### OCPP IS15118 PnC extensions
+
+**Open OCPP** fully supports the whole messaging, data types and configuration keys set associated to the ISO15118 PnC extensions.
+
+#### Charge Point role
+
+In Charge Point role these extensions consists mainly on forwarding messages from the ISO15118-2 stack layer to the Central System by using dedicated DataTransfer messages. 
+
+**Open OCPP** implements the forwarding and provides callback and retries capabilities for certificates messages.
+
+Allthough **Open OCPP** is able to manage a certificate store, the Chare Point certificate used for ISO15118 communication won't be stored in it even if the **InternalCertificateManagementEnabled** configuration key is set to **true**. This is will allow for the ISO15118-2 stack to access this certificate and use it to secure its communications with the vehicule.
+
+#### Central System role
+
+In Central System role these extensions consists mainly in certificate management by forwarding request either to OCSP server or Mobility Operators.
+
+**Open OCPP** provides callbacks where the forwarding to the necessary servers must be implemented.
 
 ### Internal configuration keys
 

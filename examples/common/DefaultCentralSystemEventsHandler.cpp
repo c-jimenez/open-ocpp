@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "DefaultCentralSystemEventsHandler.h"
+#include "PrivateKey.h"
 #include "Sha2.h"
 #include "String.h"
 
@@ -36,7 +37,17 @@ using namespace ocpp::types;
 using namespace ocpp::x509;
 
 /** @brief Constructor */
-DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler() : m_chargepoints() { }
+DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler(std::filesystem::path iso_v2g_root_ca,
+                                                                     std::filesystem::path iso_mo_root_ca,
+                                                                     bool                  set_pending_status)
+    : m_iso_v2g_root_ca(iso_v2g_root_ca),
+      m_iso_mo_root_ca(iso_mo_root_ca),
+      m_set_pending_status(set_pending_status),
+      m_chargepoints(),
+      m_pending_chargepoints(),
+      m_accepted_chargepoints()
+{
+}
 
 /** @brief Destructor */
 DefaultCentralSystemEventsHandler::~DefaultCentralSystemEventsHandler() { }
@@ -71,14 +82,12 @@ void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocp
 void DefaultCentralSystemEventsHandler::removeChargePoint(const std::string& identifier)
 {
     std::thread t(
-        [this, &identifier]
+        [this, identifier = identifier]
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            auto iter_chargepoint = m_chargepoints.find(identifier);
-            if (iter_chargepoint != m_chargepoints.end())
-            {
-                m_chargepoints.erase(iter_chargepoint);
-            }
+            m_chargepoints.erase(identifier);
+            m_pending_chargepoints.erase(identifier);
+            m_accepted_chargepoints.erase(identifier);
         });
     t.detach();
 }
@@ -140,7 +149,20 @@ ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRe
     cout << "[" << m_chargepoint->identifier() << "] - Boot notification : vendor = " << vendor << " - model = " << model
          << " - s/n = " << serial_number << " - firmware = " << firmware_version << endl;
 
-    return RegistrationStatus::Accepted;
+    ocpp::types::RegistrationStatus ret = RegistrationStatus::Accepted;
+    if (m_event_handler.setPendingEnabled())
+    {
+        auto accepted_chargepoint = m_event_handler.acceptedChargePoints();
+        auto iter_accepted        = accepted_chargepoint.find(m_chargepoint->identifier());
+        if (iter_accepted == accepted_chargepoint.end())
+        {
+            m_event_handler.pendingChargePoints()[m_chargepoint->identifier()] = m_chargepoint;
+
+            ret = RegistrationStatus::Pending;
+        }
+    }
+
+    return ret;
 }
 
 /** @copydoc ocpp::types::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
@@ -471,8 +493,30 @@ ocpp::types::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandl
          << "] - [ISO15118] Get EV certificate : iso15118_schema_version = " << iso15118_schema_version
          << " - action = " << CertificateActionEnumTypeHelper.toString(action) << " - exi_request size = " << exi_request.size() << endl;
 
-    // TODO => encode EXI request, format EXI response
-    (void)exi_response;
+    // For the purpose of this example, the EXI response contains directly the EV certificate in PEM format
+    // In a real system, the certificate is embedded in an EXI message
+
+    // Generate CSR for the EV certificate
+    X509Document::Subject ev_cert_subject;
+    ev_cert_subject.country           = "FR";
+    ev_cert_subject.state             = "Savoie";
+    ev_cert_subject.location          = "Chambery";
+    ev_cert_subject.organization      = "Open OCPP";
+    ev_cert_subject.organization_unit = "Examples";
+    ev_cert_subject.common_name       = "MO EV certificate";
+    ev_cert_subject.email_address     = "ca.examples@open-ocpp.org";
+    PrivateKey         ev_cert_key(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "");
+    CertificateRequest ev_cert_req(ev_cert_subject, ev_cert_key, Sha2::SHA256);
+
+    // Sign the certificate with the MO root certificate
+    Certificate mo_root_ca(m_event_handler.moRootCA());
+    std::string mo_root_ca_key_path = m_event_handler.moRootCA();
+    ocpp::helpers::replace(mo_root_ca_key_path, ".pem", ".key");
+    PrivateKey  mo_root_ca_key(std::filesystem::path(mo_root_ca_key_path), "");
+    Certificate ev_cert(ev_cert_req, mo_root_ca, mo_root_ca_key, Sha2::SHA256, 7300);
+
+    // Put certificate inside the response
+    exi_response = ev_cert.pem();
 
     return Iso15118EVCertificateStatusEnumType::Accepted;
 }
@@ -502,7 +546,7 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118SignC
          << endl;
 
     // Load CA certificate which will sign the request
-    std::filesystem::path ca_cert_path = "cs_iso15118_ca.pem";
+    std::filesystem::path ca_cert_path = m_event_handler.v2gRootCA();
     Certificate           ca_cert(ca_cert_path);
     if (ca_cert.isValid())
     {

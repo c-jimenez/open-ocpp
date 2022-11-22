@@ -170,12 +170,12 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
                                     bool,
                                     bool,
                                     bool,
-                                    std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>) */
+                                    std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>&) */
     void iso15118GetInstalledCertificates(
         bool v2g_root_certificate,
         bool mo_root_certificate,
         bool v2g_certificate_chain,
-        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>
+        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
             certificates) override;
 
     /** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(

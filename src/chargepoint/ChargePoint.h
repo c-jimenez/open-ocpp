@@ -188,21 +188,17 @@ class ChargePoint : public IChargePoint,
         const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
         ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
 
-    /** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePoint::iso15118GetEVCertificate(
-                                                                              const std::string& iso15118_schema_version,
-                                                                              ocpp::types::CertificateActionEnumType action,
-                                                                              const std::string&                     exi_request,
-                                                                              std::string&) */
-    ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
-                                                                              ocpp::types::CertificateActionEnumType action,
-                                                                              const std::string&                     exi_request,
-                                                                              std::string&                           exi_response) override;
+    /** @copydoc bool IChargePoint::iso15118GetEVCertificate(const std::string&,
+                                                             ocpp::types::CertificateActionEnumType,
+                                                             const std::string&,
+                                                             std::string&) */
+    bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
+                                  ocpp::types::CertificateActionEnumType action,
+                                  const std::string&                     exi_request,
+                                  std::string&                           exi_response) override;
 
-    /** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePoint::iso15118GetCertificateStatus(
-                                                                           const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                           std::string&) */
-    ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                           std::string&                            ocsp_result) override;
+    /** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType&, std::string&) */
+    bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) override;
 
     /** @copydoc bool IChargePoint::iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
     bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& csr) override;

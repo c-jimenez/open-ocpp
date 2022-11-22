@@ -477,32 +477,34 @@ bool Iso15118Manager::sendSignCertificate()
     {
         // Extract response
         result = response.status;
-
-        // Start timer to retry if no response has been received
-        if (m_csr_sign_retries < m_ocpp_config.certSigningRepeatTimes())
+        if (result == GenericStatusEnumType::Accepted)
         {
-            m_csr_sign_retries++;
-            if (m_ocpp_config.certSigningWaitMinimum().count() != 0)
+            // Start timer to retry if no response has been received
+            if (m_csr_sign_retries < m_ocpp_config.certSigningRepeatTimes())
             {
-                LOG_INFO << "Setting timeout for sign certificate to " << m_ocpp_config.certSigningWaitMinimum().count() << "s";
-                m_csr_timer.setCallback(
-                    [this]()
-                    {
-                        m_worker_pool.run<void>(
-                            [this]
-                            {
-                                LOG_ERROR << "Sign certificate timeout, triggering retry...";
-                                sendSignCertificate();
-                            });
-                    });
-                m_csr_timer.start(m_ocpp_config.certSigningWaitMinimum(), true);
+                m_csr_sign_retries++;
+                if (m_ocpp_config.certSigningWaitMinimum().count() != 0)
+                {
+                    LOG_INFO << "Setting timeout for sign certificate to " << m_ocpp_config.certSigningWaitMinimum().count() << "s";
+                    m_csr_timer.setCallback(
+                        [this]()
+                        {
+                            m_worker_pool.run<void>(
+                                [this]
+                                {
+                                    LOG_ERROR << "Sign certificate timeout, triggering retry...";
+                                    sendSignCertificate();
+                                });
+                        });
+                    m_csr_timer.start(m_ocpp_config.certSigningWaitMinimum(), true);
+                }
             }
-        }
-        else
-        {
-            if (m_csr_sign_retries != 0u)
+            else
             {
-                LOG_WARNING << "Max sign certificate retries reached : " << m_ocpp_config.certSigningRepeatTimes();
+                if (m_csr_sign_retries != 0u)
+                {
+                    LOG_WARNING << "Max sign certificate retries reached : " << m_ocpp_config.certSigningRepeatTimes();
+                }
             }
         }
     }

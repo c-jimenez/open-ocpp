@@ -353,6 +353,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
         rapidjson::Document                        json_req;
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        json_req.Parse("{}");
+        req_converter->setAllocator(&json_req.GetAllocator());
         req_converter->toJson(request, json_req);
         json_req.Accept(writer);
         req.data.value() = buffer.GetString();
