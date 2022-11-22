@@ -24,6 +24,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Enums.h"
 #include "MeterValue.h"
 
+#include <tuple>
+
 namespace ocpp
 {
 namespace chargepoint
@@ -207,7 +209,7 @@ class IChargePointEventsHandler
      * @brief Called when a charge point certificate has been received and must be installed
      *        (Not used if InternalCertificateManagementEnabled = true)
      * @param certificate Charge point certificate to install
-     * @return true is the certificate has been installed, false otherwise
+     * @return true if the certificate has been installed, false otherwise
      */
     virtual bool chargePointCertificateReceived(const ocpp::x509::Certificate& certificate) = 0;
 
@@ -277,6 +279,65 @@ class IChargePointEventsHandler
      */
     virtual ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(
         const ocpp::x509::Certificate& signing_certificate) = 0;
+
+    // ISO 15118 PnC extensions
+
+    /**
+     * @brief Called to check an EV certificate againts the installed MO certificates
+     * @param certificate EV certificate to check
+     * @return true if the certificate has been validated against an installed MO certificate, false otherwise
+     */
+    virtual bool iso15118CheckEvCertificate(const ocpp::x509::Certificate& certificate) = 0;
+
+    /**
+     * @brief Called when an ISO15118 charge point certificate has been received and must be installed
+     * @param certificate Charge point certificate to install
+     * @return true if the certificate has been installed, false otherwise
+     */
+    virtual bool iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate& certificate) = 0;
+
+    /**
+     * @brief Called when the Central System request to delete an installed ISO15118 certificate
+     * @param hash_algorithm Hash algorithm used for the following parameters
+     * @param issuer_name_hash Hash of the certificate's issuer's name
+     * @param issuer_key_hash Hash of the certificate's public key
+     * @param serial_number Serial number of the certificate
+     * @return Deletion status (see DeleteCertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                                   const std::string&                 issuer_name_hash,
+                                                                                   const std::string&                 issuer_key_hash,
+                                                                                   const std::string&                 serial_number) = 0;
+
+    /**
+     * @brief Called to get the list of installed ISO15118 certificates
+     * @param v2g_root_certificate Indicate if V2G root certificates must be listed
+     * @param mo_root_certificate Indicate if MO root certificates must be listed
+     * @param v2g_certificate_chain Indicate if V2G certificate chains must be listed
+     * @param certificates Installed certificates with their type
+     */
+    virtual void iso15118GetInstalledCertificates(
+        bool v2g_root_certificate,
+        bool mo_root_certificate,
+        bool v2g_certificate_chain,
+        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+            certificates) = 0;
+
+    /**
+     * @brief Called when an ISO15118 certificate has been received and must be installed
+     * @param type Type of certificate
+     * @param certificate certificate to install
+     * @return Installation status (see InstallCertificateStatusEnumType enum)
+     */
+    virtual ocpp::types::InstallCertificateStatusEnumType iso15118CertificateReceived(ocpp::types::InstallCertificateUseEnumType type,
+                                                                                      const ocpp::x509::Certificate& certificate) = 0;
+
+    /**
+     * @brief Called to generate a CSR in PEM format which will be used by the Central System
+     *        to generate and sign a certificate for the Charge Point for ISO15118 communications
+     * @param csr String to store the generated CSR in PEM format
+     */
+    virtual void iso15118GenerateCsr(std::string& csr) = 0;
 };
 
 } // namespace chargepoint

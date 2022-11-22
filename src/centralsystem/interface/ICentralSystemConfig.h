@@ -76,6 +76,12 @@ class ICentralSystemConfig
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     virtual unsigned int logMaxEntriesCount() const = 0;
+
+    // ISO 15118 PnC extensions
+
+    /** @brief If this variable set to true, then the Central System supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    virtual bool iso15118PnCEnabled() const = 0;
 };
 
 } // namespace config

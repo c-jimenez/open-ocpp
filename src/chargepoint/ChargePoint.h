@@ -62,6 +62,7 @@ class SmartChargingManager;
 class MaintenanceManager;
 class SecurityManager;
 class RequestFifoManager;
+class Iso15118Manager;
 
 /** @brief Charge point implementation */
 class ChargePoint : public IChargePoint,
@@ -175,6 +176,33 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType) */
     bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) override;
 
+    // ISO 15118 PnC extensions
+
+    /** @copydoc ocpp::types::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
+                                                                    const std::string&,
+                                                                    const std::vector<ocpp::types::OcspRequestDataType>&,
+                                                                    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) */
+    ocpp::types::AuthorizationStatus iso15118Authorize(
+        const ocpp::x509::Certificate&                                          certificate,
+        const std::string&                                                      id_token,
+        const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
+
+    /** @copydoc bool IChargePoint::iso15118GetEVCertificate(const std::string&,
+                                                             ocpp::types::CertificateActionEnumType,
+                                                             const std::string&,
+                                                             std::string&) */
+    bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
+                                  ocpp::types::CertificateActionEnumType action,
+                                  const std::string&                     exi_request,
+                                  std::string&                           exi_response) override;
+
+    /** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType&, std::string&) */
+    bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) override;
+
+    /** @copydoc bool IChargePoint::iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
+    bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& csr) override;
+
     // RpcClient::IListener interface
 
     /** @copydoc void RpcClient::IListener::rpcClientConnected() */
@@ -278,6 +306,8 @@ class ChargePoint : public IChargePoint,
     std::unique_ptr<MaintenanceManager> m_maintenance_manager;
     /** @brief Requests FIFO manager */
     std::unique_ptr<RequestFifoManager> m_requests_fifo_manager;
+    /** @brief ISO15118 manager */
+    std::unique_ptr<Iso15118Manager> m_iso15118_manager;
 
     /** @brief Uptime timer */
     ocpp::helpers::Timer m_uptime_timer;

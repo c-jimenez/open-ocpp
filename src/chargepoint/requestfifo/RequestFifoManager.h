@@ -42,7 +42,7 @@ class WorkerThreadPool;
 namespace chargepoint
 {
 
-class AuthentManager;
+class IAuthentManager;
 class Connectors;
 class IStatusManager;
 class IChargePointEventsHandler;
@@ -60,7 +60,7 @@ class RequestFifoManager : public ocpp::messages::IRequestFifo::IListener
                        ocpp::messages::GenericMessageSender& msg_sender,
                        ocpp::messages::IRequestFifo&         requests_fifo,
                        IStatusManager&                       status_manager,
-                       AuthentManager&                       authent_manager);
+                       IAuthentManager&                      authent_manager);
 
     /** @brief Destructor */
     virtual ~RequestFifoManager();
@@ -90,7 +90,7 @@ class RequestFifoManager : public ocpp::messages::IRequestFifo::IListener
     /** @brief Status manager */
     IStatusManager& m_status_manager;
     /** @brief Authentication manager */
-    AuthentManager& m_authent_manager;
+    IAuthentManager& m_authent_manager;
 
     /** @brief Requests FIFO */
     ocpp::messages::IRequestFifo& m_requests_fifo;

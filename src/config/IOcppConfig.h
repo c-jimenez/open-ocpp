@@ -261,6 +261,37 @@ class IOcppConfig
     /** @brief Comma separated list of supported file transfer protocols for upload AND download
                Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
     virtual std::string supportedFileTransferProtocols() const = 0;
+
+    //
+    // ISO 15118 PnC extensions
+    //
+
+    /** @brief If this variable exists and has the value true, then the Charge Point can provide a contract certificate that it cannot 
+               validate to the Central System for validation as part of the Authorize.req */
+    virtual bool centralContractValidationAllowed() const = 0;
+
+    /** @brief This configuration key defines how long the Charge Point has to wait (in seconds) before generating another CSR, in the case the
+               Central System accepts the SignCertificate.req, but never returns the signed certificate back. This value will be doubled after every
+               attempt. The amount of attempts is configured at CertSigningRepeatTimes. If the certificate signing process is slow, this setting
+               allows the Central System to tell the Charge Point to allow more time.
+               Negative values must be rejected. The value 0 means that the Charge Point does not generate another CSR (leaving it up to the
+               Central System to trigger another certificate installation). */
+    virtual std::chrono::seconds certSigningWaitMinimum() const = 0;
+
+    /** @brief This configuration key can be used to configure the amount of times the Charge Point SHALL double the previous back-off time,
+               starting with the number of seconds configured at CertSigningWaitMinimum, every time the back-off time expires without having
+               received the CertificateSigned.req containing the signed certificate based on the CSR generated. When the maximum number of
+               increments is reached, the Charge Point SHALL stop resending the SignCertificate.req, until it is requested by the Central System
+               using a TriggerMessage.req.
+               Negative values must be rejected. The value 0 means that the Charge Point does not double the back-off time. */
+    virtual unsigned int certSigningRepeatTimes() const = 0;
+
+    /** @brief If this variable is true, then the Charge Point will try to validate a contract certificate when it is offline. */
+    virtual bool contractValidationOffline() const = 0;
+
+    /** @brief If this variable set to true, then the Charge Point supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    virtual bool iso15118PnCEnabled() const = 0;
 };
 
 } // namespace config

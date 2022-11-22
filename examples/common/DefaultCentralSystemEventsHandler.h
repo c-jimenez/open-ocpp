@@ -28,6 +28,7 @@ SOFTWARE.
 #include "ICentralSystemEventsHandler.h"
 #include "IChargePointRequestHandler.h"
 
+#include <filesystem>
 #include <map>
 
 /** @brief Default central system event handlers implementation for the examples */
@@ -35,7 +36,9 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
 {
   public:
     /** @brief Constructor */
-    DefaultCentralSystemEventsHandler();
+    DefaultCentralSystemEventsHandler(std::filesystem::path iso_v2g_root_ca    = "",
+                                      std::filesystem::path iso_mo_root_ca     = "",
+                                      bool                  set_pending_status = false);
 
     /** @brief Destructor */
     virtual ~DefaultCentralSystemEventsHandler();
@@ -177,6 +180,38 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
                                                     const ocpp::types::Optional<int>&   request_id) override;
 
+        // ISO 15118 PnC extensions
+
+        /** @copydoc ocpp::types::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
+                                                          const ocpp::x509::Certificate&,
+                                                          const std::string&,
+                                                          const std::vector<ocpp::types::OcspRequestDataType>&,
+                                                          ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) override; */
+        ocpp::types::IdTokenInfoType iso15118Authorize(
+            const ocpp::x509::Certificate&                                          certificate,
+            const std::string&                                                      id_token,
+            const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+            ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
+
+        /** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
+                                                          const std::string&,
+                                                          ocpp::types::CertificateActionEnumType,
+                                                          const std::string&,
+                                                          std::string&) */
+        ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
+                                                                                  ocpp::types::CertificateActionEnumType action,
+                                                                                  const std::string&                     exi_request,
+                                                                                  std::string& exi_response) override;
+
+        /** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
+                                                          const ocpp::types::OcspRequestDataType&,
+                                                          std::string&) */
+        ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
+                                                                               std::string& ocsp_result) override;
+
+        /** @copydoc bool iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
+        bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;
+
       protected:
         /** @brief Get the serial number of the charge point */
         virtual std::string getChargePointSerialNumber(const std::string& chargepoint_id)
@@ -199,12 +234,42 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @brief Get the list of the connected charge points */
     std::map<std::string, std::shared_ptr<ChargePointRequestHandler>>& chargePoints() { return m_chargepoints; }
 
+    /** @brief Get the list of the pending charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& pendingChargePoints()
+    {
+        return m_pending_chargepoints;
+    }
+
+    /** @brief Get the list of the accepted charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& acceptedChargePoints()
+    {
+        return m_accepted_chargepoints;
+    }
+
+    /** @brief Path to the V2G root CA */
+    std::filesystem::path& v2gRootCA() { return m_iso_v2g_root_ca; }
+    /** @brief Path to the MO root CA */
+    std::filesystem::path& moRootCA() { return m_iso_mo_root_ca; }
+
+    /** @brief Indicate if the charge point must be set on pending status upon connection */
+    bool setPendingEnabled() const { return m_set_pending_status; }
+
     /** @brief Remove a charge point from the connected charge points */
     void removeChargePoint(const std::string& identifier);
 
   private:
+    /** @brief Path to the V2G root CA */
+    std::filesystem::path m_iso_v2g_root_ca;
+    /** @brief Path to the MO root CA */
+    std::filesystem::path m_iso_mo_root_ca;
+    /** @brief Indicate if the charge point must be set on pending status upon connection */
+    bool m_set_pending_status;
     /** @brief Connected charge points */
     std::map<std::string, std::shared_ptr<ChargePointRequestHandler>> m_chargepoints;
+    /** @brief Pending charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> m_pending_chargepoints;
+    /** @brief Accepted charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> m_accepted_chargepoints;
 };
 
 #endif // DEFAULTCENTRALSYSTEMEVENTSHANDLER_H

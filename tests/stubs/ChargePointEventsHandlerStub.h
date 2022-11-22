@@ -149,6 +149,44 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
      *                                            const ocpp::x509::Certificate&) */
     ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(const ocpp::x509::Certificate& signing_certificate) override;
 
+    // ISO 15118 PnC extensions
+
+    /** @copydoc bool IChargePointEventsHandler::iso15118CheckEvCertificate(const ocpp::x509::Certificate&) */
+    bool iso15118CheckEvCertificate(const ocpp::x509::Certificate& certificate) override;
+
+    /** @copydoc bool IChargePointEventsHandler::iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate&) */
+    bool iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate& certificate) override;
+
+    /** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&) */
+    ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                           const std::string&                 issuer_name_hash,
+                                                                           const std::string&                 issuer_key_hash,
+                                                                           const std::string&                 serial_number) override;
+
+    /** @copydoc void IChargePointEventsHandler::iso15118GetInstalledCertificates(
+                                    bool,
+                                    bool,
+                                    bool,
+                                    std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>&) */
+    void iso15118GetInstalledCertificates(
+        bool v2g_root_certificate,
+        bool mo_root_certificate,
+        bool v2g_certificate_chain,
+        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+            certificates) override;
+
+    /** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
+                                    ocpp::types::InstallCertificateUseEnumType type,
+                                    const ocpp::x509::Certificate&) */
+    ocpp::types::InstallCertificateStatusEnumType iso15118CertificateReceived(ocpp::types::InstallCertificateUseEnumType type,
+                                                                              const ocpp::x509::Certificate& certificate) override;
+
+    /** @copydoc void IChargePointEventsHandler::iso15118GenerateCsr(std::string&) */
+    void iso15118GenerateCsr(std::string& csr) override;
+
     // API
 
     /** @brief Indicate if a method has been called and returns the parameters used for the call */

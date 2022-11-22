@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "DefaultCentralSystemEventsHandler.h"
+#include "PrivateKey.h"
 #include "Sha2.h"
 #include "String.h"
 
@@ -36,7 +37,17 @@ using namespace ocpp::types;
 using namespace ocpp::x509;
 
 /** @brief Constructor */
-DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler() : m_chargepoints() { }
+DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler(std::filesystem::path iso_v2g_root_ca,
+                                                                     std::filesystem::path iso_mo_root_ca,
+                                                                     bool                  set_pending_status)
+    : m_iso_v2g_root_ca(iso_v2g_root_ca),
+      m_iso_mo_root_ca(iso_mo_root_ca),
+      m_set_pending_status(set_pending_status),
+      m_chargepoints(),
+      m_pending_chargepoints(),
+      m_accepted_chargepoints()
+{
+}
 
 /** @brief Destructor */
 DefaultCentralSystemEventsHandler::~DefaultCentralSystemEventsHandler() { }
@@ -71,14 +82,12 @@ void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocp
 void DefaultCentralSystemEventsHandler::removeChargePoint(const std::string& identifier)
 {
     std::thread t(
-        [this, &identifier]
+        [this, identifier = identifier]
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            auto iter_chargepoint = m_chargepoints.find(identifier);
-            if (iter_chargepoint != m_chargepoints.end())
-            {
-                m_chargepoints.erase(iter_chargepoint);
-            }
+            m_chargepoints.erase(identifier);
+            m_pending_chargepoints.erase(identifier);
+            m_accepted_chargepoints.erase(identifier);
         });
     t.detach();
 }
@@ -140,7 +149,20 @@ ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRe
     cout << "[" << m_chargepoint->identifier() << "] - Boot notification : vendor = " << vendor << " - model = " << model
          << " - s/n = " << serial_number << " - firmware = " << firmware_version << endl;
 
-    return RegistrationStatus::Accepted;
+    ocpp::types::RegistrationStatus ret = RegistrationStatus::Accepted;
+    if (m_event_handler.setPendingEnabled())
+    {
+        auto accepted_chargepoint = m_event_handler.acceptedChargePoints();
+        auto iter_accepted        = accepted_chargepoint.find(m_chargepoint->identifier());
+        if (iter_accepted == accepted_chargepoint.end())
+        {
+            m_event_handler.pendingChargePoints()[m_chargepoint->identifier()] = m_chargepoint;
+
+            ret = RegistrationStatus::Pending;
+        }
+    }
+
+    return ret;
 }
 
 /** @copydoc ocpp::types::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
@@ -307,7 +329,7 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::logStatusNoti
 {
     cout << "[" << m_chargepoint->identifier()
          << "] - Log status notification : status = " << UploadLogStatusEnumTypeHelper.toString(status)
-         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set") << endl;
 }
 
 /** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
@@ -377,12 +399,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                     else
                     {
                         cout << "[" << m_chargepoint->identifier()
-                             << "] - Failed to generate certificate bundle : " << generate_bundle_cmd_line.str();
+                             << "] - Failed to generate certificate bundle : " << generate_bundle_cmd_line.str() << endl;
                     }
                 }
                 else
                 {
-                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << sign_cert_cmd_line.str();
+                    cout << "[" << m_chargepoint->identifier() << "] - Failed to sign the CSR : " << sign_cert_cmd_line.str() << endl;
                 }
 
                 // Remove the temporary files
@@ -391,7 +413,7 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
             }
             else
             {
-                cout << "[" << m_chargepoint->identifier() << "] - Unable to create CSR file : " << csr_filename;
+                cout << "[" << m_chargepoint->identifier() << "] - Unable to create CSR file : " << csr_filename << endl;
             }
         }
         else
@@ -413,5 +435,179 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwar
 {
     cout << "[" << m_chargepoint->identifier()
          << "] - Signed firmware update status notification : status = " << FirmwareStatusEnumTypeHelper.toString(status)
-         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set");
+         << " - request_id = " << (request_id.isSet() ? std::to_string(request_id) : "not set") << endl;
+}
+
+// ISO 15118 PnC extensions
+
+/** @copydoc ocpp::types::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
+                                                          const ocpp::x509::Certificate&,
+                                                          const std::string&,
+                                                          const std::vector<ocpp::types::OcspRequestDataType>&,
+                                                          ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) override; */
+ocpp::types::IdTokenInfoType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118Authorize(
+    const ocpp::x509::Certificate&                                          certificate,
+    const std::string&                                                      id_token,
+    const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status)
+{
+    cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Authorize : certificate = " << certificate.pem().size()
+         << " - id_token = " << id_token << " - cert_hash_data size = " << cert_hash_data.size() << endl;
+
+    // Prepare response
+    ocpp::types::IdTokenInfoType ret;
+    ret.status = AuthorizationStatus::Invalid;
+
+    // Check certificate if present
+    if (certificate.isValid())
+    {
+        cert_status = AuthorizeCertificateStatusEnumType::Accepted;
+        ret.status  = AuthorizationStatus::Accepted;
+    }
+    else
+    {
+        if (!cert_hash_data.empty())
+        {
+            // Forward to OCSP => TODO with OpenSSL
+        }
+
+        // For now, always accept
+        ret.status = AuthorizationStatus::Accepted;
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
+                                                          const std::string&,
+                                                          ocpp::types::CertificateActionEnumType,
+                                                          const std::string&,
+                                                          std::string&) */
+ocpp::types::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118GetEVCertificate(
+    const std::string&                     iso15118_schema_version,
+    ocpp::types::CertificateActionEnumType action,
+    const std::string&                     exi_request,
+    std::string&                           exi_response)
+{
+    cout << "[" << m_chargepoint->identifier()
+         << "] - [ISO15118] Get EV certificate : iso15118_schema_version = " << iso15118_schema_version
+         << " - action = " << CertificateActionEnumTypeHelper.toString(action) << " - exi_request size = " << exi_request.size() << endl;
+
+    // For the purpose of this example, the EXI response contains directly the EV certificate in PEM format
+    // In a real system, the certificate is embedded in an EXI message
+
+    // Generate CSR for the EV certificate
+    X509Document::Subject ev_cert_subject;
+    ev_cert_subject.country           = "FR";
+    ev_cert_subject.state             = "Savoie";
+    ev_cert_subject.location          = "Chambery";
+    ev_cert_subject.organization      = "Open OCPP";
+    ev_cert_subject.organization_unit = "Examples";
+    ev_cert_subject.common_name       = "MO EV certificate";
+    ev_cert_subject.email_address     = "ca.examples@open-ocpp.org";
+    PrivateKey         ev_cert_key(PrivateKey::Type::EC, PrivateKey::Curve::PRIME256_V1, "");
+    CertificateRequest ev_cert_req(ev_cert_subject, ev_cert_key, Sha2::SHA256);
+
+    // Sign the certificate with the MO root certificate
+    Certificate mo_root_ca(m_event_handler.moRootCA());
+    std::string mo_root_ca_key_path = m_event_handler.moRootCA();
+    ocpp::helpers::replace(mo_root_ca_key_path, ".pem", ".key");
+    PrivateKey  mo_root_ca_key(std::filesystem::path(mo_root_ca_key_path), "");
+    Certificate ev_cert(ev_cert_req, mo_root_ca, mo_root_ca_key, Sha2::SHA256, 7300);
+
+    // Put certificate inside the response
+    exi_response = ev_cert.pem();
+
+    return Iso15118EVCertificateStatusEnumType::Accepted;
+}
+
+/** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
+                                                          const ocpp::types::OcspRequestDataType&,
+                                                          std::string&) */
+ocpp::types::GetCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118GetCertificateStatus(
+    const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
+{
+
+    cout << "[" << m_chargepoint->identifier()
+         << "] - [ISO15118] Get EV certificate status : serial number = " << ocsp_request.serialNumber.str() << endl;
+
+    // Forward to OCSP => TODO with OpenSSL
+    (void)ocsp_result;
+
+    return GetCertificateStatusEnumType::Accepted;
+}
+
+/** @copydoc bool iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118SignCertificate(
+    const ocpp::x509::CertificateRequest& certificate_request)
+{
+    bool ret = false;
+    cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Sign certificate : subject = " << certificate_request.subjectString()
+         << endl;
+
+    // Load CA certificate which will sign the request
+    std::filesystem::path ca_cert_path = m_event_handler.v2gRootCA();
+    Certificate           ca_cert(ca_cert_path);
+    if (ca_cert.isValid())
+    {
+        // Save the request to a temporary file
+        Sha2 sha256;
+        sha256.compute(certificate_request.pem().c_str(), certificate_request.pem().size());
+
+        std::stringstream name;
+        name << "/tmp/csr_" << sha256.resultString() << ".pem";
+        std::string csr_filename = name.str();
+        if (certificate_request.toFile(csr_filename))
+        {
+            // Sign the certificate request to generate a certificate
+            std::string ca_cert_key_path = ca_cert_path;
+            ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
+            ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
+            std::string       certificate_filename = csr_filename + ".crt";
+            std::stringstream sign_cert_cmd_line;
+            sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
+                               << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
+            int err = WEXITSTATUS(system(sign_cert_cmd_line.str().c_str()));
+            cout << "Command line : " << sign_cert_cmd_line.str() << " => " << err << endl;
+
+            // Check if the certificate has been generated
+            if (std::filesystem::exists(certificate_filename))
+            {
+                // Create bundle
+                std::string       bundle_filename = certificate_filename + ".bundle";
+                std::stringstream generate_bundle_cmd_line;
+                generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
+                err = WEXITSTATUS(system(generate_bundle_cmd_line.str().c_str()));
+                cout << "Command line : " << generate_bundle_cmd_line.str() << " => " << err << endl;
+                if (std::filesystem::exists(bundle_filename))
+                {
+                    m_generated_certificate = bundle_filename;
+                    ret                     = true;
+                }
+                else
+                {
+                    cout << "[" << m_chargepoint->identifier()
+                         << "] - [ISO15118] Failed to generate certificate bundle : " << generate_bundle_cmd_line.str() << endl;
+                }
+            }
+            else
+            {
+                cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Failed to sign the CSR : " << sign_cert_cmd_line.str()
+                     << endl;
+            }
+
+            // Remove the temporary files
+            std::filesystem::remove(csr_filename);
+            std::filesystem::remove(certificate_filename);
+        }
+        else
+        {
+            cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Unable to create CSR file : " << csr_filename << endl;
+        }
+    }
+    else
+    {
+        cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Unable to load CA certificate : " << ca_cert_path << endl;
+    }
+    return ret;
 }

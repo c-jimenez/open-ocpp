@@ -330,7 +330,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
          << " - certificate subject = " << certificate.subjectString() << endl;
 
     // Check number of installed certificates
-    if (getNumberOfCaCertificateInstalled(true, true) < m_config.ocppConfig().certificateStoreMaxLength())
+    if (getNumberOfCaCertificateInstalled(true, true, true) < m_config.ocppConfig().certificateStoreMaxLength())
     {
         // Compute SHA256 to generate filename
         Sha2 sha256;
@@ -348,7 +348,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
         {
             // Central System => Check AdditionalRootCertificateCheck configuration key
 
-            if (m_config.ocppConfig().additionalRootCertificateCheck() && (getNumberOfCaCertificateInstalled(false, true) == 0))
+            if (m_config.ocppConfig().additionalRootCertificateCheck() && (getNumberOfCaCertificateInstalled(false, true, false) == 0))
             {
                 // Additionnal checks :
                 // - only 1 CA certificate allowed
@@ -474,7 +474,8 @@ ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::de
         if (!dir_entry.is_directory())
         {
             std::string filename = dir_entry.path().filename();
-            if ((ocpp::helpers::startsWith(filename, "fw_") || ocpp::helpers::startsWith(filename, "cs_")) &&
+            if ((ocpp::helpers::startsWith(filename, "fw_") || ocpp::helpers::startsWith(filename, "cs_") ||
+                 ocpp::helpers::startsWith(filename, "iso_")) &&
                 ocpp::helpers::endsWith(filename, ".pem"))
             {
                 Certificate certificate(dir_entry.path());
@@ -605,7 +606,7 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
 bool DefaultChargePointEventsHandler::hasCentralSystemCaCertificateInstalled()
 {
     // A better implementation would also check the validity dates of the certificates
-    return ((getNumberOfCaCertificateInstalled(false, true) != 0) && (!m_config.stackConfig().tlsServerCertificateCa().empty()));
+    return ((getNumberOfCaCertificateInstalled(false, true, false) != 0) && (!m_config.stackConfig().tlsServerCertificateCa().empty()));
 }
 
 /** @copydoc bool IChargePointEventsHandler::hasChargePointCertificateInstalled() */
@@ -670,8 +671,206 @@ ocpp::types::UpdateFirmwareStatusEnumType DefaultChargePointEventsHandler::check
     return ret;
 }
 
+// ISO 15118 PnC extensions
+
+/** @copydoc bool IChargePointEventsHandler::iso15118CheckEvCertificate(const ocpp::x509::Certificate&) */
+bool DefaultChargePointEventsHandler::iso15118CheckEvCertificate(const ocpp::x509::Certificate& certificate)
+{
+    bool ret = false;
+
+    cout << "ISO15118 EV certificate verification requested : certificate subject = " << certificate.subjectString() << endl;
+
+    // Look for MO certificates
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (ocpp::helpers::startsWith(filename, "iso_mo_root_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                Certificate mo_cert(dir_entry.path());
+                if (certificate.verify(mo_cert.certificateChain()))
+                {
+                    cout << "Validated against certificate : " << mo_cert.subjectString() << endl;
+                    ret = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << "EV certificate validated : " << (ret ? "yes" : "no") << endl;
+
+    return ret;
+}
+
+/** @copydoc bool IChargePointEventsHandler::iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate&) */
+bool DefaultChargePointEventsHandler::iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate& certificate)
+{
+    std::string ca_filename;
+    bool        ret = false;
+
+    cout << "ISO15118 Charge point certificate installation requested : certificate subject = " << certificate.subjectString() << endl;
+
+    // Compute SHA256 to generate filename
+    Sha2 sha256;
+    sha256.compute(certificate.pem().c_str(), certificate.pem().size());
+
+    std::stringstream name;
+    name << "iso_cp_" << sha256.resultString() << ".pem";
+    std::string cert_filename = m_working_dir / name.str();
+
+    // Save certificate
+    if (certificate.toFile(cert_filename))
+    {
+        // Retrieve and save the corresponding key/pair with the new certificate
+        std::string cert_key_filename = cert_filename + ".key";
+        std::filesystem::copy("/tmp/charge_point_key.key", cert_key_filename);
+
+        cout << "Certificate saved : " << cert_filename << endl;
+        ret = true;
+    }
+    else
+    {
+        cout << "Unable to save certificate : " << cert_filename << endl;
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&,
+                                                                                                                   const std::string&) */
+ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::iso15118DeleteCertificate(
+    ocpp::types::HashAlgorithmEnumType hash_algorithm,
+    const std::string&                 issuer_name_hash,
+    const std::string&                 issuer_key_hash,
+    const std::string&                 serial_number)
+{
+    cout << "ISO15118 certificate deletion requested : hash = " << HashAlgorithmEnumTypeHelper.toString(hash_algorithm)
+         << " - serial number = " << serial_number << endl;
+    return deleteCertificate(hash_algorithm, issuer_name_hash, issuer_key_hash, serial_number);
+}
+
+/** @copydoc void IChargePointEventsHandler::iso15118GetInstalledCertificates(
+                                    bool,
+                                    bool,
+                                    bool,
+                                    std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>&) */
+void DefaultChargePointEventsHandler::iso15118GetInstalledCertificates(
+    bool v2g_root_certificate,
+    bool mo_root_certificate,
+    bool v2g_certificate_chain,
+    std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+        certificates)
+{
+    cout << "ISO15118 get installed certificates requested : v2g_root_certificate = " << (v2g_root_certificate ? "yes" : "no")
+         << " - mo_root_certificate = " << (mo_root_certificate ? "yes" : "no")
+         << " - v2g_certificate_chain = " << (v2g_certificate_chain ? "yes" : "no") << endl;
+
+    for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
+    {
+        if (!dir_entry.is_directory())
+        {
+            std::string filename = dir_entry.path().filename();
+            if (v2g_root_certificate)
+            {
+                if (ocpp::helpers::startsWith(filename, "iso_v2g_root_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    auto tuple = std::make_tuple(GetCertificateIdUseEnumType::V2GRootCertificate,
+                                                 Certificate(dir_entry.path()),
+                                                 std::vector<ocpp::x509::Certificate>());
+                    certificates.emplace_back(std::move(tuple));
+                }
+            }
+            if (mo_root_certificate)
+            {
+                if (ocpp::helpers::startsWith(filename, "iso_mo_root_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    auto tuple = std::make_tuple(GetCertificateIdUseEnumType::MORootCertificate,
+                                                 Certificate(dir_entry.path()),
+                                                 std::vector<ocpp::x509::Certificate>());
+                    certificates.emplace_back(std::move(tuple));
+                }
+            }
+            if (v2g_certificate_chain)
+            {
+                if (ocpp::helpers::startsWith(filename, "iso_v2g_chain_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    auto tuple = std::make_tuple(GetCertificateIdUseEnumType::V2GCertificateChain,
+                                                 Certificate(dir_entry.path()),
+                                                 std::vector<ocpp::x509::Certificate>());
+                    certificates.emplace_back(std::move(tuple));
+                }
+            }
+        }
+    }
+}
+
+/** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
+                                    ocpp::types::InstallCertificateUseEnumType type,
+                                    const ocpp::x509::Certificate&) */
+ocpp::types::InstallCertificateStatusEnumType DefaultChargePointEventsHandler::iso15118CertificateReceived(
+    ocpp::types::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
+{
+    std::string                      cert_filename;
+    InstallCertificateStatusEnumType ret = InstallCertificateStatusEnumType::Rejected;
+
+    cout << "ISO15118 certificate installation requested : type = " << InstallCertificateUseEnumTypeHelper.toString(type)
+         << " - certificate subject = " << certificate.subjectString() << endl;
+
+    // Check number of installed certificates
+    if (getNumberOfCaCertificateInstalled(true, true, true) < m_config.ocppConfig().certificateStoreMaxLength())
+    {
+        // Compute SHA256 to generate filename
+        Sha2 sha256;
+        sha256.compute(certificate.pem().c_str(), certificate.pem().size());
+
+        if (type == InstallCertificateUseEnumType::V2GRootCertificate)
+        {
+            // V2 root certificate
+            std::stringstream name;
+            name << "iso_v2g_root_" << sha256.resultString() << ".pem";
+            cert_filename = m_working_dir / name.str();
+        }
+        else
+        {
+            // MO root certificate
+            std::stringstream name;
+            name << "iso_mo_root_" << sha256.resultString() << ".pem";
+            cert_filename = m_working_dir / name.str();
+        }
+
+        // Save certificate
+        if (certificate.toFile(cert_filename))
+        {
+            ret = InstallCertificateStatusEnumType::Accepted;
+            cout << "Certificate saved : " << cert_filename << endl;
+        }
+        else
+        {
+            ret = InstallCertificateStatusEnumType::Failed;
+            cout << "Unable to save certificate : " << cert_filename << endl;
+        }
+    }
+    else
+    {
+        cout << "Maximum number of certificates reached" << endl;
+    }
+
+    return ret;
+}
+
+/** @copydoc void IChargePointEventsHandler::iso15118GenerateCsr(std::string&) */
+void DefaultChargePointEventsHandler::iso15118GenerateCsr(std::string& csr)
+{
+    cout << "Generate ISO15118 CSR requested" << endl;
+    generateCsr(csr);
+}
+
 /** @brief Get the number of installed CA certificates */
-unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(bool manufacturer, bool central_system)
+unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(bool manufacturer, bool central_system, bool iso15118)
 {
     unsigned int count = 0;
     for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
@@ -684,6 +883,10 @@ unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(
                 count++;
             }
             if (central_system && ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
+            {
+                count++;
+            }
+            if (iso15118 && ocpp::helpers::startsWith(filename, "iso_") && ocpp::helpers::endsWith(filename, ".pem"))
             {
                 count++;
             }
