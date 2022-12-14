@@ -390,6 +390,13 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
         }
         break;
 
+        case LWS_CALLBACK_CLOSED_CLIENT_HTTP:
+            if (client->m_retry_interval != 0)
+            {
+                retry = true;
+            }
+            break;
+
         case LWS_CALLBACK_CLIENT_CLOSED:
             client->m_connected = false;
             client->m_listener->wsClientDisconnected();
