@@ -374,14 +374,16 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
         case LWS_CALLBACK_CLIENT_WRITEABLE:
         {
             // Send data if any ready
+            bool     error = false;
             SendMsg* msg = nullptr;
-            if (client->m_send_msgs.pop(msg, 0))
+            while (client->m_send_msgs.pop(msg, 0) && !error)
             {
                 if (lws_write(wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
                 {
                     // Error
                     client->disconnect();
                     client->m_listener->wsClientError();
+                    error = true;
                 }
 
                 // Free message memory
