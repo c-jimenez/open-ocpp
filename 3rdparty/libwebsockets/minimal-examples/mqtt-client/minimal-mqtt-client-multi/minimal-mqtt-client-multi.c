@@ -53,6 +53,9 @@ static const lws_mqtt_client_connect_param_t client_connect_param = {
 	.client_id			= NULL,
 	.keep_alive			= 60,
 	.clean_start			= 1,
+	.client_id_nofree		= 1,
+	.username_nofree		= 1,
+	.password_nofree		= 1,
 	.will_param = {
 		.topic			= "good/bye",
 		.message		= "sign-off",
@@ -374,12 +377,13 @@ static const struct lws_protocols protocols[] = {
 		.callback		= callback_mqtt,
 		.per_session_data_size	= sizeof(struct pss)
 	},
-	{ NULL, NULL, 0, 0 }
+	LWS_PROTOCOL_LIST_TERM
 };
 
 int main(int argc, const char **argv)
 {
-	lws_state_notify_link_t notifier = { {}, system_notify_cb, "app" };
+	lws_state_notify_link_t notifier = { { NULL, NULL, NULL },
+					     system_notify_cb, "app" };
 	lws_state_notify_link_t *na[] = { &notifier, NULL };
 	struct lws_context_creation_info info;
 	struct lws_context *context;

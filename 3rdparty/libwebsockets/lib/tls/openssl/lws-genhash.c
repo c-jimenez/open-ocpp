@@ -26,6 +26,7 @@
  */
 #include <private-lib-core.h>
 #include <openssl/obj_mac.h>
+#include <openssl/opensslv.h>
 /*
  * Care: many openssl apis return 1 for success.  These are translated to the
  * lws convention of 0 for success.
@@ -83,12 +84,16 @@ lws_genhash_destroy(struct lws_genhash_ctx *ctx, void *result)
 	unsigned int len;
 	int ret = 0;
 
+	if (!ctx->mdctx)
+		return 0;
+
 	if (result)
 		ret = EVP_DigestFinal_ex(ctx->mdctx, result, &len) != 1;
 
 	(void)len;
 
 	EVP_MD_CTX_destroy(ctx->mdctx);
+	ctx->mdctx = NULL;
 
 	return ret;
 }
@@ -217,8 +222,12 @@ int
 lws_genhmac_update(struct lws_genhmac_ctx *ctx, const void *in, size_t len)
 {
 #if defined(LWS_HAVE_HMAC_CTX_new)
+#if defined(LIBRESSL_VERSION_NUMBER)
 	if (HMAC_Update(ctx->ctx, in, len) != 1)
 #else
+	if (HMAC_Update(ctx->ctx, in, (int)len) != 1)
+#endif
+#else /* HMAC_CTX_new */
 	if (HMAC_Update(&ctx->ctx, in, len) != 1)
 #endif
 		return -1;

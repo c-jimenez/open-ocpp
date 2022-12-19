@@ -40,6 +40,7 @@ lws_plat_service(struct lws_context *context, int timeout_ms)
 int
 _lws_plat_service_tsi(struct lws_context *context, int timeout_ms, int tsi)
 {
+	volatile struct lws_context_per_thread *vpt;
 	struct lws_context_per_thread *pt;
 	lws_usec_t timeout_us;
 	int n = -1, m, c, a = 0;
@@ -50,6 +51,7 @@ _lws_plat_service_tsi(struct lws_context *context, int timeout_ms, int tsi)
 		return 1;
 
 	pt = &context->pt[tsi];
+	vpt = (volatile struct lws_context_per_thread *)pt;
 
 	{
 		unsigned long m = lws_now_secs();
@@ -99,9 +101,15 @@ _lws_plat_service_tsi(struct lws_context *context, int timeout_ms, int tsi)
 	/*
 	 * is there anybody with pending stuff that needs service forcing?
 	 */
-	if (lws_service_adjust_timeout(context, 1, tsi)) {
-
+#if !defined(LWS_AMAZON_RTOS)
 again:
+#endif
+	n = 0;
+	if (lws_service_adjust_timeout(context, 1, tsi)) {
+#if defined(LWS_AMAZON_RTOS)
+again:
+#endif /* LWS_AMAZON_RTOS */
+
 		a = 0;
 		if (timeout_us) {
 			lws_usec_t us;
@@ -138,7 +146,11 @@ again:
 				FD_SET(pt->fds[n].fd, &errfds);
 			}
 
+			vpt->inside_poll = 1;
+			lws_memory_barrier();
 			n = select(max_fd + 1, &readfds, &writefds, &errfds, ptv);
+			vpt->inside_poll = 0;
+			lws_memory_barrier();
 			n = 0;
 
 			for (m = 0; m < (int)pt->fds_count; m++) {
@@ -179,15 +191,7 @@ again:
 		a = 1;
 
 	m = lws_service_flag_pending(context, tsi);
-	if (m)
-		c = -1; /* unknown limit */
-	else
-		if (n < 0) {
-			if (LWS_ERRNO != LWS_EINTR)
-				return -1;
-			return 0;
-		} else
-			c = n;
+	c = m ? -1 : n;
 
 	/* any socket with events to service? */
 	for (n = 0; n < (int)pt->fds_count && c; n++) {

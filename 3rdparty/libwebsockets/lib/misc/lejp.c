@@ -107,7 +107,7 @@ void
 lejp_destruct(struct lejp_ctx *ctx)
 {
 	/* no allocations... just let callback know what it happening */
-	if (ctx->pst[0].callback)
+	if (ctx && ctx->pst[0].callback)
 		ctx->pst[0].callback(ctx, LEJPCB_DESTRUCTED);
 }
 
@@ -160,7 +160,7 @@ lejp_check_path_match(struct lejp_ctx *ctx)
 		p = ctx->path;
 
 		q = *((char **)(((char *)ctx->pst[ctx->pst_sp].paths) + ((unsigned int)n * s)));
-
+//lwsl_notice("%s: %s %s\n", __func__, p, q);
 		while (*p && *q) {
 			if (*q != '*') {
 				if (*p != *q)
@@ -468,6 +468,9 @@ lejp_parse(struct lejp_ctx *ctx, const unsigned char *json, int len)
 				/* push */
 				ctx->st[ctx->sp].s = LEJP_MP_ARRAY_END;
 				c = LEJP_MP_VALUE;
+				if (ctx->pst[ctx->pst_sp].ppos + 3u >=
+							sizeof(ctx->path))
+					goto reject;
 				ctx->path[ctx->pst[ctx->pst_sp].ppos++] = '[';
 				ctx->path[ctx->pst[ctx->pst_sp].ppos++] = ']';
 				ctx->path[ctx->pst[ctx->pst_sp].ppos] = '\0';
@@ -881,3 +884,4 @@ lejp_error_to_string(int e)
 
 	return parser_errs[e];
 }
+

@@ -220,16 +220,15 @@ ss_api_amazon_auth_state(void *userobj, void *sh, lws_ss_constate_t state,
 
 	switch (state) {
 	case LWSSSCS_CREATING:
-        	if (lws_ss_set_metadata(m->ss, "ctype", "application/json", 16))
-        		return LWSSSSRET_DESTROY_ME;
+		//if (lws_ss_set_metadata(m->ss, "ctype", "application/json", 16))
+		//	return LWSSSSRET_DESTROY_ME;
 		/* fallthru */
 	case LWSSSCS_CONNECTING:
 		s = lws_system_blob_get_size(ab);
 		if (!s)
 			lwsl_debug("%s: no auth blob\n", __func__);
-		lws_ss_request_tx_len(m->ss, (unsigned long)s);
 		m->pos = 0;
-		break;
+		return lws_ss_request_tx_len(m->ss, (unsigned long)s);
 
 	case LWSSSCS_DISCONNECTED:
 		/*

@@ -490,8 +490,8 @@ int lws_hdr_total_length(struct lws *wsi, enum lws_token_indexes h)
 		len += wsi->http.ah->frags[n].len;
 		n = wsi->http.ah->frags[n].nfrag;
 
-		if (n && h != WSI_TOKEN_HTTP_COOKIE)
-			++len;
+		if (n)
+			len++;
 
 	} while (n);
 
@@ -532,9 +532,7 @@ int lws_hdr_copy_fragment(struct lws *wsi, char *dst, int len,
 int lws_hdr_copy(struct lws *wsi, char *dst, int len,
 			     enum lws_token_indexes h)
 {
-	int toklen = lws_hdr_total_length(wsi, h);
-	int n;
-	int comma;
+	int toklen = lws_hdr_total_length(wsi, h), n, comma;
 
 	*dst = '\0';
 	if (!toklen)
@@ -547,17 +545,16 @@ int lws_hdr_copy(struct lws *wsi, char *dst, int len,
 		return -1;
 
 	n = wsi->http.ah->frag_index[h];
-	if (h == WSI_TOKEN_HTTP_URI_ARGS)
-		lwsl_err("%s: WSI_TOKEN_HTTP_URI_ARGS start frag %d\n", __func__, n);
-
-
 	if (!n)
 		return 0;
 	do {
 		comma = (wsi->http.ah->frags[n].nfrag) ? 1 : 0;
 
 		if (h == WSI_TOKEN_HTTP_URI_ARGS)
-			lwsl_notice("%s: WSI_TOKEN_HTTP_URI_ARGS '%.*s'\n", __func__, (int)wsi->http.ah->frags[n].len, &wsi->http.ah->data[wsi->http.ah->frags[n].offset]);
+			lwsl_notice("%s: WSI_TOKEN_HTTP_URI_ARGS '%.*s'\n",
+				    __func__, (int)wsi->http.ah->frags[n].len,
+				    &wsi->http.ah->data[
+				                wsi->http.ah->frags[n].offset]);
 
 		if (wsi->http.ah->frags[n].len + comma >= len) {
 			lwsl_notice("blowout len\n");
@@ -569,14 +566,22 @@ int lws_hdr_copy(struct lws *wsi, char *dst, int len,
 		len -= wsi->http.ah->frags[n].len;
 		n = wsi->http.ah->frags[n].nfrag;
 
+		/*
+		 * Note if you change this logic, take care about updating len
+		 * and make sure lws_hdr_total_length() gives the same resulting
+		 * length
+		 */
+
 		if (comma) {
-			if (h == WSI_TOKEN_HTTP_COOKIE || h == WSI_TOKEN_HTTP_SET_COOKIE)
+			if (h == WSI_TOKEN_HTTP_COOKIE ||
+			    h == WSI_TOKEN_HTTP_SET_COOKIE)
 				*dst++ = ';';
 			else
 				if (h == WSI_TOKEN_HTTP_URI_ARGS)
 					*dst++ = '&';
 				else
 					*dst++ = ',';
+			len--;
 		}
 				
 	} while (n);
@@ -645,6 +650,31 @@ lws_hdr_custom_copy(struct lws *wsi, char *dst, int len, const char *name,
 	}
 
 	return -1;
+}
+
+int
+lws_hdr_custom_name_foreach(struct lws *wsi, lws_hdr_custom_fe_cb_t cb,
+			    void *custom)
+{
+	ah_data_idx_t ll;
+
+	if (!wsi->http.ah || wsi->mux_substream)
+		return -1;
+
+	ll = wsi->http.ah->unk_ll_head;
+
+	while (ll) {
+		if (ll >= wsi->http.ah->data_length)
+			return -1;
+
+		cb(&wsi->http.ah->data[ll + UHO_NAME],
+		   lws_ser_ru16be((uint8_t *)&wsi->http.ah->data[ll + UHO_NLEN]),
+		   custom);
+
+		ll = lws_ser_ru32be((uint8_t *)&wsi->http.ah->data[ll + UHO_LL]);
+	}
+
+	return 0;
 }
 #endif
 
@@ -1562,7 +1592,7 @@ lws_http_cookie_get(struct lws *wsi, const char *name, char *buf,
 
 	p += bl;
 	n -= (int)bl;
-	while (n-- > (int)bl) {
+	while (n-- > 0) {
 		if (*p == '=' && !memcmp(p - bl, name, (unsigned int)bl)) {
 			p++;
 			while (*p != ';' && n-- && max) {

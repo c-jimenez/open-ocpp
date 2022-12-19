@@ -113,8 +113,20 @@ rops_handle_POLLIN_h2(struct lws_context_per_thread *pt, struct lws *wsi,
 	}
 #endif
 
-	 lwsl_info("%s: wsistate 0x%x, pollout %d\n", __func__,
-		   (unsigned int)wsi->wsistate, pollfd->revents & LWS_POLLOUT);
+	 lwsl_info("%s: %s wsistate 0x%x, events %d, revents %d, pollout %d\n", __func__,
+		   wsi->lc.gutag, (unsigned int)wsi->wsistate,
+		   pollfd->events, pollfd->revents,
+		   pollfd->revents & LWS_POLLOUT);
+
+	 /* !!! */
+	 if (wsi->wsistate == 0x10000013) {
+		 wsi->bugcatcher++;
+		 if (wsi->bugcatcher == 250) {
+			 lwsl_err("%s: BUGCATCHER\n", __func__);
+			 return LWS_HPI_RET_PLEASE_CLOSE_ME;
+		 }
+	 } else
+		 wsi->bugcatcher = 0;
 
 	/*
 	 * something went wrong with parsing the handshake, and
@@ -170,7 +182,9 @@ rops_handle_POLLIN_h2(struct lws_context_per_thread *pt, struct lws *wsi,
 
 	if (wsi->mux_substream || wsi->upgraded_to_http2) {
 		wsi1 = lws_get_network_wsi(wsi);
-		if (wsi1 && lws_has_buffered_out(wsi1))
+		if (wsi1 && lws_has_buffered_out(wsi1)) {
+
+			lwsl_info("%s: has buffered out\n", __func__);
 			/*
 			 * We cannot deal with any kind of new RX
 			 * because we are dealing with a partial send
@@ -178,6 +192,7 @@ rops_handle_POLLIN_h2(struct lws_context_per_thread *pt, struct lws *wsi,
 			 * expect to be able to send)
 			 */
 			return LWS_HPI_RET_HANDLED;
+		}
 	}
 
 read:
@@ -205,8 +220,11 @@ read:
 	    !(pollfd->revents & pollfd->events & LWS_POLLIN))
 		return LWS_HPI_RET_HANDLED;
 
+	/* We have something to read... */
+
 	if (!(lwsi_role_client(wsi) &&
 	      (lwsi_state(wsi) != LRS_ESTABLISHED &&
+	       // lwsi_state(wsi) != LRS_H1C_ISSUE_HANDSHAKE2 &&
 	       lwsi_state(wsi) != LRS_H2_WAITING_TO_SEND_HEADERS))) {
 
 		ebuf.token = pt->serv_buf;
@@ -228,7 +246,8 @@ read:
 		// lwsl_notice("%s: Actual RX %d\n", __func__, ebuf.len);
 		// if (ebuf.len > 0)
 		//	lwsl_hexdump_notice(ebuf.token, ebuf.len);
-	}
+	} else
+		lwsl_info("%s: skipped read\n", __func__);
 
 	if (ebuf.len < 0)
 		return LWS_HPI_RET_PLEASE_CLOSE_ME;
@@ -484,9 +503,9 @@ rops_write_role_protocol_h2(struct lws *wsi, unsigned char *buf, size_t len,
 	}
 
 	if (base == LWS_WRITE_HTTP_FINAL || ((*wp) & LWS_WRITE_H2_STREAM_END)) {
-		lwsl_info("%s: %s: setting END_STREAM\n", __func__,
-				lws_wsi_tag(wsi));
 		flags |= LWS_H2_FLAG_END_STREAM;
+		lwsl_info("%s: %s: setting END_STREAM, 0x%x\n", __func__,
+				lws_wsi_tag(wsi), flags);
 		wsi->h2.send_END_STREAM = 1;
 	}
 
@@ -559,7 +578,9 @@ rops_pt_init_destroy_h2(struct lws_context *context,
 		    const struct lws_context_creation_info *info,
 		    struct lws_context_per_thread *pt, int destroy)
 {
-	context->set = lws_h2_stock_settings;
+	/* if not already set by plat, use lws default SETTINGS */
+	if (!context->set.s[0])
+		context->set = lws_h2_stock_settings;
 
 	/*
 	 * We only want to do this once... we will do it if we are built
@@ -776,9 +797,9 @@ static int
 lws_h2_bind_for_post_before_action(struct lws *wsi)
 {
 	const struct lws_http_mount *hit;
+	int uri_len = 0, methidx;
 	char *uri_ptr = NULL;
 	uint8_t *buffered;
-	int uri_len = 0;
 	const char *p;
 	size_t blen;
 
@@ -816,6 +837,9 @@ lws_h2_bind_for_post_before_action(struct lws *wsi)
 
 		if (hit->protocol)
 			name = hit->protocol;
+		else
+			if (hit->origin_protocol == LWSMPRO_FILE)
+				return 0;
 
 		pp = lws_vhost_name_to_protocol(wsi->a.vhost, name);
 		if (!pp) {
@@ -826,7 +850,10 @@ lws_h2_bind_for_post_before_action(struct lws *wsi)
 		if (lws_bind_protocol(wsi, pp, __func__))
 			return 1;
 	}
-	if (lws_http_get_uri_and_method(wsi, &uri_ptr, &uri_len) >= 0)
+
+	methidx = lws_http_get_uri_and_method(wsi, &uri_ptr, &uri_len);
+
+	if (methidx >= 0)
 		if (wsi->a.protocol->callback(wsi, LWS_CALLBACK_HTTP,
 					      wsi->user_space,
 					      hit ? uri_ptr +
@@ -835,6 +862,10 @@ lws_h2_bind_for_post_before_action(struct lws *wsi)
 							  hit->mountpoint_len :
 							  uri_len)))
 			return 1;
+
+#if defined(LWS_WITH_ACCESS_LOG)
+	lws_prepare_access_log_info(wsi, uri_ptr, uri_len, methidx);
+#endif
 
 	lwsl_info("%s: setting LRS_BODY from 0x%x (%s)\n", __func__,
 		    (int)wsi->wsistate, wsi->a.protocol->name);
@@ -1156,7 +1187,7 @@ rops_perform_user_POLLOUT_h2(struct lws *wsi)
 		 * then logically close ourself
 		 */
 
-		if ((lwsi_role_ws(w) && w->ws->ping_pending_flag) ||
+		if ((lwsi_role_ws(w) && w->ws->pong_pending_flag) ||
 		    (lwsi_state(w) == LRS_RETURNED_CLOSE &&
 		     w->ws->payload_is_close)) {
 
@@ -1164,13 +1195,13 @@ rops_perform_user_POLLOUT_h2(struct lws *wsi)
 				write_type = LWS_WRITE_CLOSE |
 					     LWS_WRITE_H2_STREAM_END;
 
-			n = lws_write(w, &w->ws->ping_payload_buf[LWS_PRE],
-				      w->ws->ping_payload_len, (enum lws_write_protocol)write_type);
+			n = lws_write(w, &w->ws->pong_payload_buf[LWS_PRE],
+				      w->ws->pong_payload_len, (enum lws_write_protocol)write_type);
 			if (n < 0)
 				return -1;
 
 			/* well he is sent, mark him done */
-			w->ws->ping_pending_flag = 0;
+			w->ws->pong_pending_flag = 0;
 			if (w->ws->payload_is_close) {
 				/* oh... a close frame... then we are done */
 				lwsl_debug("Ack'd peer's close packet\n");
@@ -1278,8 +1309,9 @@ rops_alpn_negotiated_h2(struct lws *wsi, const char *alpn)
 
 	/* HTTP2 union */
 
-	lws_hpack_dynamic_size(wsi,
-			   (int)wsi->h2.h2n->our_set.s[H2SET_HEADER_TABLE_SIZE]);
+	if (lws_hpack_dynamic_size(wsi,
+			   (int)wsi->h2.h2n->our_set.s[H2SET_HEADER_TABLE_SIZE]))
+		return 1;
 	wsi->txc.tx_cr = 65535;
 
 	lwsl_info("%s: %s: configured for h2\n", __func__, lws_wsi_tag(wsi));

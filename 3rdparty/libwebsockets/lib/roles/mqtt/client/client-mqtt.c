@@ -120,7 +120,15 @@ lws_create_client_mqtt_object(const struct lws_client_connect_info *i,
 	if (cp->clean_start || !(cp->client_id &&
 				 cp->client_id[0]))
 		c->conn_flags = LMQCFT_CLEAN_START;
-	lws_free((void *)cp->client_id);
+	if (cp->client_id_nofree)
+		c->conn_flags |= LMQCFT_CLIENT_ID_NOFREE;
+	if (cp->username_nofree)
+		c->conn_flags |= LMQCFT_USERNAME_NOFREE;
+	if (cp->password_nofree)
+		c->conn_flags |= LMQCFT_PASSWORD_NOFREE;
+
+	if (!(c->conn_flags & LMQCFT_CLIENT_ID_NOFREE))
+		lws_free((void *)cp->client_id);
 
 	c->keep_alive_secs = cp->keep_alive;
 	c->aws_iot = cp->aws_iot;
@@ -138,8 +146,8 @@ lws_create_client_mqtt_object(const struct lws_client_connect_info *i,
 			if (!c->will.message)
 				goto oom2;
 		}
-		c->conn_flags = (uint8_t)(unsigned int)(c->conn_flags | ((cp->will_param.qos << 3) & LMQCFT_WILL_QOS_MASK));
-		c->conn_flags |= (uint8_t)((!!cp->will_param.retain) * LMQCFT_WILL_RETAIN);
+		c->conn_flags = (uint16_t)(unsigned int)(c->conn_flags | ((cp->will_param.qos << 3) & LMQCFT_WILL_QOS_MASK));
+		c->conn_flags |= (uint16_t)((!!cp->will_param.retain) * LMQCFT_WILL_RETAIN);
 	}
 
 	if (cp->username &&
@@ -148,14 +156,16 @@ lws_create_client_mqtt_object(const struct lws_client_connect_info *i,
 		if (!c->username)
 			goto oom3;
 		c->conn_flags |= LMQCFT_USERNAME;
-		lws_free((void *)cp->username);
+		if (!(c->conn_flags & LMQCFT_USERNAME_NOFREE))
+			lws_free((void *)cp->username);
 		if (cp->password) {
 			c->password =
 				lws_mqtt_str_create_cstr_dup(cp->password, 0);
 			if (!c->password)
 				goto oom4;
 			c->conn_flags |= LMQCFT_PASSWORD;
-			lws_free((void *)cp->password);
+			if (!(c->conn_flags & LMQCFT_PASSWORD_NOFREE))
+				lws_free((void *)cp->password);
 		}
 	}
 

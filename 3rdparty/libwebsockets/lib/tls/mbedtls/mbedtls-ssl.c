@@ -75,6 +75,11 @@ lws_ssl_capable_read(struct lws *wsi, unsigned char *buf, size_t len)
 			/* If the socket isn't connected anymore, bail out. */
 			goto do_err1;
 
+#if defined(LWS_PLAT_FREERTOS)
+		if (errno == LWS_ECONNABORTED)
+			goto do_err1;
+#endif
+
 		if (m == SSL_ERROR_ZERO_RETURN ||
 		    m == SSL_ERROR_SYSCALL)
 			goto do_err;
@@ -85,8 +90,10 @@ lws_ssl_capable_read(struct lws *wsi, unsigned char *buf, size_t len)
 			return LWS_SSL_CAPABLE_MORE_SERVICE;
 		}
 		if (m == SSL_ERROR_WANT_WRITE || SSL_want_write(wsi->tls.ssl)) {
-			lwsl_debug("%s: WANT_WRITE\n", __func__);
+			lwsl_info("%s: WANT_WRITE\n", __func__);
 			lwsl_debug("%s: LWS_SSL_CAPABLE_MORE_SERVICE\n", lws_wsi_tag(wsi));
+			wsi->tls_read_wanted_write = 1;
+			lws_callback_on_writable(wsi);
 			return LWS_SSL_CAPABLE_MORE_SERVICE;
 		}
 
@@ -108,7 +115,7 @@ do_err:
 	 * paths to dump what was received as decrypted data from the tls tunnel
 	 */
 	lwsl_notice("%s: len %d\n", __func__, n);
-	lwsl_hexdump_notice(buf, n);
+	lwsl_hexdump_notice(buf, (size_t)n);
 #endif
 
 #if defined(LWS_WITH_SYS_METRICS)
@@ -255,6 +262,15 @@ lws_ssl_close(struct lws *wsi)
 		SSL_set_info_callback(wsi->tls.ssl, NULL);
 #endif
 
+#if defined(LWS_TLS_SYNTHESIZE_CB)
+	lws_sul_cancel(&wsi->tls.sul_cb_synth);
+	/*
+	 * ... check the session in case it did not live long enough to get
+	 * the scheduled callback to sample it
+	 */
+	lws_sess_cache_synth_cb(&wsi->tls.sul_cb_synth);
+#endif
+
 	n = SSL_get_fd(wsi->tls.ssl);
 	if (!wsi->socket_is_permanently_unusable)
 		SSL_shutdown(wsi->tls.ssl);
@@ -262,7 +278,7 @@ lws_ssl_close(struct lws *wsi)
 	SSL_free(wsi->tls.ssl);
 	wsi->tls.ssl = NULL;
 
-	lws_tls_restrict_return(wsi->a.context);
+	lws_tls_restrict_return(wsi);
 
 	return 1; /* handled */
 }

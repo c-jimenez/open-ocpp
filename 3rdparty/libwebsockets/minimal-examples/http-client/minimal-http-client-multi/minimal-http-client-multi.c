@@ -52,7 +52,10 @@ struct cliuser {
 };
 
 static int completed, failed, numbered, stagger_idx, posting, count = COUNT,
-	   reuse;
+#if defined(LWS_WITH_TLS_SESSIONS)
+	   reuse,
+#endif
+	   staggered;
 static lws_sorted_usec_list_t sul_stagger;
 static struct lws_client_connect_info i;
 static struct lws *client_wsi[COUNT];
@@ -164,19 +167,19 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason,
 	      void *user, void *in, size_t len)
 {
 	char buf[LWS_PRE + 1024], *start = &buf[LWS_PRE], *p = start,
-	     *end = &buf[sizeof(buf) - LWS_PRE - 1];
+	     *end = &buf[sizeof(buf) - 1];
 	int n, idx = (int)(intptr_t)lws_get_opaque_user_data(wsi);
 	struct pss *pss = (struct pss *)user;
 
 	switch (reason) {
 
 	case LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP:
-		lwsl_user("LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP: idx: %d, resp %u: tls-session-reuse: %d\n",
-				idx, lws_http_client_http_response(wsi), lws_tls_session_is_reused(wsi));
+		lwsl_user("LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP: idx: %d, resp %u\n",
+				idx, lws_http_client_http_response(wsi));
 
+#if defined(LWS_WITH_TLS_SESSIONS) && !defined(LWS_WITH_MBEDTLS) && !defined(WIN32)
 		if (lws_tls_session_is_reused(wsi))
 			reuse++;
-#if defined(LWS_WITH_TLS_SESSIONS) && !defined(LWS_WITH_MBEDTLS) && !defined(WIN32)
 		else
 			/*
 			 * Attempt to store any new session into
@@ -344,8 +347,8 @@ finished:
 }
 
 static const struct lws_protocols protocols[] = {
-	{ "http", callback_http, sizeof(struct pss), 0, },
-	{ NULL, NULL, 0, 0 }
+	{ "http", callback_http, sizeof(struct pss), 0, 0, NULL, 0 },
+	LWS_PROTOCOL_LIST_TERM
 };
 
 #if defined(LWS_WITH_SYS_METRICS)
@@ -371,6 +374,65 @@ static const lws_system_ops_t system_ops = {
 };
 
 #endif
+
+static void
+stagger_cb(lws_sorted_usec_list_t *sul);
+
+static void
+lws_try_client_connection(struct lws_client_connect_info *i, int m)
+{
+	char path[128];
+
+	if (numbered) {
+		lws_snprintf(path, sizeof(path), "/%d.png", m + 1);
+		i->path = path;
+	} else
+		i->path = urlpath;
+
+	i->pwsi = &client_wsi[m];
+	i->opaque_user_data = (void *)(intptr_t)m;
+
+	if (!lws_client_connect_via_info(i)) {
+		failed++;
+		lwsl_user("%s: failed: conn idx %d\n", __func__, m);
+		if (++completed == count) {
+			lwsl_user("Done: failed: %d\n", failed);
+			lws_context_destroy(context);
+		}
+	} else
+		lwsl_user("started connection %s: idx %d (%s)\n",
+			  lws_wsi_tag(client_wsi[m]), m, i->path);
+}
+
+
+static int
+system_notify_cb(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
+		   int current, int target)
+{
+	struct lws_context *context = mgr->parent;
+	int m;
+
+	if (current != LWS_SYSTATE_OPERATIONAL || target != LWS_SYSTATE_OPERATIONAL)
+		return 0;
+
+	/* all the system prerequisites are ready */
+
+	if (!staggered)
+		/*
+		 * just pile on all the connections at once, testing the
+		 * pipeline queuing before the first is connected
+		 */
+		for (m = 0; m < count; m++)
+			lws_try_client_connection(&i, m);
+	else
+		/*
+		 * delay the connections slightly
+		 */
+		lws_sul_schedule(context, 0, &sul_stagger, stagger_cb,
+				 50 * LWS_US_PER_MS);
+
+	return 0;
+}
 
 static void
 signal_cb(void *handle, int signum)
@@ -425,32 +487,6 @@ unsigned long long us(void)
 }
 
 static void
-lws_try_client_connection(struct lws_client_connect_info *i, int m)
-{
-	char path[128];
-
-	if (numbered) {
-		lws_snprintf(path, sizeof(path), "/%d.png", m + 1);
-		i->path = path;
-	} else
-		i->path = urlpath;
-
-	i->pwsi = &client_wsi[m];
-	i->opaque_user_data = (void *)(intptr_t)m;
-
-	if (!lws_client_connect_via_info(i)) {
-		failed++;
-		lwsl_user("%s: failed: conn idx %d\n", __func__, m);
-		if (++completed == count) {
-			lwsl_user("Done: failed: %d\n", failed);
-			lws_context_destroy(context);
-		}
-	} else
-		lwsl_user("started connection %s: idx %d (%s)\n",
-			  lws_wsi_tag(client_wsi[m]), m, i->path);
-}
-
-static void
 stagger_cb(lws_sorted_usec_list_t *sul)
 {
 	lws_usec_t next;
@@ -479,14 +515,15 @@ stagger_cb(lws_sorted_usec_list_t *sul)
 
 int main(int argc, const char **argv)
 {
+	lws_state_notify_link_t notifier = { { NULL, NULL, NULL },
+						system_notify_cb, "app" };
+	lws_state_notify_link_t *na[] = { &notifier, NULL };
 	struct lws_context_creation_info info;
-	int m, staggered = 0
-#if defined(LWS_WITH_TLS_SESSIONS)
-		, pl = 0
-#endif
-	;
 	unsigned long long start;
 	const char *p;
+#if defined(LWS_WITH_TLS_SESSIONS)
+	int pl = 0;
+#endif
 
 	memset(&info, 0, sizeof info); /* otherwise uninitialized garbage */
 	memset(&i, 0, sizeof i); /* otherwise uninitialized garbage */
@@ -526,6 +563,7 @@ int main(int argc, const char **argv)
 	 * network wsi) that we will use.
 	 */
 	info.fd_limit_per_thread = 1 + COUNT + 1;
+	info.register_notifier_list = na;
 	info.pcontext = &context;
 
 #if defined(LWS_WITH_SYS_METRICS)
@@ -547,6 +585,12 @@ int main(int argc, const char **argv)
 
 	if ((p = lws_cmdline_option(argc, argv, "--limit")))
 		info.simultaneous_ssl_restriction = atoi(p);
+
+	if ((p = lws_cmdline_option(argc, argv, "--ssl-handshake-serialize")))
+		/* We only consider simultaneous_ssl_restriction > 1 use cases.
+		 * If ssl isn't limited or only 1 is allowed, we don't care.
+		 */
+		info.simultaneous_ssl_handshake_restriction = atoi(p);
 
 	context = lws_create_context(&info);
 	if (!context) {
@@ -637,20 +681,6 @@ int main(int argc, const char **argv)
 				  i.host, (uint16_t)i.port, sess_load_cb, "/tmp"))
 		lwsl_warn("%s: session load failed\n", __func__);
 #endif
-
-	if (!staggered)
-		/*
-		 * just pile on all the connections at once, testing the
-		 * pipeline queuing before the first is connected
-		 */
-		for (m = 0; m < count; m++)
-			lws_try_client_connection(&i, m);
-	else
-		/*
-		 * delay the connections slightly
-		 */
-		lws_sul_schedule(context, 0, &sul_stagger, stagger_cb,
-				 50 * LWS_US_PER_MS);
 
 	start = us();
 	while (!intr && !lws_service(context, 0))

@@ -59,11 +59,15 @@ gai_strerror(int);
  #include "FreeRTOS_IP.h"
 #endif
  #include "timers.h"
+#if defined(LWS_ESP_PLATFORM)
  #include <esp_attr.h>
+#endif
  #include <semphr.h>
 #else
  #include "freertos/timers.h"
+#if defined(LWS_ESP_PLATFORM)
  #include <esp_attr.h>
+#endif
  #include <esp_system.h>
  #include <esp_task_wdt.h>
 #endif
@@ -76,7 +80,7 @@ gai_strerror(int);
 typedef SemaphoreHandle_t lws_mutex_t;
 #define lws_mutex_init(x)	x = xSemaphoreCreateMutex()
 #define lws_mutex_destroy(x)	vSemaphoreDelete(x)
-#define lws_mutex_lock(x)	xSemaphoreTake(x, portMAX_DELAY)
+#define lws_mutex_lock(x)	(!xSemaphoreTake(x, portMAX_DELAY)) /*0 = OK */
 #define lws_mutex_unlock(x)	xSemaphoreGive(x)
 
 #include <lwip/sockets.h>
@@ -94,6 +98,7 @@ typedef SemaphoreHandle_t lws_mutex_t;
  #define LWS_ENOTCONN ENOTCONN
  #define LWS_EWOULDBLOCK EWOULDBLOCK
  #define LWS_EADDRINUSE EADDRINUSE
+ #define LWS_ECONNABORTED ECONNABORTED
 
  #define lws_set_blocking_send(wsi)
 

@@ -41,6 +41,9 @@ static const lws_mqtt_client_connect_param_t client_connect_param = {
 	.client_id			= "lwsMqttClient",
 	.keep_alive			= 60,
 	.clean_start			= 1,
+	.client_id_nofree		= 1,
+	.username_nofree		= 1,
+	.password_nofree		= 1,
 	.will_param = {
 		.topic			= "good/bye",
 		.message		= "sign-off",
@@ -183,6 +186,7 @@ callback_mqtt(struct lws *wsi, enum lws_callback_reasons reason,
 
 	case LWS_CALLBACK_MQTT_SUBSCRIBED:
 		lwsl_user("%s: MQTT_SUBSCRIBED\n", __func__);
+		lws_callback_on_writable(wsi);
 		break;
 
 	case LWS_CALLBACK_MQTT_CLIENT_WRITEABLE:
@@ -249,8 +253,10 @@ callback_mqtt(struct lws *wsi, enum lws_callback_reasons reason,
 		 */
 
 		pss->state++;
-		if (pss->state != STATE_TEST_FINISH)
+		if (pss->state != STATE_TEST_FINISH) {
+			lws_callback_on_writable(wsi);
 			break;
+		}
 
 		/* Oh we are done then */
 
@@ -296,12 +302,13 @@ static const struct lws_protocols protocols[] = {
 		.callback		= callback_mqtt,
 		.per_session_data_size	= sizeof(struct pss)
 	},
-	{ NULL, NULL, 0, 0 }
+	LWS_PROTOCOL_LIST_TERM
 };
 
 int main(int argc, const char **argv)
 {
-	lws_state_notify_link_t notifier = { {}, system_notify_cb, "app" };
+	lws_state_notify_link_t notifier = { { NULL, NULL, NULL },
+					     system_notify_cb, "app" };
 	lws_state_notify_link_t *na[] = { &notifier, NULL };
 	struct lws_context_creation_info info;
 	struct lws_context *context;

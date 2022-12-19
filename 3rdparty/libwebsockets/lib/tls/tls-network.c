@@ -90,10 +90,10 @@ lws_tls_check_cert_lifetime(struct lws_vhost *v)
 			return 1;
 
 		life = (ir.time - now) / (24 * 3600);
-		lwsl_notice("   vhost %s: cert expiry: %dd\n", v->name,
+		lwsl_vhost_notice(v, "   vhost %s: cert expiry: %dd", v->name,
 			    (int)life);
 	} else
-		lwsl_info("   vhost %s: no cert\n", v->name);
+		lwsl_vhost_info(v, "   vhost %s: no cert", v->name);
 
 	memset(&caa, 0, sizeof(caa));
 	caa.vh = v;
@@ -151,7 +151,7 @@ lws_tls_generic_cert_checks(struct lws_vhost *vhost, const char *cert,
 
 	if ((n == LWS_TLS_EXTANT_NO || m == LWS_TLS_EXTANT_NO) &&
 	    (vhost->options & LWS_SERVER_OPTION_IGNORE_MISSING_CERT)) {
-		lwsl_notice("Ignoring missing %s or %s\n", cert, private_key);
+		lwsl_vhost_notice(vhost, "Ignoring missing %s or %s", cert, private_key);
 		vhost->tls.skipped_certs = 1;
 
 		return LWS_TLS_EXTANT_NO;
@@ -188,14 +188,12 @@ lws_tls_cert_updated(struct lws_context *context, const char *certpath,
 						  mem_privkey, len_mem_privkey);
 
 			if (v->tls.skipped_certs)
-				lwsl_notice("%s: vhost %s: cert unset\n",
-					    __func__, v->name);
+				lwsl_vhost_notice(v, "vhost %s: cert unset", v->name);
 		}
 	} lws_end_foreach_ll(v, vhost_next);
 
 	return 0;
 }
-#endif
 
 int
 lws_gate_accepts(struct lws_context *context, int on)
@@ -204,17 +202,29 @@ lws_gate_accepts(struct lws_context *context, int on)
 
 	lwsl_notice("%s: on = %d\n", __func__, on);
 
+	if (context->tls_gate_accepts == (char)on)
+		return 0;
+
+	context->tls_gate_accepts = (char)on;
+
 	while (v) {
-		if (v->tls.use_ssl && v->lserv_wsi &&
-		    lws_change_pollfd(v->lserv_wsi, (LWS_POLLIN) * !on,
-				      (LWS_POLLIN) * on))
-			lwsl_notice("Unable to set accept POLLIN %d\n", on);
+		lws_start_foreach_dll(struct lws_dll2 *, d,
+				      lws_dll2_get_head(&v->listen_wsi)) {
+			struct lws *wsi = lws_container_of(d, struct lws,
+							   listen_list);
+
+			if (v->tls.use_ssl &&
+			    lws_change_pollfd(wsi, on ? LWS_POLLIN : 0,
+						   on ? 0 : LWS_POLLIN))
+				lwsl_cx_notice(context, "Unable to set POLLIN %d", on);
+		} lws_end_foreach_dll(d);
 
 		v = v->vhost_next;
 	}
 
 	return 0;
 }
+#endif
 
 /* comma-separated alpn list, like "h2,http/1.1" to openssl alpn format */
 

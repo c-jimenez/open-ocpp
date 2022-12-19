@@ -1,7 +1,7 @@
 /*
  * lws-minimal-secure-streams
  *
- * Written in 2010-2020 by Andy Green <andy@warmcat.com>
+ * Written in 2010-2021 by Andy Green <andy@warmcat.com>
  *
  * This file is made available under the Creative Commons CC0 1.0
  * Universal Public Domain Dedication.
@@ -24,6 +24,8 @@
 #include <string.h>
 #include <signal.h>
 
+// #define FORCE_OS_TRUST_STORE
+
 /*
  * uncomment to force network traffic through 127.0.0.1:1080
  *
@@ -38,7 +40,7 @@
 // #define VIA_LOCALHOST_SOCKS
 
 static int interrupted, bad = 1, force_cpd_fail_portal,
-	   force_cpd_fail_no_internet, test_respmap, test_blob;
+	   force_cpd_fail_no_internet, test_respmap, test_ots, test_local;
 static unsigned int timeout_ms = 3000;
 static lws_state_notify_link_t nl;
 
@@ -82,37 +84,53 @@ static const char * const default_ss_policy =
 		 * We fetch the real policy from there using SS and switch to
 		 * using that.
 		 */
-		"{\"dst_root_x3\": \""
-	"MIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/"
-	"MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT"
-	"DkRTVCBSb290IENBIFgzMB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow"
-	"PzEkMCIGA1UEChMbRGlnaXRhbCBTaWduYXR1cmUgVHJ1c3QgQ28uMRcwFQYDVQQD"
-	"Ew5EU1QgUm9vdCBDQSBYMzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB"
-	"AN+v6ZdQCINXtMxiZfaQguzH0yxrMMpb7NnDfcdAwRgUi+DoM3ZJKuM/IUmTrE4O"
-	"rz5Iy2Xu/NMhD2XSKtkyj4zl93ewEnu1lcCJo6m67XMuegwGMoOifooUMM0RoOEq"
-	"OLl5CjH9UL2AZd+3UWODyOKIYepLYYHsUmu5ouJLGiifSKOeDNoJjj4XLh7dIN9b"
-	"xiqKqy69cK3FCxolkHRyxXtqqzTWMIn/5WgTe1QLyNau7Fqckh49ZLOMxt+/yUFw"
-	"7BZy1SbsOFU5Q9D8/RhcQPGX69Wam40dutolucbY38EVAjqr2m7xPi71XAicPNaD"
-	"aeQQmxkqtilX4+U9m5/wAl0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNV"
-	"HQ8BAf8EBAMCAQYwHQYDVR0OBBYEFMSnsaR7LHH62+FLkHX/xBVghYkQMA0GCSqG"
-	"SIb3DQEBBQUAA4IBAQCjGiybFwBcqR7uKGY3Or+Dxz9LwwmglSBd49lZRNI+DT69"
-	"ikugdB/OEIKcdBodfpga3csTS7MgROSR6cz8faXbauX+5v3gTt23ADq1cEmv8uXr"
-	"AvHRAosZy5Q6XkjEGB5YGV8eAlrwDPGxrancWYaLbumR9YbK+rlmM6pZW87ipxZz"
-	"R8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5"
-	"JDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo"
-	"Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ"
+#if !defined(FORCE_OS_TRUST_STORE)
+	  		"{\"isrg_root_x1\": \""
+	"MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw"
+	"TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh"
+	"cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4"
+	"WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJu"
+	"ZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBY"
+	"MTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygc"
+	"h77ct984kIxuPOZXoHj3dcKi/vVqbvYATyjb3miGbESTtrFj/RQSa78f0uoxmyF+"
+	"0TM8ukj13Xnfs7j/EvEhmkvBioZxaUpmZmyPfjxwv60pIgbz5MDmgK7iS4+3mX6U"
+	"A5/TR5d8mUgjU+g4rk8Kb4Mu0UlXjIB0ttov0DiNewNwIRt18jA8+o+u3dpjq+sW"
+	"T8KOEUt+zwvo/7V3LvSye0rgTBIlDHCNAymg4VMk7BPZ7hm/ELNKjD+Jo2FR3qyH"
+	"B5T0Y3HsLuJvW5iB4YlcNHlsdu87kGJ55tukmi8mxdAQ4Q7e2RCOFvu396j3x+UC"
+	"B5iPNgiV5+I3lg02dZ77DnKxHZu8A/lJBdiB3QW0KtZB6awBdpUKD9jf1b0SHzUv"
+	"KBds0pjBqAlkd25HN7rOrFleaJ1/ctaJxQZBKT5ZPt0m9STJEadao0xAH0ahmbWn"
+	"OlFuhjuefXKnEgV4We0+UXgVCwOPjdAvBbI+e0ocS3MFEvzG6uBQE3xDk3SzynTn"
+	"jh8BCNAw1FtxNrQHusEwMFxIt4I7mKZ9YIqioymCzLq9gwQbooMDQaHWBfEbwrbw"
+	"qHyGO0aoSCqI3Haadr8faqU9GY/rOPNk3sgrDQoo//fb4hVC1CLQJ13hef4Y53CI"
+	"rU7m2Ys6xt0nUW7/vGT1M0NPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNV"
+	"HRMBAf8EBTADAQH/MB0GA1UdDgQWBBR5tFnme7bl5AFzgAiIyBpY9umbbjANBgkq"
+	"hkiG9w0BAQsFAAOCAgEAVR9YqbyyqFDQDLHYGmkgJykIrGF1XIpu+ILlaS/V9lZL"
+	"ubhzEFnTIZd+50xx+7LSYK05qAvqFyFWhfFQDlnrzuBZ6brJFe+GnY+EgPbk6ZGQ"
+	"3BebYhtF8GaV0nxvwuo77x/Py9auJ/GpsMiu/X1+mvoiBOv/2X/qkSsisRcOj/KK"
+	"NFtY2PwByVS5uCbMiogziUwthDyC3+6WVwW6LLv3xLfHTjuCvjHIInNzktHCgKQ5"
+	"ORAzI4JMPJ+GslWYHb4phowim57iaztXOoJwTdwJx4nLCgdNbOhdjsnvzqvHu7Ur"
+	"TkXWStAmzOVyyghqpZXjFaH3pO3JLF+l+/+sKAIuvtd7u+Nxe5AW0wdeRlN8NwdC"
+	"jNPElpzVmbUq4JUagEiuTDkHzsxHpFKVK7q4+63SM1N95R1NbdWhscdCb+ZAJzVc"
+	"oyi3B43njTOQ5yOf+1CceWxG1bQVs5ZufpsMljq4Ui0/1lvh+wjChP4kqKOJ2qxq"
+	"4RgqsahDYVvTH9w7jXbyLeiNdd8XM2w9U/t7y0Ff/9yi0GE44Za4rF2LN9d11TPA"
+	"mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d"
+	"emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc="
 		"\"}"
+#endif
 	  "],"
 	  "\"trust_stores\": [" /* named cert chains */
+#if !defined(FORCE_OS_TRUST_STORE)
 		"{"
-			"\"name\": \"le_via_dst\","
+			"\"name\": \"le_via_isrg\","
 			"\"stack\": ["
-				"\"dst_root_x3\""
+				"\"isrg_root_x1\""
 			"]"
 		"}"
+#endif
 	  "],"
 	  "\"s\": ["
-	  	/*
+#if !defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+		/*
 		 * "fetch_policy" decides from where the real policy
 		 * will be fetched, if present.  Otherwise the initial
 		 * policy is treated as the whole, hardcoded, policy.
@@ -129,8 +147,40 @@ static const char * const default_ss_policy =
 #endif
 			"\"tls\":"		"true,"
 			"\"opportunistic\":"	"true,"
-			"\"retry\":"		"\"default\","
-			"\"tls_trust_store\":"	"\"le_via_dst\""
+#if !defined(FORCE_OS_TRUST_STORE)
+			"\"tls_trust_store\":"	"\"le_via_isrg\","
+#endif
+			"\"retry\":"		"\"default\""
+#else
+	"{\"mintest\": {"
+			"\"endpoint\":  \"warmcat.com\","
+			"\"port\": 443,"
+			"\"protocol\": \"h1\","
+			"\"http_method\": \"GET\","
+			"\"http_url\": \"index.html?uptag=${uptag}\","
+			"\"metadata\": [{"
+			"	\"uptag\": \"X-Upload-Tag:\""
+			"}, {"
+			"	\"xctype\": \"X-Content-Type:\""
+			"}],"
+			"\"tls\": true,"
+			"\"opportunistic\": true,"
+			"\"retry\": \"default\","
+			"\"timeout_ms\": 2000,"
+			"\"direct_proto_str\": true,"
+			"\"tls_trust_store\": \"le_via_dst\""
+		"}},"
+	"{\"mintest_local\": {"
+			"\"endpoint\":  \"localhost\","
+			"\"port\": 8000,"
+			"\"protocol\": \"h1\","
+			"\"http_method\": \"GET\","
+			"\"tls\": false,"
+			"\"opportunistic\": true,"
+			"\"retry\": \"default\","
+			"\"timeout_ms\": 2000,"
+			"\"direct_proto_str\": true"
+#endif
 		"}},{"
 			/*
 			 * "captive_portal_detect" describes
@@ -157,7 +207,7 @@ static const char * const default_ss_policy =
 #endif
 
 typedef struct myss {
-	struct lws_ss_handle 		*ss;
+	struct lws_ss_handle		*ss;
 	void				*opaque_data;
 	/* ... application specific state ... */
 	lws_sorted_usec_list_t		sul;
@@ -186,70 +236,26 @@ static const char *canned_root_token_payload =
 
 /* secure streams payload interface */
 
-static const uint8_t expected_blob_hash[] = {
-	0xed, 0x57, 0x20, 0xc1, 0x68, 0x30, 0x81, 0x0e,
-	0x58, 0x29, 0xdf, 0xb9, 0xb6, 0x6c, 0x96, 0xb2,
-	0xe2, 0x4e, 0xfc, 0x4f, 0x93, 0xaa, 0x5e, 0x38,
-	0xc7, 0xff, 0x41, 0x50, 0xd3, 0x1c, 0xfb, 0xbf
-};
-
 static lws_ss_state_return_t
 myss_rx(void *userobj, const uint8_t *buf, size_t len, int flags)
 {
-	myss_t *m = (myss_t *)userobj;
-	const char *md_srv = "not set", *md_test = "not set";
-	size_t md_srv_len = 7, md_test_len = 7;
 
 	if (flags & LWSSS_FLAG_PERF_JSON)
 		return LWSSSSRET_OK;
 
-	if (test_blob) {
-
-		if (flags & LWSSS_FLAG_SOM) {
-			if (lws_genhash_init(&m->hash_ctx, LWS_GENHASH_TYPE_SHA256))
-				lwsl_err("%s: hash init failed\n", __func__);
-			m->amt = 0;
-		}
-
-		if (lws_genhash_update(&m->hash_ctx, buf, len))
-			lwsl_err("%s: hash failed\n", __func__);
-
-		if ((m->amt + len) / 102400 != (m->amt / 102400)) {
-
-			lwsl_user("%s: blob test: rx %uKiB\n", __func__,
-					(unsigned int)((m->amt + len) / 1024));
-			/*
-			 * Let's make it hard for client to keep up with onward
-			 * server, delay 50ms after every 100K received, so we
-			 * are forcing the flow control action at the proxy
-			 */
-			usleep(50000);
-		}
-
-		m->amt += len;
-
-		if (flags & LWSSS_FLAG_EOM) {
-			uint8_t digest[32];
-			lws_genhash_destroy(&m->hash_ctx, digest);
-
-			if (!memcmp(expected_blob_hash, digest, 32)) {
-				lwsl_user("%s: SHA256 match\n", __func__);
-				bad = 0;
-			}
-
-			interrupted = 1;
-		}
-
-		return LWSSSSRET_OK;
-	}
+#if !defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+	myss_t *m = (myss_t *)userobj;
+	const char *md_srv = "not set", *md_test = "not set";
+	size_t md_srv_len = 7, md_test_len = 7;
 
 	lws_ss_get_metadata(m->ss, "srv", (const void **)&md_srv, &md_srv_len);
 	lws_ss_get_metadata(m->ss, "test", (const void **)&md_test, &md_test_len);
-
 	lwsl_user("%s: len %d, flags: %d, srv: %.*s, test: %.*s\n", __func__,
 		  (int)len, flags, (int)md_srv_len, md_srv,
 		  (int)md_test_len, md_test);
+
 	lwsl_hexdump_info(buf, len);
+#endif
 
 	/*
 	 * If we received the whole message, for our example it means
@@ -274,11 +280,30 @@ myss_tx(void *userobj, lws_ss_tx_ordinal_t ord, uint8_t *buf, size_t *len,
 	return LWSSSSRET_TX_DONT_SEND;
 }
 
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+static const char * long_token_str = "{xxx:AWlKJMMISWJBQpAFqU0UqKNsnSY5usx2YtjOZJUQALNtapRxu/9VJqMk5IFVhxrNvMTj+RCGN6B5OlUK80lbbC8fAmQi7SoFB8DHN9UCRHkENriC62FjMNiBVfgkjMWx+60GioZy4bI2kCcyisd2CujQuSVllUmQFXhVq291cJhFfcKR4c3CUCuhouUfK2e1BY5InDMnzUXozOh+vhjJSeBIfp4HRUAgMpV7FXlHy8D5tgbmPbHs9X81MEsHTcERd3pG10B5fu1PzH+dJbr5F2WTK+VFWZI99B89ijEZWsPg447IK3F+0HHGseZfpRjKw2bY94id/TmncTxS0cqchDJlYg+Jt33U4HkUPqLdRiGIfJb6wSATx4S9ZKUumeJAgXpC6ytlUeqPpxzgnD7Tle5CDVb+eVzRk2FJfjiZdjbYxXhWYntPusLP/PGrorkqLw0ZKw+OJ+fhbkwF+0SCUelWEc8WPtfxCDAIdEQ7X5P4vUlBNEfuHprgHbZry680syFetY2q3ZtCmWemLHhqdDGu4lFgcQPCbb9b8eOE8oAbUQPm9AeV84RXSLevBG44JST/W2JuYguOk8SFlsRkfHb3dvxfB15Lg+mtH0tGRoumSMT0CFJL4ClTiKdpJo1LPgEd2/f13GcukEWirjqDRxpepJYWaVAMbxbaPBNfRHw9S8Fn8qU9/9eAxmbEqOopep5I/Zd99CT2PdE0Qyami1p05/BEc5dgvjg3SNDmAc/8kWC0AcvoSfApXI1TaVzbNh68b79h6IaIvXXorY5274u0lVB357JIRiYo29QbJgNn4bDbIr5ScM8GnFHQdKy29/TZoq4zbGMPX2X2t41vXRVeoZteu7vNWsMQD6eIomVq9qFWnoEEaR30woGF+8ZSIEu9JH5LKVZVFx46lipnjE8CDt5qrYCjwiGIswdLLMmIltxRmDt4aefTFpre7lhgUChv7ndJARvsn8rvtg2Hg1qKyfCAHa/LBblM29cRjLFqp7tWLJO7N27SWiqEhai6pmSmSYzqoPL+rnLS69rkdIuUwkA==}{yyy:jG8akvr66AXK+W1KSUyGIN3Yk4WNRLSIZHWTu8rsvQAuKwv9a/ZxrxIa+R1xW7cwmPSgINcJ4Jo7kGK9n7aDnsSDt3uMSHsu2iNg+UtIaJcO0XO6fPaLmOPLpOIU5AfG9HnbWUjeniNRrUGN8+26JH/9EB1h/X++Ow61CCHm8mKrgR1lXsKuNyqDYIrjoI3KCCVKZkdWygyFAXQ6l0sr+pUyNpv6H5w1xlC8dtI88091b/njuRlHsnoCa1zRtgqH0L4igLNu0zzOkH/ATsVS3Pyn4nsoRiGVFgzJZ0e2jT2McmDTxNeEHcafQSxeN7pztDFHT3ukUU9QFFtFDdzlug==}{vvv:VGbzgaVrLrJ+92ACJ0TEtQ==}{eeee:QURQVG9rZW6FbmNyeXB0aW6uS2v5}{sssss:mG+}";
+#endif
+
 static lws_ss_state_return_t
 myss_state(void *userobj, void *sh, lws_ss_constate_t state,
 	   lws_ss_tx_ordinal_t ack)
 {
 	myss_t *m = (myss_t *)userobj;
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+	const char *md_test = "not set";
+	size_t md_test_len = 7;
+	int i;
+	static const char * imd_test_keys[8] = {
+		"server:",
+		"content-security-policy:",
+		"strict-transport-security:",
+		"test-custom-header:",
+		"x-xss-protection:",
+		"x-content-type-options:",
+		"x-frame-options:",
+		"x-non-exist:",
+		};
+#endif
 
 	lwsl_user("%s: %s (%d), ord 0x%x\n", __func__,
 		  lws_ss_state_name((int)state), state, (unsigned int)ack);
@@ -290,21 +315,45 @@ myss_state(void *userobj, void *sh, lws_ss_constate_t state,
 	case LWSSSCS_CONNECTING:
 		lws_ss_start_timeout(m->ss, timeout_ms);
 
-		if (!test_blob) {
-			if (lws_ss_set_metadata(m->ss, "uptag", "myuptag123", 10))
-				/* can fail, eg due to OOM, retry later if so */
-				return LWSSSSRET_DISCONNECT_ME;
+		if (lws_ss_set_metadata(m->ss, "uptag", "myuptag123", 10))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
+#if !defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+		if (lws_ss_set_metadata(m->ss, "ctype", "myctype", 7))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
+#else
+		if (lws_ss_set_metadata(m->ss, "X-Test-Type1:", "myctype1", 8))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
+		if (lws_ss_set_metadata(m->ss, "X-Test-Type2:", "myctype2", 8))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
+		if (lws_ss_set_metadata(m->ss, "Content-Type:", "myctype", 7))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
+		if (lws_ss_set_metadata(m->ss, "X-ADP-Authentication-Token:",
+					long_token_str, strlen(long_token_str)))
+			/* can fail, eg due to OOM, retry later if so */
+			return LWSSSSRET_DISCONNECT_ME;
 
-			if (lws_ss_set_metadata(m->ss, "ctype", "myctype", 7))
-				/* can fail, eg due to OOM, retry later if so */
-				return LWSSSSRET_DISCONNECT_ME;
-		}
+#endif
 		break;
 
 	case LWSSSCS_ALL_RETRIES_FAILED:
 		/* if we're out of retries, we want to close the app and FAIL */
 		interrupted = 1;
 		bad = 2;
+		break;
+	case LWSSSCS_CONNECTED:
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+	lwsl_user("%s: get direct metadata\n", __func__);
+	for (i = 0; i < 8; i++) {
+		md_test = "not set";
+		lws_ss_get_metadata(m->ss, imd_test_keys[i], (const void **)&md_test, &md_test_len);
+		lwsl_user("%s test key:[%s], got [%s]\n", __func__, imd_test_keys[i], md_test);
+	}
+#endif
 		break;
 
 	case LWSSSCS_QOS_ACK_REMOTE:
@@ -329,6 +378,15 @@ myss_state(void *userobj, void *sh, lws_ss_constate_t state,
 	return LWSSSSRET_OK;
 }
 
+#if defined(LWS_WITH_SECURE_STREAMS_BUFFER_DUMP)
+static void
+myss_headers_dump(void *userobj, const uint8_t *buf, size_t len, int done)
+{
+	lwsl_user("%s: %lu done: %s\n", __func__, len, done?"true":"false");
+
+	lwsl_hexdump_err(buf, len);
+}
+#endif
 static int
 app_system_state_nf(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
 		    int current, int target)
@@ -412,14 +470,21 @@ app_system_state_nf(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
 			ssi.rx = myss_rx;
 			ssi.tx = myss_tx;
 			ssi.state = myss_state;
+#if defined(LWS_WITH_SECURE_STREAMS_BUFFER_DUMP)
+			ssi.dump = myss_headers_dump;
+#endif
 			ssi.user_alloc = sizeof(myss_t);
-			ssi.streamtype = test_blob ? "bulkproxflow" :
-					(test_respmap ? "respmap" : "mintest");
+			ssi.streamtype = test_ots ? "mintest-ots" :
+					 (test_respmap ? "respmap" :
+					  (test_local ? "mintest_local" :
+					  "mintest"));
 
 			if (lws_ss_create(context, 0, &ssi, NULL, NULL,
 					  NULL, NULL)) {
 				lwsl_err("%s: failed to create secure stream\n",
 					 __func__);
+				interrupted = 1;
+				lws_cancel_service(context);
 				return -1;
 			}
 		}
@@ -475,6 +540,8 @@ int main(int argc, const char **argv)
 	memset(&info, 0, sizeof info);
 	lws_cmdline_option_handle_builtin(argc, argv, &info);
 
+	//lws_set_log_level(LLL_USER | LLL_ERR | LLL_DEBUG | LLL_NOTICE | LLL_INFO, NULL);
+
 	lwsl_user("LWS secure streams test client [-d<verb>]\n");
 
 	/* these options are mutually exclusive if given */
@@ -488,18 +555,18 @@ int main(int argc, const char **argv)
 	if (lws_cmdline_option(argc, argv, "--respmap"))
 		test_respmap = 1;
 
+	if (lws_cmdline_option(argc, argv, "--ots"))
+		/*
+		 * Use a streamtype that relies on the OS trust store for
+		 * validation
+		 */
+		test_ots = 1;
+
+	if (lws_cmdline_option(argc, argv, "--local"))
+		test_local = 1;
+
 	if ((p = lws_cmdline_option(argc, argv, "--timeout_ms")))
 		timeout_ms = (unsigned int)atoi(p);
-
-	if (lws_cmdline_option(argc, argv, "--blob")) {
-		test_blob = 1;
-		if (timeout_ms == 3000)
-			/*
-			 * Don't use default 3s, we're going to be a lot
-			 * slower
-			 */
-			timeout_ms = 60000;
-	}
 
 	info.fd_limit_per_thread = 1 + 6 + 1;
 	info.port = CONTEXT_PORT_NO_LISTEN;
@@ -528,6 +595,16 @@ int main(int argc, const char **argv)
 	info.options = LWS_SERVER_OPTION_EXPLICIT_VHOSTS |
 		       LWS_SERVER_OPTION_H2_JUST_FIX_WINDOW_UPDATE_OVERFLOW |
 		       LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+#endif
+
+#if defined(LWS_WITH_MBEDTLS)
+
+	/* uncomment to force mbedtls to load a system trust store like
+	 * openssl does
+	 *
+	 * info.mbedtls_client_preload_filepath =
+	 *		"/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem";
+	 */
 #endif
 
 	/* integrate us with lws system state management when context created */

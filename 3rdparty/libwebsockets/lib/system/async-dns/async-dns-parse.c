@@ -81,7 +81,8 @@ again1:
 
 		return -1;
 	}
-	if (ll > budget) {
+
+	if (ls + ll > ols + budget) {
 		lwsl_notice("%s: label too long %d vs %d\n", __func__, ll, budget);
 
 		return -1;
@@ -603,7 +604,7 @@ lws_adns_parse_udp(lws_async_dns_t *dns, const uint8_t *pkt, size_t len)
 
 	lwsl_info("%s: create cache entry for %s, %zu\n", __func__, nm,
 			est - sizeof(lws_adns_cache_t));
-	c = lws_malloc(est, "async-dns-entry");
+	c = lws_malloc(est + 1, "async-dns-entry");
 	if (!c) {
 		lwsl_err("%s: OOM %zu\n", __func__, est);
 		goto fail_out;
