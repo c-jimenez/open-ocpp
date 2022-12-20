@@ -116,6 +116,32 @@ class Queue
     }
 
     /**
+     * @brief Adds an item to the queue
+     * @param item Item to add
+     * @return true if the item has been added, fale if the maximum capacity has been reached
+     */
+    bool push(ItemType&& item)
+    {
+        bool ret = false;
+
+        // Lock queue
+        std::unique_lock<std::mutex> lock(m_mutex);
+
+        // Check size
+        if (m_queue.size() < MAX_SIZE)
+        {
+            // Add item
+            m_queue.push(item);
+
+            // Wakeup waiting thread
+            m_cond_var.notify_one();
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    /**
      * @brief Get an item from the queue
      * @param item Item retrieved from the queue
      * @param ms_timeout Max wait time in milliseconds

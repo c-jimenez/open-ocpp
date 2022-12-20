@@ -81,12 +81,16 @@ TEST_SUITE("Profile database")
         ChargingProfile profile6;
         profile6.chargingProfileId      = 6;
         profile6.stackLevel             = 6;
+        profile6.chargingProfileKind               = ChargingProfileKindType::Absolute;
         profile6.chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+        profile6.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
 
         // Tx profiles
         for (size_t i = 0; i < profiles.size(); i++)
         {
+            profiles[i]->chargingProfileKind               = ChargingProfileKindType::Absolute;
             profiles[i]->chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+            profiles[i]->chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
             CHECK(profile_db.install(1u, *profiles[i]));
         }
         CHECK_FALSE(profile_db.install(1u, profile6));

@@ -269,14 +269,14 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
             sk_GENERAL_NAME_push(names, name);
         }
         X509V3_add1_i2d(&exts, NID_subject_alt_name, names, 0, 0);
-        sk_GENERAL_NAME_free(names);
+        sk_GENERAL_NAME_pop_free(names, GENERAL_NAME_free);
     }
 
     // Add extensions to request
     if (exts)
     {
         X509_REQ_add_extensions(x509_req, exts);
-        sk_X509_EXTENSION_free(exts);
+        sk_X509_EXTENSION_pop_free(exts, X509_EXTENSION_free);
     }
 
     // Sign request

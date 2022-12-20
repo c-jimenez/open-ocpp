@@ -242,6 +242,7 @@ void LibWebsocketServer::process()
     }
 
     // Destroy context
+    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Ensure stop caller is joining
     lws_context_destroy(m_context);
 }
 

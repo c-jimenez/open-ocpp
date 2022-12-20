@@ -87,7 +87,7 @@ bool RpcBase::call(const std::string&         action,
             // Wait for response
             std::stringstream expected_id;
             expected_id << m_transaction_id;
-            RpcMessage* rpc_message = nullptr;
+            std::shared_ptr<RpcMessage> rpc_message;
             auto        wait_time   = std::chrono::steady_clock().now() + timeout;
             do
             {
@@ -104,12 +104,15 @@ bool RpcBase::call(const std::string&         action,
                         if (rpc_message->unique_id != expected_id.str())
                         {
                             // Wrong message
-                            delete rpc_message;
-                            rpc_message = nullptr;
+                            rpc_message.reset();
                         }
                     }
                 }
-            } while (ret && (rpc_message == nullptr));
+                else
+                {
+                    ret = false;
+                }
+            } while (ret && !rpc_message);
 
             // Extract response
             if (rpc_message)
@@ -126,7 +129,7 @@ bool RpcBase::call(const std::string&         action,
                 {
                     message = rpc_message->message.GetString();
                 }
-                delete rpc_message;
+                rpc_message.reset();
             }
             else
             {
@@ -164,12 +167,8 @@ void RpcBase::start()
         // Initialize transaction id sequence
         m_transaction_id = std::rand();
 
-        // Flush queues
-        m_requests_queue.clear();
-        m_requests_queue.setEnable(true);
-        m_results_queue.clear();
-
         // Start reception thread
+        m_requests_queue.setEnable(true);
         m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
     }
 }
@@ -185,6 +184,10 @@ void RpcBase::stop()
         m_rx_thread->join();
         delete m_rx_thread;
         m_rx_thread = nullptr;
+
+        // Flush queues
+        m_requests_queue.clear();
+        m_results_queue.clear();
     }
 }
 
@@ -309,7 +312,7 @@ bool RpcBase::decodeCall(const std::string&      unique_id,
     if (action.IsString() && payload.IsObject())
     {
         // Add request to the queue
-        RpcMessage* msg = new RpcMessage(unique_id, action.GetString(), rpc_frame, payload);
+        auto msg = std::make_shared<RpcMessage>(unique_id, action.GetString(), rpc_frame, payload);
         m_requests_queue.push(msg);
 
         ret = true;
@@ -327,7 +330,7 @@ bool RpcBase::decodeCallResult(const std::string& unique_id, rapidjson::Document
     if (payload.IsObject())
     {
         // Add result to the queue
-        RpcMessage* msg = new RpcMessage(unique_id, rpc_frame, payload);
+        auto msg = std::make_shared<RpcMessage>(unique_id, rpc_frame, payload);
         m_results_queue.push(msg);
 
         ret = true;
@@ -349,7 +352,7 @@ bool RpcBase::decodeCallError(const std::string&   unique_id,
     if (error.IsString() && message.IsString() && payload.IsObject())
     {
         // Add error to the queue
-        RpcMessage* msg = new RpcMessage(unique_id, rpc_frame, payload, &error, &message);
+        auto msg = std::make_shared<RpcMessage>(unique_id, rpc_frame, payload, &error, &message);
         m_results_queue.push(msg);
 
         ret = true;
@@ -380,7 +383,7 @@ void RpcBase::sendCallError(const std::string& unique_id, const char* error, con
 void RpcBase::rxThread()
 {
     // Thread loop
-    RpcMessage* rpc_message = nullptr;
+    std::shared_ptr<RpcMessage> rpc_message;
     while (m_requests_queue.pop(rpc_message))
     {
         // Notify call
@@ -417,7 +420,7 @@ void RpcBase::rxThread()
         }
 
         // Free resources
-        delete rpc_message;
+        rpc_message.reset();
     }
 }
 
