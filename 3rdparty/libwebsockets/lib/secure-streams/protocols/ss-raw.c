@@ -48,7 +48,9 @@ secstream_raw(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 		lwsl_info("%s: %s, %s CLIENT_CONNECTION_ERROR: %s\n", __func__,
 			  lws_ss_tag(h), h->policy->streamtype, in ? (char *)in : "(null)");
 
+#if defined(LWS_WITH_CONMON)
 		lws_conmon_ss_json(h);
+#endif
 
 		r = lws_ss_event_helper(h, LWSSSCS_UNREACHABLE);
 		if (r == LWSSSSRET_DESTROY_ME)
@@ -64,7 +66,9 @@ secstream_raw(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 			break;
 		lws_sul_cancel(&h->sul_timeout);
 
+#if defined(LWS_WITH_CONMON)
 		lws_conmon_ss_json(h);
+#endif
 
 		lwsl_info("%s: %s, %s RAW_CLOSE\n", __func__, lws_ss_tag(h),
 			  h->policy ? h->policy->streamtype : "no policy");
@@ -177,6 +181,7 @@ const struct lws_protocols protocol_secstream_raw = {
 	secstream_raw,
 	0,
 	0,
+	0, NULL, 0
 };
 
 const struct ss_pcols ss_pcol_raw = {
@@ -184,5 +189,5 @@ const struct ss_pcols ss_pcol_raw = {
 	"",
 	&protocol_secstream_raw,
 	secstream_connect_munge_raw,
-	NULL
+	NULL, NULL
 };

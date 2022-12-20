@@ -1,7 +1,7 @@
 /*
  * libwebsockets - small server side websockets and web server implementation
  *
- * Copyright (C) 2019 - 2020 Andy Green <andy@warmcat.com>
+ * Copyright (C) 2019 - 2021 Andy Green <andy@warmcat.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -108,11 +108,31 @@ static const char *sn[] = {
 };
 #endif
 
+struct lws_log_cx *
+lwsl_sspc_get_cx(struct lws_sspc_handle *sspc)
+{
+	if (!sspc)
+		return NULL;
+
+	return sspc->lc.log_cx;
+}
+
+
 void
-lws_ss_serialize_state_transition(lws_ss_conn_states_t *state, int new_state)
+lws_log_prepend_sspc(struct lws_log_cx *cx, void *obj, char **p, char *e)
+{
+	struct lws_sspc_handle *h = (struct lws_sspc_handle *)obj;
+
+	*p += lws_snprintf(*p, lws_ptr_diff_size_t(e, (*p)), "%s: ",
+			lws_sspc_tag(h));
+}
+
+static void
+lws_ss_serialize_state_transition(lws_sspc_handle_t *h,
+				  lws_ss_conn_states_t *state, int new_state)
 {
 #if defined(_DEBUG)
-	lwsl_info("%s: %s -> %s\n", __func__, sn[*state], sn[new_state]);
+	lwsl_sspc_info(h, "%s -> %s", sn[*state], sn[new_state]);
 #endif
 	*state = (lws_ss_conn_states_t)new_state;
 }
@@ -226,33 +246,6 @@ lws_ss_deserialize_tx_payload(struct lws_dsh *dsh, struct lws *wsi,
 
 	*flags = (int)lws_ser_ru32be(&p[3]);
 
-#if 0
-	if (wsi && wsi->a.context->detailed_latency_cb) {
-		/*
-		 * use the proxied latency information to compute the client
-		 * and our delays, and apply to wsi.
-		 *
-		 * + 7 u32   us held at client before written
-		 * +11 u32   us taken for transit to proxy
-		 * +15 u64   ustime when proxy got packet from client
-		 */
-		lws_usec_t us = lws_now_usecs();
-
-		wsi->detlat.acc_size = wsi->detlat.req_size = si - 23;
-		wsi->detlat.latencies[LAT_DUR_PROXY_CLIENT_REQ_TO_WRITE] =
-						lws_ser_ru32be(&p[7]);
-		wsi->detlat.latencies[LAT_DUR_PROXY_CLIENT_WRITE_TO_PROXY_RX] =
-						lws_ser_ru32be(&p[11]);
-		wsi->detlat.latencies[LAT_DUR_PROXY_RX_TO_ONWARD_TX] =
-						us - lws_ser_ru64be(&p[15]);
-
-		wsi->detlat.latencies[LAT_DUR_USERCB] = 0;
-	}
-#endif
-
-	// lwsl_user("%s: len %d, flags: %d\n", __func__, (int)*len, *flags);
-	// lwsl_hexdump_info(buf, *len);
-
 	lws_dsh_free((void **)&p);
 
 	return 0;
@@ -269,6 +262,9 @@ lws_ss_serialize_state(struct lws *wsi, struct lws_dsh *dsh, lws_ss_constate_t s
 {
 	uint8_t pre[12];
 	int n = 4;
+
+	if (state == LWSSSCS_EVENT_WAIT_CANCELLED)
+		return 0;
 
 	lwsl_info("%s: %s, ord 0x%x\n", __func__, lws_ss_state_name((int)state),
 		  (unsigned int)ack);
@@ -366,6 +362,7 @@ lws_ss_deserialize_parse(struct lws_ss_serialization_parser *par,
 			 lws_ss_conn_states_t *state, void *parconn,
 			 lws_ss_handle_t **pss, lws_ss_info_t *ssi, char client)
 {
+	lws_ss_state_return_t r;
 	lws_ss_metadata_t *pm;
 	lws_sspc_handle_t *h;
 	uint8_t pre[23];
@@ -375,6 +372,7 @@ lws_ss_deserialize_parse(struct lws_ss_serialization_parser *par,
 	int n;
 
 	while (len--) {
+
 		switch (par->ps) {
 		case RPAR_TYPE:
 			par->type = *cp++;
@@ -405,7 +403,7 @@ lws_ss_deserialize_parse(struct lws_ss_serialization_parser *par,
 				if (client)
 					goto hangup;
 				par->ps = RPAR_TYPE;
-				lwsl_notice("%s: DESTROYING\n", __func__);
+				lwsl_cx_notice(context, "DESTROYING");
 				goto hangup;
 
 			case LWSSS_SER_TXPRE_ONWARD_CONNECT:
@@ -416,7 +414,7 @@ lws_ss_deserialize_parse(struct lws_ss_serialization_parser *par,
 					goto hangup;
 
 				par->ps = RPAR_TYPE;
-				lwsl_notice("%s: ONWARD_CONNECT\n", __func__);
+				lwsl_cx_notice(context, "ONWARD_CONNECT");
 
 				/*
 				 * Shrug it off if we are already connecting or
@@ -542,8 +540,8 @@ lws_ss_deserialize_parse(struct lws_ss_serialization_parser *par,
 				break;
 
 			default:
-				lwsl_notice("%s: bad type 0x%x\n", __func__,
-					    par->type);
+				lwsl_cx_notice(context, "bad type 0x%x",
+					       par->type);
 				goto hangup;
 			}
 			break;
@@ -711,6 +709,8 @@ payload_ff:
 			us = lws_now_usecs();
 
 			if (!client) {
+				lws_ss_handle_t *hss;
+
 				/*
 				 * Proxy - we received some serialized tx from
 				 * the client.
@@ -721,8 +721,9 @@ payload_ff:
 				 * additionally
 				 */
 
-				lwsl_info("%s: C2P RX: len %d\n", __func__,
-						(int)n);
+				hss = proxy_pss_to_ss_h(pss);
+				if (hss)
+					lwsl_ss_info(hss, "C2P RX: len %d", (int)n);
 
 				p = pre;
 				pre[0] = LWSSS_SER_TXPRE_TX_PAYLOAD;
@@ -735,19 +736,17 @@ payload_ff:
 				/* time used later to find proxy hold time */
 				lws_ser_wu64be(&p[15], (uint64_t)us);
 
-				if ((proxy_pss_to_ss_h(pss) &&
-				     lws_fi(&proxy_pss_to_ss_h(pss)->fic, "ssproxy_dsh_c2p_pay_oom")) ||
+				if ((hss &&
+				    lws_fi(&hss->fic, "ssproxy_dsh_c2p_pay_oom")) ||
 				    lws_dsh_alloc_tail(dsh, KIND_C_TO_P, pre,
 						       23, cp, (unsigned int)n)) {
-					lwsl_err("%s: unable to alloc in dsh 3\n",
-						 __func__);
+					lwsl_ss_err(hss, "unable to alloc in dsh 3");
 
 					return LWSSSSRET_DISCONNECT_ME;
 				}
 
-				if (proxy_pss_to_ss_h(pss))
-					lws_ss_request_tx(
-						proxy_pss_to_ss_h(pss));
+				if (hss)
+					_lws_ss_request_tx(hss);
 			} else {
 
 				/*
@@ -756,16 +755,17 @@ payload_ff:
 				 * Pass whatever payload we have to ss user
 				 */
 
-				lwsl_info("%s: P2C RX: len %d\n", __func__,
-						(int)n);
-
 				h = lws_container_of(par, lws_sspc_handle_t,
 						     parser);
 				h->txc.peer_tx_cr_est -= n;
 
-				if (client_pss_to_sspc_h(pss, ssi)) {
+				lwsl_sspc_info(h, "P2C RX: len %d", (int)n);
+
+				if (ssi->rx && client_pss_to_sspc_h(pss, ssi)) {
 					/* we still have an sspc handle */
-					int ret = ssi->rx(client_pss_to_userdata(pss),
+					int ret;
+
+					ret = ssi->rx(client_pss_to_userdata(pss),
 						(uint8_t *)cp, (unsigned int)n, (int)flags);
 
 					if (client_pss_to_sspc_h(pss, ssi) &&
@@ -921,7 +921,7 @@ payload_ff:
 						 __func__, par->temp32,
 						 proxy_pss_to_ss_h(pss)->wsi->
 							 txc.peer_tx_cr_est);
-					lws_ss_request_tx(proxy_pss_to_ss_h(pss));
+					_lws_ss_request_tx(proxy_pss_to_ss_h(pss));
 				} else
 #endif
 					lwsl_info("%s: dropping TXCR\n", __func__);
@@ -1004,11 +1004,14 @@ payload_ff:
 			lwsl_notice("%s: set payload len %u\n", __func__,
 				    par->temp32);
 
-			if (proxy_pss_to_ss_h(pss))
-				lws_ss_request_tx_len(proxy_pss_to_ss_h(pss),
-							(unsigned long)par->temp32);
-
 			par->ps = RPAR_TYPE;
+
+			if (proxy_pss_to_ss_h(pss)) {
+				r = lws_ss_request_tx_len(proxy_pss_to_ss_h(pss),
+							(unsigned long)par->temp32);
+				if (r == LWSSSSRET_DESTROY_ME)
+					goto hangup;
+			}
 			break;
 
 		case RPAR_METADATA_NAMELEN:
@@ -1071,6 +1074,11 @@ payload_ff:
 					lwsl_err("%s: OOM\n", __func__);
 					goto hangup;
 				}
+
+				if (!h)
+					/* coverity */
+					goto hangup;
+
 				memset(md, 0, sizeof(lws_sspc_metadata_t));
 
 				lws_strncpy(md->name, par->metadata_name,
@@ -1095,6 +1103,11 @@ payload_ff:
 			if (!proxy_pss_to_ss_h(pss))
 				goto hangup;
 
+			if (!proxy_pss_to_ss_h(pss)->policy) {
+				lwsl_err("%s: null policy\n", __func__);
+				goto hangup;
+			}
+
 			/*
 			 * This is the policy's metadata list for the given
 			 * name
@@ -1113,25 +1126,28 @@ payload_ff:
 					proxy_pss_to_ss_h(pss),
 					par->metadata_name);
 
-			if (par->ssmd->value_on_lws_heap)
-				lws_free_set_NULL(par->ssmd->value__may_own_heap);
-			par->ssmd->value_on_lws_heap = 0;
+			if (par->ssmd) {
 
-			if (proxy_pss_to_ss_h(pss) &&
-			    lws_fi(&proxy_pss_to_ss_h(pss)->fic, "ssproxy_rx_metadata_oom"))
-				par->ssmd->value__may_own_heap = NULL;
-			else
-				par->ssmd->value__may_own_heap =
-					lws_malloc((unsigned int)par->rem + 1, "metadata");
+				if (par->ssmd->value_on_lws_heap)
+					lws_free_set_NULL(par->ssmd->value__may_own_heap);
+				par->ssmd->value_on_lws_heap = 0;
 
-			if (!par->ssmd->value__may_own_heap) {
-				lwsl_err("%s: OOM mdv\n", __func__);
-				goto hangup;
+				if (proxy_pss_to_ss_h(pss) &&
+				    lws_fi(&proxy_pss_to_ss_h(pss)->fic, "ssproxy_rx_metadata_oom"))
+					par->ssmd->value__may_own_heap = NULL;
+				else
+					par->ssmd->value__may_own_heap =
+						lws_malloc((unsigned int)par->rem + 1, "metadata");
+
+				if (!par->ssmd->value__may_own_heap) {
+					lwsl_err("%s: OOM mdv\n", __func__);
+					goto hangup;
+				}
+				par->ssmd->length = par->rem;
+				((uint8_t *)par->ssmd->value__may_own_heap)[par->rem] = '\0';
+				/* mark it as needing cleanup */
+				par->ssmd->value_on_lws_heap = 1;
 			}
-			par->ssmd->length = par->rem;
-			((uint8_t *)par->ssmd->value__may_own_heap)[par->rem] = '\0';
-			/* mark it as needing cleanup */
-			par->ssmd->value_on_lws_heap = 1;
 			par->ctr = 0;
 			break;
 
@@ -1140,21 +1156,39 @@ payload_ff:
 
 			if (client) {
 				*par->rxmetaval++ = *cp++;
-			} else
+			} else {
+
+				if (!par->ssmd) {
+					/* we don't recognize the name */
+
+					cp++;
+
+					if (--par->rem)
+						break;
+
+					par->ps = RPAR_TYPE;
+					break;
+				}
+
 				((uint8_t *)(par->ssmd->value__may_own_heap))[par->ctr++] = *cp++;
+			}
 
 			if (--par->rem)
 				break;
 
 			/* we think we got all the value */
-			if (client)
-				lwsl_notice("%s: RX METADATA %s\n", __func__,
-						par->metadata_name);
-			else {
-				lwsl_info("%s: RPAR_METADATA_VALUE for %s (len %d)\n",
-				  __func__, par->ssmd->name,
-				  (int)par->ssmd->length);
-				lwsl_hexdump_info(par->ssmd->value__may_own_heap, par->ssmd->length);
+			if (client) {
+				h = lws_container_of(par, lws_sspc_handle_t, parser);
+				lwsl_sspc_notice(h, "RX METADATA %s",
+							par->metadata_name);
+			} else {
+				lwsl_ss_info(proxy_pss_to_ss_h(pss),
+					     "RPAR_METADATA_VALUE for %s (len %d)",
+					     par->ssmd->name,
+					     (int)par->ssmd->length);
+				lwsl_hexdump_ss_info(proxy_pss_to_ss_h(pss),
+						par->ssmd->value__may_own_heap,
+						par->ssmd->length);
 			}
 			par->ps = RPAR_TYPE;
 			break;
@@ -1267,14 +1301,15 @@ payload_ff:
 			if (++par->ctr < 4)
 				break;
 
-
 			/*
 			 * Client (par->temp32 == dsh alloc)
 			 */
 
-			lws_ss_serialize_state_transition(state,
-							  LPCSCLI_LOCAL_CONNECTED);
 			h = lws_container_of(par, lws_sspc_handle_t, parser);
+
+			lws_ss_serialize_state_transition(h, state,
+							  LPCSCLI_LOCAL_CONNECTED);
+
 			lws_set_timeout(h->cwsi, NO_PENDING_TIMEOUT, 0);
 
 			if (h->dsh)
@@ -1308,8 +1343,9 @@ payload_ff:
 #endif
 
 			if (!h->creating_cb_done) {
-				if (lws_ss_check_next_state(&h->lc, &h->prev_ss_state,
-							    LWSSSCS_CREATING))
+				if (lws_ss_check_next_state_sspc(h,
+							       &h->prev_ss_state,
+							       LWSSSCS_CREATING))
 					return LWSSSSRET_DESTROY_ME;
 				h->prev_ss_state = (uint8_t)LWSSSCS_CREATING;
 				h->creating_cb_done = 1;
@@ -1334,8 +1370,7 @@ payload_ff:
 			if (!h->dsh)
 				goto hangup;
 
-			if (h->cwsi)
-				lws_callback_on_writable(h->cwsi);
+			lws_callback_on_writable(h->cwsi);
 
 			par->rsl_pos = 0;
 			par->rsl_idx = 0;
@@ -1398,7 +1433,8 @@ payload_ff:
 			 * Client received a proxied state change
 			 */
 
-			if (!client_pss_to_sspc_h(pss, ssi))
+			h = client_pss_to_sspc_h(pss, ssi);
+			if (!h)
 				/*
 				 * Since we're being informed we need to have
 				 * a stream to inform.  Assume whatever set this
@@ -1410,25 +1446,25 @@ payload_ff:
 			case LWSSSCS_DISCONNECTED:
 			case LWSSSCS_UNREACHABLE:
 			case LWSSSCS_AUTH_FAILED:
-				lws_ss_serialize_state_transition(state,
+				lws_ss_serialize_state_transition(h, state,
 						LPCSCLI_LOCAL_CONNECTED);
-				client_pss_to_sspc_h(pss, ssi)->conn_req_state =
-							LWSSSPC_ONW_NONE;
+				h->conn_req_state = LWSSSPC_ONW_NONE;
 				break;
+
 			case LWSSSCS_CONNECTED:
-				lwsl_info("%s: CONNECTED %s\n", __func__,
-					    ssi->streamtype);
+				lwsl_sspc_info(h, "CONNECTED %s",
+							ssi->streamtype);
 				if (*state == LPCSCLI_OPERATIONAL)
 					/*
 					 * Don't allow to see connected more
 					 * than once for one connection
 					 */
 					goto swallow;
-				lws_ss_serialize_state_transition(state,
-						LPCSCLI_OPERATIONAL);
 
-				client_pss_to_sspc_h(pss, ssi)->conn_req_state =
-						LWSSSPC_ONW_CONN;
+				lws_ss_serialize_state_transition(h, state,
+							LPCSCLI_OPERATIONAL);
+
+				h->conn_req_state = LWSSSPC_ONW_CONN;
 				break;
 			case LWSSSCS_TIMEOUT:
 				break;
@@ -1440,8 +1476,8 @@ payload_ff:
 				goto hangup;
 
 #if defined(_DEBUG)
-			lwsl_info("%s: forwarding proxied state %s\n",
-					__func__, lws_ss_state_name(par->ctr));
+			lwsl_sspc_info(h, "forwarding proxied state %s",
+					lws_ss_state_name(par->ctr));
 #endif
 
 			if (par->ctr == LWSSSCS_CREATING) {
@@ -1467,15 +1503,17 @@ payload_ff:
 				if (cs == LWSSSCS_DISCONNECTED)
 					h->ss_dangling_connected = 0;
 
-				if (lws_ss_check_next_state(&h->lc,
+				if (lws_ss_check_next_state_sspc(h,
 							    &h->prev_ss_state, cs))
 					return LWSSSSRET_DESTROY_ME;
 
 				if (cs < LWSSSCS_USER_BASE)
 					h->prev_ss_state = (uint8_t)cs;
 
+				h->h_in_svc = h;
 				n = ssi->state(client_pss_to_userdata(pss),
 					NULL, cs, par->flags);
+				h->h_in_svc = NULL;
 				switch (n) {
 				case LWSSSSRET_OK:
 					break;
@@ -1498,7 +1536,7 @@ swallow:
 
 hangup:
 
-	lwsl_notice("%s: hangup\n", __func__);
+	lwsl_cx_notice(context, "hangup");
 
 	return LWSSSSRET_DISCONNECT_ME;
 }

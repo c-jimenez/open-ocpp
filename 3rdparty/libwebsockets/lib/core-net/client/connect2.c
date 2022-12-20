@@ -93,26 +93,34 @@ lws_getaddrinfo46(struct lws *wsi, const char *ads, struct addrinfo **result)
 			|| n == EAI_AGAIN
 #endif
 			) {
-#if defined(LWS_WITH_SECURE_STREAMS)
-
-#endif
 		wsi->dns_reachability = 1;
 		lws_metrics_caliper_report(cal, METRES_NOGO);
 #if defined(LWS_WITH_SYS_METRICS)
 		lws_snprintf(buckname, sizeof(buckname), "dns=\"unreachable %d\"", n);
 		lws_metrics_hist_bump_priv_wsi(wsi, mth_conn_failures, buckname);
 #endif
-		lwsl_debug("%s: asking to recheck CPD in 1s\n", __func__);
+
+#if defined(LWS_WITH_CONMON)
+		wsi->conmon.dns_disposition = LWSCONMON_DNS_SERVER_UNREACHABLE;
+#endif
+
+#if 0
+		lwsl_wsi_debug(wsi, "asking to recheck CPD in 1s");
 		lws_system_cpd_start_defer(wsi->a.context, LWS_US_PER_SEC);
+#endif
 	}
 
-	lwsl_info("%s: getaddrinfo '%s' says %d\n", __func__, ads, n);
+	lwsl_wsi_info(wsi, "getaddrinfo '%s' says %d", ads, n);
 
 #if defined(LWS_WITH_SYS_METRICS)
 	if (n < 0) {
 		lws_snprintf(buckname, sizeof(buckname), "dns=\"nores %d\"", n);
 		lws_metrics_hist_bump_priv_wsi(wsi, mth_conn_failures, buckname);
 	}
+#endif
+#if defined(LWS_WITH_CONMON)
+	wsi->conmon.dns_disposition = n < 0 ? LWSCONMON_DNS_NO_RESULT :
+					      LWSCONMON_DNS_OK;
 #endif
 
 	lws_metrics_caliper_report(cal, n >= 0 ? METRES_GO : METRES_NOGO);
@@ -121,11 +129,15 @@ lws_getaddrinfo46(struct lws *wsi, const char *ads, struct addrinfo **result)
 }
 #endif
 
+#if !defined(LWS_WITH_SYS_ASYNC_DNS) && defined(EAI_NONAME)
+static const char * const dns_nxdomain = "DNS NXDOMAIN";
+#endif
+
 struct lws *
 lws_client_connect_2_dnsreq(struct lws *wsi)
 {
 	struct addrinfo *result = NULL;
-	const char *meth = NULL, *ads;
+	const char *meth = NULL;
 #if defined(LWS_WITH_IPV6)
 	struct sockaddr_in addr;
 	const char *iface;
@@ -136,9 +148,23 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 
 	if (lwsi_state(wsi) == LRS_WAITING_DNS ||
 	    lwsi_state(wsi) == LRS_WAITING_CONNECT) {
-		lwsl_info("%s: LRS_WAITING_DNS / CONNECT\n", __func__);
+		lwsl_wsi_info(wsi, "LRS_WAITING_DNS / CONNECT");
 
 		return wsi;
+	}
+
+	/*
+	 * clients who will create their own fresh connection keep a copy of
+	 * the hostname they originally connected to, in case other connections
+	 * want to use it too
+	 */
+
+	if (!wsi->cli_hostname_copy) {
+		const char *pa = lws_wsi_client_stash_item(wsi, CIS_HOST,
+					_WSI_TOKEN_CLIENT_PEER_ADDRESS);
+
+		if (pa)
+			wsi->cli_hostname_copy = lws_strdup(pa);
 	}
 
 	/*
@@ -148,11 +174,15 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 
 	meth = lws_wsi_client_stash_item(wsi, CIS_METHOD,
 					 _WSI_TOKEN_CLIENT_METHOD);
+	/* consult active connections to find out disposition */
+
+	adsin = lws_wsi_client_stash_item(wsi, CIS_ADDRESS,
+					  _WSI_TOKEN_CLIENT_PEER_ADDRESS);
 
 	/* we only pipeline connections that said it was okay */
 
 	if (!wsi->client_pipeline) {
-		lwsl_debug("%s: new conn on no pipeline flag\n", __func__);
+		lwsl_wsi_debug(wsi, "new conn on no pipeline flag");
 
 		goto solo;
 	}
@@ -163,11 +193,6 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 		    strcmp(meth, "POST") && strcmp(meth, "PUT") &&
 		    strcmp(meth, "UDP") && strcmp(meth, "MQTT"))
 		goto solo;
-
-	/* consult active connections to find out disposition */
-
-	adsin = lws_wsi_client_stash_item(wsi, CIS_ADDRESS,
-					  _WSI_TOKEN_CLIENT_PEER_ADDRESS);
 
 	if (!adsin)
 		/*
@@ -180,7 +205,7 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 	case ACTIVE_CONNS_SOLO:
 		break;
 	case ACTIVE_CONNS_MUXED:
-		lwsl_notice("%s: ACTIVE_CONNS_MUXED\n", __func__);
+		lwsl_wsi_notice(wsi, "ACTIVE_CONNS_MUXED");
 		if (lwsi_role_h2(wsi)) {
 
 			if (wsi->a.protocol->callback(wsi,
@@ -195,8 +220,9 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 
 		return wsi;
 	case ACTIVE_CONNS_QUEUED:
-		lwsl_debug("%s: ACTIVE_CONNS_QUEUED st 0x%x: \n", __func__,
-			   lwsi_state(wsi));
+		lwsl_wsi_debug(wsi, "ACTIVE_CONNS_QUEUED st 0x%x: ",
+							lwsi_state(wsi));
+
 		if (lwsi_state(wsi) == LRS_UNCONNECTED) {
 			if (lwsi_role_h2(w))
 				lwsi_set_state(wsi,
@@ -209,26 +235,6 @@ lws_client_connect_2_dnsreq(struct lws *wsi)
 	}
 
 solo:
-
-	/*
-	 * clients who will create their own fresh connection keep a copy of
-	 * the hostname they originally connected to, in case other connections
-	 * want to use it too
-	 */
-
-	if (!wsi->cli_hostname_copy) {
-		if (wsi->stash && wsi->stash->cis[CIS_HOST])
-			wsi->cli_hostname_copy =
-					lws_strdup(wsi->stash->cis[CIS_HOST]);
-#if defined(LWS_ROLE_H1) || defined(LWS_ROLE_H2)
-		else {
-			char *pa = lws_hdr_simple_ptr(wsi,
-					      _WSI_TOKEN_CLIENT_PEER_ADDRESS);
-			if (pa)
-				wsi->cli_hostname_copy = lws_strdup(pa);
-		}
-#endif
-	}
 
 	/*
 	 * If we made our own connection, and we're doing a method that can
@@ -245,7 +251,7 @@ solo:
 	    lws_dll2_is_detached(&wsi->dll_cli_active_conns)) {
 		lws_context_lock(wsi->a.context, __func__);
 		lws_vhost_lock(wsi->a.vhost);
-		lwsl_info("%s: adding active conn %s\n", __func__, lws_wsi_tag(wsi));
+		lwsl_wsi_info(wsi, "adding as active conn");
 		/* caution... we will have to unpick this on oom4 path */
 		lws_dll2_add_head(&wsi->dll_cli_active_conns,
 				 &wsi->a.vhost->dll_cli_active_conns_owner);
@@ -254,23 +260,18 @@ solo:
 	}
 
 	/*
-	 * unix socket destination?
-	 */
-
-	if (wsi->stash)
-		ads = wsi->stash->cis[CIS_ADDRESS];
-	else
-		ads = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_PEER_ADDRESS);
-
-	/*
 	 * Since address must be given at client creation, should not be
 	 * possible, but necessary to satisfy coverity
 	 */
-	if (!ads)
+	if (!adsin)
 		return NULL;
 
 #if defined(LWS_WITH_UNIX_SOCK)
-	if (*ads == '+') {
+	/*
+	 * unix socket destination?
+	 */
+
+	if (*adsin == '+') {
 		wsi->unix_skt = 1;
 		n = 0;
 		goto next_step;
@@ -289,7 +290,7 @@ solo:
 
 	if (wsi->ipv6 && iface &&
 	    inet_pton(AF_INET, iface, &addr.sin_addr) == 1) {
-		lwsl_notice("%s: client connection forced to IPv4\n", __func__);
+		lwsl_wsi_notice(wsi, "client connection forced to IPv4");
 		wsi->ipv6 = 0;
 	}
 #endif
@@ -302,7 +303,7 @@ solo:
 	 * Priority 1: connect to http proxy */
 
 	if (wsi->a.vhost->http.http_proxy_port) {
-		ads = wsi->a.vhost->http.http_proxy_address;
+		adsin = wsi->a.vhost->http.http_proxy_address;
 		port = (int)wsi->a.vhost->http.http_proxy_port;
 #else
 		if (0) {
@@ -313,8 +314,8 @@ solo:
 	/* Priority 2: Connect to SOCK5 Proxy */
 
 	} else if (wsi->a.vhost->socks_proxy_port) {
-		lwsl_client("Sending SOCKS Greeting\n");
-		ads = wsi->a.vhost->socks_proxy_address;
+		lwsl_wsi_client(wsi, "Sending SOCKS Greeting");
+		adsin = wsi->a.vhost->socks_proxy_address;
 		port = (int)wsi->a.vhost->socks_proxy_port;
 #endif
 	} else {
@@ -331,7 +332,7 @@ solo:
 	 */
 	lwsi_set_state(wsi, LRS_WAITING_DNS);
 
-	lwsl_info("%s: %s: lookup %s:%u\n", __func__, wsi->lc.gutag, ads, port);
+	lwsl_wsi_info(wsi, "lookup %s:%u", adsin, port);
 	wsi->conn_port = (uint16_t)port;
 
 #if !defined(LWS_WITH_SYS_ASYNC_DNS)
@@ -340,7 +341,21 @@ solo:
 		/*
 		 * blocking dns resolution
 		 */
-		n = lws_getaddrinfo46(wsi, ads, &result);
+		n = lws_getaddrinfo46(wsi, adsin, &result);
+#if defined(EAI_NONAME)
+		if (n == EAI_NONAME) {
+			/*
+			 * The DNS server responded with NXDOMAIN... even
+			 * though this is still in the client creation call,
+			 * we need to make a CCE, otherwise there won't be
+			 * any user indication of what went wrong
+			 */
+			wsi->client_suppress_CONNECTION_ERROR = 0;
+			lws_inform_client_conn_fail(wsi, (void *)dns_nxdomain,
+						    strlen(dns_nxdomain));
+			goto failed1;
+		}
+#endif
 	}
 #else
 	/* this is either FAILED, CONTINUING, or already called connect_4 */
@@ -348,7 +363,7 @@ solo:
 	if (lws_fi(&wsi->fic, "dnsfail"))
 		return lws_client_connect_3_connect(wsi, NULL, NULL, -4, NULL);
 	else
-		n = lws_async_dns_query(wsi->a.context, wsi->tsi, ads,
+		n = lws_async_dns_query(wsi->a.context, wsi->tsi, adsin,
 				LWS_ADNS_RECORD_A, lws_client_connect_3_connect,
 				wsi, NULL);
 
@@ -364,7 +379,7 @@ solo:
 #if defined(LWS_WITH_UNIX_SOCK)
 next_step:
 #endif
-	return lws_client_connect_3_connect(wsi, ads, result, n, NULL);
+	return lws_client_connect_3_connect(wsi, adsin, result, n, NULL);
 
 //#if defined(LWS_WITH_SYS_ASYNC_DNS)
 failed1:

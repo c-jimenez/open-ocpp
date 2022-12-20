@@ -77,7 +77,7 @@ lws_mqtt_client_send_connect(struct lws *wsi)
 		*p++ = 'T';
 		*p++ = 'T';
 		*p++ = MQTT_VER_3_1_1;
-		*p++ = c->conn_flags;
+		*p++ = (uint8_t)c->conn_flags;
 		lws_ser_wu16be(p, c->keep_alive_secs);
 		p += 2;
 
@@ -170,6 +170,28 @@ lws_mqtt_client_send_connect(struct lws *wsi)
 	if (lws_write(wsi, (unsigned char *)&b[LWS_PRE], lws_ptr_diff_size_t(p, start),
 		  LWS_WRITE_BINARY) != lws_ptr_diff(p, start)) {
 		lwsl_notice("%s: write failed\n", __func__);
+
+		return NULL;
+	}
+
+	return wsi;
+}
+
+struct lws *
+lws_mqtt_client_send_disconnect(struct lws *wsi)
+{
+	uint8_t b[256 + LWS_PRE], *start = b + LWS_PRE, *p = start;
+
+	/* 1. Fixed Headers */
+	if (lws_mqtt_fill_fixed_header(p++, LMQCP_DISCONNECT, 0, 0, 0))
+	{
+		lwsl_err("%s: Failled to fill fixed header\n", __func__);
+		return NULL;
+	}
+	*p++ = 0;
+	if (lws_write(wsi, (unsigned char *)&b[LWS_PRE], lws_ptr_diff_size_t(p, start),
+				LWS_WRITE_BINARY) != lws_ptr_diff(p, start)) {
+		lwsl_err("%s: write failed\n", __func__);
 
 		return NULL;
 	}

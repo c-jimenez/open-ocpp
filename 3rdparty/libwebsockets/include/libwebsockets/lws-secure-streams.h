@@ -217,6 +217,15 @@ typedef enum {
 	LWSSSCS_SERVER_TXN,
 	LWSSSCS_SERVER_UPGRADE,		/* the server protocol upgraded */
 
+	LWSSSCS_EVENT_WAIT_CANCELLED, /* somebody called lws_cancel_service */
+
+	LWSSSCS_UPSTREAM_LINK_RETRY,	/* if we are being proxied over some
+					 * intermediate link, this transient
+					 * state may be sent to indicate we are
+					 * waiting to establish that link before
+					 * creation can proceed.. ack is the
+					 * number of ms we have been trying */
+
 	LWSSSCS_SINK_JOIN,		/* sinks get this when a new source
 					 * stream joins the sink */
 	LWSSSCS_SINK_PART,		/* sinks get this when a new source
@@ -345,6 +354,11 @@ typedef lws_ss_state_return_t (*lws_sscb_state)(void *userobj, void *h_src,
 						lws_ss_constate_t state,
 						lws_ss_tx_ordinal_t ack);
 
+#if defined(LWS_WITH_SECURE_STREAMS_BUFFER_DUMP)
+typedef void (*lws_ss_buffer_dump_cb)(void *userobj, const uint8_t *buf,
+		size_t len, int done);
+#endif
+
 struct lws_ss_policy;
 
 typedef struct lws_ss_info {
@@ -377,6 +391,10 @@ typedef struct lws_ss_info {
 	/**< advisory cb about state of stream and QoS status if applicable...
 	 * h_src is only used with sinks and LWSSSCS_SINK_JOIN/_PART events.
 	 * Return nonzero to indicate you want to destroy the stream. */
+#if defined(LWS_WITH_SECURE_STREAMS_BUFFER_DUMP)
+	lws_ss_buffer_dump_cb dump;
+	/**< cb to record needed protocol buffer data*/
+#endif
 	int	    manual_initial_tx_credit;
 	/**< 0 = manage any tx credit automatically, nonzero explicitly sets the
 	 * peer stream to have the given amount of tx credit, if the protocol
@@ -436,7 +454,7 @@ typedef struct lws_ss_info {
  * formats, \p ppayload_fmt is set to point to the name of the needed payload
  * format from the policy database if non-NULL.
  */
-LWS_VISIBLE LWS_EXTERN int
+LWS_VISIBLE LWS_EXTERN int LWS_WARN_UNUSED_RESULT
 lws_ss_create(struct lws_context *context, int tsi, const lws_ss_info_t *ssi,
 	      void *opaque_user_data, struct lws_ss_handle **ppss,
 	      struct lws_sequencer *seq_owner, const char **ppayload_fmt);
@@ -460,9 +478,9 @@ lws_ss_destroy(struct lws_ss_handle **ppss);
  * write on this stream, the \p *tx callback will occur with an empty buffer for
  * the stream owner to fill in.
  *
- * Returns 0 or LWSSSSRET_SS_HANDLE_DESTROYED
+ * Returns 0 or LWSSSSRET_DESTROY_ME
  */
-LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t
+LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t LWS_WARN_UNUSED_RESULT
 lws_ss_request_tx(struct lws_ss_handle *pss);
 
 /**
@@ -478,7 +496,7 @@ lws_ss_request_tx(struct lws_ss_handle *pss);
  * This api variant should be used when it's possible the payload will go out
  * over h1 with x-web-form-urlencoded or similar Content-Type.
  */
-LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t
+LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t LWS_WARN_UNUSED_RESULT
 lws_ss_request_tx_len(struct lws_ss_handle *pss, unsigned long len);
 
 /**
@@ -494,7 +512,7 @@ lws_ss_request_tx_len(struct lws_ss_handle *pss, unsigned long len);
  * LWSSSSRET_OK means the connection is ongoing.
  *
  */
-LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t
+LWS_VISIBLE LWS_EXTERN lws_ss_state_return_t LWS_WARN_UNUSED_RESULT
 lws_ss_client_connect(struct lws_ss_handle *h);
 
 /**

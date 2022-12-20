@@ -271,6 +271,39 @@ lws_apply_metadata(lws_ss_handle_t *h, struct lws *wsi, uint8_t *buf,
 }
 
 
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+static int
+lws_apply_instant_metadata(lws_ss_handle_t *h, struct lws *wsi, uint8_t *buf,
+		   uint8_t **pp, uint8_t *end)
+{
+	lws_ss_metadata_t *imd = h->instant_metadata;
+
+	while (imd) {
+		if (imd->name && imd->value__may_own_heap) {
+			lwsl_debug("%s add header %s %s %d\n", __func__,
+					           imd->name,
+			                           (char *)imd->value__may_own_heap,
+						   (int)imd->length);
+			if (lws_add_http_header_by_name(wsi,
+					(const unsigned char *)imd->name,
+					(const unsigned char *)imd->value__may_own_heap,
+					(int)imd->length, pp, end))
+			return -1;
+
+			/* it's possible user set content-length directly */
+			if (!strncmp(imd->name,
+				     "content-length", 14) &&
+			    atoi(imd->value__may_own_heap))
+				lws_client_http_body_pending(wsi, 1);
+
+		}
+
+		imd = imd->next;
+	}
+
+	return 0;
+}
+#endif
 /*
  * Check if any metadata headers present in the server headers, and record
  * them into the associated metadata item if so.
@@ -293,7 +326,7 @@ lws_extract_metadata(lws_ss_handle_t *h, struct lws *wsi)
 				const char *cp = lws_hdr_simple_ptr(wsi,
 						polmd->value_is_http_token);
 				omd = lws_ss_get_handle_metadata(h, polmd->name);
-				if (!omd)
+				if (!omd || !cp)
 					return 1;
 
 				assert(!strcmp(omd->name, polmd->name));
@@ -363,14 +396,16 @@ lws_extract_metadata(lws_ss_handle_t *h, struct lws *wsi)
 
 					omd = lws_ss_get_handle_metadata(h,
 								   polmd->name);
+					if (omd) {
 
-					_lws_ss_set_metadata(omd,
-						polmd->name, p, (size_t)n);
-					omd->value_on_lws_heap = 1;
+						_lws_ss_set_metadata(omd,
+							polmd->name, p, (size_t)n);
+						omd->value_on_lws_heap = 1;
 
 #if defined(LWS_WITH_SECURE_STREAMS_PROXY_API)
-					omd->pending_onward = 1;
+						omd->pending_onward = 1;
 #endif
+					}
 				}
 			}
 #endif
@@ -415,22 +450,45 @@ secstream_h1(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 			lwsl_err("%s: CCE with no ss handle %s\n", __func__, lws_wsi_tag(wsi));
 			break;
 		}
+
+		lws_ss_assert_extant(wsi->a.context, wsi->tsi, h);
+
 		assert(h->policy);
 
+#if defined(LWS_WITH_CONMON)
 		lws_conmon_ss_json(h);
+#endif
 
 		lws_metrics_caliper_report_hist(h->cal_txn, wsi);
 		lwsl_info("%s: %s CLIENT_CONNECTION_ERROR: %s\n", __func__,
 			  h->lc.gutag, in ? (const char *)in : "none");
-		/* already disconnected, no action for DISCONNECT_ME */
-		r = lws_ss_event_helper(h, LWSSSCS_UNREACHABLE);
-		if (r)
-			return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+		if (h->ss_dangling_connected) {
+			/* already disconnected, no action for DISCONNECT_ME */
+			r = lws_ss_event_helper(h, LWSSSCS_DISCONNECTED);
+			if (r != LWSSSSRET_OK)
+				return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+		} else {
+			/* already disconnected, no action for DISCONNECT_ME */
+			r = lws_ss_event_helper(h, LWSSSCS_UNREACHABLE);
+			if (r) {
+				if (h->inside_connect) {
+					h->pending_ret = r;
+					break;
+				}
+
+				return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			}
+		}
 
 		h->wsi = NULL;
 		r = lws_ss_backoff(h);
-		if (r != LWSSSSRET_OK)
+		if (r != LWSSSSRET_OK) {
+			if (h->inside_connect) {
+				h->pending_ret = r;
+				break;
+			}
 			return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+		}
 		break;
 
 	case LWS_CALLBACK_CLIENT_HTTP_REDIRECT:
@@ -451,13 +509,25 @@ secstream_h1(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 
 		lws_sul_cancel(&h->sul_timeout);
 
+		lws_ss_assert_extant(wsi->a.context, wsi->tsi, h);
+
+#if defined(LWS_WITH_CONMON)
+		if (wsi->conmon.pcol == LWSCONMON_PCOL_NONE) {
+			wsi->conmon.pcol = LWSCONMON_PCOL_HTTP;
+			wsi->conmon.protocol_specific.http.response =
+					(int)lws_http_client_http_response(wsi);
+		}
+
 		lws_conmon_ss_json(h);
+#endif
 
 		lws_metrics_caliper_report_hist(h->cal_txn, wsi);
 		//lwsl_notice("%s: %s LWS_CALLBACK_CLOSED_CLIENT_HTTP\n",
 		//		__func__, wsi->lc.gutag);
 
 		h->wsi = NULL;
+		h->hanging_som = 0;
+		h->subseq = 0;
 
 #if defined(LWS_WITH_SERVER)
 		lws_pt_lock(pt, __func__);
@@ -485,13 +555,24 @@ secstream_h1(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 		}
 		break;
 
-
 	case LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP:
 
 		if (!h)
 			return -1;
 
+		lws_ss_assert_extant(wsi->a.context, wsi->tsi, h);
+		h->wsi = wsi; /* since we accept the wsi is bound to the SS,
+			       * ensure the SS feels the same way about the wsi */
+
+#if defined(LWS_WITH_CONMON)
+		if (wsi->conmon.pcol == LWSCONMON_PCOL_NONE) {
+			wsi->conmon.pcol = LWSCONMON_PCOL_HTTP;
+			wsi->conmon.protocol_specific.http.response =
+					(int)lws_http_client_http_response(wsi);
+		}
+
 		lws_conmon_ss_json(h);
+#endif
 
 		status = (int)lws_http_client_http_response(wsi);
 		lwsl_info("%s: LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP: %d\n", __func__, status);
@@ -571,9 +652,12 @@ secstream_h1(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 		lws_sul_cancel(&h->sul);
 
 		if (h->prev_ss_state != LWSSSCS_CONNECTED) {
-			r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
-			if (r != LWSSSSRET_OK)
-				return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			wsi->client_suppress_CONNECTION_ERROR = 1;
+			if (h->prev_ss_state != LWSSSCS_CONNECTED) {
+				r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
+				if (r != LWSSSSRET_OK)
+					return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			}
 		}
 
 		/*
@@ -715,6 +799,13 @@ malformed:
 		if (lws_apply_metadata(h, wsi, buf, p, end))
 			return -1;
 
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+		if (h->policy->flags & LWSSSPOLF_DIRECT_PROTO_STR) {
+			if (lws_apply_instant_metadata(h, wsi, buf, p, end))
+				return -1;
+		}
+#endif
+
 #if defined(LWS_WITH_SECURE_STREAMS_AUTH_SIGV4)
 		if (h->policy->auth && h->policy->auth->type &&
 				!strcmp(h->policy->auth->type, "sigv4")) {
@@ -742,9 +833,12 @@ malformed:
 				!strcmp(h->policy->u.http.method, "PUT") ||
 				!strcmp(h->policy->u.http.method, "POST"))) {
 
-			r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
-			if (r)
-				return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			wsi->client_suppress_CONNECTION_ERROR = 1;
+			if (h->prev_ss_state != LWSSSCS_CONNECTED) {
+				r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
+				if (r)
+					return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			}
 		}
 
 		break;
@@ -772,6 +866,8 @@ malformed:
 	//	lwsl_notice("%s: HTTP_READ: client side sent len %d fl 0x%x\n",
 	//		    __func__, (int)len, (int)f);
 
+		h->wsi = wsi; /* since we accept the wsi is bound to the SS,
+			       * ensure the SS feels the same way about the wsi */
 		r = h->info.rx(ss_to_userobj(h), (const uint8_t *)in, len, f);
 		if (r != LWSSSSRET_OK)
 			return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
@@ -801,6 +897,7 @@ malformed:
 		if (h->hanging_som) {
 			h->info.rx(ss_to_userobj(h), NULL, 0, LWSSS_FLAG_EOM);
 			h->hanging_som = 0;
+			h->subseq = 0;
 		}
 
 		wsi->http.writeable_len = h->writeable_len = 0;
@@ -827,7 +924,7 @@ malformed:
 	case LWS_CALLBACK_CLIENT_HTTP_WRITEABLE:
 
 		if (!h || !h->info.tx) {
-			lwsl_notice("%s: %s no handle / tx\n", __func__, h->lc.gutag);
+			lwsl_notice("%s: no handle / tx\n", __func__);
 			return 0;
 		}
 
@@ -960,7 +1057,7 @@ malformed:
 		if (!h)
 			return -1;
 
-		lwsl_notice("%s: LWS_CALLBACK_HTTP\n", __func__);
+		lwsl_info("%s: LWS_CALLBACK_HTTP\n", __func__);
 		{
 
 			h->txn_resp_set = 0;
@@ -975,7 +1072,7 @@ malformed:
 						     WSI_TOKEN_HTTP_COLON_METHOD), (unsigned int)m))
 					return -1;
 				m = lws_hdr_total_length(wsi, WSI_TOKEN_HTTP_COLON_PATH);
-				if (lws_ss_alloc_set_metadata(h, "path",
+				if (m && lws_ss_alloc_set_metadata(h, "path",
 						    lws_hdr_simple_ptr(wsi,
 						     WSI_TOKEN_HTTP_COLON_PATH), (unsigned int)m))
 					return -1;
@@ -1011,14 +1108,19 @@ malformed:
 			 */
 			lws_metrics_caliper_report_hist(h->cal_txn, (struct lws *)NULL);
 #endif
-			r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
-			if (r)
-				return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			wsi->client_suppress_CONNECTION_ERROR = 1;
+			if (h->prev_ss_state != LWSSSCS_CONNECTED) {
+				r = lws_ss_event_helper(h, LWSSSCS_CONNECTED);
+				if (r)
+					return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			}
 		}
 
 		r = lws_ss_event_helper(h, LWSSSCS_SERVER_TXN);
 		if (r)
-			return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r, wsi, &h);
+			return _lws_ss_handle_state_ret_CAN_DESTROY_HANDLE(r,
+								wsi, &h);
+
 		return 0;
 #endif
 
@@ -1032,8 +1134,7 @@ malformed:
 const struct lws_protocols protocol_secstream_h1 = {
 	"lws-secstream-h1",
 	secstream_h1,
-	0,
-	0,
+	0, 0, 0, NULL, 0
 };
 
 /*
@@ -1073,6 +1174,9 @@ secstream_connect_munge_h1(lws_ss_handle_t *h, char *buf, size_t len,
 		i->ssl_connection |= LCCSCF_HTTP_X_WWW_FORM_URLENCODED;
 #endif
 
+	if (h->policy->flags & LWSSSPOLF_HTTP_CACHE_COOKIES)
+		i->ssl_connection |= LCCSCF_CACHE_COOKIES;
+
 	/* protocol aux is the path part */
 
 	i->path = buf;
@@ -1098,5 +1202,5 @@ const struct ss_pcols ss_pcol_h1 = {
 	"http/1.1",
 	&protocol_secstream_h1,
 	secstream_connect_munge_h1,
-	NULL
+	NULL, NULL
 };

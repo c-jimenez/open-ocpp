@@ -109,7 +109,11 @@ callback_raw_test(struct lws *wsi, enum lws_callback_reasons reason,
 #if defined(__linux__)
 				CBAUD |
 #endif
-				CSIZE | CSTOPB | PARENB | CRTSCTS);
+				CSIZE | CSTOPB | PARENB
+#if !defined(__QNX__)
+				| CRTSCTS
+#endif
+		);
 		tio.c_cflag |= 0x1412 | CS8 | CREAD | CLOCAL;
 
 		tcsetattr(vhd->filefd, TCSANOW, &tio);
@@ -170,8 +174,8 @@ callback_raw_test(struct lws *wsi, enum lws_callback_reasons reason,
 }
 
 static struct lws_protocols protocols[] = {
-	{ "raw-test", callback_raw_test, 0, 0 },
-	{ NULL, NULL, 0, 0 } /* terminator */
+	{ "raw-test", callback_raw_test, 0, 0, 0, NULL, 0 },
+	LWS_PROTOCOL_LIST_TERM
 };
 
 static int interrupted;

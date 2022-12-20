@@ -69,6 +69,9 @@ endif()
 
 if (LWS_WITH_SSL AND LWS_WITH_WOLFSSL)
 	if ("${LWS_WOLFSSL_LIBRARIES}" STREQUAL "" OR "${LWS_WOLFSSL_INCLUDE_DIRS}" STREQUAL "")
+		include (FindPkgConfig)
+		PKG_SEARCH_MODULE(LWS_WOLFSSL wolfssl)
+
 		if (NOT WOLFSSL_FOUND)
 			if (LWS_WITH_CYASSL)
 				message(FATAL_ERROR "You must set LWS_CYASSL_LIBRARIES and LWS_CYASSL_INCLUDE_DIRS when LWS_WITH_CYASSL is turned on.")
@@ -117,14 +120,23 @@ if (LWS_WITH_SSL)
 		list(APPEND SOURCES
 			tls/tls-sessions.c)
 	endif()
+	if (LWS_WITH_TLS_JIT_TRUST)
+		list(APPEND SOURCES
+			tls/tls-jit-trust.c)
+	endif()
 	
 	if (LWS_WITH_MBEDTLS)
 		list(APPEND SOURCES
 			tls/mbedtls/mbedtls-tls.c
+			tls/mbedtls/mbedtls-extensions.c
 			tls/mbedtls/mbedtls-x509.c)
 		if (LWS_WITH_NETWORK)
 			list(APPEND SOURCES
 				tls/mbedtls/mbedtls-ssl.c)
+		endif()
+		if (LWS_WITH_TLS_JIT_TRUST)
+			list(APPEND SOURCES
+				tls/mbedtls/mbedtls-extensions.c)
 		endif()
 		if (LWS_WITH_TLS_SESSIONS)
 			list(APPEND SOURCES
@@ -208,12 +220,14 @@ if (LWS_WITH_SSL)
 		if (LWS_WITH_CYASSL)
 			foreach(inc ${WOLFSSL_INCLUDE_DIRS})
 				set(OPENSSL_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS} ${inc} ${inc}/cyassl)
-				include_directories("${inc}" "${inc}/cyassl")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} "${inc}" "${inc}/cyassl")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)
 			endforeach()
 		else()
 			foreach(inc ${WOLFSSL_INCLUDE_DIRS})
 				set(OPENSSL_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS} ${inc} ${inc}/wolfssl)
-				include_directories("${inc}" "${inc}/wolfssl")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} "${inc}" "${inc}/wolfssl")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)
 			endforeach()
 		endif()
 		set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${OPENSSL_INCLUDE_DIRS})
@@ -231,7 +245,8 @@ if (LWS_WITH_SSL)
 		message("MBEDTLS libraries: ${MBEDTLS_LIBRARIES}")
 
 		foreach(inc ${MBEDTLS_INCLUDE_DIRS})
-			include_directories("${inc}" "${inc}/mbedtls")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} "${inc}" "${inc}/mbedtls")
+				set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)
 		endforeach()
 
 		list(INSERT LIB_LIST 0 "${MBEDTLS_LIBRARIES}")
@@ -242,6 +257,10 @@ if (LWS_WITH_SSL)
 	endif()
 
 	if (NOT chose_ssl)
+		if (OPENSSL_FOUND AND "${OPENSSL_INCLUDE_DIRS}" STREQUAL "")
+			set(OPENSSL_INCLUDE_DIRS "${OPENSSL_INCLUDE_DIR}")
+		endif()
+
 		if (NOT OPENSSL_FOUND AND NOT LWS_WITH_BORINGSSL)
 			# TODO: Add support for STATIC also.
 			if (NOT LWS_PLAT_FREERTOS)
@@ -260,23 +279,24 @@ if (LWS_WITH_SSL)
 		endif()
 
 		if (OPENSSL_INCLUDE_DIRS)
-			include_directories("${OPENSSL_INCLUDE_DIRS}")
-			if (NOT LWS_PLAT_FREERTOS)
-				list(INSERT LIB_LIST 0 ${OPENSSL_LIBRARIES})
-			endif()
-	
-			if (NOT LWS_WITH_MBEDTLS)
-				# older (0.98) Openssl lacks this
-				set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${OPENSSL_INCLUDE_DIRS} PARENT_SCOPE)
-				check_include_file(openssl/ecdh.h LWS_HAVE_OPENSSL_ECDH_H)
-		
-				if (LWS_SSL_SERVER_WITH_ECDH_CERT AND NOT LWS_HAVE_OPENSSL_ECDH_H)
-					message(FATAL_ERROR "Missing openssl/ecdh.h, so cannot use LWS_SSL_SERVER_WITH_ECDH_CERT")
-				endif()
-			else()
-				unset(LWS_HAVE_OPENSSL_ECDH_H PARENT_SCOPE)
-			endif(NOT LWS_WITH_MBEDTLS)
+			set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} "${OPENSSL_INCLUDE_DIRS}")
+			set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)
 		endif()
+		if (NOT LWS_PLAT_FREERTOS)
+			list(INSERT LIB_LIST 0 ${OPENSSL_LIBRARIES})
+		endif()
+
+		if (NOT LWS_WITH_MBEDTLS)
+			# older (0.98) Openssl lacks this
+			set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${OPENSSL_INCLUDE_DIRS} PARENT_SCOPE)
+			check_include_file(openssl/ecdh.h LWS_HAVE_OPENSSL_ECDH_H)
+
+			if (LWS_SSL_SERVER_WITH_ECDH_CERT AND NOT LWS_HAVE_OPENSSL_ECDH_H)
+				message(FATAL_ERROR "Missing openssl/ecdh.h, so cannot use LWS_SSL_SERVER_WITH_ECDH_CERT")
+			endif()
+		else()
+			unset(LWS_HAVE_OPENSSL_ECDH_H PARENT_SCOPE)
+		endif(NOT LWS_WITH_MBEDTLS)
 	endif()
 
 endif(LWS_WITH_SSL)
@@ -308,7 +328,7 @@ endif()
 
 CHECK_FUNCTION_EXISTS(${VARIA}RSA_set0_key LWS_HAVE_RSA_SET0_KEY PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}X509_get_key_usage LWS_HAVE_X509_get_key_usage PARENT_SCOPE)
-CHECK_FUNCTION_EXISTS(${VARIA}EVP_PKEY_new_raw_private_key LWS_HAVE_SSL_CTX_EVP_PKEY_new_raw_private_key PARENT_SCOPE)
+CHECK_FUNCTION_EXISTS(${VARIA}SSL_CTX_EVP_PKEY_new_raw_private_key LWS_HAVE_SSL_CTX_EVP_PKEY_new_raw_private_key PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}SSL_CTX_get0_certificate LWS_HAVE_SSL_CTX_get0_certificate PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}SSL_get0_alpn_selected LWS_HAVE_SSL_get0_alpn_selected PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}SSL_set_alpn_protos LWS_HAVE_SSL_set_alpn_protos PARENT_SCOPE)
@@ -318,6 +338,12 @@ CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_192_cfb8 LWS_HAVE_EVP_aes_192_cfb8 PARENT_
 CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_192_cfb128 LWS_HAVE_EVP_aes_192_cfb128 PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_256_cfb8 LWS_HAVE_EVP_aes_256_cfb8 PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_256_cfb128 LWS_HAVE_EVP_aes_256_cfb128 PARENT_SCOPE)
+CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_xts LWS_HAVE_EVP_aes_128_xts PARENT_SCOPE)
+CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_ofb LWS_HAVE_EVP_aes_128_ofb PARENT_SCOPE)
+CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_ecb LWS_HAVE_EVP_aes_128_ecb PARENT_SCOPE)
+CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_ctr LWS_HAVE_EVP_aes_128_ctr PARENT_SCOPE)
+
+
 CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_xts LWS_HAVE_EVP_aes_128_xts PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}RSA_verify_pss_mgf1 LWS_HAVE_RSA_verify_pss_mgf1 PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}HMAC_CTX_new LWS_HAVE_HMAC_CTX_new PARENT_SCOPE)
@@ -335,14 +361,15 @@ if (LWS_WITH_SSL AND NOT LWS_WITH_MBEDTLS)
 	# what's in an openssl also installed on the build host
 CHECK_C_SOURCE_COMPILES("#include <openssl/ssl.h>\nint main(void) { STACK_OF(X509) *c = NULL; SSL_CTX *ctx = NULL; return (int)SSL_CTX_get_extra_chain_certs_only(ctx, &c); }\n" LWS_HAVE_SSL_EXTRA_CHAIN_CERTS)
 CHECK_C_SOURCE_COMPILES("#include <openssl/ssl.h>\nint main(void) { EVP_MD_CTX *md_ctx = NULL; EVP_MD_CTX_free(md_ctx); return 0; }\n" LWS_HAVE_EVP_MD_CTX_free)
+CHECK_C_SOURCE_COMPILES("#include <openssl/ssl.h>\nint main(void) { OPENSSL_STACK *x = NULL; return !x; } \n" LWS_HAVE_OPENSSL_STACK)
 set(LWS_HAVE_SSL_EXTRA_CHAIN_CERTS ${LWS_HAVE_SSL_EXTRA_CHAIN_CERTS} PARENT_SCOPE)
 set(LWS_HAVE_EVP_MD_CTX_free ${LWS_HAVE_EVP_MD_CTX_free} PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}ECDSA_SIG_set0 LWS_HAVE_ECDSA_SIG_set0 PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}BN_bn2binpad LWS_HAVE_BN_bn2binpad PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}EVP_aes_128_wrap LWS_HAVE_EVP_aes_128_wrap PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}EC_POINT_get_affine_coordinates LWS_HAVE_EC_POINT_get_affine_coordinates PARENT_SCOPE)
-CHECK_FUNCTION_EXISTS(${VARIA}SSL_CTX_load_verify_file LWS_HAVE_SSL_CTX_load_verify_file PARENT_SCOPE)
-CHECK_FUNCTION_EXISTS(${VARIA}SSL_CTX_load_verify_dir LWS_HAVE_SSL_CTX_load_verify_dir PARENT_SCOPE)
+CHECK_SYMBOL_EXISTS(${VARIA}SSL_CTX_load_verify_file LWS_HAVE_SSL_CTX_load_verify_file PARENT_SCOPE)
+CHECK_SYMBOL_EXISTS(${VARIA}SSL_CTX_load_verify_dir LWS_HAVE_SSL_CTX_load_verify_dir PARENT_SCOPE)
 endif()
 
 if (LWS_WITH_MBEDTLS)
@@ -352,16 +379,38 @@ if (LWS_WITH_MBEDTLS)
 		set(LWS_HAVE_X509_VERIFY_PARAM_set1_host 1 PARENT_SCOPE)
 	endif()
 
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_conf_alpn_protocols LWS_HAVE_mbedtls_ssl_conf_alpn_protocols PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_get_alpn_protocol LWS_HAVE_mbedtls_ssl_get_alpn_protocol PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_conf_sni LWS_HAVE_mbedtls_ssl_conf_sni PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_ca_chain LWS_HAVE_mbedtls_ssl_set_hs_ca_chain PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_own_cert LWS_HAVE_mbedtls_ssl_set_hs_own_cert PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_authmode LWS_HAVE_mbedtls_ssl_set_hs_authmode PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_net_init LWS_HAVE_mbedtls_net_init PARENT_SCOPE)
-	CHECK_FUNCTION_EXISTS(mbedtls_md_setup LWS_HAVE_mbedtls_md_setup PARENT_SCOPE) # not on xenial 2.2
-	CHECK_FUNCTION_EXISTS(mbedtls_rsa_complete LWS_HAVE_mbedtls_rsa_complete PARENT_SCOPE) # not on xenial 2.2
-	CHECK_FUNCTION_EXISTS(mbedtls_internal_aes_encrypt LWS_HAVE_mbedtls_internal_aes_encrypt PARENT_SCOPE) # not on xenial 2.2
+	set(CMAKE_REQUIRED_LIBRARIES ${MBEDTLS_LIBRARY} ${MBEDX509_LIBRARY} ${MBEDCRYPTO_LIBRARY})
+	set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${MBEDTLS_INCLUDE_DIRS})
+
+	if (ESP_PLATFORM)
+		# we know we should have things
+		set(LWS_HAVE_MBEDTLS_AUTH_KEY_ID 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_conf_alpn_protocols 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_get_alpn_protocol 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_conf_sni 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_set_hs_ca_chain 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_set_hs_own_cert 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_ssl_set_hs_authmode 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_net_init 1 CACHE BOOL x)
+		set(LWS_HAVE_mbedtls_x509_crt_parse_file 1 CACHE BOOL x) # some embedded may lack filesystem
+		set(LWS_HAVE_mbedtls_md_setup 1 CACHE BOOL x) # not on xenial 2.2
+		set(LWS_HAVE_mbedtls_rsa_complete 1 CACHE BOOL x) # not on xenial 2.2
+		set(LWS_HAVE_mbedtls_internal_aes_encrypt 1 CACHE BOOL x) # not on xenial 2.2
+	else()
+		CHECK_C_SOURCE_COMPILES("#include <mbedtls/x509_crt.h>\nint main(void) { struct mbedtls_x509_crt c; c.authority_key_id.keyIdentifier.tag = MBEDTLS_ASN1_OCTET_STRING; return c.authority_key_id.keyIdentifier.tag; }\n" LWS_HAVE_MBEDTLS_AUTH_KEY_ID)
+		CHECK_C_SOURCE_COMPILES("#include <mbedtls/ssl.h>\nint main(void) { void *v = (void *)mbedtls_ssl_set_verify; return !!v; }\n" LWS_HAVE_mbedtls_ssl_set_verify)
+		CHECK_SYMBOL_EXISTS(mbedtls_ssl_conf_alpn_protocols LWS_HAVE_mbedtls_ssl_conf_alpn_protocols PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_ssl_get_alpn_protocol LWS_HAVE_mbedtls_ssl_get_alpn_protocol PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_ssl_conf_sni LWS_HAVE_mbedtls_ssl_conf_sni PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_ca_chain LWS_HAVE_mbedtls_ssl_set_hs_ca_chain PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_own_cert LWS_HAVE_mbedtls_ssl_set_hs_own_cert PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_ssl_set_hs_authmode LWS_HAVE_mbedtls_ssl_set_hs_authmode PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_net_init LWS_HAVE_mbedtls_net_init PARENT_SCOPE)
+		CHECK_FUNCTION_EXISTS(mbedtls_x509_crt_parse_file LWS_HAVE_mbedtls_x509_crt_parse_file PARENT_SCOPE) # some embedded may lack filesystem
+		CHECK_FUNCTION_EXISTS(mbedtls_md_setup LWS_HAVE_mbedtls_md_setup PARENT_SCOPE) # not on xenial 2.2
+		CHECK_FUNCTION_EXISTS(mbedtls_rsa_complete LWS_HAVE_mbedtls_rsa_complete PARENT_SCOPE) # not on xenial 2.2
+		CHECK_FUNCTION_EXISTS(mbedtls_internal_aes_encrypt LWS_HAVE_mbedtls_internal_aes_encrypt PARENT_SCOPE) # not on xenial 2.2
+	endif()
 else()
 CHECK_FUNCTION_EXISTS(${VARIA}TLS_client_method LWS_HAVE_TLS_CLIENT_METHOD PARENT_SCOPE)
 CHECK_FUNCTION_EXISTS(${VARIA}TLSv1_2_client_method LWS_HAVE_TLSV1_2_CLIENT_METHOD PARENT_SCOPE)

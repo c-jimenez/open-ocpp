@@ -46,7 +46,9 @@ secstream_ws(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 		if (!h)
 			break;
 
+#if defined(LWS_WITH_CONMON)
 		lws_conmon_ss_json(h);
+#endif
 
 		r = lws_ss_event_helper(h, LWSSSCS_UNREACHABLE);
 		if (r == LWSSSSRET_DESTROY_ME)
@@ -64,7 +66,9 @@ secstream_ws(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 			break;
 		lws_sul_cancel(&h->sul_timeout);
 
+#if defined(LWS_WITH_CONMON)
 		lws_conmon_ss_json(h);
+#endif
 
 		r = lws_ss_event_helper(h, LWSSSCS_DISCONNECTED);
 		if (r == LWSSSSRET_DESTROY_ME)
@@ -186,8 +190,7 @@ secstream_ws(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 const struct lws_protocols protocol_secstream_ws = {
 	"lws-secstream-ws",
 	secstream_ws,
-	0,
-	0,
+	0, 0, 0, NULL, 0
 };
 /*
  * Munge connect info according to protocol-specific considerations... this
@@ -209,8 +212,6 @@ secstream_connect_munge_ws(lws_ss_handle_t *h, char *buf, size_t len,
 	size_t used_in, used_out;
 	lws_strexp_t exp;
 
-	lwsl_notice("%s\n", __func__);
-
 	/* i.path on entry is used to override the policy urlpath if not "" */
 
 	if (i->path[0])
@@ -218,6 +219,12 @@ secstream_connect_munge_ws(lws_ss_handle_t *h, char *buf, size_t len,
 
 	if (!pbasis)
 		return 0;
+
+	if (h->policy->flags & LWSSSPOLF_HTTP_CACHE_COOKIES)
+		i->ssl_connection |= LCCSCF_CACHE_COOKIES;
+
+	if (h->policy->flags & LWSSSPOLF_PRIORITIZE_READS)
+		i->ssl_connection |= LCCSCF_PRIORITIZE_READS;
 
 	/* protocol aux is the path part ; ws subprotocol name */
 
@@ -232,11 +239,11 @@ secstream_connect_munge_ws(lws_ss_handle_t *h, char *buf, size_t len,
 
 	i->protocol = h->policy->u.http.u.ws.subprotocol;
 
-	lwsl_notice("%s: url %s, ws subprotocol %s\n", __func__, buf, i->protocol);
+	lwsl_ss_info(h, "url %s, ws subprotocol %s", buf, i->protocol);
 
 	return 0;
 }
 
 const struct ss_pcols ss_pcol_ws = {
-	"ws",  "http/1.1",  &protocol_secstream_ws, secstream_connect_munge_ws
+	"ws",  "http/1.1",  &protocol_secstream_ws, secstream_connect_munge_ws, 0, 0
 };

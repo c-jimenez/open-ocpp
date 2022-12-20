@@ -71,7 +71,6 @@ enum lejp_global_paths {
 
 static const char * const paths_vhosts[] = {
 	"vhosts[]",
-	"vhosts[].mounts[]",
 	"vhosts[].name",
 	"vhosts[].port",
 	"vhosts[].interface",
@@ -89,13 +88,17 @@ static const char * const paths_vhosts[] = {
 	"vhosts[].mounts[].auth-mask",
 	"vhosts[].mounts[].cgi-timeout",
 	"vhosts[].mounts[].cgi-env[].*",
+	"vhosts[].mounts[].cgi-env[]",
 	"vhosts[].mounts[].cache-max-age",
 	"vhosts[].mounts[].cache-reuse",
 	"vhosts[].mounts[].cache-revalidate",
 	"vhosts[].mounts[].basic-auth",
 	"vhosts[].mounts[].cache-intermediaries",
 	"vhosts[].mounts[].extra-mimetypes.*",
+	"vhosts[].mounts[].extra-mimetypes",
 	"vhosts[].mounts[].interpret.*",
+	"vhosts[].mounts[].interpret",
+	"vhosts[].mounts[]",
 	"vhosts[].ws-protocols[].*.*",
 	"vhosts[].ws-protocols[].*",
 	"vhosts[].ws-protocols[]",
@@ -108,6 +111,7 @@ static const char * const paths_vhosts[] = {
 	"vhosts[].ssl-option-set",
 	"vhosts[].ssl-option-clear",
 	"vhosts[].mounts[].pmo[].*",
+	"vhosts[].mounts[].pmo[]",
 	"vhosts[].headers[].*",
 	"vhosts[].headers[]",
 	"vhosts[].client-ssl-key",
@@ -119,6 +123,7 @@ static const char * const paths_vhosts[] = {
 	"vhosts[].ignore-missing-cert",
 	"vhosts[].error-document-404",
 	"vhosts[].alpn",
+	"vhosts[].fo-listen-queue",
 	"vhosts[].ssl-client-option-set",
 	"vhosts[].ssl-client-option-clear",
 	"vhosts[].tls13-ciphers",
@@ -139,7 +144,6 @@ static const char * const paths_vhosts[] = {
 
 enum lejp_vhost_paths {
 	LEJPVP,
-	LEJPVP_MOUNTS,
 	LEJPVP_NAME,
 	LEJPVP_PORT,
 	LEJPVP_INTERFACE,
@@ -157,13 +161,19 @@ enum lejp_vhost_paths {
 	LEJPVP_DEFAULT_AUTH_MASK,
 	LEJPVP_CGI_TIMEOUT,
 	LEJPVP_CGI_ENV,
+	LEJPVP_CGI_ENV_base,
 	LEJPVP_MOUNT_CACHE_MAX_AGE,
 	LEJPVP_MOUNT_CACHE_REUSE,
 	LEJPVP_MOUNT_CACHE_REVALIDATE,
 	LEJPVP_MOUNT_BASIC_AUTH,
 	LEJPVP_MOUNT_CACHE_INTERMEDIARIES,
 	LEJPVP_MOUNT_EXTRA_MIMETYPES,
+	LEJPVP_MOUNT_EXTRA_MIMETYPES_base,
 	LEJPVP_MOUNT_INTERPRET,
+	LEJPVP_MOUNT_INTERPRET_base,
+
+	LEJPVP_MOUNTS,
+
 	LEJPVP_PROTOCOL_NAME_OPT,
 	LEJPVP_PROTOCOL_NAME,
 	LEJPVP_PROTOCOL,
@@ -176,6 +186,7 @@ enum lejp_vhost_paths {
 	LEJPVP_SSL_OPTION_SET,
 	LEJPVP_SSL_OPTION_CLEAR,
 	LEJPVP_PMO,
+	LEJPVP_PM_baseO,
 	LEJPVP_HEADERS_NAME,
 	LEJPVP_HEADERS,
 	LEJPVP_CLIENT_SSL_KEY,
@@ -187,6 +198,7 @@ enum lejp_vhost_paths {
 	LEJPVP_IGNORE_MISSING_CERT,
 	LEJPVP_ERROR_DOCUMENT_404,
 	LEJPVP_ALPN,
+	LWJPVP_FO_LISTEN_QUEUE,
 	LEJPVP_SSL_CLIENT_OPTION_SET,
 	LEJPVP_SSL_CLIENT_OPTION_CLEAR,
 	LEJPVP_TLS13_CIPHERS,
@@ -693,6 +705,9 @@ lejp_vhosts_cb(struct lejp_ctx *ctx, char reason)
 	case LEJPVP_CGI_TIMEOUT:
 		a->m.cgi_timeout = atoi(ctx->buf);
 		return 0;
+	case LWJPVP_FO_LISTEN_QUEUE:
+		a->info->fo_listen_queue = atoi(ctx->buf);
+		return 0;
 	case LEJPVP_KEEPALIVE_TIMEOUT:
 		a->info->keepalive_timeout = atoi(ctx->buf);
 		return 0;
@@ -931,6 +946,8 @@ lwsws_get_config(void *user, const char *f, const char * const *paths,
 	unsigned char buf[128];
 	struct lejp_ctx ctx;
 	int n, m = 0, fd;
+
+	memset(&ctx, 0, sizeof(ctx));
 
 	fd = lws_open(f, O_RDONLY);
 	if (fd < 0) {

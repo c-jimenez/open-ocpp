@@ -12,14 +12,13 @@ require_lws_config(LWS_ROLE_H1 1 requirements)
 require_lws_config(LWS_WITHOUT_CLIENT 0 requirements)
 require_lws_config(LWS_WITH_SECURE_STREAMS 1 requirements)
 require_lws_config(LWS_WITH_SECURE_STREAMS_AUTH_SIGV4 1 requirements)
-require_lws_config(LWS_WITH_SECURE_STREAMS_STATIC_POLICY_ONLY 0 requirements)
 
 if (requirements)
 	add_executable(${SAMP} ss-s3-main.c ss-s3-ss.c)
 	
 	find_program(VALGRIND "valgrind")
 
-	if (LWS_CTEST_INTERNET_AVAILABLE AND NOT WIN32)
+	if (LWS_CTEST_INTERNET_AVAILABLE AND NOT WIN32 AND 0)
 		if (VALGRIND)
 			message("testing via valgrind")
 			add_test(NAME ss-sigv4 COMMAND

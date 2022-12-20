@@ -24,7 +24,6 @@
 
 #include "private-lib-core.h"
 #include "private-lib-tls-openssl.h"
-#include <errno.h>
 
 int openssl_websocket_private_data_index,
 	   openssl_SSL_CTX_private_data_index;
@@ -57,12 +56,11 @@ int lws_ssl_get_error(struct lws *wsi, int n)
 		return 99;
 
 	m = SSL_get_error(wsi->tls.ssl, n);
-	lwsl_debug("%s: %p %d -> %d (errno %d)\n", __func__, wsi->tls.ssl, n, m,
-		   errno);
+       lwsl_debug("%s: %p %d -> %d (errno %d)\n", __func__, wsi->tls.ssl, n, m, LWS_ERRNO);
 	if (m == SSL_ERROR_SSL)
 		lws_tls_err_describe_clear();
 
-	// assert (errno != 9);
+       // assert (LWS_ERRNO != 9);
 
 	return m;
 }
@@ -207,7 +205,11 @@ lws_ssl_capable_read(struct lws *wsi, unsigned char *buf, size_t len)
 	if (!wsi->tls.ssl)
 		return lws_ssl_capable_read_no_ssl(wsi, buf, len);
 
+#ifndef WIN32
 	errno = 0;
+#else
+  WSASetLastError(0);
+#endif
 	ERR_clear_error();
 	n = SSL_read(wsi->tls.ssl, buf, (int)(ssize_t)len);
 #if defined(LWS_PLAT_FREERTOS)
@@ -244,14 +246,14 @@ lws_ssl_capable_read(struct lws *wsi, unsigned char *buf, size_t len)
 	 */
 	if (n <= 0) {
 		m = lws_ssl_get_error(wsi, n);
-		lwsl_debug("%s: ssl err %d errno %d\n", lws_wsi_tag(wsi), m, errno);
+               lwsl_debug("%s: ssl err %d errno %d\n", lws_wsi_tag(wsi), m, LWS_ERRNO);
 		if (m == SSL_ERROR_ZERO_RETURN) /* cleanly shut down */
 			goto do_err;
 
 		/* hm not retryable.. could be 0 size pkt or error  */
 
 		if (m == SSL_ERROR_SSL || m == SSL_ERROR_SYSCALL ||
-		    errno == LWS_ENOTCONN) {
+        LWS_ERRNO == LWS_ENOTCONN) {
 
 			/* unclean, eg closed conn */
 
@@ -273,8 +275,10 @@ do_err:
 			return LWS_SSL_CAPABLE_MORE_SERVICE;
 		}
 		if (SSL_want_write(wsi->tls.ssl)) {
-			lwsl_debug("%s: WANT_WRITE\n", __func__);
+			lwsl_info("%s: WANT_WRITE\n", __func__);
 			lwsl_debug("%s: LWS_SSL_CAPABLE_MORE_SERVICE\n", lws_wsi_tag(wsi));
+			wsi->tls_read_wanted_write = 1;
+			lws_callback_on_writable(wsi);
 			return LWS_SSL_CAPABLE_MORE_SERVICE;
 		}
 
@@ -449,6 +453,15 @@ lws_ssl_close(struct lws *wsi)
 		SSL_set_info_callback(wsi->tls.ssl, NULL);
 #endif
 
+#if defined(LWS_TLS_SYNTHESIZE_CB)
+	lws_sul_cancel(&wsi->tls.sul_cb_synth);
+	/*
+	 * ... check the session in case it did not live long enough to get
+	 * the scheduled callback to sample it
+	 */
+	lws_sess_cache_synth_cb(&wsi->tls.sul_cb_synth);
+#endif
+
 	n = SSL_get_fd(wsi->tls.ssl);
 	if (!wsi->socket_is_permanently_unusable)
 		SSL_shutdown(wsi->tls.ssl);
@@ -456,7 +469,7 @@ lws_ssl_close(struct lws *wsi)
 	SSL_free(wsi->tls.ssl);
 	wsi->tls.ssl = NULL;
 
-	lws_tls_restrict_return(wsi->a.context);
+	lws_tls_restrict_return(wsi);
 
 	// lwsl_notice("%s: ssl restr %d, simul %d\n", __func__,
 	//		wsi->a.context->simultaneous_ssl_restriction,
@@ -521,7 +534,11 @@ __lws_tls_shutdown(struct lws *wsi)
 {
 	int n;
 
+#ifndef WIN32
 	errno = 0;
+#else
+  WSASetLastError(0);
+#endif
 	ERR_clear_error();
 	n = SSL_shutdown(wsi->tls.ssl);
 	lwsl_debug("SSL_shutdown=%d for fd %d\n", n, wsi->desc.sockfd);

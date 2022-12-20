@@ -195,20 +195,23 @@ typedef struct lws_lifecycle {
 #endif
 	lws_dll2_t			list; /* group list membership */
 	uint64_t			us_creation; /* creation timestamp */
+	lws_log_cx_t			*log_cx;
 } lws_lifecycle_t;
 
 void
-__lws_lc_tag(lws_lifecycle_group_t *grp, lws_lifecycle_t *lc,
-		    const char *format, ...);
+__lws_lc_tag(struct lws_context *cx, lws_lifecycle_group_t *grp,
+	     lws_lifecycle_t *lc, const char *format, ...);
 
 void
 __lws_lc_tag_append(lws_lifecycle_t *lc, const char *app);
 
 void
-__lws_lc_untag(lws_lifecycle_t *lc);
+__lws_lc_untag(struct lws_context *cx, lws_lifecycle_t *lc);
 
 const char *
 lws_lc_tag(lws_lifecycle_t *lc);
+
+extern lws_log_cx_t log_cx;
 
 /*
  * Generic bidi tx credit management
@@ -445,6 +448,8 @@ struct lws_context {
 
 	lws_lifecycle_group_t			lcg[LWSLCG_COUNT];
 
+	const struct lws_protocols		*protocols_copy;
+
 #if defined(LWS_WITH_NETLINK)
 	lws_sorted_usec_list_t			sul_nl_coldplug;
 	/* process can only have one netlink socket, have to do it in ctx */
@@ -514,6 +519,12 @@ struct lws_context {
 
 #if defined(LWS_WITH_TLS)
 	struct lws_context_tls		tls;
+#if defined (LWS_WITH_TLS_JIT_TRUST)
+	lws_dll2_owner_t		jit_inflight;
+	/* ongoing sync or async jit trust lookups */
+	struct lws_cache_ttl_lru	*trust_cache;
+	/* caches host -> truncated trust SKID mappings */
+#endif
 #endif
 #if defined(LWS_WITH_DRIVERS)
 	lws_netdevs_t			netdevs;
@@ -528,6 +539,9 @@ struct lws_context {
 	/**< Toplevel Fault Injection ctx */
 #endif
 
+#if defined(LWS_WITH_CACHE_NSCOOKIEJAR) && defined(LWS_WITH_CLIENT)
+	struct lws_cache_ttl_lru *l1, *nsc;
+#endif
 
 #if defined(LWS_WITH_SYS_NTPCLIENT)
 	void				*ntpclient_priv;
@@ -589,6 +603,9 @@ struct lws_context {
 
 #endif /* NETWORK */
 
+	lws_log_cx_t			*log_cx;
+	const char			*name;
+
 #if defined(LWS_WITH_SECURE_STREAMS_PROXY_API)
 	const char	*ss_proxy_bind;
 	const char	*ss_proxy_address;
@@ -603,12 +620,12 @@ struct lws_context {
 	const char *username, *groupname;
 #endif
 
-#if defined(LWS_AMAZON_RTOS) && defined(LWS_WITH_MBEDTLS)
+#if defined(LWS_WITH_MBEDTLS)
 	mbedtls_entropy_context mec;
 	mbedtls_ctr_drbg_context mcdc;
 #endif
 
-#if defined(LWS_WITH_THREADPOOL)
+#if defined(LWS_WITH_THREADPOOL) && defined(LWS_HAVE_PTHREAD_H)
 	struct lws_threadpool *tp_list_head;
 #endif
 
@@ -685,6 +702,11 @@ struct lws_context {
 	unsigned int max_http_header_pool;
 	int simultaneous_ssl_restriction;
 	int simultaneous_ssl;
+	int simultaneous_ssl_handshake_restriction;
+	int simultaneous_ssl_handshake;
+#if defined(LWS_WITH_TLS_JIT_TRUST)
+	int		vh_idle_grace_ms;
+#endif
 #if defined(LWS_WITH_PEER_LIMITS)
 	uint32_t pl_hash_elements;	/* protected by context->lock */
 	uint32_t count_peers;		/* protected by context->lock */
@@ -699,6 +721,8 @@ struct lws_context {
 #if defined(LWS_WITH_NETLINK)
 	lws_route_uidx_t			route_uidx;
 #endif
+
+	char		tls_gate_accepts;
 
 	unsigned int deprecated:1;
 	unsigned int inside_context_destroy:1;
@@ -744,6 +768,13 @@ lws_jws_base64_enc(const char *in, size_t in_len, char *out, size_t out_max);
 void
 lws_vhost_destroy1(struct lws_vhost *vh);
 
+#if defined(LWS_WITH_CACHE_NSCOOKIEJAR) && defined(LWS_WITH_CLIENT)
+int
+lws_parse_set_cookie(struct lws *wsi);
+
+int
+lws_cookie_send_cookies(struct lws *wsi, char **pp, char *end);
+#endif
 
 #if defined(LWS_PLAT_FREERTOS)
 int
@@ -765,8 +796,6 @@ struct lws_buflist {
 
 char *
 lws_strdup(const char *s);
-
-extern int log_level;
 
 int
 lws_b64_selftest(void);
@@ -794,7 +823,7 @@ void lwsl_emit_stderr(int level, const char *line);
  #define lws_ssl_SSL_CTX_destroy(_a)
  #define lws_ssl_remove_wsi_from_buffered_list(_a)
  #define __lws_ssl_remove_wsi_from_buffered_list(_a)
- #define lws_context_init_ssl_library(_a)
+ #define lws_context_init_ssl_library(_a, _b)
  #define lws_context_deinit_ssl_library(_a)
  #define lws_tls_check_all_cert_lifetimes(_a)
  #define lws_tls_acme_sni_cert_destroy(_a)
@@ -856,6 +885,9 @@ lws_vhost_protocol_options(struct lws_vhost *vh, const char *name);
 const struct lws_http_mount *
 lws_find_mount(struct lws *wsi, const char *uri_ptr, int uri_len);
 
+#ifdef LWS_WITH_HTTP2
+int lws_wsi_is_h2(struct lws *wsi);
+#endif
 /*
  * custom allocator
  */
@@ -920,6 +952,15 @@ int LWS_WARN_UNUSED_RESULT
 lws_check_utf8(unsigned char *state, unsigned char *buf, size_t len);
 int alloc_file(struct lws_context *context, const char *filename,
 			  uint8_t **buf, lws_filepos_t *amount);
+
+int
+lws_lec_scratch(lws_lec_pctx_t *ctx);
+void
+lws_lec_signed(lws_lec_pctx_t *ctx, int64_t num);
+
+int
+lws_cose_key_checks(const lws_cose_key_t *key, int64_t kty, int64_t alg,
+		    int key_op, const char *crv);
 
 void lws_msleep(unsigned int);
 

@@ -3,20 +3,23 @@
  *
  * Copyright (C) 2010 - 2021 Andy Green <andy@warmcat.com>
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation:
- *  version 2.1 of the License.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *  MA  02110-1301  USA
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  *
  * included from libwebsockets.h
  */
@@ -38,6 +41,29 @@ typedef struct lws_mqtt_str_st lws_mqtt_str_t;
 #define LWS_MQTT_MAX_CIDLEN    128
 #define LWS_MQTT_RANDOM_CIDLEN 23 /* 3.1.3.1-5: Server MUST... between
 				     1 and 23 chars... */
+
+#define LWS_MQTT_SHADOW_MAX_THING_LEN 128
+#define LWS_MQTT_SHADOW_MAX_SHADOW_LEN 64
+#define LWS_MQTT_SHADOW_UPDATE_STR "/update"
+#define LWS_MQTT_SHADOW_DELETE_STR "/delete"
+#define LWS_MQTT_SHADOW_GET_STR "/get"
+#define LWS_MQTT_SHADOW_RESP_ACCEPTED_STR  "/accepted"
+#define LWS_MQTT_SHADOW_RESP_REJECTED_STR "/rejected"
+#define LWS_MQTT_SHADOW_RESP_DELTA_STR "/delta"
+#define LWS_MQTT_SHADOW_RESP_DOCUMENT_STR "/documents"
+#define LWS_MQTT_SHADOW_UPDATE_ACCEPTED_STR LWS_MQTT_SHADOW_UPDATE_STR LWS_MQTT_SHADOW_RESP_ACCEPTED_STR
+#define LWS_MQTT_SHADOW_UPDATE_REJECTED_STR LWS_MQTT_SHADOW_UPDATE_STR LWS_MQTT_SHADOW_RESP_REJECTED_STR
+#define LWS_MQTT_SHADOW_UPDATE_DELTA_STR LWS_MQTT_SHADOW_UPDATE_STR LWS_MQTT_SHADOW_RESP_DELTA_STR
+#define LWS_MQTT_SHADOW_UPDATE_DOCUMENT_STR LWS_MQTT_SHADOW_UPDATE_STR LWS_MQTT_SHADOW_RESP_DOCUMENT_STR
+#define LWS_MQTT_SHADOW_DELETE_ACCEPTED_STR LWS_MQTT_SHADOW_DELETE_STR LWS_MQTT_SHADOW_RESP_ACCEPTED_STR
+#define LWS_MQTT_SHADOW_DELETE_REJECTED_STR LWS_MQTT_SHADOW_DELETE_STR LWS_MQTT_SHADOW_RESP_REJECTED_STR
+#define LWS_MQTT_SHADOW_GET_ACCEPTED_STR LWS_MQTT_SHADOW_GET_STR LWS_MQTT_SHADOW_RESP_ACCEPTED_STR
+#define LWS_MQTT_SHADOW_GET_REJECTED_STR LWS_MQTT_SHADOW_GET_STR LWS_MQTT_SHADOW_RESP_REJECTED_STR
+#define LWS_MQTT_SHADOW_PREFIX_FORMAT "$aws/things/%s"
+#define LWS_MQTT_SHADOW_NAMED_SHADOW_TOPIC_FORMAT LWS_MQTT_SHADOW_PREFIX_FORMAT "/shadow/name/%s%s"
+#define LWS_MQTT_SHADOW_UNNAMED_SHADOW_TOPIC_FORMAT  LWS_MQTT_SHADOW_PREFIX_FORMAT "/shadow%s"
+#define LWS_MQTT_SHADOW_UNNAMED_TOPIC_MATCH	"$aws/things/+/shadow/+"
+#define LWS_MQTT_SHADOW_NAMED_TOPIC_MATCH	"$aws/things/+/shadow/name/+/+"
 
 typedef enum {
 	QOS0,
@@ -67,14 +93,27 @@ typedef struct lws_mqtt_client_connect_param_s {
 	uint16_t 			keep_alive;	/* MQTT keep alive
 							   interval in
 							   seconds */
-	uint8_t 			clean_start;	/* MQTT clean
+	uint8_t 			clean_start:1;	/* MQTT clean
 							   session */
+	uint8_t				client_id_nofree:1;
+	/**< do not free the client id */
+	uint8_t				username_nofree:1;
+	/**< do not free the username */
+	uint8_t				password_nofree:1;
+	/**< do not free the password */
 	struct {
 		const char 		*topic;
 		const char 		*message;
 		lws_mqtt_qos_levels_t	qos;
 		uint8_t 		retain;
 	} will_param;				/* MQTT LWT
+						   parameters */
+	struct {
+		const char 		*topic;
+		const char 		*message;
+		lws_mqtt_qos_levels_t	qos;
+		uint8_t 		retain;
+	} birth_param;				/* MQTT Birth
 						   parameters */
 	const char 			*username;
 	const char 			*password;
@@ -98,6 +137,7 @@ typedef struct lws_mqtt_publish_param_s {
 						   0 */
 	uint8_t 		dup:1;		/* Retried PUBLISH,
 						   for QoS > 0 */
+	uint8_t			retain:1;	/* Retained message */
 } lws_mqtt_publish_param_t;
 
 typedef struct topic_elem {
@@ -140,6 +180,10 @@ typedef enum {
 
 /* flags from byte 8 of C_TO_S CONNECT */
 typedef enum {
+	LMQCFT_USERNAME_NOFREE					= (1 << 10),
+	LMQCFT_PASSWORD_NOFREE					= (1 << 9),
+	LMQCFT_CLIENT_ID_NOFREE					= (1 << 8),
+	/* only the low 8 are standardized and go out in the protocol */
 	LMQCFT_USERNAME						= (1 << 7),
 	LMQCFT_PASSWORD						= (1 << 6),
 	LMQCFT_WILL_RETAIN					= (1 << 5),

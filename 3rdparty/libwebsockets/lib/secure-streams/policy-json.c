@@ -64,6 +64,7 @@ static const char * const lejp_tokens_policy[] = {
 	"s[].*.attr_high_reliability",
 	"s[].*.attr_low_cost",
 	"s[].*.long_poll",
+	"s[].*.ws_prioritize_reads",
 	"s[].*.retry",
 	"s[].*.timeout_ms",
 	"s[].*.perf",
@@ -98,6 +99,7 @@ static const char * const lejp_tokens_policy[] = {
 	"s[].*.http_mime_content_type",
 	"s[].*.http_www_form_urlencoded",
 	"s[].*.http_expect",
+	"s[].*.http_cookies",
 	"s[].*.http_fail_redirect",
 	"s[].*.http_multipart_ss_in",
 	"s[].*.ws_subprotocol",
@@ -109,17 +111,23 @@ static const char * const lejp_tokens_policy[] = {
 	"s[].*.mqtt_topic",
 	"s[].*.mqtt_subscribe",
 	"s[].*.mqtt_qos",
+	"s[].*.mqtt_retain",
 	"s[].*.mqtt_keep_alive",
 	"s[].*.mqtt_clean_start",
 	"s[].*.mqtt_will_topic",
 	"s[].*.mqtt_will_message",
 	"s[].*.mqtt_will_qos",
 	"s[].*.mqtt_will_retain",
+	"s[].*.mqtt_birth_topic",
+	"s[].*.mqtt_birth_message",
+	"s[].*.mqtt_birth_qos",
+	"s[].*.mqtt_birth_retain",
 	"s[].*.aws_iot",
 	"s[].*.swake_validity",
 	"s[].*.use_auth",
 	"s[].*.aws_region",
 	"s[].*.aws_service",
+	"s[].*.direct_proto_str",
 	"s[].*",
 	"auth[].name",
 	"auth[].type",
@@ -165,6 +173,7 @@ typedef enum {
 	LSSPPT_ATTR_HIGH_RELIABILITY,
 	LSSPPT_ATTR_LOW_COST,
 	LSSPPT_LONG_POLL,
+	LSSPPT_PRIORITIZE_READS,
 	LSSPPT_RETRYPTR,
 	LSSPPT_DEFAULT_TIMEOUT_MS,
 	LSSPPT_PERF,
@@ -198,6 +207,7 @@ typedef enum {
 	LSSPPT_HTTP_MULTIPART_CONTENT_TYPE,
 	LSSPPT_HTTP_WWW_FORM_URLENCODED,
 	LSSPPT_HTTP_EXPECT,
+	LSSPPT_HTTP_COOKIES,
 	LSSPPT_HTTP_FAIL_REDIRECT,
 	LSSPPT_HTTP_MULTIPART_SS_IN,
 	LSSPPT_WS_SUBPROTOCOL,
@@ -209,17 +219,23 @@ typedef enum {
 	LSSPPT_MQTT_TOPIC,
 	LSSPPT_MQTT_SUBSCRIBE,
 	LSSPPT_MQTT_QOS,
+	LSSPPT_MQTT_RETAIN,
 	LSSPPT_MQTT_KEEPALIVE,
 	LSSPPT_MQTT_CLEAN_START,
 	LSSPPT_MQTT_WILL_TOPIC,
 	LSSPPT_MQTT_WILL_MESSAGE,
 	LSSPPT_MQTT_WILL_QOS,
 	LSSPPT_MQTT_WILL_RETAIN,
+	LSSPPT_MQTT_BIRTH_TOPIC,
+	LSSPPT_MQTT_BIRTH_MESSAGE,
+	LSSPPT_MQTT_BIRTH_QOS,
+	LSSPPT_MQTT_BIRTH_RETAIN,
 	LSSPPT_MQTT_AWS_IOT,
 	LSSPPT_SWAKE_VALIDITY,
 	LSSPPT_USE_AUTH,
 	LSSPPT_AWS_REGION,
 	LSSPPT_AWS_SERVICE,
+	LSSPPT_DIRECT_PROTO_STR,
 	LSSPPT_STREAMTYPES,
 	LSSPPT_AUTH_NAME,
 	LSSPPT_AUTH_TYPE,
@@ -754,6 +770,11 @@ lws_ss_policy_parser_cb(struct lejp_ctx *ctx, char reason)
 		if (reason == LEJPCB_VAL_TRUE)
 			a->curr[LTY_POLICY].p->flags |= LWSSSPOLF_LONG_POLL;
 		break;
+	case LSSPPT_PRIORITIZE_READS:
+		if (reason == LEJPCB_VAL_TRUE)
+			a->curr[LTY_POLICY].p->flags |= LWSSSPOLF_PRIORITIZE_READS;
+		break;
+
 	case LSSPPT_HTTP_WWW_FORM_URLENCODED:
 		if (reason == LEJPCB_VAL_TRUE)
 			a->curr[LTY_POLICY].p->flags |=
@@ -768,6 +789,11 @@ lws_ss_policy_parser_cb(struct lejp_ctx *ctx, char reason)
 		if (reason == LEJPCB_VAL_TRUE)
 			a->curr[LTY_POLICY].p->flags |=
 						LWSSSPOLF_ALLOW_REDIRECTS;
+		break;
+	case LSSPPT_HTTP_COOKIES:
+		if (reason == LEJPCB_VAL_TRUE)
+			a->curr[LTY_POLICY].p->flags |=
+						LWSSSPOLF_HTTP_CACHE_COOKIES;
 		break;
 	case LSSPPT_HTTP_MULTIPART_SS_IN:
 		if (reason == LEJPCB_VAL_TRUE)
@@ -996,6 +1022,11 @@ lws_ss_policy_parser_cb(struct lejp_ctx *ctx, char reason)
 		a->curr[LTY_POLICY].p->u.mqtt.qos = (uint8_t)atoi(ctx->buf);
 		break;
 
+	case LSSPPT_MQTT_RETAIN:
+		a->curr[LTY_POLICY].p->u.mqtt.retain =
+						reason == LEJPCB_VAL_TRUE;
+		break;
+
 	case LSSPPT_MQTT_KEEPALIVE:
 		a->curr[LTY_POLICY].p->u.mqtt.keep_alive = (uint16_t)atoi(ctx->buf);
 		break;
@@ -1019,12 +1050,33 @@ lws_ss_policy_parser_cb(struct lejp_ctx *ctx, char reason)
 		a->curr[LTY_POLICY].p->u.mqtt.will_retain =
 						reason == LEJPCB_VAL_TRUE;
 		break;
+	case LSSPPT_MQTT_BIRTH_TOPIC:
+		pp = (char **)&a->curr[LTY_POLICY].p->u.mqtt.birth_topic;
+		goto string2;
+
+	case LSSPPT_MQTT_BIRTH_MESSAGE:
+		pp = (char **)&a->curr[LTY_POLICY].p->u.mqtt.birth_message;
+		goto string2;
+
+	case LSSPPT_MQTT_BIRTH_QOS:
+		a->curr[LTY_POLICY].p->u.mqtt.birth_qos = (uint8_t)atoi(ctx->buf);
+		break;
+	case LSSPPT_MQTT_BIRTH_RETAIN:
+		a->curr[LTY_POLICY].p->u.mqtt.birth_retain =
+						reason == LEJPCB_VAL_TRUE;
+		break;
 	case LSSPPT_MQTT_AWS_IOT:
 		if (reason == LEJPCB_VAL_TRUE)
 			a->curr[LTY_POLICY].p->u.mqtt.aws_iot =
 						reason == LEJPCB_VAL_TRUE;
 		break;
 #endif
+	case LSSPPT_DIRECT_PROTO_STR:
+		if (reason == LEJPCB_VAL_TRUE)
+			a->curr[LTY_POLICY].p->flags |=
+					LWSSSPOLF_DIRECT_PROTO_STR;
+		break;
+
 
 	case LSSPPT_PROTOCOL:
 		a->curr[LTY_POLICY].p->protocol = 0xff;
@@ -1130,10 +1182,16 @@ lws_ss_policy_parse_abandon(struct lws_context *context)
 		 * Free all the client DER buffers now they have been parsed
 		 * into tls library X.509 objects
 		 */
-		if (!x->keep) { /* used for server */
-			lws_free((void *)x->ca_der);
-			x->ca_der = NULL;
-		}
+		lws_free((void *)x->ca_der);
+		x->ca_der = NULL;
+
+		x = x->next;
+	}
+
+	x = context->server_der_list;
+	while (x) {
+		lws_free((void *)x->ca_der);
+		x->ca_der = NULL;
 
 		x = x->next;
 	}
@@ -1141,6 +1199,8 @@ lws_ss_policy_parse_abandon(struct lws_context *context)
 	lejp_destruct(&args->jctx);
 	lwsac_free(&args->ac);
 	lws_free_set_NULL(context->pol_args);
+
+	context->server_der_list = NULL;
 
 	return 0;
 }
@@ -1154,7 +1214,7 @@ lws_ss_policy_parse_file(struct lws_context *cx, const char *filepath)
 	int n, m, fd = lws_open(filepath, LWS_O_RDONLY);
 
 	if (fd < 0)
-		return -1;
+		return LEJP_REJECT_UNKNOWN;
 
 	do {
 		n = (int)read(fd, buf, sizeof(buf));
@@ -1193,12 +1253,11 @@ lws_ss_policy_parse(struct lws_context *context, const uint8_t *buf, size_t len)
 	int m;
 
 #if !defined(LWS_PLAT_FREERTOS) && !defined(LWS_PLAT_OPTEE)
-	if (!args->jctx.line && buf[0] != '{') {
-		puts((const char *)buf);
+	if (args->jctx.line < 2 && buf[0] != '{' && !args->parse_data)
 		return lws_ss_policy_parse_file(context, (const char *)buf);
-	}
 #endif
 
+	args->parse_data = 1;
 	m = lejp_parse(&args->jctx, buf, (int)len);
 	if (m == LEJP_CONTINUE || m >= 0)
 		return m;

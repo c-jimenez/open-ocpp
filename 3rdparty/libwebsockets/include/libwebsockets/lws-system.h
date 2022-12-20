@@ -139,6 +139,7 @@ typedef enum { /* keep system_state_names[] in sync in context.c */
 					  * drop everything done with old
 					  * policy, switch to new then enter
 					  * LWS_SYSTATE_POLICY_VALID */
+	LWS_SYSTATE_CONTEXT_DESTROYING,	 /* Context is being destroyed */
 } lws_system_states_t;
 
 /* Captive Portal Detect -related */
@@ -153,6 +154,11 @@ typedef enum {
 
 typedef void (*lws_attach_cb_t)(struct lws_context *context, int tsi, void *opaque);
 struct lws_attach_item;
+
+LWS_EXTERN LWS_VISIBLE int
+lws_tls_jit_trust_got_cert_cb(struct lws_context *cx, void *got_opaque,
+			      const uint8_t *skid, size_t skid_len,
+			      const uint8_t *der, size_t der_len);
 
 typedef struct lws_system_ops {
 	int (*reboot)(void);
@@ -185,6 +191,15 @@ typedef struct lws_system_ops {
 	/**< metric \p item is reporting an event of kind \p rpt,
 	 * held in \p mdata... return 0 to leave the metric object as it is,
 	 * or nonzero to reset it. */
+
+	int (*jit_trust_query)(struct lws_context *cx, const uint8_t *skid,
+			       size_t skid_len, void *got_opaque);
+	/**< user defined trust store search, if we do trust a cert with SKID
+	 * matching skid / skid_len, then it should get hold of the DER for the
+	 * matching root CA and call
+	 * lws_tls_jit_trust_got_cert_cb(..., got_opaque) before cleaning up and
+	 * returning.  The DER should be destroyed if in heap before returning.
+	 */
 
 	uint32_t	wake_latency_us;
 	/**< time taken for this device to wake from suspend, in us

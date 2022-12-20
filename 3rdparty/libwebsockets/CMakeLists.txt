@@ -63,18 +63,39 @@ if (ESP_PLATFORM)
 endif()
 
 # it's at this point any toolchain file is brought in
-project(libwebsockets C CXX)
+project(libwebsockets C)
+if (LWS_WITH_SECURE_STREAMS_CPP)
+	enable_language(CXX)
+endif()
 include(CTest)
 
 if (ESP_PLATFORM)
        include_directories(
-       ${IDF_PATH}/components/freertos/port/xtensa/include/
-       ${IDF_PATH}/components/hal/include
-       ${IDF_PATH}/components/soc/${CONFIG_IDF_TARGET}/include/ 
-       ${IDF_PATH}/components/soc/include/ 
-       ${IDF_PATH}/components/esp_hw_support/include
-       ${IDF_PATH}/components/hal/${CONFIG_IDF_TARGET}/include/
-       )
+		$ENV{IDF_PATH}/components/esp_hw_support/include/soc/
+		$ENV{IDF_PATH}/components/freertos/include/
+		$ENV{IDF_PATH}/components/freertos/esp_additions/include/
+		$ENV{IDF_PATH}/components/freertos/esp_additions/include/freertos/
+		$ENV{IDF_PATH}/components/freertos/FreeRTOS-Kernel/include/
+		$ENV{IDF_PATH}/components/freertos/FreeRTOS-Kernel/portable/linux/include/
+		$ENV{IDF_PATH}/components/xtensa/${CONFIG_IDF_TARGET}/include/
+		$ENV{IDF_PATH}/components/freertos/include/esp_additions
+		$ENV{IDF_PATH}/components/hal/include
+		$ENV{IDF_PATH}/components/soc/${CONFIG_IDF_TARGET}/include/
+		$ENV{IDF_PATH}/components/soc/include/
+		$ENV{IDF_PATH}/components/esp_hw_support/include
+		$ENV{IDF_PATH}/components/hal/${CONFIG_IDF_TARGET}/include/
+	)
+
+	if (CONFIG_IDF_TARGET_ARCH_RISCV)
+                include_directories(
+                       $ENV{IDF_PATH}/components/freertos/port/riscv/include
+                       $ENV{IDF_PATH}/components/riscv/include)
+        else()
+                include_directories(
+                       $ENV{IDF_PATH}/components/freertos/port/xtensa/include
+                       $ENV{IDF_PATH}/components/xtensa/include)
+        endif()
+
 endif()
 
 
@@ -139,6 +160,8 @@ option(LWS_WITH_SECURE_STREAMS_PROXY_API "Secure Streams support to work across 
 option(LWS_WITH_SECURE_STREAMS_SYS_AUTH_API_AMAZON_COM "Auth support for api.amazon.com" OFF)
 option(LWS_WITH_SECURE_STREAMS_STATIC_POLICY_ONLY "Secure Streams Policy is hardcoded only" OFF)
 option(LWS_WITH_SECURE_STREAMS_AUTH_SIGV4 "Secure Streams Auth support for AWS Sigv4" OFF)
+option(LWS_WITH_SECURE_STREAMS_BUFFER_DUMP "Secure Streams protocol buffer dump" OFF)
+option(LWS_WITH_SS_DIRECT_PROTOCOL_STR "Secure Streams directly set/get metadata w/o policy" OFF)
 
 #
 # CTest options
@@ -159,11 +182,12 @@ option(LWS_WITH_SSL "Include SSL support (defaults to OpenSSL or similar, mbedTL
 option(LWS_WITH_MBEDTLS "Use mbedTLS (>=2.0) replacement for OpenSSL. When setting this, you also may need to specify LWS_MBEDTLS_LIBRARIES and LWS_MBEDTLS_INCLUDE_DIRS" OFF)
 option(LWS_WITH_BORINGSSL "Use BoringSSL replacement for OpenSSL" OFF)
 option(LWS_WITH_CYASSL "Use CyaSSL replacement for OpenSSL. When setting this, you also need to specify LWS_CYASSL_LIBRARIES and LWS_CYASSL_INCLUDE_DIRS" OFF)
-option(LWS_WITH_WOLFSSL "Use wolfSSL replacement for OpenSSL. When setting this, you also need to specify LWS_WOLFSSL_LIBRARIES and LWS_WOLFSSL_INCLUDE_DIRS" OFF)
+option(LWS_WITH_WOLFSSL "Use wolfSSL replacement for OpenSSL. When setting this, you also may need to specify LWS_WOLFSSL_LIBRARIES and LWS_WOLFSSL_INCLUDE_DIRS" OFF)
 option(LWS_SSL_CLIENT_USE_OS_CA_CERTS "SSL support should make use of the OS-installed CA root certs" ON)
 option(LWS_TLS_LOG_PLAINTEXT_RX "For debugging log the received plaintext as soon as decrypted" OFF)
 option(LWS_TLS_LOG_PLAINTEXT_TX "For debugging log the transmitted plaintext just before encryption" OFF)
 option(LWS_WITH_TLS_SESSIONS "Enable persistent, resumable TLS sessions" ON)
+option(LWS_WITH_TLS_JIT_TRUST "Enable dynamically computing which trusted TLS CA is needed to be instantiated" OFF)
 
 #
 # Event library options (may select multiple, or none for default poll()
@@ -195,7 +219,7 @@ option(LWS_WITH_STATIC "Build the static version of the library" ON)
 option(LWS_WITH_SHARED "Build the shared version of the library" ON)
 option(LWS_LINK_TESTAPPS_DYNAMIC "Link the test apps to the shared version of the library. Default is to link statically" OFF)
 option(LWS_STATIC_PIC "Build the static version of the library with position-independent code" OFF)
-option(LWS_SUPPRESS_DEPRECATED_API_WARNINGS "Turn off complaints about, eg, openssl deprecated api usage" OFF)
+option(LWS_SUPPRESS_DEPRECATED_API_WARNINGS "Turn off complaints about, eg, openssl 3 deprecated api usage" ON)
 
 #
 # Specific platforms
@@ -210,11 +234,11 @@ option(LWS_PLAT_ANDROID "Android flavour of unix platform" OFF)
 #
 option(LWS_WITHOUT_CLIENT "Don't build the client part of the library" OFF)
 option(LWS_WITHOUT_SERVER "Don't build the server part of the library" OFF)
-option(LWS_WITHOUT_TESTAPPS "Don't build the libwebsocket-test-apps" ON)
-option(LWS_WITHOUT_TEST_SERVER "Don't build the test server" ON)
-option(LWS_WITHOUT_TEST_SERVER_EXTPOLL "Don't build the test server version that uses external poll" ON)
-option(LWS_WITHOUT_TEST_PING "Don't build the ping test application" ON)
-option(LWS_WITHOUT_TEST_CLIENT "Don't build the client test application" ON)
+option(LWS_WITHOUT_TESTAPPS "Don't build the libwebsocket-test-apps" OFF)
+option(LWS_WITHOUT_TEST_SERVER "Don't build the test server" OFF)
+option(LWS_WITHOUT_TEST_SERVER_EXTPOLL "Don't build the test server version that uses external poll" OFF)
+option(LWS_WITHOUT_TEST_PING "Don't build the ping test application" OFF)
+option(LWS_WITHOUT_TEST_CLIENT "Don't build the client test application" OFF)
 #
 # Extensions (permessage-deflate)
 #
@@ -228,6 +252,8 @@ option(LWS_WITHOUT_BUILTIN_SHA1 "Don't build the lws sha-1 (eg, because openssl 
 option(LWS_WITHOUT_DAEMONIZE "Don't build the daemonization api" ON)
 option(LWS_SSL_SERVER_WITH_ECDH_CERT "Include SSL server use ECDH certificate" OFF)
 option(LWS_WITH_LEJP "With the Lightweight JSON Parser" ON)
+option(LWS_WITH_CBOR "With the Lightweight LECP CBOR Parser" OFF)
+option(LWS_WITH_CBOR_FLOAT "Build floating point types if building CBOR LECP" ON)
 option(LWS_WITH_SQLITE3 "Require SQLITE3 support" OFF)
 option(LWS_WITH_STRUCT_JSON "Generic struct serialization to and from JSON" OFF)
 option(LWS_WITH_STRUCT_SQLITE3 "Generic struct serialization to and from SQLITE3" OFF)
@@ -246,7 +272,8 @@ set(LWS_LOGGING_BITFIELD_CLEAR 0 CACHE STRING "Bitfield describing which log lev
 option(LWS_LOGS_TIMESTAMP "Timestamp at start of logs" ON)
 option(LWS_LOG_TAG_LIFECYCLE "Log tagged object lifecycle as NOTICE" ON)
 option(LWS_AVOID_SIGPIPE_IGN "Android 7+ reportedly needs this" OFF)
-option(LWS_WITH_JOSE "JSON Web Signature / Encryption / Keys (RFC7515/6/) API" OFF)
+option(LWS_WITH_JOSE "JOSE JSON Web Signature / Encryption / Keys (RFC7515/6/) API" OFF)
+option(LWS_WITH_COSE "COSE CBOR Signature / Encryption / Keys (RFC8152) API" OFF)
 option(LWS_WITH_GENCRYPTO "Enable support for Generic Crypto apis independent of TLS backend" OFF)
 option(LWS_WITH_SELFTESTS "Selftests run at context creation" OFF)
 option(LWS_WITH_GCOV "Build with gcc gcov coverage instrumentation" OFF)
@@ -255,13 +282,12 @@ option(LWS_REPRODUCIBLE "Build libwebsockets reproducible. It removes the build 
 option(LWS_WITH_MINIMAL_EXAMPLES "Also build the normally standalone minimal examples, for QA" OFF)
 option(LWS_WITH_LWSAC "lwsac Chunk Allocation api" ON)
 option(LWS_WITH_CUSTOM_HEADERS "Store and allow querying custom HTTP headers (H1 only)" ON)
-option(LWS_WITH_DISKCACHE "Hashed cache directory with lazy LRU deletion to size limit" OFF)
+option(LWS_WITH_DISKCACHE "Hashed cache directory with lazy LRU deletion to size limit (unrelated to lws_cache_ttl)" OFF)
 option(LWS_WITH_ASAN "Build with gcc runtime sanitizer options enabled (needs libasan)" OFF)
 option(LWS_WITH_LEJP_CONF "With LEJP configuration parser as used by lwsws" OFF)
 option(LWS_WITH_ZLIB "Include zlib support (required for extensions)" OFF)
 option(LWS_WITH_BUNDLED_ZLIB "Use bundled zlib version (Windows only)" ${LWS_WITH_BUNDLED_ZLIB_DEFAULT})
 option(LWS_WITH_MINIZ "Use miniz instead of zlib" OFF)
-option(LWS_WITH_DEPRECATED_THINGS "Temporary workaround for deprecated apis" OFF)
 option(LWS_WITH_SEQUENCER "lws_seq_t support" OFF)
 option(LWS_WITH_EXTERNAL_POLL "Support external POLL integration using callback messages (not recommended)" OFF)
 option(LWS_WITH_LWS_DSH "Support lws_dsh_t Disordered Shared Heap" OFF)
@@ -275,6 +301,12 @@ option(LWS_HTTP_HEADERS_ALL "Override header reduction optimization and include 
 option(LWS_WITH_SUL_DEBUGGING "Enable zombie lws_sul checking on object deletion" OFF)
 option(LWS_WITH_PLUGINS_API "Build generic lws_plugins apis (see LWS_WITH_PLUGINS to also build protocol plugins)" OFF)
 option(LWS_WITH_CONMON "Collect introspectable connection latency stats on individual client connections" ON)
+option(LWS_WITHOUT_EVENTFD "Force using pipe instead of eventfd" OFF)
+if (UNIX OR WIN32)
+	option(LWS_WITH_CACHE_NSCOOKIEJAR "Build file-backed lws-cache-ttl that uses netscape cookie jar format (linux-only)" ON)
+else()
+	option(LWS_WITH_CACHE_NSCOOKIEJAR "Build file-backed lws-cache-ttl that uses netscape cookie jar format (linux-only)" OFF)
+endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	option(LWS_WITH_NETLINK "Monitor Netlink for Routing Table changes" ON)
@@ -369,12 +401,16 @@ if(GIT_EXECUTABLE)
 	message("Git commit hash: ${LWS_BUILD_HASH}")
 endif()
 
+if ("${LWS_BUILD_HASH}" STREQUAL "")
+	set(LWS_BUILD_HASH "unknown")
+endif()
+
 set(PACKAGE "libwebsockets")
 set(CPACK_RPM_PACKAGE_LICENSE "MIT")
 set(CPACK_PACKAGE_NAME "${PACKAGE}")
 set(CPACK_PACKAGE_VERSION_MAJOR "4")
-set(CPACK_PACKAGE_VERSION_MINOR "2")
-set(CPACK_PACKAGE_VERSION_PATCH_NUMBER "0")
+set(CPACK_PACKAGE_VERSION_MINOR "3")
+set(CPACK_PACKAGE_VERSION_PATCH_NUMBER "2")
 
 set(CPACK_PACKAGE_VERSION_PATCH "${CPACK_PACKAGE_VERSION_PATCH_NUMBER}-${LWS_BUILD_HASH}")
 set(CPACK_PACKAGE_RELEASE 1)
@@ -383,7 +419,7 @@ set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSIO
 set(CPACK_PACKAGE_VENDOR "andy@warmcat.com")
 set(CPACK_PACKAGE_CONTACT "andy@warmcat.com")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PACKAGE} ${CPACK_PACKAGE_VERSION}")
-set(SOVERSION "18")
+set(SOVERSION "19")
 if(NOT CPACK_GENERATOR)
     if(UNIX)
         set(CPACK_GENERATOR "TGZ")
@@ -553,7 +589,14 @@ CHECK_FUNCTION_EXISTS(getgrgid_r LWS_HAVE_GETGRGID_R)
 CHECK_FUNCTION_EXISTS(getgrnam_r LWS_HAVE_GETGRNAM_R)
 CHECK_FUNCTION_EXISTS(getpwuid_r LWS_HAVE_GETPWUID_R)
 CHECK_FUNCTION_EXISTS(getpwnam_r LWS_HAVE_GETPWNAM_R)
+CHECK_FUNCTION_EXISTS(timegm LWS_HAVE_TIMEGM)
 
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+	if(CMAKE_OSX_DEPLOYMENT_TARGET LESS "10.12")
+		message("No clock_gettime found on macOS ${CMAKE_OSX_DEPLOYMENT_TARGET}. Disabling LWS_HAVE_CLOCK_GETTIME.")
+		set(LWS_HAVE_CLOCK_GETTIME 0)
+	endif()
+endif()
 
 if (NOT LWS_HAVE_GETIFADDRS)
 	if (LWS_WITHOUT_BUILTIN_GETIFADDRS)
@@ -754,9 +797,17 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR COMPILER_IS_CLANG)
 
 	# always warn all and generate debug info
 	if (UNIX AND NOT LWS_PLAT_FREERTOS)
-		set(CMAKE_C_FLAGS "-Wall -Wconversion -Wsign-compare -Wstrict-aliasing ${VISIBILITY_FLAG} -Wundef ${GCOV_FLAGS} ${CMAKE_C_FLAGS} ${ASAN_FLAGS}" )
+		set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wconversion -Wsign-compare -Wstrict-aliasing ${VISIBILITY_FLAG} -Wundef ${GCOV_FLAGS} ${CMAKE_C_FLAGS} ${ASAN_FLAGS}" )
 	else()
 		set(CMAKE_C_FLAGS "-Wall -Wsign-compare ${VISIBILITY_FLAG} ${GCOV_FLAGS} ${CMAKE_C_FLAGS}" )
+	endif()
+
+	if (PICO_SDK_PATH)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wconversion -Wsign-compare -Wstrict-aliasing -Wundef -nolibc")
+	endif()
+
+	if (ESP_PLATFORM AND (CONFIG_IDF_TARGET_ESP32 OR CONFIG_IDF_TARGET_ESP32S2 OR CONFIG_IDF_TARGET_ESP32S3))
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mlongcalls")
 	endif()
 
 	if ("${DISABLE_WERROR}" STREQUAL "OFF")
@@ -800,6 +851,12 @@ if (MSVC)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 	# Fail the build if any warnings
 	add_compile_options(/W3 /WX)
+	# Unbreak MSVC broken preprocessor __VA_ARGS__ behaviour
+	if (MSVC_VERSION GREATER 1925)
+		add_compile_options(/Zc:preprocessor /wd5105)
+	else()
+		add_compile_options(/experimental:preprocessor /wd5105)
+	endif()
 endif(MSVC)
 
 if (MINGW)
@@ -829,7 +886,7 @@ if (LWS_WITH_ZLIB)
 	if (NOT ZLIB_FOUND)
 		if (LWS_WITH_MINIZ)
 			find_package(Miniz REQUIRED)
-			set(ZLIB_INCLUDE_DIRS ${MINIZ_INCLUDE_DIRS})
+			set(ZLIB_INCLUDE_DIRS ${MINIZ_INCLUDE_DIR})
 			set(ZLIB_LIBRARIES ${MINIZ_LIBRARIES})
 		else()
 			find_package(ZLIB REQUIRED)
@@ -1016,6 +1073,9 @@ file(RELATIVE_PATH
 
 if (DEFINED REL_INCLUDE_DIR)
     set(LWS__INCLUDE_DIRS "\${LWS_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+endif()
+if (DEFINED OPENSSL_INCLUDE_DIRS)
+	set(LWS__INCLUDE_DIRS "${LWS__INCLUDE_DIRS};${OPENSSL_INCLUDE_DIRS}")
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/cmake/libwebsockets-config.cmake.in

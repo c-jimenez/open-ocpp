@@ -453,6 +453,8 @@ struct lws_context_creation_info {
 	int simultaneous_ssl_restriction;
 	/**< CONTEXT: 0 (no limit) or limit of simultaneous SSL sessions
 	 * possible.*/
+	int simultaneous_ssl_handshake_restriction;
+	/**< CONTEXT: 0 (no limit) or limit of simultaneous SSL handshakes ongoing */
 	int ssl_info_event_mask;
 	/**< VHOST: mask of ssl events to be reported on LWS_CALLBACK_SSL_INFO
 	 * callback for connections on this vhost.  The mask values are of
@@ -536,6 +538,17 @@ struct lws_context_creation_info {
 	  * implementation for the one provided by provided_ssl_ctx.
 	  * Libwebsockets no longer is responsible for freeing the context
 	  * if this option is selected. */
+#else /* WITH_MBEDTLS */
+	const char *mbedtls_client_preload_filepath;
+	/**< CONTEXT: If NULL, no effect.  Otherwise it should point to a
+	 * filepath where every created client SSL_CTX is preloaded from the
+	 * system trust bundle.
+	 *
+	 * This sets a processwide variable that affects all contexts.
+	 *
+	 * Requires that the mbedtls provides mbedtls_x509_crt_parse_file(),
+	 * else disabled.
+	 */
 #endif
 #endif
 
@@ -621,7 +634,10 @@ struct lws_context_creation_info {
 	const char *vhost_name;
 	/**< VHOST: name of vhost, must match external DNS name used to
 	 * access the site, like "warmcat.com" as it's used to match
-	 * Host: header and / or SNI name for SSL. */
+	 * Host: header and / or SNI name for SSL.
+	 * CONTEXT: NULL, or the name to associate with the context for
+	 * context-specific logging
+	 */
 #if defined(LWS_WITH_PLUGINS)
 	const char * const *plugin_dirs;
 	/**< CONTEXT: NULL, or NULL-terminated array of directories to
@@ -843,14 +859,58 @@ struct lws_context_creation_info {
 
 #if defined(LWS_WITH_SYS_METRICS)
 	const struct lws_metric_policy		*metrics_policies;
-	/**< non-SS policy metrics policies */
+	/**< CONTEXT: non-SS policy metrics policies */
 	const char				*metrics_prefix;
-	/**< prefix for this context's metrics, used to distinguish metrics
-	 * pooled from different processes / applications, so, eg what would
-	 * be "cpu.svc" if this is NULL becomes "myapp.cpu.svc" is this is
+	/**< CONTEXT: prefix for this context's metrics, used to distinguish
+	 * metrics pooled from different processes / applications, so, eg what
+	 * would be "cpu.svc" if this is NULL becomes "myapp.cpu.svc" is this is
 	 * set to "myapp".  Policies are applied using the name with the prefix,
 	 * if present.
 	 */
+#endif
+
+	int					fo_listen_queue;
+	/**< VHOST: 0 = no TCP_FASTOPEN, nonzero = enable TCP_FASTOPEN if the
+	 * platform supports it, with the given queue length for the listen
+	 * socket.
+	 */
+
+	const struct lws_plugin_evlib		*event_lib_custom;
+	/**< CONTEXT: If non-NULL, override event library selection so it uses
+	 * this custom event library implementation, instead of default internal
+	 * loop.  Don't set any other event lib context creation flags in that
+	 * case. it will be used automatically.  This is useful for integration
+	 * where an existing application is using its own handrolled event loop
+	 * instead of an event library, it provides a way to allow lws to use
+	 * the custom event loop natively as if it were an "event library".
+	 */
+
+#if defined(LWS_WITH_TLS_JIT_TRUST)
+	size_t					jitt_cache_max_footprint;
+	/**< CONTEXT: 0 for no limit, else max bytes used by JIT Trust cache...
+	 * LRU items are evicted to keep under this limit */
+	int					vh_idle_grace_ms;
+	/**< CONTEXT: 0 for default of 5000ms, or number of ms JIT Trust vhosts
+	 * are allowed to live without active connections using them. */
+#endif
+
+	lws_log_cx_t				*log_cx;
+	/**< CONTEXT: NULL to use the default, process-scope logging context,
+	 * else a specific logging context to associate with this context */
+
+#if defined(LWS_WITH_CACHE_NSCOOKIEJAR) && defined(LWS_WITH_CLIENT)
+	const char				*http_nsc_filepath;
+	/**< CONTEXT: Filepath to use for http netscape cookiejar file */
+
+	size_t					http_nsc_heap_max_footprint;
+	/**< CONTEXT: 0, or limit in bytes for heap usage of memory cookie
+	 * cache */
+	size_t					http_nsc_heap_max_items;
+	/**< CONTEXT: 0, or the max number of items allowed in the cookie cache
+	 * before destroying lru items to keep it under the limit */
+	size_t					http_nsc_heap_max_payload;
+	/**< CONTEXT: 0, or the maximum size of a single cookie we are able to
+	 * handle */
 #endif
 
 	/* Add new things just above here ---^
@@ -1265,13 +1325,7 @@ struct lws_http_mount {
 
 	/* Add new things just above here ---^
 	 * This is part of the ABI, don't needlessly break compatibility
-	 *
-	 * The below is to ensure later library versions with new
-	 * members added above will see 0 (default) even if the app
-	 * was not built against the newer headers.
 	 */
-
-	void *_unused[2]; /**< dummy */
 };
 
 ///@}
