@@ -232,6 +232,7 @@ void Certificate::convertCertificateRequest(void* request, const void* issuer, v
     ASN1_INTEGER* serial = ASN1_INTEGER_new();
     ASN1_STRING_set(serial, serial_bytes, sizeof(serial_bytes));
     X509_set_serialNumber(cert, serial);
+    ASN1_INTEGER_free(serial);
 
     // Set subject and issuer name
     X509_NAME* issuer_name;
@@ -268,7 +269,7 @@ void Certificate::convertCertificateRequest(void* request, const void* issuer, v
                 }
             }
         }
-        sk_X509_EXTENSION_free(extensions);
+        sk_X509_EXTENSION_pop_free(extensions, X509_EXTENSION_free);
     }
     if (issuer_cert)
     {
@@ -386,13 +387,15 @@ void Certificate::readInfos(Certificate& certificate)
             certificate.m_x509v3_extensions_names.emplace_back(OBJ_nid2ln(extension_obj_nid));
             if (extension_obj_nid == NID_issuer_alt_name)
             {
-                certificate.m_x509v3_extensions.issuer_alternate_names =
-                    convertGeneralNames(X509_get_ext_d2i(cert, NID_issuer_alt_name, nullptr, nullptr));
+                void* ext                                              = X509_get_ext_d2i(cert, NID_issuer_alt_name, nullptr, nullptr);
+                certificate.m_x509v3_extensions.issuer_alternate_names = convertGeneralNames(ext);
+                OPENSSL_free(ext);
             }
             else if (extension_obj_nid == NID_subject_alt_name)
             {
-                certificate.m_x509v3_extensions.subject_alternate_names =
-                    convertGeneralNames(X509_get_ext_d2i(cert, NID_subject_alt_name, nullptr, nullptr));
+                void* ext                                               = X509_get_ext_d2i(cert, NID_subject_alt_name, nullptr, nullptr);
+                certificate.m_x509v3_extensions.subject_alternate_names = convertGeneralNames(ext);
+                OPENSSL_free(ext);
             }
             else if (extension_obj_nid == NID_basic_constraints)
             {
@@ -408,6 +411,7 @@ void Certificate::readInfos(Certificate& certificate)
                             certificate.m_x509v3_extensions.basic_constraints.path_length = ASN1_INTEGER_get(basic_constraint->pathlen);
                         }
                     }
+                    OPENSSL_free(basic_constraint);
                 }
             }
             else
