@@ -93,11 +93,11 @@ bool SmartChargingManager::getSetpoint(unsigned int                             
         for (const auto& profile : m_profile_db.chargePointMaxProfiles())
         {
             // Check if the profile is active
-            const ChargingSchedulePeriod* period = nullptr;
-            if (isProfileActive(connector, profile.second, period))
+            size_t period = 0;
+            if (isProfileActive(connector, profile.second, period, DateTime::now()))
             {
                 // Apply setpoint
-                fillSetpoint(charge_point_setpoint, unit, profile.second, *period);
+                fillSetpoint(charge_point_setpoint, unit, profile.second, profile.second.chargingSchedule.chargingSchedulePeriod[period]);
                 break;
             }
         }
@@ -351,20 +351,101 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                                          std::string&                                   error_code,
                                          std::string&                                   error_message)
 {
-    (void)request;
+    bool ret = false;
     (void)error_code;
-    (void)error_message;
 
     LOG_INFO << "GetCompositeSchedule requested : connectorId = " << request.connectorId << " - duration = " << request.duration
              << " - chargingRateUnit = "
              << (request.chargingRateUnit.isSet() ? ChargingRateUnitTypeHelper.toString(request.chargingRateUnit) : "not set");
 
-    // Not supported for now...
-    response.status = GetCompositeScheduleStatus::Rejected;
+    // Get connector
+    Connector* connector = m_connectors.getConnector(request.connectorId);
+    if (connector)
+    {
+        // Get profiles list
+        std::vector<const ProfileDatabase::ChargingProfileList*> profile_lists;
+        if (connector->transaction_id != 0)
+        {
+            profile_lists.push_back(&m_profile_db.txProfiles());
+        }
+        profile_lists.push_back(&m_profile_db.txDefaultProfiles());
+
+        // Compute periods
+        std::vector<Period> periods;
+        DateTime            now = DateTime::now();
+        for (auto& profile_list : profile_lists)
+        {
+            for (const auto& profile : (*profile_list))
+            {
+                if (profile.first == request.connectorId)
+                {
+                    std::vector<Period> profile_periods = getProfilePeriods(connector, profile.second, now, request.duration);
+                    periods                             = mergeProfilePeriods(periods, profile_periods);
+                    if (periods.empty())
+                    {
+                        break;
+                    }
+                }
+            }
+            if (periods.empty())
+            {
+                break;
+            }
+        }
+
+        // Create response
+        if (!periods.empty())
+        {
+            response.status        = GetCompositeScheduleStatus::Accepted;
+            response.connectorId   = request.connectorId;
+            response.scheduleStart = now;
+
+            ChargingSchedule& schedule = response.chargingSchedule.value();
+            schedule.duration          = 0;
+            if (request.chargingRateUnit.isSet())
+            {
+                schedule.chargingRateUnit = request.chargingRateUnit;
+            }
+            else
+            {
+                schedule.chargingRateUnit = ChargingRateUnitType::A;
+            }
+            // Adjust start if needed since first period must start at 0
+            int offset             = periods[0].start;
+            schedule.startSchedule = DateTime(now.timestamp() + offset);
+            for (const auto& period : periods)
+            {
+                ChargingSchedulePeriod p;
+                p.startPeriod = period.start - offset;
+                if (period.unit == schedule.chargingRateUnit)
+                {
+                    p.limit = period.setpoint;
+                }
+                else
+                {
+                    p.limit = convertToUnit(period.setpoint, schedule.chargingRateUnit, period.nb_phases);
+                }
+                p.numberPhases = period.nb_phases;
+                schedule.chargingSchedulePeriod.push_back(p);
+                schedule.duration += period.duration;
+            }
+        }
+        else
+        {
+            // No profiles, couldn't compute any schedule
+            response.status = GetCompositeScheduleStatus::Rejected;
+        }
+
+        ret = true;
+    }
+    else
+    {
+        error_message = "Invalid connector id";
+    }
 
     LOG_INFO << "GetCompositeSchedule status : " << GetCompositeScheduleStatusHelper.toString(response.status);
 
-    return true;
+    return ret;
 }
 
 /** @brief Periodically cleanup expired profiles */
@@ -441,11 +522,11 @@ void SmartChargingManager::computeSetpoint(Connector*                           
         if ((profile.first == connector->id) || (profile.first == 0))
         {
             // Check if the profile is active
-            const ChargingSchedulePeriod* period = nullptr;
-            if (isProfileActive(connector, profile.second, period))
+            size_t period = 0;
+            if (isProfileActive(connector, profile.second, period, DateTime::now()))
             {
                 // Apply setpoint
-                fillSetpoint(connector_setpoint, unit, profile.second, *period);
+                fillSetpoint(connector_setpoint, unit, profile.second, profile.second.chargingSchedule.chargingSchedulePeriod[period]);
             }
 
             // Check connector type
@@ -466,110 +547,39 @@ void SmartChargingManager::computeSetpoint(Connector*                           
 }
 
 /** @brief Check if the given profile is active */
-bool SmartChargingManager::isProfileActive(Connector*                                  connector,
-                                           const ocpp::types::ChargingProfile&         profile,
-                                           const ocpp::types::ChargingSchedulePeriod*& period)
+bool SmartChargingManager::isProfileActive(Connector*                          connector,
+                                           const ocpp::types::ChargingProfile& profile,
+                                           size_t&                             period,
+                                           const ocpp::types::DateTime&        time_point)
 {
     bool ret = false;
 
     // Check profile validity
-    DateTime now = DateTime::now();
-    if ((!profile.validFrom.isSet() || (now >= profile.validFrom)) && (!profile.validTo.isSet() || (now <= profile.validTo)))
+    if (isProfileValid(profile, time_point))
     {
-        // Check profile kind
-        ChargingProfileKindType kind = profile.chargingProfileKind;
-        if (kind == ChargingProfileKindType::Absolute)
-        {
-            // Specific case of Absolute schedule : if startSchedule field is not set,
-            // the schedule is actually a Relative schedule
-            if (!profile.chargingSchedule.startSchedule.isSet())
-            {
-                kind = ChargingProfileKindType::Relative;
-            }
-        }
+        // Get profile kind
+        ChargingProfileKindType kind = getProfileKind(profile);
 
         // Compute start of schedule
-        DateTime start_of_schedule;
-        switch (kind)
-        {
-            case ChargingProfileKindType::Recurring:
-            {
-                // Get start of schedule day of the week and time of the day
-                std::tm tm_start_schedule;
-                time_t  start_schedule_time_t = profile.chargingSchedule.startSchedule.value().timestamp();
-                localtime_r(&start_schedule_time_t, &tm_start_schedule);
-
-                // Get the same information on today
-                std::tm tm_today;
-                time_t  now_time_t = now.timestamp();
-                localtime_r(&now_time_t, &tm_today);
-
-                // Compute recurrency to obtain the start of the schedule
-                if (profile.recurrencyKind == RecurrencyKindType::Daily)
-                {
-                    // Daily
-
-                    // Apply the same time on today
-                    tm_today.tm_hour = tm_start_schedule.tm_hour;
-                    tm_today.tm_min  = tm_start_schedule.tm_min;
-                    tm_today.tm_sec  = tm_start_schedule.tm_sec;
-
-                    // Compute start of schedule for today
-                    start_of_schedule = mktime(&tm_today);
-                }
-                else
-                {
-                    // Weekly
-
-                    // Compare day of the week
-                    if (tm_start_schedule.tm_wday == tm_today.tm_wday)
-                    {
-                        // Apply the same time on today
-                        tm_today.tm_hour = tm_start_schedule.tm_hour;
-                        tm_today.tm_min  = tm_start_schedule.tm_min;
-                        tm_today.tm_sec  = tm_start_schedule.tm_sec;
-
-                        // Compute start of schedule for today
-                        start_of_schedule = mktime(&tm_today);
-                    }
-                    else
-                    {
-                        // Not the good day, put the start of schedule in the future
-                        // to have it discard
-                        start_of_schedule = now + 1;
-                    }
-                }
-            }
-            break;
-
-            case ChargingProfileKindType::Absolute:
-            {
-                // Start of schedule is defined in the profile itself
-                start_of_schedule = profile.chargingSchedule.startSchedule;
-            }
-            break;
-
-            case ChargingProfileKindType::Relative:
-            {
-                // Start of schedule is the start of the transaction
-                start_of_schedule = connector->transaction_start;
-            }
-            break;
-        }
+        DateTime start_of_schedule = getProfileStartTime(connector, profile, kind, time_point);
 
         // Check schedule validity
-        if ((start_of_schedule <= now) &&
-            (!profile.chargingSchedule.duration.isSet() || ((start_of_schedule + profile.chargingSchedule.duration) >= now)))
+        if ((start_of_schedule <= time_point) &&
+            (!profile.chargingSchedule.duration.isSet() || ((start_of_schedule + profile.chargingSchedule.duration) <= time_point)))
         {
             // Look for the matching period
             const auto& schedule_periods = profile.chargingSchedule.chargingSchedulePeriod;
+            period                       = schedule_periods.size() - 1u;
             for (auto iter = schedule_periods.rbegin(); iter != schedule_periods.rend(); iter++)
             {
-                if ((start_of_schedule + iter->startPeriod) <= now)
+                if ((start_of_schedule + iter->startPeriod) <= time_point)
                 {
-                    period = &(*iter);
-                    ret    = true;
+                    ret = true;
                     break;
+                }
+                else
+                {
+                    period--;
                 }
             }
         }
@@ -620,6 +630,346 @@ float SmartChargingManager::convertToUnit(float value, ocpp::types::ChargingRate
         ret = value * static_cast<float>(number_phases) * m_stack_config.operatingVoltage();
     }
     return ret;
+}
+
+/** @brief Indicate if a charging profile is valid at a given point in time */
+bool SmartChargingManager::isProfileValid(const ocpp::types::ChargingProfile& profile, const ocpp::types::DateTime& time_point)
+{
+    bool ret = false;
+    if ((!profile.validFrom.isSet() || (time_point >= profile.validFrom)) && (!profile.validTo.isSet() || (time_point <= profile.validTo)))
+    {
+        ret = true;
+    }
+    return ret;
+}
+
+/** @brief Get the kind of charging profile */
+ocpp::types::ChargingProfileKindType SmartChargingManager::getProfileKind(const ocpp::types::ChargingProfile& profile)
+{
+    ChargingProfileKindType kind = profile.chargingProfileKind;
+    if (kind == ChargingProfileKindType::Absolute)
+    {
+        // Specific case of Absolute schedule : if startSchedule field is not set,
+        // the schedule is actually a Relative schedule
+        if (!profile.chargingSchedule.startSchedule.isSet())
+        {
+            kind = ChargingProfileKindType::Relative;
+        }
+    }
+    return kind;
+}
+
+/** @brief Get the start time of a charging profile schedule */
+ocpp::types::DateTime SmartChargingManager::getProfileStartTime(Connector*                           connector,
+                                                                const ocpp::types::ChargingProfile&  profile,
+                                                                ocpp::types::ChargingProfileKindType kind,
+                                                                const ocpp::types::DateTime&         time_point)
+{
+    DateTime start_of_schedule;
+    switch (kind)
+    {
+        case ChargingProfileKindType::Recurring:
+        {
+            // Get start of schedule day of the week and time of the day
+            std::tm tm_start_schedule;
+            time_t  start_schedule_time_t = profile.chargingSchedule.startSchedule.value().timestamp();
+            localtime_r(&start_schedule_time_t, &tm_start_schedule);
+
+            // Get the same information on today
+            std::tm tm_today;
+            time_t  now_time_t = time_point.timestamp();
+            localtime_r(&now_time_t, &tm_today);
+
+            // Apply the same time on today
+            tm_today.tm_hour = tm_start_schedule.tm_hour;
+            tm_today.tm_min  = tm_start_schedule.tm_min;
+            tm_today.tm_sec  = tm_start_schedule.tm_sec;
+
+            // Compute start of schedule for today
+            start_of_schedule = mktime(&tm_today);
+
+            // Compute recurrency to obtain the start of the schedule
+            if (profile.recurrencyKind == RecurrencyKindType::Weekly)
+            {
+                // Weekly
+
+                // Compare day of the week
+                if (tm_start_schedule.tm_wday != tm_today.tm_wday)
+                {
+                    // Not the good day, compute the start of schedule
+                    // based on the number of days before the actual scheduled day
+                    int days_count = tm_start_schedule.tm_wday - tm_today.tm_wday;
+                    if (days_count < 0)
+                    {
+                        days_count = tm_today.tm_wday - tm_start_schedule.tm_wday;
+                    }
+                    start_of_schedule =
+                        DateTime(start_of_schedule.timestamp() + days_count * 86400); // 86400 = 3600 * 24 = Number of seconds in a day
+                }
+            }
+        }
+        break;
+
+        case ChargingProfileKindType::Absolute:
+        {
+            // Start of schedule is defined in the profile itself
+            start_of_schedule = profile.chargingSchedule.startSchedule;
+        }
+        break;
+
+        case ChargingProfileKindType::Relative:
+        {
+            // Check if a transaction is in progress
+            if (connector->transaction_id != 0)
+            {
+                // Start of schedule is the start of the transaction
+                start_of_schedule = connector->transaction_start;
+            }
+            else
+            {
+                // Start of schedule is the given time point
+                start_of_schedule = time_point;
+            }
+        }
+        break;
+    }
+    return start_of_schedule;
+}
+
+/** @brief Get the composite schedule periods corresponding to a charging profile */
+std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriods(Connector*                          connector,
+                                                                                  const ocpp::types::ChargingProfile& profile,
+                                                                                  const ocpp::types::DateTime&        time_point,
+                                                                                  unsigned int                        duration)
+{
+    std::vector<Period> periods;
+
+    // Current time point
+    time_t ts_time_point = time_point.timestamp();
+
+    // Compute start of schedule
+    ChargingProfileKindType kind                 = getProfileKind(profile);
+    DateTime                start_of_schedule    = getProfileStartTime(connector, profile, kind, time_point);
+    time_t                  ts_start_of_schedule = start_of_schedule.timestamp();
+
+    // Compute the end of schedule
+    DateTime end_of_schedule    = DateTime(time_point.timestamp() + duration);
+    time_t   ts_end_of_schedule = end_of_schedule.timestamp();
+    if (profile.chargingSchedule.duration.isSet())
+    {
+        time_t ts_profile_end_of_schedule = ts_start_of_schedule + profile.chargingSchedule.duration;
+        if (ts_profile_end_of_schedule < ts_end_of_schedule)
+        {
+            ts_end_of_schedule = ts_profile_end_of_schedule;
+        }
+    }
+
+    // Check if the profile is active
+    bool   found  = false;
+    size_t period = 0;
+    if (isProfileActive(connector, profile, period, time_point))
+    {
+        // Profile is active
+        found = true;
+    }
+    else
+    {
+        // Check start of schedule
+        if ((start_of_schedule <= ts_end_of_schedule) && isProfileValid(profile, start_of_schedule))
+        {
+            // Get the first period
+            period = 0;
+            found  = true;
+        }
+    }
+
+    // Check if a period has been found
+    if (found)
+    {
+        // Look for schedule periods
+        bool   end           = false;
+        time_t delta_start   = ts_start_of_schedule - ts_time_point;
+        time_t current_start = ((delta_start > 0) ? delta_start : 0);
+        do
+        {
+            // Current schedule period
+            const ChargingSchedulePeriod& schedule_period = profile.chargingSchedule.chargingSchedulePeriod[period];
+
+            // Create composite schedule period
+            Period p;
+            p.start    = current_start;
+            p.setpoint = schedule_period.limit;
+            p.unit     = profile.chargingSchedule.chargingRateUnit;
+            if (schedule_period.numberPhases.isSet())
+            {
+                p.nb_phases = schedule_period.numberPhases;
+            }
+            else
+            {
+                p.nb_phases = 3u; // Default, if not set is 3 phases charging
+            }
+
+            // Next period
+            period++;
+
+            // Compute duration
+            if (period == profile.chargingSchedule.chargingSchedulePeriod.size())
+            {
+                // Last period
+                p.duration = ts_end_of_schedule - (ts_time_point + p.start);
+                end        = true;
+            }
+            else
+            {
+                p.duration    = profile.chargingSchedule.chargingSchedulePeriod[period].startPeriod + delta_start - p.start;
+                current_start = p.start + p.duration;
+            }
+
+            // Add period
+            periods.push_back(p);
+        } while (!end);
+    }
+
+    return periods;
+}
+
+/** @brief Merge composite schedule periods */
+std::vector<SmartChargingManager::Period> SmartChargingManager::mergeProfilePeriods(const std::vector<Period>& ref_periods,
+                                                                                    const std::vector<Period>& new_periods)
+{
+    std::vector<Period> merged_periods;
+
+    // Check first merge
+    if (ref_periods.empty())
+    {
+        merged_periods = new_periods;
+    }
+    else
+    {
+        bool   error            = false;
+        size_t ref_period_index = 0;
+        for (size_t i = 0; (i < new_periods.size()) && !error; i++)
+        {
+            // Check if there are reference periods left
+            if (ref_period_index != ref_periods.size())
+            {
+                // Check if the new period is beginning before the reference period
+                if (new_periods[i].start < ref_periods[ref_period_index].start)
+                {
+                    if ((new_periods[i].start + new_periods[i].duration) < ref_periods[ref_period_index].start)
+                    {
+                        // The whole period is before the reference period
+                        merged_periods.push_back(new_periods[i]);
+                    }
+                    else
+                    {
+                        // A part of the period which overlapse the reference period
+                        Period p;
+                        p.start     = new_periods[i].start;
+                        p.duration  = ref_periods[ref_period_index].start - new_periods[i].start;
+                        p.setpoint  = new_periods[i].setpoint;
+                        p.unit      = new_periods[i].unit;
+                        p.nb_phases = new_periods[i].nb_phases;
+                        merged_periods.push_back(p);
+
+                        // Add all following consecutive reference periods
+                        const Period* previous = &p;
+                        while (ref_period_index != ref_periods.size())
+                        {
+                            const Period& ref_period = ref_periods[ref_period_index];
+                            if (ref_period.start == (previous->start + previous->duration))
+                            {
+                                merged_periods.push_back(ref_period);
+                                previous = &merged_periods.back();
+                                ref_period_index++;
+                            }
+                            else
+                            {
+                                // Non consecutive period
+                                error = true;
+                                break;
+                            }
+                        }
+
+                        // Check if the new period is still enabled
+                        if ((new_periods[i].start + new_periods[i].duration) > (previous->start + previous->duration))
+                        {
+                            // Restart computation for this period
+                            i--;
+                        }
+                    }
+                }
+                else
+                {
+                    // Add all following consecutive reference periods
+                    const Period* previous = nullptr;
+                    while (ref_period_index != ref_periods.size())
+                    {
+                        const Period& ref_period = ref_periods[ref_period_index];
+                        if (!previous || (ref_period.start == (previous->start + previous->duration)))
+                        {
+                            merged_periods.push_back(ref_period);
+                            previous = &merged_periods.back();
+                            ref_period_index++;
+                        }
+                        else
+                        {
+                            // Non consecutive period
+                            error = true;
+                            break;
+                        }
+                    }
+
+                    // Check if the new period is still enabled
+                    if ((new_periods[i].start + new_periods[i].duration) > (previous->start + previous->duration))
+                    {
+                        // Restart computation for this period
+                        i--;
+                    }
+                }
+            }
+            else
+            {
+                // No more reference periods, add the new periods at the end
+                const Period* last_period = &merged_periods.back();
+                if (((new_periods[i].start + new_periods[i].duration) > (last_period->start + last_period->duration)) &&
+                    ((new_periods[i].start < last_period->start) || (new_periods[i].start < (last_period->start + last_period->duration))))
+                {
+                    // Add the susbset of period after the last period
+                    Period p;
+                    p.start     = last_period->start + last_period->duration;
+                    p.duration  = new_periods[i].duration - (p.start - new_periods[i].start);
+                    p.setpoint  = new_periods[i].setpoint;
+                    p.unit      = new_periods[i].unit;
+                    p.nb_phases = new_periods[i].nb_phases;
+                    merged_periods.push_back(p);
+                }
+                else
+                {
+                    // Add the whole period
+                    if (new_periods[i].start == (last_period->start + last_period->duration))
+                    {
+                        merged_periods.push_back(new_periods[i]);
+                    }
+                    else
+                    {
+                        if (new_periods[i].start > (last_period->start + last_period->duration))
+                        {
+                            // Non consecutive period
+                            error = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (error || (ref_period_index != ref_periods.size()))
+        {
+            LOG_ERROR << "Unable to compute the composite schedule due to non continuous profiles periods";
+            merged_periods.clear();
+        }
+    }
+
+    return merged_periods;
 }
 
 } // namespace chargepoint
