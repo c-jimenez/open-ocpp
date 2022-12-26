@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Connectors.h"
 #include "GenericMessageSender.h"
 #include "IChargePointConfig.h"
+#include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
 #include "Logger.h"
 #include "WorkerThreadPool.h"
@@ -38,6 +39,7 @@ namespace chargepoint
 SmartChargingManager::SmartChargingManager(const ocpp::config::IChargePointConfig&         stack_config,
                                            ocpp::config::IOcppConfig&                      ocpp_config,
                                            ocpp::database::Database&                       database,
+                                           IChargePointEventsHandler&                      events_handler,
                                            ocpp::helpers::ITimerPool&                      timer_pool,
                                            ocpp::helpers::WorkerThreadPool&                worker_pool,
                                            Connectors&                                     connectors,
@@ -48,6 +50,7 @@ SmartChargingManager::SmartChargingManager(const ocpp::config::IChargePointConfi
       GenericMessageHandler<GetCompositeScheduleReq, GetCompositeScheduleConf>(GET_COMPOSITE_SCHEDULE_ACTION, messages_converter),
       m_stack_config(stack_config),
       m_ocpp_config(ocpp_config),
+      m_events_handler(events_handler),
       m_worker_pool(worker_pool),
       m_connectors(connectors),
       m_profile_db(ocpp_config, database),
@@ -391,6 +394,32 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
             {
                 break;
             }
+        }
+        if (periods.empty())
+        {
+            LOG_INFO << "No charging profiles for the requested period";
+        }
+
+        // Get local limitations
+        ChargingProfile local_profile;
+        local_profile.chargingProfileId      = 0;
+        local_profile.chargingProfileKind    = ChargingProfileKindType::Relative;
+        local_profile.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
+        local_profile.stackLevel             = 0;
+        if (m_events_handler.getLocalLimitationsSchedule(request.connectorId, request.duration, local_profile.chargingSchedule) &&
+            !local_profile.chargingSchedule.chargingSchedulePeriod.empty())
+        {
+            // Ensure profile is relative with the requested duration
+            local_profile.chargingSchedule.startSchedule.clear();
+            local_profile.chargingSchedule.duration = request.duration;
+
+            // Merge periods
+            std::vector<Period> local_periods = getProfilePeriods(connector, local_profile, now, request.duration);
+            periods                           = mergeLocalPeriods(periods, local_periods);
+        }
+        else
+        {
+            LOG_INFO << "No local limitations for the requested period";
         }
 
         // Create response
@@ -767,19 +796,22 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriod
     // Check if the profile is active
     bool   found  = false;
     size_t period = 0;
-    if (isProfileActive(connector, profile, period, time_point))
+    if (!profile.chargingSchedule.chargingSchedulePeriod.empty())
     {
-        // Profile is active
-        found = true;
-    }
-    else
-    {
-        // Check start of schedule
-        if ((start_of_schedule <= ts_end_of_schedule) && isProfileValid(profile, start_of_schedule))
+        if (isProfileActive(connector, profile, period, time_point))
         {
-            // Get the first period
-            period = 0;
-            found  = true;
+            // Profile is active
+            found = true;
+        }
+        else
+        {
+            // Check start of schedule
+            if ((start_of_schedule <= ts_end_of_schedule) && isProfileValid(profile, start_of_schedule))
+            {
+                // Get the first period
+                period = 0;
+                found  = true;
+            }
         }
     }
 
@@ -833,13 +865,13 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriod
     return periods;
 }
 
-/** @brief Merge composite schedule periods */
+/** @brief Merge charging profiles periods */
 std::vector<SmartChargingManager::Period> SmartChargingManager::mergeProfilePeriods(const std::vector<Period>& ref_periods,
                                                                                     const std::vector<Period>& new_periods)
 {
     std::vector<Period> merged_periods;
 
-    // Check first merge
+    // Check if a merge is needed
     if (ref_periods.empty())
     {
         merged_periods = new_periods;
@@ -964,12 +996,159 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeProfilePeri
         }
         if (error || (ref_period_index != ref_periods.size()))
         {
-            LOG_ERROR << "Unable to compute the composite schedule due to non continuous profiles periods";
+            LOG_WARNING << "Unable to compute the composite schedule due to non continuous profiles periods";
             merged_periods.clear();
         }
     }
 
     return merged_periods;
+}
+
+/** @brief Merge local limitations periods */
+std::vector<SmartChargingManager::Period> SmartChargingManager::mergeLocalPeriods(const std::vector<Period>& profiles_periods,
+                                                                                  const std::vector<Period>& local_periods)
+{
+    std::vector<Period> merged_periods;
+
+    // Check if a merge is needed
+    if (profiles_periods.empty())
+    {
+        merged_periods = local_periods;
+    }
+    else
+    {
+        bool   offset                    = false;
+        int    local_period_start        = 0;
+        int    local_period_start_offset = 0;
+        size_t profiles_period_index     = 0;
+        for (size_t i = 0; i < local_periods.size(); i++)
+        {
+            // Compute start of current local period
+            if (offset)
+            {
+                offset = false;
+            }
+            else
+            {
+                local_period_start        = local_periods[i].start;
+                local_period_start_offset = 0;
+            }
+
+            int local_period_end = local_period_start + (local_periods[i].duration - local_period_start_offset);
+            // Check if there are profiles periods left
+            if (profiles_period_index != profiles_periods.size())
+            {
+                if (local_period_end <= profiles_periods[profiles_period_index].start)
+                {
+                    // The whole period is before the profile period
+                    addMergedPeriod(local_periods[i], merged_periods);
+                }
+                else if (local_period_start >= profiles_periods[profiles_period_index].start)
+                {
+                    int profiles_period_end =
+                        profiles_periods[profiles_period_index].start + profiles_periods[profiles_period_index].duration;
+                    if (local_period_end <= profiles_period_end)
+                    {
+                        // The whole period is included inside the profile period
+                        Period p;
+                        p.start    = local_period_start;
+                        p.duration = local_periods[i].duration - local_period_start_offset;
+                        mergeSetpoint(profiles_periods[profiles_period_index], local_periods[i], p);
+                        addMergedPeriod(p, merged_periods);
+                    }
+                    else
+                    {
+                        // The period is across profile periods
+                        Period p;
+                        p.start    = local_period_start;
+                        p.duration = profiles_period_end - local_period_start;
+                        mergeSetpoint(profiles_periods[profiles_period_index], local_periods[i], p);
+                        addMergedPeriod(p, merged_periods);
+
+                        // Next profiles period but keep working on the same local period
+                        local_period_start        = p.start + p.duration;
+                        local_period_start_offset = local_period_start - local_periods[i].start;
+                        offset                    = true;
+                        profiles_period_index++;
+                        i--;
+                    }
+                }
+                else
+                {
+                    // A part of the local period which overlapse the profile period
+                    Period p;
+                    p.start     = local_periods[i].start;
+                    p.duration  = profiles_periods[profiles_period_index].start - local_periods[i].start;
+                    p.setpoint  = local_periods[i].setpoint;
+                    p.unit      = local_periods[i].unit;
+                    p.nb_phases = local_periods[i].nb_phases;
+                    addMergedPeriod(p, merged_periods);
+
+                    // Keep working on the same local period
+                    local_period_start        = p.start + p.duration;
+                    local_period_start_offset = local_period_start - local_periods[i].start;
+                    offset                    = true;
+                    i--;
+                }
+            }
+            else
+            {
+                // A local period without merge
+                Period p;
+                p.start     = local_period_start;
+                p.duration  = local_periods[i].duration - local_period_start_offset;
+                p.setpoint  = local_periods[i].setpoint;
+                p.unit      = local_periods[i].unit;
+                p.nb_phases = local_periods[i].nb_phases;
+                addMergedPeriod(p, merged_periods);
+            }
+        }
+    }
+    return merged_periods;
+}
+
+/** @brief Merge the setpoint of a local limitation and a profile limitation */
+void SmartChargingManager::mergeSetpoint(const Period& profile_period, const Period& local_period, Period& merged_period)
+{
+    float profile_setpoint = profile_period.setpoint;
+    if (profile_period.unit != local_period.unit)
+    {
+        profile_setpoint = convertToUnit(profile_period.setpoint, local_period.unit, profile_period.nb_phases);
+    }
+    if (local_period.setpoint < profile_setpoint)
+    {
+        merged_period.setpoint  = local_period.setpoint;
+        merged_period.unit      = local_period.unit;
+        merged_period.nb_phases = local_period.nb_phases;
+    }
+    else
+    {
+        merged_period.setpoint  = profile_period.setpoint;
+        merged_period.unit      = profile_period.unit;
+        merged_period.nb_phases = profile_period.nb_phases;
+    }
+}
+
+/** @brief Add a local limitation and profiles limitations merged period */
+void SmartChargingManager::addMergedPeriod(const Period& merged_period, std::vector<Period>& periods)
+{
+    if (periods.empty())
+    {
+        periods.push_back(merged_period);
+    }
+    else
+    {
+        Period& last_period = periods.back();
+        if ((last_period.setpoint == merged_period.setpoint) && (last_period.unit == merged_period.unit) &&
+            (last_period.nb_phases == merged_period.nb_phases))
+        {
+            last_period.duration += merged_period.duration;
+        }
+        else
+        {
+            periods.push_back(merged_period);
+        }
+    }
 }
 
 } // namespace chargepoint

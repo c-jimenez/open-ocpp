@@ -54,6 +54,7 @@ namespace chargepoint
 
 class Connectors;
 struct Connector;
+class IChargePointEventsHandler;
 
 /** @brief Handle smart charging for the charge point */
 class SmartChargingManager
@@ -68,6 +69,7 @@ class SmartChargingManager
     SmartChargingManager(const ocpp::config::IChargePointConfig&         stack_config,
                          ocpp::config::IOcppConfig&                      ocpp_config,
                          ocpp::database::Database&                       database,
+                         IChargePointEventsHandler&                      events_handler,
                          ocpp::helpers::ITimerPool&                      timer_pool,
                          ocpp::helpers::WorkerThreadPool&                worker_pool,
                          Connectors&                                     connectors,
@@ -134,6 +136,8 @@ class SmartChargingManager
     const ocpp::config::IChargePointConfig& m_stack_config;
     /** @brief Standard OCPP configuration */
     ocpp::config::IOcppConfig& m_ocpp_config;
+    /** @brief User defined events handler */
+    IChargePointEventsHandler& m_events_handler;
     /** @brief Worker thread pool */
     ocpp::helpers::WorkerThreadPool& m_worker_pool;
     /** @brief Connectors */
@@ -204,8 +208,17 @@ class SmartChargingManager
                                           const ocpp::types::DateTime&        time_point,
                                           unsigned int                        duration);
 
-    /** @brief Merge composite schedule periods */
+    /** @brief Merge charging profiles periods */
     std::vector<Period> mergeProfilePeriods(const std::vector<Period>& ref_periods, const std::vector<Period>& new_periods);
+
+    /** @brief Merge local limitations periods */
+    std::vector<Period> mergeLocalPeriods(const std::vector<Period>& profiles_periods, const std::vector<Period>& local_periods);
+
+    /** @brief Merge the setpoint of a local limitation and a profile limitation */
+    void mergeSetpoint(const Period& profile_period, const Period& local_period, Period& merged_period);
+
+    /** @brief Add a local limitation and profiles limitations merged period */
+    void addMergedPeriod(const Period& merged_period, std::vector<Period>& periods);
 };
 
 } // namespace chargepoint

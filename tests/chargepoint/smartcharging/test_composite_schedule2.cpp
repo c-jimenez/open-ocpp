@@ -108,7 +108,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - overlapping before")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -189,7 +189,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - contiguous before")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -267,7 +267,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - overlapping after")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -345,7 +345,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - contiguous after")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -423,7 +423,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - reference + 1 period overlapping")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -492,7 +492,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - reference + 1 period same start")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -557,7 +557,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - reference + non contiguous before")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -605,7 +605,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     TEST_CASE("2 profiles - reference + non contiguous after")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 

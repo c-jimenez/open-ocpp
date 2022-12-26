@@ -157,6 +157,16 @@ void ChargePointEventsHandlerStub::transactionDeAuthorized(unsigned int connecto
     m_calls["transactionDeAuthorized"] = {{"connector_id", std::to_string(connector_id)}};
 }
 
+/** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ChargingSchedule&) */
+bool ChargePointEventsHandlerStub::getLocalLimitationsSchedule(unsigned int                   connector_id,
+                                                               unsigned int                   duration,
+                                                               ocpp::types::ChargingSchedule& schedule)
+{
+    (void)schedule;
+    m_calls["getLocalLimitationsSchedule"] = {{"connector_id", std::to_string(connector_id)}, {"duration", std::to_string(duration)}};
+    return false;
+}
+
 /** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
 bool ChargePointEventsHandlerStub::resetRequested(ocpp::types::ResetType reset_type)
 {

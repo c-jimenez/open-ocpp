@@ -83,6 +83,9 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     /** @copydoc void IChargePointEventsHandler::transactionDeAuthorized(unsigned int) */
     void transactionDeAuthorized(unsigned int connector_id) override;
 
+    /** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ChargingSchedule&) */
+    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) override;
+
     /** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
     bool resetRequested(ocpp::types::ResetType reset_type) override;
 

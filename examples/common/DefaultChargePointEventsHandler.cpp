@@ -181,6 +181,16 @@ void DefaultChargePointEventsHandler::transactionDeAuthorized(unsigned int conne
     cout << "Transaction deauthorized on connector : " << connector_id << endl;
 }
 
+/** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, ocpp::types::ChargingSchedule&) */
+bool DefaultChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int                   connector_id,
+                                                                  unsigned int                   duration,
+                                                                  ocpp::types::ChargingSchedule& schedule)
+{
+    (void)schedule;
+    cout << "Local limitations schedule requested : " << connector_id << " - " << duration << endl;
+    return false;
+}
+
 /** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
 bool DefaultChargePointEventsHandler::resetRequested(ocpp::types::ResetType reset_type)
 {

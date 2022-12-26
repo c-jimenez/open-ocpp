@@ -108,7 +108,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 relative profile - no duration")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -153,7 +153,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 relative profile - no duration - rate unit conversion")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -200,7 +200,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 relative profile - duration less than asked")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -246,7 +246,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 relative profile - duration more than asked")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -292,7 +292,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 absolute profile - after - no duration")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -339,7 +339,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 absolute profile - before - no duration")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 
@@ -389,7 +389,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     TEST_CASE("1 absolute profile - before - duration less than asked")
     {
         SmartChargingManager smartcharging_mgr(
-            stack_config, ocpp_config, database, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
 
         DateTime now = DateTime::now();
 

@@ -279,6 +279,7 @@ bool ChargePoint::start()
             m_smart_charging_manager = std::make_unique<SmartChargingManager>(m_stack_config,
                                                                               m_ocpp_config,
                                                                               m_database,
+                                                                              m_events_handler,
                                                                               *m_timer_pool,
                                                                               *m_worker_pool,
                                                                               m_connectors,

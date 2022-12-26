@@ -648,6 +648,21 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
     void transactionDeAuthorized(unsigned int connector_id) override { (void)connector_id; }
 
     /**
+     * @brief Called on reception of a GetCompositeSchedule request
+     * @param connector_id Id of the concerned connector
+     * @param duration Duration in seconds of the schedule
+     * @param schedule Schedule containing the local limitations for the requested duration
+     * @return true if a schedule has been defined, false if there are no local limitations for the requested duration
+     */
+    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) override
+    {
+        (void)connector_id;
+        (void)duration;
+        (void)schedule;
+        return false;
+    }
+
+    /**
      * @brief Called on a reset request from the Central System
      * @param reset_type Type of reset
      * @return true if the request is accepted, false otherwise

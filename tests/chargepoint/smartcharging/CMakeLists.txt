@@ -16,6 +16,12 @@ add_test(
   NAME test_composite_schedule2
   COMMAND test_composite_schedule2
 )
+add_executable(test_composite_schedule3 test_composite_schedule3.cpp)
+target_link_libraries(test_composite_schedule3 unit_tests_stubs doctest sqlite3 pthread dl )
+add_test(
+  NAME test_composite_schedule3
+  COMMAND test_composite_schedule3
+)
 
 # Unit tests for ProfileDatabase class
 add_executable(test_profile_database test_profile_database.cpp)
