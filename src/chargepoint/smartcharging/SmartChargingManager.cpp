@@ -354,16 +354,19 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                                          std::string&                                   error_code,
                                          std::string&                                   error_message)
 {
-    bool ret = false;
     (void)error_code;
+    (void)error_message;
 
     LOG_INFO << "GetCompositeSchedule requested : connectorId = " << request.connectorId << " - duration = " << request.duration
              << " - chargingRateUnit = "
              << (request.chargingRateUnit.isSet() ? ChargingRateUnitTypeHelper.toString(request.chargingRateUnit) : "not set");
 
+    // Prepare response
+    response.status = GetCompositeScheduleStatus::Rejected;
+
     // Get connector
     Connector* connector = m_connectors.getConnector(request.connectorId);
-    if (connector)
+    if (connector || (request.connectorId == 0u))
     {
         // Get profiles list
         std::vector<const ProfileDatabase::ChargingProfileList*> profile_lists;
@@ -378,12 +381,16 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
         DateTime            now = DateTime::now();
         for (auto& profile_list : profile_lists)
         {
+            unsigned int stack_level = std::numeric_limits<unsigned int>::max();
             for (const auto& profile : (*profile_list))
             {
-                if (profile.first == request.connectorId)
+                // Add the profile if it matches the selected connector
+                // or take the profile installed for connector 0 if it doesn't exists
+                if ((profile.first == request.connectorId) || ((profile.first == 0u) && (stack_level != profile.second.stackLevel)))
                 {
                     std::vector<Period> profile_periods = getProfilePeriods(connector, profile.second, now, request.duration);
                     periods                             = mergeProfilePeriods(periods, profile_periods);
+                    stack_level                         = profile.second.stackLevel;
                     if (periods.empty())
                     {
                         break;
@@ -462,19 +469,16 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
         else
         {
             // No profiles, couldn't compute any schedule
-            response.status = GetCompositeScheduleStatus::Rejected;
         }
-
-        ret = true;
     }
     else
     {
-        error_message = "Invalid connector id";
+        LOG_ERROR << "Invalid connector id : " << request.connectorId;
     }
 
     LOG_INFO << "GetCompositeSchedule status : " << GetCompositeScheduleStatusHelper.toString(response.status);
 
-    return ret;
+    return true;
 }
 
 /** @brief Periodically cleanup expired profiles */
@@ -853,7 +857,13 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriod
             }
             else
             {
-                p.duration    = profile.chargingSchedule.chargingSchedulePeriod[period].startPeriod + delta_start - p.start;
+                p.duration = profile.chargingSchedule.chargingSchedulePeriod[period].startPeriod + delta_start - p.start;
+                if ((p.start + p.duration + ts_time_point) >= ts_end_of_schedule)
+                {
+                    // The current period ends after the requested schedule end
+                    p.duration = ts_end_of_schedule - (p.start + ts_time_point);
+                    end        = true;
+                }
                 current_start = p.start + p.duration;
             }
 

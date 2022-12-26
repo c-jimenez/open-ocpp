@@ -43,7 +43,7 @@ TEST_SUITE("Profile database")
         CHECK(database.open(DATABASE_PATH));
     }
 
-    TEST_CASE("Profile stacking")
+    TEST_CASE("Profile installation")
     {
         OcppConfigStub ocpp_config;
 
@@ -79,17 +79,17 @@ TEST_SUITE("Profile database")
         profiles.push_back(&profile5);
 
         ChargingProfile profile6;
-        profile6.chargingProfileId      = 6;
-        profile6.stackLevel             = 6;
+        profile6.chargingProfileId                 = 6;
+        profile6.stackLevel                        = 6;
         profile6.chargingProfileKind               = ChargingProfileKindType::Absolute;
-        profile6.chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+        profile6.chargingProfilePurpose            = ChargingProfilePurposeType::TxProfile;
         profile6.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
 
         // Tx profiles
         for (size_t i = 0; i < profiles.size(); i++)
         {
             profiles[i]->chargingProfileKind               = ChargingProfileKindType::Absolute;
-            profiles[i]->chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+            profiles[i]->chargingProfilePurpose            = ChargingProfilePurposeType::TxProfile;
             profiles[i]->chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
             CHECK(profile_db.install(1u, *profiles[i]));
         }
@@ -154,6 +154,83 @@ TEST_SUITE("Profile database")
         }
 
         // Clear profiles
+        profile_db.clear(Optional<int>(), 1u);
+        CHECK_EQ(profile_db.txProfiles().size(), 0u);
+        CHECK_EQ(profile_db.txDefaultProfiles().size(), 0u);
+        CHECK_EQ(profile_db.chargePointMaxProfiles().size(), 0u);
+    }
+
+    TEST_CASE("Profile stacking")
+    {
+        OcppConfigStub ocpp_config;
+
+        ocpp_config.setConfigValue("MaxChargingProfilesInstalled", "5");
+
+        ProfileDatabase profile_db(ocpp_config, database);
+
+        std::vector<ChargingProfile*> profiles;
+
+        ChargingProfile profile1;
+        profile1.stackLevel = 5;
+        profiles.push_back(&profile1);
+
+        ChargingProfile profile2;
+        profile2.stackLevel = 5;
+        profiles.push_back(&profile2);
+
+        ChargingProfile profile3;
+        profile3.stackLevel = 3;
+        profiles.push_back(&profile3);
+
+        ChargingProfile profile4;
+        profile4.stackLevel = 3;
+        profiles.push_back(&profile4);
+
+        ChargingProfile profile5;
+        profile5.stackLevel = 2;
+        profiles.push_back(&profile5);
+
+        for (size_t i = 0; i < profiles.size(); i++)
+        {
+            profiles[i]->chargingProfileId                 = i;
+            profiles[i]->chargingProfileKind               = ChargingProfileKindType::Absolute;
+            profiles[i]->chargingProfilePurpose            = ChargingProfilePurposeType::TxProfile;
+            profiles[i]->chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        }
+
+        CHECK(profile_db.install(0u, profile5));
+        CHECK(profile_db.install(1u, profile3));
+        CHECK(profile_db.install(0u, profile1));
+        CHECK(profile_db.install(0u, profile4));
+        CHECK(profile_db.install(1u, profile2));
+        CHECK_EQ(profile_db.txProfiles().size(), 5u);
+
+        // Stacking order
+        auto iter = profile_db.txProfiles().cbegin();
+
+        CHECK_EQ(iter->first, 1u);
+        CHECK_EQ(iter->second.chargingProfileId, 1);
+        CHECK_EQ(iter->second.stackLevel, 5);
+        ++iter;
+        CHECK_EQ(iter->first, 0u);
+        CHECK_EQ(iter->second.chargingProfileId, 0);
+        CHECK_EQ(iter->second.stackLevel, 5);
+        ++iter;
+        CHECK_EQ(iter->first, 1u);
+        CHECK_EQ(iter->second.chargingProfileId, 2);
+        CHECK_EQ(iter->second.stackLevel, 3);
+        ++iter;
+        CHECK_EQ(iter->first, 0u);
+        CHECK_EQ(iter->second.chargingProfileId, 3);
+        CHECK_EQ(iter->second.stackLevel, 3);
+        ++iter;
+        CHECK_EQ(iter->first, 0u);
+        CHECK_EQ(iter->second.chargingProfileId, 4);
+        CHECK_EQ(iter->second.stackLevel, 2);
+        ++iter;
+
+        // Clear profiles
+        profile_db.clear(Optional<int>(), 0u);
         profile_db.clear(Optional<int>(), 1u);
         CHECK_EQ(profile_db.txProfiles().size(), 0u);
         CHECK_EQ(profile_db.txDefaultProfiles().size(), 0u);

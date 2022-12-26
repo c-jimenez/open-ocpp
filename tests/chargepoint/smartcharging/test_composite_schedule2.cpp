@@ -74,6 +74,15 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         connectors.initDatabaseTable();
     }
 
+    void clearAllProfiles(SmartChargingManager & smartcharging_mgr)
+    {
+        ClearChargingProfileReq  clearprofiles_req;
+        ClearChargingProfileConf clearprofiles_conf;
+        std::string              error_code;
+        std::string              error_message;
+        smartcharging_mgr.handleMessage(clearprofiles_req, clearprofiles_conf, error_code, error_message);
+    }
+
     bool installProfile(unsigned int connector_id, const ChargingProfile& profile, SmartChargingManager& smartcharging_mgr)
     {
         SetChargingProfileReq setprofile_req;
@@ -109,6 +118,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -190,6 +200,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -268,6 +279,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -346,6 +358,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -424,6 +437,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -493,6 +507,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -558,6 +573,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -606,6 +622,7 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -648,6 +665,183 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
 
         ChargingSchedule schedule;
         CHECK_FALSE(getCompositeSchedule(1, 3600, ChargingRateUnitType::A, schedule, smartcharging_mgr));
+    }
+
+    TEST_CASE("2 profiles  - 1 TxProfile + 1 TxDefaultProfile")
+    {
+        SmartChargingManager smartcharging_mgr(
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
+
+        DateTime now = DateTime::now();
+
+        Connector* connector         = connectors.getConnector(1);
+        connector->transaction_id    = 1;
+        connector->transaction_start = DateTime(now.timestamp() - 100);
+
+        ChargingProfile profile1;
+        profile1.chargingProfileId      = 1;
+        profile1.stackLevel             = 5;
+        profile1.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
+        profile1.chargingProfileKind    = ChargingProfileKindType::Absolute;
+
+        ChargingSchedulePeriod charging_period;
+        charging_period.limit        = 16.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 1;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 10.f;
+        charging_period.startPeriod  = 1000;
+        charging_period.numberPhases = 2;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 32.f;
+        charging_period.startPeriod  = 1700;
+        charging_period.numberPhases = 3;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile1.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        profile1.chargingSchedule.startSchedule    = DateTime(now.timestamp() + 300);
+        profile1.chargingSchedule.duration         = 2000;
+        CHECK(installProfile(1, profile1, smartcharging_mgr));
+
+        ChargingProfile profile2;
+        profile2.chargingProfileId      = 2;
+        profile2.stackLevel             = 4;
+        profile2.chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+        profile2.chargingProfileKind    = ChargingProfileKindType::Relative;
+
+        charging_period.limit        = 8.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 2;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 20.f;
+        charging_period.startPeriod  = 200;
+        charging_period.numberPhases = 3;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 18.f;
+        charging_period.startPeriod  = 500;
+        charging_period.numberPhases = 3;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile2.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        CHECK(installProfile(1, profile2, smartcharging_mgr));
+
+        ChargingSchedule schedule;
+        CHECK(getCompositeSchedule(1, 3600, ChargingRateUnitType::A, schedule, smartcharging_mgr));
+
+        CHECK_EQ(schedule.duration, 3600);
+        CHECK_EQ(schedule.chargingRateUnit, ChargingRateUnitType::A);
+        CHECK_GE(schedule.startSchedule.value(), now);
+        CHECK_LE(schedule.startSchedule.value(), DateTime(now.timestamp() + 1));
+        CHECK_EQ(schedule.chargingSchedulePeriod.size(), 3);
+
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].startPeriod, 0);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].limit, 8.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].numberPhases.value(), 2);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].startPeriod, 100);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].limit, 20.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].numberPhases.value(), 3);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].startPeriod, 400);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].limit, 18.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].numberPhases.value(), 3);
+    }
+
+    TEST_CASE("3 profiles  - 1 TxProfile connector 1 + 1 TxDefaultProfile connector 0 + 1 TxDefaultProfile connector 1")
+    {
+        SmartChargingManager smartcharging_mgr(
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
+
+        DateTime now = DateTime::now();
+
+        Connector* connector         = connectors.getConnector(1);
+        connector->transaction_id    = 1;
+        connector->transaction_start = DateTime(now.timestamp() - 100);
+
+        ChargingProfile profile1;
+        profile1.chargingProfileId      = 1;
+        profile1.stackLevel             = 5;
+        profile1.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
+        profile1.chargingProfileKind    = ChargingProfileKindType::Absolute;
+
+        ChargingSchedulePeriod charging_period;
+        charging_period.limit        = 5.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 1;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 13.f;
+        charging_period.startPeriod  = 1000;
+        charging_period.numberPhases = 2;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 25.f;
+        charging_period.startPeriod  = 1700;
+        charging_period.numberPhases = 3;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile1.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        profile1.chargingSchedule.startSchedule    = DateTime(now.timestamp() + 300);
+        profile1.chargingSchedule.duration         = 2000;
+        CHECK(installProfile(0, profile1, smartcharging_mgr));
+
+        ChargingProfile profile2;
+        profile2.chargingProfileId      = 2;
+        profile2.stackLevel             = 5;
+        profile2.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
+        profile2.chargingProfileKind    = ChargingProfileKindType::Absolute;
+
+        charging_period.limit        = 16.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 1;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 10.f;
+        charging_period.startPeriod  = 1000;
+        charging_period.numberPhases = 2;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 32.f;
+        charging_period.startPeriod  = 1700;
+        charging_period.numberPhases = 3;
+        profile2.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile2.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        profile2.chargingSchedule.startSchedule    = DateTime(now.timestamp() + 300);
+        profile2.chargingSchedule.duration         = 2000;
+        CHECK(installProfile(1, profile2, smartcharging_mgr));
+
+        ChargingProfile profile3;
+        profile3.chargingProfileId      = 3;
+        profile3.stackLevel             = 4;
+        profile3.chargingProfilePurpose = ChargingProfilePurposeType::TxProfile;
+        profile3.chargingProfileKind    = ChargingProfileKindType::Relative;
+
+        charging_period.limit        = 8.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 2;
+        profile3.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 20.f;
+        charging_period.startPeriod  = 200;
+        charging_period.numberPhases = 3;
+        profile3.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 18.f;
+        charging_period.startPeriod  = 500;
+        charging_period.numberPhases = 3;
+        profile3.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile3.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        CHECK(installProfile(1, profile3, smartcharging_mgr));
+
+        ChargingSchedule schedule;
+        CHECK(getCompositeSchedule(1, 3600, ChargingRateUnitType::A, schedule, smartcharging_mgr));
+
+        CHECK_EQ(schedule.duration, 3600);
+        CHECK_EQ(schedule.chargingRateUnit, ChargingRateUnitType::A);
+        CHECK_GE(schedule.startSchedule.value(), now);
+        CHECK_LE(schedule.startSchedule.value(), DateTime(now.timestamp() + 1));
+        CHECK_EQ(schedule.chargingSchedulePeriod.size(), 3);
+
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].startPeriod, 0);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].limit, 8.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].numberPhases.value(), 2);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].startPeriod, 100);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].limit, 20.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].numberPhases.value(), 3);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].startPeriod, 400);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].limit, 18.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].numberPhases.value(), 3);
     }
 
     TEST_CASE("Cleanup")

@@ -74,6 +74,15 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
         connectors.initDatabaseTable();
     }
 
+    void clearAllProfiles(SmartChargingManager & smartcharging_mgr)
+    {
+        ClearChargingProfileReq  clearprofiles_req;
+        ClearChargingProfileConf clearprofiles_conf;
+        std::string              error_code;
+        std::string              error_message;
+        smartcharging_mgr.handleMessage(clearprofiles_req, clearprofiles_conf, error_code, error_message);
+    }
+
     bool installProfile(unsigned int connector_id, const ChargingProfile& profile, SmartChargingManager& smartcharging_mgr)
     {
         SetChargingProfileReq setprofile_req;
@@ -109,6 +118,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -154,6 +164,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -201,6 +212,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -247,6 +259,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         ChargingProfile profile1;
         profile1.chargingProfileId      = 1;
@@ -267,6 +280,10 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
         charging_period.startPeriod  = 1700;
         charging_period.numberPhases = 3;
         profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 24.f;
+        charging_period.startPeriod  = 3700;
+        charging_period.numberPhases = 1;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
         profile1.chargingSchedule.duration         = 5000;
         profile1.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
         CHECK(installProfile(1, profile1, smartcharging_mgr));
@@ -279,9 +296,9 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
         CHECK_EQ(schedule.chargingRateUnit, ChargingRateUnitType::A);
         CHECK_GE(schedule.startSchedule.value(), now);
         CHECK_LE(schedule.startSchedule.value(), DateTime(now.timestamp() + 1));
-        CHECK_EQ(schedule.chargingSchedulePeriod.size(), profile1.chargingSchedule.chargingSchedulePeriod.size());
+        CHECK_EQ(schedule.chargingSchedulePeriod.size(), profile1.chargingSchedule.chargingSchedulePeriod.size() - 1);
 
-        for (size_t i = 0; i < profile1.chargingSchedule.chargingSchedulePeriod.size(); i++)
+        for (size_t i = 0; i < profile1.chargingSchedule.chargingSchedulePeriod.size() - 1; i++)
         {
             CHECK_EQ(schedule.chargingSchedulePeriod[i].startPeriod, profile1.chargingSchedule.chargingSchedulePeriod[i].startPeriod);
             CHECK_EQ(schedule.chargingSchedulePeriod[i].limit, profile1.chargingSchedule.chargingSchedulePeriod[i].limit);
@@ -293,6 +310,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -340,6 +358,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
@@ -390,6 +409,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
     {
         SmartChargingManager smartcharging_mgr(
             stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
 
         DateTime now = DateTime::now();
 
