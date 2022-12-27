@@ -60,7 +60,7 @@ This implementation is based on the following libraries :
 
 As of this version :
 
-* All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
+* All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
 * All the messages defined in the OCPP 1.6 security whitepaper edition 2 have been implemented
 * All the messages defined in the Using ISO 15118 Plug & Charge with OCPP 1.6 Application Note v1.0 have been implemented
@@ -93,7 +93,7 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Charge Point role |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for connector 0 in Charge Point role |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
 ### Supported OCPP configuration keys

@@ -54,6 +54,7 @@ namespace chargepoint
 
 class Connectors;
 struct Connector;
+class IChargePointEventsHandler;
 
 /** @brief Handle smart charging for the charge point */
 class SmartChargingManager
@@ -68,6 +69,7 @@ class SmartChargingManager
     SmartChargingManager(const ocpp::config::IChargePointConfig&         stack_config,
                          ocpp::config::IOcppConfig&                      ocpp_config,
                          ocpp::database::Database&                       database,
+                         IChargePointEventsHandler&                      events_handler,
                          ocpp::helpers::ITimerPool&                      timer_pool,
                          ocpp::helpers::WorkerThreadPool&                worker_pool,
                          Connectors&                                     connectors,
@@ -134,6 +136,8 @@ class SmartChargingManager
     const ocpp::config::IChargePointConfig& m_stack_config;
     /** @brief Standard OCPP configuration */
     ocpp::config::IOcppConfig& m_ocpp_config;
+    /** @brief User defined events handler */
+    IChargePointEventsHandler& m_events_handler;
     /** @brief Worker thread pool */
     ocpp::helpers::WorkerThreadPool& m_worker_pool;
     /** @brief Connectors */
@@ -147,6 +151,21 @@ class SmartChargingManager
     /** @brief Profile cleanup timer */
     ocpp::helpers::Timer m_cleanup_timer;
 
+    /** @brief Composite schedule period */
+    struct Period
+    {
+        /** @brief Number of seconds since the start */
+        int start;
+        /** @brief Duration in seconds of the period */
+        int duration;
+        /** @brief Setpoint for the period */
+        float setpoint;
+        /** @brief Unit of the setpoint for the period */
+        ocpp::types::ChargingRateUnitType unit;
+        /** @brief Number of phases */
+        unsigned int nb_phases;
+    };
+
     /** @brief Periodically cleanup expired profiles */
     void cleanupProfiles();
 
@@ -157,9 +176,10 @@ class SmartChargingManager
                          const ProfileDatabase::ChargingProfileList&                profiles_list);
 
     /** @brief Check if the given profile is active */
-    bool isProfileActive(Connector*                                  connector,
-                         const ocpp::types::ChargingProfile&         profile,
-                         const ocpp::types::ChargingSchedulePeriod*& period);
+    bool isProfileActive(Connector*                          connector,
+                         const ocpp::types::ChargingProfile& profile,
+                         size_t&                             period,
+                         const ocpp::types::DateTime&        time_point);
 
     /** @brief Fill a setpoint structure with a charging profile and a charging schedule period */
     void fillSetpoint(ocpp::types::SmartChargingSetpoint&        setpoint,
@@ -169,6 +189,36 @@ class SmartChargingManager
 
     /** @brief Convert charging rate units */
     float convertToUnit(float value, ocpp::types::ChargingRateUnitType unit, unsigned int number_phases);
+
+    /** @brief Indicate if a charging profile is valid at a given point in time */
+    bool isProfileValid(const ocpp::types::ChargingProfile& profile, const ocpp::types::DateTime& time_point);
+
+    /** @brief Get the kind of charging profile */
+    ocpp::types::ChargingProfileKindType getProfileKind(const ocpp::types::ChargingProfile& profile);
+
+    /** @brief Get the start time of a charging profile schedule */
+    ocpp::types::DateTime getProfileStartTime(Connector*                           connector,
+                                              const ocpp::types::ChargingProfile&  profile,
+                                              ocpp::types::ChargingProfileKindType kind,
+                                              const ocpp::types::DateTime&         time_point);
+
+    /** @brief Get the composite schedule periods corresponding to a charging profile */
+    std::vector<Period> getProfilePeriods(Connector*                          connector,
+                                          const ocpp::types::ChargingProfile& profile,
+                                          const ocpp::types::DateTime&        time_point,
+                                          unsigned int                        duration);
+
+    /** @brief Merge charging profiles periods */
+    std::vector<Period> mergeProfilePeriods(const std::vector<Period>& ref_periods, const std::vector<Period>& new_periods);
+
+    /** @brief Merge local limitations periods */
+    std::vector<Period> mergeLocalPeriods(const std::vector<Period>& profiles_periods, const std::vector<Period>& local_periods);
+
+    /** @brief Merge the setpoint of a local limitation and a profile limitation */
+    void mergeSetpoint(const Period& profile_period, const Period& local_period, Period& merged_period);
+
+    /** @brief Add a local limitation and profiles limitations merged period */
+    void addMergedPeriod(const Period& merged_period, std::vector<Period>& periods);
 };
 
 } // namespace chargepoint

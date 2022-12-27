@@ -20,6 +20,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_ICHARGEPOINTEVENTSHANDLER_H
 
 #include "Certificate.h"
+#include "ChargingSchedule.h"
 #include "DateTime.h"
 #include "Enums.h"
 #include "MeterValue.h"
@@ -136,6 +137,15 @@ class IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      */
     virtual void transactionDeAuthorized(unsigned int connector_id) = 0;
+
+    /**
+     * @brief Called on reception of a GetCompositeSchedule request
+     * @param connector_id Id of the concerned connector
+     * @param duration Duration in seconds of the schedule
+     * @param schedule Schedule containing the local limitations for the requested duration
+     * @return true if a schedule has been defined, false if there are no local limitations for the requested duration
+     */
+    virtual bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) = 0;
 
     /**
      * @brief Called on a reset request from the Central System
