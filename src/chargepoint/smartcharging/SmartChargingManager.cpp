@@ -105,15 +105,12 @@ bool SmartChargingManager::getSetpoint(unsigned int                             
             }
         }
 
-        // Compute connector setpoint if a transaction is active on the connector
+        // Compute connector setpoint
         connector_setpoint.clear();
-        if (connector->transaction_id != 0)
+        computeSetpoint(connector, connector_setpoint, unit, m_profile_db.txProfiles());
+        if (!connector_setpoint.isSet())
         {
-            computeSetpoint(connector, connector_setpoint, unit, m_profile_db.txProfiles());
-            if (!connector_setpoint.isSet())
-            {
-                computeSetpoint(connector, connector_setpoint, unit, m_profile_db.txDefaultProfiles());
-            }
+            computeSetpoint(connector, connector_setpoint, unit, m_profile_db.txDefaultProfiles());
         }
 
         // Connector setpoint cannot be greater than charge point setpoint
@@ -541,16 +538,8 @@ void SmartChargingManager::computeSetpoint(Connector*                           
                                            ocpp::types::ChargingRateUnitType                          unit,
                                            const ProfileDatabase::ChargingProfileList&                profiles_list)
 {
-    unsigned int level = 0;
     for (const auto& profile : profiles_list)
     {
-        // Check if the profile has been found
-        if (connector_setpoint.isSet() && (profile.second.stackLevel < level))
-        {
-            // Profile found
-            break;
-        }
-
         // Check connector
         if ((profile.first == connector->id) || (profile.first == 0))
         {
@@ -560,19 +549,8 @@ void SmartChargingManager::computeSetpoint(Connector*                           
             {
                 // Apply setpoint
                 fillSetpoint(connector_setpoint, unit, profile.second, profile.second.chargingSchedule.chargingSchedulePeriod[period]);
-            }
 
-            // Check connector type
-            if (profile.first == 0)
-            {
-                // Any connector profile, save stack level in case of a connector specific
-                // profile with the same stack level exists
-                level = profile.second.stackLevel;
-            }
-            else
-            {
-                // Connector specific profile, stop search since it has highest priority
-                // over any connector profile
+                // Highest applicable profile found
                 break;
             }
         }
@@ -598,7 +576,7 @@ bool SmartChargingManager::isProfileActive(Connector*                          c
 
         // Check schedule validity
         if ((start_of_schedule <= time_point) &&
-            (!profile.chargingSchedule.duration.isSet() || ((start_of_schedule + profile.chargingSchedule.duration) <= time_point)))
+            (!profile.chargingSchedule.duration.isSet() || ((start_of_schedule + profile.chargingSchedule.duration) >= time_point)))
         {
             // Look for the matching period
             const auto& schedule_periods = profile.chargingSchedule.chargingSchedulePeriod;

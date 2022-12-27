@@ -30,3 +30,11 @@ add_test(
   NAME test_profile_database
   COMMAND test_profile_database
 )
+
+# Unit tests for smartcharging setpoint
+add_executable(test_smartcharging_setpoint test_smartcharging_setpoint.cpp)
+target_link_libraries(test_smartcharging_setpoint unit_tests_stubs doctest sqlite3 pthread dl )
+add_test(
+  NAME test_smartcharging_setpoint
+  COMMAND test_smartcharging_setpoint
+)

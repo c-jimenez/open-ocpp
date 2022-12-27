@@ -51,7 +51,7 @@ class ProfileDatabase
 
     /** @brief Stores a profile alongside its target connector */
     typedef std::pair<unsigned int, ocpp::types::ChargingProfile> ChargingProfileInfo;
-    /** @brief Allow sorting of profiles by stack level  and connector id*/
+    /** @brief Allow sorting of profiles by stack level and connector id*/
     struct ChargingProfileInfoLess
     {
         bool operator()(const ChargingProfileInfo& lhs, const ChargingProfileInfo& rhs) const
