@@ -7,17 +7,26 @@
         {
             "type": "gdb",
             "request": "launch",
-            "name": "x86 debug",
+            "name": "x86 CP debug",
             "target": "${workspaceRoot}/bin/gcc_native/quick_start_chargepoint",
             "cwd": "${workspaceRoot}/bin/gcc_native/",
-            "arguments": "",
+            "arguments": "-r",
+            "valuesFormatting": "parseText"
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "x86 CS debug",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_centralsystem",
+            "cwd": "${workspaceRoot}/bin/gcc_native/",
+            "arguments": "-r",
             "valuesFormatting": "parseText"
         },
         {
             "type": "gdb",
             "request": "launch",
             "name": "x86 test debug",
-            "target": "${workspaceRoot}/build_gcc_native/tests/chargepoint/metervalues/test_metervalues",
+            "target": "${workspaceRoot}/build_gcc_native/tests/chargepoint/smartcharging/test_smartcharging_setpoint",
             "cwd": "${workspaceRoot}",
             "valuesFormatting": "parseText"
         }
