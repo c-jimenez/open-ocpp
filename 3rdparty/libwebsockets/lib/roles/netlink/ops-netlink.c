@@ -41,7 +41,7 @@
 #define RTA_ALIGNTO 4U
 
 //#define lwsl_netlink lwsl_notice
-#define lwsl_netlink lwsl_info
+#define lwsl_cx_netlink lwsl_cx_info
 
 static void
 lws_netlink_coldplug_done_cb(lws_sorted_usec_list_t *sul)
@@ -49,9 +49,10 @@ lws_netlink_coldplug_done_cb(lws_sorted_usec_list_t *sul)
 	struct lws_context *ctx = lws_container_of(sul, struct lws_context,
 						   sul_nl_coldplug);
 	ctx->nl_initial_done = 1;
-
+#if defined(LWS_WITH_SYS_STATE)
 	/* if nothing is there to intercept anything, go all the way */
 	lws_state_transition_steps(&ctx->mgr_system, LWS_SYSTATE_OPERATIONAL);
+#endif
 }
 
 static int
@@ -78,18 +79,6 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 	if (!(pollfd->revents & LWS_POLLIN))
 		return LWS_HPI_RET_HANDLED;
 
-	if (!cx->nl_initial_done && pt == &cx->pt[0]) {
-		/*
-		 * While netlink info still coming, keep moving the timer for
-		 * calling it "done" to +100ms until after it stops coming
-		 */
-		lws_context_lock(cx, __func__);
-		lws_sul_schedule(cx, 0, &cx->sul_nl_coldplug,
-				 lws_netlink_coldplug_done_cb,
-				 100 * LWS_US_PER_MS);
-		lws_context_unlock(cx);
-	}
-
 	memset(&msg, 0, sizeof(msg));
 
 	iov.iov_base		= (void *)s;
@@ -103,7 +92,7 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 
 	n = (unsigned int)recvmsg(wsi->desc.sockfd, &msg, 0);
 	if ((int)n < 0) {
-		lwsl_notice("%s: recvmsg failed\n", __func__);
+		lwsl_cx_notice(cx, "recvmsg failed");
 		return LWS_HPI_RET_PLEASE_CLOSE_ME;
 	}
 
@@ -125,10 +114,9 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 
 		struct ifinfomsg *ifi;
 		struct rtattr *attribute;
-		lws_sockaddr46 *sa46;
 		unsigned int len;
 
-		lwsl_netlink("%s: RTM %d\n", __func__, h->nlmsg_type);
+		lwsl_cx_netlink(cx, "RTM %d", h->nlmsg_type);
 
 		memset(&robj, 0, sizeof(robj));
 		robj.if_idx = -1;
@@ -151,34 +139,21 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 			/* loop over all attributes for the NEWLINK message */
 			for (attribute = IFLA_RTA(ifi); RTA_OK(attribute, len);
 					 attribute = RTA_NEXT(attribute, len)) {
-				lwsl_netlink("%s: if attr %d\n", __func__,
+				lwsl_cx_netlink(cx, "if attr %d",
 					    (int)attribute->rta_type);
 				switch(attribute->rta_type) {
 				case IFLA_IFNAME:
-					lwsl_netlink("NETLINK ifidx %d : %s\n",
+					lwsl_cx_netlink(cx, "NETLINK ifidx %d : %s",
 						     ifi->ifi_index,
 						     (char *)RTA_DATA(attribute));
-					break;
-				case RTA_SRC:
-					sa46 = (lws_sockaddr46 *)RTA_DATA(attribute);
-					if (sa46->sa4.sin_family == 0xffff) {
-						lwsl_netlink("%s: down %d\n",
-							     __func__,
-							     ifi->ifi_index);
-						lws_pt_lock(pt, __func__);
-						_lws_route_table_ifdown(pt,
-								ifi->ifi_index);
-						_lws_route_pt_close_unroutable(pt);
-						lws_pt_unlock(pt);
-					}
 					break;
 				default:
 					break;
 				} /* switch */
 			} /* for loop */
 
-			lwsl_netlink("%s: NEWLINK ifi_index %d, flags 0x%x\n",
-				     __func__, ifi->ifi_index, ifi->ifi_flags);
+			lwsl_cx_netlink(cx, "NEWLINK ifi_index %d, flags 0x%x",
+					ifi->ifi_index, ifi->ifi_flags);
 
 			/*
 			 * Despite "New"link this is actually telling us there
@@ -190,8 +165,8 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 				 * Interface is down, so scrub all routes that
 				 * applied to it
 				 */
-				lwsl_netlink("%s: NEWLINK: ifdown %d\n",
-						__func__, ifi->ifi_index);
+				lwsl_cx_netlink(cx, "NEWLINK: ifdown %d",
+						ifi->ifi_index);
 				lws_pt_lock(pt, __func__);
 				_lws_route_table_ifdown(pt, ifi->ifi_index);
 				lws_pt_unlock(pt);
@@ -214,15 +189,20 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 			ra = (struct rtattr *)IFA_RTA(ifam);
 			ra_len = (unsigned int)IFA_PAYLOAD(h);
 
-			lwsl_netlink("%s: %s\n", __func__,
+			lwsl_cx_netlink(cx, "%s",
 				     h->nlmsg_type == RTM_NEWADDR ?
 						     "NEWADDR" : "DELADDR");
-			break;
+
+			/*
+			 * almost nothing interesting within IFA_* attributes:
+			 * so skip it and goto to the second half
+			 */
+			goto second_half;
 
 		case RTM_NEWROUTE:
 		case RTM_DELROUTE:
 
-			lwsl_netlink("%s: %s\n", __func__,
+			lwsl_cx_netlink(cx, "%s",
 				     h->nlmsg_type == RTM_NEWROUTE ?
 						     "NEWROUTE" : "DELROUTE");
 
@@ -233,23 +213,23 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 
 		case RTM_DELNEIGH:
 		case RTM_NEWNEIGH:
-			lwsl_netlink("%s: %s\n", __func__,
-				     h->nlmsg_type == RTM_NEWNEIGH ? "NEWNEIGH" :
-								     "DELNEIGH");
+			lwsl_cx_netlink(cx, "%s", h->nlmsg_type ==
+						RTM_NEWNEIGH ? "NEWNEIGH" :
+							       "DELNEIGH");
 #if !defined(LWS_WITH_NO_LOGS) && defined(_DEBUG)
 			nd = (struct ndmsg *)rm;
-			lwsl_netlink("%s: fam %u, ifidx %u, flags 0x%x\n",
-				    __func__, nd->ndm_family, nd->ndm_ifindex,
+			lwsl_cx_netlink(cx, "fam %u, ifidx %u, flags 0x%x",
+				    nd->ndm_family, nd->ndm_ifindex,
 				    nd->ndm_flags);
 #endif
 			ra = (struct rtattr *)RTM_RTA(rm);
 			ra_len = (unsigned int)RTM_PAYLOAD(h);
 			for ( ; RTA_OK(ra, ra_len); ra = RTA_NEXT(ra, ra_len)) {
-				lwsl_netlink("%s: atr %d\n", __func__, ra->rta_type);
+				lwsl_cx_netlink(cx, "atr %d", ra->rta_type);
 				switch (ra->rta_type) {
 				case NDA_DST:
-					lwsl_netlink("%s: dst len %d\n",
-						    __func__, ra->rta_len);
+					lwsl_cx_netlink(cx, "dst len %d",
+							ra->rta_len);
 					break;
 				}
 			}
@@ -259,13 +239,14 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 			continue;
 
 		default:
-			lwsl_netlink("%s: *** Unknown RTM_%d\n", __func__,
+			lwsl_cx_netlink(cx, "*** Unknown RTM_%d",
 					h->nlmsg_type);
 			continue;
 		} /* switch */
 
 		robj.proto = rm->rtm_protocol;
 
+		// iterate over route attributes
 		for ( ; RTA_OK(ra, ra_len); ra = RTA_NEXT(ra, ra_len)) {
 			// lwsl_netlink("%s: atr %d\n", __func__, ra->rta_type);
 			switch (ra->rta_type) {
@@ -275,14 +256,23 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 							rm->rtm_family);
 				robj.src_len = rm->rtm_src_len;
 				lws_sa46_write_numeric_address(&robj.src, buf, sizeof(buf));
-				lwsl_netlink("%s: RTA_SRC: %s\n", __func__, buf);
+				lwsl_cx_netlink(cx, "RTA_SRC: %s", buf);
 				break;
 			case RTA_DST:
+				/* check if is local addr -> considering it as src addr too */
+				if (rm->rtm_type == RTN_LOCAL &&
+				    ((rm->rtm_family == AF_INET && rm->rtm_dst_len == 32) ||
+				     (rm->rtm_family == AF_INET6 && rm->rtm_dst_len == 128))) {
+					lws_sa46_copy_address(&robj.src, RTA_DATA(ra),
+							rm->rtm_family);
+					lwsl_cx_netlink(cx, "Local addr: RTA_DST -> added to RTA_SRC");
+				}
+
 				lws_sa46_copy_address(&robj.dest, RTA_DATA(ra),
 							rm->rtm_family);
 				robj.dest_len = rm->rtm_dst_len;
 				lws_sa46_write_numeric_address(&robj.dest, buf, sizeof(buf));
-				lwsl_netlink("%s: RTA_DST: %s\n", __func__, buf);
+				lwsl_cx_netlink(cx, "RTA_DST: %s", buf);
 				break;
 			case RTA_GATEWAY:
 				lws_sa46_copy_address(&robj.gateway,
@@ -294,11 +284,8 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 				break;
 			case RTA_IIF: /* int: input interface index */
 			case RTA_OIF: /* int: output interface index */
-				if (h->nlmsg_type != RTM_NEWADDR &&
-				    h->nlmsg_type != RTM_DELADDR) {
-					robj.if_idx = *(int *)RTA_DATA(ra);
-					lwsl_netlink("%s: ifidx %d\n", __func__, robj.if_idx);
-				}
+				robj.if_idx = *(int *)RTA_DATA(ra);
+				lwsl_cx_netlink(cx, "ifidx %d", robj.if_idx);
 				break;
 			case RTA_PRIORITY: /* int: priority of route */
 				p = RTA_DATA(ra);
@@ -315,8 +302,8 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 				break;
 
 			default:
-				lwsl_info("%s: unknown attr type %d\n",
-						__func__, ra->rta_type);
+				lwsl_cx_info(cx, "unknown attr type %d",
+					     ra->rta_type);
 				break;
 			}
 		} /* for */
@@ -324,15 +311,14 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 		/*
 		 * the second half, once all the attributes were collected
 		 */
-
-
+second_half:
 		switch (h->nlmsg_type) {
 
 		case RTM_DELROUTE:
 			/*
 			 * This will also take down wsi marked as using it
 			 */
-			lwsl_netlink("%s: DELROUTE: if_idx %d\n", __func__,
+			lwsl_cx_netlink(cx, "DELROUTE: if_idx %d",
 					robj.if_idx);
 			lws_pt_lock(pt, __func__);
 			_lws_route_remove(pt, &robj, 0);
@@ -341,7 +327,7 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 
 		case RTM_NEWROUTE:
 
-			lwsl_netlink("%s: NEWROUTE rtm_type %d\n", __func__,
+			lwsl_cx_netlink(cx, "NEWROUTE rtm_type %d",
 					rm->rtm_type);
 
 			/*
@@ -360,9 +346,9 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 			goto ana;
 
 		case RTM_DELADDR:
-			lwsl_notice("%s: DELADDR\n", __func__);
+			lwsl_cx_notice(cx, "DELADDR");
 #if defined(_DEBUG)
-			_lws_routing_entry_dump(&robj);
+			_lws_routing_entry_dump(cx, &robj);
 #endif
 			lws_pt_lock(pt, __func__);
 			_lws_route_remove(pt, &robj, LRR_MATCH_SRC | LRR_IGNORE_PRI);
@@ -372,7 +358,7 @@ rops_handle_POLLIN_netlink(struct lws_context_per_thread *pt, struct lws *wsi,
 
 		case RTM_NEWADDR:
 
-			lwsl_netlink("%s: NEWADDR\n", __func__);
+			lwsl_cx_netlink(cx, "NEWADDR");
 ana:
 
 			/*
@@ -385,9 +371,8 @@ ana:
 			lws_pt_lock(pt, __func__);
 
 			/* returns zero on match already in table */
-			rmat = _lws_route_remove(pt, &robj, LRR_MATCH_SRC |
-							    LRR_JUST_CHECK |
-							    LRR_IGNORE_PRI);
+			rmat = _lws_route_remove(pt, &robj, h->nlmsg_type == RTM_NEWROUTE ?
+					LRR_MATCH_DST : LRR_MATCH_SRC | LRR_IGNORE_PRI);
 			lws_pt_unlock(pt);
 
 			if (rmat) {
@@ -397,7 +382,7 @@ ana:
 
 			rou = lws_malloc(sizeof(*rou), __func__);
 			if (!rou) {
-				lwsl_err("%s: oom\n", __func__);
+				lwsl_cx_err(cx, "oom");
 				return LWS_HPI_RET_HANDLED;
 			}
 
@@ -412,7 +397,8 @@ ana:
 
 			rou->uidx = _lws_route_get_uidx(cx);
 			lws_dll2_add_tail(&rou->list, &cx->routing_table);
-			lwsl_info("%s: route list size %u\n", __func__, cx->routing_table.count);
+			lwsl_cx_info(cx, "route list size %u",
+					cx->routing_table.count);
 
 			_lws_route_pt_close_unroutable(pt);
 
@@ -462,6 +448,20 @@ inform:
 	}
 #endif
 
+	if (!cx->nl_initial_done &&
+	    pt == &cx->pt[0] &&
+	    cx->routing_table.count) {
+		/*
+		 * While netlink info still coming, keep moving the timer for
+		 * calling it "done" to +100ms until after it stops coming
+		 */
+		lws_context_lock(cx, __func__);
+		lws_sul_schedule(cx, 0, &cx->sul_nl_coldplug,
+				 lws_netlink_coldplug_done_cb,
+				 100 * LWS_US_PER_MS);
+		lws_context_unlock(cx);
+	}
+
 	return LWS_HPI_RET_HANDLED;
 }
 
@@ -480,7 +480,7 @@ rops_pt_init_destroy_netlink(struct lws_context *context,
 	struct msghdr msg;
 	struct iovec iov;
 	struct lws *wsi;
-	int n;
+	int n, ret = 1;
 
 	if (destroy) {
 
@@ -500,7 +500,7 @@ rops_pt_init_destroy_netlink(struct lws_context *context,
 		/* we can only have one netlink socket */
 		return 0;
 
-	lwsl_info("%s: creating netlink skt\n", __func__);
+	lwsl_cx_info(context, "creating netlink skt");
 
 	/*
 	 * We want a netlink socket per pt as well
@@ -508,33 +508,35 @@ rops_pt_init_destroy_netlink(struct lws_context *context,
 
 	lws_context_lock(context, __func__);
 	wsi = __lws_wsi_create_with_role(context, (int)(pt - &context->pt[0]),
-				       &role_ops_netlink);
+				       &role_ops_netlink, NULL);
 	lws_context_unlock(context);
 	if (!wsi)
 		goto bail;
 
 	wsi->desc.sockfd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 	if (wsi->desc.sockfd == LWS_SOCK_INVALID) {
-		lwsl_err("%s: unable to open netlink\n", __func__);
+		lwsl_cx_err(context, "unable to open netlink");
 		goto bail1;
 	}
 
-	__lws_lc_tag(&context->lcg[LWSLCG_VHOST], &wsi->lc, "netlink");
+	lws_plat_set_nonblocking(wsi->desc.sockfd);
+
+	__lws_lc_tag(context, &context->lcg[LWSLCG_VHOST], &wsi->lc,
+			"netlink");
 
 	memset(&sanl, 0, sizeof(sanl));
 	sanl.nl_family		= AF_NETLINK;
 	sanl.nl_pid		= (uint32_t)getpid();
-	sanl.nl_groups		= (1 << (RTNLGRP_LINK - 1)) |
-				  (1 << (RTNLGRP_IPV4_ROUTE - 1)) |
-				  (1 << (RTNLGRP_IPV4_IFADDR - 1))
+	sanl.nl_groups		= RTMGRP_LINK | RTMGRP_IPV4_ROUTE | RTMGRP_IPV4_IFADDR
 #if defined(LWS_WITH_IPV6)
-				  | (1 << (RTNLGRP_IPV6_ROUTE - 1)) |
-				    (1 << (RTNLGRP_IPV6_IFADDR - 1))
+				  | RTMGRP_IPV6_ROUTE | RTMGRP_IPV6_IFADDR
 #endif
 				 ;
 
-	if (bind(wsi->desc.sockfd, (struct sockaddr*)&sanl, sizeof(sanl)) < 0) {
-		lwsl_err("%s: netlink bind failed\n", __func__);
+	if (lws_fi(&context->fic, "netlink_bind") ||
+	    bind(wsi->desc.sockfd, (struct sockaddr*)&sanl, sizeof(sanl)) < 0) {
+		lwsl_cx_warn(context, "netlink bind failed");
+		ret = 0; /* some systems deny access, just ignore */
 		goto bail2;
 	}
 
@@ -577,30 +579,28 @@ rops_pt_init_destroy_netlink(struct lws_context *context,
 
 	n = (int)sendmsg(wsi->desc.sockfd, (struct msghdr *)&msg, 0);
 	if (n < 0) {
-		lwsl_notice("%s: rt dump req failed... permissions? errno %d\n",
-				__func__, LWS_ERRNO);
+		lwsl_cx_notice(context, "rt dump req failed... permissions? errno %d",
+				LWS_ERRNO);
 	}
 
 	/*
-	 * Responses are going to come asynchronously, since we can't process
-	 * DNS lookups properly until we collected the initial netlink responses
-	 * let's set a timer that will let us advance from lws_system
-	 * LWS_SYSTATE_IFACE_COLDPLUG
+	 * Responses are going to come asynchronously, let's block moving
+	 * off state IFACE_COLDPLUG until we have had them.  This is important
+	 * since if we don't hold there, when we do get the responses we may
+	 * cull any ongoing connections as unroutable otherwise
 	 */
 
-	lwsl_debug("%s: starting netlink coldplug wait\n", __func__);
-	lws_sul_schedule(context, 0, &context->sul_nl_coldplug,
-			 lws_netlink_coldplug_done_cb, 450 * LWS_US_PER_MS);
+	lwsl_cx_debug(context, "starting netlink coldplug wait");
 
 	return 0;
 
 bail2:
-	__lws_lc_untag(&wsi->lc);
+	__lws_lc_untag(wsi->a.context, &wsi->lc);
 	compatible_close(wsi->desc.sockfd);
 bail1:
 	lws_free(wsi);
 bail:
-	return 1;
+	return ret;
 }
 
 static const lws_rops_t rops_table_netlink[] = {

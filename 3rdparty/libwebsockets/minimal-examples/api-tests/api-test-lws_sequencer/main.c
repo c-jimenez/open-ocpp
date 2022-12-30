@@ -169,8 +169,8 @@ notify:
 }
 
 static const struct lws_protocols protocols[] = {
-	{ "seq-test-http", callback_http, 0, 0, },
-	{ NULL, NULL, 0, 0 }
+	{ "seq-test-http", callback_http, 0, 0, 0, NULL, 0 },
+	LWS_PROTOCOL_LIST_TERM
 };
 
 
@@ -218,7 +218,7 @@ sequencer_start_client(struct myseq *s)
 		/* we couldn't even get started with the client connection */
 
 		lws_seq_queue_event(lws_seq_from_user(s),
-				    SEQ_MSG_CLIENT_FAILED, NULL, NULL);
+				    (lws_seq_events_t)SEQ_MSG_CLIENT_FAILED, NULL, NULL);
 
 		return 1;
 	}

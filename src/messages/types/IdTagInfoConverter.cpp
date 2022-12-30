@@ -29,11 +29,11 @@ namespace messages
 
 /** @bcopydoc bool IMessageConverter<ocpp::types::IdTagInfo>::fromJson(const rapidjson::Value&,
  *                                                                     ocpp::types::IdTagInfo&,
- *                                                                     const char*&,
+ *                                                                     std::string&,
  *                                                                     std::string&) */
 bool IdTagInfoConverter::fromJson(const rapidjson::Value& json,
                                   ocpp::types::IdTagInfo& data,
-                                  const char*&            error_code,
+                                  std::string&            error_code,
                                   std::string&            error_message)
 {
     bool ret;

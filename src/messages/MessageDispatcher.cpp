@@ -37,13 +37,13 @@ MessageDispatcher::MessageDispatcher(const MessagesValidator& messages_validator
 /** @brief Destructor */
 MessageDispatcher::~MessageDispatcher() { }
 
-/** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&) */
-bool MessageDispatcher::registerHandler(const std::string& action, IMessageHandler& handler)
+/** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&, bool) */
+bool MessageDispatcher::registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace)
 {
     bool ret = false;
 
     // Check if handler exists for this action
-    if (m_handlers.find(action) == m_handlers.end())
+    if (allow_replace || (m_handlers.find(action) == m_handlers.end()))
     {
         // Get the payload validator
         ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, true);
@@ -69,12 +69,12 @@ bool MessageDispatcher::registerHandler(const std::string& action, IMessageHandl
 /** @copydoc bool IMessageDispatcher::dispatchMessage(const std::string&,
                                                           const rapidjson::Value&,
                                                           rapidjson::Document&,
-                                                          const char*&,
+                                                          std::string&,
                                                           std::string&) */
 bool MessageDispatcher::dispatchMessage(const std::string&      action,
                                         const rapidjson::Value& payload,
                                         rapidjson::Document&    response,
-                                        const char*&            error_code,
+                                        std::string&            error_code,
                                         std::string&            error_message)
 {
     bool ret = false;
@@ -84,8 +84,8 @@ bool MessageDispatcher::dispatchMessage(const std::string&      action,
     if (it != m_handlers.end())
     {
         // Check payload
-        auto&                                      handler_data = it->second;
-        ocpp::json::JsonValidator*                 validator    = handler_data.first;
+        auto&                      handler_data = it->second;
+        ocpp::json::JsonValidator* validator    = handler_data.first;
         if (validator && validator->isValid(payload))
         {
             // Call handler

@@ -60,12 +60,12 @@ void ConfigManager::registerConfigChangedListener(const std::string& key, IConfi
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ConfigManager::handleMessage(const ocpp::messages::GetConfigurationReq& request,
                                   ocpp::messages::GetConfigurationConf&      response,
-                                  const char*&                               error_code,
+                                  std::string&                               error_code,
                                   std::string&                               error_message)
 {
     (void)error_code;
@@ -78,12 +78,12 @@ bool ConfigManager::handleMessage(const ocpp::messages::GetConfigurationReq& req
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ConfigManager::handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
                                   ocpp::messages::ChangeConfigurationConf&      response,
-                                  const char*&                                  error_code,
+                                  std::string&                                  error_code,
                                   std::string&                                  error_message)
 {
     (void)error_code;

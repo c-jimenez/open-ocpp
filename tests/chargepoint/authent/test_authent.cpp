@@ -111,12 +111,12 @@ TEST_SUITE("Authentication component")
         auth_data.idTagInfo.value().status = AuthorizationStatus::Blocked;
         send_req.localAuthorizationList.push_back(auth_data);
         SendLocalListConf send_resp;
-        const char*       error_code = nullptr;
+        std::string       error_code;
         std::string       error_message;
 
         CHECK(local_list.handleMessage(send_req, send_resp, error_code, error_message));
         CHECK_EQ(send_resp.status, UpdateStatus::Accepted);
-        CHECK_EQ(error_code, nullptr);
+        CHECK(error_code.empty());
         CHECK(error_message.empty());
     }
 

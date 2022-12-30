@@ -13,7 +13,8 @@ require_lws_config(LWS_WITHOUT_CLIENT 0 requirements)
 require_lws_config(LWS_WITH_SECURE_STREAMS 1 requirements)
 require_lws_config(LWS_WITH_SECURE_STREAMS_STATIC_POLICY_ONLY 0 requirements)
 require_lws_config(LWS_WITH_SYS_STATE 1 requirements)
-require_lws_config(LWS_WITH_GENCRYPTO 1 requirements)
+
+require_lws_config(LWS_WITH_SYS_FAULT_INJECTION 1 has_fault_injection)
 
 if (requirements)
 	add_executable(${SAMP} minimal-secure-streams.c)
@@ -52,10 +53,40 @@ if (requirements)
 		set_tests_properties(ss-warmcat
 				     PROPERTIES
 				     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/minimal-examples/secure-streams/minimal-secure-streams
-				     TIMEOUT 20)
+				     TIMEOUT 40)
 		if (DEFINED ENV{SAI_OVN})
 			set_tests_properties(ss-warmcat PROPERTIES FIXTURES_REQUIRED "res_sspcmin")		     
 		endif()
+
+		if (has_fault_injection)
+			if (VALGRIND)
+				add_test(NAME ss-warmcat-fi1 COMMAND
+					${VALGRIND} --tool=memcheck --leak-check=yes --num-callers=20
+					$<TARGET_FILE:lws-minimal-secure-streams>
+					--fault-injection "ss/ss_create_destroy_me"
+					--expected-exit 1)
+				add_test(NAME ss-warmcat-fi2 COMMAND
+					${VALGRIND} --tool=memcheck --leak-check=yes --num-callers=20
+					$<TARGET_FILE:lws-minimal-secure-streams>
+					--fault-injection "ss/ss_no_streamtype_policy"
+					--expected-exit 1)
+			else()
+				add_test(NAME ss-warmcat-fi1 COMMAND lws-minimal-secure-streams
+					 --fault-injection "ss/ss_create_destroy_me"
+					 --expected-exit 1)
+				add_test(NAME ss-warmcat-fi2 COMMAND lws-minimal-secure-streams
+					 --fault-injection "ss/ss_no_streamtype_policy"
+					 --expected-exit 1)
+ 			 endif()
+
+			set_tests_properties(ss-warmcat-fi1
+					     ss-warmcat-fi2
+				     PROPERTIES
+				     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/minimal-examples/secure-streams/minimal-secure-streams
+				     TIMEOUT 5)
+
+		endif()
+
 
 		if (HAS_LWS_WITH_SECURE_STREAMS_PROXY_API OR LWS_WITH_SECURE_STREAMS_PROXY_API)
 

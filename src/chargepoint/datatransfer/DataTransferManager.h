@@ -20,8 +20,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_DATATRANSFERMANAGER_H
 
 #include "DataTransfer.h"
-#include "Enums.h"
 #include "GenericMessageHandler.h"
+#include "IDataTransferManager.h"
+
+#include <unordered_map>
 
 namespace ocpp
 {
@@ -40,7 +42,8 @@ namespace chargepoint
 class IChargePointEventsHandler;
 
 /** @brief Handle charge point data transfer requests */
-class DataTransferManager : public ocpp::messages::GenericMessageHandler<ocpp::messages::DataTransferReq, ocpp::messages::DataTransferConf>
+class DataTransferManager : public IDataTransferManager,
+                            public ocpp::messages::GenericMessageHandler<ocpp::messages::DataTransferReq, ocpp::messages::DataTransferConf>
 {
   public:
     /** @brief Constructor */
@@ -67,16 +70,21 @@ class DataTransferManager : public ocpp::messages::GenericMessageHandler<ocpp::m
                       ocpp::types::DataTransferStatus& status,
                       std::string&                     response_data);
 
+    // IDataTransferManager interface
+
+    /** @copydoc void IDataTransferManager::registerHandler(const std::string&, IDataTransferHandler&) */
+    void registerHandler(const std::string& vendor_id, IDataTransferHandler& handler) override;
+
     // GenericMessageHandler interface
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::DataTransferReq& request,
                        ocpp::messages::DataTransferConf&      response,
-                       const char*&                           error_code,
+                       std::string&                           error_code,
                        std::string&                           error_message) override;
 
   private:
@@ -84,6 +92,8 @@ class DataTransferManager : public ocpp::messages::GenericMessageHandler<ocpp::m
     IChargePointEventsHandler& m_events_handler;
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender& m_msg_sender;
+    /** @brief Registered handlers */
+    std::unordered_map<std::string, IDataTransferHandler*> m_handlers;
 };
 
 } // namespace chargepoint

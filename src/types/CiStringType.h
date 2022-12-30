@@ -38,12 +38,20 @@ class ICiStringType
      * @return Size limit in bytes of the string
      */
     virtual size_t max() const = 0;
+
     /**
      * @brief Assign a new value to the string
      * @param value New string value
      * @return true if the new value respects the max string size, false otherwise
      */
     virtual bool assign(const std::string& value) = 0;
+
+    /**
+     * @brief Assign a new value to the string
+     * @param value New string value
+     * @return true if the new value respects the max string size, false otherwise
+     */
+    virtual bool assign(std::string&& value) = 0;
 
     /**
      * @brief Implicit conversion operator
@@ -104,6 +112,12 @@ class CiStringType : public ICiStringType
      */
     CiStringType(const CiStringType& copy) : m_string(copy.m_string) { }
 
+    /**
+     * @brief Move constructor
+     * @param copy String to move
+     */
+    CiStringType(CiStringType&& move) : m_string(std::move(move.m_string)) { }
+
     /** @brief Destructor */
     virtual ~CiStringType() { }
 
@@ -134,6 +148,27 @@ class CiStringType : public ICiStringType
     }
 
     /**
+     * @brief Assign a new value to the string
+     * @param value New string value
+     * @return true if the new value respects the max string size, false otherwise
+     */
+    bool assign(std::string&& value) override
+    {
+        bool ret = false;
+        if (value.size() <= MAX_STRING_SIZE)
+        {
+            m_string.assign(value);
+            ret = true;
+        }
+        else
+        {
+            m_string.assign(value);
+            m_string.resize(MAX_STRING_SIZE);
+        }
+        return ret;
+    }
+
+    /**
      * @brief Copy operator
      * @param copy String to copy
      * @return Reference to itself
@@ -141,6 +176,17 @@ class CiStringType : public ICiStringType
     CiStringType& operator=(const CiStringType& copy)
     {
         m_string = copy.m_string;
+        return *this;
+    }
+
+    /**
+     * @brief Copy/move operator
+     * @param copy String to copy/move
+     * @return Reference to itself
+     */
+    CiStringType& operator=(CiStringType&& copy)
+    {
+        m_string.assign(std::move(copy.m_string));
         return *this;
     }
 

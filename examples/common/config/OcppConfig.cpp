@@ -46,9 +46,9 @@ using namespace ocpp::helpers;
 /** @brief List of configuration values with their attributes */
 static const map<string, int> CONFIGURATION_VALUES = {
 
-    ///
-    /// Stand OCPP configuration
-    ///
+    //
+    // Standart OCPP configuration
+    //
     {"AllowOfflineTxForUnknownId", PARAM_READ_WRITE | PARAM_OCPP},
     {"AuthorizationCacheEnabled", PARAM_READ_WRITE | PARAM_OCPP},
     {"AuthorizeRemoteTxRequests", PARAM_READ_WRITE | PARAM_OCPP},
@@ -93,6 +93,9 @@ static const map<string, int> CONFIGURATION_VALUES = {
     {"ConnectorSwitch3to1PhaseSupported", PARAM_READ | PARAM_OCPP},
     {"MaxChargingProfilesInstalled", PARAM_READ | PARAM_OCPP},
     {"MaxChargingProfilesInstalled", PARAM_READ | PARAM_OCPP},
+    //
+    // Security extensions
+    //
     {"AdditionalRootCertificateCheck", PARAM_READ | PARAM_OCPP},
     {"AuthorizationKey", PARAM_WRITE | PARAM_OCPP},
     {"CertificateSignedMaxChainSize", PARAM_READ | PARAM_OCPP},
@@ -100,10 +103,18 @@ static const map<string, int> CONFIGURATION_VALUES = {
     {"CpoName", PARAM_READ | PARAM_WRITE | PARAM_OCPP},
     {"SecurityProfile", PARAM_READ_WRITE | PARAM_OCPP},
     {"SupportedFileTransferProtocols", PARAM_READ | PARAM_OCPP},
+    //
+    // ISO 15118 PnC extensions
+    //
+    {"CentralContractValidationAllowed", PARAM_READ_WRITE | PARAM_OCPP},
+    {"CertSigningWaitMinimum", PARAM_READ_WRITE | PARAM_OCPP},
+    {"CertSigningRepeatTimes", PARAM_READ_WRITE | PARAM_OCPP},
+    {"ContractValidationOffline", PARAM_READ_WRITE | PARAM_OCPP},
+    {"Iso15118PnCEnabled", PARAM_READ_WRITE | PARAM_OCPP},
 
-    ///
-    /// Charge point configuration
-    ///
+    //
+    // Charge point configuration
+    //
     {"ConnexionUrl", PARAM_READ_WRITE | PARAM_REBOOT},
     {"ChargePointIdentifier", PARAM_READ_WRITE | PARAM_REBOOT},
     {"FirmwareVersion", PARAM_READ}};

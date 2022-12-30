@@ -29,11 +29,11 @@ namespace messages
 
 /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::fromJson(const rapidjson::Value&,
  *                                                                    ocpp::types::ChargingSchedule&,
- *                                                                    const char*&,
+ *                                                                    std::string&,
  *                                                                    std::string&) */
 bool ChargingScheduleConverter::fromJson(const rapidjson::Value&        json,
                                          ocpp::types::ChargingSchedule& data,
-                                         const char*&                   error_code,
+                                         std::string&                   error_code,
                                          std::string&                   error_message)
 {
     bool ret = extract(json, "startSchedule", data.startSchedule, error_message);

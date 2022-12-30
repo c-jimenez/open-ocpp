@@ -38,18 +38,18 @@ class MessageDispatcherStub : public IMessageDispatcher
     /** @brief Destructor */
     virtual ~MessageDispatcherStub();
 
-    /** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&) */
-    bool registerHandler(const std::string& action, IMessageHandler& handler) override;
+    /** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&, bool) */
+    bool registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace = false) override;
 
     /** @copydoc bool IMessageDispatcher::dispatchMessage(const std::string&,
                                                           const rapidjson::Value&,
                                                           rapidjson::Document&,
-                                                          const char*&,
+                                                          std::string&,
                                                           std::string&) */
     bool dispatchMessage(const std::string&      action,
                          const rapidjson::Value& payload,
                          rapidjson::Document&    response,
-                         const char*&            error_code,
+                         std::string&            error_code,
                          std::string&            error_message) override;
 
     /** @brief Check if a specific action as a registered handler */

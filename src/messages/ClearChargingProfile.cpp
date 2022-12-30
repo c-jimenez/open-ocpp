@@ -40,10 +40,10 @@ const EnumToStringFromString<ClearChargingProfileStatus> ClearChargingProfileSta
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ClearChargingProfileReqConverter::fromJson(const rapidjson::Value&  json,
                                                 ClearChargingProfileReq& data,
-                                                const char*&             error_code,
+                                                std::string&             error_code,
                                                 std::string&             error_message)
 {
     extract(json, "id", data.id);
@@ -60,7 +60,7 @@ bool ClearChargingProfileReqConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ClearChargingProfileReqConverter::toJson(const ClearChargingProfileReq& data, rapidjson::Document& json)
 {
     fill(json, "id", data.id);
@@ -73,10 +73,10 @@ bool ClearChargingProfileReqConverter::toJson(const ClearChargingProfileReq& dat
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ClearChargingProfileConfConverter::fromJson(const rapidjson::Value&   json,
                                                  ClearChargingProfileConf& data,
-                                                 const char*&              error_code,
+                                                 std::string&              error_code,
                                                  std::string&              error_message)
 {
     (void)error_code;
@@ -85,7 +85,7 @@ bool ClearChargingProfileConfConverter::fromJson(const rapidjson::Value&   json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ClearChargingProfileConfConverter::toJson(const ClearChargingProfileConf& data, rapidjson::Document& json)
 {
     fill(json, "status", ClearChargingProfileStatusHelper.toString(data.status));

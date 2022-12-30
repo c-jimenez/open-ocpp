@@ -20,9 +20,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ICentralSystemConfig.h"
 #include "IChargePointRequestHandler.h"
 #include "IRpc.h"
-#include "Logger.h"
+#include "Iso15118.h"
 #include "MessageDispatcher.h"
-#include "MessagesConverter.h"
 
 using namespace ocpp::messages;
 using namespace ocpp::types;
@@ -57,6 +56,7 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
           SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, messages_converter),
       m_identifier(identifier),
       m_stack_config(stack_config),
+      m_messages_converter(messages_converter),
       m_handler(nullptr)
 {
     msg_dispatcher.registerHandler(AUTHORIZE_ACTION, *dynamic_cast<GenericMessageHandler<AuthorizeReq, AuthorizeConf>*>(this));
@@ -96,12 +96,12 @@ ChargePointHandler::~ChargePointHandler() { }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& request,
                                        ocpp::messages::AuthorizeConf&      response,
-                                       const char*&                        error_code,
+                                       std::string&                        error_code,
                                        std::string&                        error_message)
 {
     bool ret = false;
@@ -127,12 +127,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& reque
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq& request,
                                        ocpp::messages::BootNotificationConf&      response,
-                                       const char*&                               error_code,
+                                       std::string&                               error_code,
                                        std::string&                               error_message)
 {
     bool ret = false;
@@ -176,37 +176,82 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& request,
                                        ocpp::messages::DataTransferConf&      response,
-                                       const char*&                           error_code,
+                                       std::string&                           error_code,
                                        std::string&                           error_message)
 {
     bool ret = false;
     (void)error_message;
 
-    LOG_INFO << "[" << m_identifier << "] - Data transfer requested : vendorId = " << request.vendorId.str()
-             << " - messageId = " << (request.messageId.isSet() ? request.messageId.value().str() : "not set")
-             << " - data = " << (request.data.isSet() ? request.data.value() : "not set");
-
-    // Notify request
-    if (m_handler)
+    // Check if ISO15518 support is enabled
+    bool message_handled = false;
+    if (m_stack_config.iso15118PnCEnabled() && (request.vendorId == ISO15118_VENDOR_ID) && m_handler)
     {
-        response.status = m_handler->dataTransfer(request.vendorId, request.messageId.value(), request.data.value(), response.data.value());
-        if (response.data.value().empty())
+        // Known messages
+        if (request.messageId.value() == ISO15118_AUTHORIZE_ACTION)
         {
-            response.data.clear();
+            // Iso15118Authorize
+            response.status = handleMessage<Iso15118AuthorizeReq, Iso15118AuthorizeConf>(
+                "Iso15118Authorize", request.data.value(), response.data.value());
+        }
+        else if (request.messageId.value() == GET_15118_EV_CERTIFICATE_ACTION)
+        {
+            // Get15118EVCertificate
+            response.status = handleMessage<Get15118EVCertificateReq, Get15118EVCertificateConf>(
+                "Get15118EVCertificate", request.data.value(), response.data.value());
+        }
+        else if (request.messageId.value() == GET_CERTIFICATE_STATUS_ACTION)
+        {
+            // GetCertificateStatus
+            response.status = handleMessage<GetCertificateStatusReq, GetCertificateStatusConf>(
+                "GetCertificateStatus", request.data.value(), response.data.value());
+        }
+        else if (request.messageId.value() == SIGN_CERTIFICATE_ACTION)
+        {
+            // SignCertificate
+            response.status =
+                handleMessage<SignCertificateReq, SignCertificateConf>("SignCertificate", request.data.value(), response.data.value());
+        }
+        else
+        {
+            // Unknown message
+            LOG_ERROR << "[ISO15118] Unknown message : " << request.messageId.value().str();
+            response.status = DataTransferStatus::UnknownMessageId;
         }
 
-        LOG_INFO << "[" << m_identifier << "] - Data transfer : status = " << DataTransferStatusHelper.toString(response.status)
-                 << " - data = " << (request.data.isSet() ? request.data.value() : "not set");
-        ret = true;
+        message_handled = true;
+        ret             = true;
     }
-    else
+
+    // Notify message if it hasn't been handled already
+    if (!message_handled)
     {
-        error_code = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
+        LOG_INFO << "[" << m_identifier << "] - Data transfer requested : vendorId = " << request.vendorId.str()
+                 << " - messageId = " << (request.messageId.isSet() ? request.messageId.value().str() : "not set")
+                 << " - data = " << (request.data.isSet() ? request.data.value() : "not set");
+
+        // Notify request
+        if (m_handler)
+        {
+            response.status =
+                m_handler->dataTransfer(request.vendorId, request.messageId.value(), request.data.value(), response.data.value());
+            if (response.data.value().empty())
+            {
+                response.data.clear();
+            }
+
+            LOG_INFO << "[" << m_identifier << "] - Data transfer : status = " << DataTransferStatusHelper.toString(response.status)
+                     << " - data = " << (request.data.isSet() ? request.data.value() : "not set");
+            ret = true;
+        }
+        else
+        {
+            error_code = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
+        }
     }
 
     return ret;
@@ -214,12 +259,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& re
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNotificationReq& request,
                                        ocpp::messages::DiagnosticsStatusNotificationConf&      response,
-                                       const char*&                                            error_code,
+                                       std::string&                                            error_code,
                                        std::string&                                            error_message)
 {
     bool ret = false;
@@ -247,12 +292,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNo
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotificationReq& request,
                                        ocpp::messages::FirmwareStatusNotificationConf&      response,
-                                       const char*&                                         error_code,
+                                       std::string&                                         error_code,
                                        std::string&                                         error_message)
 {
     bool ret = false;
@@ -280,12 +325,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotif
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& request,
                                        ocpp::messages::HeartbeatConf&      response,
-                                       const char*&                        error_code,
+                                       std::string&                        error_code,
                                        std::string&                        error_message)
 {
     (void)error_code;
@@ -304,12 +349,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& reque
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& request,
                                        ocpp::messages::MeterValuesConf&      response,
-                                       const char*&                          error_code,
+                                       std::string&                          error_code,
                                        std::string&                          error_message)
 {
     bool ret = false;
@@ -338,12 +383,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& req
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq& request,
                                        ocpp::messages::StartTransactionConf&      response,
-                                       const char*&                               error_code,
+                                       std::string&                               error_code,
                                        std::string&                               error_message)
 {
     bool ret = false;
@@ -375,12 +420,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationReq& request,
                                        ocpp::messages::StatusNotificationConf&      response,
-                                       const char*&                                 error_code,
+                                       std::string&                                 error_code,
                                        std::string&                                 error_message)
 {
     bool ret = false;
@@ -415,12 +460,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationR
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq& request,
                                        ocpp::messages::StopTransactionConf&      response,
-                                       const char*&                              error_code,
+                                       std::string&                              error_code,
                                        std::string&                              error_message)
 {
     bool ret = false;
@@ -457,12 +502,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq&
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificationReq& request,
                                        ocpp::messages::LogStatusNotificationConf&      response,
-                                       const char*&                                    error_code,
+                                       std::string&                                    error_code,
                                        std::string&                                    error_message)
 {
     bool ret = false;
@@ -491,12 +536,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificati
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotificationReq& request,
                                        ocpp::messages::SecurityEventNotificationConf&      response,
-                                       const char*&                                        error_code,
+                                       std::string&                                        error_code,
                                        std::string&                                        error_message)
 {
     bool ret = false;
@@ -525,12 +570,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotifi
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq& request,
                                        ocpp::messages::SignCertificateConf&      response,
-                                       const char*&                              error_code,
+                                       std::string&                              error_code,
                                        std::string&                              error_message)
 {
     bool ret = false;
@@ -568,12 +613,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq&
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
                                        ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
-                                       const char*&                                               error_code,
+                                       std::string&                                               error_code,
                                        std::string&                                               error_message)
 {
     bool ret = false;
@@ -598,6 +643,100 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatu
     }
 
     return ret;
+}
+
+// ISO 15118 PnC extensions
+
+/** @brief Handle an Iso15118Authorize request */
+void ChargePointHandler::handleMessage(const ocpp::messages::Iso15118AuthorizeReq& request, ocpp::messages::Iso15118AuthorizeConf& response)
+{
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Authorize requested : idToken = " << request.idToken.str()
+             << " -  certificate = " << (request.certificate.isSet() ? std::to_string(request.certificate.value().size()) : "not set");
+
+    // Load certificate
+    ocpp::x509::Certificate certificate(request.certificate.value());
+    if (!request.certificate.isSet() || certificate.isValid())
+    {
+        // Notify request
+        response.idTokenInfo =
+            m_handler->iso15118Authorize(certificate, request.idToken, request.iso15118CertificateHashData, response.certificateStatus);
+    }
+    else
+    {
+        response.certificateStatus  = AuthorizeCertificateStatusEnumType::CertChainError;
+        response.idTokenInfo.status = AuthorizationStatus::Invalid;
+    }
+
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Authorize status : " << AuthorizationStatusHelper.toString(response.idTokenInfo.status);
+}
+
+/** @brief Handle a Get15118EVCertificate request */
+void ChargePointHandler::handleMessage(const ocpp::messages::Get15118EVCertificateReq& request,
+                                       ocpp::messages::Get15118EVCertificateConf&      response)
+{
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Get EV certificate requested : action = " << CertificateActionEnumTypeHelper.toString(request.action)
+             << " -  iso15118SchemaVersion = " << request.iso15118SchemaVersion.str();
+
+    // Notify request
+    std::string exi_response;
+    response.status = m_handler->iso15118GetEVCertificate(request.iso15118SchemaVersion, request.action, request.exiRequest, exi_response);
+    if (response.status == Iso15118EVCertificateStatusEnumType::Accepted)
+    {
+        response.exiResponse.assign(exi_response);
+    }
+
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Get EV certificate status : " << Iso15118EVCertificateStatusEnumTypeHelper.toString(response.status);
+}
+
+/** @brief Handle a GetCertificateStatus request */
+void ChargePointHandler::handleMessage(const ocpp::messages::GetCertificateStatusReq& request,
+                                       ocpp::messages::GetCertificateStatusConf&      response)
+{
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Get certificate status requested : hashAlgorithm = "
+             << HashAlgorithmEnumTypeHelper.toString(request.ocspRequestData.hashAlgorithm)
+             << " -  issuerKeyHash = " << request.ocspRequestData.issuerKeyHash.str()
+             << " -  issuerNameHash = " << request.ocspRequestData.issuerNameHash.str()
+             << " -  responderURL = " << request.ocspRequestData.responderURL.str()
+             << " -  serialNumber = " << request.ocspRequestData.serialNumber.str();
+
+    // Notify request
+    std::string ocsp_result;
+    response.status = m_handler->iso15118GetCertificateStatus(request.ocspRequestData, ocsp_result);
+    if (response.status == GetCertificateStatusEnumType::Accepted)
+    {
+        if (!ocsp_result.empty())
+        {
+            response.ocspResult.value().assign(ocsp_result);
+        }
+    }
+
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Get certificate status : " << GetCertificateStatusEnumTypeHelper.toString(response.status);
+}
+
+/** @brief Handle a SignCertificate request */
+void ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq& request, ocpp::messages::SignCertificateConf& response)
+{
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Sign certificate requested : csr size = " << request.csr.size();
+
+    // Prepare response
+    response.status = GenericStatusEnumType::Rejected;
+
+    // Load certificate request
+    ocpp::x509::CertificateRequest certificate_request(request.csr);
+    if (certificate_request.isValid())
+    {
+        // Notify request
+        if (m_handler->iso15118SignCertificate(certificate_request))
+        {
+            response.status = GenericStatusEnumType::Accepted;
+        }
+    }
+
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Sign certificate : " << GenericStatusEnumTypeHelper.toString(response.status);
 }
 
 } // namespace centralsystem

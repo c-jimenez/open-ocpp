@@ -39,6 +39,17 @@ Connectors::Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::D
 {
 }
 
+/** @brief Destructor */
+Connectors::~Connectors()
+{
+    // Clear connector array
+    for (Connector* connector : m_connectors)
+    {
+        delete connector;
+    }
+    m_connectors.clear();
+}
+
 /** @brief Indicate if a connector id is valid */
 bool Connectors::isValid(unsigned int id) const
 {

@@ -125,7 +125,11 @@ typedef int suseconds_t;
 #define LWS_EXTERN
 #endif
 
+#if defined(__MINGW32__)
+#define LWS_INVALID_FILE -1
+#else
 #define LWS_INVALID_FILE INVALID_HANDLE_VALUE
+#endif
 #define LWS_SOCK_INVALID (INVALID_SOCKET)
 #define LWS_O_RDONLY _O_RDONLY
 #define LWS_O_WRONLY _O_WRONLY
@@ -287,6 +291,18 @@ typedef int suseconds_t;
 #include <mbedtls/ssl.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/version.h>
+
+#if !defined(MBEDTLS_PRIVATE)
+#define MBEDTLS_PRIVATE(_q) _q
+#endif
+
+#if (MBEDTLS_VERSION_MAJOR == 3) && (MBEDTLS_VERSION_MINOR == 0)
+#define MBEDTLS_PRIVATE_V30_ONLY(_q) MBEDTLS_PRIVATE(_q)
+#else
+#define MBEDTLS_PRIVATE_V30_ONLY(_q) _q
+#endif
+
 #endif
 #else
 #include <openssl/ssl.h>
@@ -378,7 +394,11 @@ struct lws;
 #if defined(_WIN32)
 #if !defined(LWS_WIN32_HANDLE_TYPES)
 typedef SOCKET lws_sockfd_type;
+#if defined(__MINGW32__)
+typedef int lws_filefd_type;
+#else
 typedef HANDLE lws_filefd_type;
+#endif
 #endif
 
 
@@ -566,8 +586,11 @@ struct lws_vhost;
 struct lws;
 
 #include <libwebsockets/lws-dll2.h>
+#include <libwebsockets/lws-map.h>
+
 #include <libwebsockets/lws-fault-injection.h>
 #include <libwebsockets/lws-timeout-timer.h>
+#include <libwebsockets/lws-cache-ttl.h>
 #if defined(LWS_WITH_SYS_SMD)
 #include <libwebsockets/lws-smd.h>
 #endif
@@ -608,7 +631,11 @@ struct lws;
 #if defined(LWS_WITH_FILE_OPS)
 #include <libwebsockets/lws-vfs.h>
 #endif
+#include <libwebsockets/lws-gencrypto.h>
+
 #include <libwebsockets/lws-lejp.h>
+#include <libwebsockets/lws-lecp.h>
+#include <libwebsockets/lws-cose.h>
 #include <libwebsockets/lws-struct.h>
 #include <libwebsockets/lws-threadpool.h>
 #include <libwebsockets/lws-tokenize.h>
@@ -638,7 +665,6 @@ struct lws;
 #include <mbedtls/sha512.h>
 #endif
 
-#include <libwebsockets/lws-gencrypto.h>
 #include <libwebsockets/lws-genhash.h>
 #include <libwebsockets/lws-genrsa.h>
 #include <libwebsockets/lws-genaes.h>

@@ -35,10 +35,10 @@ const EnumToStringFromString<DataTransferStatus> DataTransferStatusHelper = {{Da
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool DataTransferReqConverter::fromJson(const rapidjson::Value& json,
                                         DataTransferReq&        data,
-                                        const char*&            error_code,
+                                        std::string&            error_code,
                                         std::string&            error_message)
 {
     (void)error_code;
@@ -49,7 +49,7 @@ bool DataTransferReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool DataTransferReqConverter::toJson(const DataTransferReq& data, rapidjson::Document& json)
 {
     fill(json, "vendorId", data.vendorId);
@@ -58,10 +58,10 @@ bool DataTransferReqConverter::toJson(const DataTransferReq& data, rapidjson::Do
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool DataTransferConfConverter::fromJson(const rapidjson::Value& json,
                                          DataTransferConf&       data,
-                                         const char*&            error_code,
+                                         std::string&            error_code,
                                          std::string&            error_message)
 {
     (void)error_code;
@@ -71,7 +71,7 @@ bool DataTransferConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool DataTransferConfConverter::toJson(const DataTransferConf& data, rapidjson::Document& json)
 {
     fill(json, "status", DataTransferStatusHelper.toString(data.status));

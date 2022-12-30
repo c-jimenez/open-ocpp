@@ -84,6 +84,12 @@ class CentralSystemConfig : public ocpp::config::ICentralSystemConfig
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     unsigned int logMaxEntriesCount() const override { return get<unsigned int>("LogMaxEntriesCount"); }
 
+    // ISO 15118 PnC extensions
+
+    /** @brief If this variable set to true, then the Central System supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    bool iso15118PnCEnabled() const override { return getBool("Iso15118PnCEnabled"); }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile& m_config;

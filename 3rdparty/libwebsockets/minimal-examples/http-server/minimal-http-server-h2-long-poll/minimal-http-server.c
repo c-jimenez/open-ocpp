@@ -57,7 +57,7 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 	struct pss * pss = (struct pss *)user;
 	uint8_t buf[LWS_PRE + LWS_RECOMMENDED_MIN_HEADER_SPACE],
 		*start = &buf[LWS_PRE], *p = start,
-		*end = p + sizeof(buf) - LWS_PRE;
+		*end = buf + sizeof(buf) - 1;
 	int m, n;
 
 	switch (reason) {
@@ -101,8 +101,8 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 }
 
 static struct lws_protocols protocols[] = {
-	{ "http", callback_http, sizeof(struct pss), 0 },
-	{ NULL, NULL, 0, 0 } /* terminator */
+	{ "http", callback_http, sizeof(struct pss), 0, 0, NULL, 0 },
+	LWS_PROTOCOL_LIST_TERM
 };
 
 

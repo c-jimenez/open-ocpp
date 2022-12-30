@@ -42,7 +42,7 @@ callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons reason,
 {
 	struct pss *pss = (struct pss *)user;
 	uint8_t buf[LWS_PRE + 2048], *start = &buf[LWS_PRE], *p = start,
-		*end = &buf[sizeof(buf) - LWS_PRE - 1];
+		*end = &buf[sizeof(buf) - 1];
 	time_t t;
 	int n;
 #if defined(LWS_HAVE_CTIME_R)
@@ -216,8 +216,8 @@ callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons reason,
 }
 
 static const struct lws_protocols defprot =
-	{ "defprot", lws_callback_http_dummy, 0, 0 }, protocol =
-	{ "http", callback_dynamic_http, sizeof(struct pss), 0 };
+	{ "defprot", lws_callback_http_dummy, 0, 0, 0, NULL, 0 }, protocol =
+	{ "http", callback_dynamic_http, sizeof(struct pss), 0, 0, NULL, 0 };
 
 static const struct lws_protocols *pprotocols[] = { &defprot, &protocol, NULL };
 

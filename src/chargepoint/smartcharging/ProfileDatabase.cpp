@@ -353,7 +353,7 @@ std::string ProfileDatabase::serialize(const ocpp::types::ChargingProfile& profi
 /** @brief Deserialize a profile from a string */
 bool ProfileDatabase::deserialize(const std::string& profile_str, ocpp::types::ChargingProfile& profile)
 {
-    const char*         error_code = nullptr;
+    std::string         error_code;
     std::string         error_message;
     rapidjson::Document profile_json;
     profile_json.Parse(profile_str.c_str());

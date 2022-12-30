@@ -131,12 +131,39 @@ lws_plat_init(struct lws_context *context,
 					 context->max_fds, "lws_lookup");
 
 	if (!context->lws_lookup) {
-		lwsl_err("%s: OOM on alloc lws_lookup array for %d conn\n",
-			 __func__, context->max_fds);
+		lwsl_cx_err(context, "OOM on alloc lws_lookup array for %d conn",
+			 context->max_fds);
 		return 1;
 	}
 
-	lwsl_info(" mem: platform fd map: %5lu B\n",
+#if defined(LWS_WITH_MBEDTLS)
+	{
+		int n;
+
+		/* initialize platform random through mbedtls */
+		mbedtls_entropy_init(&context->mec);
+		mbedtls_ctr_drbg_init(&context->mcdc);
+
+		n = mbedtls_ctr_drbg_seed(&context->mcdc, mbedtls_entropy_func,
+					  &context->mec, NULL, 0);
+		if (n)
+			lwsl_err("%s: mbedtls_ctr_drbg_seed() returned 0x%x\n",
+				 __func__, n);
+#if 0
+		else {
+			uint8_t rtest[16];
+			lwsl_notice("%s: started drbg\n", __func__);
+			if (mbedtls_ctr_drbg_random(&context->mcdc, rtest,
+							sizeof(rtest)))
+				lwsl_err("%s: get random failed\n", __func__);
+			else
+				lwsl_hexdump_notice(rtest, sizeof(rtest));
+		}
+#endif
+	}
+#endif
+
+	lwsl_cx_info(context, " mem: platform fd map: %5lu B",
 		    (unsigned long)(sizeof(struct lws *) * context->max_fds));
 #endif
 #if defined(LWS_WITH_FILE_OPS)

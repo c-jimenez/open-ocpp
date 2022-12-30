@@ -1,7 +1,7 @@
 /*
  * libwebsockets - small server side websockets and web server implementation
  *
- * Copyright (C) 2010 - 2019 Andy Green <andy@warmcat.com>
+ * Copyright (C) 2010 - 2021 Andy Green <andy@warmcat.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -93,6 +93,12 @@ enum lws_client_connect_ssl_connection_flags {
 	LCCSCF_CONMON				= (1 << 28),
 	/**< If LWS_WITH_CONMON enabled for build, keeps a copy of the
 	 * getaddrinfo results so they can be queried subsequently */
+	LCCSCF_ACCEPT_TLS_DOWNGRADE_REDIRECTS	= (1 << 29),
+	/**< By default lws rejects https redirecting to http.  Set this
+	 * flag on the client connection to allow it. */
+	LCCSCF_CACHE_COOKIES			= (1 << 30),
+	/**< If built with -DLWS_WITH_CACHE_NSCOOKIEJAR, store and reapply
+	 * http cookies in a Netscape Cookie Jar on this connection */
 };
 
 /** struct lws_client_connect_info - parameters to connect with when using
@@ -108,7 +114,8 @@ struct lws_client_connect_info {
 	int ssl_connection;
 	/**< 0, or a combination of LCCSCF_ flags */
 	const char *path;
-	/**< uri path */
+	/**< URI path. Prefix with + for a UNIX socket. (+@ for
+     * a Linux abstract-namespace socket) */
 	const char *host;
 	/**< content of host header */
 	const char *origin;
@@ -216,10 +223,16 @@ struct lws_client_connect_info {
 	 * connection, allows targeting by "wsi=XXX/..." if you give XXX here.
 	 */
 
-	uint16_t	keep_warm_secs;
+	uint16_t				keep_warm_secs;
 	/**< 0 means 5s.  If the client connection to the endpoint becomes idle,
 	 * defer closing it for this many seconds in case another outgoing
 	 * connection to the same endpoint turns up.
+	 */
+
+	lws_log_cx_t				*log_cx;
+	/**< NULL to use lws_context log context, else a pointer to a log
+	 * context template to take a copy of for this wsi.  Used to isolate
+	 * wsi-specific logs into their own stream or file.
 	 */
 
 	/* Add new things just above here ---^
@@ -300,6 +313,7 @@ lws_http_client_read(struct lws *wsi, char **buf, int *len);
  * \param wsi: client connection
  *
  * Returns the last server response code, eg, 200 for client http connections.
+ * If there is no valid response, it will return 0.
  *
  * You should capture this during the LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP
  * callback, because after that the memory reserved for storing the related

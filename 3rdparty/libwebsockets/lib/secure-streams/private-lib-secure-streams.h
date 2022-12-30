@@ -1,7 +1,7 @@
 /*
  * libwebsockets - small server side websockets and web server implementation
  *
- * Copyright (C) 2019 - 2020 Andy Green <andy@warmcat.com>
+ * Copyright (C) 2019 - 2021 Andy Green <andy@warmcat.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -39,6 +39,7 @@ typedef enum {
 	SSSEQ_CONNECTED,
 } lws_ss_seq_state_t;
 
+struct conn;
 
 /**
  * lws_ss_handle_t: publicly-opaque secure stream object implementation
@@ -70,13 +71,20 @@ typedef struct lws_ss_handle {
 	struct lws_sequencer	*seq;	  /**< owning sequencer if any */
 	struct lws		*wsi;	  /**< the stream wsi if any */
 
+	struct conn		*conn_if_sspc_onw;
+
 #if defined(LWS_WITH_SSPLUGINS)
 	void			*nauthi;  /**< the nauth plugin instance data */
 	void			*sauthi;  /**< the sauth plugin instance data */
 #endif
 
 	lws_ss_metadata_t	*metadata;
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+	lws_ss_metadata_t	*instant_metadata; /**< for set instant metadata */
+	struct lwsac            *imd_ac;           /**< for get custom header */
+#endif
 	const lws_ss_policy_t	*rideshare;
+	struct lws_ss_handle	*h_in_svc;
 
 #if defined(LWS_WITH_CONMON)
 	char			*conmon_json;
@@ -139,10 +147,15 @@ typedef struct lws_ss_handle {
 			lws_mqtt_topic_elem_t		topic_qos;
 			lws_mqtt_topic_elem_t		sub_top;
 			lws_mqtt_subscribe_param_t 	sub_info;
+			lws_mqtt_subscribe_param_t 	shadow_sub;
 			/* allocation that must be destroyed with conn */
 			void				*heap_baggage;
 			const char			*subscribe_to;
 			size_t				subscribe_to_len;
+			struct lws_buflist		*buflist_unacked;
+			uint32_t			unacked_size;
+			uint8_t				retry_count;
+			uint8_t				send_unacked:1;
 		} mqtt;
 #endif
 #if defined(LWS_WITH_SYS_SMD)
@@ -157,6 +170,8 @@ typedef struct lws_ss_handle {
 
 	lws_ss_constate_t	connstate;/**< public connection state */
 	lws_ss_seq_state_t	seqstate; /**< private connection state */
+	lws_ss_state_return_t	pending_ret; /**< holds desired disposition
+						* for ss during CCE */
 
 #if defined(LWS_WITH_SERVER)
 	int			txn_resp;
@@ -181,6 +196,9 @@ typedef struct lws_ss_handle {
 	uint8_t			destroying:1;
 	uint8_t			ss_dangling_connected:1;
 	uint8_t			proxy_onward:1; /* opaque is conn */
+	uint8_t			inside_connect:1; /* set if we are currently
+						   * creating the onward
+						   * connect */
 } lws_ss_handle_t;
 
 /* connection helper that doesn't need to hang around after connection starts */
@@ -310,7 +328,14 @@ typedef struct lws_sspc_handle {
 	struct lws_dsh		*dsh;
 	struct lws_context	*context;
 
+	struct lws_sspc_handle	*h_in_svc;
+	/*
+	 * Used to detect illegal lws_sspc_destroy() calls while still
+	 * being serviced
+	 */
+
 	lws_usec_t		us_earliest_write_req;
+	lws_usec_t		us_start_upstream;
 
 	unsigned long		writeable_len;
 
@@ -381,6 +406,8 @@ struct policy_cb_args {
 
 	int count;
 	char pending_respmap;
+
+	uint8_t parse_data:1;
 };
 
 #if defined(LWS_WITH_SYS_SMD)
@@ -411,9 +438,6 @@ lws_ss_deserialize_tx_payload(struct lws_dsh *dsh, struct lws *wsi,
 int
 lws_ss_serialize_state(struct lws *wsi, struct lws_dsh *dsh, lws_ss_constate_t state,
 		       lws_ss_tx_ordinal_t ack);
-
-void
-lws_ss_serialize_state_transition(lws_ss_conn_states_t *state, int new_state);
 
 const lws_ss_policy_t *
 lws_ss_policy_lookup(const struct lws_context *context, const char *streamtype);
@@ -464,6 +488,11 @@ lws_ss_get_handle_metadata(struct lws_ss_handle *h, const char *name);
 lws_ss_metadata_t *
 lws_ss_policy_metadata_index(const lws_ss_policy_t *p, size_t index);
 
+#if defined(LWS_WITH_SS_DIRECT_PROTOCOL_STR)
+lws_ss_metadata_t *
+lws_ss_get_handle_instant_metadata(struct lws_ss_handle *h, const char *name);
+#endif
+
 lws_ss_metadata_t *
 lws_ss_policy_metadata(const lws_ss_policy_t *p, const char *name);
 
@@ -482,6 +511,9 @@ _lws_ss_alloc_set_metadata(lws_ss_metadata_t *omd, const char *name,
 lws_ss_state_return_t
 _lws_ss_client_connect(lws_ss_handle_t *h, int is_retry, void *conn_if_sspc_onw);
 
+lws_ss_state_return_t
+_lws_ss_request_tx(lws_ss_handle_t *h);
+
 int
 __lws_ss_proxy_bind_ss_to_conn_wsi(void *parconn, size_t dsh_size);
 
@@ -497,10 +529,24 @@ int
 lws_ss_check_next_state(lws_lifecycle_t *lc, uint8_t *prevstate,
 			lws_ss_constate_t cs);
 
+int
+lws_ss_check_next_state_ss(lws_ss_handle_t *ss, uint8_t *prevstate,
+			   lws_ss_constate_t cs);
+
+int
+lws_ss_check_next_state_sspc(lws_sspc_handle_t *ss, uint8_t *prevstate,
+			     lws_ss_constate_t cs);
+
 void
 lws_proxy_clean_conn_ss(struct lws *wsi);
 
-#if defined(LWS_WITH_SECURE_STREAMS_STATIC_POLICY_ONLY)
+int
+lws_ss_cancel_notify_dll(struct lws_dll2 *d, void *user);
+
+int
+lws_sspc_cancel_notify_dll(struct lws_dll2 *d, void *user);
+
+#if defined(LWS_WITH_SECURE_STREAMS_STATIC_POLICY_ONLY) || defined(LWS_WITH_SECURE_STREAMS_CPP)
 int
 lws_ss_policy_unref_trust_store(struct lws_context *context,
 				const lws_ss_policy_t *pol);
@@ -512,6 +558,13 @@ lws_ss_sys_cpd(struct lws_context *cx);
 #if defined(LWS_WITH_SECURE_STREAMS_AUTH_SIGV4)
 int lws_ss_apply_sigv4(struct lws *wsi, struct lws_ss_handle *h,
 		       unsigned char **p, unsigned char *end);
+#endif
+
+#if defined(_DEBUG)
+void
+lws_ss_assert_extant(struct lws_context *cx, int tsi, struct lws_ss_handle *h);
+#else
+#define lws_ss_assert_extant(_a, _b, _c)
 #endif
 
 typedef int (* const secstream_protocol_connect_munge_t)(lws_ss_handle_t *h,

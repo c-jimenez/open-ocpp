@@ -38,15 +38,7 @@ lws_tls_server_client_cert_verify_config(struct lws_vhost *vh)
 		return 0;
 	}
 
-	/*
-	 * The wrapper has this messed-up mapping:
-	 *
-	 * 	   else if (ctx->verify_mode == SSL_VERIFY_FAIL_IF_NO_PEER_CERT)
-	 *     mode = MBEDTLS_SSL_VERIFY_OPTIONAL;
-	 *
-	 * ie the meaning is inverted.  So where we should test for ! we don't
-	 */
-	if (lws_check_opt(vh->options, LWS_SERVER_OPTION_PEER_CERT_NOT_REQUIRED))
+	if (!lws_check_opt(vh->options, LWS_SERVER_OPTION_PEER_CERT_NOT_REQUIRED))
 		verify_options = SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
 
 	lwsl_notice("%s: vh %s requires client cert %d\n", __func__, vh->name,
@@ -198,7 +190,7 @@ lws_tls_server_vhost_backend_init(const struct lws_context_creation_info *info,
 	lws_filepos_t flen;
 	int n;
 
-	vhost->tls.ssl_ctx = SSL_CTX_new(method);	/* create context */
+	vhost->tls.ssl_ctx = SSL_CTX_new(method, &vhost->context->mcdc);	/* create context */
 	if (!vhost->tls.ssl_ctx) {
 		lwsl_err("problem creating ssl context\n");
 		return 1;
@@ -279,7 +271,9 @@ int
 #endif
 lws_tls_server_abort_connection(struct lws *wsi)
 {
-	__lws_tls_shutdown(wsi);
+	if (wsi->tls.use_ssl)
+		__lws_tls_shutdown(wsi);
+	
 	SSL_free(wsi->tls.ssl);
 
 	return 0;

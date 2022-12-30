@@ -27,10 +27,10 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetDiagnosticsReqConverter::fromJson(const rapidjson::Value& json,
                                           GetDiagnosticsReq&      data,
-                                          const char*&            error_code,
+                                          std::string&            error_code,
                                           std::string&            error_message)
 {
     bool ret;
@@ -48,7 +48,7 @@ bool GetDiagnosticsReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetDiagnosticsReqConverter::toJson(const GetDiagnosticsReq& data, rapidjson::Document& json)
 {
     fill(json, "location", data.location);
@@ -59,10 +59,10 @@ bool GetDiagnosticsReqConverter::toJson(const GetDiagnosticsReq& data, rapidjson
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetDiagnosticsConfConverter::fromJson(const rapidjson::Value& json,
                                            GetDiagnosticsConf&     data,
-                                           const char*&            error_code,
+                                           std::string&            error_code,
                                            std::string&            error_message)
 {
     (void)error_code;
@@ -71,7 +71,7 @@ bool GetDiagnosticsConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool GetDiagnosticsConfConverter::toJson(const GetDiagnosticsConf& data, rapidjson::Document& json)
 {
     fill(json, "fileName", data.fileName);

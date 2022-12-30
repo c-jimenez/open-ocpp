@@ -347,12 +347,12 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
                                   ocpp::messages::ChangeAvailabilityConf&      response,
-                                  const char*&                                 error_code,
+                                  std::string&                                 error_code,
                                   std::string&                                 error_message)
 {
     bool ret = false;
@@ -519,6 +519,15 @@ void StatusManager::sendBootNotification()
         std::chrono::seconds interval(boot_conf.interval);
         m_ocpp_config.heartbeatInterval(interval);
         m_heartbeat_timer.restart(std::chrono::milliseconds(interval));
+
+        // Save registration status
+        m_force_boot_notification = false;
+        m_internal_config.setKey(LAST_REGISTRATION_STATUS_KEY, RegistrationStatusHelper.toString(m_registration_status));
+        if (m_registration_status == RegistrationStatus::Accepted)
+        {
+            // Cancel next retry
+            m_boot_notification_timer.stop();
+        }
     }
 
     return;

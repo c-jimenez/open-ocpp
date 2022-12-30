@@ -853,14 +853,14 @@ test_jwt_RS256(struct lws_context *context)
 		goto bail;
 	}
 
-	if (lws_x509_jwk_privkey_pem(&jwk, (char *)rsa_key,
+	if (lws_x509_jwk_privkey_pem(context, &jwk, (char *)rsa_key,
 				     LWS_ARRAY_SIZE(rsa_key), NULL)) {
 		lwsl_err("%s: failed to copy private key to jwk\n", __func__);
 		goto bail;
 	}
 
 	if (lws_x509_info(pub, LWS_TLS_CERT_INFO_DER_RAW, der_info,
-			  LWS_ARRAY_SIZE(der_buf) - sizeof(der_info) +
+			  LWS_ARRAY_SIZE(der_buf) - sizeof(*der_info) +
 			  sizeof(der_info->ns.name)) ||
 	    der_info->ns.len <= 0) {
 		lwsl_err("%s: failed to parse x509 public key\n", __func__);

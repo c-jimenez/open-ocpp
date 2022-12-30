@@ -59,12 +59,12 @@ class RpcClientListener : public IRpc::IListener, public RpcClient::IListener
     /** @copydoc void IRpc::IListener::rpcCallReceived(const std::string&,
                                                        const rapidjson::Value&,
                                                        rapidjson::Document&,
-                                                       const char*&,
+                                                       std::string&,
                                                        std::string&) */
     bool rpcCallReceived(const std::string&      action,
                          const rapidjson::Value& payload,
                          rapidjson::Document&    response,
-                         const char*&            error_code,
+                         std::string&            error_code,
                          std::string&            error_message) override
     {
         this->action = action;
@@ -76,7 +76,10 @@ class RpcClientListener : public IRpc::IListener, public RpcClient::IListener
         {
             response.Parse(this->response);
         }
-        error_code = this->error_code;
+        if (this->error_code)
+        {
+            error_code = this->error_code;
+        }
         if (this->error_message)
         {
             error_message = this->error_message;

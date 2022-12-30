@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "OcspRequestDataType.h"
 #include "SecurityEvent.h"
 #include "SmartChargingSetpoint.h"
 
@@ -253,6 +254,52 @@ class IChargePoint
      * @return true if the notification has been sent, false otherwise
      */
     virtual bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) = 0;
+
+    // ISO 15118 PnC extensions
+
+    /**
+     * @brief Authorize an ISO15118 transaction
+     * @param certificate The X.509 certificated presented by EV
+     * @param id_token This contains the identifier that needs to be authorized
+     * @param cert_hash_data Contains the information needed to verify the EV Contract Certificate via OCSP
+     * @param cert_status Certificate status information. - if all certificates are 
+     *                    valid: return 'Accepted'. - if one of the certificates was revoked,
+     *                    return 'CertificateRevoked
+     * @return Authorization status (see AuthorizationStatus type)
+    */
+    virtual ocpp::types::AuthorizationStatus iso15118Authorize(
+        const ocpp::x509::Certificate&                                          certificate,
+        const std::string&                                                      id_token,
+        const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
+
+    /**
+     * @brief Get or update an ISO15118 EV certificate 
+     * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
+     * @param action Defines whether certificate needs to be installed or updated
+     * @param exi_request Raw CertificateInstallationReq request from EV, Base64 encoded
+     * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
+     * @return true if the processing of the message has been successful and an EXI response has been included, false otherwise 
+     */
+    virtual bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
+                                          ocpp::types::CertificateActionEnumType action,
+                                          const std::string&                     exi_request,
+                                          std::string&                           exi_response) = 0;
+
+    /**
+     * @brief Get the status of an ISO15118 certificate
+     * @param ocsp_request Indicates the certificate of which the status is requested
+     * @param ocsp_result OCSPResponse class as defined in IETF RFC 6960. DER encoded (as defined in IETF RFC 6960), and then base64 encoded
+     * @return true if the status of the certificate has been successfully retrieved, false otherwise 
+     */
+    virtual bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) = 0;
+
+    /**
+     * @brief Send a CSR request to sign an ISO15118 certificate
+     * @param csr CSR request
+     * @return true if the request has been sent and accepted, false otherwise
+     */
+    virtual bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& csr) = 0;
 };
 
 } // namespace chargepoint

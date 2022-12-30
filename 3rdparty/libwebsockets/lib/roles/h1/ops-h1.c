@@ -292,9 +292,11 @@ ws_mode:
 		// assert(0);
 		/* fallthru */
 
+	case LRS_WAITING_CONNECT: /* observed on warmcat.com */
+		break;
+
 	default:
 		lwsl_err("%s: Unhandled state %d\n", __func__, lwsi_state(wsi));
-		assert(0);
 		goto bail;
 	}
 
@@ -367,6 +369,7 @@ lws_h1_server_socket_service(struct lws *wsi, struct lws_pollfd *pollfd)
 	if ((lwsi_state(wsi) == LRS_ESTABLISHED ||
 	     lwsi_state(wsi) == LRS_ISSUING_FILE ||
 	     lwsi_state(wsi) == LRS_HEADERS ||
+	     lwsi_state(wsi) == LRS_DOING_TRANSACTION || /* at least, SSE */
 	     lwsi_state(wsi) == LRS_DISCARD_BODY ||
 	     lwsi_state(wsi) == LRS_BODY)) {
 
@@ -632,6 +635,11 @@ rops_handle_POLLIN_h1(struct lws_context_per_thread *pt, struct lws *wsi,
 
 		lwsl_debug("%s: %s: wsistate 0x%x\n", __func__, lws_wsi_tag(wsi),
 			   (unsigned int)wsi->wsistate);
+
+		if (pollfd->revents & LWS_POLLHUP &&
+		    !lws_buflist_total_len(&wsi->buflist))
+			return LWS_HPI_RET_PLEASE_CLOSE_ME;
+
 		n = lws_h1_server_socket_service(wsi, pollfd);
 		if (n != LWS_HPI_RET_HANDLED)
 			return n;
@@ -705,7 +713,9 @@ static int
 rops_handle_POLLOUT_h1(struct lws *wsi)
 {
 
-	if (lwsi_state(wsi) == LRS_ISSUE_HTTP_BODY) {
+
+	if (lwsi_state(wsi) == LRS_ISSUE_HTTP_BODY ||
+	    lwsi_state(wsi) == LRS_WAITING_SERVER_REPLY) {
 #if defined(LWS_WITH_HTTP_PROXY)
 		if (wsi->http.proxy_clientside) {
 			unsigned char *buf, prebuf[LWS_PRE + 1024];
@@ -717,7 +727,6 @@ rops_handle_POLLOUT_h1(struct lws *wsi)
 				len = sizeof(prebuf) - LWS_PRE;
 
 			if (len) {
-
 				memcpy(prebuf + LWS_PRE, buf, len);
 
 				lwsl_debug("%s: %s: proxying body %d %d %d %d %d\n",
@@ -736,23 +745,28 @@ rops_handle_POLLOUT_h1(struct lws *wsi)
 				}
 
 				lws_buflist_use_segment(&wsi->parent->http.buflist_post_body, len);
+
 			}
 
-			if (wsi->parent->http.buflist_post_body)
+			if (wsi->parent->http.buflist_post_body) {
 				lws_callback_on_writable(wsi);
-			else {
-#if defined(LWS_ROLE_H1) || defined(LWS_ROLE_H2)
-				/* prepare ourselves to do the parsing */
-				wsi->http.ah->parser_state = WSI_TOKEN_NAME_PART;
-				wsi->http.ah->lextable_pos = 0;
-#if defined(LWS_WITH_CUSTOM_HEADERS)
-				wsi->http.ah->unk_pos = 0;
-#endif
-#endif
-				lwsi_set_state(wsi, LRS_WAITING_SERVER_REPLY);
-				lws_set_timeout(wsi, PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE,
-						(int)wsi->a.context->timeout_secs);
+				return LWS_HP_RET_DROP_POLLOUT;
 			}
+
+			lwsl_wsi_err(wsi, "nothing to send");
+#if defined(LWS_ROLE_H1) || defined(LWS_ROLE_H2)
+			/* prepare ourselves to do the parsing */
+			wsi->http.ah->parser_state = WSI_TOKEN_NAME_PART;
+			wsi->http.ah->lextable_pos = 0;
+#if defined(LWS_WITH_CUSTOM_HEADERS)
+			wsi->http.ah->unk_pos = 0;
+#endif
+#endif
+			lwsi_set_state(wsi, LRS_WAITING_SERVER_REPLY);
+			lws_set_timeout(wsi, PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE,
+					(int)wsi->a.context->timeout_secs);
+
+			return LWS_HP_RET_DROP_POLLOUT;
 		}
 #endif
 		return LWS_HP_RET_USER_SERVICE;

@@ -46,12 +46,12 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
     /** @copydoc bool IMessageHandler::handle(const std::string&
                                               const rapidjson::Value&
                                               rapidjson::Document&
-                                              const char*&
+                                              std::string&
                                               std::string&) */
     bool handle(const std::string&      action,
                 const rapidjson::Value& payload,
                 rapidjson::Document&    response,
-                const char*&            error_code,
+                std::string&            error_code,
                 std::string&            error_message) override
     {
         bool ret = false;
@@ -79,11 +79,11 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
      * @brief Handle an incoming call request
      * @param request Payload of the request
      * @param response Payload of the response
-     * @param error_code Standard error code, set to nullptr if no error
+     * @param error_code Standard error code, empty if no error
      * @param error_msg Additionnal error message, empty if no error
      * @return true if the call is accepted, false otherwise
      */
-    virtual bool handleMessage(const RequestType& request, ResponseType& response, const char*& error_code, std::string& error_message) = 0;
+    virtual bool handleMessage(const RequestType& request, ResponseType& response, std::string& error_code, std::string& error_message) = 0;
 
   private:
     IMessageConverter<RequestType>&  m_request_converter;

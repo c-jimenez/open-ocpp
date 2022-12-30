@@ -46,7 +46,7 @@ class WorkerThreadPool;
 namespace chargepoint
 {
 
-class AuthentManager;
+class IAuthentManager;
 class IStatusManager;
 class Connectors;
 class IChargePointEventsHandler;
@@ -66,7 +66,7 @@ class ReservationManager
                        const ocpp::messages::GenericMessagesConverter& messages_converter,
                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                        IStatusManager&                                 status_manager,
-                       AuthentManager&                                 authent_manager);
+                       IAuthentManager&                                authent_manager);
 
     /** @brief Destructor */
     virtual ~ReservationManager();
@@ -89,22 +89,22 @@ class ReservationManager
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ReserveNowReq& request,
                        ocpp::messages::ReserveNowConf&      response,
-                       const char*&                         error_code,
+                       std::string&                         error_code,
                        std::string&                         error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::CancelReservationReq& request,
                        ocpp::messages::CancelReservationConf&      response,
-                       const char*&                                error_code,
+                       std::string&                                error_code,
                        std::string&                                error_message) override;
 
   private:
@@ -119,7 +119,7 @@ class ReservationManager
     /** @brief Status manager */
     IStatusManager& m_status_manager;
     /** @brief Authentication manager */
-    AuthentManager& m_authent_manager;
+    IAuthentManager& m_authent_manager;
 
     /** @brief Periodic timer to check reservations expiry */
     ocpp::helpers::Timer m_expiry_timer;

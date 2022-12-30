@@ -56,13 +56,14 @@ This implementation is based on the following libraries :
 * Websockets (Client or Server)
 * OCPP-J RPC
 * JSON messages serialization/deserialization
-* OCPP role (Charge Point or Central System)
+* OCPP role (Charge Point, Central System or Local Controller)
 
 As of this version :
 
-* All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented except GetCompositeSchedule for Charge Point role
+* All the messages defined in the OCPP 1.6 edition 2 protocol have been implemented
 * All the configuration keys defined in the OCPP 1.6 edition 2 protocol have been implemented for the Charge Point role
 * All the messages defined in the OCPP 1.6 security whitepaper edition 2 have been implemented
+* All the messages defined in the Using ISO 15118 Plug & Charge with OCPP 1.6 Application Note v1.0 have been implemented
 
 The user application will have to implement some callbacks to provide the data needed by **Open OCPP** or to handle OCPP events (boot notification, remote start/stop notifications, meter values...).
 
@@ -77,7 +78,7 @@ The persistent data handled by **Open OCPP** is stored into a single file which 
   + Logs
   * X.509 Certificates
 
-* For Central System role :
+* For Central System or Local Controller role :
 
   + Internal configuration
   + Logs
@@ -92,7 +93,7 @@ The standard OCPP configuration persistency has to be handled by the user applic
 | Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
 | Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
 | Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for now in Charge Point role |
+| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for connector 0 in Charge Point role |
 | Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
 
 ### Supported OCPP configuration keys
@@ -153,6 +154,11 @@ In the "Owner" column, "S" means that the configuration key behavior is handled 
 | CpoName | S | None |
 | SecurityProfile | S | None |
 | SupportedFileTransferProtocols | U | None |
+| CentralContractValidationAllowed | S | None
+| CertSigningWaitMinimum | S | None |
+| CertSigningRepeatTimes | S | None |
+| ContractValidationOffline | U/S | The stack will notify the user application for contract validation depending on the value of this parameter
+| ISO15118PnCEnabled | S | None |
 
 ### OCPP security extensions
 
@@ -210,6 +216,24 @@ If **InternalCertificateManagementEnabled** is set to **true**, the storage of c
 **Open OCPP** support this feature for both Charge Point and Central System roles.
 
 **Open OCPP** provides helper classes based on OpenSSL to ease private keys, certificate and certificate requests usage : generation, signature, verification. They can be used in the user application callbacks. These helpers can be found in the ocpp::tools::x509 namespace and are widely used in the **Open OCPP** source code and examples.
+
+### OCPP IS15118 PnC extensions
+
+**Open OCPP** fully supports the whole messaging, data types and configuration keys set associated to the ISO15118 PnC extensions.
+
+#### Charge Point role
+
+In Charge Point role these extensions consists mainly on forwarding messages from the ISO15118-2 stack layer to the Central System by using dedicated DataTransfer messages. 
+
+**Open OCPP** implements the forwarding and provides callback and retries capabilities for certificates messages.
+
+Allthough **Open OCPP** is able to manage a certificate store, the Chare Point certificate used for ISO15118 communication won't be stored in it even if the **InternalCertificateManagementEnabled** configuration key is set to **true**. This is will allow for the ISO15118-2 stack to access this certificate and use it to secure its communications with the vehicule.
+
+#### Central System role
+
+In Central System role these extensions consists mainly in certificate management by forwarding request either to OCSP server or Mobility Operators.
+
+**Open OCPP** provides callbacks where the forwarding to the necessary servers must be implemented.
 
 ### Internal configuration keys
 
@@ -281,6 +305,21 @@ The behavior and the configuration of the **Open OCPP** stack can be modified th
 | TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
 | TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
 | TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
+
+#### Local Controller keys
+
+| Key | Type | Description |
+| :---: | :---: | :--- |
+| ListenUrl | string | URL to listen to incomming  websocket connections |
+| WebSocketPingInterval | uint | Websocket PING interval in seconds |
+| HttpBasicAuthent | bool | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method |
+| TlsEcdhCurve | string | ECDH curve to use for TLS connections with EC keys |
+| TlsServerCertificate | string | Path to the Central System's certificate |
+| TlsServerCertificatePrivateKey | string | Path to the Central System's certificate's private key |
+| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
+| TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
+| TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
+| DisconnectFromCpWhenCsDisconnected | bool | If set to true, the Charge Point is automatically disconnected when the connection to the Central System cannot be established or is lost |
 
 ## Build
 
@@ -370,7 +409,7 @@ See the deploy test [CMakeLists.txt](./tests/deploy/CMakeLists.txt) as an exampl
 
 ## Quick start
 
-The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md) and the [quick start Central System example](./examples/quick_start_centralsystem/README.md).
+The best way to start is to take a look at the [examples](./examples/README.md) and more specifically at the [quick start Charge Point example](./examples/quick_start_chargepoint/README.md), the [quick start Central System example](./examples/quick_start_centralsystem/README.md) and the [quick start Local Controller example](./examples/quick_start_localcontroller/README.md).
 
 ### Charge Point role
 

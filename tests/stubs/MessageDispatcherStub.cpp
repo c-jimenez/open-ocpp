@@ -28,22 +28,29 @@ MessageDispatcherStub::MessageDispatcherStub() : m_handlers() { }
 /** @brief Destructor */
 MessageDispatcherStub::~MessageDispatcherStub() { }
 
-/** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&) */
-bool MessageDispatcherStub::registerHandler(const std::string& action, IMessageHandler& handler)
+/** @copydoc bool IMessageDispatcher::registerHandler(const std::string&, IMessageHandler&, bool) */
+bool MessageDispatcherStub::registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace)
 {
-    m_handlers[action] = &handler;
-    return true;
+    bool ret = false;
+
+    if (allow_replace || !hasHandler(action))
+    {
+        m_handlers[action] = &handler;
+        ret                = true;
+    }
+
+    return ret;
 }
 
 /** @copydoc bool IMessageDispatcher::dispatchMessage(const std::string&,
                                                           const rapidjson::Value&,
                                                           rapidjson::Document&,
-                                                          const char*&,
+                                                          std::string&,
                                                           std::string&) */
 bool MessageDispatcherStub::dispatchMessage(const std::string&      action,
                                             const rapidjson::Value& payload,
                                             rapidjson::Document&    response,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     bool ret          = false;

@@ -26,8 +26,8 @@ namespace ocpp
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool HeartbeatReqConverter::fromJson(const rapidjson::Value& json, HeartbeatReq& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool HeartbeatReqConverter::fromJson(const rapidjson::Value& json, HeartbeatReq& data, std::string& error_code, std::string& error_message)
 {
     (void)json;
     (void)data;
@@ -36,7 +36,7 @@ bool HeartbeatReqConverter::fromJson(const rapidjson::Value& json, HeartbeatReq&
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool HeartbeatReqConverter::toJson(const HeartbeatReq& data, rapidjson::Document& json)
 {
     (void)data;
@@ -44,10 +44,10 @@ bool HeartbeatReqConverter::toJson(const HeartbeatReq& data, rapidjson::Document
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool HeartbeatConfConverter::fromJson(const rapidjson::Value& json,
                                       HeartbeatConf&          data,
-                                      const char*&            error_code,
+                                      std::string&            error_code,
                                       std::string&            error_message)
 {
     bool ret = extract(json, "currentTime", data.currentTime, error_message);
@@ -58,7 +58,7 @@ bool HeartbeatConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool HeartbeatConfConverter::toJson(const HeartbeatConf& data, rapidjson::Document& json)
 {
     fill(json, "currentTime", data.currentTime.str());

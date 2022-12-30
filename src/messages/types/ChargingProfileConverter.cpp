@@ -30,11 +30,11 @@ namespace messages
 
 /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::fromJson(const rapidjson::Value&,
  *                                                                    ocpp::types::ChargingProfile&,
- *                                                                    const char*&,
+ *                                                                    std::string&,
  *                                                                    std::string&) */
 bool ChargingProfileConverter::fromJson(const rapidjson::Value&       json,
                                         ocpp::types::ChargingProfile& data,
-                                        const char*&                  error_code,
+                                        std::string&                  error_code,
                                         std::string&                  error_message)
 {
     bool ret;

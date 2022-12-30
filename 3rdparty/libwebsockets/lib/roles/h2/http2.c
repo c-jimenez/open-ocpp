@@ -267,8 +267,9 @@ __lws_wsi_server_new(struct lws_vhost *vh, struct lws *parent_wsi,
 	}
 
 #if defined(LWS_WITH_SERVER)
-	if (lwsi_role_server(parent_wsi))
+	if (lwsi_role_server(parent_wsi)) {
 		lws_metrics_caliper_bind(wsi->cal_conn, wsi->a.context->mth_srv);
+	}
 #endif
 
 	h2n->highest_sid_opened = sid;
@@ -395,11 +396,16 @@ lws_h2_issue_preface(struct lws *wsi)
 		return 1;
 	}
 
+	if (h2n->sent_preface)
+		return 1;
+
 	lwsl_debug("%s: %s: fd %d\n", __func__, lws_wsi_tag(wsi), (int)wsi->desc.sockfd);
 
 	if (lws_issue_raw(wsi, (uint8_t *)preface, strlen(preface)) !=
 		(int)strlen(preface))
 		return 1;
+
+	h2n->sent_preface = 1;
 
 	lws_role_transition(wsi, LWSIFR_CLIENT, LRS_H2_WAITING_TO_SEND_HEADERS,
 			    &role_ops_h2);
@@ -424,6 +430,12 @@ lws_pps_schedule(struct lws *wsi, struct lws_h2_protocol_send *pps)
 {
 	struct lws *nwsi = lws_get_network_wsi(wsi);
 	struct lws_h2_netconn *h2n = nwsi->h2.h2n;
+
+	if (!h2n) {
+		lwsl_warn("%s: null h2n\n", __func__);
+		lws_free(pps);
+		return;
+	}
 
 	pps->next = h2n->pps;
 	h2n->pps = pps;
@@ -1510,6 +1522,18 @@ lws_h2_parse_end_of_frame(struct lws *wsi)
 #endif
 #endif /* CLIENT */
 
+#if defined(LWS_WITH_SECURE_STREAMS)
+			if (wsi->for_ss) {
+				lws_ss_handle_t *h = (lws_ss_handle_t *)lws_get_opaque_user_data(wsi);
+
+				h2n->swsi->for_ss = 1;
+				wsi->for_ss = 0;
+
+				if (h->wsi == wsi)
+					h->wsi = h2n->swsi;
+			}
+#endif
+
 			h2n->swsi->a.protocol = wsi->a.protocol;
 			if (h2n->swsi->user_space &&
 			    !h2n->swsi->user_space_externally_allocated)
@@ -1521,6 +1545,11 @@ lws_h2_parse_end_of_frame(struct lws *wsi)
 			wsi->a.opaque_user_data = NULL;
 			h2n->swsi->txc.manual_initial_tx_credit =
 					wsi->txc.manual_initial_tx_credit;
+
+#if defined(LWS_WITH_TLS)
+			lws_strncpy(h2n->swsi->alpn, wsi->alpn,
+					sizeof(wsi->alpn));
+#endif
 
 			wsi->user_space = NULL;
 
@@ -1619,8 +1648,17 @@ lws_h2_parse_end_of_frame(struct lws *wsi)
 #if defined(LWS_WITH_CLIENT)
 		if (h2n->swsi->client_mux_substream &&
 		    lws_client_interpret_server_handshake(h2n->swsi)) {
-			lwsl_info("%s: cli int serv hs closed it\n", __func__);
-			break;
+			/*
+			 * This is more complicated than it looks, one exit from
+			 * interpret_server_handshake() is to do a close that
+			 * turns into a redirect.
+			 *
+			 * In that case, the wsi survives having being reset
+			 * and detached from any h2 identity.  We need to get
+			 * our parents out from touching it any more
+			 */
+			lwsl_info("%s: cli int serv hs closed, or redir\n", __func__);
+			return 2;
 		}
 #endif
 
@@ -2020,7 +2058,7 @@ lws_h2_parser(struct lws *wsi, unsigned char *in, lws_filepos_t _inlen,
 			h2n->count++;
 
 			if (h2n->type == LWS_H2_FRAME_TYPE_COUNT) { /* IGNORING FRAME */
-				lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
+				//lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
 				goto frame_end;
 			}
 
@@ -2155,16 +2193,22 @@ lws_h2_parser(struct lws *wsi, unsigned char *in, lws_filepos_t _inlen,
 							__func__, lws_wsi_tag(h2n->swsi));
 				}
 
+				/*
+				 * in + length may cover multiple frames, we
+				 * can only consider the length of the DATA
+				 * in front of us
+				 */
+
 				if (lws_hdr_total_length(h2n->swsi,
 					     WSI_TOKEN_HTTP_CONTENT_LENGTH) &&
 				    h2n->swsi->http.rx_content_length &&
 				    h2n->swsi->http.rx_content_remain <
-						    lws_ptr_diff_size_t(iend, in) + 1 - 9 && /* last */
+						     h2n->length && /* last */
 				    h2n->inside < h2n->length) {
 
 					lwsl_warn("%s: %lu %lu %lu %lu\n", __func__,
 						  (unsigned long)h2n->swsi->http.rx_content_remain,
-						(unsigned long)(lws_ptr_diff_size_t(iend, in) + 1 - 9),
+						(unsigned long)(lws_ptr_diff_size_t(iend, in) + 1),
 						(unsigned long)h2n->inside, (unsigned long)h2n->length);
 
 					/* unread data in frame */
@@ -2217,10 +2261,9 @@ lws_h2_parser(struct lws *wsi, unsigned char *in, lws_filepos_t _inlen,
 						goto close_swsi_and_return;
 					}
 
-					break;
+					goto do_windows;
 				}
 #endif
-
 				if (lwsi_state(h2n->swsi) == LRS_DEFERRING_ACTION) {
 					m = lws_buflist_append_segment(
 						&h2n->swsi->buflist, in - 1, (unsigned int)n);
@@ -2299,7 +2342,7 @@ do_windows:
 					 * fast as we can take it
 					 */
 
-					m = n; //(2 * h2n->length) + 65536;
+					m = n  + 65536;
 
 					/* update both the stream and nwsi */
 
@@ -2360,7 +2403,7 @@ do_windows:
 				break;
 
 			case LWS_H2_FRAME_TYPE_COUNT: /* IGNORING FRAME */
-				lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
+				//lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
 				h2n->count++;
 				break;
 
@@ -2384,7 +2427,13 @@ frame_end:
 			/*
 			 * end of frame just happened
 			 */
-			if (lws_h2_parse_end_of_frame(wsi))
+			n = lws_h2_parse_end_of_frame(wsi);
+			if (n == 2) {
+				*inused = (lws_filepos_t)lws_ptr_diff_size_t(in, oldin);
+
+				return 2;
+			}
+			if (n)
 				goto fail;
 
 			break;
@@ -2430,7 +2479,7 @@ try_frame_start:
 
 		default:
 			if (h2n->type == LWS_H2_FRAME_TYPE_COUNT) { /* IGNORING FRAME */
-				lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
+				//lwsl_debug("%s: consuming for ignored %u %u\n", __func__, (unsigned int)h2n->count, (unsigned int)h2n->length);
 				h2n->count++;
 			}
 			break;
@@ -2468,6 +2517,7 @@ lws_h2_client_handshake(struct lws *wsi)
 	char *meth = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_METHOD),
 	     *uri = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_URI), *simp;
 	struct lws *nwsi = lws_get_network_wsi(wsi);
+	const char *path = "/";
 	int n, m;
 	/*
 	 * The identifier of a newly established stream MUST be numerically
@@ -2505,6 +2555,8 @@ lws_h2_client_handshake(struct lws *wsi)
 	if (!meth)
 		meth = "GET";
 
+	/* h2 pseudoheaders must be in a bunch at the start */
+
 	if (lws_add_http_header_by_token(wsi,
 				WSI_TOKEN_HTTP_COLON_METHOD,
 				(unsigned char *)meth,
@@ -2517,31 +2569,49 @@ lws_h2_client_handshake(struct lws *wsi)
 				&p, end))
 		goto fail_length;
 
+
 	n = lws_hdr_total_length(wsi, _WSI_TOKEN_CLIENT_URI);
+	if (n)
+		path = uri;
+	else
+		if (wsi->stash && wsi->stash->cis[CIS_PATH]) {
+			path = wsi->stash->cis[CIS_PATH];
+			n = (int)strlen(path);
+		} else
+			n = 1;
+
+	if (n > 1 && path[0] == '/' && path[1] == '/') {
+		path++;
+		n--;
+	}
+
 	if (n && lws_add_http_header_by_token(wsi,
 				WSI_TOKEN_HTTP_COLON_PATH,
-				(unsigned char *)uri, n, &p, end))
-		goto fail_length;
-
-	n = lws_hdr_total_length(wsi, _WSI_TOKEN_CLIENT_ORIGIN);
-	simp = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_ORIGIN);
-	if (n && simp && lws_add_http_header_by_token(wsi,
-				WSI_TOKEN_HTTP_COLON_AUTHORITY,
-				(unsigned char *)simp, n, &p, end))
+				(unsigned char *)path, n, &p, end))
 		goto fail_length;
 
 	n = lws_hdr_total_length(wsi, _WSI_TOKEN_CLIENT_HOST);
 	simp = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_HOST);
+	if (!n && wsi->stash && wsi->stash->cis[CIS_ADDRESS]) {
+		n = (int)strlen(wsi->stash->cis[CIS_ADDRESS]);
+		simp = wsi->stash->cis[CIS_ADDRESS];
+	}
 
-	if (!wsi->client_h2_alpn && n && simp &&
+//	n = lws_hdr_total_length(wsi, _WSI_TOKEN_CLIENT_ORIGIN);
+//	simp = lws_hdr_simple_ptr(wsi, _WSI_TOKEN_CLIENT_ORIGIN);
+#if 0
+	if (n && simp && lws_add_http_header_by_token(wsi,
+				WSI_TOKEN_HTTP_COLON_AUTHORITY,
+				(unsigned char *)simp, n, &p, end))
+		goto fail_length;
+#endif
+
+
+	if (/*!wsi->client_h2_alpn && */n && simp &&
 	    lws_add_http_header_by_token(wsi, WSI_TOKEN_HOST,
 				(unsigned char *)simp, n, &p, end))
 		goto fail_length;
 
-	if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_USER_AGENT,
-				(unsigned char *)"lwsss", 5,
-				&p, end))
-		goto fail_length;
 
 	if (wsi->flags & LCCSCF_HTTP_MULTIPART_MIME) {
 		p1 = lws_http_multipart_headers(wsi, p);
@@ -2559,6 +2629,11 @@ lws_h2_client_handshake(struct lws *wsi)
 	}
 
 	/* give userland a chance to append, eg, cookies */
+
+#if defined(LWS_WITH_CACHE_NSCOOKIEJAR) && defined(LWS_WITH_CLIENT)
+	if (wsi->flags & LCCSCF_CACHE_COOKIES)
+		lws_cookie_send_cookies(wsi, (char **)&p, (char *)end);
+#endif
 
 	if (wsi->a.protocol->callback(wsi,
 				LWS_CALLBACK_CLIENT_APPEND_HANDSHAKE_HEADER,

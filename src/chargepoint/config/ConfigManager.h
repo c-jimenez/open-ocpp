@@ -66,22 +66,22 @@ class ConfigManager
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::GetConfigurationReq& request,
                        ocpp::messages::GetConfigurationConf&      response,
-                       const char*&                               error_code,
+                       std::string&                               error_code,
                        std::string&                               error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
                        ocpp::messages::ChangeConfigurationConf&      response,
-                       const char*&                                  error_code,
+                       std::string&                                  error_code,
                        std::string&                                  error_message) override;
 
   private:

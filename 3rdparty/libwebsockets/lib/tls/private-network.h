@@ -75,11 +75,19 @@ struct lws_vhost_tls {
 };
 
 struct lws_lws_tls {
-	lws_tls_conn *ssl;
-	lws_tls_bio *client_bio;
-	struct lws_dll2 dll_pending_tls;
-	unsigned int use_ssl;
-	unsigned int redirect_to_https:1;
+	lws_tls_conn		*ssl;
+	lws_tls_bio		*client_bio;
+#if defined(LWS_TLS_SYNTHESIZE_CB)
+	lws_sorted_usec_list_t	sul_cb_synth;
+#endif
+#if !defined(LWS_WITH_MBEDTLS) && defined(LWS_WITH_TLS_JIT_TRUST)
+	/* mbedtls has this in the wrapper, since no wsi ptr at validation */
+	lws_tls_kid_chain_t	kid_chain;
+#endif
+	struct lws_dll2		dll_pending_tls;
+	char			err_helper[32];
+	unsigned int		use_ssl;
+	unsigned int		redirect_to_https:1;
 };
 
 
@@ -94,6 +102,10 @@ lws_ssl_pending(struct lws *wsi);
 int LWS_WARN_UNUSED_RESULT
 lws_server_socket_service_ssl(struct lws *new_wsi, lws_sockfd_type accept_fd,
 				char is_pollin);
+
+void
+lws_sess_cache_synth_cb(lws_sorted_usec_list_t *sul);
+
 int
 lws_ssl_close(struct lws *wsi);
 void

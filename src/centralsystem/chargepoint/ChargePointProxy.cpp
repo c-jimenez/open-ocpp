@@ -34,7 +34,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GetLog.h"
 #include "ICentralSystemConfig.h"
 #include "InstallCertificate.h"
-#include "Logger.h"
+#include "Iso15118GetInstalledCertificateIds.h"
+#include "Iso15118InstallCertificate.h"
+#include "Iso15118TriggerMessage.h"
 #include "RemoteStartTransaction.h"
 #include "RemoteStopTransaction.h"
 #include "ReserveNow.h"
@@ -66,7 +68,8 @@ ChargePointProxy::ChargePointProxy(ICentralSystem&                              
       m_rpc(rpc),
       m_msg_dispatcher(messages_validator),
       m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
-      m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config)
+      m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config),
+      m_messages_converter(messages_converter)
 {
     m_rpc->registerSpy(*this);
     m_rpc->registerListener(*this);
@@ -1038,6 +1041,160 @@ ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware
     return ret;
 }
 
+// ISO 15118 PnC extensions
+
+/** @copydoc bool ICentralSystem::IChargePoint::iso15118CertificateSigned(const ocpp::x509::Certificate&) */
+bool ChargePointProxy::iso15118CertificateSigned(const ocpp::x509::Certificate& certificate_chain)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Certificate signed : certificate chain size = " << certificate_chain.pemChain().size();
+
+    // Prepare request
+    CertificateSignedReq request;
+    request.certificateChain.assign(certificate_chain.pem());
+
+    // Send request
+    CertificateSignedConf response;
+    if (send("CertificateSigned", CERTIFICATE_SIGNED_ACTION, request, response))
+    {
+        // Extract response
+        ret = (response.status == CertificateSignedStatusEnumType::Accepted);
+        LOG_INFO << "[" << m_identifier
+                 << "] - [ISO15118] Certificate signed : " << CertificateSignedStatusEnumTypeHelper.toString(response.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - [ISO15118] Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118DeleteCertificate(
+                                const ocpp::types::CertificateHashDataType&) */
+ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::iso15118DeleteCertificate(
+    const ocpp::types::CertificateHashDataType& certificate)
+{
+    DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::Failed;
+
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Delete certificate : serialNumber = " << certificate.serialNumber.str();
+
+    // Prepare request
+    DeleteCertificateReq request;
+    request.certificateHashData = certificate;
+
+    // Send request
+    DeleteCertificateConf response;
+    if (send("DeleteCertificate", DELETE_CERTIFICATE_ACTION, request, response))
+    {
+        // Extract response
+        ret = response.status;
+        LOG_INFO << "[" << m_identifier
+                 << "] - [ISO15118] Delete certificate : " << DeleteCertificateStatusEnumTypeHelper.toString(response.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - [ISO15118] Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool ICentralSystem::IChargePoint::iso15118GetInstalledCertificateIds(ocpp::types::GetCertificateIdUseEnumType,
+                                                                                       std::vector<ocpp::types::CertificateHashDataChainType>&) */
+bool ChargePointProxy::iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>& types,
+                                                          std::vector<ocpp::types::CertificateHashDataChainType>&      certificates)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Get installed certificate ids : certificateType size = " << types.size();
+
+    // Prepare request
+    Iso15118GetInstalledCertificateIdsReq request;
+    request.certificateType = types;
+
+    // Send request
+    Iso15118GetInstalledCertificateIdsConf response;
+    if (send("Iso15118GetInstalledCertificateIds", ISO15118_GET_INSTALLED_CERTIFICATE_IDS_ACTION, request, response))
+    {
+        // Extract response
+        LOG_INFO << "[" << m_identifier << "] - [ISO15118] Get installed certificate ids : status = "
+                 << GetInstalledCertificateStatusEnumTypeHelper.toString(response.status)
+                 << " - count = " << response.certificateHashDataChain.size();
+        certificates = response.certificateHashDataChain;
+        ret          = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - [ISO15118] Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc ocpp::types::InstallCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118CertificateSigned(
+                                                                ocpp::types::InstallCertificateUseEnumType,
+                                                                const ocpp::x509::Certificate&) */
+ocpp::types::InstallCertificateStatusEnumType ChargePointProxy::iso15118InstallCertificate(ocpp::types::InstallCertificateUseEnumType type,
+                                                                                           const ocpp::x509::Certificate& certificate)
+{
+    InstallCertificateStatusEnumType ret = InstallCertificateStatusEnumType::Rejected;
+
+    LOG_INFO << "[" << m_identifier
+             << "] - [ISO15118] Install certificate : certificateType = " << InstallCertificateUseEnumTypeHelper.toString(type)
+             << " - certificate subject = " << certificate.subjectString();
+
+    // Prepare request
+    Iso15118InstallCertificateReq request;
+    request.certificateType = type;
+    request.certificate.assign(certificate.pem());
+
+    // Send request
+    Iso15118InstallCertificateConf response;
+    if (send("Iso15118InstallCertificate", ISO15118_INSTALL_CERTIFICATE_ACTION, request, response))
+    {
+        // Extract response
+        ret = response.status;
+        LOG_INFO << "[" << m_identifier
+                 << "] - [ISO15118] Install certificate : " << InstallCertificateStatusEnumTypeHelper.toString(response.status);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - [ISO15118] Call failed";
+    }
+
+    return ret;
+}
+
+/** @copydoc bool ICentralSystem::IChargePoint::iso15118TriggerSignCertificate() */
+bool ChargePointProxy::iso15118TriggerSignCertificate()
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Trigger sign certificate";
+
+    // Prepare request
+    Iso15118TriggerMessageReq request;
+
+    // Send request
+    Iso15118TriggerMessageConf response;
+    if (send("Iso15118TriggerMessage", ISO15118_TRIGGER_MESSAGE_ACTION, request, response))
+    {
+        // Extract response
+        LOG_INFO << "[" << m_identifier
+                 << "] - [ISO15118] Trigger sign certificate : status = " << TriggerMessageStatusEnumTypeHelper.toString(response.status);
+        ret = (response.status == TriggerMessageStatusEnumType::Accepted);
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - [ISO15118] Call failed";
+    }
+
+    return ret;
+}
+
 // IRpc::IListener interface
 
 /** @copydoc void IRpc::IListener::rpcDisconnected() */
@@ -1059,12 +1216,12 @@ void ChargePointProxy::rpcError()
 /** @copydoc bool IRpc::IListener::rpcCallReceived(const std::string&,
                                                        const rapidjson::Value&,
                                                        rapidjson::Document&,
-                                                       const char*&,
+                                                       std::string&,
                                                        std::string&) */
 bool ChargePointProxy::rpcCallReceived(const std::string&      action,
                                        const rapidjson::Value& payload,
                                        rapidjson::Document&    response,
-                                       const char*&            error_code,
+                                       std::string&            error_code,
                                        std::string&            error_message)
 {
     return m_msg_dispatcher.dispatchMessage(action, payload, response, error_code, error_message);

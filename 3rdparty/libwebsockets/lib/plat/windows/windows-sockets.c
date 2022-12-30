@@ -25,6 +25,7 @@
 #ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #endif
+#define MBEDTLS_ALLOW_PRIVATE_ACCESS
 #include "private-lib-core.h"
 
 #if defined(LWS_WITH_MBEDTLS)
@@ -200,6 +201,9 @@ lws_plat_insert_socket_into_fds(struct lws_context *context, struct lws *wsi)
 	}
 #endif
 
+	if (context->event_loop_ops->io)
+		context->event_loop_ops->io(wsi, LWS_EV_START | LWS_EV_READ);
+
 	pt->fds[pt->fds_count++].revents = 0;
 
 	lws_plat_change_pollfd(context, wsi, &pt->fds[pt->fds_count - 1]);
@@ -240,6 +244,8 @@ lws_plat_change_pollfd(struct lws_context *context, struct lws *wsi,
 
 	return 0;
 }
+
+#if defined(LWS_WITH_TLS)
 
 int
 lws_plat_vhost_tls_client_ctx_init(struct lws_vhost *vhost)
@@ -398,6 +404,8 @@ lws_plat_vhost_tls_client_ctx_init(struct lws_vhost *vhost)
 	return 0;
 }
 
+#endif
+
 const char *
 lws_plat_inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
 {
@@ -551,19 +559,22 @@ int
 lws_plat_mbedtls_net_send(void *ctx, const uint8_t *buf, size_t len)
 {
 	int fd = ((mbedtls_net_context *) ctx)->fd;
-	int ret;
+	int ret, en;
 
 	if (fd < 0)
 		return MBEDTLS_ERR_NET_INVALID_CONTEXT;
 
-	ret = write(fd, buf, (unsigned int)len);
+	ret = send(fd, (const char *)buf, (unsigned int)len, 0);
 	if (ret >= 0)
 		return ret;
 
-	if (errno == EAGAIN || errno == EWOULDBLOCK)
+	en = LWS_ERRNO;
+	if (en == EAGAIN || en == EWOULDBLOCK)
 		return MBEDTLS_ERR_SSL_WANT_WRITE;
 
-        if (WSAGetLastError() == WSAECONNRESET )
+	ret = WSAGetLastError();
+	lwsl_notice("%s: errno %d, GLE %d\n", __func__, en, ret);
+	if (ret == WSAECONNRESET )
             return( MBEDTLS_ERR_NET_CONN_RESET );
 
 	return MBEDTLS_ERR_NET_SEND_FAILED;
@@ -573,19 +584,23 @@ int
 lws_plat_mbedtls_net_recv(void *ctx, unsigned char *buf, size_t len)
 {
 	int fd = ((mbedtls_net_context *) ctx)->fd;
-	int ret;
+	int ret, en;
 
 	if (fd < 0)
 		return MBEDTLS_ERR_NET_INVALID_CONTEXT;
 
-	ret = (int)read(fd, buf, (unsigned int)len);
+	ret = (int)recv(fd, (char *)buf, (unsigned int)len, 0);
 	if (ret >= 0)
 		return ret;
 
-	if (errno == EAGAIN || errno == EWOULDBLOCK)
+	en = LWS_ERRNO;
+	if (en == EAGAIN || en == EWOULDBLOCK)
 		return MBEDTLS_ERR_SSL_WANT_READ;
 
-        if (WSAGetLastError() == WSAECONNRESET)
+	ret = WSAGetLastError();
+	lwsl_notice("%s: errno %d, GLE %d\n", __func__, en, ret);
+
+        if (ret == WSAECONNRESET)
             return MBEDTLS_ERR_NET_CONN_RESET;
 
 	return MBEDTLS_ERR_NET_RECV_FAILED;

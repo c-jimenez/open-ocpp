@@ -17,9 +17,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "TransactionManager.h"
-#include "AuthentManager.h"
 #include "Connectors.h"
 #include "GenericMessageSender.h"
+#include "IAuthentManager.h"
 #include "IChargePointEventsHandler.h"
 #include "IMeterValuesManager.h"
 #include "IOcppConfig.h"
@@ -46,7 +46,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        ocpp::messages::GenericMessageSender&           msg_sender,
                                        ocpp::messages::IRequestFifo&                   requests_fifo,
-                                       AuthentManager&                                 authent_manager,
+                                       IAuthentManager&                                authent_manager,
                                        ReservationManager&                             reservation_manager,
                                        IMeterValuesManager&                            meter_values_manager,
                                        ISmartChargingManager&                          smart_charging_manager)
@@ -260,12 +260,12 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
 bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
                                        ocpp::messages::RemoteStartTransactionConf&      response,
-                                       const char*&                                     error_code,
+                                       std::string&                                     error_code,
                                        std::string&                                     error_message)
 {
     (void)error_code;
@@ -314,12 +314,12 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool TransactionManager::handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
                                        ocpp::messages::RemoteStopTransactionConf&      response,
-                                       const char*&                                    error_code,
+                                       std::string&                                    error_code,
                                        std::string&                                    error_message)
 {
     (void)error_code;

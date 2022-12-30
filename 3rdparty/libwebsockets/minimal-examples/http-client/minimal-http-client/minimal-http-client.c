@@ -1,7 +1,7 @@
 /*
  * lws-minimal-http-client
  *
- * Written in 2010-2019 by Andy Green <andy@warmcat.com>
+ * Written in 2010-2021 by Andy Green <andy@warmcat.com>
  *
  * This file is made available under the Creative Commons CC0 1.0
  * Universal Public Domain Dedication.
@@ -62,6 +62,11 @@ dump_conmon_data(struct lws *wsi)
 }
 #endif
 
+static const char *ua = "Mozilla/5.0 (X11; Linux x86_64) "
+			"AppleWebKit/537.36 (KHTML, like Gecko) "
+			"Chrome/51.0.2704.103 Safari/537.36",
+		  *acc = "*/*";
+
 static int
 callback_http(struct lws *wsi, enum lws_callback_reasons reason,
 	      void *user, void *in, size_t len)
@@ -104,12 +109,20 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason,
 
 		break;
 
-#if defined(LWS_WITH_HTTP_BASIC_AUTH)
-
 	/* you only need this if you need to do Basic Auth */
 	case LWS_CALLBACK_CLIENT_APPEND_HANDSHAKE_HEADER:
 	{
 		unsigned char **p = (unsigned char **)in, *end = (*p) + len;
+
+		if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_USER_AGENT,
+				(unsigned char *)ua, (int)strlen(ua), p, end))
+			return -1;
+
+		if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_ACCEPT,
+				(unsigned char *)acc, (int)strlen(acc), p, end))
+			return -1;
+#if defined(LWS_WITH_HTTP_BASIC_AUTH)
+		{
 		char b[128];
 
 		if (!ba_user || !ba_password)
@@ -120,10 +133,10 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason,
 		if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_AUTHORIZATION,
 				(unsigned char *)b, (int)strlen(b), p, end))
 			return -1;
-
+		}
+#endif
 		break;
 	}
-#endif
 
 	/* chunks of chunked content, with header removed */
 	case LWS_CALLBACK_RECEIVE_CLIENT_HTTP_READ:
@@ -186,10 +199,9 @@ static const struct lws_protocols protocols[] = {
 	{
 		"http",
 		callback_http,
-		0,
-		0,
+		0, 0, 0, NULL, 0
 	},
-	{ NULL, NULL, 0, 0 }
+	LWS_PROTOCOL_LIST_TERM
 };
 
 static void
@@ -243,9 +255,10 @@ system_notify_cb(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
 		i.ssl_connection = 0;
 
 	i.ssl_connection |= LCCSCF_H2_QUIRK_OVERFLOWS_TXCR |
+			    LCCSCF_ACCEPT_TLS_DOWNGRADE_REDIRECTS |
 			    LCCSCF_H2_QUIRK_NGHTTP2_END_STREAM;
 
-	i.alpn = "h2";
+	i.alpn = "h2,http/1.1";
 	if (lws_cmdline_option(a->argc, a->argv, "--h1"))
 		i.alpn = "http/1.1";
 
@@ -265,6 +278,9 @@ system_notify_cb(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
 
 	if (lws_cmdline_option(a->argc, a->argv, "-k"))
 		i.ssl_connection |= LCCSCF_ALLOW_INSECURE;
+
+	if (lws_cmdline_option(a->argc, a->argv, "-b"))
+		i.ssl_connection |= LCCSCF_CACHE_COOKIES;
 
 	if (lws_cmdline_option(a->argc, a->argv, "-m"))
 		i.ssl_connection |= LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
@@ -321,7 +337,8 @@ system_notify_cb(lws_state_manager_t *mgr, lws_state_notify_link_t *link,
 
 int main(int argc, const char **argv)
 {
-	lws_state_notify_link_t notifier = { {0}, system_notify_cb, "app" };
+	lws_state_notify_link_t notifier = { { NULL, NULL, NULL },
+					     system_notify_cb, "app" };
 	lws_state_notify_link_t *na[] = { &notifier, NULL };
 	struct lws_context_creation_info info;
 	struct lws_context *context;
@@ -348,6 +365,12 @@ int main(int argc, const char **argv)
 	info.register_notifier_list = na;
 	info.connect_timeout_secs = 30;
 
+#if defined(LWS_WITH_CACHE_NSCOOKIEJAR)
+	info.http_nsc_filepath = "./cookies.txt";
+	if ((p = lws_cmdline_option(argc, argv, "-c")))
+		info.http_nsc_filepath = p;
+#endif
+
 	/*
 	 * since we know this lws context is only ever going to be used with
 	 * one client wsis / fds / sockets at a time, let lws know it doesn't
@@ -362,7 +385,11 @@ int main(int argc, const char **argv)
 	 * OpenSSL uses the system trust store.  mbedTLS has to be told which
 	 * CA to trust explicitly.
 	 */
-	info.client_ssl_ca_filepath = "./warmcat.com.cer";
+	if (lws_cmdline_option(argc, argv, "-w"))
+		/* option to confirm we are validating against the right cert */
+		info.client_ssl_ca_filepath = "./wrong.cer";
+	else
+		info.client_ssl_ca_filepath = "./warmcat.com.cer";
 #endif
 #if 0
 	n = open("./warmcat.com.cer", O_RDONLY);

@@ -61,12 +61,12 @@ void TriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType 
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageReq& request,
                                           ocpp::messages::TriggerMessageConf&      response,
-                                          const char*&                             error_code,
+                                          std::string&                             error_code,
                                           std::string&                             error_message)
 {
     bool ret = true;
@@ -112,12 +112,12 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
                                           ocpp::messages::ExtendedTriggerMessageConf&      response,
-                                          const char*&                                     error_code,
+                                          std::string&                                     error_code,
                                           std::string&                                     error_message)
 {
     bool ret = true;

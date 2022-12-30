@@ -36,10 +36,10 @@ const EnumToStringFromString<ReservationStatus> ReservationStatusHelper = {{Rese
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ReserveNowReqConverter::fromJson(const rapidjson::Value& json,
                                       ReserveNowReq&          data,
-                                      const char*&            error_code,
+                                      std::string&            error_code,
                                       std::string&            error_message)
 {
     bool ret;
@@ -55,7 +55,7 @@ bool ReserveNowReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ReserveNowReqConverter::toJson(const ReserveNowReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
@@ -66,10 +66,10 @@ bool ReserveNowReqConverter::toJson(const ReserveNowReq& data, rapidjson::Docume
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ReserveNowConfConverter::fromJson(const rapidjson::Value& json,
                                        ReserveNowConf&         data,
-                                       const char*&            error_code,
+                                       std::string&            error_code,
                                        std::string&            error_message)
 {
     (void)error_code;
@@ -78,7 +78,7 @@ bool ReserveNowConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ReserveNowConfConverter::toJson(const ReserveNowConf& data, rapidjson::Document& json)
 {
     fill(json, "status", ReservationStatusHelper.toString(data.status));

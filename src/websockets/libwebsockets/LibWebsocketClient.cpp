@@ -254,6 +254,7 @@ void LibWebsocketClient::process()
     }
 
     // Destroy context
+    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Ensure disconnect caller is joining
     lws_context_destroy(m_context);
 }
 
@@ -374,14 +375,16 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
         case LWS_CALLBACK_CLIENT_WRITEABLE:
         {
             // Send data if any ready
+            bool     error = false;
             SendMsg* msg = nullptr;
-            if (client->m_send_msgs.pop(msg, 0))
+            while (client->m_send_msgs.pop(msg, 0) && !error)
             {
                 if (lws_write(wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
                 {
                     // Error
                     client->disconnect();
                     client->m_listener->wsClientError();
+                    error = true;
                 }
 
                 // Free message memory
@@ -389,6 +392,13 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             }
         }
         break;
+
+        case LWS_CALLBACK_CLOSED_CLIENT_HTTP:
+            if (client->m_retry_interval != 0)
+            {
+                retry = true;
+            }
+            break;
 
         case LWS_CALLBACK_CLIENT_CLOSED:
             client->m_connected = false;

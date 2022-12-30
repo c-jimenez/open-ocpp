@@ -35,8 +35,8 @@ const EnumToStringFromString<ResetStatus> ResetStatusHelper = {{ResetStatus::Acc
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool ResetReqConverter::fromJson(const rapidjson::Value& json, ResetReq& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool ResetReqConverter::fromJson(const rapidjson::Value& json, ResetReq& data, std::string& error_code, std::string& error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -44,15 +44,15 @@ bool ResetReqConverter::fromJson(const rapidjson::Value& json, ResetReq& data, c
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ResetReqConverter::toJson(const ResetReq& data, rapidjson::Document& json)
 {
     fill(json, "type", ResetTypeHelper.toString(data.type));
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
-bool ResetConfConverter::fromJson(const rapidjson::Value& json, ResetConf& data, const char*& error_code, std::string& error_message)
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
+bool ResetConfConverter::fromJson(const rapidjson::Value& json, ResetConf& data, std::string& error_code, std::string& error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -60,7 +60,7 @@ bool ResetConfConverter::fromJson(const rapidjson::Value& json, ResetConf& data,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ResetConfConverter::toJson(const ResetConf& data, rapidjson::Document& json)
 {
     fill(json, "status", ResetStatusHelper.toString(data.status));

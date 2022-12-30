@@ -35,7 +35,8 @@ DataTransferManager::DataTransferManager(IChargePointEventsHandler&             
                                          ocpp::messages::GenericMessageSender&           msg_sender)
     : GenericMessageHandler<DataTransferReq, DataTransferConf>(DATA_TRANSFER_ACTION, messages_converter),
       m_events_handler(events_handler),
-      m_msg_sender(msg_sender)
+      m_msg_sender(msg_sender),
+      m_handlers()
 {
     msg_dispatcher.registerHandler(DATA_TRANSFER_ACTION, *this);
 }
@@ -77,22 +78,39 @@ bool DataTransferManager::dataTransfer(const std::string&               vendor_i
     return ret;
 }
 
+/** @copydoc void IDataTransferManager::registerHandler(const std::string&, IDataTransferHandler&) */
+void DataTransferManager::registerHandler(const std::string& vendor_id, IDataTransferHandler& handler)
+{
+    m_handlers[vendor_id] = &handler;
+}
+
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
  *                                                                                ResponseType& response,
- *                                                                                const char*& error_code,
+ *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
 bool DataTransferManager::handleMessage(const ocpp::messages::DataTransferReq& request,
                                         ocpp::messages::DataTransferConf&      response,
-                                        const char*&                           error_code,
+                                        std::string&                           error_code,
                                         std::string&                           error_message)
 {
     (void)error_code;
     (void)error_message;
 
-    // Notify request
-    response.status =
-        m_events_handler.dataTransferRequested(request.vendorId, request.messageId.value(), request.data, response.data.value());
+    // Check if a handler has been registered
+    auto handler = m_handlers.find(request.vendorId);
+    if (handler != m_handlers.cend())
+    {
+        // Notify handler
+        response.status =
+            handler->second->onDataTransferRequest(request.vendorId, request.messageId.value(), request.data, response.data.value());
+    }
+    else
+    {
+        // Notify request to user
+        response.status =
+            m_events_handler.dataTransferRequested(request.vendorId, request.messageId.value(), request.data, response.data.value());
+    }
 
     return true;
 }

@@ -30,11 +30,11 @@ namespace messages
 
 /** @bcopydoc bool IMessageConverter<ocpp::types::AuthorizationData>::fromJson(const rapidjson::Value&,
  *                                                                     ocpp::types::AuthorizationData&,
- *                                                                     const char*&,
+ *                                                                     std::string&,
  *                                                                     std::string&) */
 bool AuthorizationDataConverter::fromJson(const rapidjson::Value&         json,
                                           ocpp::types::AuthorizationData& data,
-                                          const char*&                    error_code,
+                                          std::string&                    error_code,
                                           std::string&                    error_message)
 {
     bool ret = true;

@@ -32,10 +32,10 @@ const EnumToStringFromString<RegistrationStatus> RegistrationStatusHelper = {
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool BootNotificationReqConverter::fromJson(const rapidjson::Value& json,
                                             BootNotificationReq&    data,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     (void)error_code;
@@ -53,7 +53,7 @@ bool BootNotificationReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool BootNotificationReqConverter::toJson(const BootNotificationReq& data, rapidjson::Document& json)
 {
     fill(json, "chargeBoxSerialNumber", data.chargeBoxSerialNumber);
@@ -69,10 +69,10 @@ bool BootNotificationReqConverter::toJson(const BootNotificationReq& data, rapid
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool BootNotificationConfConverter::fromJson(const rapidjson::Value& json,
                                              BootNotificationConf&   data,
-                                             const char*&            error_code,
+                                             std::string&            error_code,
                                              std::string&            error_message)
 {
     bool ret;
@@ -87,7 +87,7 @@ bool BootNotificationConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool BootNotificationConfConverter::toJson(const BootNotificationConf& data, rapidjson::Document& json)
 {
     fill(json, "currentTime", data.currentTime.str());

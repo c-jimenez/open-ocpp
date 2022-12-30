@@ -34,10 +34,21 @@
 #error "You probably need LWS_SUPPRESS_DEPRECATED_API_WARNINGS"
 #endif
 
+#if defined(USE_WOLFSSL)
+#include "openssl/ecdh.h"
+#endif
+
 /*
  * Care: many openssl apis return 1 for success.  These are translated to the
  * lws convention of 0 for success.
  */
+
+#if defined(USE_WOLFSSL)
+EVP_PKEY * EVP_PKEY_CTX_get0_pkey(EVP_PKEY_CTX *p)
+{
+	return p->pkey;
+}
+#endif
 
 #if !defined(LWS_HAVE_ECDSA_SIG_set0)
 static void
@@ -66,9 +77,11 @@ ECDSA_SIG_set0(ECDSA_SIG *sig, BIGNUM *r, BIGNUM *s)
 int BN_bn2binpad(const BIGNUM *a, unsigned char *to, int tolen)
 {
     int i;
+#if !defined(USE_WOLFSSL)
     BN_ULONG l;
+#endif
 
-#if !defined(LIBRESSL_VERSION_NUMBER)
+#if !defined(LIBRESSL_VERSION_NUMBER) && !defined(USE_WOLFSSL)
     bn_check_top(a);
 #endif
     i = BN_num_bytes(a);
@@ -78,10 +91,14 @@ int BN_bn2binpad(const BIGNUM *a, unsigned char *to, int tolen)
         memset(to, 0, (size_t)(tolen - i));
         to += tolen - i;
     }
+#if defined(USE_WOLFSSL)
+    BN_bn2bin(a, to);
+#else
     while (i--) {
         l = a->d[i / BN_BYTES];
         *(to++) = (unsigned char)(l >> (8 * (i % BN_BYTES))) & 0xff;
     }
+#endif
     return tolen;
 }
 #endif
@@ -102,7 +119,8 @@ const struct lws_ec_curves lws_ec_curves[4] = {
 };
 
 static int
-lws_genec_eckey_import(int nid, EVP_PKEY *pkey, struct lws_gencrypto_keyelem *el)
+lws_genec_eckey_import(int nid, EVP_PKEY *pkey,
+		       const struct lws_gencrypto_keyelem *el)
 {
 	EC_KEY *ec = EC_KEY_new_by_curve_name(nid);
 	BIGNUM *bn_d, *bn_x, *bn_y;
@@ -132,7 +150,22 @@ lws_genec_eckey_import(int nid, EVP_PKEY *pkey, struct lws_gencrypto_keyelem *el
 		goto bail1;
 	}
 
+	/*
+	 * EC_KEY_set_public_key_affine_coordinates sets the public key for
+	 * key based on its affine co-ordinates, i.e. it constructs an
+	 * EC_POINT object based on the supplied x and y values and sets
+	 * the public key to be this EC_POINT. It will also performs
+	 * certain sanity checks on the key to confirm that it is valid.
+	 */
+
+#if defined(USE_WOLFSSL)
+	n = wolfSSL_EC_POINT_set_affine_coordinates_GFp(ec->group,
+                                                ec->pub_key,
+                                                bn_x, bn_y,
+                                                NULL);
+#else
 	n = EC_KEY_set_public_key_affine_coordinates(ec, bn_x, bn_y);
+#endif
 	BN_free(bn_x);
 	BN_free(bn_y);
 	if (n != 1) {
@@ -160,10 +193,12 @@ lws_genec_eckey_import(int nid, EVP_PKEY *pkey, struct lws_gencrypto_keyelem *el
 
 	/* explicitly confirm the key pieces are consistent */
 
+#if !defined(USE_WOLFSSL)
 	if (EC_KEY_check_key(ec) != 1) {
 		lwsl_err("%s: EC_KEY_set_private_key fail\n", __func__);
 		goto bail;
 	}
+#endif
 
 	n = EVP_PKEY_assign_EC_KEY(pkey, ec);
 	if (n != 1) {
@@ -184,7 +219,8 @@ bail:
 static int
 lws_genec_keypair_import(struct lws_genec_ctx *ctx,
 			 const struct lws_ec_curves *curve_table,
-			 EVP_PKEY_CTX **pctx, struct lws_gencrypto_keyelem *el)
+			 EVP_PKEY_CTX **pctx,
+			 const struct lws_gencrypto_keyelem *el)
 {
 	EVP_PKEY *pkey = NULL;
 	const struct lws_ec_curves *curve;
@@ -273,7 +309,7 @@ lws_genecdh_set_key(struct lws_genec_ctx *ctx, struct lws_gencrypto_keyelem *el,
 
 int
 lws_genecdsa_set_key(struct lws_genec_ctx *ctx,
-		     struct lws_gencrypto_keyelem *el)
+		     const struct lws_gencrypto_keyelem *el)
 {
 	if (ctx->genec_alg != LEGENEC_ECDSA)
 		return -1;
@@ -486,6 +522,7 @@ lws_genecdsa_hash_sign_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 			   uint8_t *sig, size_t sig_len)
 {
 	int ret = -1, n, keybytes = lws_gencrypto_bits_to_bytes(keybits);
+	size_t hs = lws_genhash_size(hash_type);
 	const BIGNUM *r = NULL, *s = NULL;
 	ECDSA_SIG *ecdsasig;
 	EC_KEY *eckey;
@@ -498,9 +535,9 @@ lws_genecdsa_hash_sign_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 	if (!ctx->has_private)
 		return -1;
 
-	if ((int)sig_len < keybytes * 2) {
+	if ((int)sig_len != (int)(keybytes * 2)) {
 		lwsl_notice("%s: sig buff %d < %d\n", __func__,
-			    (int)sig_len, keybytes * 2);
+			    (int)sig_len, (int)(hs * 2));
 		return -1;
 	}
 
@@ -525,7 +562,7 @@ lws_genecdsa_hash_sign_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 	 * 4.  The resulting 64-octet sequence is the JWS Signature value.
 	 */
 
-	ecdsasig = ECDSA_do_sign(in, (int)lws_genhash_size(hash_type), eckey);
+	ecdsasig = ECDSA_do_sign(in, (int)hs, eckey);
 	EC_KEY_free(eckey);
 	if (!ecdsasig) {
 		lwsl_notice("%s: ECDSA_do_sign fail\n", __func__);
@@ -567,8 +604,8 @@ lws_genecdsa_hash_sig_verify_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 				 enum lws_genhash_types hash_type, int keybits,
 				 const uint8_t *sig, size_t sig_len)
 {
-	int ret = -1, n, keybytes = lws_gencrypto_bits_to_bytes(keybits),
-	    hlen = (int)lws_genhash_size(hash_type);
+	int ret = -1, n, hlen = (int)lws_genhash_size(hash_type),
+			keybytes = lws_gencrypto_bits_to_bytes(keybits);
 	ECDSA_SIG *ecsig = ECDSA_SIG_new();
 	BIGNUM *r = NULL, *s = NULL;
 	EC_KEY *eckey;
@@ -580,7 +617,7 @@ lws_genecdsa_hash_sig_verify_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 		goto bail;
 
 	if ((int)sig_len != keybytes * 2) {
-		lwsl_err("%s: sig buf too small %d vs %d\n", __func__,
+		lwsl_err("%s: sig buf size %d vs %d\n", __func__,
 			 (int)sig_len, keybytes * 2);
 		goto bail;
 	}
@@ -620,7 +657,7 @@ lws_genecdsa_hash_sig_verify_jws(struct lws_genec_ctx *ctx, const uint8_t *in,
 	n = ECDSA_do_verify(in, hlen, ecsig, eckey);
 	EC_KEY_free(eckey);
 	if (n != 1) {
-		lwsl_err("%s: ECDSA_do_verify fail\n", __func__);
+		lwsl_err("%s: ECDSA_do_verify fail, hlen %d\n", __func__, (int)hlen);
 		lws_tls_err_describe_clear();
 		goto bail;
 	}
@@ -660,7 +697,12 @@ lws_genecdh_compute_shared_secret(struct lws_genec_ctx *ctx, uint8_t *ss,
 
 	len = (EC_GROUP_get_degree(EC_KEY_get0_group(eckey[LDHS_OURS])) + 7) / 8;
 	if (len <= *ss_len) {
-		*ss_len = ECDH_compute_key(ss, (unsigned int)len,
+#if defined(USE_WOLFSSL)
+		*ss_len = wolfSSL_ECDH_compute_key(
+#else
+		*ss_len = ECDH_compute_key(
+#endif
+				ss, (unsigned int)len,
 				EC_KEY_get0_public_key(eckey[LDHS_THEIRS]),
 				eckey[LDHS_OURS], NULL);
 		ret = -(*ss_len < 0);

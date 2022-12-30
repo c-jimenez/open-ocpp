@@ -43,6 +43,9 @@ class Connectors
     /** @brief Constructor */
     Connectors(ocpp::config::IOcppConfig& ocpp_config, ocpp::database::Database& database, ocpp::helpers::ITimerPool& timer_pool);
 
+    /** @brief Destructor */
+    virtual ~Connectors();
+
     /**
      * @brief Indicate if a connector id is valid
      * @param id Id of the connector

@@ -37,10 +37,10 @@ const EnumToStringFromString<AvailabilityStatus> AvailabilityStatusHelper = {
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value& json,
                                               ChangeAvailabilityReq&  data,
-                                              const char*&            error_code,
+                                              std::string&            error_code,
                                               std::string&            error_message)
 {
     bool ret;
@@ -53,7 +53,7 @@ bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
@@ -61,10 +61,10 @@ bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, r
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value& json,
                                                ChangeAvailabilityConf& data,
-                                               const char*&            error_code,
+                                               std::string&            error_code,
                                                std::string&            error_message)
 {
     (void)error_code;
@@ -73,7 +73,7 @@ bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool ChangeAvailabilityConfConverter::toJson(const ChangeAvailabilityConf& data, rapidjson::Document& json)
 {
     fill(json, "status", AvailabilityStatusHelper.toString(data.status));

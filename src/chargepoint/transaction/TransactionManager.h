@@ -43,7 +43,7 @@ class IRequestFifo;
 namespace chargepoint
 {
 
-class AuthentManager;
+class IAuthentManager;
 class Connectors;
 class ReservationManager;
 class IChargePointEventsHandler;
@@ -64,7 +64,7 @@ class TransactionManager
                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                        ocpp::messages::GenericMessageSender&           msg_sender,
                        ocpp::messages::IRequestFifo&                   requests_fifo,
-                       AuthentManager&                                 authent_manager,
+                       IAuthentManager&                                authent_manager,
                        ReservationManager&                             reservation_manager,
                        IMeterValuesManager&                            meter_values_manager,
                        ISmartChargingManager&                          smart_charging_manager);
@@ -93,22 +93,22 @@ class TransactionManager
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
                        ocpp::messages::RemoteStartTransactionConf&      response,
-                       const char*&                                     error_code,
+                       std::string&                                     error_code,
                        std::string&                                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
-     *                                                                                const char*& error_code,
+     *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
     bool handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
                        ocpp::messages::RemoteStopTransactionConf&      response,
-                       const char*&                                    error_code,
+                       std::string&                                    error_code,
                        std::string&                                    error_message) override;
 
   private:
@@ -121,7 +121,7 @@ class TransactionManager
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender& m_msg_sender;
     /** @brief Authentication manager */
-    AuthentManager& m_authent_manager;
+    IAuthentManager& m_authent_manager;
     /** @brief Reservation manager */
     ReservationManager& m_reservation_manager;
     /** @brief Meter values manager */

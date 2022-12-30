@@ -77,6 +77,12 @@ class CentralSystemConfig : public ICentralSystemConfig
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */
     unsigned int logMaxEntriesCount() const override { return 1000; }
+
+    // ISO 15118 PnC extensions
+
+    /** @brief If this variable set to true, then the Central System supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    bool iso15118PnCEnabled() const override { return true; }
 };
 
 /** @brief Dummy implementation of central system event handler */
@@ -463,6 +469,37 @@ class OcppConfig : public IOcppConfig
     /** @brief Comma separated list of supported file transfer protocols for upload AND download
                Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
     std::string supportedFileTransferProtocols() const override { return ""; }
+
+    //
+    // ISO 15118 PnC extensions
+    //
+
+    /** @brief If this variable exists and has the value true, then the Charge Point can provide a contract certificate that it cannot 
+               validate to the Central System for validation as part of the Authorize.req */
+    bool centralContractValidationAllowed() const override { return true; }
+
+    /** @brief This configuration key defines how long the Charge Point has to wait (in seconds) before generating another CSR, in the case the
+               Central System accepts the SignCertificate.req, but never returns the signed certificate back. This value will be doubled after every
+               attempt. The amount of attempts is configured at CertSigningRepeatTimes. If the certificate signing process is slow, this setting
+               allows the Central System to tell the Charge Point to allow more time.
+               Negative values must be rejected. The value 0 means that the Charge Point does not generate another CSR (leaving it up to the
+               Central System to trigger another certificate installation). */
+    std::chrono::seconds certSigningWaitMinimum() const override { return std::chrono::seconds(1); }
+
+    /** @brief This configuration key can be used to configure the amount of times the Charge Point SHALL double the previous back-off time,
+               starting with the number of seconds configured at CertSigningWaitMinimum, every time the back-off time expires without having
+               received the CertificateSigned.req containing the signed certificate based on the CSR generated. When the maximum number of
+               increments is reached, the Charge Point SHALL stop resending the SignCertificate.req, until it is requested by the Central System
+               using a TriggerMessage.req.
+               Negative values must be rejected. The value 0 means that the Charge Point does not double the back-off time. */
+    unsigned int certSigningRepeatTimes() const override { return 0; }
+
+    /** @brief If this variable is true, then the Charge Point will try to validate a contract certificate when it is offline. */
+    bool contractValidationOffline() const override { return true; }
+
+    /** @brief If this variable set to true, then the Charge Point supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    bool iso15118PnCEnabled() const override { return true; }
 };
 
 /** @brief Dummy implementation of charge point event handler */
@@ -609,6 +646,21 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      */
     void transactionDeAuthorized(unsigned int connector_id) override { (void)connector_id; }
+
+    /**
+     * @brief Called on reception of a GetCompositeSchedule request
+     * @param connector_id Id of the concerned connector
+     * @param duration Duration in seconds of the schedule
+     * @param schedule Schedule containing the local limitations for the requested duration
+     * @return true if a schedule has been defined, false if there are no local limitations for the requested duration
+     */
+    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) override
+    {
+        (void)connector_id;
+        (void)duration;
+        (void)schedule;
+        return false;
+    }
 
     /**
      * @brief Called on a reset request from the Central System
@@ -804,6 +856,91 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
         (void)signing_certificate;
         return UpdateFirmwareStatusEnumType::Rejected;
     }
+
+    // ISO 15118 PnC extensions
+
+    /**
+     * @brief Called to check an EV certificate againts the installed MO certificates
+     * @param certificate EV certificate to check
+     * @return true if the certificate has been validated against an installed MO certificate, false otherwise
+     */
+    bool iso15118CheckEvCertificate(const ocpp::x509::Certificate& certificate) override
+    {
+        (void)certificate;
+        return true;
+    }
+
+    /**
+     * @brief Called when an ISO15118 charge point certificate has been received and must be installed
+     * @param certificate Charge point certificate to install
+     * @return true if the certificate has been installed, false otherwise
+     */
+    bool iso15118ChargePointCertificateReceived(const ocpp::x509::Certificate& certificate) override
+    {
+        (void)certificate;
+        return true;
+    }
+
+    /**
+     * @brief Called when the Central System request to delete an installed ISO15118 certificate
+     * @param hash_algorithm Hash algorithm used for the following parameters
+     * @param issuer_name_hash Hash of the certificate's issuer's name
+     * @param issuer_key_hash Hash of the certificate's public key
+     * @param serial_number Serial number of the certificate
+     * @return Deletion status (see DeleteCertificateStatusEnumType enum)
+     */
+    ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
+                                                                           const std::string&                 issuer_name_hash,
+                                                                           const std::string&                 issuer_key_hash,
+                                                                           const std::string&                 serial_number) override
+    {
+        (void)hash_algorithm;
+        (void)issuer_name_hash;
+        (void)issuer_key_hash;
+        (void)serial_number;
+        return DeleteCertificateStatusEnumType::Accepted;
+    }
+
+    /**
+     * @brief Called to get the list of installed ISO15118 certificates
+     * @param v2g_root_certificate Indicate if V2G root certificates must be listed
+     * @param mo_root_certificate Indicate if MO root certificates must be listed
+     * @param v2g_certificate_chain Indicate if V2G certificate chains must be listed
+     * @param certificates Installed certificates with their type
+     */
+    void iso15118GetInstalledCertificates(
+        bool v2g_root_certificate,
+        bool mo_root_certificate,
+        bool v2g_certificate_chain,
+        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+            certificates) override
+    {
+        (void)v2g_root_certificate;
+        (void)mo_root_certificate;
+        (void)v2g_certificate_chain;
+        (void)certificates;
+    }
+
+    /**
+     * @brief Called when an ISO15118 certificate has been received and must be installed
+     * @param type Type of certificate
+     * @param certificate certificate to install
+     * @return Installation status (see InstallCertificateStatusEnumType enum)
+     */
+    ocpp::types::InstallCertificateStatusEnumType iso15118CertificateReceived(ocpp::types::InstallCertificateUseEnumType type,
+                                                                              const ocpp::x509::Certificate& certificate) override
+    {
+        (void)type;
+        (void)certificate;
+        return InstallCertificateStatusEnumType::Accepted;
+    }
+
+    /**
+     * @brief Called to generate a CSR in PEM format which will be used by the Central System
+     *        to generate and sign a certificate for the Charge Point for ISO15118 communications
+     * @param csr String to store the generated CSR in PEM format
+     */
+    void iso15118GenerateCsr(std::string& csr) override { (void)csr; }
 };
 
 /** @brief Entry point */

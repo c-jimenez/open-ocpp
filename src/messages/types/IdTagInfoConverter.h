@@ -33,9 +33,9 @@ class IdTagInfoConverter : public IMessageConverter<ocpp::types::IdTagInfo>
   public:
     /** @copydoc bool IMessageConverter<ocpp::types::IdTagInfo>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::IdTagInfo&,
-     *                                                                    const char*&,
+     *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value& json, ocpp::types::IdTagInfo& data, const char*& error_code, std::string& error_message) override;
+    bool fromJson(const rapidjson::Value& json, ocpp::types::IdTagInfo& data, std::string& error_code, std::string& error_message) override;
 
     /** @copydoc bool IMessageConverter<ocpp::types::IdTagInfo>::toJson(const ocpp::types::IdTagInfo&,
      *                                                                  rapidjson::Document&) */

@@ -47,10 +47,10 @@ const EnumToStringFromString<Reason> ReasonHelper = {{Reason::DeAuthorized, "DeA
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
                                            StopTransactionReq&     data,
-                                           const char*&            error_code,
+                                           std::string&            error_code,
                                            std::string&            error_message)
 {
     extract(json, "idTag", data.idTag);
@@ -76,7 +76,7 @@ bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool StopTransactionReqConverter::toJson(const StopTransactionReq& data, rapidjson::Document& json)
 {
     bool ret = true;
@@ -102,10 +102,10 @@ bool StopTransactionReqConverter::toJson(const StopTransactionReq& data, rapidjs
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool StopTransactionConfConverter::fromJson(const rapidjson::Value& json,
                                             StopTransactionConf&    data,
-                                            const char*&            error_code,
+                                            std::string&            error_code,
                                             std::string&            error_message)
 {
     bool ret = true;
@@ -117,7 +117,7 @@ bool StopTransactionConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool StopTransactionConfConverter::toJson(const StopTransactionConf& data, rapidjson::Document& json)
 {
     bool ret = true;

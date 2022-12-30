@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Queue.h"
 
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -129,9 +130,9 @@ class RpcBase : public IRpc
     /** @brief Mutex for concurrent call access */
     std::mutex m_call_mutex;
     /** @brief Queue for incomming call requests */
-    ocpp::helpers::Queue<RpcMessage*> m_requests_queue;
+    ocpp::helpers::Queue<std::shared_ptr<RpcMessage>> m_requests_queue;
     /** @brief Queue for incomming call results */
-    ocpp::helpers::Queue<RpcMessage*> m_results_queue;
+    ocpp::helpers::Queue<std::shared_ptr<RpcMessage>> m_results_queue;
     /** @brief Reception thread */
     std::thread* m_rx_thread;
 

@@ -1,7 +1,7 @@
 /*
  * lws-minimal-secure-streams-policy2c
  *
- * Written in 2010-2020 by Andy Green <andy@warmcat.com>
+ * Written in 2010-2021 by Andy Green <andy@warmcat.com>
  *
  * This file is made available under the Creative Commons CC0 1.0
  * Universal Public Domain Dedication.
@@ -347,6 +347,7 @@ int main(int argc, const char **argv)
 							buf, sizeof(buf)));
 
 				printf("\t.name = \"%s\",\n", pol->trust.store->name);
+				printf("\t.count = %d,\n", pol->trust.store->count);
 				printf("\t.ssx509 = {\n");
 
 				for (n = pol->trust.store->count - 1; n >= 0 ; n--)
@@ -426,8 +427,9 @@ int main(int argc, const char **argv)
 			printf("\t.next = (void *)&%s,\n", prev);
 
 		printf("\t.name = \"%s\",\n", auth->name);
+		printf("\t.type= \"%s\",\n", auth->type);
 		printf("\t.streamtype = \"%s\",\n", auth->streamtype);
-		printf("\t.blob = %d,\n", auth->blob_index);
+		printf("\t.blob_index = %d,\n", auth->blob_index);
 		printf("}");
 		if (auth->next)
 			printf(",");
@@ -522,7 +524,7 @@ int main(int argc, const char **argv)
 					pol->u.http.auth_preamble);
 
 			if (pol->u.http.respmap) {
-				printf("\t\t\t.respmap = &%s_http_respmap,\n",
+				printf("\t\t\t.respmap = (void *)&%s_http_respmap,\n",
 						curr);
 				printf("\t\t\t.count_respmap = %d,\n",
 						pol->u.http.count_respmap);
@@ -571,7 +573,24 @@ int main(int argc, const char **argv)
 			if (pol->u.mqtt.will_message)
 				printf("\t\t\t.will_message = \"%s\",\n",
 					pol->u.mqtt.will_message);
-
+			if (pol->u.mqtt.will_qos)
+				printf("\t\t\t.will_qos = %u,\n",
+					pol->u.mqtt.will_qos);
+			if (pol->u.mqtt.will_retain)
+				printf("\t\t\t.will_retain = %u,\n",
+					pol->u.mqtt.will_retain);
+			if (pol->u.mqtt.birth_topic)
+				printf("\t\t\t.birth_topic = \"%s\",\n",
+					pol->u.mqtt.birth_topic);
+			if (pol->u.mqtt.birth_message)
+				printf("\t\t\t.birth_message = \"%s\",\n",
+					pol->u.mqtt.birth_message);
+			if (pol->u.mqtt.birth_qos)
+				printf("\t\t\t.birth_qos = %u,\n",
+					pol->u.mqtt.birth_qos);
+			if (pol->u.mqtt.birth_retain)
+				printf("\t\t\t.birth_retain = %u,\n",
+					pol->u.mqtt.birth_retain);
 			if (pol->u.mqtt.keep_alive)
 				printf("\t\t\t.keep_alive = %u,\n",
 					pol->u.mqtt.keep_alive);
@@ -581,13 +600,12 @@ int main(int argc, const char **argv)
 			if (pol->u.mqtt.clean_start)
 				printf("\t\t\t.clean_start = %u,\n",
 					pol->u.mqtt.clean_start);
-			if (pol->u.mqtt.will_qos)
-				printf("\t\t\t.will_qos = %u,\n",
-					pol->u.mqtt.will_qos);
-			if (pol->u.mqtt.will_retain)
-				printf("\t\t\t.will_retain = %u,\n",
-					pol->u.mqtt.will_retain);
-
+			if (pol->u.mqtt.aws_iot)
+				printf("\t\t\t.aws_iot = %u,\n",
+					pol->u.mqtt.aws_iot);
+			if (pol->u.mqtt.retain)
+				printf("\t\t\t.retain = %u,\n",
+					pol->u.mqtt.retain);
 			printf("\t\t}\n\t},\n");
 
 			break;
@@ -634,6 +652,13 @@ int main(int argc, const char **argv)
 			printf("\t.trust = {.store = &_ss_ts_%s},\n",
 				purify_csymbol(pol->trust.store->name,
 							buf, sizeof(buf)));
+#if defined(LWS_WITH_SECURE_STREAMS_AUTH_SIGV4)
+		if (pol->aws_region)
+			printf("\t.aws_region= \"%s\",\n", pol->aws_region);
+		if (pol->aws_service)
+			printf("\t.aws_service= \"%s\",\n", pol->aws_service);
+
+#endif
 
 
 		printf("}");

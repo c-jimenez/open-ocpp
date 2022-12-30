@@ -58,7 +58,7 @@ lws_get_addresses(struct lws_vhost *vh, void *ads, char *name,
 		if (!lws_plat_inet_ntop(AF_INET6,
 					&((struct sockaddr_in6 *)ads)->sin6_addr,
 					rip, (socklen_t)rip_len)) {
-			lwsl_err("inet_ntop: %s", strerror(LWS_ERRNO));
+			lwsl_vhost_err(vh, "inet_ntop: %s", strerror(LWS_ERRNO));
 			return -1;
 		}
 
@@ -67,7 +67,13 @@ lws_get_addresses(struct lws_vhost *vh, void *ads, char *name,
 			memmove(rip, rip + 7, strlen(rip) - 6);
 
 		getnameinfo((struct sockaddr *)ads, sizeof(struct sockaddr_in6),
-			    name, (socklen_t)name_len, NULL, 0, 0);
+			    name,
+#if defined(__ANDROID__)
+			    (size_t)name_len,
+#else
+			    (socklen_t)name_len,
+#endif
+			    NULL, 0, 0);
 
 		return 0;
 	} else
@@ -81,7 +87,13 @@ lws_get_addresses(struct lws_vhost *vh, void *ads, char *name,
 #if !defined(LWS_PLAT_FREERTOS)
 		if (getnameinfo((struct sockaddr *)ads,
 				sizeof(struct sockaddr_in),
-				name, (unsigned int)name_len, NULL, 0, 0))
+				name,
+#if defined(__ANDROID__)
+				(size_t)name_len,
+#else
+				(socklen_t)name_len,
+#endif
+				NULL, 0, 0))
 			return -1;
 #endif
 
@@ -165,7 +177,7 @@ lws_get_peer_addresses(struct lws *wsi, lws_sockfd_type fd, char *name,
 	}
 
 	if (getpeername(fd, p, &len) < 0) {
-		lwsl_warn("getpeername: %s\n", strerror(LWS_ERRNO));
+		lwsl_wsi_warn(wsi, "getpeername: %s", strerror(LWS_ERRNO));
 		goto bail;
 	}
 
@@ -194,7 +206,7 @@ bail:
 int
 lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 		lws_sockfd_type sockfd, int port, const char *iface,
-		int ipv6_allowed)
+		int af)
 {
 #ifdef LWS_WITH_UNIX_SOCK
 	struct sockaddr_un serv_unix;
@@ -206,7 +218,7 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 #ifndef LWS_PLAT_OPTEE
 	socklen_t len = sizeof(struct sockaddr_storage);
 #endif
-	int n;
+	int n = 0;
 #if !defined(LWS_PLAT_FREERTOS) && !defined(LWS_PLAT_OPTEE)
 	int m;
 #endif
@@ -219,15 +231,16 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 	if (wsi)
 		psin = (struct sockaddr_storage *)&wsi->sa46_local;
 
+	switch (af) {
 #if defined(LWS_WITH_UNIX_SOCK)
-	if (!port && LWS_UNIX_SOCK_ENABLED(vhost)) {
+	case AF_UNIX:
 		v = (struct sockaddr *)&serv_unix;
 		memset(&serv_unix, 0, sizeof(serv_unix));
 		serv_unix.sun_family = AF_UNIX;
 		if (!iface)
 			return LWS_ITOSA_NOT_EXIST;
 		if (sizeof(serv_unix.sun_path) <= strlen(iface)) {
-			lwsl_err("\"%s\" too long for UNIX domain socket\n",
+			lwsl_wsi_err(wsi, "\"%s\" too long for UNIX domain socket",
 			         iface);
 			return LWS_ITOSA_NOT_EXIST;
 		}
@@ -239,35 +252,37 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 			unlink(serv_unix.sun_path);
 
 		// lwsl_hexdump_notice(v, n);
-
-	} else
+		break;
 #endif
 #if defined(LWS_WITH_IPV6) && !defined(LWS_PLAT_FREERTOS)
-	if (ipv6_allowed && LWS_IPV6_ENABLED(vhost)) {
+	case AF_INET6:
 		v = (struct sockaddr *)&serv_addr6;
 		n = sizeof(struct sockaddr_in6);
+
 		memset(&serv_addr6, 0, sizeof(serv_addr6));
+		serv_addr6.sin6_family = AF_INET6;
 		if (iface) {
 			m = interface_to_sa(vhost, iface,
 				    (struct sockaddr_in *)v, (unsigned int)n, 1);
 			if (m == LWS_ITOSA_NOT_USABLE) {
-				lwsl_info("%s: netif %s: Not usable\n",
-					 __func__, iface);
+				lwsl_wsi_info(wsi, "netif %s: Not usable",
+						   iface);
 				return m;
 			}
 			if (m == LWS_ITOSA_NOT_EXIST) {
-				lwsl_info("%s: netif %s: Does not exist\n",
-					 __func__, iface);
+				lwsl_wsi_info(wsi, "netif %s: Does not exist",
+						   iface);
 				return m;
 			}
-			serv_addr6.sin6_scope_id = (unsigned int)lws_get_addr_scope(iface);
+			serv_addr6.sin6_scope_id = (unsigned int)htonl((uint32_t)
+					lws_get_addr_scope(wsi, iface));
 		}
 
-		serv_addr6.sin6_family = AF_INET6;
 		serv_addr6.sin6_port = (uint16_t)htons((uint16_t)port);
-	} else
+		break;
 #endif
-	{
+
+	case AF_INET:
 		v = (struct sockaddr *)&serv_addr4;
 		n = sizeof(serv_addr4);
 		memset(&serv_addr4, 0, sizeof(serv_addr4));
@@ -279,19 +294,22 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 		    m = interface_to_sa(vhost, iface,
 				    (struct sockaddr_in *)v, (unsigned int)n, 0);
 			if (m == LWS_ITOSA_NOT_USABLE) {
-				lwsl_info("%s: netif %s: Not usable\n",
-					 __func__, iface);
+				lwsl_wsi_info(wsi, "netif %s: Not usable",
+						   iface);
 				return m;
 			}
 			if (m == LWS_ITOSA_NOT_EXIST) {
-				lwsl_info("%s: netif %s: Does not exist\n",
-					 __func__, iface);
+				lwsl_wsi_info(wsi, "netif %s: Does not exist",
+						   iface);
 				return m;
 			}
 		}
 #endif
 		serv_addr4.sin_port = htons((uint16_t)(unsigned int)port);
-	} /* ipv4 */
+		break;
+	default:
+		return -1;
+	} /* switch */
 
 	/* just checking for the interface extant */
 	if (sockfd == LWS_SOCK_INVALID)
@@ -299,17 +317,18 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 
 	n = bind(sockfd, v, (socklen_t)n);
 #ifdef LWS_WITH_UNIX_SOCK
-	if (n < 0 && LWS_UNIX_SOCK_ENABLED(vhost)) {
-		lwsl_err("ERROR on binding fd %d to \"%s\" (%d %d)\n",
-			 sockfd, iface, n, LWS_ERRNO);
+	if (n < 0 && af == AF_UNIX) {
+		lwsl_wsi_err(wsi, "ERROR on binding fd %d to \"%s\" (%d %d)",
+				  sockfd, iface, n, LWS_ERRNO);
+
 		return LWS_ITOSA_NOT_EXIST;
 	} else
 #endif
 	if (n < 0) {
 		int _lws_errno = LWS_ERRNO;
 
-		lwsl_err("ERROR on binding fd %d to port %d (%d %d)\n",
-			 sockfd, port, n, _lws_errno);
+		lwsl_wsi_err(wsi, "ERROR on binding fd %d to port %d (%d %d)",
+				  sockfd, port, n, _lws_errno);
 
 		/* if something already listening, tell caller to fail permanently */
 
@@ -322,33 +341,33 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 	}
 
 #if defined(LWS_WITH_UNIX_SOCK) && !defined(WIN32)
-	if (!port && LWS_UNIX_SOCK_ENABLED(vhost)) {
+	if (af == AF_UNIX) {
 		uid_t uid = vhost->context->uid;
 		gid_t gid = vhost->context->gid;
 
 		if (vhost->unix_socket_perms) {
 			if (lws_plat_user_colon_group_to_ids(
 				vhost->unix_socket_perms, &uid, &gid)) {
-				lwsl_err("%s: Failed to translate %s\n",
-					  __func__, vhost->unix_socket_perms);
+				lwsl_wsi_err(wsi, "Failed to translate %s",
+						   vhost->unix_socket_perms);
 				return LWS_ITOSA_NOT_EXIST;
 			}
 		}
 		if (iface && iface[0] != '@' && uid && gid) {
 			if (chown(iface, uid, gid)) {
-				lwsl_err("%s: failed to set %s perms %u:%u\n",
-					 __func__, iface,
-					 (unsigned int)uid, (unsigned int)gid);
+				lwsl_wsi_err(wsi, "failed to set %s perms %u:%u",
+						  iface, (unsigned int)uid,
+						  (unsigned int)gid);
 
 				return LWS_ITOSA_NOT_EXIST;
 			}
-			lwsl_notice("%s: vh %s unix skt %s perms %u:%u\n",
-				    __func__, vhost->name, iface,
-				    (unsigned int)uid, (unsigned int)gid);
+			lwsl_wsi_notice(wsi, "vh %s unix skt %s perms %u:%u",
+					      vhost->name, iface,
+					      (unsigned int)uid,
+					      (unsigned int)gid);
 
 			if (chmod(iface, 0660)) {
-				lwsl_err("%s: failed to set %s to 0600 mode\n",
-					 __func__, iface);
+				lwsl_wsi_err(wsi, "0600 mode on %s fail", iface);
 
 				return LWS_ITOSA_NOT_EXIST;
 			}
@@ -358,7 +377,7 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 
 #ifndef LWS_PLAT_OPTEE
 	if (getsockname(sockfd, (struct sockaddr *)psin, &len) == -1)
-		lwsl_warn("getsockname: %s\n", strerror(LWS_ERRNO));
+		lwsl_wsi_warn(wsi, "getsockname: %s", strerror(LWS_ERRNO));
 	else
 #endif
 #if defined(LWS_WITH_IPV6)
@@ -378,8 +397,7 @@ lws_socket_bind(struct lws_vhost *vhost, struct lws *wsi,
 			lws_sa46_write_numeric_address((lws_sockaddr46 *)psin,
 							buf, sizeof(buf));
 
-			lwsl_notice("%s: %s: source ads %s\n", __func__,
-					wsi ? wsi->lc.gutag : "nowsi", buf);
+			lwsl_vhost_notice(vhost, "source ads %s", buf);
 		}
 
 	return port;
@@ -399,11 +417,13 @@ lws_retry_get_delay_ms(struct lws_context *context,
 		*conceal = 0;
 
 	if (retry) {
-		if (*ctry < retry->retry_ms_table_count)
-			ms = retry->retry_ms_table[*ctry];
-		else
-			ms = retry->retry_ms_table[
-				retry->retry_ms_table_count - 1];
+		if (retry->retry_ms_table_count) {
+			if (*ctry < retry->retry_ms_table_count)
+				ms = retry->retry_ms_table[*ctry];
+			else
+				ms = retry->retry_ms_table[
+					retry->retry_ms_table_count - 1];
+		}
 
 		/* if no percent given, use the default 30% */
 		if (retry->jitter_percent)
@@ -435,8 +455,7 @@ lws_retry_sul_schedule(struct lws_context *context, int tid,
 	if (!conceal)
 		return 1;
 
-	lwsl_info("%s: sul %p: scheduling retry in %dms\n", __func__, sul,
-			(int)ms);
+	lwsl_cx_info(context, "sul %p: scheduling retry in %dms", sul, (int)ms);
 
 	lws_sul_schedule(context, tid, sul, cb, (int64_t)(ms * 1000));
 
@@ -483,7 +502,7 @@ lws_retry_sul_schedule_retry_wsi(struct lws *wsi, lws_sorted_usec_list_t *sul,
 
 #if defined(LWS_WITH_IPV6)
 unsigned long
-lws_get_addr_scope(const char *ifname_or_ipaddr)
+lws_get_addr_scope(struct lws *wsi, const char *ifname_or_ipaddr)
 {
 	unsigned long scope;
 	char ip[NI_MAXHOST];
@@ -524,10 +543,8 @@ lws_get_addr_scope(const char *ifname_or_ipaddr)
 			continue;
 
 		ip[0] = '\0';
-		getnameinfo(addr->ifa_addr,
-				sizeof(struct sockaddr_in6),
-				ip, sizeof(ip),
-				NULL, 0, NI_NUMERICHOST);
+		getnameinfo(addr->ifa_addr, sizeof(struct sockaddr_in6),
+			    ip, sizeof(ip), NULL, 0, NI_NUMERICHOST);
 
 		i = 0;
 		while (ip[i])
@@ -544,27 +561,22 @@ lws_get_addr_scope(const char *ifname_or_ipaddr)
 	freeifaddrs(addrs);
 #else
 
-	for (i = 0; i < 5; i++)
-	{
+	for (i = 0; i < 5; i++) {
 		ret = GetAdaptersAddresses(AF_INET6, GAA_FLAG_INCLUDE_PREFIX,
 					   NULL, addrs, &size);
-		if ((ret == NO_ERROR) || (ret == ERROR_NO_DATA)) {
+		if (ret == NO_ERROR || ret == ERROR_NO_DATA)
 			break;
-		} else if (ret == ERROR_BUFFER_OVERFLOW)
-		{
-			if (addrs)
-				free(addrs);
-			addrs = (IP_ADAPTER_ADDRESSES *)malloc(size);
-		} else
-		{
-			if (addrs)
-			{
-				free(addrs);
-				addrs = NULL;
-			}
-			lwsl_err("Failed to get IPv6 address table (%d)", ret);
+
+		if (addrs)
+			free(addrs);
+
+		if (ret != ERROR_BUFFER_OVERFLOW) {
+			addrs = NULL;
+			lwsl_wsi_err(wsi, "Get IPv6 ads table fail (%d)", ret);
 			break;
 		}
+
+		addrs = (IP_ADAPTER_ADDRESSES *)malloc(size);
 	}
 
 	if ((ret == NO_ERROR) && (addrs)) {

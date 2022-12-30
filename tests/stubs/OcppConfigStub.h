@@ -278,6 +278,37 @@ class OcppConfigStub : public IOcppConfig
                Allowed values : FTP, FTPS, HTTP, HTTPS, SFTP */
     std::string supportedFileTransferProtocols() const override { return getString("SupportedFileTransferProtocols"); }
 
+    //
+    // ISO 15118 PnC extensions
+    //
+
+    /** @brief If this variable exists and has the value true, then the Charge Point can provide a contract certificate that it cannot 
+               validate to the Central System for validation as part of the Authorize.req */
+    bool centralContractValidationAllowed() const override { return getBool("CentralContractValidationAllowed"); }
+
+    /** @brief This configuration key defines how long the Charge Point has to wait (in seconds) before generating another CSR, in the case the
+               Central System accepts the SignCertificate.req, but never returns the signed certificate back. This value will be doubled after every
+               attempt. The amount of attempts is configured at CertSigningRepeatTimes. If the certificate signing process is slow, this setting
+               allows the Central System to tell the Charge Point to allow more time.
+               Negative values must be rejected. The value 0 means that the Charge Point does not generate another CSR (leaving it up to the
+               Central System to trigger another certificate installation). */
+    std::chrono::seconds certSigningWaitMinimum() const override { return get<std::chrono::seconds>("CertSigningWaitMinimum"); }
+
+    /** @brief This configuration key can be used to configure the amount of times the Charge Point SHALL double the previous back-off time,
+               starting with the number of seconds configured at CertSigningWaitMinimum, every time the back-off time expires without having
+               received the CertificateSigned.req containing the signed certificate based on the CSR generated. When the maximum number of
+               increments is reached, the Charge Point SHALL stop resending the SignCertificate.req, until it is requested by the Central System
+               using a TriggerMessage.req.
+               Negative values must be rejected. The value 0 means that the Charge Point does not double the back-off time. */
+    unsigned int certSigningRepeatTimes() const override { return get<unsigned int>("CertSigningRepeatTimes"); }
+
+    /** @brief If this variable is true, then the Charge Point will try to validate a contract certificate when it is offline. */
+    bool contractValidationOffline() const override { return getBool("ContractValidationOffline"); }
+
+    /** @brief If this variable set to true, then the Charge Point supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    bool iso15118PnCEnabled() const override { return getBool("Iso15118PnCEnabled"); }
+
   private:
     /** @brief Configuration */
     std::map<std::string, std::string> m_config;

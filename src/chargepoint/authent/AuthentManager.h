@@ -19,8 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_AUTHENTMANAGER_H
 #define OPENOCPP_AUTHENTMANAGER_H
 
-#include "Enums.h"
-#include "IdTagInfo.h"
+#include "IAuthentManager.h"
 
 namespace ocpp
 {
@@ -50,7 +49,7 @@ class AuthentCache;
 class AuthentLocalList;
 
 /** @brief Handle charge point authentication requests */
-class AuthentManager
+class AuthentManager : public IAuthentManager
 {
   public:
     /** @brief Constructor */
@@ -65,20 +64,17 @@ class AuthentManager
     /** @brief Destructor */
     virtual ~AuthentManager();
 
-    /**
-     * @brief Ask for authorization of operation
-     * @param id_tag Id of the user's
-     * @param parent_id If of the user's parent tag
-     * @return Authorization status (see AuthorizationStatus enum)
-     */
-    ocpp::types::AuthorizationStatus authorize(const std::string& id_tag, std::string& parent_id);
+    /** @copydoc ocpp::types::AuthorizationStatus IAuthentManager::authorize(const std::string&, std::string&) */
+    ocpp::types::AuthorizationStatus authorize(const std::string& id_tag, std::string& parent_id) override;
 
-    /**
-     * @brief Update a tag information
-     * @param id_tag Id of the tag to update
-     * @param id_tag_info New tag informations
-     */
-    void update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info);
+    /** @copydoc void IAuthentManager::update(const std::string& id_tag, const ocpp::types::IdTagInfo&) */
+    void update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info) override;
+
+    /** @copydoc ocpp::types::AuthorizationStatus IAuthentManager::iso15118Authorize(const std::string&) */
+    ocpp::types::AuthorizationStatus iso15118Authorize(const std::string& token_id) override;
+
+    /** @copydoc void IAuthentManager::iso15118Update(const std::string&, const ocpp::types::IdTokenInfoType&) */
+    void iso15118Update(const std::string& token_id, const ocpp::types::IdTokenInfoType& token_info) override;
 
   private:
     /** @brief Standard OCPP configuration */

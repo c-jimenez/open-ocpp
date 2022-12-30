@@ -42,23 +42,24 @@ class IMessageDispatcher
      * @brief Register a message handler for a specific action
      * @param action Action
      * @param handler Message handler
-     * @return false if a handler is already regstered for this action, true otherwise
+     * @param allow_replace Indicate if the replacement of an already registered is allowed
+     * @return false if a handler is already registered for this action, true otherwise
      */
-    virtual bool registerHandler(const std::string& action, IMessageHandler& handler) = 0;
+    virtual bool registerHandler(const std::string& action, IMessageHandler& handler, bool allow_replace = false) = 0;
 
     /**
      * @brief Dispatch a received action to the registered handler
      * @param action Action
      * @param payload JSON payload for the action
      * @param response JSON response to send
-     * @param error_code Standard error code, set to nullptr if no error
+     * @param error_code Standard error code, empty if no error
      * @param error_msg Additionnal error message, empty if no error
      * @return true if the call is accepted, false otherwise
      */
     virtual bool dispatchMessage(const std::string&      action,
                                  const rapidjson::Value& payload,
                                  rapidjson::Document&    response,
-                                 const char*&            error_code,
+                                 std::string&            error_code,
                                  std::string&            error_message) = 0;
 
     /** @brief Interface for messages handlers implementations */
@@ -73,14 +74,14 @@ class IMessageDispatcher
          * @param action Action
          * @param payload JSON payload for the action
          * @param response JSON response to send
-         * @param error_code Standard error code, set to nullptr if no error
+         * @param error_code Standard error code, empty if no error
          * @param error_msg Additionnal error message, empty if no error
          * @return true if the call is accepted, false otherwise
          */
         virtual bool handle(const std::string&      action,
                             const rapidjson::Value& payload,
                             rapidjson::Document&    response,
-                            const char*&            error_code,
+                            std::string&            error_code,
                             std::string&            error_message) = 0;
     };
 };

@@ -33,10 +33,10 @@ const EnumToStringFromString<CancelReservationStatus> CancelReservationStatusHel
 namespace messages
 {
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool CancelReservationReqConverter::fromJson(const rapidjson::Value& json,
                                              CancelReservationReq&   data,
-                                             const char*&            error_code,
+                                             std::string&            error_code,
                                              std::string&            error_message)
 {
     (void)error_code;
@@ -45,17 +45,17 @@ bool CancelReservationReqConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool CancelReservationReqConverter::toJson(const CancelReservationReq& data, rapidjson::Document& json)
 {
     fill(json, "reservationId", data.reservationId);
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool CancelReservationConfConverter::fromJson(const rapidjson::Value& json,
                                               CancelReservationConf&  data,
-                                              const char*&            error_code,
+                                              std::string&            error_code,
                                               std::string&            error_message)
 {
     (void)error_code;
@@ -64,7 +64,7 @@ bool CancelReservationConfConverter::fromJson(const rapidjson::Value& json,
     return true;
 }
 
-/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, const char*&, std::string&) */
+/** @copydoc bool IMessageConverter<DataType>::toJson(DataType&, rapidjson::Document&, std::string&, std::string&) */
 bool CancelReservationConfConverter::toJson(const CancelReservationConf& data, rapidjson::Document& json)
 {
     fill(json, "status", CancelReservationStatusHelper.toString(data.status));

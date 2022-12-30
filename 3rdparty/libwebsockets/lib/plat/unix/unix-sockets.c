@@ -216,8 +216,18 @@ lws_plat_set_socket_options_ip(lws_sockfd_type fd, uint8_t pri, int lws_flags)
 {
 	int optval = (int)pri, ret = 0, n;
 	socklen_t optlen = sizeof(optval);
-#if !defined(LWS_WITH_NO_LOGS)
+#if (_LWS_ENABLED_LOGS & LLL_WARN)
 	int en;
+#endif
+
+#if 0
+#if defined(TCP_FASTOPEN_CONNECT)
+	optval = 1;
+	if (setsockopt(fd, IPPROTO_TCP, TCP_FASTOPEN_CONNECT, (void *)&optval,
+		       sizeof(optval)))
+		lwsl_warn("%s: FASTOPEN_CONNECT failed\n", __func__);
+	optval = (int)pri;
+#endif
 #endif
 
 #if !defined(__APPLE__) && \
@@ -225,14 +235,16 @@ lws_plat_set_socket_options_ip(lws_sockfd_type fd, uint8_t pri, int lws_flags)
       !defined(__NetBSD__) && \
       !defined(__OpenBSD__) && \
       !defined(__sun) && \
-      !defined(__HAIKU__)
+      !defined(__HAIKU__) && \
+      !defined(__CYGWIN__) && \
+      !defined(__QNX__)
 
 	/* the BSDs don't have SO_PRIORITY */
 
 	if (pri) { /* 0 is the default already */
 		if (setsockopt(fd, SOL_SOCKET, SO_PRIORITY,
 				(const void *)&optval, optlen) < 0) {
-#if !defined(LWS_WITH_NO_LOGS)
+#if (_LWS_ENABLED_LOGS & LLL_WARN)
 			en = errno;
 			lwsl_warn("%s: unable to set socket pri %d: errno %d\n",
 				  __func__, (int)pri, en);
@@ -266,6 +278,14 @@ lws_plat_set_socket_options_ip(lws_sockfd_type fd, uint8_t pri, int lws_flags)
 
 /* cast a struct sockaddr_in6 * into addr for ipv6 */
 
+enum {
+	IP_SCORE_NONE,
+	IP_SCORE_NONNATIVE,
+	IP_SCORE_IPV6_SCOPE_BASE,
+	/* ipv6 scopes */
+	IP_SCORE_GLOBAL_NATIVE = 18
+};
+
 int
 lws_interface_to_sa(int ipv6, const char *ifname, struct sockaddr_in *addr,
 		    size_t addrlen)
@@ -274,8 +294,11 @@ lws_interface_to_sa(int ipv6, const char *ifname, struct sockaddr_in *addr,
 
 	struct ifaddrs *ifr;
 	struct ifaddrs *ifc;
-#ifdef LWS_WITH_IPV6
+#if defined(LWS_WITH_IPV6)
 	struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)addr;
+	unsigned long sco = IP_SCORE_NONE;
+	unsigned long ts;
+	const uint8_t *p;
 #endif
 
 	if (getifaddrs(&ifr)) {
@@ -283,7 +306,7 @@ lws_interface_to_sa(int ipv6, const char *ifname, struct sockaddr_in *addr,
 
 		return LWS_ITOSA_USABLE;
 	}
-	for (ifc = ifr; ifc != NULL && rc; ifc = ifc->ifa_next) {
+	for (ifc = ifr; ifc != NULL; ifc = ifc->ifa_next) {
 		if (!ifc->ifa_addr || !ifc->ifa_name)
 			continue;
 
@@ -298,13 +321,19 @@ lws_interface_to_sa(int ipv6, const char *ifname, struct sockaddr_in *addr,
 #if defined(AF_PACKET)
 		case AF_PACKET:
 			/* interface exists but is not usable */
-			rc = LWS_ITOSA_NOT_USABLE;
+			if (rc == LWS_ITOSA_NOT_EXIST)
+				rc = LWS_ITOSA_NOT_USABLE;
 			continue;
 #endif
 
 		case AF_INET:
-#ifdef LWS_WITH_IPV6
+#if defined(LWS_WITH_IPV6)
 			if (ipv6) {
+				/* any existing solution is better than this */
+				if (sco != IP_SCORE_NONE)
+					break;
+				sco = IP_SCORE_NONNATIVE;
+				rc = LWS_ITOSA_USABLE;
 				/* map IPv4 to IPv6 */
 				memset((char *)&addr6->sin6_addr, 0,
 						sizeof(struct in6_addr));
@@ -314,37 +343,44 @@ lws_interface_to_sa(int ipv6, const char *ifname, struct sockaddr_in *addr,
 				       &((struct sockaddr_in *)ifc->ifa_addr)->sin_addr,
 							sizeof(struct in_addr));
 				lwsl_debug("%s: uplevelling ipv4 bind to ipv6\n", __func__);
-			} else
+				break;
+			}
+
+			sco = IP_SCORE_GLOBAL_NATIVE;
 #endif
-				memcpy(addr,
-					(struct sockaddr_in *)ifc->ifa_addr,
+			rc = LWS_ITOSA_USABLE;
+			memcpy(addr, (struct sockaddr_in *)ifc->ifa_addr,
 						    sizeof(struct sockaddr_in));
 			break;
-#ifdef LWS_WITH_IPV6
+#if defined(LWS_WITH_IPV6)
 		case AF_INET6:
+			p = (const uint8_t *)
+				&((struct sockaddr_in6 *)ifc->ifa_addr)->sin6_addr;
+			ts = IP_SCORE_IPV6_SCOPE_BASE;
+			if (p[0] == 0xff)
+				ts = (unsigned long)(IP_SCORE_IPV6_SCOPE_BASE + (p[1] & 0xf));
+
+			if (sco >= ts)
+				break;
+
+			sco = ts;
+			rc = LWS_ITOSA_USABLE;
+
 			memcpy(&addr6->sin6_addr,
-			  &((struct sockaddr_in6 *)ifc->ifa_addr)->sin6_addr,
+			     &((struct sockaddr_in6 *)ifc->ifa_addr)->sin6_addr,
 						       sizeof(struct in6_addr));
 			break;
 #endif
 		default:
-			continue;
+			break;
 		}
-		rc = LWS_ITOSA_USABLE;
 	}
 
 	freeifaddrs(ifr);
 
-	if (rc) {
-		/* check if bind to IP address */
-#ifdef LWS_WITH_IPV6
-		if (inet_pton(AF_INET6, ifname, &addr6->sin6_addr) == 1)
-			rc = LWS_ITOSA_USABLE;
-		else
-#endif
-		if (inet_pton(AF_INET, ifname, &addr->sin_addr) == 1)
-			rc = LWS_ITOSA_USABLE;
-	}
+	if (rc &&
+	    !lws_sa46_parse_numeric_address(ifname, (lws_sockaddr46 *)addr))
+		rc = LWS_ITOSA_USABLE;
 
 	return rc;
 }
@@ -553,7 +589,7 @@ lws_plat_vhost_tls_client_ctx_init(struct lws_vhost *vhost)
 int
 lws_plat_mbedtls_net_send(void *ctx, const uint8_t *buf, size_t len)
 {
-	int fd = ((mbedtls_net_context *) ctx)->fd;
+	int fd = ((mbedtls_net_context *) ctx)->MBEDTLS_PRIVATE_V30_ONLY(fd);
 	int ret;
 
 	if (fd < 0)
@@ -578,7 +614,7 @@ lws_plat_mbedtls_net_send(void *ctx, const uint8_t *buf, size_t len)
 int
 lws_plat_mbedtls_net_recv(void *ctx, unsigned char *buf, size_t len)
 {
-	int fd = ((mbedtls_net_context *) ctx)->fd;
+	int fd = ((mbedtls_net_context *) ctx)->MBEDTLS_PRIVATE_V30_ONLY(fd);
 	int ret;
 
 	if (fd < 0)
