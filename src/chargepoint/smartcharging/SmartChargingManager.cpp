@@ -408,15 +408,16 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
         // Get local limitations
         ChargingProfile local_profile;
         local_profile.chargingProfileId      = 0;
-        local_profile.chargingProfileKind    = ChargingProfileKindType::Relative;
+        local_profile.chargingProfileKind    = ChargingProfileKindType::Absolute;
         local_profile.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
         local_profile.stackLevel             = 0;
         if (m_events_handler.getLocalLimitationsSchedule(request.connectorId, request.duration, local_profile.chargingSchedule) &&
             !local_profile.chargingSchedule.chargingSchedulePeriod.empty())
         {
-            // Ensure profile is relative with the requested duration
+            // Ensure profile is absolute with the requested duration
             local_profile.chargingSchedule.startSchedule.clear();
-            local_profile.chargingSchedule.duration = request.duration;
+            local_profile.chargingSchedule.startSchedule = now;
+            local_profile.chargingSchedule.duration      = request.duration;
 
             // Merge periods
             std::vector<Period> local_periods = getProfilePeriods(connector, local_profile, now, request.duration);

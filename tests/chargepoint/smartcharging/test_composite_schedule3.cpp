@@ -323,6 +323,80 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         CHECK_EQ(schedule.chargingSchedulePeriod[4].numberPhases.value(), 1);
     }
 
+    TEST_CASE("1 profile (relative) + local limitations - charging")
+    {
+        SmartChargingManager smartcharging_mgr(
+            stack_config, ocpp_config, database, event_handler, timer_pool, worker_pool, connectors, msgs_converter, msg_dispatcher);
+        clearAllProfiles(smartcharging_mgr);
+
+        DateTime now = DateTime::now();
+
+        Connector* connector         = connectors.getConnector(1);
+        connector->transaction_id    = 1;
+        connector->transaction_start = DateTime(now.timestamp() - 100);
+
+        ChargingProfile profile1;
+        profile1.chargingProfileId      = 1;
+        profile1.stackLevel             = 5;
+        profile1.chargingProfilePurpose = ChargingProfilePurposeType::TxDefaultProfile;
+        profile1.chargingProfileKind    = ChargingProfileKindType::Relative;
+
+        ChargingSchedulePeriod charging_period;
+        charging_period.limit        = 16.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 1;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 10.f;
+        charging_period.startPeriod  = 1000;
+        charging_period.numberPhases = 2;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 32.f;
+        charging_period.startPeriod  = 1700;
+        charging_period.numberPhases = 3;
+        profile1.chargingSchedule.chargingSchedulePeriod.push_back(charging_period);
+        profile1.chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;
+        profile1.chargingSchedule.startSchedule    = DateTime(now.timestamp() + 300);
+        CHECK(installProfile(1, profile1, smartcharging_mgr));
+
+        ChargingSchedule& local_schedule = event_handler.schedule;
+        local_schedule.chargingSchedulePeriod.clear();
+        charging_period.limit        = 8.f;
+        charging_period.startPeriod  = 0;
+        charging_period.numberPhases = 2;
+        local_schedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 20.f;
+        charging_period.startPeriod  = 200;
+        charging_period.numberPhases = 3;
+        local_schedule.chargingSchedulePeriod.push_back(charging_period);
+        charging_period.limit        = 18.f;
+        charging_period.startPeriod  = 1400;
+        charging_period.numberPhases = 3;
+        local_schedule.chargingSchedulePeriod.push_back(charging_period);
+        local_schedule.chargingRateUnit = ChargingRateUnitType::A;
+
+        ChargingSchedule schedule;
+        CHECK(getCompositeSchedule(1, 3600, ChargingRateUnitType::A, schedule, smartcharging_mgr));
+
+        CHECK_EQ(schedule.duration, 3600);
+        CHECK_EQ(schedule.chargingRateUnit, ChargingRateUnitType::A);
+        CHECK_GE(schedule.startSchedule.value(), now);
+        CHECK_LE(schedule.startSchedule.value(), DateTime(now.timestamp() + 1));
+        CHECK_EQ(schedule.chargingSchedulePeriod.size(), 4);
+
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].startPeriod, 0);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].limit, 8.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[0].numberPhases.value(), 2);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].startPeriod, 200);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].limit, 16.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[1].numberPhases.value(), 1);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].startPeriod, 900);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].limit, 10.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[2].numberPhases.value(), 2);
+        CHECK_EQ(schedule.chargingSchedulePeriod[3].startPeriod, 1600);
+        CHECK_EQ(schedule.chargingSchedulePeriod[3].limit, 18.f);
+        CHECK_EQ(schedule.chargingSchedulePeriod[3].numberPhases.value(), 3);
+    }
+
     TEST_CASE("Cleanup")
     {
         CHECK(database.close());
