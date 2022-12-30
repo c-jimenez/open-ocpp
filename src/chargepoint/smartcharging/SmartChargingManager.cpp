@@ -375,7 +375,8 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
 
         // Compute periods
         std::vector<Period> periods;
-        DateTime            now = DateTime::now();
+        bool                error = false;
+        DateTime            now   = DateTime::now();
         for (auto& profile_list : profile_lists)
         {
             unsigned int stack_level = std::numeric_limits<unsigned int>::max();
@@ -390,11 +391,11 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                     stack_level                         = profile.second.stackLevel;
                     if (periods.empty())
                     {
-                        break;
+                        error = true;
                     }
                 }
             }
-            if (periods.empty())
+            if (error)
             {
                 break;
             }
