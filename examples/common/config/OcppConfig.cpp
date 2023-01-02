@@ -55,7 +55,7 @@ static const map<string, int> CONFIGURATION_VALUES = {
     {"BlinkRepeat", PARAM_READ_WRITE | PARAM_OCPP},
     {"ClockAlignedDataInterval", PARAM_READ_WRITE | PARAM_OCPP},
     {"ConnectionTimeOut", PARAM_READ_WRITE | PARAM_OCPP},
-    {"ConnectorPhaseRotation", PARAM_READ | PARAM_OCPP},
+    {"ConnectorPhaseRotation", PARAM_READ_WRITE | PARAM_OCPP},
     {"ConnectorPhaseRotationMaxLength", PARAM_READ | PARAM_OCPP},
     {"GetConfigurationMaxKeys", PARAM_READ | PARAM_OCPP},
     {"HeartbeatInterval", PARAM_READ_WRITE | PARAM_OCPP},
