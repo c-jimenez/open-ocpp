@@ -217,7 +217,7 @@ bool LibWebsocketClient::send(const void* data, size_t size)
         ret          = m_send_msgs.push(msg);
 
         // Schedule a send
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service(m_context);
     }
 
     return ret;
@@ -372,11 +372,21 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             client->m_listener->wsClientDataReceived(in, len);
             break;
 
+        case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
+        {
+            // Triggers a send
+            if (!client->m_end && !client->m_send_msgs.empty())
+            {
+                lws_callback_on_writable(client->m_wsi);
+            }
+        }
+        break;
+
         case LWS_CALLBACK_CLIENT_WRITEABLE:
         {
             // Send data if any ready
             bool     error = false;
-            SendMsg* msg = nullptr;
+            SendMsg* msg   = nullptr;
             while (client->m_send_msgs.pop(msg, 0) && !error)
             {
                 if (lws_write(wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))

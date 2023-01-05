@@ -414,6 +414,20 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
         }
         break;
 
+        case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
+        {
+            // Trigger close or send
+            for (const auto& iter_client : server->m_clients)
+            {
+                Client* client = dynamic_cast<Client*>(iter_client.second.get());
+                if (!client->m_connected || !client->m_send_msgs.empty())
+                {
+                    lws_callback_on_writable(client->m_wsi);
+                }
+            }
+        }
+        break;
+
         case LWS_CALLBACK_SERVER_WRITEABLE:
         {
             // Get corresponding client
@@ -425,7 +439,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                 {
                     // Send data if any ready
                     bool     error = false;
-                    SendMsg* msg = nullptr;
+                    SendMsg* msg   = nullptr;
                     while (client->m_send_msgs.pop(msg, 0) && !error)
                     {
                         if (lws_write(client->m_wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
@@ -511,7 +525,7 @@ bool LibWebsocketServer::Client::disconnect(bool notify_disconnected)
         }
 
         // Schedule a close
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service_pt(m_wsi);
     }
 
     // Empty message queue
@@ -543,7 +557,7 @@ bool LibWebsocketServer::Client::send(const void* data, size_t size)
         ret          = m_send_msgs.push(msg);
 
         // Schedule a send
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service_pt(m_wsi);
     }
 
     return ret;

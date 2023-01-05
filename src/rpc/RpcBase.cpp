@@ -88,7 +88,7 @@ bool RpcBase::call(const std::string&         action,
             std::stringstream expected_id;
             expected_id << m_transaction_id;
             std::shared_ptr<RpcMessage> rpc_message;
-            auto        wait_time   = std::chrono::steady_clock().now() + timeout;
+            auto                        wait_time = std::chrono::steady_clock().now() + timeout;
             do
             {
                 // Compute timeout
@@ -179,8 +179,11 @@ void RpcBase::stop()
     // Check if already started
     if (m_rx_thread)
     {
-        // Stop reception thread
+        // Stop queues
+        m_results_queue.setEnable(false);
         m_requests_queue.setEnable(false);
+
+        // Stop reception thread
         m_rx_thread->join();
         delete m_rx_thread;
         m_rx_thread = nullptr;
@@ -313,7 +316,7 @@ bool RpcBase::decodeCall(const std::string&      unique_id,
     {
         // Add request to the queue
         auto msg = std::make_shared<RpcMessage>(unique_id, action.GetString(), rpc_frame, payload);
-        m_requests_queue.push(msg);
+        m_requests_queue.push(std::move(msg));
 
         ret = true;
     }
@@ -331,7 +334,7 @@ bool RpcBase::decodeCallResult(const std::string& unique_id, rapidjson::Document
     {
         // Add result to the queue
         auto msg = std::make_shared<RpcMessage>(unique_id, rpc_frame, payload);
-        m_results_queue.push(msg);
+        m_results_queue.push(std::move(msg));
 
         ret = true;
     }
@@ -353,7 +356,7 @@ bool RpcBase::decodeCallError(const std::string&   unique_id,
     {
         // Add error to the queue
         auto msg = std::make_shared<RpcMessage>(unique_id, rpc_frame, payload, &error, &message);
-        m_results_queue.push(msg);
+        m_results_queue.push(std::move(msg));
 
         ret = true;
     }
