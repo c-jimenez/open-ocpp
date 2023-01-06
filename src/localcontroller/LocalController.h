@@ -69,6 +69,9 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
 
     // RpcServer::IListener interface
 
+    /** @copydoc bool RpcServer::IListener::rpcAcceptConnection(const char*) */
+    bool rpcAcceptConnection(const char* ip_address) override;
+
     /** @copydoc bool RpcServer::IListener::rpcCheckCredentials(const std::string&, const std::string&, const std::string&) */
     bool rpcCheckCredentials(const std::string& chargepoint_id, const std::string& user, const std::string& password) override;
 

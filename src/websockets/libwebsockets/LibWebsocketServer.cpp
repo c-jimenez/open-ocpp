@@ -258,6 +258,24 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_wsi = wsi;
             break;
 
+        case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
+        {
+            // Get parameters
+            struct lws_filter_network_conn_args* filter = reinterpret_cast<struct lws_filter_network_conn_args*>(user);
+
+            // Get client IP address
+            char ip_address[64];
+            lws_sa46_write_numeric_address(reinterpret_cast<lws_sockaddr46*>(&filter->cli_addr), ip_address, sizeof(ip_address));
+
+            // Notify user
+            if (!server->m_listener->wsAcceptConnection(ip_address))
+            {
+                // Disconnect
+                ret = -1;
+            }
+        }
+        break;
+
         case LWS_CALLBACK_HTTP_CONFIRM_UPGRADE:
         {
             // Check selected protocol

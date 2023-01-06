@@ -93,6 +93,17 @@ class CentralSystemEventsHandler : public ICentralSystemEventsHandler
     virtual ~CentralSystemEventsHandler() { }
 
     /**
+     * @brief Called to accept an incoming connection
+     * @param ip_address IP address of the client
+     * @return true if the incoming connection must be accepted, false otherwise
+     */
+    bool acceptConnection(const char* ip_address) override
+    {
+        (void)ip_address;
+        return true;
+    }
+
+    /**
      * @brief Called to check the charge point credentials for HTTP basic authentication
      * @param chargepoint_id Charge Point identifier
      * @param password Password

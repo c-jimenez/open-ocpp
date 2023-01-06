@@ -84,6 +84,12 @@ void RpcServer::registerServerListener(IListener& listener)
 
 // IWebsocketServer::IListener interface
 
+/** @copydoc bool IWebsocketServer::IListener::wsAcceptConnection(const char*) */
+bool RpcServer::wsAcceptConnection(const char* ip_address)
+{
+    return m_listener->rpcAcceptConnection(ip_address);
+}
+
 /** @copydoc bool IWebsocketServer::IListener::wsCheckCredentials(const char*, const std::string&, const std::string&) */
 bool RpcServer::wsCheckCredentials(const char* uri, const std::string& user, const std::string& password)
 {

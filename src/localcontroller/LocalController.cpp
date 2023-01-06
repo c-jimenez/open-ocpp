@@ -242,6 +242,14 @@ bool LocalController::stop()
     return ret;
 }
 
+/** @copydoc bool RpcServer::IListener::rpcAcceptConnection(const char*) */
+bool LocalController::rpcAcceptConnection(const char* ip_address)
+{
+    // Notify connection => no additional processing is done here
+    // to keep this callback has fast as possible
+    return m_events_handler.acceptConnection(ip_address);
+}
+
 /** @copydoc bool RpcServer::IListener::rpcCheckCredentials(const std::string&, const std::string&, const std::string&) */
 bool LocalController::rpcCheckCredentials(const std::string& chargepoint_id, const std::string& user, const std::string& password)
 {
