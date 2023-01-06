@@ -103,5 +103,47 @@ void Logger::registerLogger(ocpp::database::Database& database, const std::strin
     }
 }
 
+/** @brief External logging function */
+std::function<void(unsigned int, const std::string&)> ExtLogger::m_log_function = [](unsigned int level, const std::string& log_line)
+{
+    // Default function if no external logger has been registered
+    static std::mutex mutex;
+
+    std::time_t                 now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::lock_guard<std::mutex> lock(mutex);
+
+    std::tm now_tm;
+    localtime_r(&now, &now_tm);
+    LOG_OUTPUT << level << " - [" << std::put_time(&now_tm, "%Y-%m-%dT%T") << "] - " << log_line << std::endl;
+};
+
+/** @brief Constructor */
+ExtLogger::ExtLogger(const char* level_str, unsigned int level, const char* filename, const char* line) : m_log_output(), m_level(level)
+{
+    (void)level_str;
+    m_log_output << filename << ":" << line << " - ";
+}
+
+/** @brief Constructor */
+ExtLogger::ExtLogger(const char* name, const char* level_str, unsigned int level, const char* filename, const char* line)
+    : m_log_output(), m_level(level)
+{
+    (void)name;
+    (void)level_str;
+    m_log_output << filename << ":" << line << " - ";
+}
+
+/** @brief Destructor */
+ExtLogger::~ExtLogger()
+{
+    m_log_function(m_level, m_log_output.str());
+}
+
+/** @brief Register an external logging function */
+void ExtLogger::registerLogFunction(std::function<void(unsigned int, const std::string&)> log_function)
+{
+    m_log_function = log_function;
+}
+
 } // namespace log
 } // namespace ocpp
