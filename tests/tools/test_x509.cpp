@@ -21,7 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CertificateRequest.h"
 #include "PrivateKey.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <openssl/bio.h>
 #include <openssl/pem.h>
@@ -409,7 +409,7 @@ TEST_SUITE("Certificate request")
         // Check fields
         checkTestCertificateRequestFields(cert_request, false);
 
-        std::fstream f("req.csr", f.out);
+        std::fstream f("req.csr", std::fstream::out);
         f << cert_request.pem();
     }
 }

@@ -10,7 +10,7 @@ add_library(ws OBJECT
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
     libwebsockets/LibWebsocketServer.cpp
-)
+ )
 
 # Private includes
 target_include_directories(ws PRIVATE libwebsockets)

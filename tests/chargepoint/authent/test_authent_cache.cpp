@@ -24,7 +24,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessagesConverter.h"
 #include "MessageDispatcherStub.h"
 #include "OcppConfigStub.h"
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 

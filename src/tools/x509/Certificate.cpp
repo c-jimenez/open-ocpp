@@ -20,17 +20,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CertificateRequest.h"
 #include "PrivateKey.h"
 #include "sign.h"
+#include "openssl.h"
 
 #include <ctime>
 #include <iomanip>
 #include <sstream>
-
-#include <openssl/bio.h>
-#include <openssl/err.h>
-#include <openssl/pem.h>
-#include <openssl/rand.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
 
 namespace ocpp
 {

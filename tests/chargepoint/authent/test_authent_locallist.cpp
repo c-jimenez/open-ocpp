@@ -25,7 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessageDispatcherStub.h"
 #include "OcppConfigStub.h"
 #include "SendLocalList.h"
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 

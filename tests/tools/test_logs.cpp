@@ -22,7 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define LOG_LEVEL 0 // Enable all log levels
 #include "Logger.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <string>
 
@@ -89,7 +89,7 @@ TEST_SUITE("Database class test suite")
     TEST_CASE("Log database")
     {
         Database db;
-        CHECK(db.open(test_database_path));
+        CHECK(db.open(test_database_path.string()));
 
         LogDatabase log_db1(db, "logs_1", 10u);
         for (size_t i = 0; i < 20; i++)
@@ -122,7 +122,7 @@ TEST_SUITE("Database class test suite")
     TEST_CASE("Default logger")
     {
         Database db;
-        CHECK(db.open(test_database_path));
+        CHECK(db.open(test_database_path.string()));
 
         LOG_INFO << "This log won't be saved!";
 
@@ -163,7 +163,7 @@ TEST_SUITE("Database class test suite")
     TEST_CASE("Custom logger")
     {
         Database db;
-        CHECK(db.open(test_database_path));
+        CHECK(db.open(test_database_path.string()));
 
         LOG_INFO << "This log won't be saved!";
 

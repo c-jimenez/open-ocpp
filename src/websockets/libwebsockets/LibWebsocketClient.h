@@ -22,7 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IWebsocketClient.h"
 #include "Queue.h"
 #include "Url.h"
-#include "libwebsockets.h"
+#include "websockets.h"
 
 #include <condition_variable>
 #include <mutex>
@@ -125,9 +125,9 @@ class LibWebsocketClient : public IWebsocketClient
     void process();
 
     /** @brief libwebsockets connection callback */
-    static void connectCallback(struct lws_sorted_usec_list* sul);
+    static void connectCallback(struct lws_sorted_usec_list* sul) noexcept;
     /** @brief libwebsockets event callback */
-    static int eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len);
+    static int eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len) noexcept;
 };
 
 } // namespace websockets

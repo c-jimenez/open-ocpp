@@ -17,8 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Base64.h"
-
-#include <openssl/evp.h>
+#include "openssl.h"
 
 namespace ocpp
 {

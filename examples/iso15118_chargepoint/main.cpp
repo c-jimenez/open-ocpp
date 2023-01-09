@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "iso15118_chargepoint.ini";
-    ChargePointDemoConfig config(path);
+    ChargePointDemoConfig config(path.string());
 
     std::filesystem::path ev_cert_path(working_dir);
     ev_cert_path /= "iso_cp_ev_cert.pem";

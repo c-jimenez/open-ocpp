@@ -30,7 +30,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "SmartChargingManager.h"
 #include "TestableTimerPool.h"
 #include "TestableWorkerThreadPool.h"
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 

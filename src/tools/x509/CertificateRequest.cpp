@@ -28,10 +28,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #else
 #include <arpa/inet.h>
 #endif // _MSC_VER
-#include <openssl/bio.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
+
+#include "openssl.h"
 
 namespace ocpp
 {

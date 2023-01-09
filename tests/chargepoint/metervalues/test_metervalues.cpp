@@ -33,7 +33,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "TestableTimerPool.h"
 #include "TestableWorkerThreadPool.h"
 #include "TriggerMessageManagerStub.h"
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 

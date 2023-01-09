@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "remote_chargepoint.ini";
-    ChargePointDemoConfig config(path);
+    ChargePointDemoConfig config(path.string());
 
     // // Event handler
     ChargePointEventsHandler event_handler(config, working_dir);

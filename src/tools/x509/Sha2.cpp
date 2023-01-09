@@ -17,12 +17,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Sha2.h"
+#include "openssl.h"
 
 #include <iomanip>
 #include <sstream>
-
-#include <openssl/evp.h>
-#include <openssl/sha.h>
 
 namespace ocpp
 {

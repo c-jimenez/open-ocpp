@@ -105,17 +105,17 @@ bool LibWebsocketClient::connect(const std::string&        url,
                     if (!m_credentials.server_certificate_ca.empty())
                     {
                         info.client_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
-                        info.client_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                        info.client_ssl_ca_mem_len = static_cast<unsigned int>(m_credentials.server_certificate_ca.size());
                     }
                     if (!m_credentials.client_certificate.empty())
                     {
                         info.client_ssl_cert_mem     = m_credentials.client_certificate.c_str();
-                        info.client_ssl_cert_mem_len = m_credentials.client_certificate.size();
+                        info.client_ssl_cert_mem_len = static_cast<unsigned int>(m_credentials.client_certificate.size());
                     }
                     if (!m_credentials.client_certificate_private_key.empty())
                     {
                         info.client_ssl_key_mem     = m_credentials.client_certificate_private_key.c_str();
-                        info.client_ssl_key_mem_len = m_credentials.client_certificate_private_key.size();
+                        info.client_ssl_key_mem_len = static_cast<unsigned int>(m_credentials.client_certificate_private_key.size());
                     }
                 }
                 else
@@ -265,7 +265,7 @@ void LibWebsocketClient::process()
 }
 
 /** @brief libwebsockets connection callback */
-void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
+void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul) noexcept
 {
     // Configure retry policy
 #ifdef _MSC_VER
@@ -319,7 +319,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
     }
     if (client->m_url.port())
     {
-        i.port = client->m_url.port();
+        i.port = static_cast<int>(client->m_url.port());
     }
     i.protocol              = client->m_protocol.c_str();
     i.local_protocol_name   = "LibWebsocketClient";
@@ -338,7 +338,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 }
 
 /** @brief libwebsockets event callback */
-int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len)
+int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len) noexcept
 {
     int  ret   = 0;
     bool retry = false;

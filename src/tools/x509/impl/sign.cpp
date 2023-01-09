@@ -17,13 +17,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "sign.h"
+#include "openssl.h"
 
 #include <fstream>
 #include <vector>
-
-#include <openssl/err.h>
-#include <openssl/evp.h>
-#include <openssl/x509.h>
 
 namespace ocpp
 {

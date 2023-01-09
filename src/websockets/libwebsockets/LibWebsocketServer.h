@@ -22,7 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IWebsocketServer.h"
 #include "Queue.h"
 #include "Url.h"
-#include "libwebsockets.h"
+#include "websockets.h"
 
 #include <array>
 #include <condition_variable>

@@ -30,14 +30,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #else
 #include <arpa/inet.h>
 #endif // _MSC_VER
-#include <openssl/bio.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
-#if (OPENSSL_VERSION_NUMBER >= 0x30000000L)
-// OpenSSL 3.x
-#include <openssl/core_names.h>
-#endif // OPENSSL_VERSION_NUMBER
+
+#include "openssl.h"
 
 namespace ocpp
 {

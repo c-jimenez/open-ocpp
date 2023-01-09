@@ -21,7 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Database.h"
 #include "OcppConfigStub.h"
 #include "TestableTimerPool.h"
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 
