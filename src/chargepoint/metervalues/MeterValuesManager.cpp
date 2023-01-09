@@ -26,7 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Logger.h"
 #include "MeterValueConverter.h"
 #include "MeterValues.h"
-#include "String.h"
+#include "StringHelpers.h"
 #include "WorkerThreadPool.h"
 
 #include <functional>
@@ -246,7 +246,11 @@ void MeterValuesManager::configureClockAlignedTimer(void)
         // Compute next due date
         time_t    now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         struct tm aligned_time_tm;
+#ifdef _MSC_VER
+        localtime_s(&aligned_time_tm, &now);
+#else // _MSC_VER
         localtime_r(&now, &aligned_time_tm);
+#endif // _MSC_VER
         aligned_time_tm.tm_min = 0;
         aligned_time_tm.tm_sec = 0;
         time_t aligned_time    = std::mktime(&aligned_time_tm);

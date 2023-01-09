@@ -849,8 +849,6 @@ endif()
 if (MSVC)
 	# Turn off pointless microsoft security warnings.
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
-	# Fail the build if any warnings
-	add_compile_options(/W3 /WX)
 	# Unbreak MSVC broken preprocessor __VA_ARGS__ behaviour
 	if (MSVC_VERSION GREATER 1925)
 		add_compile_options(/Zc:preprocessor /wd5105)

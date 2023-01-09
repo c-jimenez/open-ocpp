@@ -17,14 +17,19 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "X509Document.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 
+#ifdef _MSC_VER
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
+#endif // _MSC_VER
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
@@ -43,7 +48,7 @@ namespace x509
 X509Document::X509Document(const std::filesystem::path& pem_file) : m_is_valid(false), m_pem(), m_openssl_object(nullptr)
 {
     // Open PEM file
-    std::fstream file(pem_file, file.in | file.binary | file.ate);
+    std::fstream file(pem_file, std::fstream::in | std::fstream::binary | std::fstream::ate);
     if (file.is_open())
     {
         // Read the whole file
@@ -64,7 +69,7 @@ X509Document::~X509Document() { }
 bool X509Document::toFile(const std::filesystem::path& pem_file) const
 {
     bool         ret = false;
-    std::fstream x509_file(pem_file, x509_file.out);
+    std::fstream x509_file(pem_file, std::fstream::out);
     if (x509_file.is_open())
     {
         x509_file << m_pem;
@@ -124,8 +129,11 @@ time_t X509Document::convertAsn1Time(const void* pasn1_time)
     struct tm        tm;
     ASN1_TIME_to_tm(asn1_time, &tm);
     time_t timestamp = mktime(&tm);
+#ifdef _MSC_VER
+#else // _MSC_VER
     timestamp += tm.tm_gmtoff;
     timestamp -= (tm.tm_isdst * 3600);
+#endif // _MSC_VER
     return timestamp;
 }
 

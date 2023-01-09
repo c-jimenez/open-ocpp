@@ -27,10 +27,15 @@ SOFTWARE.
 #include "ChargePointDemoConfig.h"
 #include "PrivateKey.h"
 #include "Sha2.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <fstream>
 #include <iostream>
+
+// With MSVC compiler, the system() call returns directly the command's return value
+#ifdef _MSC_VER
+#define WEXITSTATUS(x) (x)
+#endif _MSC_VER
 
 using namespace std;
 using namespace ocpp::types;
@@ -352,7 +357,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
 
             std::stringstream name;
             name << "fw_" << sha256.resultString() << ".pem";
-            ca_filename = m_working_dir / name.str();
+            ca_filename = (m_working_dir / name.str()).string();
         }
         else
         {
@@ -369,7 +374,7 @@ ocpp::types::CertificateStatusEnumType DefaultChargePointEventsHandler::caCertif
 
             std::stringstream name;
             name << "cs_" << sha256.resultString() << ".pem";
-            ca_filename = m_working_dir / name.str();
+            ca_filename = (m_working_dir / name.str()).string();
         }
 
         // Check if the certificate must be saved
@@ -419,7 +424,7 @@ bool DefaultChargePointEventsHandler::chargePointCertificateReceived(const ocpp:
 
     std::stringstream name;
     name << "cp_" << sha256.resultString() << ".pem";
-    std::string cert_filename = m_working_dir / name.str();
+    std::string cert_filename = (m_working_dir / name.str()).string();
 
     // Save certificate
     if (certificate.toFile(cert_filename))
@@ -483,7 +488,7 @@ ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::de
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if ((ocpp::helpers::startsWith(filename, "fw_") || ocpp::helpers::startsWith(filename, "cs_") ||
                  ocpp::helpers::startsWith(filename, "iso_")) &&
                 ocpp::helpers::endsWith(filename, ".pem"))
@@ -551,7 +556,7 @@ void DefaultChargePointEventsHandler::getInstalledCertificates(ocpp::types::Cert
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (type == CertificateUseEnumType::ManufacturerRootCertificate)
             {
                 if (ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
@@ -627,7 +632,7 @@ bool DefaultChargePointEventsHandler::hasChargePointCertificateInstalled()
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (ocpp::helpers::startsWith(filename, "cp_") && ocpp::helpers::endsWith(filename, ".pem"))
             {
                 std::string certificate_key = dir_entry.path().string() + ".key";
@@ -658,7 +663,7 @@ ocpp::types::UpdateFirmwareStatusEnumType DefaultChargePointEventsHandler::check
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
             {
                 ca_certificates.emplace_back(dir_entry.path());
@@ -695,7 +700,7 @@ bool DefaultChargePointEventsHandler::iso15118CheckEvCertificate(const ocpp::x50
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (ocpp::helpers::startsWith(filename, "iso_mo_root_") && ocpp::helpers::endsWith(filename, ".pem"))
             {
                 Certificate mo_cert(dir_entry.path());
@@ -728,7 +733,7 @@ bool DefaultChargePointEventsHandler::iso15118ChargePointCertificateReceived(con
 
     std::stringstream name;
     name << "iso_cp_" << sha256.resultString() << ".pem";
-    std::string cert_filename = m_working_dir / name.str();
+    std::string cert_filename = (m_working_dir / name.str()).string();
 
     // Save certificate
     if (certificate.toFile(cert_filename))
@@ -783,7 +788,7 @@ void DefaultChargePointEventsHandler::iso15118GetInstalledCertificates(
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (v2g_root_certificate)
             {
                 if (ocpp::helpers::startsWith(filename, "iso_v2g_root_") && ocpp::helpers::endsWith(filename, ".pem"))
@@ -842,14 +847,14 @@ ocpp::types::InstallCertificateStatusEnumType DefaultChargePointEventsHandler::i
             // V2 root certificate
             std::stringstream name;
             name << "iso_v2g_root_" << sha256.resultString() << ".pem";
-            cert_filename = m_working_dir / name.str();
+            cert_filename = (m_working_dir / name.str()).string();
         }
         else
         {
             // MO root certificate
             std::stringstream name;
             name << "iso_mo_root_" << sha256.resultString() << ".pem";
-            cert_filename = m_working_dir / name.str();
+            cert_filename = (m_working_dir / name.str()).string();
         }
 
         // Save certificate
@@ -887,7 +892,7 @@ unsigned int DefaultChargePointEventsHandler::getNumberOfCaCertificateInstalled(
     {
         if (!dir_entry.is_directory())
         {
-            std::string filename = dir_entry.path().filename();
+            std::string filename = dir_entry.path().filename().string();
             if (manufacturer && ocpp::helpers::startsWith(filename, "fw_") && ocpp::helpers::endsWith(filename, ".pem"))
             {
                 count++;

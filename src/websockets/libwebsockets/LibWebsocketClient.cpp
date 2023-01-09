@@ -236,10 +236,12 @@ void LibWebsocketClient::process()
     client = this;
 
     // Mask SIG_PIPE signal
+#ifndef _MSC_VER
     sigset_t set;
     sigemptyset(&set);
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
+#endif // _MSC_VER
 
     // Need to ensure that the context is still valid when a user callback
     // has called disconnect() function
@@ -266,6 +268,10 @@ void LibWebsocketClient::process()
 void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 {
     // Configure retry policy
+#ifdef _MSC_VER
+    client->m_retry_policy = {
+        &client->m_retry_interval, 1, 1, client->m_ping_interval, static_cast<uint16_t>(2u * client->m_ping_interval), 20};
+#else
     client->m_retry_policy = {
         .retry_ms_table       = &client->m_retry_interval,
         .retry_ms_table_count = 1,
@@ -276,6 +282,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 
         .jitter_percent = 20,
     };
+#endif // _MSC_VER
 
     // Connexion parameters
     struct lws_client_connect_info i;

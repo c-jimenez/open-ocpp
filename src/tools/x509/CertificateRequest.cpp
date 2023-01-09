@@ -22,7 +22,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <iomanip>
 #include <sstream>
 
+#ifdef _MSC_VER
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
+#endif // _MSC_VER
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>

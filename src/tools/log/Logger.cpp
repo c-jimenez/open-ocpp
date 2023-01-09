@@ -62,7 +62,11 @@ Logger::~Logger()
         std::lock_guard<std::mutex> lock(mutex);
 
         std::tm now_tm;
+#ifdef _MSC_VER
+        localtime_s(&now_tm, &now);
+#else  // _MSC_VER
         localtime_r(&now, &now_tm);
+#endif // _MSC_VER
         LOG_OUTPUT << m_level_str << " - [" << std::put_time(&now_tm, "%Y-%m-%dT%T") << "] - " << file_line.str() << " - "
                    << m_log_output.str() << std::endl;
     }
@@ -113,7 +117,11 @@ std::function<void(unsigned int, const std::string&)> ExtLogger::m_log_function 
     std::lock_guard<std::mutex> lock(mutex);
 
     std::tm now_tm;
+#ifdef _MSC_VER
+    localtime_s(&now_tm, &now);
+#else  // _MSC_VER
     localtime_r(&now, &now_tm);
+#endif // _MSC_VER
     LOG_OUTPUT << level << " - [" << std::put_time(&now_tm, "%Y-%m-%dT%T") << "] - " << log_line << std::endl;
 };
 

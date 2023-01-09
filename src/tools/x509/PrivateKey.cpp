@@ -47,7 +47,7 @@ PrivateKey::PrivateKey(const std::filesystem::path& pem_file, const std::string&
     : m_is_valid(false), m_private_pem(), m_public_pem(), m_size(0), m_openssl_object(nullptr)
 {
     // Open PEM file
-    std::fstream file(pem_file, file.in | file.binary | file.ate);
+    std::fstream file(pem_file, std::fstream::in | std::fstream::binary | std::fstream::ate);
     if (file.is_open())
     {
         // Read the whole file
@@ -175,7 +175,7 @@ std::vector<uint8_t> PrivateKey::sign(const std::string& filepath, Sha2::Type sh
 bool PrivateKey::privateToFile(const std::filesystem::path& pem_file) const
 {
     bool         ret = false;
-    std::fstream x509_file(pem_file, x509_file.out);
+    std::fstream x509_file(pem_file, std::fstream::out);
     if (x509_file.is_open())
     {
         x509_file << m_private_pem;
@@ -188,7 +188,7 @@ bool PrivateKey::privateToFile(const std::filesystem::path& pem_file) const
 bool PrivateKey::publicToFile(const std::filesystem::path& pem_file) const
 {
     bool         ret = false;
-    std::fstream x509_file(pem_file, x509_file.out);
+    std::fstream x509_file(pem_file, std::fstream::out);
     if (x509_file.is_open())
     {
         x509_file << m_public_pem;

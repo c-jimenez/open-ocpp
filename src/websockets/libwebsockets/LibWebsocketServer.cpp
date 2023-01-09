@@ -77,6 +77,9 @@ bool LibWebsocketServer::start(const std::string&        url,
 
             // Retry policy
             uint16_t ping  = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+#ifdef _MSC_VER
+            m_retry_policy = {nullptr, 0, 0, ping, static_cast<uint16_t>(2u * ping), 0};
+#else
             m_retry_policy = {.retry_ms_table       = nullptr,
                               .retry_ms_table_count = 0,
                               .conceal_count        = 0,
@@ -85,6 +88,7 @@ bool LibWebsocketServer::start(const std::string&        url,
                               .secs_since_valid_hangup = static_cast<uint16_t>(2u * ping), /* hangup after secs idle */
 
                               .jitter_percent = 0};
+#endif // _MSC_VER
 
             // Fill context information
             struct lws_context_creation_info info;
@@ -224,10 +228,12 @@ void LibWebsocketServer::process()
     server = this;
 
     // Mask SIG_PIPE signal
+#ifndef _MSC_VER
     sigset_t set;
     sigemptyset(&set);
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
+#endif // _MSC_VER
 
     // Event loop
     int ret = 0;
@@ -282,7 +288,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (strcmp("websocket", static_cast<char*>(in)) == 0)
             {
                 // Check URI
+#ifdef _MSC_VER
+                char uri[512u];
+#else  // _MSC_VER
                 char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
+#endif // _MSC_VER
                 int  len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
                 if ((len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
@@ -312,7 +322,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                             else
                             {
                                 b64[5] = '\0';
+#ifdef _MSC_VER
+                                if (_stricmp(b64, "Basic"))
+#else
                                 if (strcasecmp(b64, "Basic"))
+#endif // _MSC_VER
                                 {
                                     lwsl_err("auth missing basic: %s\n", b64);
                                     ret = -1;
@@ -400,7 +414,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_clients[wsi] = client;
 
             // Notify connection
+#ifdef _MSC_VER
+            char uri[512u];
+#else // _MSC_VER
             char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
+#endif // _MSC_VER
             if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)
             {
                 uri[0] = 0;

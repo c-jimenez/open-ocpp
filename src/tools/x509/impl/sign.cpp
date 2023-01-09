@@ -77,7 +77,7 @@ std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha, EVP_PKEY*
     if (pkey)
     {
         // Open the file
-        std::fstream file(filepath, file.in | file.binary);
+        std::fstream file(filepath, std::fstream::in | std::fstream::binary);
         if (file.is_open())
         {
             // Initialize signing context
@@ -159,7 +159,7 @@ bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, 
     if (!signature.empty() && pkey)
     {
         // Open the file
-        std::fstream file(filepath, file.in | file.binary);
+        std::fstream file(filepath, std::fstream::in | std::fstream::binary);
         if (file.is_open())
         {
             // Initialize verify context

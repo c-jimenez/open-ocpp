@@ -28,7 +28,7 @@ SOFTWARE.
 #include "MainMeterSimulator.h"
 #include "MeterSimulator.h"
 #include "SetpointManager.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <cstring>
 #include <filesystem>

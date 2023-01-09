@@ -26,7 +26,7 @@ SOFTWARE.
 #include "ChargePointDemoConfig.h"
 #include "IMeter.h"
 #include "ISetpointManager.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <iostream>
 

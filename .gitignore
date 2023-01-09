@@ -2,3 +2,4 @@ build
 build_*
 bin/*
 .vscode/settings.json
+.vs

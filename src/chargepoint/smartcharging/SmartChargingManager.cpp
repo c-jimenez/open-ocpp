@@ -686,12 +686,20 @@ ocpp::types::DateTime SmartChargingManager::getProfileStartTime(Connector*      
             // Get start of schedule day of the week and time of the day
             std::tm tm_start_schedule;
             time_t  start_schedule_time_t = profile.chargingSchedule.startSchedule.value().timestamp();
+#ifdef _MSC_VER
+            localtime_s(&tm_start_schedule, &start_schedule_time_t);
+#else  // _MSC_VER
             localtime_r(&start_schedule_time_t, &tm_start_schedule);
+#endif // _MSC_VER
 
             // Get the same information on today
             std::tm tm_today;
             time_t  now_time_t = time_point.timestamp();
+#ifdef _MSC_VER
+            localtime_s(&tm_today, &now_time_t);
+#else  // _MSC_VER
             localtime_r(&now_time_t, &tm_today);
+#endif // _MSC_VER
 
             // Apply the same time on today
             tm_today.tm_hour = tm_start_schedule.tm_hour;

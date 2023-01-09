@@ -42,7 +42,7 @@ bool IniFile::load(const std::string& path, bool sync)
 {
     bool ret = false;
 
-    std::fstream file(path, file.in);
+    std::fstream file(path, std::fstream::in);
     if (file.is_open())
     {
         std::string line;
@@ -136,7 +136,7 @@ bool IniFile::store(const std::string& path) const
 {
     bool ret = false;
 
-    std::fstream file(path, file.trunc | file.out);
+    std::fstream file(path, std::fstream::trunc | std::fstream::out);
     if (file.is_open())
     {
         for (const auto& section : m_data)
