@@ -203,7 +203,7 @@ TEST_SUITE("Get composite schedule - single OCPP profile")
             CHECK_EQ(schedule.chargingSchedulePeriod[i].startPeriod, profile1.chargingSchedule.chargingSchedulePeriod[i].startPeriod);
             CHECK_EQ(schedule.chargingSchedulePeriod[i].limit,
                      stack_config.operatingVoltage() * profile1.chargingSchedule.chargingSchedulePeriod[i].limit *
-                         profile1.chargingSchedule.chargingSchedulePeriod[i].numberPhases);
+                         static_cast<float>(profile1.chargingSchedule.chargingSchedulePeriod[i].numberPhases));
             CHECK_EQ(schedule.chargingSchedulePeriod[i].numberPhases, profile1.chargingSchedule.chargingSchedulePeriod[i].numberPhases);
         }
     }

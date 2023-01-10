@@ -363,7 +363,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
 
     // Get connector
     Connector* connector = m_connectors.getConnector(request.connectorId);
-    if (connector || (request.connectorId == 0u))
+    if (connector)
     {
         // Get profiles list
         std::vector<const ProfileDatabase::ChargingProfileList*> profile_lists;
@@ -417,7 +417,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
             // Ensure profile is absolute with the requested duration
             local_profile.chargingSchedule.startSchedule.clear();
             local_profile.chargingSchedule.startSchedule = now;
-            local_profile.chargingSchedule.duration      = request.duration;
+            local_profile.chargingSchedule.duration      = static_cast<int>(request.duration);
 
             // Merge periods
             std::vector<Period> local_periods = getProfilePeriods(connector, local_profile, now, request.duration);
@@ -446,12 +446,12 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                 schedule.chargingRateUnit = ChargingRateUnitType::A;
             }
             // Adjust start if needed since first period must start at 0
-            int offset             = periods[0].start;
+            time_t offset             = periods[0].start;
             schedule.startSchedule = DateTime(now.timestamp() + offset);
             for (const auto& period : periods)
             {
                 ChargingSchedulePeriod p;
-                p.startPeriod = period.start - offset;
+                p.startPeriod = static_cast<int>(period.start - offset);
                 if (period.unit == schedule.chargingRateUnit)
                 {
                     p.limit = period.setpoint;
@@ -462,7 +462,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                 }
                 p.numberPhases = period.nb_phases;
                 schedule.chargingSchedulePeriod.push_back(p);
-                schedule.duration += period.duration;
+                schedule.duration += static_cast<int>(period.duration);
             }
         }
         else
@@ -951,10 +951,13 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeProfilePeri
                     }
 
                     // Check if the new period is still enabled
-                    if ((new_periods[i].start + new_periods[i].duration) > (previous->start + previous->duration))
+                    if (previous)
                     {
-                        // Restart computation for this period
-                        i--;
+                        if ((new_periods[i].start + new_periods[i].duration) > (previous->start + previous->duration))
+                        {
+                            // Restart computation for this period
+                            i--;
+                        }
                     }
                 }
             }
@@ -1016,8 +1019,8 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeLocalPeriod
     else
     {
         bool   offset                    = false;
-        int    local_period_start        = 0;
-        int    local_period_start_offset = 0;
+        time_t    local_period_start        = 0;
+        time_t    local_period_start_offset = 0;
         size_t profiles_period_index     = 0;
         for (size_t i = 0; i < local_periods.size(); i++)
         {
@@ -1032,7 +1035,7 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeLocalPeriod
                 local_period_start_offset = 0;
             }
 
-            int local_period_end = local_period_start + (local_periods[i].duration - local_period_start_offset);
+            time_t local_period_end = local_period_start + (local_periods[i].duration - local_period_start_offset);
             // Check if there are profiles periods left
             if (profiles_period_index != profiles_periods.size())
             {
@@ -1043,7 +1046,7 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeLocalPeriod
                 }
                 else if (local_period_start >= profiles_periods[profiles_period_index].start)
                 {
-                    int profiles_period_end =
+                    time_t profiles_period_end =
                         profiles_periods[profiles_period_index].start + profiles_periods[profiles_period_index].duration;
                     if (local_period_end <= profiles_period_end)
                     {

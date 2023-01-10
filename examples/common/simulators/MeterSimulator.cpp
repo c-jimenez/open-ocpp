@@ -125,7 +125,7 @@ void MeterSimulator::update()
     unsigned int energy_mwh = 0;
     for (size_t i = 0; i < m_phases_count; i++)
     {
-        energy_mwh += static_cast<int64_t>(m_powers[i]) * UPDATE_PERIOD.count() / 3600ll;
+        energy_mwh += static_cast<unsigned int>(static_cast<int64_t>(m_powers[i]) * UPDATE_PERIOD.count() / 3600ll);
     }
     m_energy += energy_mwh;
 }

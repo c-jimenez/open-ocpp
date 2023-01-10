@@ -80,7 +80,7 @@ void Sha2::update(const void* data, size_t size)
 /** @brief Finalize the computation */
 std::vector<uint8_t> Sha2::finalize()
 {
-    unsigned int size = m_last_result.size();
+    unsigned int size = static_cast<unsigned int>(m_last_result.size());
     EVP_DigestFinal(reinterpret_cast<EVP_MD_CTX*>(m_context), &m_last_result[0], &size);
     return m_last_result;
 }

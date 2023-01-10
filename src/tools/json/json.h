@@ -39,6 +39,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #pragma warning(disable : 4464)
 #pragma warning(disable : 5027)
 #pragma warning(disable : 26451)
+#pragma warning(disable : 26819)
+#pragma warning(disable : 33010)
 #endif // _MSC_VER
 
 // Use exception for critical parse errors

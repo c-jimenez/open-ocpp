@@ -61,28 +61,28 @@ class RpcClientListener : public IRpc::IListener, public RpcClient::IListener
                                                        rapidjson::Document&,
                                                        std::string&,
                                                        std::string&) */
-    bool rpcCallReceived(const std::string&      action,
-                         const rapidjson::Value& payload,
-                         rapidjson::Document&    response,
-                         std::string&            error_code,
-                         std::string&            error_message) override
+    bool rpcCallReceived(const std::string&      _action,
+                         const rapidjson::Value& _payload,
+                         rapidjson::Document&    _response,
+                         std::string&            _error_code,
+                         std::string&            _error_message) override
     {
-        this->action = action;
+        action = _action;
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        payload.Accept(writer);
-        this->payload = buffer.GetString();
-        if (this->response)
+        _payload.Accept(writer);
+        payload = buffer.GetString();
+        if (response)
         {
-            response.Parse(this->response);
+            _response.Parse(response);
         }
-        if (this->error_code)
+        if (error_code)
         {
-            error_code = this->error_code;
+            _error_code = error_code;
         }
-        if (this->error_message)
+        if (error_message)
         {
-            error_message = this->error_message;
+            _error_message = error_message;
         }
         return !received_error;
     }

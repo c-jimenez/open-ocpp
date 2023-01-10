@@ -192,7 +192,7 @@ TEST_SUITE("Profile database")
 
         for (size_t i = 0; i < profiles.size(); i++)
         {
-            profiles[i]->chargingProfileId                 = i;
+            profiles[i]->chargingProfileId                 = static_cast<int>(i);
             profiles[i]->chargingProfileKind               = ChargingProfileKindType::Absolute;
             profiles[i]->chargingProfilePurpose            = ChargingProfilePurposeType::TxProfile;
             profiles[i]->chargingSchedule.chargingRateUnit = ChargingRateUnitType::A;

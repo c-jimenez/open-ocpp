@@ -50,11 +50,11 @@ class CustomChargePointEventsHandlerStub : public ChargePointEventsHandlerStub
     ChargingSchedule schedule;
 
     /** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ChargingSchedule&) */
-    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) override
+    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& _schedule) override
     {
         (void)connector_id;
         (void)duration;
-        schedule = this->schedule;
+        _schedule = schedule;
         return true;
     }
 };

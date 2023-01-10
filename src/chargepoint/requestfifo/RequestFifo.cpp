@@ -159,7 +159,7 @@ void RequestFifo::load()
             do
             {
                 // Extract table data
-                int          id           = query->getUInt32(0);
+                unsigned int id           = query->getUInt32(0);
                 unsigned int connector_id = query->getUInt32(1);
                 std::string  action       = query->getString(2);
                 std::string  request_str  = query->getString(3);

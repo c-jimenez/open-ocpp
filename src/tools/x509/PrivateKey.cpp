@@ -44,7 +44,7 @@ PrivateKey::PrivateKey(const std::filesystem::path& pem_file, const std::string&
         // Read the whole file
         auto filesize = file.tellg();
         file.seekg(0, file.beg);
-        m_private_pem.resize(filesize);
+        m_private_pem.resize(static_cast<size_t>(filesize));
         file.read(&m_private_pem[0], filesize);
 
         // Read the key
@@ -83,7 +83,7 @@ PrivateKey::PrivateKey(Type type, unsigned int param, const std::string& passphr
         if (ctx)
         {
             EVP_PKEY_keygen_init(ctx);
-            EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, param);
+            EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, static_cast<int>(param));
         }
     }
     if (ctx)

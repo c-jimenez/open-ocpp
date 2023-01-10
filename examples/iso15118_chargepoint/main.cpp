@@ -186,7 +186,6 @@ int main(int argc, char* argv[])
                 Certificate                                  ev_certificate(ev_cert_path);
                 std::vector<OcspRequestDataType>             cert_hash_data;
                 Optional<AuthorizeCertificateStatusEnumType> cert_status;
-                OcspRequestDataType                          ocsp_request;
                 ocsp_request.hashAlgorithm = HashAlgorithmEnumType::SHA384;
                 ocsp_request.issuerKeyHash.assign("AABBCCDDEEFF");
                 ocsp_request.issuerNameHash.assign("0102030405");

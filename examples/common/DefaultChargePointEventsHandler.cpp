@@ -93,10 +93,10 @@ ocpp::types::AvailabilityStatus DefaultChargePointEventsHandler::changeAvailabil
     return AvailabilityStatus::Accepted;
 }
 
-/** @copydoc unsigned int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
-unsigned int DefaultChargePointEventsHandler::getTxStartStopMeterValue(unsigned int connector_id)
+/** @copydoc int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
+int DefaultChargePointEventsHandler::getTxStartStopMeterValue(unsigned int connector_id)
 {
-    static unsigned int value = 0;
+    static int value = 0;
     cout << "Get start/stop meter value for connector " << connector_id << endl;
     value += 100;
     return value;

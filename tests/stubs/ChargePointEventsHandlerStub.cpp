@@ -72,8 +72,8 @@ ocpp::types::AvailabilityStatus ChargePointEventsHandlerStub::changeAvailability
     return m_availability_status;
 }
 
-/** @copydoc unsigned int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
-unsigned int ChargePointEventsHandlerStub::getTxStartStopMeterValue(unsigned int connector_id)
+/** @copydoc int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
+int ChargePointEventsHandlerStub::getTxStartStopMeterValue(unsigned int connector_id)
 {
     m_calls["getTxStartStopMeterValue"] = {{"connector_id", std::to_string(connector_id)}};
     return m_tx_start_stop_value;
@@ -371,7 +371,7 @@ void ChargePointEventsHandlerStub::iso15118GenerateCsr(std::string& csr)
 }
 
 /** @brief Indicate if a method has been called and returns the parameters used for the call */
-bool ChargePointEventsHandlerStub::methodCalled(const std::string method_name, std::map<std::string, std::string>& params)
+bool ChargePointEventsHandlerStub::methodCalled(const std::string& method_name, std::map<std::string, std::string>& params)
 {
     bool ret  = false;
     auto iter = m_calls.find(method_name);

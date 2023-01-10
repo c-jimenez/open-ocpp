@@ -40,7 +40,7 @@ struct StartTransactionReq
     ocpp::types::IdToken idTag;
     /** @brief Required. This contains the meter value in Wh for the connector at start of the
                transaction */
-    unsigned int meterStart;
+    int meterStart;
     /** @brief Optional. This contains the id of the reservation that terminates as a result of
                this transaction */
     ocpp::types::Optional<int> reservationId;

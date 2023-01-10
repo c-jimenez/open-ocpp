@@ -155,9 +155,9 @@ class SmartChargingManager
     struct Period
     {
         /** @brief Number of seconds since the start */
-        int start;
+        time_t start;
         /** @brief Duration in seconds of the period */
-        int duration;
+        time_t duration;
         /** @brief Setpoint for the period */
         float setpoint;
         /** @brief Unit of the setpoint for the period */

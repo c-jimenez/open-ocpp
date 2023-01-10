@@ -54,12 +54,12 @@ bool GetConfigurationReqConverter::toJson(const GetConfigurationReq& data, rapid
     if (data.key.isSet())
     {
         rapidjson::Value                    keys(rapidjson::kArrayType);
-        rapidjson::Document::AllocatorType& allocator = json.GetAllocator();
+        rapidjson::Document::AllocatorType& _allocator = json.GetAllocator();
         for (const auto& key : data.key.value())
         {
-            keys.PushBack(rapidjson::Value(key.c_str(), key.str().size(), allocator).Move(), allocator);
+            keys.PushBack(rapidjson::Value(key.c_str(), static_cast<rapidjson::SizeType>(key.str().size()), _allocator).Move(), _allocator);
         }
-        json.AddMember(rapidjson::StringRef("key"), keys.Move(), allocator);
+        json.AddMember(rapidjson::StringRef("key"), keys.Move(), _allocator);
     }
     return true;
 }
@@ -105,7 +105,7 @@ bool GetConfigurationConfConverter::toJson(const GetConfigurationConf& data, rap
     if (data.configurationKey.isSet())
     {
         rapidjson::Value                    configurationKey(rapidjson::kArrayType);
-        rapidjson::Document::AllocatorType& allocator = json.GetAllocator();
+        rapidjson::Document::AllocatorType& _allocator = json.GetAllocator();
         for (const KeyValue& key : data.configurationKey.value())
         {
             rapidjson::Document value;
@@ -113,20 +113,20 @@ bool GetConfigurationConfConverter::toJson(const GetConfigurationConf& data, rap
             fill(value, "key", key.key);
             fill(value, "readonly", key.readonly);
             fill(value, "value", key.value);
-            configurationKey.PushBack(value.Move(), allocator);
+            configurationKey.PushBack(value.Move(), _allocator);
         }
-        json.AddMember(rapidjson::StringRef("configurationKey"), configurationKey.Move(), allocator);
+        json.AddMember(rapidjson::StringRef("configurationKey"), configurationKey.Move(), _allocator);
     }
 
     if (data.unknownKey.isSet())
     {
         rapidjson::Value                    unknownKey(rapidjson::kArrayType);
-        rapidjson::Document::AllocatorType& allocator = json.GetAllocator();
+        rapidjson::Document::AllocatorType& _allocator = json.GetAllocator();
         for (const auto& key : data.unknownKey.value())
         {
-            unknownKey.PushBack(rapidjson::Value(key.c_str(), key.str().size(), allocator).Move(), allocator);
+            unknownKey.PushBack(rapidjson::Value(key.c_str(), static_cast<rapidjson::SizeType>(key.str().size()), _allocator).Move(), _allocator);
         }
-        json.AddMember(rapidjson::StringRef("unknownKey"), unknownKey.Move(), allocator);
+        json.AddMember(rapidjson::StringRef("unknownKey"), unknownKey.Move(), _allocator);
     }
     return true;
 }

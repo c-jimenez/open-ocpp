@@ -20,6 +20,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest_wrapper.h"
 
+// Disable unreachable code warning for MSVC compiler
+// This warning occurs in job function which are throwing an exception
+// and so cannot reach their final return statement
+// Disable couldn't apply left-to-right evaluation order
+// when checking for wait completion of waiters
+#ifdef _MSC_VER
+#pragma warning(disable : 4702)
+#pragma warning(disable : 4866)
+#endif // _MSC_VER
+
 using namespace ocpp::helpers;
 
 TEST_SUITE("WorkerThreadPool class test suite")

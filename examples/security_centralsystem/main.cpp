@@ -391,7 +391,7 @@ int main(int argc, char* argv[])
                 // Get security logs
                 std::string log_filename;
                 if (chargepoint->getLog(LogEnumType::SecurityLog,
-                                        DateTime::now().timestamp(),
+                                        static_cast<int>(DateTime::now().timestamp()),
                                         "ftp://localhost",
                                         Optional<unsigned int>(),
                                         Optional<std::chrono::seconds>(),

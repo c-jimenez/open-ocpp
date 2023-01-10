@@ -282,7 +282,7 @@ void MeterValuesManager::processClockAligned(void)
             {
                 // Process meter value configuration
                 std::string meter_values        = m_ocpp_config.meterValuesAlignedData();
-                size_t      measurands_max_size = m_ocpp_config.meterValuesAlignedDataMaxLength();
+                unsigned int      measurands_max_size = m_ocpp_config.meterValuesAlignedDataMaxLength();
                 auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
                 if (!measurands.empty())
                 {
@@ -334,7 +334,7 @@ void MeterValuesManager::processSampled(unsigned int connector_id)
         {
             // Process sampled meter value configuration
             std::string meter_values        = m_ocpp_config.meterValuesSampledData();
-            size_t      measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
+            unsigned int      measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
             auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
             if (!measurands.empty())
             {
@@ -386,7 +386,7 @@ void MeterValuesManager::processTriggered(unsigned int connector_id)
 
             // Process meter value configuration
             std::string meter_values        = m_ocpp_config.meterValuesSampledData();
-            size_t      measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
+            unsigned int measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
             auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
             if (!measurands.empty())
             {
@@ -489,17 +489,17 @@ bool MeterValuesManager::fillMeterValue(
     meter_value.sampledValue.clear();
     for (const auto& measurand : measurands)
     {
-        unsigned int count = meter_value.sampledValue.size();
+        size_t count = meter_value.sampledValue.size();
         if (!m_events_handler.getMeterValue(connector_id, measurand, meter_value))
         {
-            for (unsigned int i = count; i < meter_value.sampledValue.size(); i++)
+            for (size_t i = count; i < meter_value.sampledValue.size(); i++)
             {
                 meter_value.sampledValue.pop_back();
             }
         }
         else
         {
-            for (unsigned int i = count; i < meter_value.sampledValue.size(); i++)
+            for (size_t i = count; i < meter_value.sampledValue.size(); i++)
             {
                 SampledValue& sample_value = meter_value.sampledValue[i];
                 sample_value.context       = context;

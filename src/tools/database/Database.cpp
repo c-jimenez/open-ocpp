@@ -80,7 +80,7 @@ std::unique_ptr<Database::Query> Database::query(const std::string& sql)
     {
         // Create new statement
         sqlite3_stmt* stmt = nullptr;
-        if (sqlite3_prepare_v2(m_db, sql.c_str(), sql.size() + 1, &stmt, nullptr) == SQLITE_OK)
+        if (sqlite3_prepare_v2(m_db, sql.c_str(), static_cast<int>(sql.size()) + 1, &stmt, nullptr) == SQLITE_OK)
         {
             // Allocate new query
             query = std::make_unique<Database::Query>(*this, stmt);
@@ -145,7 +145,7 @@ bool Database::Query::bind(int number, const std::vector<uint8_t>& value)
 {
     bool ret = false;
 
-    int result = sqlite3_bind_blob(m_stmt, number + 1, &value[0], value.size(), nullptr);
+    int result = sqlite3_bind_blob(m_stmt, number + 1, &value[0], static_cast<int>(value.size()), nullptr);
     if (result == SQLITE_OK)
     {
         ret = true;
@@ -302,11 +302,11 @@ bool Database::Query::isNull(int column) const
 /** @brief Get a blob value from a query result */
 std::vector<uint8_t> Database::Query::getBlob(int column) const
 {
-    int         size = 0;
+    size_t      size = 0;
     const void* blob = sqlite3_column_blob(m_stmt, column);
     if (blob)
     {
-        size = sqlite3_column_bytes(m_stmt, column);
+        size = static_cast<size_t>(sqlite3_column_bytes(m_stmt, column));
     }
 
     std::vector<uint8_t> value(size);

@@ -83,8 +83,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @copydoc bool ICentralSystem::IChargePoint::cancelReservation(int) */
     bool cancelReservation(int reservation_id) override;
 
-    /** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(int, ocpp::types::AvailabilityType) */
-    ocpp::types::AvailabilityStatus changeAvailability(int connector_id, ocpp::types::AvailabilityType availability) override;
+    /** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(unsigned int, ocpp::types::AvailabilityType) */
+    ocpp::types::AvailabilityStatus changeAvailability(unsigned int connector_id, ocpp::types::AvailabilityType availability) override;
 
     /** @copydoc ocpp::types::ConfigurationStatus ICentralSystem::IChargePoint::changeConfiguration(const std::string&, const std::string&) */
     ocpp::types::ConfigurationStatus changeConfiguration(const std::string& key, const std::string& value) override;

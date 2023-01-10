@@ -95,7 +95,7 @@ TEST_SUITE("Database class test suite")
         for (size_t i = 0; i < 20; i++)
         {
             log_db1.log(std::chrono::steady_clock::now().time_since_epoch().count(),
-                        1 + i,
+                        static_cast<unsigned int>(1u + i),
                         "file.cpp:" + std::to_string(i),
                         "My log! " + std::to_string(i));
         }

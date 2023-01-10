@@ -567,7 +567,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      * @return Meter value in Wh for the connector
      */
-    unsigned int getTxStartStopMeterValue(unsigned int connector_id) override
+    int getTxStartStopMeterValue(unsigned int connector_id) override
     {
         (void)connector_id;
         return 0;

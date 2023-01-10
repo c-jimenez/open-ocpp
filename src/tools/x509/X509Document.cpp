@@ -48,7 +48,7 @@ X509Document::X509Document(const std::filesystem::path& pem_file) : m_is_valid(f
         // Read the whole file
         auto filesize = file.tellg();
         file.seekg(0, file.beg);
-        m_pem.resize(filesize);
+        m_pem.resize(static_cast<size_t>(filesize));
         file.read(&m_pem[0], filesize);
     }
 }

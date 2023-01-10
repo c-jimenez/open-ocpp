@@ -165,7 +165,7 @@ class ICentralSystem
          * @param availability Availability state (see AvailabilityType documentation)
          * @return Operation status (see AvailabilityStatus documentation)
          */
-        virtual ocpp::types::AvailabilityStatus changeAvailability(int connector_id, ocpp::types::AvailabilityType availability) = 0;
+        virtual ocpp::types::AvailabilityStatus changeAvailability(unsigned int connector_id, ocpp::types::AvailabilityType availability) = 0;
 
         /**
          * @brief Change the value of a configuration key

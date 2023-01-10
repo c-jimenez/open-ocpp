@@ -43,7 +43,7 @@ std::string encode(const void* data, size_t size)
         if (encoded_size >= 0)
         {
             // Resize output
-            b64_str.resize(encoded_size);
+            b64_str.resize(static_cast<unsigned int>(encoded_size));
         }
         else
         {
@@ -71,7 +71,7 @@ std::vector<uint8_t> decode(const std::string& b64_str)
         if (decoded_size >= 0)
         {
             // Resize output
-            data.resize(decoded_size);
+            data.resize(static_cast<unsigned int>(decoded_size));
         }
         else
         {

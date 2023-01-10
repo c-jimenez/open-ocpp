@@ -317,7 +317,7 @@ bool IniFile::Value::isInt() const
         }
         for (; (index < m_value.size()) && ret; index++)
         {
-            ret = std::isdigit(m_value[index]);
+            ret = (std::isdigit(m_value[index]) != 0);
         }
     }
     return ret;
@@ -349,7 +349,7 @@ bool IniFile::Value::isFloat() const
         }
         for (; (index < m_value.size()) && ret; index++)
         {
-            ret = std::isdigit(m_value[index]);
+            ret = (std::isdigit(m_value[index]) != 0);
             if (!ret && (m_value[index] == '.'))
             {
                 dot_count++;
