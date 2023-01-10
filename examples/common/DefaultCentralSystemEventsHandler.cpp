@@ -34,7 +34,7 @@ SOFTWARE.
 // With MSVC compiler, the system() call returns directly the command's return value
 #ifdef _MSC_VER
 #define WEXITSTATUS(x) (x)
-#endif _MSC_VER
+#endif // _MSC_VER
 
 using namespace std;
 using namespace ocpp::centralsystem;
