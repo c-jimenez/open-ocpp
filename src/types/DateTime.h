@@ -80,9 +80,10 @@ class DateTime
         }
         if (!ss.fail())
         {
-            m_datetime = std::mktime(&t);
 #ifdef _MSC_VER
+            m_datetime = _mkgmtime(&t);
 #else  // _MSC_VER
+            m_datetime = std::mktime(&t);
             m_datetime += t.tm_gmtoff;
             m_datetime -= (t.tm_isdst * 3600);
 #endif // _MSC_VER
