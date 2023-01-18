@@ -241,11 +241,15 @@ void LibWebsocketClient::process()
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
 
+    // Need to ensure that the context is still valid when a user callback
+    // has called disconnect() function
+    lws_context* context = m_context;
+
     // Event loop
     int ret = 0;
     while (!m_end && (ret >= 0))
     {
-        ret = lws_service(m_context, 0);
+        ret = lws_service(context, 0);
     }
     if (!m_end)
     {
@@ -255,7 +259,7 @@ void LibWebsocketClient::process()
 
     // Destroy context
     std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Ensure disconnect caller is joining
-    lws_context_destroy(m_context);
+    lws_context_destroy(context);
 }
 
 /** @brief libwebsockets connection callback */
@@ -391,14 +395,16 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             {
                 if (lws_write(wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
                 {
-                    // Error
-                    client->disconnect();
-                    client->m_listener->wsClientError();
+                    // Error, close the socket
                     error = true;
                 }
 
                 // Free message memory
                 delete msg;
+            }
+            if (error)
+            {
+                return -1;
             }
         }
         break;
