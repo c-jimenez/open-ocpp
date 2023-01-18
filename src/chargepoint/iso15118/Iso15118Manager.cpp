@@ -279,7 +279,7 @@ void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request
 
     // Prepare response
     bool send_security_event = true;
-    response.status = CertificateSignedStatusEnumType::Rejected;
+    response.status          = CertificateSignedStatusEnumType::Rejected;
 
     // Check certificate's size
     if (request.certificateChain.size() < m_ocpp_config.certificateSignedMaxChainSize())
@@ -294,7 +294,7 @@ void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request
                 // Stop timeout timer
                 m_csr_timer.stop();
                 send_security_event = false;
-                response.status = CertificateSignedStatusEnumType::Accepted;
+                response.status     = CertificateSignedStatusEnumType::Accepted;
             }
         }
     }

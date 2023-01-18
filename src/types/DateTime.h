@@ -178,7 +178,7 @@ class DateTime
         std::tm            t = {};
 #ifdef _MSC_VER
         gmtime_s(&t, &m_datetime);
-#else // _MSC_VER
+#else  // _MSC_VER
         gmtime_r(&m_datetime, &t);
 #endif // _MSC_VER
         ss << std::put_time(&t, "%Y-%m-%dT%TZ");

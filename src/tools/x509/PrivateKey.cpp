@@ -17,8 +17,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "PrivateKey.h"
-#include "sign.h"
 #include "openssl.h"
+#include "sign.h"
 
 #include <fstream>
 #include <iomanip>

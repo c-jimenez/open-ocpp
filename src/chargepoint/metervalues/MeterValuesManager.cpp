@@ -248,7 +248,7 @@ void MeterValuesManager::configureClockAlignedTimer(void)
         struct tm aligned_time_tm;
 #ifdef _MSC_VER
         localtime_s(&aligned_time_tm, &now);
-#else // _MSC_VER
+#else  // _MSC_VER
         localtime_r(&now, &aligned_time_tm);
 #endif // _MSC_VER
         aligned_time_tm.tm_min = 0;
@@ -281,9 +281,9 @@ void MeterValuesManager::processClockAligned(void)
             [this]
             {
                 // Process meter value configuration
-                std::string meter_values        = m_ocpp_config.meterValuesAlignedData();
-                unsigned int      measurands_max_size = m_ocpp_config.meterValuesAlignedDataMaxLength();
-                auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
+                std::string  meter_values        = m_ocpp_config.meterValuesAlignedData();
+                unsigned int measurands_max_size = m_ocpp_config.meterValuesAlignedDataMaxLength();
+                auto         measurands          = computeMeasurandList(meter_values, measurands_max_size);
                 if (!measurands.empty())
                 {
                     LOG_DEBUG << "Clock aligned meter values : " << meter_values;
@@ -333,9 +333,9 @@ void MeterValuesManager::processSampled(unsigned int connector_id)
         [this, connector_id]
         {
             // Process sampled meter value configuration
-            std::string meter_values        = m_ocpp_config.meterValuesSampledData();
-            unsigned int      measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
-            auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
+            std::string  meter_values        = m_ocpp_config.meterValuesSampledData();
+            unsigned int measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
+            auto         measurands          = computeMeasurandList(meter_values, measurands_max_size);
             if (!measurands.empty())
             {
                 LOG_DEBUG << "Sampled meter values : " << meter_values;
@@ -385,9 +385,9 @@ void MeterValuesManager::processTriggered(unsigned int connector_id)
             std::this_thread::sleep_for(std::chrono::milliseconds(250u));
 
             // Process meter value configuration
-            std::string meter_values        = m_ocpp_config.meterValuesSampledData();
+            std::string  meter_values        = m_ocpp_config.meterValuesSampledData();
             unsigned int measurands_max_size = m_ocpp_config.meterValuesSampledDataMaxLength();
-            auto        measurands          = computeMeasurandList(meter_values, measurands_max_size);
+            auto         measurands          = computeMeasurandList(meter_values, measurands_max_size);
             if (!measurands.empty())
             {
                 LOG_INFO << "Triggered mater values : " << meter_values;

@@ -124,7 +124,8 @@ bool GetConfigurationConfConverter::toJson(const GetConfigurationConf& data, rap
         rapidjson::Document::AllocatorType& _allocator = json.GetAllocator();
         for (const auto& key : data.unknownKey.value())
         {
-            unknownKey.PushBack(rapidjson::Value(key.c_str(), static_cast<rapidjson::SizeType>(key.str().size()), _allocator).Move(), _allocator);
+            unknownKey.PushBack(rapidjson::Value(key.c_str(), static_cast<rapidjson::SizeType>(key.str().size()), _allocator).Move(),
+                                _allocator);
         }
         json.AddMember(rapidjson::StringRef("unknownKey"), unknownKey.Move(), _allocator);
     }

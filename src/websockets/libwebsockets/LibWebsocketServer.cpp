@@ -76,7 +76,7 @@ bool LibWebsocketServer::start(const std::string&        url,
             m_protocols[1] = {nullptr, nullptr, 0, 0, 0, nullptr, 0};
 
             // Retry policy
-            uint16_t ping  = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+            uint16_t ping = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
 #ifdef _MSC_VER
             m_retry_policy = {nullptr, 0, 0, ping, static_cast<uint16_t>(2u * ping), 0};
 #else
@@ -138,8 +138,9 @@ bool LibWebsocketServer::start(const std::string&        url,
                     }
                     if (!m_credentials.server_certificate_private_key.empty())
                     {
-                        info.server_ssl_private_key_mem     = m_credentials.server_certificate_private_key.c_str();
-                        info.server_ssl_private_key_mem_len = static_cast<unsigned int>(m_credentials.server_certificate_private_key.size());
+                        info.server_ssl_private_key_mem = m_credentials.server_certificate_private_key.c_str();
+                        info.server_ssl_private_key_mem_len =
+                            static_cast<unsigned int>(m_credentials.server_certificate_private_key.size());
                     }
                     if (!m_credentials.server_certificate_ca.empty())
                     {
@@ -293,7 +294,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 #else  // _MSC_VER
                 char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
 #endif // _MSC_VER
-                int  uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
+                int uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
                 if ((uri_len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
                 {
@@ -416,7 +417,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             // Notify connection
 #ifdef _MSC_VER
             char uri[512u];
-#else // _MSC_VER
+#else  // _MSC_VER
             char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
 #endif // _MSC_VER
             if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)

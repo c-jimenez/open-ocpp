@@ -446,7 +446,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
                 schedule.chargingRateUnit = ChargingRateUnitType::A;
             }
             // Adjust start if needed since first period must start at 0
-            time_t offset             = periods[0].start;
+            time_t offset          = periods[0].start;
             schedule.startSchedule = DateTime(now.timestamp() + offset);
             for (const auto& period : periods)
             {
@@ -1019,8 +1019,8 @@ std::vector<SmartChargingManager::Period> SmartChargingManager::mergeLocalPeriod
     else
     {
         bool   offset                    = false;
-        time_t    local_period_start        = 0;
-        time_t    local_period_start_offset = 0;
+        time_t local_period_start        = 0;
+        time_t local_period_start_offset = 0;
         size_t profiles_period_index     = 0;
         for (size_t i = 0; i < local_periods.size(); i++)
         {

@@ -124,7 +124,7 @@ time_t X509Document::convertAsn1Time(const void* pasn1_time)
     ASN1_TIME_to_tm(asn1_time, &tm);
     time_t timestamp = mktime(&tm);
 #ifdef _MSC_VER
-#else // _MSC_VER
+#else  // _MSC_VER
     timestamp += tm.tm_gmtoff;
     timestamp -= (tm.tm_isdst * 3600);
 #endif // _MSC_VER
