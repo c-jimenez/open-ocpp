@@ -363,20 +363,43 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
     unsigned int connector_id = request.connectorId;
     if (m_connectors.isValid(connector_id))
     {
-        // Notify request
-        response.status = m_events_handler.changeAvailabilityRequested(connector_id, request.type);
-        if (response.status == AvailabilityStatus::Accepted)
-        {
-            // Update status
-            ChargePointStatus status = ChargePointStatus::Unavailable;
-            if (request.type == AvailabilityType::Operative)
+        //In the case the ChangeAvailability.req contains ConnectorId = 0, the status change applies to the Charge Point and all Connectors.
+        if(connector_id == 0)
+        {            
+            for(unsigned int i=0;i <= m_connectors.getCount();i++)
             {
-                status = ChargePointStatus::Available;
-            }
-            m_worker_pool.run<void>([this, connector_id, status] { updateConnectorStatus(connector_id, status); });
-        }
+                response.status = m_events_handler.changeAvailabilityRequested(i, request.type);
+                if (response.status == AvailabilityStatus::Accepted)
+                {
+                    // Update status
+                    ChargePointStatus status = ChargePointStatus::Unavailable;
+                    if (request.type == AvailabilityType::Operative)
+                    {
+                        status = ChargePointStatus::Available;
+                    }
+                    m_worker_pool.run<void>([this, i, status] { updateConnectorStatus(i, status); });
+                }
 
-        LOG_INFO << "Change availability " << AvailabilityStatusHelper.toString(response.status);
+                LOG_INFO << "Change availability " << AvailabilityStatusHelper.toString(response.status);
+            }
+        }
+        else
+        {
+            // Notify request
+            response.status = m_events_handler.changeAvailabilityRequested(connector_id, request.type);
+            if (response.status == AvailabilityStatus::Accepted)
+            {
+                // Update status
+                ChargePointStatus status = ChargePointStatus::Unavailable;
+                if (request.type == AvailabilityType::Operative)
+                {
+                    status = ChargePointStatus::Available;
+                }
+                m_worker_pool.run<void>([this, connector_id, status] { updateConnectorStatus(connector_id, status); });
+            }
+
+            LOG_INFO << "Change availability " << AvailabilityStatusHelper.toString(response.status);
+        }
         ret = true;
     }
     else
