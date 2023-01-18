@@ -27,6 +27,14 @@ CMAKE_INSTALL_PREFIX:=-D CMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
 CMAKE_INSTALL_PREFIX_CMD:=--prefix $(INSTALL_PREFIX)
 endif
 
+# Format code
+format:
+	@echo "Formatting source code..."
+	@find ./src -name '*.h' -or -name '*.cpp' | xargs clang-format -i
+	@find ./examples -name '*.h' -or -name '*.cpp' | xargs clang-format -i
+	@find ./tests -name '*.h' -or -name '*.cpp' | xargs clang-format -i
+	@echo "Formatting done!"
+
 # Build/clean all targets
 all: gcc clang
 clean: clean-gcc clean-clang
