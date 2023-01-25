@@ -134,8 +134,8 @@ bool ChargePointProxy::cancelReservation(int reservation_id)
     return ret;
 }
 
-/** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(int, ocpp::types::AvailabilityType) */
-ocpp::types::AvailabilityStatus ChargePointProxy::changeAvailability(int connector_id, ocpp::types::AvailabilityType availability)
+/** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(unsigned int, ocpp::types::AvailabilityType) */
+ocpp::types::AvailabilityStatus ChargePointProxy::changeAvailability(unsigned int connector_id, ocpp::types::AvailabilityType availability)
 {
     AvailabilityStatus ret = AvailabilityStatus::Rejected;
 
@@ -324,7 +324,7 @@ bool ChargePointProxy::getCompositeSchedule(unsigned int                        
     // Prepare request
     GetCompositeScheduleReq req;
     req.connectorId      = connector_id;
-    req.duration         = duration.count();
+    req.duration         = static_cast<unsigned int>(duration.count());
     req.chargingRateUnit = unit;
 
     // Send request
@@ -427,7 +427,7 @@ bool ChargePointProxy::getDiagnostics(const std::string&                        
     req.retries  = retries;
     if (retry_interval.isSet())
     {
-        req.retryInterval = retry_interval.value().count();
+        req.retryInterval = static_cast<unsigned int>(retry_interval.value().count());
     }
     req.startTime = start;
     req.stopTime  = stop;
@@ -755,7 +755,7 @@ bool ChargePointProxy::updateFirmware(const std::string&                        
     req.retrieveDate = retrieve_date;
     if (retry_interval.isSet())
     {
-        req.retryInterval = retry_interval.value().count();
+        req.retryInterval = static_cast<unsigned int>(retry_interval.value().count());
     }
 
     // Send request
@@ -928,7 +928,7 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
     req.retries   = retries;
     if (retry_interval.isSet())
     {
-        req.retryInterval = retry_interval.value().count();
+        req.retryInterval = static_cast<unsigned int>(retry_interval.value().count());
     }
     req.log.remoteLocation.assign(uri);
     req.log.oldestTimestamp = start;
@@ -1017,7 +1017,7 @@ ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware
     req.retries   = retries;
     if (retry_interval.isSet())
     {
-        req.retryInterval = retry_interval.value().count();
+        req.retryInterval = static_cast<unsigned int>(retry_interval.value().count());
     }
     req.firmware.location.assign(uri);
     req.firmware.retrieveDateTime = retrieve_date;

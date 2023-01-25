@@ -51,8 +51,8 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     ocpp::types::AvailabilityStatus changeAvailabilityRequested(unsigned int                  connector_id,
                                                                 ocpp::types::AvailabilityType availability) override;
 
-    /** @copydoc unsigned int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
-    unsigned int getTxStartStopMeterValue(unsigned int connector_id) override;
+    /** @copydoc int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
+    int getTxStartStopMeterValue(unsigned int connector_id) override;
 
     /** @copydoc void IChargePointEventsHandler::reservationStarted(unsigned int) */
     void reservationStarted(unsigned int connector_id) override;
@@ -193,7 +193,7 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     // API
 
     /** @brief Indicate if a method has been called and returns the parameters used for the call */
-    bool methodCalled(const std::string method_name, std::map<std::string, std::string>& params);
+    bool methodCalled(const std::string& method_name, std::map<std::string, std::string>& params);
     /** @brief Clear the call history */
     void clearCalls();
 
@@ -202,7 +202,7 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     /** @brief Availability status to return */
     void setAvailabilityStatus(ocpp::types::AvailabilityStatus availability_status) { m_availability_status = availability_status; }
     /** @brief Tx start stop meter value */
-    void setTxStartStopMeterValue(unsigned int tx_start_stop_value) { m_tx_start_stop_value = tx_start_stop_value; }
+    void setTxStartStopMeterValue(int tx_start_stop_value) { m_tx_start_stop_value = tx_start_stop_value; }
     /** @brief Data transfer status */
     void setDataTransferStatus(ocpp::types::DataTransferStatus data_transfer_status) { m_data_transfer_status = data_transfer_status; }
     /** @brief Unlock status */
@@ -223,7 +223,7 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     /** @brief Availability status to return */
     ocpp::types::AvailabilityStatus m_availability_status;
     /** @brief Tx start stop meter value */
-    unsigned int m_tx_start_stop_value;
+    int m_tx_start_stop_value;
     /** @brief Data transfer status */
     ocpp::types::DataTransferStatus m_data_transfer_status;
     /** @brief Unlock status */

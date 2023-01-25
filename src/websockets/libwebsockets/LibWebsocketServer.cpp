@@ -76,7 +76,10 @@ bool LibWebsocketServer::start(const std::string&        url,
             m_protocols[1] = {nullptr, nullptr, 0, 0, 0, nullptr, 0};
 
             // Retry policy
-            uint16_t ping  = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+            uint16_t ping = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+#ifdef _MSC_VER
+            m_retry_policy = {nullptr, 0, 0, ping, static_cast<uint16_t>(2u * ping), 0};
+#else
             m_retry_policy = {.retry_ms_table       = nullptr,
                               .retry_ms_table_count = 0,
                               .conceal_count        = 0,
@@ -85,6 +88,7 @@ bool LibWebsocketServer::start(const std::string&        url,
                               .secs_since_valid_hangup = static_cast<uint16_t>(2u * ping), /* hangup after secs idle */
 
                               .jitter_percent = 0};
+#endif // _MSC_VER
 
             // Fill context information
             struct lws_context_creation_info info;
@@ -93,7 +97,7 @@ bool LibWebsocketServer::start(const std::string&        url,
                            LWS_SERVER_OPTION_HTTP_HEADERS_SECURITY_BEST_PRACTICES_ENFORCE;
             if (m_url.port() != 0)
             {
-                info.port = m_url.port();
+                info.port = static_cast<int>(m_url.port());
             }
             else
             {
@@ -130,17 +134,18 @@ bool LibWebsocketServer::start(const std::string&        url,
                     if (!m_credentials.server_certificate.empty())
                     {
                         info.server_ssl_cert_mem     = m_credentials.server_certificate.c_str();
-                        info.server_ssl_cert_mem_len = m_credentials.server_certificate.size();
+                        info.server_ssl_cert_mem_len = static_cast<unsigned int>(m_credentials.server_certificate.size());
                     }
                     if (!m_credentials.server_certificate_private_key.empty())
                     {
-                        info.server_ssl_private_key_mem     = m_credentials.server_certificate_private_key.c_str();
-                        info.server_ssl_private_key_mem_len = m_credentials.server_certificate_private_key.size();
+                        info.server_ssl_private_key_mem = m_credentials.server_certificate_private_key.c_str();
+                        info.server_ssl_private_key_mem_len =
+                            static_cast<unsigned int>(m_credentials.server_certificate_private_key.size());
                     }
                     if (!m_credentials.server_certificate_ca.empty())
                     {
                         info.server_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
-                        info.server_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                        info.server_ssl_ca_mem_len = static_cast<unsigned int>(m_credentials.server_certificate_ca.size());
                     }
                 }
                 else
@@ -224,10 +229,12 @@ void LibWebsocketServer::process()
     server = this;
 
     // Mask SIG_PIPE signal
+#ifndef _MSC_VER
     sigset_t set;
     sigemptyset(&set);
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
+#endif // _MSC_VER
 
     // Event loop
     int ret = 0;
@@ -282,9 +289,13 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (strcmp("websocket", static_cast<char*>(in)) == 0)
             {
                 // Check URI
+#ifdef _MSC_VER
+                char uri[512u];
+#else  // _MSC_VER
                 char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-                int  len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
-                if ((len >= static_cast<int>(server->m_url.path().size())) &&
+#endif // _MSC_VER
+                int uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
+                if ((uri_len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
                 {
                     // Check basic authent
@@ -312,7 +323,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                             else
                             {
                                 b64[5] = '\0';
+#ifdef _MSC_VER
+                                if (_stricmp(b64, "Basic"))
+#else
                                 if (strcasecmp(b64, "Basic"))
+#endif // _MSC_VER
                                 {
                                     lwsl_err("auth missing basic: %s\n", b64);
                                     ret = -1;
@@ -339,9 +354,9 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                                         else
                                         {
                                             // Check credentials
-                                            std::string user(plain, static_cast<size_t>(pcolon - plain));
+                                            std::string username(plain, static_cast<size_t>(pcolon - plain));
                                             std::string password(pcolon + 1u);
-                                            if (!server->m_listener->wsCheckCredentials(uri, user, password))
+                                            if (!server->m_listener->wsCheckCredentials(uri, username, password))
                                             {
                                                 // The following code snippet is from the lws_unauthorised_basic_auth() function in server.c file of libwebsockets
                                                 // BEGIN SNIPPET
@@ -400,7 +415,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_clients[wsi] = client;
 
             // Notify connection
+#ifdef _MSC_VER
+            char uri[512u];
+#else  // _MSC_VER
             char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
+#endif // _MSC_VER
             if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)
             {
                 uri[0] = 0;

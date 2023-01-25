@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "quick_start_centralsystem.ini";
-    CentralSystemDemoConfig config(path);
+    CentralSystemDemoConfig config(path.string());
 
     // Event handler
     DefaultCentralSystemEventsHandler event_handler;

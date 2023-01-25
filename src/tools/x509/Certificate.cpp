@@ -19,18 +19,17 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Certificate.h"
 #include "CertificateRequest.h"
 #include "PrivateKey.h"
+#include "openssl.h"
 #include "sign.h"
 
 #include <ctime>
 #include <iomanip>
 #include <sstream>
 
-#include <openssl/bio.h>
-#include <openssl/err.h>
-#include <openssl/pem.h>
-#include <openssl/rand.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
+// Disable may throw exception warning on OpenSSL_sk_pop_free callbacks
+#ifdef _MSC_VER
+#pragma warning(disable : 5039)
+#endif // _MSC_VER
 
 namespace ocpp
 {
@@ -408,7 +407,8 @@ void Certificate::readInfos(Certificate& certificate)
                         certificate.m_x509v3_extensions.basic_constraints.is_ca = true;
                         if (basic_constraint->pathlen)
                         {
-                            certificate.m_x509v3_extensions.basic_constraints.path_length = ASN1_INTEGER_get(basic_constraint->pathlen);
+                            certificate.m_x509v3_extensions.basic_constraints.path_length =
+                                static_cast<unsigned int>(ASN1_INTEGER_get(basic_constraint->pathlen));
                         }
                     }
                     OPENSSL_free(basic_constraint);

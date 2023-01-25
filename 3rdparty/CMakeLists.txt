@@ -11,10 +11,21 @@ target_include_directories(rapidjson INTERFACE rapidjson/include)
 add_library(doctest INTERFACE)
 target_include_directories(doctest INTERFACE doctest/doctest)
 
+# SQLite 3
+add_subdirectory(sqlite3)
+
 # Use default flags for the libwebsockets library
-set(CMAKE_C_FLAGS_DEBUG     "-O0 -g3 -ggdb3")
-set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3 -ggdb3")
-set(CMAKE_C_FLAGS_RELEASE   "-O2 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+if (NOT MSVC)
+set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG_INIT} -O0 -g3 -ggdb3")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG_INIT} -O0 -g3 -ggdb3")
+set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE_INIT} -O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE_INIT} -O2 -DNDEBUG")
+else()
+set(DISABLED_WARNING_LWS    "/WX- /wd4191 /wd4996")
+set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG_INIT} ${DISABLED_WARNING_LWS}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG_INIT} ${DISABLED_WARNING_LWS}")
+set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE_INIT} ${DISABLED_WARNING_LWS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE_INIT} ${DISABLED_WARNING_LWS}")
+endif()
 
 add_subdirectory(libwebsockets)

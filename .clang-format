@@ -8,10 +8,10 @@ AllowShortBlocksOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
 AlignEscapedNewlines: Left
 AlignOperands: true
 AlignTrailingComments: true
-AllowShortBlocksOnASingleLine: false
 BreakConstructorInitializers: BeforeColon
 ReflowComments: false
 AllowShortCaseLabelsOnASingleLine: false
@@ -19,7 +19,26 @@ BinPackParameters: false
 BinPackArguments: false
 PointerAlignment: Left
 IndentCaseLabels: true
-BreakBeforeBraces: Allman
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 SpaceInEmptyBlock: true
 AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true

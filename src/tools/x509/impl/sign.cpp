@@ -17,13 +17,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "sign.h"
+#include "openssl.h"
 
 #include <fstream>
 #include <vector>
-
-#include <openssl/err.h>
-#include <openssl/evp.h>
-#include <openssl/x509.h>
 
 namespace ocpp
 {
@@ -53,7 +50,7 @@ std::vector<uint8_t> sign(const void* buffer, size_t size, Sha2::Type sha, EVP_P
         EVP_DigestSignUpdate(ctx, buffer, size);
 
         // Compute signature
-        signature.resize(EVP_PKEY_size(pkey));
+        signature.resize(static_cast<size_t>(EVP_PKEY_size(pkey)));
         size_t sig_size = signature.size();
         if (EVP_DigestSignFinal(ctx, &signature[0], &sig_size) == 1)
         {
@@ -77,7 +74,7 @@ std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha, EVP_PKEY*
     if (pkey)
     {
         // Open the file
-        std::fstream file(filepath, file.in | file.binary);
+        std::fstream file(filepath, std::fstream::in | std::fstream::binary);
         if (file.is_open())
         {
             // Initialize signing context
@@ -95,11 +92,11 @@ std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha, EVP_PKEY*
             do
             {
                 file.read(reinterpret_cast<char*>(buffer), sizeof(buffer));
-                EVP_DigestSignUpdate(ctx, buffer, file.gcount());
+                EVP_DigestSignUpdate(ctx, buffer, static_cast<size_t>(file.gcount()));
             } while (file.gcount() == sizeof(buffer));
 
             // Compute signature
-            signature.resize(EVP_PKEY_size(pkey));
+            signature.resize(static_cast<size_t>(EVP_PKEY_size(pkey)));
             size_t sig_size = signature.size();
             if (EVP_DigestSignFinal(ctx, &signature[0], &sig_size) == 1)
             {
@@ -159,7 +156,7 @@ bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, 
     if (!signature.empty() && pkey)
     {
         // Open the file
-        std::fstream file(filepath, file.in | file.binary);
+        std::fstream file(filepath, std::fstream::in | std::fstream::binary);
         if (file.is_open())
         {
             // Initialize verify context
@@ -177,7 +174,7 @@ bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, 
             do
             {
                 file.read(reinterpret_cast<char*>(buffer), sizeof(buffer));
-                EVP_DigestVerifyUpdate(ctx, buffer, file.gcount());
+                EVP_DigestVerifyUpdate(ctx, buffer, static_cast<size_t>(file.gcount()));
             } while (file.gcount() == sizeof(buffer));
 
             // Verify signature

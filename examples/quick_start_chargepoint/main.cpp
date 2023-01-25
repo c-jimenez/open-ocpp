@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "quick_start_chargepoint.ini";
-    ChargePointDemoConfig config(path);
+    ChargePointDemoConfig config(path.string());
 
     // Event handler
     DefaultChargePointEventsHandler event_handler(config, working_dir);

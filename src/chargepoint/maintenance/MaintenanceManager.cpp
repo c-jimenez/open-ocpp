@@ -421,9 +421,9 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
             {
                 log_file /= "security_logs.csv";
                 LOG_INFO << "Generate security logs export : " << log_file;
-                if (m_security_manager.exportSecurityEvents(log_file, request.log.oldestTimestamp, request.log.latestTimestamp))
+                if (m_security_manager.exportSecurityEvents(log_file.string(), request.log.oldestTimestamp, request.log.latestTimestamp))
                 {
-                    local_log_file = log_file;
+                    local_log_file = log_file.string();
                 }
                 else
                 {
@@ -569,7 +569,7 @@ void MaintenanceManager::processGetDiagnostics(std::string                      
         url += "/";
     }
     std::filesystem::path diag_file(local_diagnostic_file);
-    url += diag_file.filename();
+    url += diag_file.filename().string();
 
     LOG_INFO << "GetDiagnostics : URL = " << url << " - retries = " << nb_retries << " - retryInterval = " << retry_interval_s.count()
              << " - diagnostic file = " << local_diagnostic_file;
@@ -749,7 +749,7 @@ void MaintenanceManager::processGetLog(ocpp::types::LogEnumType            type,
         url += "/";
     }
     std::filesystem::path log_file(local_log_file);
-    url += log_file.filename();
+    url += log_file.filename().string();
 
     LOG_INFO << "GetLog : type = " << LogEnumTypeHelper.toString(type) << " - URL = " << url << " - retries = " << nb_retries
              << " - retryInterval = " << retry_interval_s.count() << " - log file = " << local_log_file

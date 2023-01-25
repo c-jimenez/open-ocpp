@@ -77,7 +77,7 @@ class IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      * @return Meter value in Wh for the connector
      */
-    virtual unsigned int getTxStartStopMeterValue(unsigned int connector_id) = 0;
+    virtual int getTxStartStopMeterValue(unsigned int connector_id) = 0;
 
     /**
      * @brief Called when a reservation as started on a connector

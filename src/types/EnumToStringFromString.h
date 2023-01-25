@@ -19,7 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_ENUMTOSTRINGFROMSTRING_H
 #define OPENOCPP_ENUMTOSTRINGFROMSTRING_H
 
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <unordered_map>
 #include <vector>

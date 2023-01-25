@@ -97,7 +97,7 @@ bool RpcBase::call(const std::string&         action,
                 if (left_time.count() >= 0)
                 {
                     // Wait for a message
-                    ret = m_results_queue.pop(rpc_message, left_time.count());
+                    ret = m_results_queue.pop(rpc_message, static_cast<unsigned int>(left_time.count()));
                     if (ret)
                     {
                         // Check id

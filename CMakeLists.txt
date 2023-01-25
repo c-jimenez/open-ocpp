@@ -18,7 +18,11 @@ include(CMakeLists_Options.txt)
 
 # Target toolchain definition and specific compiler flags
 if(NOT DEFINED TARGET)
-    set(TARGET native)
+    if (NOT MSVC)
+        set(TARGET "gcc")
+    else()
+        set(TARGET "msvc")
+    endif()
 endif()
 include(CMakeLists_${TARGET}.txt)
 

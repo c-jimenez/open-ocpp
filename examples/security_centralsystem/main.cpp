@@ -149,10 +149,10 @@ int main(int argc, char* argv[])
 
     // Configuration
     std::filesystem::path   path(working_dir);
-    CentralSystemDemoConfig config_p0(path / "security_centralsystem_p0.ini");
-    CentralSystemDemoConfig config_p1(path / "security_centralsystem_p1.ini");
-    CentralSystemDemoConfig config_p2(path / "security_centralsystem_p2.ini");
-    CentralSystemDemoConfig config_p3(path / "security_centralsystem_p3.ini");
+    CentralSystemDemoConfig config_p0((path / "security_centralsystem_p0.ini").string());
+    CentralSystemDemoConfig config_p1((path / "security_centralsystem_p1.ini").string());
+    CentralSystemDemoConfig config_p2((path / "security_centralsystem_p2.ini").string());
+    CentralSystemDemoConfig config_p3((path / "security_centralsystem_p3.ini").string());
 
     // Event handler
     CentralSystemEventsHandler event_handler(chargepoint_db);
@@ -391,7 +391,7 @@ int main(int argc, char* argv[])
                 // Get security logs
                 std::string log_filename;
                 if (chargepoint->getLog(LogEnumType::SecurityLog,
-                                        DateTime::now().timestamp(),
+                                        static_cast<int>(DateTime::now().timestamp()),
                                         "ftp://localhost",
                                         Optional<unsigned int>(),
                                         Optional<std::chrono::seconds>(),

@@ -98,7 +98,7 @@ LocalController::LocalController(const ocpp::config::ILocalControllerConfig&    
     m_uptime_timer.setCallback(std::bind(&LocalController::processUptime, this));
 
     // Random numbers
-    std::srand(time(nullptr));
+    std::srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 /** @brief Destructor */
@@ -321,7 +321,7 @@ void LocalController::initDatabase()
     {
         std::string value;
         m_internal_config.getKey(TOTAL_UPTIME_KEY, value);
-        m_total_uptime = std::atoi(value.c_str());
+        m_total_uptime = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
 }
 

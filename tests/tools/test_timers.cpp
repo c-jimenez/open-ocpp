@@ -19,7 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Timer.h"
 #include "TimerPool.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <memory>
 

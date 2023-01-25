@@ -97,7 +97,7 @@ CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig&        st
     m_uptime_timer.setCallback(std::bind(&CentralSystem::processUptime, this));
 
     // Random numbers
-    std::srand(time(nullptr));
+    std::srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 /** @brief Destructor */
@@ -313,7 +313,7 @@ void CentralSystem::initDatabase()
     {
         std::string value;
         m_internal_config.getKey(TOTAL_UPTIME_KEY, value);
-        m_total_uptime = std::atoi(value.c_str());
+        m_total_uptime = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
 }
 

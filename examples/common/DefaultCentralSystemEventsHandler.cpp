@@ -25,11 +25,16 @@ SOFTWARE.
 #include "DefaultCentralSystemEventsHandler.h"
 #include "PrivateKey.h"
 #include "Sha2.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <fstream>
 #include <iostream>
 #include <thread>
+
+// With MSVC compiler, the system() call returns directly the command's return value
+#ifdef _MSC_VER
+#define WEXITSTATUS(x) (x)
+#endif // _MSC_VER
 
 using namespace std;
 using namespace ocpp::centralsystem;
@@ -379,7 +384,7 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
             if (certificate_request.toFile(csr_filename))
             {
                 // Sign the certificate request to generate a certificate
-                std::string ca_cert_key_path = ca_cert_path;
+                std::string ca_cert_key_path = ca_cert_path.string();
                 ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
                 ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
                 std::string       certificate_filename = csr_filename + ".crt";
@@ -517,7 +522,7 @@ ocpp::types::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandl
 
     // Sign the certificate with the MO root certificate
     Certificate mo_root_ca(m_event_handler.moRootCA());
-    std::string mo_root_ca_key_path = m_event_handler.moRootCA();
+    std::string mo_root_ca_key_path = m_event_handler.moRootCA().string();
     ocpp::helpers::replace(mo_root_ca_key_path, ".pem", ".key");
     PrivateKey  mo_root_ca_key(std::filesystem::path(mo_root_ca_key_path), "");
     Certificate ev_cert(ev_cert_req, mo_root_ca, mo_root_ca_key, Sha2::SHA256, 7300);
@@ -567,7 +572,7 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118SignC
         if (certificate_request.toFile(csr_filename))
         {
             // Sign the certificate request to generate a certificate
-            std::string ca_cert_key_path = ca_cert_path;
+            std::string ca_cert_key_path = ca_cert_path.string();
             ocpp::helpers::replace(ca_cert_key_path, ".pem", ".key");
             ocpp::helpers::replace(ca_cert_key_path, ".crt", ".key");
             std::string       certificate_filename = csr_filename + ".crt";

@@ -155,7 +155,7 @@ class Waiter
     bool success() { return (dynamic_cast<Job<ReturnType>*>(m_job.get()))->success; }
 
     /** @brief Wait for completion */
-    bool wait(std::chrono::milliseconds timeout = std::chrono::hours(24u))
+    bool wait(std::chrono::milliseconds timeout = std::chrono::hours(24))
     {
         Job<ReturnType>*             job = dynamic_cast<Job<ReturnType>*>(m_job.get());
         std::unique_lock<std::mutex> lock(job->end_of_job_mutex);
@@ -182,7 +182,7 @@ class Waiter<void>
     bool success() { return (dynamic_cast<Job<void>*>(m_job.get()))->success; }
 
     /** @brief Wait for completion */
-    bool wait(std::chrono::milliseconds timeout = std::chrono::hours(24u))
+    bool wait(std::chrono::milliseconds timeout = std::chrono::hours(24))
     {
         Job<void>*                   job = dynamic_cast<Job<void>*>(m_job.get());
         std::unique_lock<std::mutex> lock(job->end_of_job_mutex);

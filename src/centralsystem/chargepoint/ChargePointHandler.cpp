@@ -155,11 +155,11 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq
                                                       request.meterType.value());
         if (response.status == RegistrationStatus::Accepted)
         {
-            response.interval = m_stack_config.heartbeatInterval().count();
+            response.interval = static_cast<unsigned int>(m_stack_config.heartbeatInterval().count());
         }
         else
         {
-            response.interval = m_stack_config.bootNotificationRetryInterval().count();
+            response.interval = static_cast<unsigned int>(m_stack_config.bootNotificationRetryInterval().count());
         }
         response.currentTime = DateTime::now();
 

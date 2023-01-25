@@ -30,6 +30,20 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif // __GNUC__
 
+// Disable MSVC warnings
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4061)
+#pragma warning(disable : 4127)
+#pragma warning(disable : 4365)
+#pragma warning(disable : 4464)
+#pragma warning(disable : 4996)
+#pragma warning(disable : 5027)
+#pragma warning(disable : 26451)
+#pragma warning(disable : 26819)
+#pragma warning(disable : 33010)
+#endif // _MSC_VER
+
 // Use exception for critical parse errors
 // instead of asserts
 #include <stdexcept>
@@ -59,5 +73,10 @@ class parse_exception : public std::logic_error
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif // __GNUC__
+
+// Restore MSVC warnings
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif // _MSC_VER
 
 #endif // OPENOCPP_JSON_H

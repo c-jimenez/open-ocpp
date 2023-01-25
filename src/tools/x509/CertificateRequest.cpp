@@ -22,11 +22,19 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <iomanip>
 #include <sstream>
 
+#ifdef _MSC_VER
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
-#include <openssl/bio.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
+#endif // _MSC_VER
+
+#include "openssl.h"
+
+// Disable may throw exception warning on OpenSSL_sk_pop_free callbacks
+#ifdef _MSC_VER
+#pragma warning(disable : 5039)
+#endif // _MSC_VER
 
 namespace ocpp
 {
@@ -138,7 +146,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_countryName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.country.c_str()),
-                                   subject.country.size(),
+                                   static_cast<int>(subject.country.size()),
                                    -1,
                                    0);
     }
@@ -148,7 +156,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_stateOrProvinceName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.state.c_str()),
-                                   subject.state.size(),
+                                   static_cast<int>(subject.state.size()),
                                    -1,
                                    0);
     }
@@ -158,7 +166,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_localityName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.location.c_str()),
-                                   subject.location.size(),
+                                   static_cast<int>(subject.location.size()),
                                    -1,
                                    0);
     }
@@ -168,7 +176,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_organizationName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.organization.c_str()),
-                                   subject.organization.size(),
+                                   static_cast<int>(subject.organization.size()),
                                    -1,
                                    0);
     }
@@ -178,7 +186,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_organizationalUnitName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.organization_unit.c_str()),
-                                   subject.organization_unit.size(),
+                                   static_cast<int>(subject.organization_unit.size()),
                                    -1,
                                    0);
     }
@@ -188,7 +196,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_commonName,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.common_name.c_str()),
-                                   subject.common_name.size(),
+                                   static_cast<int>(subject.common_name.size()),
                                    -1,
                                    0);
     }
@@ -198,7 +206,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
                                    NID_pkcs9_emailAddress,
                                    V_ASN1_UTF8STRING,
                                    reinterpret_cast<const unsigned char*>(subject.email_address.c_str()),
-                                   subject.email_address.size(),
+                                   static_cast<int>(subject.email_address.size()),
                                    -1,
                                    0);
     }
@@ -220,7 +228,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
         if (extensions.basic_constraints.is_ca)
         {
             pathlen = ASN1_INTEGER_new();
-            ASN1_INTEGER_set(pathlen, extensions.basic_constraints.path_length);
+            ASN1_INTEGER_set(pathlen, static_cast<long>(extensions.basic_constraints.path_length));
             bc.ca      = 255;
             bc.pathlen = pathlen;
         }
@@ -245,7 +253,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
             if (alt_name.find('@') != std::string::npos)
             {
                 ASN1_STRING* email = ASN1_UTF8STRING_new();
-                ASN1_STRING_set(email, alt_name.c_str(), alt_name.size());
+                ASN1_STRING_set(email, alt_name.c_str(), static_cast<int>(alt_name.size()));
                 GENERAL_NAME_set0_value(name, GEN_EMAIL, email);
             }
             else if (inet_pton(AF_INET, alt_name.c_str(), &in_addr) == 1)
@@ -263,7 +271,7 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
             else
             {
                 ASN1_STRING* dns = ASN1_UTF8STRING_new();
-                ASN1_STRING_set(dns, alt_name.c_str(), alt_name.size());
+                ASN1_STRING_set(dns, alt_name.c_str(), static_cast<int>(alt_name.size()));
                 GENERAL_NAME_set0_value(name, GEN_DNS, dns);
             }
             sk_GENERAL_NAME_push(names, name);

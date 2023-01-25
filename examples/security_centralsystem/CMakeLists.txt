@@ -23,5 +23,17 @@ target_link_libraries(security_centralsystem
 # Copy to binary directory
 ADD_CUSTOM_COMMAND(TARGET security_centralsystem
           POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_centralsystem_p*.ini ${BIN_DIR}/
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_centralsystem_p0.ini ${BIN_DIR}/
+)
+ADD_CUSTOM_COMMAND(TARGET security_centralsystem
+          POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_centralsystem_p1.ini ${BIN_DIR}/
+)
+ADD_CUSTOM_COMMAND(TARGET security_centralsystem
+          POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_centralsystem_p2.ini ${BIN_DIR}/
+)
+ADD_CUSTOM_COMMAND(TARGET security_centralsystem
+          POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/config/security_centralsystem_p3.ini ${BIN_DIR}/
 )
