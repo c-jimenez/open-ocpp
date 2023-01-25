@@ -31,6 +31,9 @@ namespace messages
 class IdTagInfoConverter : public IMessageConverter<ocpp::types::IdTagInfo>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::IdTagInfo>* IMessageConverter<ocpp::types::IdTagInfo>::clone() const */
+    IMessageConverter<ocpp::types::IdTagInfo>* clone() const override { return new IdTagInfoConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::IdTagInfo>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::IdTagInfo&,
      *                                                                    std::string&,

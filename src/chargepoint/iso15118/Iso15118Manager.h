@@ -175,8 +175,8 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
         bool ret = false;
 
         // Get converters
-        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        auto req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
 
         // Prepare request
         ocpp::messages::DataTransferReq req;
@@ -240,9 +240,9 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
     template <typename RequestType, typename ResponseType>
     ocpp::types::DataTransferStatus handle(const std::string& type_id, const std::string& request_data, std::string& response_data)
     {
-        ocpp::types::DataTransferStatus                  status         = ocpp::types::DataTransferStatus::Rejected;
-        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        ocpp::types::DataTransferStatus status         = ocpp::types::DataTransferStatus::Rejected;
+        auto                            req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto                            resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
         try
         {
             // Parse JSON

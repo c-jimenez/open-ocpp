@@ -31,6 +31,9 @@ namespace messages
 class CertificateHashDataTypeConverter : public IMessageConverter<ocpp::types::CertificateHashDataType>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::CertificateHashDataType>* IMessageConverter<ocpp::types::CertificateHashDataType>::clone() const */
+    IMessageConverter<ocpp::types::CertificateHashDataType>* clone() const override { return new CertificateHashDataTypeConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::fromJson(const rapidjson::Value&,
     *                                                                                   ocpp::types::CertificateHashDataType&,
     *                                                                                   std::string&,

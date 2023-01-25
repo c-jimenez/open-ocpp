@@ -190,7 +190,7 @@ class SecurityManager
     /** @brief Transaction related requests FIFO */
     ocpp::messages::IRequestFifo& m_requests_fifo;
     /** @brief Message converter for SecurityEventNotificationReq */
-    ocpp::messages::IMessageConverter<ocpp::messages::SecurityEventNotificationReq>& m_security_event_req_converter;
+    std::unique_ptr<ocpp::messages::IMessageConverter<ocpp::messages::SecurityEventNotificationReq>> m_security_event_req_converter;
     /** @brief Charge Point */
     IChargePoint& m_charge_point;
 

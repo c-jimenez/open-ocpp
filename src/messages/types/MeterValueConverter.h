@@ -31,6 +31,9 @@ namespace messages
 class MeterValueConverter : public IMessageConverter<ocpp::types::MeterValue>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::MeterValue>* IMessageConverter<ocpp::types::MeterValue>::clone() const */
+    IMessageConverter<ocpp::types::MeterValue>* clone() const override { return new MeterValueConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::MeterValue&,
      *                                                                    std::string&,

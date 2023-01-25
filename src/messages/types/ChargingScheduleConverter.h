@@ -31,6 +31,9 @@ namespace messages
 class ChargingScheduleConverter : public IMessageConverter<ocpp::types::ChargingSchedule>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::ChargingSchedule>* IMessageConverter<ocpp::types::ChargingSchedule>::clone() const */
+    IMessageConverter<ocpp::types::ChargingSchedule>* clone() const override { return new ChargingScheduleConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::ChargingSchedule&,
      *                                                                    std::string&,
