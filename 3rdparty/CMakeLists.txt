@@ -11,10 +11,8 @@ target_include_directories(rapidjson INTERFACE rapidjson/include)
 add_library(doctest INTERFACE)
 target_include_directories(doctest INTERFACE doctest/doctest)
 
-# SQLite 3 is built for MSVC target only
-if (MSVC)
+# SQLite 3
 add_subdirectory(sqlite3)
-endif()
 
 # Use default flags for the libwebsockets library
 if (NOT MSVC)
