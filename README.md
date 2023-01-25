@@ -31,6 +31,8 @@ This implementation is based on the following libraries :
   - [Build](#build)
     - [Pre-requisites](#pre-requisites)
     - [Build options](#build-options)
+    - [Linux build](#linux-build)
+    - [Windows build](#windows-build)
   - [Install and use](#install-and-use)
     - [Installation](#installation)
     - [Use with CMake](#use-with-cmake)
@@ -327,9 +329,8 @@ The behavior and the configuration of the **Open OCPP** stack can be modified th
 
 * A fully C++17 compliant compiler
 * OpenSSL library v1.1.1 or greater
-* SQLite 3 library
 * CMake 3.13 or greater
-* Make 4.1 or greater
+* Make 4.1 or greater (for Linux build only)
 * curl 7.70 or greater (for examples only, to allow diagnotics uploads)
 * zip 3.0 or greater (for examples only, to allow diagnotics uploads)
 
@@ -338,7 +339,6 @@ For information, most of the development has been made on the following environm
 * Debian 11 (Bullseye)
 * gcc 10.2 and clang 11.0
 * OpenSSL 1.1.1k
-* SQLite 3.34.1
 * CMake 3.18
 * Make 4.3
 
@@ -346,29 +346,50 @@ For information, most of the development has been made on the following environm
 
 The build is based on CMake, the following definitions must be passed to the CMake command to customize the build :
 
-* **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file
+* **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file => not needed for native GCC/CLang or MSVC since it will be automatically detected 
 * **BIN_DIR** : Output directory for the generated binaries
 * **CMAKE_BUILD_TYPE** : Can be set to either Debug or Release (Release build produces optimized stripped binaries)
 
 Additionnaly, the **CMakeLists_Options.txt** contains several options that can be switched on/off.
-
-An helper makefile is available at project's level to simplify the use of CMake. Just use the one of the following commands to build using gcc or gcc without cross compilation :
-
-```make gcc-native``` or ```make clang-native``` or ```make gcc-native BUILD_TYPE=Debug``` or ```make clang-native BUILD_TYPE=Debug``` 
-
-This makefile also contains the corresponding cleaning targets :
-
-```make clean-gcc-native``` or ```make clean-clang-native```
-
-And to run the unit tests :
-
-```make tests-gcc-native``` or ```make tests-clang-native```
 
 The build generates 2 flavors of the **Open OCPP** library depending on the needs of your project :
 * Shared : libopen-ocpp.so
 * Static : libopen-ocpp_static.a
 
 **Note**: When using **Open OCPP** in a non GNU LGPL project, the shared library must be used in order to not contaminate your project with the LGPL licence (see [Wikipedia GNU LGPL article](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License#Differences_from_the_GPL))
+
+### Linux build
+
+An helper makefile is available at project's level to simplify the use of CMake. Just use the one of the following commands to build using gcc or gcc without cross compilation :
+
+```make gcc``` or ```make clang``` or ```make gcc BUILD_TYPE=Debug``` or ```make clang BUILD_TYPE=Debug``` 
+
+This makefile also contains the corresponding cleaning targets :
+
+```make clean-gcc``` or ```make clean-clang```
+
+And to run the unit tests :
+
+```make tests-gcc``` or ```make tests-clang```
+
+### Windows build
+
+**Open OCPP** can be generated on Window plateform using Visual Studio 2022 Community Edition. To open and build the project please follow the standard instructions from Microsoft to [build a CMake based project in Visual Studio](https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170).
+
+You will have to install first a full Windows package of the OpenSSL library (including headers). One can be found on this website : https://slproweb.com/products/Win32OpenSSL.html (do not download the "Light" versions which are not embedding the headers).
+
+Then the following environment variables must be defined to allow Visual Studio/CMake to find the installed OpenSSL package :
+
+* OPENSSL_INCLUDE_DIR
+* OPENSSL_ROOT_DIR
+
+Example for a 64-bit OpenSSL package download from the mentioned website and installed in the default folder :
+
+```OPENSSL_INCLUDE_DIR = C:\Program Files\OpenSSL-Win64\include```
+
+```OPENSSL_ROOT_DIR = C:\Program Files\OpenSSL-Win64```
+
+**Note** : Do not forget to close and re-open Visual Studio after having modified the environment variables to have them taken into account
 
 ## Install and use
 ### Installation
@@ -379,7 +400,7 @@ The build generates 2 flavors of the **Open OCPP** library depending on the need
 
 The makefile contains helper targets which can be called if the installation needs to be done in a non standard directory using the variable *INSTALL_PREFIX* :
 
-```make install-gcc-native INSTALL_PREFIX=/your/directory``` or ```make install-clang-native INSTALL_PREFIX=/your/directory```
+```make install-gcc INSTALL_PREFIX=/your/directory``` or ```make install-clang INSTALL_PREFIX=/your/directory```
 
 If run without the *INSTALL_PREFIX* variable, it will install in the standard system directories.
 
