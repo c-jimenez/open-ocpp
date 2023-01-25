@@ -8,6 +8,12 @@ if(NOT DEFINED LOG_LEVEL)
 endif()
 add_compile_definitions(LOG_LEVEL=${LOG_LEVEL})
 
+# Logger
+option(EXTERNAL_LOGGER      "Use an external logger"                OFF)
+if(EXTERNAL_LOGGER)
+    add_compile_definitions(EXTERNAL_LOGGER=1)
+endif()
+
 # Static library
 option(BUILD_STATIC_LIBRARY "Build Open OCPP as a static library"   ON)
 

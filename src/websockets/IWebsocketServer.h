@@ -73,6 +73,13 @@ class IWebsocketServer
         virtual ~IListener() { }
 
         /**
+         * @brief Called to accept an incoming connection
+         * @param ip_address IP address of the client
+         * @return true if the incoming connection must be accepted, false otherwise
+         */
+        virtual bool wsAcceptConnection(const char* ip_address) = 0;
+
+        /**
          * @brief Called to check the user credentials for HTTP basic authentication
          * @param uri Requested URI
          * @param user User name

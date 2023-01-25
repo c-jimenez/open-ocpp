@@ -20,17 +20,60 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #undef LOG_LEVEL
 #endif
 #define LOG_LEVEL 0 // Enable all log levels
-#include "Database.h"
-#include "LogDatabase.h"
 #include "Logger.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-#include <filesystem>
 #include <string>
 
-using namespace ocpp::database;
 using namespace ocpp::log;
+
+#ifdef EXTERNAL_LOGGER
+
+TEST_SUITE("External logger class test suite")
+{
+    TEST_CASE("Custom log function")
+    {
+        unsigned int log_level = 0;
+        std::string  log_str;
+        auto         log_function = [&](unsigned int level, const std::string& log)
+        {
+            log_level = level;
+            log_str   = log;
+        };
+
+        ExtLogger::registerLogFunction(log_function);
+
+        LOG_COM << "This one will be saved!";
+        CHECK_EQ(log_level, 1);
+        CHECK_NE(log_str.find("This one will be saved!"), std::string::npos);
+
+        LOG_DEBUG << "This one too!";
+        CHECK_EQ(log_level, 0);
+        CHECK_NE(log_str.find("This one too!"), std::string::npos);
+
+        LOG_INFO << "This one either!";
+        CHECK_EQ(log_level, 2);
+        CHECK_NE(log_str.find("This one either!"), std::string::npos);
+
+        LOG_WARNING << "And also this one!";
+        CHECK_EQ(log_level, 3);
+        CHECK_NE(log_str.find("And also this one!"), std::string::npos);
+
+        LOG_ERROR << "This is the last one saved!";
+        CHECK_EQ(log_level, 4);
+        CHECK_NE(log_str.find("This is the last one saved!"), std::string::npos);
+    }
+}
+
+#else // EXTERNAL_LOGGER
+
+#include "Database.h"
+#include "LogDatabase.h"
+
+#include <filesystem>
+
+using namespace ocpp::database;
 
 std::filesystem::path test_database_path;
 
@@ -158,5 +201,10 @@ TEST_SUITE("Database class test suite")
         CHECK_FALSE(query->next());
     }
 
-    TEST_CASE("Cleanup") { std::filesystem::remove(test_database_path); }
+    TEST_CASE("Cleanup")
+    {
+        std::filesystem::remove(test_database_path);
+    }
 }
+
+#endif // EXTERNAL_LOGGER

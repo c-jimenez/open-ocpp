@@ -41,6 +41,13 @@ DefaultLocalControllerEventsHandler::~DefaultLocalControllerEventsHandler() { }
 
 // ILocalControllerEventsHandler interface
 
+/** @copydoc bool ILocalControllerEventsHandler::acceptConnection(const char*) */
+bool DefaultLocalControllerEventsHandler::acceptConnection(const char* ip_address)
+{
+    cout << "Accept connection from [" << ip_address << "]" << endl;
+    return true;
+}
+
 /** @copydoc bool ILocalControllerEventsHandler::checkCredentials(const std::string&, const std::string&) */
 bool DefaultLocalControllerEventsHandler::checkCredentials(const std::string& chargepoint_id, const std::string& password)
 {

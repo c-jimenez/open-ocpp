@@ -34,6 +34,13 @@ class ILocalControllerEventsHandler
     virtual ~ILocalControllerEventsHandler() { }
 
     /**
+     * @brief Called to accept an incoming connection
+     * @param ip_address IP address of the client
+     * @return true if the incoming connection must be accepted, false otherwise
+     */
+    virtual bool acceptConnection(const char* ip_address) = 0;
+
+    /**
      * @brief Called to check the charge point credentials for HTTP basic authentication
      * @param chargepoint_id Charge Point identifier
      * @param password Password
