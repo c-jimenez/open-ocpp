@@ -511,11 +511,36 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (iter_client != server->m_clients.end())
             {
                 Client* client = dynamic_cast<Client*>(iter_client->second.get());
-
-                // Notify client
                 if (client->m_listener)
                 {
-                    client->m_listener->wsClientDataReceived(in, len);
+                    // Get frame info
+                    bool   is_first         = (lws_is_first_fragment(wsi) == 1);
+                    bool   is_last          = (lws_is_final_fragment(wsi) == 1);
+                    size_t remaining_length = lws_remaining_packet_payload(wsi);
+                    if (is_first && is_last)
+                    {
+                        // Notify client
+                        client->m_listener->wsClientDataReceived(in, len);
+                    }
+                    else if (is_first)
+                    {
+                        // Prepare frame bufferization
+                        client->beginFragmentedFrame(len + remaining_length);
+                        client->appendFragmentedData(in, len);
+                    }
+                    else
+                    {
+                        // Bufferize data
+                        client->appendFragmentedData(in, len);
+                        if (is_last)
+                        {
+                            // Notify client
+                            client->m_listener->wsClientDataReceived(client->getFragmentedFrame(), client->getFragmentedFrameSize());
+
+                            // Release resources
+                            client->releaseFragmentedFrame();
+                        }
+                    }
                 }
             }
         }
@@ -530,13 +555,21 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 
 /** @brief Constructor */
 LibWebsocketServer::Client::Client(struct lws* wsi, const char* ip_address)
-    : m_wsi(wsi), m_ip_address(ip_address), m_connected(true), m_listener(nullptr), m_send_msgs()
+    : m_wsi(wsi),
+      m_ip_address(ip_address),
+      m_connected(true),
+      m_listener(nullptr),
+      m_send_msgs(),
+      m_fragmented_frame(nullptr),
+      m_fragmented_frame_size(0),
+      m_fragmented_frame_index(0)
 {
 }
 /** @brief Destructor */
 LibWebsocketServer::Client::~Client()
 {
     disconnect(true);
+    releaseFragmentedFrame();
 }
 
 /** @copydoc const std::string& IClient::ipAddress(bool) const */
@@ -604,6 +637,38 @@ bool LibWebsocketServer::Client::send(const void* data, size_t size)
 void LibWebsocketServer::Client::registerListener(IClient::IListener& listener)
 {
     m_listener = &listener;
+}
+
+/** @brief Prepare the buffer to store a new fragmented frame */
+void LibWebsocketServer::Client::beginFragmentedFrame(size_t frame_size)
+{
+    // Release previously allocated data
+    releaseFragmentedFrame();
+
+    // Allocate new buffer
+    m_fragmented_frame      = new uint8_t[frame_size];
+    m_fragmented_frame_size = frame_size;
+}
+
+/** @brief Append data to the fragmented frame */
+void LibWebsocketServer::Client::appendFragmentedData(const void* data, size_t size)
+{
+    size_t copy_len = size;
+    if ((m_fragmented_frame_index + size) >= m_fragmented_frame_size)
+    {
+        copy_len = m_fragmented_frame_size - m_fragmented_frame_index;
+    }
+    memcpy(&m_fragmented_frame[m_fragmented_frame_index], data, copy_len);
+    m_fragmented_frame_index += copy_len;
+}
+
+/** @brief Release the memory associated with the fragmented frame */
+void LibWebsocketServer::Client::releaseFragmentedFrame()
+{
+    delete[] m_fragmented_frame;
+    m_fragmented_frame       = nullptr;
+    m_fragmented_frame_size  = 0;
+    m_fragmented_frame_index = 0;
 }
 
 } // namespace websockets

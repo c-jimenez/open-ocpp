@@ -49,7 +49,10 @@ LibWebsocketClient::LibWebsocketClient()
       m_wsi(nullptr),
       m_retry_policy(),
       m_retry_count(0),
-      m_send_msgs()
+      m_send_msgs(),
+      m_fragmented_frame(nullptr),
+      m_fragmented_frame_size(0),
+      m_fragmented_frame_index(0)
 {
 }
 /** @brief Destructor */
@@ -57,6 +60,7 @@ LibWebsocketClient::~LibWebsocketClient()
 {
     // To prevent keeping an open connection in background
     disconnect();
+    releaseFragmentedFrame();
 }
 
 /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
@@ -264,6 +268,38 @@ void LibWebsocketClient::process()
     lws_context_destroy(context);
 }
 
+/** @brief Prepare the buffer to store a new fragmented frame */
+void LibWebsocketClient::beginFragmentedFrame(size_t frame_size)
+{
+    // Release previously allocated data
+    releaseFragmentedFrame();
+
+    // Allocate new buffer
+    m_fragmented_frame      = new uint8_t[frame_size];
+    m_fragmented_frame_size = frame_size;
+}
+
+/** @brief Append data to the fragmented frame */
+void LibWebsocketClient::appendFragmentedData(const void* data, size_t size)
+{
+    size_t copy_len = size;
+    if ((m_fragmented_frame_index + size) >= m_fragmented_frame_size)
+    {
+        copy_len = m_fragmented_frame_size - m_fragmented_frame_index;
+    }
+    memcpy(&m_fragmented_frame[m_fragmented_frame_index], data, copy_len);
+    m_fragmented_frame_index += copy_len;
+}
+
+/** @brief Release the memory associated with the fragmented frame */
+void LibWebsocketClient::releaseFragmentedFrame()
+{
+    delete[] m_fragmented_frame;
+    m_fragmented_frame       = nullptr;
+    m_fragmented_frame_size  = 0;
+    m_fragmented_frame_index = 0;
+}
+
 /** @brief libwebsockets connection callback */
 void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul) noexcept
 {
@@ -380,8 +416,40 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:
-            client->m_listener->wsClientDataReceived(in, len);
-            break;
+        {
+            if (client->m_listener)
+            {
+                // Get frame info
+                bool   is_first         = (lws_is_first_fragment(wsi) == 1);
+                bool   is_last          = (lws_is_final_fragment(wsi) == 1);
+                size_t remaining_length = lws_remaining_packet_payload(wsi);
+                if (is_first && is_last)
+                {
+                    // Notify client
+                    client->m_listener->wsClientDataReceived(in, len);
+                }
+                else if (is_first)
+                {
+                    // Prepare frame bufferization
+                    client->beginFragmentedFrame(len + remaining_length);
+                    client->appendFragmentedData(in, len);
+                }
+                else
+                {
+                    // Bufferize data
+                    client->appendFragmentedData(in, len);
+                    if (is_last)
+                    {
+                        // Notify client
+                        client->m_listener->wsClientDataReceived(client->m_fragmented_frame, client->m_fragmented_frame_size);
+
+                        // Release resources
+                        client->releaseFragmentedFrame();
+                    }
+                }
+            }
+        }
+        break;
 
         case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
         {

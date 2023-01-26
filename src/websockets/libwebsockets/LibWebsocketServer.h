@@ -110,6 +110,34 @@ class LibWebsocketServer : public IWebsocketServer
         /** @copydoc bool IClient::registerListener(IListener&) */
         void registerListener(IClient::IListener& listener) override;
 
+        /**
+         * @brief Get the size in bytes of the fragmented frame
+         * @return Size in bytes of the fragmented frame
+         */
+        size_t getFragmentedFrameSize() const { return m_fragmented_frame_size; }
+
+        /**
+         * @brief Get the fragmented frame
+         * @return Fragmented frame
+         */
+        const void* getFragmentedFrame() const { return m_fragmented_frame; }
+
+        /**
+         * @brief Prepare the buffer to store a new fragmented frame
+         * @param frame_size Size of the fragmented frame in bytes
+         */
+        void beginFragmentedFrame(size_t frame_size);
+
+        /**
+         * @brief Append data to the fragmented frame
+         * @param data Data to append
+         * @param size Size of the data in bytes
+         */
+        void appendFragmentedData(const void* data, size_t size);
+
+        /** @brief Release the memory associated with the fragmented frame */
+        void releaseFragmentedFrame();
+
       private:
         /** @brief Client socket */
         struct lws* m_wsi;
@@ -121,6 +149,12 @@ class LibWebsocketServer : public IWebsocketServer
         IClient::IListener* m_listener;
         /** @brief Queue of messages to send */
         ocpp::helpers::Queue<SendMsg*> m_send_msgs;
+        /** @brief Buffer to store fragmented frames */
+        uint8_t* m_fragmented_frame;
+        /** @brief Size of the fragmented frame */
+        size_t m_fragmented_frame_size;
+        /** @brief Current index in the fragmented frame */
+        size_t m_fragmented_frame_index;
     };
 
     /** @brief Listener */
