@@ -35,8 +35,8 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
   public:
     /** @brief Constructor */
     GenericMessageHandler(const std::string& action, const GenericMessagesConverter& messages_converter)
-        : m_request_converter(*messages_converter.getRequestConverter<RequestType>(action)),
-          m_response_converter(*messages_converter.getResponseConverter<ResponseType>(action))
+        : m_request_converter(messages_converter.getRequestConverter<RequestType>(action)),
+          m_response_converter(messages_converter.getResponseConverter<ResponseType>(action))
     {
     }
 
@@ -60,15 +60,15 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
 
         // Convert request
         RequestType request;
-        if (m_request_converter.fromJson(payload, request, error_code, error_message))
+        if (m_request_converter->fromJson(payload, request, error_code, error_message))
         {
             // Handle message
             ResponseType resp;
             if (handleMessage(request, resp, error_code, error_message))
             {
                 // Convert response
-                m_response_converter.setAllocator(&response.GetAllocator());
-                ret = m_response_converter.toJson(resp, response);
+                m_response_converter->setAllocator(&response.GetAllocator());
+                ret = m_response_converter->toJson(resp, response);
             }
         }
 
@@ -86,8 +86,8 @@ class GenericMessageHandler : public IMessageDispatcher::IMessageHandler
     virtual bool handleMessage(const RequestType& request, ResponseType& response, std::string& error_code, std::string& error_message) = 0;
 
   private:
-    IMessageConverter<RequestType>&  m_request_converter;
-    IMessageConverter<ResponseType>& m_response_converter;
+    std::unique_ptr<IMessageConverter<RequestType>>  m_request_converter;
+    std::unique_ptr<IMessageConverter<ResponseType>> m_response_converter;
 };
 
 } // namespace messages

@@ -341,8 +341,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
         bool ret = false;
 
         // Get converters
-        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        auto req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
 
         // Prepare request
         ocpp::messages::DataTransferReq req;

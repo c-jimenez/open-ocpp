@@ -31,6 +31,9 @@ namespace messages
 class AuthorizationDataConverter : public IMessageConverter<ocpp::types::AuthorizationData>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::AuthorizationData>* IMessageConverter<ocpp::types::AuthorizationData>::clone() const */
+    IMessageConverter<ocpp::types::AuthorizationData>* clone() const override { return new AuthorizationDataConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::AuthorizationData&,
      *                                                                    std::string&,

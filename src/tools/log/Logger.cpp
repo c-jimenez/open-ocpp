@@ -69,10 +69,11 @@ Logger::~Logger()
 #endif // _MSC_VER
         LOG_OUTPUT << m_level_str << " - [" << std::put_time(&now_tm, "%Y-%m-%dT%T") << "] - " << file_line.str() << " - "
                    << m_log_output.str() << std::endl;
-    }
-    if (m_log_database)
-    {
-        m_log_database->log(now, m_level, file_line.str(), m_log_output.str());
+
+        if (m_log_database)
+        {
+            m_log_database->log(now, m_level, file_line.str(), m_log_output.str());
+        }
     }
 }
 
