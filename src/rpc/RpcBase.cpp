@@ -415,11 +415,10 @@ void RpcBase::rxThread()
         else
         {
             // Error
-            if (error_code.empty())
+            if (!error_code.empty())
             {
-                error_code = RPC_ERROR_GENERIC;
+                sendCallError(rpc_message->unique_id, error_code.c_str(), error);
             }
-            sendCallError(rpc_message->unique_id, error_code.c_str(), error);
         }
 
         // Free resources
