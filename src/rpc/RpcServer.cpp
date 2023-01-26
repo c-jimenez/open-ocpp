@@ -84,12 +84,18 @@ void RpcServer::registerServerListener(IListener& listener)
 
 // IWebsocketServer::IListener interface
 
+/** @copydoc bool IWebsocketServer::IListener::wsAcceptConnection(const char*) */
+bool RpcServer::wsAcceptConnection(const char* ip_address)
+{
+    return m_listener->rpcAcceptConnection(ip_address);
+}
+
 /** @copydoc bool IWebsocketServer::IListener::wsCheckCredentials(const char*, const std::string&, const std::string&) */
 bool RpcServer::wsCheckCredentials(const char* uri, const std::string& user, const std::string& password)
 {
     // Extract Charge Point identifier from URI
     std::filesystem::path uri_path(uri);
-    std::string           chargepoint_id = uri_path.filename();
+    std::string           chargepoint_id = uri_path.filename().string();
 
     // Check credentials
     return m_listener->rpcCheckCredentials(chargepoint_id, user, password);
@@ -100,7 +106,7 @@ void RpcServer::wsClientConnected(const char* uri, std::shared_ptr<ocpp::websock
 {
     // Extract Charge Point identifier from URI
     std::filesystem::path uri_path(uri);
-    std::string           chargepoint_id = uri_path.filename();
+    std::string           chargepoint_id = uri_path.filename().string();
 
     // Instanciate client
     std::shared_ptr<Client> rpc_client(new Client(client));

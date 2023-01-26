@@ -26,7 +26,7 @@ SOFTWARE.
 #include "ChargePointDemoConfig.h"
 #include "IMeter.h"
 #include "ISetpointManager.h"
-#include "String.h"
+#include "StringHelpers.h"
 
 #include <iostream>
 
@@ -42,15 +42,15 @@ ChargePointEventsHandler::ChargePointEventsHandler(ChargePointDemoConfig& config
 /** @brief Destructor */
 ChargePointEventsHandler::~ChargePointEventsHandler() { }
 
-/** @copydoc unsigned int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
-unsigned int ChargePointEventsHandler::getTxStartStopMeterValue(unsigned int connector_id)
+/** @copydoc int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
+int ChargePointEventsHandler::getTxStartStopMeterValue(unsigned int connector_id)
 {
-    unsigned int ret = 0;
+    int ret = 0;
     cout << "Get start/stop meter value for connector " << connector_id << endl;
     if (m_meter_simulators)
     {
         IMeter* meter_simulator = (*m_meter_simulators)[connector_id].get();
-        ret                     = static_cast<unsigned int>(meter_simulator->getEnergy());
+        ret                     = static_cast<int>(meter_simulator->getEnergy());
     }
     return ret;
 }

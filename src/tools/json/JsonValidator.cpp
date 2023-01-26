@@ -39,7 +39,7 @@ bool JsonValidator::init(const std::string& schema_file)
     // Open schema file
     std::ifstream file;
     file.open(schema_file);
-    if (!file.fail())
+    if (file.is_open())
     {
         // Read the whole file
         std::string     json;
@@ -47,7 +47,8 @@ bool JsonValidator::init(const std::string& schema_file)
         std::streamsize size;
         do
         {
-            size         = file.readsome(buffer, sizeof(buffer) - 1u);
+            file.read(buffer, sizeof(buffer) - 1u);
+            size         = file.gcount();
             buffer[size] = 0;
             json.append(buffer);
         } while (size != 0);

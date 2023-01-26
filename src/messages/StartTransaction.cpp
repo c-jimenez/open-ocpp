@@ -39,7 +39,7 @@ bool StartTransactionReqConverter::fromJson(const rapidjson::Value& json,
         error_message = "connectorId field must be > 0";
     }
     extract(json, "idTag", data.idTag);
-    ret = ret && extract(json, "meterStart", data.meterStart, error_message);
+    extract(json, "meterStart", data.meterStart);
     extract(json, "reservationId", data.reservationId);
     ret = ret && extract(json, "timestamp", data.timestamp, error_message);
     if (!ret)

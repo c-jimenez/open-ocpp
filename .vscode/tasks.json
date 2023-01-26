@@ -4,11 +4,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build GCC native",
+            "label": "build GCC",
             "type": "shell",
             "command": "make",
             "args": [
-                "gcc-native",
+                "gcc",
                 "BUILD_TYPE=Debug"
             ],
             "problemMatcher": "$gcc",
@@ -18,20 +18,20 @@
             }
         },
         {
-            "label": "tests GCC native",
+            "label": "tests GCC",
             "type": "shell",
             "command": "make",
             "args": [
-                "tests-gcc-native"
+                "tests-gcc"
             ],
             "group": "build"
         },
         {
-            "label": "clean GCC native",
+            "label": "clean GCC",
             "type": "shell",
             "command": "make",
             "args": [
-                "clean-gcc-native",
+                "clean-gcc",
                 "BUILD_TYPE=Debug"
             ],
             "group": "build"

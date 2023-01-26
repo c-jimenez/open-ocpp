@@ -54,8 +54,8 @@ bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
                                            std::string&            error_message)
 {
     extract(json, "idTag", data.idTag);
-    bool ret = extract(json, "meterStop", data.meterStop, error_message);
-    ret      = ret && extract(json, "timestamp", data.timestamp, error_message);
+    extract(json, "meterStop", data.meterStop);
+    bool ret = extract(json, "timestamp", data.timestamp, error_message);
     extract(json, "transactionId", data.transactionId);
     data.reason = ReasonHelper.fromString(json["reason"].GetString());
     if (json.HasMember("transactionData"))

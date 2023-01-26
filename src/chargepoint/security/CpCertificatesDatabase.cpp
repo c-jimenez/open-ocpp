@@ -54,7 +54,7 @@ CpCertificatesDatabase::~CpCertificatesDatabase() { }
 /** @brief Initialize the database table */
 void CpCertificatesDatabase::initDatabaseTable()
 {
-    if (m_stack_config.internalCertificateManagementEnabled() > 0)
+    if (m_stack_config.internalCertificateManagementEnabled())
     {
         // Create database
         auto query = m_database.query("CREATE TABLE IF NOT EXISTS CpCertificates ("

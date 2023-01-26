@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "security_chargepoint.ini";
-    ChargePointDemoConfig config(path);
+    ChargePointDemoConfig config(path.string());
 
     // Check if certificate management is handled by Open OCPP
     if (!config.stackConfig().internalCertificateManagementEnabled())
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
             {
                 if (!dir_entry.is_directory())
                 {
-                    std::string filename = dir_entry.path().filename();
+                    std::string filename = dir_entry.path().filename().string();
                     if (ocpp::helpers::startsWith(filename, "cs_") && ocpp::helpers::endsWith(filename, ".pem"))
                     {
                         certs.emplace_back(dir_entry.path().string(), dir_entry.path());
@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
             {
                 if (!dir_entry.is_directory())
                 {
-                    std::string filename = dir_entry.path().filename();
+                    std::string filename = dir_entry.path().filename().string();
                     if (ocpp::helpers::startsWith(filename, "cp_") && ocpp::helpers::endsWith(filename, ".pem"))
                     {
                         certs.emplace_back(dir_entry.path().string(), dir_entry.path());

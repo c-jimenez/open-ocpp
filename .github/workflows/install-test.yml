@@ -16,6 +16,6 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get install -y libev-dev libuv1-dev
     - name: make gcc install
-      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-gcc tests-install-gcc-native
+      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-gcc tests-install-gcc
     - name: make clang install
-      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-clang tests-install-clang-native
+      run: make BUILD_TYPE=Release INSTALL_PREFIX=/tmp/install-clang tests-install-clang

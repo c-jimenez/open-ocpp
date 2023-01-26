@@ -263,9 +263,9 @@ class ChargePointHandler
     template <typename RequestType, typename ResponseType>
     ocpp::types::DataTransferStatus handleMessage(const std::string& type_id, const std::string& request_data, std::string& response_data)
     {
-        ocpp::types::DataTransferStatus                  status         = ocpp::types::DataTransferStatus::Rejected;
-        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        ocpp::types::DataTransferStatus status         = ocpp::types::DataTransferStatus::Rejected;
+        auto                            req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto                            resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
         try
         {
             // Parse JSON

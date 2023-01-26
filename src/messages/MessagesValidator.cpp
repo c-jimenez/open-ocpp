@@ -165,7 +165,7 @@ bool MessagesValidator::addValidator(const std::filesystem::path& validator_path
 
     // Load validator
     std::shared_ptr<ocpp::json::JsonValidator> validator = std::make_shared<ocpp::json::JsonValidator>();
-    if (validator->init(validator_path))
+    if (validator->init(validator_path.string()))
     {
         LOG_DEBUG << "[" << action << "] Validator loaded : " << validator_path;
 

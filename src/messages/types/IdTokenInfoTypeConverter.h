@@ -31,6 +31,9 @@ namespace messages
 class IdTokenInfoTypeConverter : public IMessageConverter<ocpp::types::IdTokenInfoType>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::IdTokenInfoType>* IMessageConverter<ocpp::types::IdTokenInfoType>::clone() const */
+    IMessageConverter<ocpp::types::IdTokenInfoType>* clone() const override { return new IdTokenInfoTypeConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::IdTokenInfoType>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::IdTokenInfoType&,
      *                                                                    std::string&,

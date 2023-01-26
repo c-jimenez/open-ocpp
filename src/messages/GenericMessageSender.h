@@ -129,8 +129,8 @@ class GenericMessageSender
         CallResult ret = CallResult::Failed;
 
         // Get converters
-        IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(action);
-        IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(action);
+        auto req_converter  = m_messages_converter.getRequestConverter<RequestType>(action);
+        auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(action);
         if (req_converter && resp_converter)
         {
             // Convert request
@@ -204,7 +204,7 @@ class GenericMessageSender
         CallResult ret = CallResult::Failed;
 
         // Get converter
-        IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(action);
+        auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(action);
         if (resp_converter)
         {
             // Execute call

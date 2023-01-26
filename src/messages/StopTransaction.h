@@ -44,7 +44,7 @@ struct StopTransactionReq
     ocpp::types::Optional<ocpp::types::IdToken> idTag;
     /** @brief Required. This contains the meter value in Wh for the connector at end of the
                transaction */
-    unsigned int meterStop;
+    int meterStop;
     /** @brief Required. This contains the date and time on which the transaction is stopped */
     ocpp::types::DateTime timestamp;
     /** @brief Required. This contains the transaction-id as received by the

@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
     // Configuration
     std::filesystem::path path(working_dir);
     path /= "quick_start_localcontroller.ini";
-    LocalControllerDemoConfig config(path);
+    LocalControllerDemoConfig config(path.string());
 
     // Event handler
     DefaultLocalControllerEventsHandler event_handler(config.stackConfig());

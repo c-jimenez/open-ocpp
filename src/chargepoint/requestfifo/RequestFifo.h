@@ -70,7 +70,7 @@ class RequestFifo : public ocpp::messages::IRequestFifo
     struct Entry
     {
         /** @brief Default constructor */
-        Entry() : id(0), action(), request() { }
+        Entry() : id(0), connector_id(0), action(), request() { }
         /** @brief Constructor */
         Entry(unsigned int _id, unsigned int _connector_id, std::string _action, std::string _request)
             : id(_id), connector_id(_connector_id), action(_action), request(_request)

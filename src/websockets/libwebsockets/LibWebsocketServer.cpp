@@ -76,7 +76,10 @@ bool LibWebsocketServer::start(const std::string&        url,
             m_protocols[1] = {nullptr, nullptr, 0, 0, 0, nullptr, 0};
 
             // Retry policy
-            uint16_t ping  = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+            uint16_t ping = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::seconds>(ping_interval).count());
+#ifdef _MSC_VER
+            m_retry_policy = {nullptr, 0, 0, ping, static_cast<uint16_t>(2u * ping), 0};
+#else
             m_retry_policy = {.retry_ms_table       = nullptr,
                               .retry_ms_table_count = 0,
                               .conceal_count        = 0,
@@ -85,6 +88,7 @@ bool LibWebsocketServer::start(const std::string&        url,
                               .secs_since_valid_hangup = static_cast<uint16_t>(2u * ping), /* hangup after secs idle */
 
                               .jitter_percent = 0};
+#endif // _MSC_VER
 
             // Fill context information
             struct lws_context_creation_info info;
@@ -93,7 +97,7 @@ bool LibWebsocketServer::start(const std::string&        url,
                            LWS_SERVER_OPTION_HTTP_HEADERS_SECURITY_BEST_PRACTICES_ENFORCE;
             if (m_url.port() != 0)
             {
-                info.port = m_url.port();
+                info.port = static_cast<int>(m_url.port());
             }
             else
             {
@@ -130,17 +134,18 @@ bool LibWebsocketServer::start(const std::string&        url,
                     if (!m_credentials.server_certificate.empty())
                     {
                         info.server_ssl_cert_mem     = m_credentials.server_certificate.c_str();
-                        info.server_ssl_cert_mem_len = m_credentials.server_certificate.size();
+                        info.server_ssl_cert_mem_len = static_cast<unsigned int>(m_credentials.server_certificate.size());
                     }
                     if (!m_credentials.server_certificate_private_key.empty())
                     {
-                        info.server_ssl_private_key_mem     = m_credentials.server_certificate_private_key.c_str();
-                        info.server_ssl_private_key_mem_len = m_credentials.server_certificate_private_key.size();
+                        info.server_ssl_private_key_mem = m_credentials.server_certificate_private_key.c_str();
+                        info.server_ssl_private_key_mem_len =
+                            static_cast<unsigned int>(m_credentials.server_certificate_private_key.size());
                     }
                     if (!m_credentials.server_certificate_ca.empty())
                     {
                         info.server_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
-                        info.server_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                        info.server_ssl_ca_mem_len = static_cast<unsigned int>(m_credentials.server_certificate_ca.size());
                     }
                 }
                 else
@@ -224,10 +229,12 @@ void LibWebsocketServer::process()
     server = this;
 
     // Mask SIG_PIPE signal
+#ifndef _MSC_VER
     sigset_t set;
     sigemptyset(&set);
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
+#endif // _MSC_VER
 
     // Event loop
     int ret = 0;
@@ -258,15 +265,37 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_wsi = wsi;
             break;
 
+        case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
+        {
+            // Get parameters
+            struct lws_filter_network_conn_args* filter = reinterpret_cast<struct lws_filter_network_conn_args*>(user);
+
+            // Get client IP address
+            char ip_address[64];
+            lws_sa46_write_numeric_address(reinterpret_cast<lws_sockaddr46*>(&filter->cli_addr), ip_address, sizeof(ip_address));
+
+            // Notify user
+            if (!server->m_listener->wsAcceptConnection(ip_address))
+            {
+                // Disconnect
+                ret = -1;
+            }
+        }
+        break;
+
         case LWS_CALLBACK_HTTP_CONFIRM_UPGRADE:
         {
             // Check selected protocol
             if (strcmp("websocket", static_cast<char*>(in)) == 0)
             {
                 // Check URI
+#ifdef _MSC_VER
+                char uri[512u];
+#else  // _MSC_VER
                 char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-                int  len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
-                if ((len >= static_cast<int>(server->m_url.path().size())) &&
+#endif // _MSC_VER
+                int uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
+                if ((uri_len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
                 {
                     // Check basic authent
@@ -294,7 +323,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                             else
                             {
                                 b64[5] = '\0';
+#ifdef _MSC_VER
+                                if (_stricmp(b64, "Basic"))
+#else
                                 if (strcasecmp(b64, "Basic"))
+#endif // _MSC_VER
                                 {
                                     lwsl_err("auth missing basic: %s\n", b64);
                                     ret = -1;
@@ -321,9 +354,9 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                                         else
                                         {
                                             // Check credentials
-                                            std::string user(plain, static_cast<size_t>(pcolon - plain));
+                                            std::string username(plain, static_cast<size_t>(pcolon - plain));
                                             std::string password(pcolon + 1u);
-                                            if (!server->m_listener->wsCheckCredentials(uri, user, password))
+                                            if (!server->m_listener->wsCheckCredentials(uri, username, password))
                                             {
                                                 // The following code snippet is from the lws_unauthorised_basic_auth() function in server.c file of libwebsockets
                                                 // BEGIN SNIPPET
@@ -382,7 +415,11 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_clients[wsi] = client;
 
             // Notify connection
+#ifdef _MSC_VER
+            char uri[512u];
+#else  // _MSC_VER
             char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
+#endif // _MSC_VER
             if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)
             {
                 uri[0] = 0;
@@ -414,6 +451,20 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
         }
         break;
 
+        case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
+        {
+            // Trigger close or send
+            for (const auto& iter_client : server->m_clients)
+            {
+                Client* client = dynamic_cast<Client*>(iter_client.second.get());
+                if (!client->m_connected || !client->m_send_msgs.empty())
+                {
+                    lws_callback_on_writable(client->m_wsi);
+                }
+            }
+        }
+        break;
+
         case LWS_CALLBACK_SERVER_WRITEABLE:
         {
             // Get corresponding client
@@ -425,7 +476,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                 {
                     // Send data if any ready
                     bool     error = false;
-                    SendMsg* msg = nullptr;
+                    SendMsg* msg   = nullptr;
                     while (client->m_send_msgs.pop(msg, 0) && !error)
                     {
                         if (lws_write(client->m_wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
@@ -460,11 +511,36 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (iter_client != server->m_clients.end())
             {
                 Client* client = dynamic_cast<Client*>(iter_client->second.get());
-
-                // Notify client
                 if (client->m_listener)
                 {
-                    client->m_listener->wsClientDataReceived(in, len);
+                    // Get frame info
+                    bool   is_first         = (lws_is_first_fragment(wsi) == 1);
+                    bool   is_last          = (lws_is_final_fragment(wsi) == 1);
+                    size_t remaining_length = lws_remaining_packet_payload(wsi);
+                    if (is_first && is_last)
+                    {
+                        // Notify client
+                        client->m_listener->wsClientDataReceived(in, len);
+                    }
+                    else if (is_first)
+                    {
+                        // Prepare frame bufferization
+                        client->beginFragmentedFrame(len + remaining_length);
+                        client->appendFragmentedData(in, len);
+                    }
+                    else
+                    {
+                        // Bufferize data
+                        client->appendFragmentedData(in, len);
+                        if (is_last)
+                        {
+                            // Notify client
+                            client->m_listener->wsClientDataReceived(client->getFragmentedFrame(), client->getFragmentedFrameSize());
+
+                            // Release resources
+                            client->releaseFragmentedFrame();
+                        }
+                    }
                 }
             }
         }
@@ -479,13 +555,21 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 
 /** @brief Constructor */
 LibWebsocketServer::Client::Client(struct lws* wsi, const char* ip_address)
-    : m_wsi(wsi), m_ip_address(ip_address), m_connected(true), m_listener(nullptr), m_send_msgs()
+    : m_wsi(wsi),
+      m_ip_address(ip_address),
+      m_connected(true),
+      m_listener(nullptr),
+      m_send_msgs(),
+      m_fragmented_frame(nullptr),
+      m_fragmented_frame_size(0),
+      m_fragmented_frame_index(0)
 {
 }
 /** @brief Destructor */
 LibWebsocketServer::Client::~Client()
 {
     disconnect(true);
+    releaseFragmentedFrame();
 }
 
 /** @copydoc const std::string& IClient::ipAddress(bool) const */
@@ -511,7 +595,7 @@ bool LibWebsocketServer::Client::disconnect(bool notify_disconnected)
         }
 
         // Schedule a close
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service_pt(m_wsi);
     }
 
     // Empty message queue
@@ -543,7 +627,7 @@ bool LibWebsocketServer::Client::send(const void* data, size_t size)
         ret          = m_send_msgs.push(msg);
 
         // Schedule a send
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service_pt(m_wsi);
     }
 
     return ret;
@@ -553,6 +637,38 @@ bool LibWebsocketServer::Client::send(const void* data, size_t size)
 void LibWebsocketServer::Client::registerListener(IClient::IListener& listener)
 {
     m_listener = &listener;
+}
+
+/** @brief Prepare the buffer to store a new fragmented frame */
+void LibWebsocketServer::Client::beginFragmentedFrame(size_t frame_size)
+{
+    // Release previously allocated data
+    releaseFragmentedFrame();
+
+    // Allocate new buffer
+    m_fragmented_frame      = new uint8_t[frame_size];
+    m_fragmented_frame_size = frame_size;
+}
+
+/** @brief Append data to the fragmented frame */
+void LibWebsocketServer::Client::appendFragmentedData(const void* data, size_t size)
+{
+    size_t copy_len = size;
+    if ((m_fragmented_frame_index + size) >= m_fragmented_frame_size)
+    {
+        copy_len = m_fragmented_frame_size - m_fragmented_frame_index;
+    }
+    memcpy(&m_fragmented_frame[m_fragmented_frame_index], data, copy_len);
+    m_fragmented_frame_index += copy_len;
+}
+
+/** @brief Release the memory associated with the fragmented frame */
+void LibWebsocketServer::Client::releaseFragmentedFrame()
+{
+    delete[] m_fragmented_frame;
+    m_fragmented_frame       = nullptr;
+    m_fragmented_frame_size  = 0;
+    m_fragmented_frame_index = 0;
 }
 
 } // namespace websockets

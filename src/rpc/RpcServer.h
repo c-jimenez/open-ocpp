@@ -66,6 +66,9 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
 
     // IWebsocketServer::IListener interface
 
+    /** @copydoc bool IWebsocketServer::IListener::wsAcceptConnection(const char*) */
+    bool wsAcceptConnection(const char* ip_address) override;
+
     /** @copydoc bool IWebsocketServer::IListener::wsCheckCredentials(const char*, const std::string&, const std::string&) */
     bool wsCheckCredentials(const char* uri, const std::string& user, const std::string& password) override;
 
@@ -81,6 +84,13 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
       public:
         /** @brief Destructor */
         virtual ~IListener() { }
+
+        /**
+         * @brief Called to accept an incoming connection
+         * @param ip_address IP address of the client
+         * @return true if the incoming connection must be accepted, false otherwise
+         */
+        virtual bool rpcAcceptConnection(const char* ip_address) = 0;
 
         /**
          * @brief Called to check the user credentials for HTTP basic authentication

@@ -22,7 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IWebsocketClient.h"
 #include "Queue.h"
 #include "Url.h"
-#include "libwebsockets.h"
+#include "websockets.h"
 
 #include <condition_variable>
 #include <mutex>
@@ -121,13 +121,27 @@ class LibWebsocketClient : public IWebsocketClient
     /** @brief Queue of messages to send */
     ocpp::helpers::Queue<SendMsg*> m_send_msgs;
 
+    /** @brief Buffer to store fragmented frames */
+    uint8_t* m_fragmented_frame;
+    /** @brief Size of the fragmented frame */
+    size_t m_fragmented_frame_size;
+    /** @brief Current index in the fragmented frame */
+    size_t m_fragmented_frame_index;
+
     /** @brief Internal thread */
     void process();
 
+    /** @brief Prepare the buffer to store a new fragmented frame */
+    void beginFragmentedFrame(size_t frame_size);
+    /** @brief Append data to the fragmented frame */
+    void appendFragmentedData(const void* data, size_t size);
+    /** @brief Release the memory associated with the fragmented frame */
+    void releaseFragmentedFrame();
+
     /** @brief libwebsockets connection callback */
-    static void connectCallback(struct lws_sorted_usec_list* sul);
+    static void connectCallback(struct lws_sorted_usec_list* sul) noexcept;
     /** @brief libwebsockets event callback */
-    static int eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len);
+    static int eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len) noexcept;
 };
 
 } // namespace websockets

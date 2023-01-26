@@ -134,7 +134,7 @@ ChargePoint::ChargePoint(const ocpp::config::IChargePointConfig&          stack_
     m_uptime_timer.setCallback(std::bind(&ChargePoint::processUptime, this));
 
     // Random numbers
-    std::srand(time(nullptr));
+    std::srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 /** @brief Destructor */
@@ -1043,7 +1043,7 @@ void ChargePoint::initDatabase()
     {
         std::string value;
         m_internal_config.getKey(TOTAL_UPTIME_KEY, value);
-        m_total_uptime = std::atoi(value.c_str());
+        m_total_uptime = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
     if (!m_internal_config.keyExist(TOTAL_DISCONNECTED_TIME_KEY))
     {
@@ -1053,7 +1053,7 @@ void ChargePoint::initDatabase()
     {
         std::string value;
         m_internal_config.getKey(TOTAL_DISCONNECTED_TIME_KEY, value);
-        m_total_disconnected_time = std::atoi(value.c_str());
+        m_total_disconnected_time = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
     if (!m_internal_config.keyExist(LAST_CONNECTION_URL_KEY))
     {

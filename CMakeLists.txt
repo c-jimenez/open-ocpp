@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 1.0.0
+                 VERSION 1.1.0
 )
 
 # Definitions for Version.h file
@@ -18,7 +18,11 @@ include(CMakeLists_Options.txt)
 
 # Target toolchain definition and specific compiler flags
 if(NOT DEFINED TARGET)
-    set(TARGET native)
+    if (NOT MSVC)
+        set(TARGET "gcc")
+    else()
+        set(TARGET "msvc")
+    endif()
 endif()
 include(CMakeLists_${TARGET}.txt)
 

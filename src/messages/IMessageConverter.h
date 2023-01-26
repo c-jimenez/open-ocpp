@@ -38,6 +38,12 @@ class IMessageConverter
     virtual ~IMessageConverter() { }
 
     /**
+     * Clone a message converter instance
+     * @return Cloned message converter instance
+     */
+    virtual IMessageConverter* clone() const = 0;
+
+    /**
      * @brief Convert a JSON object to a C++ data type
      * @param json JSON object to convert
      * @param data C++ data type to fill
@@ -273,17 +279,19 @@ class IMessageConverter
     class MessageType##ReqConverter : public IMessageConverter<MessageType##Req>                                                           \
     {                                                                                                                                      \
       public:                                                                                                                              \
+        IMessageConverter<MessageType##Req>* clone() const override { return new MessageType##ReqConverter(); }                            \
         bool fromJson(const rapidjson::Value& json, MessageType##Req& data, std::string& error_code, std::string& error_message) override; \
         bool toJson(const MessageType##Req& data, rapidjson::Document& json) override;                                                     \
     };                                                                                                                                     \
     class MessageType##ConfConverter : public IMessageConverter<MessageType##Conf>                                                         \
     {                                                                                                                                      \
       public:                                                                                                                              \
-        bool fromJson(const rapidjson::Value& json,                                                                                        \
-                      MessageType##Conf&      data,                                                                                        \
-                      std::string&            error_code,                                                                                  \
-                      std::string&            error_message) override;                                                                                \
-        bool toJson(const MessageType##Conf& data, rapidjson::Document& json) override;                                                    \
+        IMessageConverter<MessageType##Conf>* clone() const override { return new MessageType##ConfConverter(); }                          \
+        bool                                  fromJson(const rapidjson::Value& json,                                                       \
+                                                       MessageType##Conf&      data,                                                       \
+                                                       std::string&            error_code,                                                 \
+                                                       std::string&            error_message) override;                                               \
+        bool                                  toJson(const MessageType##Conf& data, rapidjson::Document& json) override;                   \
     };
 
 } // namespace messages

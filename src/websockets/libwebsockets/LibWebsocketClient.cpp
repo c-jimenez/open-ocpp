@@ -49,7 +49,10 @@ LibWebsocketClient::LibWebsocketClient()
       m_wsi(nullptr),
       m_retry_policy(),
       m_retry_count(0),
-      m_send_msgs()
+      m_send_msgs(),
+      m_fragmented_frame(nullptr),
+      m_fragmented_frame_size(0),
+      m_fragmented_frame_index(0)
 {
 }
 /** @brief Destructor */
@@ -57,6 +60,7 @@ LibWebsocketClient::~LibWebsocketClient()
 {
     // To prevent keeping an open connection in background
     disconnect();
+    releaseFragmentedFrame();
 }
 
 /** @copydoc bool IWebsocketClient::connect(const std::string&, const std::string&, const Credentials&,
@@ -105,17 +109,17 @@ bool LibWebsocketClient::connect(const std::string&        url,
                     if (!m_credentials.server_certificate_ca.empty())
                     {
                         info.client_ssl_ca_mem     = m_credentials.server_certificate_ca.c_str();
-                        info.client_ssl_ca_mem_len = m_credentials.server_certificate_ca.size();
+                        info.client_ssl_ca_mem_len = static_cast<unsigned int>(m_credentials.server_certificate_ca.size());
                     }
                     if (!m_credentials.client_certificate.empty())
                     {
                         info.client_ssl_cert_mem     = m_credentials.client_certificate.c_str();
-                        info.client_ssl_cert_mem_len = m_credentials.client_certificate.size();
+                        info.client_ssl_cert_mem_len = static_cast<unsigned int>(m_credentials.client_certificate.size());
                     }
                     if (!m_credentials.client_certificate_private_key.empty())
                     {
                         info.client_ssl_key_mem     = m_credentials.client_certificate_private_key.c_str();
-                        info.client_ssl_key_mem_len = m_credentials.client_certificate_private_key.size();
+                        info.client_ssl_key_mem_len = static_cast<unsigned int>(m_credentials.client_certificate_private_key.size());
                     }
                 }
                 else
@@ -217,7 +221,7 @@ bool LibWebsocketClient::send(const void* data, size_t size)
         ret          = m_send_msgs.push(msg);
 
         // Schedule a send
-        lws_callback_on_writable(m_wsi);
+        lws_cancel_service(m_context);
     }
 
     return ret;
@@ -236,16 +240,22 @@ void LibWebsocketClient::process()
     client = this;
 
     // Mask SIG_PIPE signal
+#ifndef _MSC_VER
     sigset_t set;
     sigemptyset(&set);
     sigaddset(&set, SIGPIPE);
     pthread_sigmask(SIG_BLOCK, &set, NULL);
+#endif // _MSC_VER
+
+    // Need to ensure that the context is still valid when a user callback
+    // has called disconnect() function
+    lws_context* context = m_context;
 
     // Event loop
     int ret = 0;
     while (!m_end && (ret >= 0))
     {
-        ret = lws_service(m_context, 0);
+        ret = lws_service(context, 0);
     }
     if (!m_end)
     {
@@ -255,13 +265,49 @@ void LibWebsocketClient::process()
 
     // Destroy context
     std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Ensure disconnect caller is joining
-    lws_context_destroy(m_context);
+    lws_context_destroy(context);
+}
+
+/** @brief Prepare the buffer to store a new fragmented frame */
+void LibWebsocketClient::beginFragmentedFrame(size_t frame_size)
+{
+    // Release previously allocated data
+    releaseFragmentedFrame();
+
+    // Allocate new buffer
+    m_fragmented_frame      = new uint8_t[frame_size];
+    m_fragmented_frame_size = frame_size;
+}
+
+/** @brief Append data to the fragmented frame */
+void LibWebsocketClient::appendFragmentedData(const void* data, size_t size)
+{
+    size_t copy_len = size;
+    if ((m_fragmented_frame_index + size) >= m_fragmented_frame_size)
+    {
+        copy_len = m_fragmented_frame_size - m_fragmented_frame_index;
+    }
+    memcpy(&m_fragmented_frame[m_fragmented_frame_index], data, copy_len);
+    m_fragmented_frame_index += copy_len;
+}
+
+/** @brief Release the memory associated with the fragmented frame */
+void LibWebsocketClient::releaseFragmentedFrame()
+{
+    delete[] m_fragmented_frame;
+    m_fragmented_frame       = nullptr;
+    m_fragmented_frame_size  = 0;
+    m_fragmented_frame_index = 0;
 }
 
 /** @brief libwebsockets connection callback */
-void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
+void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul) noexcept
 {
     // Configure retry policy
+#ifdef _MSC_VER
+    client->m_retry_policy = {
+        &client->m_retry_interval, 1, 1, client->m_ping_interval, static_cast<uint16_t>(2u * client->m_ping_interval), 20};
+#else
     client->m_retry_policy = {
         .retry_ms_table       = &client->m_retry_interval,
         .retry_ms_table_count = 1,
@@ -272,6 +318,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 
         .jitter_percent = 20,
     };
+#endif // _MSC_VER
 
     // Connexion parameters
     struct lws_client_connect_info i;
@@ -308,7 +355,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
     }
     if (client->m_url.port())
     {
-        i.port = client->m_url.port();
+        i.port = static_cast<int>(client->m_url.port());
     }
     i.protocol              = client->m_protocol.c_str();
     i.local_protocol_name   = "LibWebsocketClient";
@@ -327,7 +374,7 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul)
 }
 
 /** @brief libwebsockets event callback */
-int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len)
+int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons reason, void* user, void* in, size_t len) noexcept
 {
     int  ret   = 0;
     bool retry = false;
@@ -369,26 +416,70 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:
-            client->m_listener->wsClientDataReceived(in, len);
-            break;
+        {
+            if (client->m_listener)
+            {
+                // Get frame info
+                bool   is_first         = (lws_is_first_fragment(wsi) == 1);
+                bool   is_last          = (lws_is_final_fragment(wsi) == 1);
+                size_t remaining_length = lws_remaining_packet_payload(wsi);
+                if (is_first && is_last)
+                {
+                    // Notify client
+                    client->m_listener->wsClientDataReceived(in, len);
+                }
+                else if (is_first)
+                {
+                    // Prepare frame bufferization
+                    client->beginFragmentedFrame(len + remaining_length);
+                    client->appendFragmentedData(in, len);
+                }
+                else
+                {
+                    // Bufferize data
+                    client->appendFragmentedData(in, len);
+                    if (is_last)
+                    {
+                        // Notify client
+                        client->m_listener->wsClientDataReceived(client->m_fragmented_frame, client->m_fragmented_frame_size);
+
+                        // Release resources
+                        client->releaseFragmentedFrame();
+                    }
+                }
+            }
+        }
+        break;
+
+        case LWS_CALLBACK_EVENT_WAIT_CANCELLED:
+        {
+            // Triggers a send
+            if (!client->m_end && !client->m_send_msgs.empty())
+            {
+                lws_callback_on_writable(client->m_wsi);
+            }
+        }
+        break;
 
         case LWS_CALLBACK_CLIENT_WRITEABLE:
         {
             // Send data if any ready
             bool     error = false;
-            SendMsg* msg = nullptr;
+            SendMsg* msg   = nullptr;
             while (client->m_send_msgs.pop(msg, 0) && !error)
             {
                 if (lws_write(wsi, msg->payload, msg->size, LWS_WRITE_TEXT) < static_cast<int>(msg->size))
                 {
-                    // Error
-                    client->disconnect();
-                    client->m_listener->wsClientError();
+                    // Error, close the socket
                     error = true;
                 }
 
                 // Free message memory
                 delete msg;
+            }
+            if (error)
+            {
+                return -1;
             }
         }
         break;

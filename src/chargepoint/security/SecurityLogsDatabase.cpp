@@ -88,7 +88,7 @@ bool SecurityLogsDatabase::exportSecurityEvents(const std::string&              
     bool ret = false;
 
     // Create export file
-    std::fstream export_file(filepath, export_file.out);
+    std::fstream export_file(filepath, std::fstream::out);
     if (export_file.is_open())
     {
         // Create export request

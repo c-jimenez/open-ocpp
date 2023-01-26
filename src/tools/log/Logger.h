@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "FilenameMacro.h"
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <sstream>
@@ -61,6 +62,23 @@ class LogDatabase;
 #define LOG_LEVEL 2
 #endif // LOG_LEVEL
 
+#ifdef EXTERNAL_LOGGER
+/** @brief Log level is set to 0 to generate all the logs
+ *         The leve filtering will be done by the external logger
+*/
+#undef LOG_LEVEL
+#define LOG_LEVEL 0
+
+// Use the external logger
+#define OPENOCPP_LOGGER ocpp::log::ExtLogger
+
+#else
+
+// Use the standard logger
+#define OPENOCPP_LOGGER ocpp::log::Logger
+
+#endif // EXTERNAL_LOGGER
+
 /** @brief Default log name */
 #define DEFAULT_LOG_NAME "Logs"
 
@@ -71,36 +89,36 @@ class LogDatabase;
 
 // Log macros
 #if (LOG_LEVEL == 0)
-#define LOG_DEBUG ocpp::log::Logger("\x1b[32m[ DEBUG ]\x1b[0m", 0, __FILENAME__, LINE_TOSTRING(__LINE__))
-#define LOG_DEBUG2(logger_name) ocpp::log::Logger(logger_name, "\x1b[32m[ DEBUG ]\x1b[0m", 0, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_DEBUG OPENOCPP_LOGGER("\x1b[32m[ DEBUG ]\x1b[0m", 0, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_DEBUG2(logger_name) OPENOCPP_LOGGER(logger_name, "\x1b[32m[ DEBUG ]\x1b[0m", 0, __FILENAME__, LINE_TOSTRING(__LINE__))
 #else
 #define LOG_DEBUG ocpp::log::NullLogger()
 #define LOG_DEBUG2(logger_name) ocpp::log::NullLogger()
 #endif
 #if (LOG_LEVEL <= 1)
-#define LOG_COM ocpp::log::Logger("\x1b[34m[  COM  ]\x1b[0m", 1, __FILENAME__, LINE_TOSTRING(__LINE__))
-#define LOG_COM2(logger_name) ocpp::log::Logger(logger_name, "\x1b[34m[  COM  ]\x1b[0m", 1, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_COM OPENOCPP_LOGGER("\x1b[34m[  COM  ]\x1b[0m", 1, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_COM2(logger_name) OPENOCPP_LOGGER(logger_name, "\x1b[34m[  COM  ]\x1b[0m", 1, __FILENAME__, LINE_TOSTRING(__LINE__))
 #else
 #define LOG_COM ocpp::log::NullLogger()
 #define LOG_COM2(logger_name) ocpp::log::NullLogger()
 #endif
 #if (LOG_LEVEL <= 2)
-#define LOG_INFO ocpp::log::Logger("\x1b[30m[ INFO  ]\x1b[0m", 2, __FILENAME__, LINE_TOSTRING(__LINE__))
-#define LOG_INFO2(logger_name) ocpp::log::Logger(logger_name, "\x1b[30m[ INFO  ]\x1b[0m", 2, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_INFO OPENOCPP_LOGGER("\x1b[30m[ INFO  ]\x1b[0m", 2, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_INFO2(logger_name) OPENOCPP_LOGGER(logger_name, "\x1b[30m[ INFO  ]\x1b[0m", 2, __FILENAME__, LINE_TOSTRING(__LINE__))
 #else
 #define LOG_INFO ocpp::log::NullLogger()
 #define LOG_INFO2(logger_name) ocpp::log::NullLogger()
 #endif
 #if (LOG_LEVEL <= 3)
-#define LOG_WARNING ocpp::log::Logger("\x1b[33m[WARNING]\x1b[0m", 3, __FILENAME__, LINE_TOSTRING(__LINE__))
-#define LOG_WARNING2(logger_name) ocpp::log::Logger(logger_name, "\x1b[33m[WARNING]\x1b[0m", 3, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_WARNING OPENOCPP_LOGGER("\x1b[33m[WARNING]\x1b[0m", 3, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_WARNING2(logger_name) OPENOCPP_LOGGER(logger_name, "\x1b[33m[WARNING]\x1b[0m", 3, __FILENAME__, LINE_TOSTRING(__LINE__))
 #else
 #define LOG_WARNING ocpp::log::NullLogger()
 #define LOG_WARNING2(logger_name) ocpp::log::NullLogger()
 #endif
 #if (LOG_LEVEL <= 4)
-#define LOG_ERROR ocpp::log::Logger("\x1b[31m[ ERROR ]\x1b[0m", 4, __FILENAME__, LINE_TOSTRING(__LINE__))
-#define LOG_ERROR2(logger_name) ocpp::log::Logger(logger_name, "\x1b[31m[ ERROR ]\x1b[0m", 4, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_ERROR OPENOCPP_LOGGER("\x1b[31m[ ERROR ]\x1b[0m", 4, __FILENAME__, LINE_TOSTRING(__LINE__))
+#define LOG_ERROR2(logger_name) OPENOCPP_LOGGER(logger_name, "\x1b[31m[ ERROR ]\x1b[0m", 4, __FILENAME__, LINE_TOSTRING(__LINE__))
 #else
 #define LOG_ERROR ocpp::log::NullLogger()
 #define LOG_ERROR2(logger_name) ocpp::log::NullLogger()
@@ -185,6 +203,55 @@ class NullLogger
         (void)input;
         return (*this);
     }
+};
+
+/** @brief External logger */
+class ExtLogger
+{
+  public:
+    /** @brief Constructor */
+    ExtLogger(const char* level_str, unsigned int level, const char* filename, const char* line);
+    /** @brief Constructor */
+    ExtLogger(const char* name, const char* level_str, unsigned int level, const char* filename, const char* line);
+
+    /** @brief Destructor */
+    virtual ~ExtLogger();
+
+    /**
+     * @brief Generic log operator
+     * @param input Data to log
+     * @return Logger's instance
+     */
+    template <typename T>
+    ExtLogger& operator<<(const T& input)
+    {
+        m_log_output << input;
+        return (*this);
+    }
+
+    /**
+     * @brief Log operator for boolean values
+     * @param input Data to log
+     * @return Logger's instance
+     */
+    ExtLogger& operator<<(bool input)
+    {
+        static const char* BOOL_STRING[] = {"false", "true"};
+        m_log_output << BOOL_STRING[static_cast<int>(input)];
+        return (*this);
+    }
+
+    /** @brief Register an external logging function */
+    static void registerLogFunction(std::function<void(unsigned int, const std::string&)> log_function);
+
+  private:
+    /** @brief Log output */
+    std::stringstream m_log_output;
+    /** @brief Log level */
+    unsigned int m_level;
+
+    /** @brief External logging function */
+    static std::function<void(unsigned int, const std::string&)> m_log_function;
 };
 
 } // namespace log

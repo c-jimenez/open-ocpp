@@ -93,6 +93,17 @@ class CentralSystemEventsHandler : public ICentralSystemEventsHandler
     virtual ~CentralSystemEventsHandler() { }
 
     /**
+     * @brief Called to accept an incoming connection
+     * @param ip_address IP address of the client
+     * @return true if the incoming connection must be accepted, false otherwise
+     */
+    bool acceptConnection(const char* ip_address) override
+    {
+        (void)ip_address;
+        return true;
+    }
+
+    /**
      * @brief Called to check the charge point credentials for HTTP basic authentication
      * @param chargepoint_id Charge Point identifier
      * @param password Password
@@ -556,7 +567,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      * @return Meter value in Wh for the connector
      */
-    unsigned int getTxStartStopMeterValue(unsigned int connector_id) override
+    int getTxStartStopMeterValue(unsigned int connector_id) override
     {
         (void)connector_id;
         return 0;

@@ -17,21 +17,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "PrivateKey.h"
+#include "openssl.h"
 #include "sign.h"
 
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-
-#include <openssl/bio.h>
-#include <openssl/evp.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
-#if (OPENSSL_VERSION_NUMBER >= 0x30000000L)
-// OpenSSL 3.x
-#include <openssl/core_names.h>
-#endif // OPENSSL_VERSION_NUMBER
 
 namespace ocpp
 {
@@ -47,13 +38,13 @@ PrivateKey::PrivateKey(const std::filesystem::path& pem_file, const std::string&
     : m_is_valid(false), m_private_pem(), m_public_pem(), m_size(0), m_openssl_object(nullptr)
 {
     // Open PEM file
-    std::fstream file(pem_file, file.in | file.binary | file.ate);
+    std::fstream file(pem_file, std::fstream::in | std::fstream::binary | std::fstream::ate);
     if (file.is_open())
     {
         // Read the whole file
         auto filesize = file.tellg();
         file.seekg(0, file.beg);
-        m_private_pem.resize(filesize);
+        m_private_pem.resize(static_cast<size_t>(filesize));
         file.read(&m_private_pem[0], filesize);
 
         // Read the key
@@ -92,7 +83,7 @@ PrivateKey::PrivateKey(Type type, unsigned int param, const std::string& passphr
         if (ctx)
         {
             EVP_PKEY_keygen_init(ctx);
-            EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, param);
+            EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, static_cast<int>(param));
         }
     }
     if (ctx)
@@ -175,7 +166,7 @@ std::vector<uint8_t> PrivateKey::sign(const std::string& filepath, Sha2::Type sh
 bool PrivateKey::privateToFile(const std::filesystem::path& pem_file) const
 {
     bool         ret = false;
-    std::fstream x509_file(pem_file, x509_file.out);
+    std::fstream x509_file(pem_file, std::fstream::out);
     if (x509_file.is_open())
     {
         x509_file << m_private_pem;
@@ -188,7 +179,7 @@ bool PrivateKey::privateToFile(const std::filesystem::path& pem_file) const
 bool PrivateKey::publicToFile(const std::filesystem::path& pem_file) const
 {
     bool         ret = false;
-    std::fstream x509_file(pem_file, x509_file.out);
+    std::fstream x509_file(pem_file, std::fstream::out);
     if (x509_file.is_open())
     {
         x509_file << m_public_pem;

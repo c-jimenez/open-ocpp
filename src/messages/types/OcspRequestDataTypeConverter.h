@@ -31,6 +31,9 @@ namespace messages
 class OcspRequestDataTypeConverter : public IMessageConverter<ocpp::types::OcspRequestDataType>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::OcspRequestDataType>* IMessageConverter<ocpp::types::OcspRequestDataType>::clone() const */
+    IMessageConverter<ocpp::types::OcspRequestDataType>* clone() const override { return new OcspRequestDataTypeConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::OcspRequestDataType>::fromJson(const rapidjson::Value&,
     *                                                                               ocpp::types::OcspRequestDataType&,
     *                                                                               std::string&,

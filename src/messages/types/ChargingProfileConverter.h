@@ -31,6 +31,9 @@ namespace messages
 class ChargingProfileConverter : public IMessageConverter<ocpp::types::ChargingProfile>
 {
   public:
+    /** @copydoc IMessageConverter<ocpp::types::ChargingProfile>* IMessageConverter<ocpp::types::ChargingProfile>::clone() const */
+    IMessageConverter<ocpp::types::ChargingProfile>* clone() const override { return new ChargingProfileConverter(); }
+
     /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::fromJson(const rapidjson::Value&,
      *                                                                    ocpp::types::ChargingProfile&,
      *                                                                    std::string&,

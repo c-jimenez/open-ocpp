@@ -80,9 +80,13 @@ class DateTime
         }
         if (!ss.fail())
         {
+#ifdef _MSC_VER
+            m_datetime = _mkgmtime(&t);
+#else  // _MSC_VER
             m_datetime = std::mktime(&t);
             m_datetime += t.tm_gmtoff;
             m_datetime -= (t.tm_isdst * 3600);
+#endif // _MSC_VER
             ret = true;
         }
         return ret;
@@ -172,7 +176,11 @@ class DateTime
     {
         std::ostringstream ss;
         std::tm            t = {};
+#ifdef _MSC_VER
+        gmtime_s(&t, &m_datetime);
+#else  // _MSC_VER
         gmtime_r(&m_datetime, &t);
+#endif // _MSC_VER
         ss << std::put_time(&t, "%Y-%m-%dT%TZ");
         return ss.str();
     }

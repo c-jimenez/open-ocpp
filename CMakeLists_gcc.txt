@@ -1,5 +1,5 @@
 #################################################################################
-#        Native target toolchain definition and specific compiler flags         #
+#          GCC target toolchain definition and specific compiler flags          #
 #################################################################################
 
 # Warnings

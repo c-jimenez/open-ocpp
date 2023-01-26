@@ -83,8 +83,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @copydoc bool ICentralSystem::IChargePoint::cancelReservation(int) */
     bool cancelReservation(int reservation_id) override;
 
-    /** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(int, ocpp::types::AvailabilityType) */
-    ocpp::types::AvailabilityStatus changeAvailability(int connector_id, ocpp::types::AvailabilityType availability) override;
+    /** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(unsigned int, ocpp::types::AvailabilityType) */
+    ocpp::types::AvailabilityStatus changeAvailability(unsigned int connector_id, ocpp::types::AvailabilityType availability) override;
 
     /** @copydoc ocpp::types::ConfigurationStatus ICentralSystem::IChargePoint::changeConfiguration(const std::string&, const std::string&) */
     ocpp::types::ConfigurationStatus changeConfiguration(const std::string& key, const std::string& value) override;
@@ -341,8 +341,8 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
         bool ret = false;
 
         // Get converters
-        ocpp::messages::IMessageConverter<RequestType>*  req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        ocpp::messages::IMessageConverter<ResponseType>* resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        auto req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
 
         // Prepare request
         ocpp::messages::DataTransferReq req;

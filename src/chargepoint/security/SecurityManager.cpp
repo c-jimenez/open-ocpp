@@ -98,7 +98,7 @@ SecurityManager::SecurityManager(const ocpp::config::IChargePointConfig&        
       m_worker_pool(worker_pool),
       m_requests_fifo(requests_fifo),
       m_security_event_req_converter(
-          *messages_converter.getRequestConverter<SecurityEventNotificationReq>(SECURITY_EVENT_NOTIFICATION_ACTION)),
+          messages_converter.getRequestConverter<SecurityEventNotificationReq>(SECURITY_EVENT_NOTIFICATION_ACTION)),
       m_charge_point(charge_point),
       m_security_logs_db(stack_config, database),
       m_ca_certificates_db(stack_config, database),
@@ -319,8 +319,8 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
                 // Stack is not started, queue the notification
                 rapidjson::Document payload;
                 payload.Parse("{}");
-                m_security_event_req_converter.setAllocator(&payload.GetAllocator());
-                if (m_security_event_req_converter.toJson(request, payload))
+                m_security_event_req_converter->setAllocator(&payload.GetAllocator());
+                if (m_security_event_req_converter->toJson(request, payload))
                 {
                     m_requests_fifo.push(0, SECURITY_EVENT_NOTIFICATION_ACTION, payload);
                 }

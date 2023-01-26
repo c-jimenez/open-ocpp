@@ -2,7 +2,7 @@
 # Helper library
 add_library(helpers OBJECT 
     IniFile.cpp
-    String.cpp
+    StringHelpers.cpp
     Timer.cpp
     TimerPool.cpp
     WorkerThreadPool.cpp

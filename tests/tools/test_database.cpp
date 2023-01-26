@@ -18,7 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Database.h"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "doctest_wrapper.h"
 
 #include <filesystem>
 #include <limits>
@@ -42,7 +42,7 @@ TEST_SUITE("Database class test suite")
 
         auto query = db.query("SELECT * FROM TestTable;");
         CHECK_EQ(query.get(), nullptr);
-        CHECK(db.open(test_database_path));
+        CHECK(db.open(test_database_path.string()));
 
         query = db.query("SELECT * FROM TestTable;");
         CHECK_EQ(query.get(), nullptr);

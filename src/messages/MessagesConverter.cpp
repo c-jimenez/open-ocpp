@@ -70,9 +70,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
     registerResponseConverter<action##Conf>(#action, *new action##ConfConverter())
 
 /** @brief Macro to delete a message converter for an OCPP action */
-#define DELETE_CONVERTER(action)                      \
-    delete getRequestConverter<action##Req>(#action); \
-    delete getResponseConverter<action##Conf>(#action)
+#define DELETE_CONVERTER(action)                  \
+    deleteRequestConverter<action##Req>(#action); \
+    deleteResponseConverter<action##Conf>(#action)
 
 namespace ocpp
 {

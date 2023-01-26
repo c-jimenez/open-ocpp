@@ -97,7 +97,7 @@ CentralSystem::CentralSystem(const ocpp::config::ICentralSystemConfig&        st
     m_uptime_timer.setCallback(std::bind(&CentralSystem::processUptime, this));
 
     // Random numbers
-    std::srand(time(nullptr));
+    std::srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 /** @brief Destructor */
@@ -240,6 +240,14 @@ bool CentralSystem::stop()
     return ret;
 }
 
+/** @copydoc bool RpcServer::IListener::rpcAcceptConnection(const char*) */
+bool CentralSystem::rpcAcceptConnection(const char* ip_address)
+{
+    // Notify connection => no additional processing is done here
+    // to keep this callback has fast as possible
+    return m_events_handler.acceptConnection(ip_address);
+}
+
 /** @copydoc bool RpcServer::IListener::rpcCheckCredentials(const std::string&, const std::string&, const std::string&) */
 bool CentralSystem::rpcCheckCredentials(const std::string& chargepoint_id, const std::string& user, const std::string& password)
 {
@@ -305,7 +313,7 @@ void CentralSystem::initDatabase()
     {
         std::string value;
         m_internal_config.getKey(TOTAL_UPTIME_KEY, value);
-        m_total_uptime = std::atoi(value.c_str());
+        m_total_uptime = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
 }
 

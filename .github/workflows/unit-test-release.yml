@@ -14,10 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: make gcc Release
-      run: make gcc-native BUILD_TYPE=Release
+      run: make gcc BUILD_TYPE=Release
     - name: unit tests gcc Release
-      run: make tests-gcc-native BUILD_TYPE=Release
+      run: make tests-gcc BUILD_TYPE=Release
     - name: make clang Release
-      run: make clang-native BUILD_TYPE=Release
+      run: make clang BUILD_TYPE=Release
     - name: unit tests clang
-      run: make tests-clang-native BUILD_TYPE=Release
+      run: make tests-clang BUILD_TYPE=Release

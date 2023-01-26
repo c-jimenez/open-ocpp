@@ -46,7 +46,7 @@ bool SendLocalListReqConverter::fromJson(const rapidjson::Value& json,
 {
     bool ret = true;
     extract(json, "listVersion", data.listVersion);
-    if (json.HasMember(""))
+    if (json.HasMember("localAuthorizationList"))
     {
         AuthorizationDataConverter      authorization_data_converter;
         std::vector<AuthorizationData>& local_authorization_list = data.localAuthorizationList;
