@@ -177,7 +177,6 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
                         response.status = UpdateStatus::VersionMismatch;
                     }
                 }
-
             }
             else
             {
@@ -187,7 +186,6 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
         else
         {
             response.status = UpdateStatus::Failed;
-
         }
     }
     else
