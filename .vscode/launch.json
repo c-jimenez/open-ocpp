@@ -25,6 +25,15 @@
         {
             "type": "gdb",
             "request": "launch",
+            "name": "x86 LC debug",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_localcontroller",
+            "cwd": "${workspaceRoot}/bin/gcc_native/",
+            "arguments": "-r",
+            "valuesFormatting": "parseText"
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
             "name": "x86 test debug",
             "target": "${workspaceRoot}/build_gcc_native/tests/chargepoint/smartcharging/test_smartcharging_setpoint",
             "cwd": "${workspaceRoot}",
