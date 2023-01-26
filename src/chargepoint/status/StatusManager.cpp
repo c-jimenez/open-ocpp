@@ -373,10 +373,23 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
             {
                 status = ChargePointStatus::Available;
             }
-            m_worker_pool.run<void>([this, connector_id, status] { updateConnectorStatus(connector_id, status); });
+
+            // In the case the ChangeAvailability.req contains ConnectorId = 0, the status change applies to the Charge Point and all Connectors.
+            if (connector_id == 0)
+            {
+                for (unsigned int i = 0; i <= m_connectors.getCount(); i++)
+                {
+                    m_worker_pool.run<void>([this, i, status] { updateConnectorStatus(i, status); });
+                }
+            }
+            else
+            {
+                m_worker_pool.run<void>([this, connector_id, status] { updateConnectorStatus(connector_id, status); });
+            }
         }
 
         LOG_INFO << "Change availability " << AvailabilityStatusHelper.toString(response.status);
+
         ret = true;
     }
     else
