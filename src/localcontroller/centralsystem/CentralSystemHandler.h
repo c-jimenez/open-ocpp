@@ -415,7 +415,6 @@ class CentralSystemHandler
                 if (cs_error.empty())
                 {
                     LOG_WARNING << "[" << m_identifier << "] - Unable to forward [" << action << "] request";
-                    error = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
                 }
                 else
                 {
@@ -428,7 +427,6 @@ class CentralSystemHandler
         else
         {
             LOG_WARNING << "[" << m_identifier << "] - Unable to forward [" << action << "] request";
-            error = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
         }
 
         return ret;

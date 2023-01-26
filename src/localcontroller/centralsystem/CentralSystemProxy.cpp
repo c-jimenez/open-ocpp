@@ -563,7 +563,7 @@ void CentralSystemProxy::rcpMessageReceived(const std::string& msg)
 /** @copydoc void IRpc::ISpy::rcpMessageSent(const std::string& msg) */
 void CentralSystemProxy::rcpMessageSent(const std::string& msg)
 {
-    LOG_COM << "[" << m_identifier << "] - RX : " << msg;
+    LOG_COM << "[" << m_identifier << "] - TX : " << msg;
 }
 
 // RpcClient::IListener interface

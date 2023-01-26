@@ -266,7 +266,6 @@ class ChargePointHandler
             if (cs_error.empty())
             {
                 LOG_WARNING << "[" << m_identifier << "] - Unable to forward [" << action << "] request";
-                error = ocpp::rpc::IRpc::RPC_ERROR_INTERNAL;
             }
             else
             {
