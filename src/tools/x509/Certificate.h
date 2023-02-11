@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -51,7 +50,7 @@ class Certificate : public X509Document
      * @param certificate_request Certificate request to be signed
      * @param signing_certificate Certificate which will sign the request
      * @param private_key Private key of the certificate which will sign the request
-     * @param sha Secure hash algorithm to use to sign the request 
+     * @param sha Secure hash algorithm to use to sign the request
      * @param days New certficate validity in days
      */
     Certificate(const CertificateRequest& certificate_request,
@@ -64,7 +63,7 @@ class Certificate : public X509Document
      * @brief Constructor for a self-signed certificate from a certificate request
      * @param certificate_request Certificate request to be signed
      * @param private_key Private key of the certificate request
-     * @param sha Secure hash algorithm to use to sign the request 
+     * @param sha Secure hash algorithm to use to sign the request
      * @param days New certficate validity in days
      */
     Certificate(const CertificateRequest& certificate_request, const PrivateKey& private_key, Sha2::Type sha, unsigned int days);
@@ -95,7 +94,7 @@ class Certificate : public X509Document
      */
     bool verify(const std::vector<Certificate>& ca_chain) const;
 
-    /** 
+    /**
      * @brief Verify the signature of a buffer using the certificate's public key
      * @param signature Expected signature
      * @param buffer Buffer to use
@@ -105,7 +104,7 @@ class Certificate : public X509Document
      */
     bool verify(const std::vector<uint8_t>& signature, const void* buffer, size_t size, Sha2::Type sha = Sha2::Type::SHA256);
 
-    /** 
+    /**
      * @brief Verify the signature of a file using the certificate's public key
      * @param signature Expected signature
      * @param filepath Path to the file
@@ -114,67 +113,67 @@ class Certificate : public X509Document
      */
     bool verify(const std::vector<uint8_t>& signature, const std::string& filepath, Sha2::Type sha);
 
-    /** 
-     * @brief Get the PEM encoded data representation of each certificate composing the certificate chain (if any) 
+    /**
+     * @brief Get the PEM encoded data representation of each certificate composing the certificate chain (if any)
      * @return PEM encoded data representation of each certificate composing the certificate chain (if any)
      */
     const std::vector<std::string>& pemChain() const { return m_pem_chain; }
 
     /** @brief Get the certificates composing the certificate chain (if any)
-     *  @return Certificates composing the certificate chain (if any) 
+     *  @return Certificates composing the certificate chain (if any)
      */
     const std::vector<Certificate>& certificateChain() const { return m_certificate_chain; }
 
-    /** 
-     * @brief Get the serial number 
+    /**
+     * @brief Get the serial number
      * @return Serial number
      */
     const std::vector<uint8_t>& serialNumber() const { return m_serial_number; }
 
-    /** 
+    /**
      * @brief Get the serial number as string
      * @return Serial number as string
      */
     const std::string& serialNumberString() const { return m_serial_number_string; }
 
-    /** 
+    /**
      * @brief Get the serial number as an hex string
      * @return Serial number as an hex string
      */
     const std::string& serialNumberHexString() const { return m_serial_number_hex_string; }
 
-    /** 
-     * @brief Get the date of start of validity 
+    /**
+     * @brief Get the date of start of validity
      * @return Date of start of validity
      */
     time_t validityFrom() const { return m_validity_from; }
 
-    /** 
-     * @brief Get the date of end of validity 
+    /**
+     * @brief Get the date of end of validity
      * @return Date of end of validity
      */
     time_t validityTo() const { return m_validity_to; }
 
-    /** 
-     * @brief Get the issuer 
+    /**
+     * @brief Get the issuer
      * @return Issuer
      */
     const Subject& issuer() const { return m_issuer; }
 
-    /** 
+    /**
      * @brief Get the issuer string
      * @return Issuer string
      */
     const std::string& issuerString() const { return m_issuer_string; }
 
-    /** 
+    /**
      * @brief Get the issuer alternate names
      * @return Issuer alternate names
      */
     const std::vector<std::string>& issuerAltNames() const { return m_x509v3_extensions.issuer_alternate_names; }
 
-    /** 
-     * @brief Indicate if it is a self-signed certificate 
+    /**
+     * @brief Indicate if it is a self-signed certificate
      * @return true if it is a self signed certificate, false otherwise
      */
     bool isSelfSigned() const { return m_is_self_signed; }

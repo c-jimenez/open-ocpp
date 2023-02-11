@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -429,7 +428,7 @@ bool ChargePointProxy::registerHandler(
 }
 
 /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
                                          ocpp::messages::DiagnosticsStatusNotificationConf&, std::string&, std::string&)>) */
 bool ChargePointProxy::registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
                                                           ocpp::messages::DiagnosticsStatusNotificationConf&,
@@ -440,7 +439,7 @@ bool ChargePointProxy::registerHandler(std::function<bool(const ocpp::messages::
 }
 
 /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
                                          ocpp::messages::FirmwareStatusNotificationConf&, std::string&, std::string&)>) */
 bool ChargePointProxy::registerHandler(
     std::function<bool(
@@ -504,7 +503,7 @@ bool ChargePointProxy::registerHandler(
 }
 
 /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&, 
+                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
                                          ocpp::messages::SecurityEventNotificationConf&, std::string&, std::string&)>) */
 bool ChargePointProxy::registerHandler(
     std::function<bool(
@@ -524,7 +523,7 @@ bool ChargePointProxy::registerHandler(
 }
 
 /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
                                          ocpp::messages::SignedFirmwareStatusNotificationConf&, std::string&, std::string&)>) */
 bool ChargePointProxy::registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
                                                           ocpp::messages::SignedFirmwareStatusNotificationConf&,

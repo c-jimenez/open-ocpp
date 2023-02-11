@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,7 +39,7 @@ class ISecurityManager
      * @brief Log a security event
      * @param type Type of the security event
      * @param message Additional information about the occurred security event
-     * @param critical If non-standard security event, indicates its criticity 
+     * @param critical If non-standard security event, indicates its criticity
      *                 (only critival events are forward to central system)
      * @return true if the security evenst has been logged, false otherwise
      */

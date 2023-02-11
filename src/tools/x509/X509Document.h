@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -112,73 +111,73 @@ class X509Document
      */
     const std::string& pem() const { return m_pem; }
 
-    /** 
-     * @brief Get the subject 
+    /**
+     * @brief Get the subject
      * @return Subject
      */
     const Subject& subject() const { return m_subject; }
 
-    /** 
+    /**
      * @brief Get the subject string
      * @return Subject string
      */
     const std::string& subjectString() const { return m_subject_string; }
 
-    /** 
+    /**
      * @brief Get the subject alternate names
      * @return Subject alternate names
      */
     const std::vector<std::string>& subjectAltNames() const { return m_x509v3_extensions.subject_alternate_names; }
 
-    /** 
-     * @brief Get the signature algorithm 
+    /**
+     * @brief Get the signature algorithm
      * @return Signature algorithm
      */
     const std::string& signatureAlgo() const { return m_sig_algo; }
 
-    /** 
-     * @brief Get the signature hash 
+    /**
+     * @brief Get the signature hash
      * @return Signature hash
      */
     const std::string& signatureHash() const { return m_sig_hash; }
 
-    /** 
-     * @brief Get the public key 
+    /**
+     * @brief Get the public key
      * @return Public key
      */
     const std::vector<uint8_t>& publicKey() const { return m_pub_key; }
 
-    /** 
+    /**
      * @brief Get the public key as string
      * @return Public key as string
      */
     const std::string& publicKeyString() const { return m_pub_key_string; }
 
-    /** 
-     * @brief Get the size of the public key in bits 
-     * @return Size of the public key in bits 
+    /**
+     * @brief Get the size of the public key in bits
+     * @return Size of the public key in bits
      */
     unsigned int publicKeySize() const { return m_pub_key_size; }
 
-    /** 
+    /**
      * @brief Get the public key algorithm
      * @return Public key algorithm
      */
     const std::string& publicKeyAlgo() const { return m_pub_key_algo; }
 
-    /** 
+    /**
      * @brief Get the public key algorithm parameter
      * @return Public key algorithm parameter
      */
     const std::string& publicKeyAlgoParam() const { return m_pub_key_algo_param; }
 
-    /** 
+    /**
      * @brief Get the X509v3 extensions
      * @return X509v3 extensions
      */
     const Extensions& x509v3Extensions() const { return m_x509v3_extensions; }
 
-    /** 
+    /**
      * @brief Get the X509v3 extensions names
      * @return X509v3 extensions names
      */

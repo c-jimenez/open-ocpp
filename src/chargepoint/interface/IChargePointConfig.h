@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -126,11 +125,11 @@ class IChargePointConfig
     virtual std::string clientCertificateRequestHashType() const = 0;
     /** @brief Key type for certificate request generation : ec or rsa */
     virtual std::string clientCertificateRequestKeyType() const = 0;
-    /** @brief Length in bits of the key for certificate request generation 
+    /** @brief Length in bits of the key for certificate request generation
      *         if rsa has been selected for key type : minimum 2048 */
     virtual unsigned int clientCertificateRequestRsaKeyLength() const = 0;
-    /** @brief Name of the elliptic curve for certificate request generation 
-     *         if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, 
+    /** @brief Name of the elliptic curve for certificate request generation
+     *         if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1,
      *         brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 */
     virtual std::string clientCertificateRequestEcCurve() const = 0;
     /** @brief Country for the subject field of certificate request generation (can be left empty) */
