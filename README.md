@@ -10,9 +10,17 @@ This implementation is based on the following libraries :
 * [rapidjson](https://rapidjson.org/) : JSON serialization/deserialization
 * [doctest](https://github.com/doctest/doctest) : Unit tests
 
+## License
+
+**Open OCPP** is distributed over the [GNU Lesser General Public License, version 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html).
+As such it can be used and distributed in any commercial and non-commercial product without affecting the original product's license as long as the **Open OCPP** source code used in the product is made available to anyone.
+
+**Caution**: When using **Open OCPP** in a non GNU GPL/LGPL project, the shared library with dynamic linking is the preferred way of using **Open OCPP** to avoid to have to provide the proprietary parts of your software as a source code or binary object to any person wanting to rebuilt it with a modified version of **Open OCPP** as mentioned in the [GNU LGPL FAQ](https://www.gnu.org/licenses/gpl-faq.en.html#LGPLStaticVsDynamic)
+
 ## Table of contents
 
 - [Open OCPP](#open-ocpp)
+  - [License](#license)
   - [Table of contents](#table-of-contents)
   - [Features](#features)
     - [Key features](#key-features)
@@ -24,10 +32,14 @@ This implementation is based on the following libraries :
       - [Extended trigger messages](#extended-trigger-messages)
       - [Certificate management](#certificate-management)
       - [Signed firmware update](#signed-firmware-update)
+    - [OCPP IS15118 PnC extensions](#ocpp-is15118-pnc-extensions)
+      - [Charge Point role](#charge-point-role)
+      - [Central System role](#central-system-role)
     - [Internal configuration keys](#internal-configuration-keys)
       - [Common keys](#common-keys)
       - [Charge Point keys](#charge-point-keys)
       - [Central System keys](#central-system-keys)
+      - [Local Controller keys](#local-controller-keys)
   - [Build](#build)
     - [Pre-requisites](#pre-requisites)
     - [Build options](#build-options)
@@ -37,11 +49,11 @@ This implementation is based on the following libraries :
     - [Installation](#installation)
     - [Use with CMake](#use-with-cmake)
   - [Quick start](#quick-start)
-    - [Charge Point role](#charge-point-role)
+    - [Charge Point role](#charge-point-role-1)
       - [Configuration interface](#configuration-interface)
       - [Event handler interface](#event-handler-interface)
       - [Charge Point object](#charge-point-object)
-    - [Central System role](#central-system-role)
+    - [Central System role](#central-system-role-1)
       - [Configuration interface](#configuration-interface-1)
       - [Event handler interfaces](#event-handler-interfaces)
       - [Central System object](#central-system-object)
@@ -89,14 +101,14 @@ The standard OCPP configuration persistency has to be handled by the user applic
 
 ### Supported OCPP feature profiles
 
-| Profile | Description | Restrictions |
-| :---:   |    :---    | :--- |
-| Core | Basic Charge Point functionality comparable with OCPP 1.5 [OCPP1.5] without support for firmware updates, local authorization list management and reservations | OCPP confguration persistency has to be handled by the user application |
-| Firmware Management | Support for firmware update management and diagnostic log file download | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
-| Local Auth List Management | Features to manage the local authorization list in Charge Points | None |
-| Reservation | Support for reservation of a Charge Point. | None |
-| Smart Charging | Support for basic Smart Charging, for instance using control pilot | GetCompositeSchedule is not supported for connector 0 in Charge Point role |
-| Remote Trigger | Support for remote triggering of Charge Point initiated messages | None |
+|          Profile           | Description                                                                                                                                                    | Restrictions                                                                                                                                    |
+| :------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+|            Core            | Basic Charge Point functionality comparable with OCPP 1.5 [OCPP1.5] without support for firmware updates, local authorization list management and reservations | OCPP confguration persistency has to be handled by the user application                                                                         |
+|    Firmware Management     | Support for firmware update management and diagnostic log file download                                                                                        | Actual file download/upload as well as firmware installation must be handled by the user application in the callbacks provided by **Open OCPP** |
+| Local Auth List Management | Features to manage the local authorization list in Charge Points                                                                                               | None                                                                                                                                            |
+|        Reservation         | Support for reservation of a Charge Point.                                                                                                                     | None                                                                                                                                            |
+|       Smart Charging       | Support for basic Smart Charging, for instance using control pilot                                                                                             | GetCompositeSchedule is not supported for connector 0 in Charge Point role                                                                      |
+|       Remote Trigger       | Support for remote triggering of Charge Point initiated messages                                                                                               | None                                                                                                                                            |
 
 ### Supported OCPP configuration keys
 
@@ -104,63 +116,63 @@ The OCPP configuration keys support applies to Charge Point role only.
 
 In the "Owner" column, "S" means that the configuration key behavior is handled by the stack, "U" means that it must handled by the user application.
 
-| Key | Owner | Restrictions |
-| :---: | :---: | :--- |
-| AllowOfflineTxForUnknownId | S | None |
-| AuthorizationCacheEnabled | S | None |
-| AuthorizeRemoteTxRequests | U | None |
-| BlinkRepeat | U | None |
-| ClockAlignedDataInterval | S | None |
-| ConnectionTimeOut | U | None |
-| ConnectorPhaseRotation | U | None |
-| ConnectorPhaseRotationMaxLength | U | None |
-| GetConfigurationMaxKeys | S | Must be set to the sum of OCPP configuration keys count (49) + user application configuration keys count to allow to export all the configuration in 1 message |
-| HeartbeatInterval | S | Heartbeat are only sent if no messages have been exchanged since HeartbeatInterval seconds |
-| LightIntensity | U | None |
-| LocalAuthorizeOffline | S | None |
-| LocalPreAuthorize | S | None |
-| MaxEnergyOnInvalidId | U | None |
-| MeterValuesAlignedData | S+U | User application must validate the requested meter value list according to its metering capacities when modified by the Central System |
-| MeterValuesAlignedDataMaxLength | S | None |
-| MeterValuesSampledData | S+U | User application must validate the requested meter value list according to its metering capacities when modified by the Central System |
-| MeterValuesSampledDataMaxLength | S | None |
-| MeterValueSampleInterval | S | None |
-| MinimumStatusDuration | S | None |
-| NumberOfConnectors | S | None |
-| ResetRetries | U | None |
-| StopTransactionOnEVSideDisconnect | U | None |
-| StopTransactionOnInvalidId | U | None |
-| StopTxnAlignedData | S+U | User application must validate the requested meter value list according to its metering capacities when modified by the Central System |
-| StopTxnAlignedDataMaxLength | S | None |
-| StopTxnSampledData | S+U | User application must validate the requested meter value list according to its metering capacities when modified by the Central System |
-| StopTxnSampledDataMaxLength | S | None |
-| SupportedFeatureProfiles | S | None |
-| SupportedFeatureProfilesMaxLength | S | None |
-| TransactionMessageAttempts | S | None |
-| TransactionMessageRetryInterval | S | None |
-| UnlockConnectorOnEVSideDisconnect | U | None |
-| WebSocketPingInterval | S | Reboot required |
-| LocalAuthListEnabled | S | None |
-| LocalAuthListMaxLength | S | None |
-| SendLocalListMaxLength | S | None |
-| ReserveConnectorZeroSupported | S | None |
-| ChargeProfileMaxStackLevel | S | None |
-| ChargingScheduleAllowedChargingRateUnit | S | None |
-| ChargingScheduleMaxPeriods | S | None |
-| ConnectorSwitch3to1PhaseSupported | S | None |
-| MaxChargingProfilesInstalled | S | None |
-| AdditionalRootCertificateCheck | U/S | If internal certificate management is enabled, the stack handle this parameter (implemented behavior for now is the always the one corresponding to AdditionalRootCertificateCheck = False), otherwise it must be the user application |
-| AuthorizationKey | S | None |
-| CertificateSignedMaxChainSize | S | None |
-| CertificateStoreMaxLength | U/S | If internal certificate management is enabled, the stack handle this parameter, otherwise it must be the user application |
-| CpoName | S | None |
-| SecurityProfile | S | None |
-| SupportedFileTransferProtocols | U | None |
-| CentralContractValidationAllowed | S | None
-| CertSigningWaitMinimum | S | None |
-| CertSigningRepeatTimes | S | None |
-| ContractValidationOffline | U/S | The stack will notify the user application for contract validation depending on the value of this parameter
-| ISO15118PnCEnabled | S | None |
+|                   Key                   | Owner | Restrictions                                                                                                                                                                                                                           |
+| :-------------------------------------: | :---: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|       AllowOfflineTxForUnknownId        |   S   | None                                                                                                                                                                                                                                   |
+|        AuthorizationCacheEnabled        |   S   | None                                                                                                                                                                                                                                   |
+|        AuthorizeRemoteTxRequests        |   U   | None                                                                                                                                                                                                                                   |
+|               BlinkRepeat               |   U   | None                                                                                                                                                                                                                                   |
+|        ClockAlignedDataInterval         |   S   | None                                                                                                                                                                                                                                   |
+|            ConnectionTimeOut            |   U   | None                                                                                                                                                                                                                                   |
+|         ConnectorPhaseRotation          |   U   | None                                                                                                                                                                                                                                   |
+|     ConnectorPhaseRotationMaxLength     |   U   | None                                                                                                                                                                                                                                   |
+|         GetConfigurationMaxKeys         |   S   | Must be set to the sum of OCPP configuration keys count (49) + user application configuration keys count to allow to export all the configuration in 1 message                                                                         |
+|            HeartbeatInterval            |   S   | Heartbeat are only sent if no messages have been exchanged since HeartbeatInterval seconds                                                                                                                                             |
+|             LightIntensity              |   U   | None                                                                                                                                                                                                                                   |
+|          LocalAuthorizeOffline          |   S   | None                                                                                                                                                                                                                                   |
+|            LocalPreAuthorize            |   S   | None                                                                                                                                                                                                                                   |
+|          MaxEnergyOnInvalidId           |   U   | None                                                                                                                                                                                                                                   |
+|         MeterValuesAlignedData          |  S+U  | User application must validate the requested meter value list according to its metering capacities when modified by the Central System                                                                                                 |
+|     MeterValuesAlignedDataMaxLength     |   S   | None                                                                                                                                                                                                                                   |
+|         MeterValuesSampledData          |  S+U  | User application must validate the requested meter value list according to its metering capacities when modified by the Central System                                                                                                 |
+|     MeterValuesSampledDataMaxLength     |   S   | None                                                                                                                                                                                                                                   |
+|        MeterValueSampleInterval         |   S   | None                                                                                                                                                                                                                                   |
+|          MinimumStatusDuration          |   S   | None                                                                                                                                                                                                                                   |
+|           NumberOfConnectors            |   S   | None                                                                                                                                                                                                                                   |
+|              ResetRetries               |   U   | None                                                                                                                                                                                                                                   |
+|    StopTransactionOnEVSideDisconnect    |   U   | None                                                                                                                                                                                                                                   |
+|       StopTransactionOnInvalidId        |   U   | None                                                                                                                                                                                                                                   |
+|           StopTxnAlignedData            |  S+U  | User application must validate the requested meter value list according to its metering capacities when modified by the Central System                                                                                                 |
+|       StopTxnAlignedDataMaxLength       |   S   | None                                                                                                                                                                                                                                   |
+|           StopTxnSampledData            |  S+U  | User application must validate the requested meter value list according to its metering capacities when modified by the Central System                                                                                                 |
+|       StopTxnSampledDataMaxLength       |   S   | None                                                                                                                                                                                                                                   |
+|        SupportedFeatureProfiles         |   S   | None                                                                                                                                                                                                                                   |
+|    SupportedFeatureProfilesMaxLength    |   S   | None                                                                                                                                                                                                                                   |
+|       TransactionMessageAttempts        |   S   | None                                                                                                                                                                                                                                   |
+|     TransactionMessageRetryInterval     |   S   | None                                                                                                                                                                                                                                   |
+|    UnlockConnectorOnEVSideDisconnect    |   U   | None                                                                                                                                                                                                                                   |
+|          WebSocketPingInterval          |   S   | Reboot required                                                                                                                                                                                                                        |
+|          LocalAuthListEnabled           |   S   | None                                                                                                                                                                                                                                   |
+|         LocalAuthListMaxLength          |   S   | None                                                                                                                                                                                                                                   |
+|         SendLocalListMaxLength          |   S   | None                                                                                                                                                                                                                                   |
+|      ReserveConnectorZeroSupported      |   S   | None                                                                                                                                                                                                                                   |
+|       ChargeProfileMaxStackLevel        |   S   | None                                                                                                                                                                                                                                   |
+| ChargingScheduleAllowedChargingRateUnit |   S   | None                                                                                                                                                                                                                                   |
+|       ChargingScheduleMaxPeriods        |   S   | None                                                                                                                                                                                                                                   |
+|    ConnectorSwitch3to1PhaseSupported    |   S   | None                                                                                                                                                                                                                                   |
+|      MaxChargingProfilesInstalled       |   S   | None                                                                                                                                                                                                                                   |
+|     AdditionalRootCertificateCheck      |  U/S  | If internal certificate management is enabled, the stack handle this parameter (implemented behavior for now is the always the one corresponding to AdditionalRootCertificateCheck = False), otherwise it must be the user application |
+|            AuthorizationKey             |   S   | None                                                                                                                                                                                                                                   |
+|      CertificateSignedMaxChainSize      |   S   | None                                                                                                                                                                                                                                   |
+|        CertificateStoreMaxLength        |  U/S  | If internal certificate management is enabled, the stack handle this parameter, otherwise it must be the user application                                                                                                              |
+|                 CpoName                 |   S   | None                                                                                                                                                                                                                                   |
+|             SecurityProfile             |   S   | None                                                                                                                                                                                                                                   |
+|     SupportedFileTransferProtocols      |   U   | None                                                                                                                                                                                                                                   |
+|    CentralContractValidationAllowed     |   S   | None                                                                                                                                                                                                                                   |
+|         CertSigningWaitMinimum          |   S   | None                                                                                                                                                                                                                                   |
+|         CertSigningRepeatTimes          |   S   | None                                                                                                                                                                                                                                   |
+|        ContractValidationOffline        |  U/S  | The stack will notify the user application for contract validation depending on the value of this parameter                                                                                                                            |
+|           ISO15118PnCEnabled            |   S   | None                                                                                                                                                                                                                                   |
 
 ### OCPP security extensions
 
@@ -225,7 +237,7 @@ If **InternalCertificateManagementEnabled** is set to **true**, the storage of c
 
 #### Charge Point role
 
-In Charge Point role these extensions consists mainly on forwarding messages from the ISO15118-2 stack layer to the Central System by using dedicated DataTransfer messages. 
+In Charge Point role these extensions consists mainly on forwarding messages from the ISO15118-2 stack layer to the Central System by using dedicated DataTransfer messages.
 
 **Open OCPP** implements the forwarding and provides callback and retries capabilities for certificates messages.
 
@@ -243,85 +255,85 @@ The behavior and the configuration of the **Open OCPP** stack can be modified th
 
 #### Common keys
 
-| Key | Type | Description |
-| :---: | :---: | :--- |
-| DatabasePath | string | Path to the database to store persistent data |
-| JsonSchemasPath | string | Path to the JSON schemas to validate the messages |
-| CallRequestTimeout | uint | Call request timeout in milliseconds |
-| Tlsv12CipherList | string | List of authorized ciphers for TLSv1.2 connections (OpenSSL format) |
-| Tlsv13CipherList | string | List of authorized ciphers for TLSv1.3 connections (OpenSSL format) |
-| LogMaxEntriesCount | uint | Maximum number of entries in the log (0 = no logs in database) |
+|        Key         |  Type  | Description                                                         |
+| :----------------: | :----: | :------------------------------------------------------------------ |
+|    DatabasePath    | string | Path to the database to store persistent data                       |
+|  JsonSchemasPath   | string | Path to the JSON schemas to validate the messages                   |
+| CallRequestTimeout |  uint  | Call request timeout in milliseconds                                |
+|  Tlsv12CipherList  | string | List of authorized ciphers for TLSv1.2 connections (OpenSSL format) |
+|  Tlsv13CipherList  | string | List of authorized ciphers for TLSv1.3 connections (OpenSSL format) |
+| LogMaxEntriesCount |  uint  | Maximum number of entries in the log (0 = no logs in database)      |
 
 #### Charge Point keys
 
-| Key | Type | Description |
-| :---: | :---: | :--- |
-| ConnexionUrl | string | URL of the Central System |
-| ChargePointIdentifier | string | OCPP Charge Point identifier. Will be concatanated with the **ConnexionUrl** key |
-| ConnectionTimeout | uint | Connection timeout in milliseconds |
-| RetryInterval | uint | Retry interval when connection has failed in milliseconds |
-| ChargeBoxSerialNumber | string | Deprecated. Charge Box serial number for BootNotification message |
-| ChargePointModel | string | Charge Point model for BootNotification message |
-| ChargePointSerialNumber | string | Charge Point serial number for BootNotification message |
-| ChargePointVendor | string | Charge Point vendor for BootNotification message |
-| FirmwareVersion | string | Charge Point firmware version for BootNotification message |
-| Iccid | string | ICCID of the moden's SIM card for BootNotification message |
-| Imsi | string | IMSI of the moden's SIM card for BootNotification message |
-| MeterSerialNumber | string | Main electrical meter serial number for BootNotification message |
-| MeterType | string | Main electrical meter type for BootNotification message |
-| OperatingVoltage | float | Nominal operating voltage (needed for Watt to Amp conversions in smart charging profiles) |
-| AuthentCacheMaxEntriesCount | uint | Maximum number of entries in the authentication cache |
-| TlsServerCertificateCa | string | Path to Certification Authority signing chain to validate the Central System certificate |
-| TlsClientCertificate | string | Path to Charge Point certificate |
-| TlsClientCertificatePrivateKey | string | Path to Charge Point's certificate's private key |
-| TlsClientCertificatePrivateKeyPassphrase | string | Charge Point certificate's private key passphrase |
-| TlsAllowSelfSignedCertificates | bool | Allow TLS connections using self-signed certificates (Warning : enabling this feature is not recommended in production) |
-| TlsAllowExpiredCertificates | bool | Allow TLS connections using expired certificates (Warning : enabling this feature is not recommended in production) |
-| TlsAcceptNonTrustedCertificates | bool | Accept non trusted certificates for TLS connections (Warning : enabling this feature is not recommended in production) |
-| TlsSkipServerNameCheck | bool | Skip server name check in certificates for TLS connections (Warning : enabling this feature is not recommended in production) |
-| InternalCertificateManagementEnabled | bool | If true, certificates are stored inside **Open OCPP** databasen otherwise user application has to handle them|
-| SecurityEventNotificationEnabled | bool | Enable security event notification |
-| SecurityLogMaxEntriesCount | uint | Maximum number of entries in the security log (0 = no security logs in database) |
-| ClientCertificateRequestHashType | string | Hash type for certificate request generation : sha256, sha384 or sha512 |
-| ClientCertificateRequestKeyType | string | Key type for certificate request generation : ec or rsa |
-| ClientCertificateRequestRsaKeyLength | uint | Length in bits of the key for certificate request generation if rsa has been selected for key type : minimum 2048 |
-| ClientCertificateRequestEcCurve | string | Name of the elliptic curve for certificate request generation if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 |
-| ClientCertificateRequestSubjectCountry | string | Country for the subject field of certificate request generation (can be left empty) |
-| ClientCertificateRequestSubjectState | string | State for the subject field of certificate request generation (can be left empty) |
-| ClientCertificateRequestSubjectLocation | string | Location for the subject field of certificate request generation (can be left empty) |
-| ClientCertificateRequestSubjectOrganizationUnit | string | Organization unit for the subject field of certificate request generation (can be left empty) |
-| ClientCertificateRequestSubjectEmail | string | Email for the subject field of certificate request generation (can be left empty) |
+|                       Key                       |  Type  | Description                                                                                                                                                                                           |
+| :---------------------------------------------: | :----: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                  ConnexionUrl                   | string | URL of the Central System                                                                                                                                                                             |
+|              ChargePointIdentifier              | string | OCPP Charge Point identifier. Will be concatanated with the **ConnexionUrl** key                                                                                                                      |
+|                ConnectionTimeout                |  uint  | Connection timeout in milliseconds                                                                                                                                                                    |
+|                  RetryInterval                  |  uint  | Retry interval when connection has failed in milliseconds                                                                                                                                             |
+|              ChargeBoxSerialNumber              | string | Deprecated. Charge Box serial number for BootNotification message                                                                                                                                     |
+|                ChargePointModel                 | string | Charge Point model for BootNotification message                                                                                                                                                       |
+|             ChargePointSerialNumber             | string | Charge Point serial number for BootNotification message                                                                                                                                               |
+|                ChargePointVendor                | string | Charge Point vendor for BootNotification message                                                                                                                                                      |
+|                 FirmwareVersion                 | string | Charge Point firmware version for BootNotification message                                                                                                                                            |
+|                      Iccid                      | string | ICCID of the moden's SIM card for BootNotification message                                                                                                                                            |
+|                      Imsi                       | string | IMSI of the moden's SIM card for BootNotification message                                                                                                                                             |
+|                MeterSerialNumber                | string | Main electrical meter serial number for BootNotification message                                                                                                                                      |
+|                    MeterType                    | string | Main electrical meter type for BootNotification message                                                                                                                                               |
+|                OperatingVoltage                 | float  | Nominal operating voltage (needed for Watt to Amp conversions in smart charging profiles)                                                                                                             |
+|           AuthentCacheMaxEntriesCount           |  uint  | Maximum number of entries in the authentication cache                                                                                                                                                 |
+|             TlsServerCertificateCa              | string | Path to Certification Authority signing chain to validate the Central System certificate                                                                                                              |
+|              TlsClientCertificate               | string | Path to Charge Point certificate                                                                                                                                                                      |
+|         TlsClientCertificatePrivateKey          | string | Path to Charge Point's certificate's private key                                                                                                                                                      |
+|    TlsClientCertificatePrivateKeyPassphrase     | string | Charge Point certificate's private key passphrase                                                                                                                                                     |
+|         TlsAllowSelfSignedCertificates          |  bool  | Allow TLS connections using self-signed certificates (Warning : enabling this feature is not recommended in production)                                                                               |
+|           TlsAllowExpiredCertificates           |  bool  | Allow TLS connections using expired certificates (Warning : enabling this feature is not recommended in production)                                                                                   |
+|         TlsAcceptNonTrustedCertificates         |  bool  | Accept non trusted certificates for TLS connections (Warning : enabling this feature is not recommended in production)                                                                                |
+|             TlsSkipServerNameCheck              |  bool  | Skip server name check in certificates for TLS connections (Warning : enabling this feature is not recommended in production)                                                                         |
+|      InternalCertificateManagementEnabled       |  bool  | If true, certificates are stored inside **Open OCPP** databasen otherwise user application has to handle them                                                                                         |
+|        SecurityEventNotificationEnabled         |  bool  | Enable security event notification                                                                                                                                                                    |
+|           SecurityLogMaxEntriesCount            |  uint  | Maximum number of entries in the security log (0 = no security logs in database)                                                                                                                      |
+|        ClientCertificateRequestHashType         | string | Hash type for certificate request generation : sha256, sha384 or sha512                                                                                                                               |
+|         ClientCertificateRequestKeyType         | string | Key type for certificate request generation : ec or rsa                                                                                                                                               |
+|      ClientCertificateRequestRsaKeyLength       |  uint  | Length in bits of the key for certificate request generation if rsa has been selected for key type : minimum 2048                                                                                     |
+|         ClientCertificateRequestEcCurve         | string | Name of the elliptic curve for certificate request generation if ec has been selected for key type : prime256v1, secp256k1, secp384r1, secp521r1, brainpoolP256t1, brainpoolP384t1 or brainpoolP512t1 |
+|     ClientCertificateRequestSubjectCountry      | string | Country for the subject field of certificate request generation (can be left empty)                                                                                                                   |
+|      ClientCertificateRequestSubjectState       | string | State for the subject field of certificate request generation (can be left empty)                                                                                                                     |
+|     ClientCertificateRequestSubjectLocation     | string | Location for the subject field of certificate request generation (can be left empty)                                                                                                                  |
+| ClientCertificateRequestSubjectOrganizationUnit | string | Organization unit for the subject field of certificate request generation (can be left empty)                                                                                                         |
+|      ClientCertificateRequestSubjectEmail       | string | Email for the subject field of certificate request generation (can be left empty)                                                                                                                     |
 
 #### Central System keys
 
-| Key | Type | Description |
-| :---: | :---: | :--- |
-| ListenUrl | string | URL to listen to incomming  websocket connections |
-| WebSocketPingInterval | uint | Websocket PING interval in seconds |
-| BootNotificationRetryInterval | uint | Boot notification retry interval in second (sent in BootNotificationConf when status is Pending or Rejected) |
-| HeartbeatInterval | uint | Heartbeat interval in seconds (sent in BootNotificationConf when status is Accepted) |
-| HttpBasicAuthent | bool | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method |
-| TlsEcdhCurve | string | ECDH curve to use for TLS connections with EC keys |
-| TlsServerCertificate | string | Path to the Central System's certificate |
-| TlsServerCertificatePrivateKey | string | Path to the Central System's certificate's private key |
-| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
-| TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
-| TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
+|                   Key                    |  Type  | Description                                                                                                  |
+| :--------------------------------------: | :----: | :----------------------------------------------------------------------------------------------------------- |
+|                ListenUrl                 | string | URL to listen to incomming  websocket connections                                                            |
+|          WebSocketPingInterval           |  uint  | Websocket PING interval in seconds                                                                           |
+|      BootNotificationRetryInterval       |  uint  | Boot notification retry interval in second (sent in BootNotificationConf when status is Pending or Rejected) |
+|            HeartbeatInterval             |  uint  | Heartbeat interval in seconds (sent in BootNotificationConf when status is Accepted)                         |
+|             HttpBasicAuthent             |  bool  | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method         |
+|               TlsEcdhCurve               | string | ECDH curve to use for TLS connections with EC keys                                                           |
+|           TlsServerCertificate           | string | Path to the Central System's certificate                                                                     |
+|      TlsServerCertificatePrivateKey      | string | Path to the Central System's certificate's private key                                                       |
+| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase                                                        |
+|          TlsServerCertificateCa          | string | Path to the Certification Authority signing chain for the Central System's certificate                       |
+|       TlsClientCertificateAuthent        |  bool  | If set to true, the Charge Points must authenticate themselves using an X.509 certificate                    |
 
 #### Local Controller keys
 
-| Key | Type | Description |
-| :---: | :---: | :--- |
-| ListenUrl | string | URL to listen to incomming  websocket connections |
-| WebSocketPingInterval | uint | Websocket PING interval in seconds |
-| HttpBasicAuthent | bool | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method |
-| TlsEcdhCurve | string | ECDH curve to use for TLS connections with EC keys |
-| TlsServerCertificate | string | Path to the Central System's certificate |
-| TlsServerCertificatePrivateKey | string | Path to the Central System's certificate's private key |
-| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase |
-| TlsServerCertificateCa | string | Path to the Certification Authority signing chain for the Central System's certificate |
-| TlsClientCertificateAuthent | bool | If set to true, the Charge Points must authenticate themselves using an X.509 certificate |
-| DisconnectFromCpWhenCsDisconnected | bool | If set to true, the Charge Point is automatically disconnected when the connection to the Central System cannot be established or is lost |
+|                   Key                    |  Type  | Description                                                                                                                               |
+| :--------------------------------------: | :----: | :---------------------------------------------------------------------------------------------------------------------------------------- |
+|                ListenUrl                 | string | URL to listen to incomming  websocket connections                                                                                         |
+|          WebSocketPingInterval           |  uint  | Websocket PING interval in seconds                                                                                                        |
+|             HttpBasicAuthent             |  bool  | If set to true, the Charge Points must autenticate themselves using HTTP Basic Authentication method                                      |
+|               TlsEcdhCurve               | string | ECDH curve to use for TLS connections with EC keys                                                                                        |
+|           TlsServerCertificate           | string | Path to the Central System's certificate                                                                                                  |
+|      TlsServerCertificatePrivateKey      | string | Path to the Central System's certificate's private key                                                                                    |
+| TlsServerCertificatePrivateKeyPassphrase | string | Central System's certificate's private key passphrase                                                                                     |
+|          TlsServerCertificateCa          | string | Path to the Certification Authority signing chain for the Central System's certificate                                                    |
+|       TlsClientCertificateAuthent        |  bool  | If set to true, the Charge Points must authenticate themselves using an X.509 certificate                                                 |
+|    DisconnectFromCpWhenCsDisconnected    |  bool  | If set to true, the Charge Point is automatically disconnected when the connection to the Central System cannot be established or is lost |
 
 ## Build
 
@@ -346,7 +358,7 @@ For information, most of the development has been made on the following environm
 
 The build is based on CMake, the following definitions must be passed to the CMake command to customize the build :
 
-* **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file => not needed for native GCC/CLang or MSVC since it will be automatically detected 
+* **TARGET** : Allow to load the appropriate *CMakeLists_TARGET.txt* file => not needed for native GCC/CLang or MSVC since it will be automatically detected
 * **BIN_DIR** : Output directory for the generated binaries
 * **CMAKE_BUILD_TYPE** : Can be set to either Debug or Release (Release build produces optimized stripped binaries)
 
@@ -356,13 +368,11 @@ The build generates 2 flavors of the **Open OCPP** library depending on the need
 * Shared : libopen-ocpp.so
 * Static : libopen-ocpp_static.a
 
-**Note**: When using **Open OCPP** in a non GNU LGPL project, the shared library must be used in order to not contaminate your project with the LGPL licence (see [Wikipedia GNU LGPL article](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License#Differences_from_the_GPL))
-
 ### Linux build
 
 An helper makefile is available at project's level to simplify the use of CMake. Just use the one of the following commands to build using gcc or gcc without cross compilation :
 
-```make gcc``` or ```make clang``` or ```make gcc BUILD_TYPE=Debug``` or ```make clang BUILD_TYPE=Debug``` 
+```make gcc``` or ```make clang``` or ```make gcc BUILD_TYPE=Debug``` or ```make clang BUILD_TYPE=Debug```
 
 This makefile also contains the corresponding cleaning targets :
 

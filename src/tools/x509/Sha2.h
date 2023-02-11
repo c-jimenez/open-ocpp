@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -63,15 +62,15 @@ class Sha2
     /** @brief Initialize a new computation */
     void init();
 
-    /** 
-     * @brief Add data to the current computation 
+    /**
+     * @brief Add data to the current computation
      * @param data Data to add
      * @param size Size of the data to add in bytes
      */
     void update(const void* data, size_t size);
 
-    /** 
-     * @brief Finalize the computation 
+    /**
+     * @brief Finalize the computation
      * @return SHA computed
      */
     std::vector<uint8_t> finalize();

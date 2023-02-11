@@ -3,9 +3,8 @@ Copyright (c) 2020 Cedric Jimenez
 This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License version 2.1
+as published by the Free Software Foundation.
 
 OpenOCPP is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -100,13 +99,13 @@ class SecurityManager
      */
     bool signCertificate(const ocpp::x509::CertificateRequest& csr);
 
-    /** 
-     * @brief Generate a new certificate request 
-     * @return true if the request has been sent and accepted, false otherwise 
+    /**
+     * @brief Generate a new certificate request
+     * @return true if the request has been sent and accepted, false otherwise
      */
     bool generateCertificateRequest();
 
-    /** 
+    /**
      * @brief Get the installed Charge Point certificate as PEM encoded data
      * @param private_key Corresponding private key as PEM encoded data
      * @return Installed Charge Point certificate as PEM encoded data
