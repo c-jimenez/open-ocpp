@@ -51,7 +51,7 @@ struct StopTransactionReq
     int transactionId;
     /** @brief Optional. This contains the reason why the transaction was stopped. MAY only
                be omitted when the Reason is "Local". */
-    ocpp::types::Reason reason;
+    ocpp::types::Optional<ocpp::types::Reason> reason;
     /** @brief Optional. This contains transaction usage details relevant for billing purposes */
     std::vector<ocpp::types::MeterValue> transactionData;
 };
