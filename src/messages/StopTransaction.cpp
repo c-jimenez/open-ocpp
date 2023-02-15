@@ -56,7 +56,10 @@ bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "meterStop", data.meterStop);
     bool ret = extract(json, "timestamp", data.timestamp, error_message);
     extract(json, "transactionId", data.transactionId);
-    data.reason = ReasonHelper.fromString(json["reason"].GetString());
+    if (json.HasMember("reason"))
+    {
+        data.reason = ReasonHelper.fromString(json["reason"].GetString());
+    }
     if (json.HasMember("transactionData"))
     {
         const rapidjson::Value& transactionData = json["transactionData"];
@@ -83,7 +86,10 @@ bool StopTransactionReqConverter::toJson(const StopTransactionReq& data, rapidjs
     fill(json, "meterStop", data.meterStop);
     fill(json, "timestamp", data.timestamp);
     fill(json, "transactionId", data.transactionId);
-    fill(json, "reason", ReasonHelper.toString(data.reason));
+    if (data.reason.isSet())
+    {
+        fill(json, "reason", ReasonHelper.toString(data.reason));
+    }
     if (!data.transactionData.empty())
     {
         rapidjson::Value    transactionData(rapidjson::kArrayType);
