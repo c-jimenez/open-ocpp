@@ -57,7 +57,7 @@ bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value& json,
 bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, rapidjson::Document& json)
 {
     fill(json, "connectorId", data.connectorId);
-    fill(json, "requestedMessage", AvailabilityTypeHelper.toString(data.type));
+    fill(json, "type", AvailabilityTypeHelper.toString(data.type));
     return true;
 }
 
