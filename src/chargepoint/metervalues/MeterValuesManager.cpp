@@ -188,10 +188,23 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
 bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (connector_id.isSet() && (message == MessageTrigger::MeterValues))
+
+    if (message == MessageTrigger::MeterValues)
     {
-        processTriggered(connector_id);
-        ret = true;
+        if (connector_id.isSet())
+        {
+            processTriggered(connector_id);
+            ret = true;
+        }
+        else
+        {
+            for (const Connector* connector : m_connectors.getConnectors())
+            {
+                unsigned int id = connector->id;
+                processTriggered(id);
+            }
+            ret = true;
+        }
     }
     return ret;
 }
@@ -201,12 +214,25 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
                                           const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (connector_id.isSet() && (message == MessageTriggerEnumType::MeterValues))
+    if (message == MessageTriggerEnumType::MeterValues)
     {
-        processTriggered(connector_id);
-        ret = true;
+        if (connector_id.isSet())
+        {
+            processTriggered(connector_id);
+            ret = true;
+        }
+        else
+        {
+            for (const Connector* connector : m_connectors.getConnectors())
+            {
+                unsigned int id = connector->id;
+                processTriggered(id);
+            }
+            ret = true;
+        }
     }
     return ret;
+
 }
 
 /** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */

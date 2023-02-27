@@ -170,7 +170,7 @@ bool ChargePointEventsHandlerStub::getLocalLimitationsSchedule(unsigned int     
 /** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
 bool ChargePointEventsHandlerStub::resetRequested(ocpp::types::ResetType reset_type)
 {
-    m_calls["transactionDeAuthorized"] = {{"reset_type", ResetTypeHelper.toString(reset_type)}};
+    m_calls["resetRequested"] = {{"reset_type", ResetTypeHelper.toString(reset_type)}};
     return callResult("resetRequested");
 }
 

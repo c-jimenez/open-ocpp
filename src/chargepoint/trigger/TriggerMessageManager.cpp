@@ -85,8 +85,14 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
     }
     else
     {
-        // Check connector id
-        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
+        // Check invalid connector id
+        if (request.connectorId.isSet() && !m_connectors.isValid(request.connectorId))
+        {
+            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_message = "Invalid connector id";
+            response.status = TriggerMessageStatus::Rejected;
+        }
+        else
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
@@ -99,11 +105,6 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
                 response.status = TriggerMessageStatus::Rejected;
                 LOG_WARNING << "Trigger message rejected : " << trigger_message;
             }
-        }
-        else
-        {
-            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
-            error_message = "Invalid connector id";
         }
     }
 
@@ -136,25 +137,26 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerM
     }
     else
     {
-        // Check connector id
-        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
+        // Check invalid connector id
+        if (request.connectorId.isSet() && !m_connectors.isValid(request.connectorId))
+        {
+            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_message = "Invalid connector id";
+            response.status = TriggerMessageStatusEnumType::Rejected;
+        }
+        else
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
             {
                 response.status = TriggerMessageStatusEnumType::Accepted;
-                LOG_INFO << "Extended trigger message accepted : " << trigger_message;
+                LOG_INFO << "Trigger message accepted : " << trigger_message;
             }
             else
             {
                 response.status = TriggerMessageStatusEnumType::Rejected;
-                LOG_WARNING << "Extended trigger message rejected : " << trigger_message;
+                LOG_WARNING << "Trigger message rejected : " << trigger_message;
             }
-        }
-        else
-        {
-            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
-            error_message = "Invalid connector id";
         }
     }
 
