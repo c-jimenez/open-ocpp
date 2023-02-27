@@ -188,13 +188,11 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
 bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-
     if (message == MessageTrigger::MeterValues)
     {
         if (connector_id.isSet())
         {
             processTriggered(connector_id);
-            ret = true;
         }
         else
         {
@@ -203,8 +201,8 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, c
                 unsigned int id = connector->id;
                 processTriggered(id);
             }
-            ret = true;
         }
+        ret = true;
     }
     return ret;
 }
@@ -219,7 +217,6 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
         if (connector_id.isSet())
         {
             processTriggered(connector_id);
-            ret = true;
         }
         else
         {
@@ -228,11 +225,10 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
                 unsigned int id = connector->id;
                 processTriggered(id);
             }
-            ret = true;
         }
+        ret = true;
     }
     return ret;
-
 }
 
 /** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */

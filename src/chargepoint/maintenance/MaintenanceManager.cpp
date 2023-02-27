@@ -589,9 +589,16 @@ void MaintenanceManager::processGetDiagnostics(std::string                      
             if (nb_retries > 0)
             {
                 nb_retries--;
-                LOG_WARNING << "GetDiagnostics : upload failed (" << nb_retries << " retrie(s) left - next retry in "
-                            << retry_interval_s.count() << "s)";
-                std::this_thread::sleep_for(retry_interval_s);
+                if (nb_retries != 0)
+                {
+                    LOG_WARNING << "GetDiagnostics : upload failed (" << nb_retries << " retrie(s) left - next retry in "
+                                << retry_interval_s.count() << "s)";
+                    std::this_thread::sleep_for(retry_interval_s);
+                }
+                else
+                {
+                    LOG_WARNING << "GetDiagnostics : upload failed no retries left";
+                }
             }
         }
 
@@ -636,7 +643,7 @@ void MaintenanceManager::processUpdateFirmware(std::string                      
                                                ocpp::types::DateTime               retrieve_date)
 {
 
-    LOG_INFO << "UpdateFirmware : Waiting until retrieve date:"<<retrieve_date.timestamp()<<" DateTime::now():"<<DateTime::now();
+    LOG_INFO << "UpdateFirmware : Waiting until retrieve date (" << retrieve_date.timestamp() << ") from now (" << DateTime::now() << ")";
 
     // Check retrieve date
     if (retrieve_date > DateTime::now())
@@ -669,13 +676,19 @@ void MaintenanceManager::processUpdateFirmware(std::string                      
         if (!success)
         {
             // Next retry
-
             if (nb_retries > 0)
             {
-               nb_retries--;
-                LOG_WARNING << "FirmwareUpdate : download failed (" << nb_retries << " retrie(s) left - next retry in "
-                            << retry_interval_s.count() << "s)";
-                std::this_thread::sleep_for(retry_interval_s);
+                nb_retries--;
+                if (nb_retries != 0)
+                {
+                    LOG_WARNING << "FirmwareUpdate : download failed (" << nb_retries << " retrie(s) left - next retry in "
+                                << retry_interval_s.count() << "s)";
+                    std::this_thread::sleep_for(retry_interval_s);
+                }
+                else
+                {
+                    LOG_WARNING << "FirmwareUpdate : download failed no retries left";
+                }
             }
         }
 
@@ -769,13 +782,20 @@ void MaintenanceManager::processGetLog(ocpp::types::LogEnumType            type,
         success = m_events_handler.uploadFile(local_log_file, url);
         if (!success)
         {
-            // Next retry            
+            // Next retry
             if (nb_retries > 0)
             {
                 nb_retries--;
-                LOG_WARNING << "GetLog : upload failed (" << nb_retries << " retrie(s) left - next retry in " << retry_interval_s.count()
-                            << "s)";
-                std::this_thread::sleep_for(retry_interval_s);
+                if (nb_retries != 0)
+                {
+                    LOG_WARNING << "GetLog : upload failed (" << nb_retries << " retrie(s) left - next retry in "
+                                << retry_interval_s.count() << "s)";
+                    std::this_thread::sleep_for(retry_interval_s);
+                }
+                else
+                {
+                    LOG_WARNING << "GetLog : upload failed retries left";
+                }
             }
         }
 
@@ -857,13 +877,20 @@ void MaintenanceManager::processSignedUpdateFirmware(std::string                
         success = m_events_handler.downloadFile(location, local_firmware_file);
         if (!success)
         {
-            // Next retry            
+            // Next retry
             if (nb_retries > 0)
             {
                 nb_retries--;
-                LOG_WARNING << "SignedUpdateFirmware : download failed (" << nb_retries << " retrie(s) left - next retry in "
-                            << retry_interval_s.count() << "s)";
-                std::this_thread::sleep_for(retry_interval_s);
+                if (nb_retries != 0)
+                {
+                    LOG_WARNING << "SignedUpdateFirmware : download failed (" << nb_retries << " retrie(s) left - next retry in "
+                                << retry_interval_s.count() << "s)";
+                    std::this_thread::sleep_for(retry_interval_s);
+                }
+                else
+                {
+                    LOG_WARNING << "SignedUpdateFirmware : download failed no retries left";
+                }
             }
         }
 
