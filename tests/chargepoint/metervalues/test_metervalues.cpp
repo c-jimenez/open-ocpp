@@ -162,6 +162,120 @@ static void checkClockAligned(const std::vector<std::pair<std::string, std::uniq
     CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].value, "16");
 }
 
+/** @brief Check all the sampled meter values */
+static void checkAllSampled(const std::vector<std::pair<std::string, std::unique_ptr<rapidjson::Document>>>& messages,
+                            ReadingContext                                                                   context)
+{
+    MeterValuesReq meter_value_req;
+
+    CHECK_EQ(messages.size(), 3u);
+    CHECK_EQ(messages[0].first, METER_VALUES_ACTION);
+    CHECK_EQ(messages[1].first, METER_VALUES_ACTION);
+    CHECK_EQ(messages[2].first, METER_VALUES_ACTION);
+
+    CHECK(deserializeMeterValue((*messages[0].second), meter_value_req));
+    CHECK_EQ(meter_value_req.connectorId, 0);
+    CHECK_FALSE(meter_value_req.transactionId.isSet());
+    CHECK_EQ(meter_value_req.meterValue.size(), 1u);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue.size(), 4);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].phase, Phase::L1);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].location, Location::Inlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].value, "10");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].phase, Phase::L2);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].location, Location::Inlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].value, "20");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].phase, Phase::L3);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].location, Location::Inlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].value, "30");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].measurand, Measurand::EnergyActiveImportRegister);
+    CHECK_FALSE(meter_value_req.meterValue[0].sampledValue[3].phase.isSet());
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].location, Location::Inlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].unit, UnitOfMeasure::kWh);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].value, "123");
+
+    CHECK(deserializeMeterValue((*messages[1].second), meter_value_req));
+    CHECK_EQ(meter_value_req.connectorId, 1);
+    CHECK_FALSE(meter_value_req.transactionId.isSet());
+    CHECK_EQ(meter_value_req.meterValue.size(), 1u);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue.size(), 4);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].phase, Phase::L1);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].value, "40");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].phase, Phase::L2);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].value, "50");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].phase, Phase::L3);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].value, "60");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].measurand, Measurand::EnergyActiveImportRegister);
+    CHECK_FALSE(meter_value_req.meterValue[0].sampledValue[3].phase.isSet());
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].unit, UnitOfMeasure::kWh);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].value, "100");
+
+    CHECK(deserializeMeterValue((*messages[2].second), meter_value_req));
+    CHECK_EQ(meter_value_req.connectorId, 2);
+    CHECK_FALSE(meter_value_req.transactionId.isSet());
+    CHECK_EQ(meter_value_req.meterValue.size(), 1u);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue.size(), 4);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].phase, Phase::L1);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[0].value, "70");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].phase, Phase::L2);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[1].value, "80");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].measurand, Measurand::CurrentImport);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].phase, Phase::L3);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].unit, UnitOfMeasure::A);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[2].value, "90");
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].measurand, Measurand::EnergyActiveImportRegister);
+    CHECK_FALSE(meter_value_req.meterValue[0].sampledValue[3].phase.isSet());
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].location, Location::Outlet);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].format, ValueFormat::Raw);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].unit, UnitOfMeasure::kWh);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].context, context);
+    CHECK_EQ(meter_value_req.meterValue[0].sampledValue[3].value, "23");
+}
+
 /** @brief Check the sampled meter values */
 static void checkSampled(const std::vector<std::pair<std::string, std::unique_ptr<rapidjson::Document>>>& messages)
 {
@@ -825,18 +939,26 @@ TEST_SUITE("Metervalues component")
         rpc.clearCalls();
 
         // Trigger meter values without connector id
-        CHECK_FALSE(meter_mgr.onTriggerMessage(MessageTrigger::MeterValues, Optional<unsigned int>()));
-        CHECK_FALSE(event_handler.methodCalled("getMeterValue", params));
+        CHECK(meter_mgr.onTriggerMessage(MessageTrigger::MeterValues, Optional<unsigned int>()));
+        CHECK(event_handler.methodCalled("getMeterValue", params));
 
         // Check messages
-        CHECK(rpc.getCalls().empty());
+        checkAllSampled(rpc.getCalls(), ReadingContext::Trigger);
+
+        // Clear stubs
+        event_handler.clearCalls();
+        rpc.clearCalls();
 
         // Extended trigger meter values without connector id
-        CHECK_FALSE(meter_mgr.onTriggerMessage(MessageTriggerEnumType::MeterValues, Optional<unsigned int>()));
-        CHECK_FALSE(event_handler.methodCalled("getMeterValue", params));
+        CHECK(meter_mgr.onTriggerMessage(MessageTriggerEnumType::MeterValues, Optional<unsigned int>()));
+        CHECK(event_handler.methodCalled("getMeterValue", params));
 
         // Check messages
-        CHECK(rpc.getCalls().empty());
+        checkAllSampled(rpc.getCalls(), ReadingContext::Trigger);
+
+        // Clear stubs
+        event_handler.clearCalls();
+        rpc.clearCalls();
     }
 
     TEST_CASE("Custom meter values")

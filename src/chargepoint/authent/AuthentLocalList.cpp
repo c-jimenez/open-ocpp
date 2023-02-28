@@ -124,7 +124,7 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
     // Check local list activation
     if (m_ocpp_config.localAuthListEnabled())
     {
-        if (request.listVersion > 0)
+        if (request.listVersion >= 0)
         {
             // Check update list size
             if (request.localAuthorizationList.size() <= m_ocpp_config.sendLocalListMaxLength())
