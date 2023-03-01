@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -56,7 +56,7 @@ class SecurityLogsDatabase
      * @brief Log a security event
      * @param type Type of the security event
      * @param message Additional information about the occurred security event
-     * @param critical If non-standard security event, indicates its criticity 
+     * @param critical If non-standard security event, indicates its criticity
      *                 (only critival events are forward to central system)
      * @param timestamp Timestamp of the security event
      * @return true if the security evenst has been logged, false otherwise

@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -90,11 +90,11 @@ class MeterValuesManager : public IMeterValuesManager,
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message, 
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message,
      *                                                                                 const ocpp::types::Optional<unsigned int>&) */
     bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, 
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message,
      *                                                                                 const ocpp::types::Optional<unsigned int>&) */
     bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 

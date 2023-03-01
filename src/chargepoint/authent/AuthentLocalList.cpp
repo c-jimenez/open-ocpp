@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -124,7 +124,7 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
     // Check local list activation
     if (m_ocpp_config.localAuthListEnabled())
     {
-        if (request.listVersion > 0)
+        if (request.listVersion >= 0)
         {
             // Check update list size
             if (request.localAuthorizationList.size() <= m_ocpp_config.sendLocalListMaxLength())

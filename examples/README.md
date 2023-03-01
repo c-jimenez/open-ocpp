@@ -1,6 +1,6 @@
 # Examples
 
-All the examples are licensed under the MIT licence so that code can be used and modified at will without having to contribute back.
+All the examples are licensed under the MIT license so that code can be used and modified at will without having to contribute back.
 
 The following examples are available for OCPP 1.6 standard :
 

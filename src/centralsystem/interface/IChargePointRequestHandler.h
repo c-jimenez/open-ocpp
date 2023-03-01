@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -198,7 +198,7 @@ class IChargePointRequestHandler
      * @param certificate The X.509 certificated presented by EV
      * @param id_token This contains the identifier that needs to be authorized
      * @param cert_hash_data Contains the information needed to verify the EV Contract Certificate via OCSP
-     * @param cert_status Certificate status information. - if all certificates are 
+     * @param cert_status Certificate status information. - if all certificates are
      *                    valid: return 'Accepted'. - if one of the certificates was revoked,
      *                    return 'CertificateRevoked
      * @return Authorization status (see AuthorizationStatus type)
@@ -210,12 +210,12 @@ class IChargePointRequestHandler
         ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
 
     /**
-     * @brief Called when the Charge Point wants to get or update an ISO15118 EV certificate 
+     * @brief Called when the Charge Point wants to get or update an ISO15118 EV certificate
      * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
      * @param action Defines whether certificate needs to be installed or updated
      * @param exi_request Raw CertificateInstallationReq request from EV, Base64 encoded
      * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
-     * @return Operation status (see Iso15118EVCertificateStatusEnumType enum) 
+     * @return Operation status (see Iso15118EVCertificateStatusEnumType enum)
      */
     virtual ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
                                                                                       ocpp::types::CertificateActionEnumType action,

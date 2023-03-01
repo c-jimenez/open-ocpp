@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -188,9 +188,20 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
 bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (connector_id.isSet() && (message == MessageTrigger::MeterValues))
+    if (message == MessageTrigger::MeterValues)
     {
-        processTriggered(connector_id);
+        if (connector_id.isSet())
+        {
+            processTriggered(connector_id);
+        }
+        else
+        {
+            for (const Connector* connector : m_connectors.getConnectors())
+            {
+                unsigned int id = connector->id;
+                processTriggered(id);
+            }
+        }
         ret = true;
     }
     return ret;
@@ -201,9 +212,20 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
                                           const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = false;
-    if (connector_id.isSet() && (message == MessageTriggerEnumType::MeterValues))
+    if (message == MessageTriggerEnumType::MeterValues)
     {
-        processTriggered(connector_id);
+        if (connector_id.isSet())
+        {
+            processTriggered(connector_id);
+        }
+        else
+        {
+            for (const Connector* connector : m_connectors.getConnectors())
+            {
+                unsigned int id = connector->id;
+                processTriggered(id);
+            }
+        }
         ret = true;
     }
     return ret;

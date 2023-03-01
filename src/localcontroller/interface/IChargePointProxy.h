@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -83,14 +83,14 @@ class IChargePointProxy
     /** @brief Disconnect the charge point */
     virtual void disconnect() = 0;
 
-    /** 
-     * @brief Get the associated central system proxy 
-     * @return Associated central system proxy 
+    /**
+     * @brief Get the associated central system proxy
+     * @return Associated central system proxy
      */
     virtual std::shared_ptr<ICentralSystemProxy> centralSystemProxy() = 0;
 
-    /** 
-     * @brief Register a listener to the proxy events 
+    /**
+     * @brief Register a listener to the proxy events
      * @param listener Listener to the proxy events
      */
     virtual void registerListener(ILocalControllerProxyEventsHandler& listener) = 0;

@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -340,7 +340,7 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
         override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
                                          ocpp::messages::DiagnosticsStatusNotificationConf&, std::string&, std::string&)>) */
     bool registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
                                             ocpp::messages::DiagnosticsStatusNotificationConf&,
@@ -348,7 +348,7 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
                                             std::string&)> handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
                                          ocpp::messages::FirmwareStatusNotificationConf&, std::string&, std::string&)>) */
     bool registerHandler(std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
                                             ocpp::messages::FirmwareStatusNotificationConf&,
@@ -394,7 +394,7 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
             handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&, 
+                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
                                          ocpp::messages::SecurityEventNotificationConf&, std::string&, std::string&)>) */
     bool registerHandler(std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
                                             ocpp::messages::SecurityEventNotificationConf&,
@@ -408,7 +408,7 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
             handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&, 
+                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
                                          ocpp::messages::SignedFirmwareStatusNotificationConf&, std::string&, std::string&)>) */
     bool registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
                                             ocpp::messages::SignedFirmwareStatusNotificationConf&,

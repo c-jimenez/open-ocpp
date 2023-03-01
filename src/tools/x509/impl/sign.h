@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -28,8 +28,8 @@ namespace ocpp
 namespace x509
 {
 
-/** 
- * @brief Compute the signature of a buffer using a key 
+/**
+ * @brief Compute the signature of a buffer using a key
  * @param buffer Buffer to use
  * @param size Size in bytes of the buffer
  * @param sha Secure hash algorithm to use
@@ -47,8 +47,8 @@ std::vector<uint8_t> sign(const void* buffer, size_t size, Sha2::Type sha, EVP_P
  */
 std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha, EVP_PKEY* pkey);
 
-/** 
- * @brief Verify the signature of a buffer using a key 
+/**
+ * @brief Verify the signature of a buffer using a key
  * @param signature Expected signature
  * @param buffer Buffer to use
  * @param size Size in bytes of the buffer
@@ -58,7 +58,7 @@ std::vector<uint8_t> sign(const std::string& filepath, Sha2::Type sha, EVP_PKEY*
  */
 bool verify(const std::vector<uint8_t>& signature, const void* buffer, size_t size, Sha2::Type sha, EVP_PKEY* pkey);
 
-/** 
+/**
  * @brief Verify the signature of a file using a key
  * @param signature Expected signature
  * @param filepath Path to the file

@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -266,7 +266,7 @@ class IOcppConfig
     // ISO 15118 PnC extensions
     //
 
-    /** @brief If this variable exists and has the value true, then the Charge Point can provide a contract certificate that it cannot 
+    /** @brief If this variable exists and has the value true, then the Charge Point can provide a contract certificate that it cannot
                validate to the Central System for validation as part of the Authorize.req */
     virtual bool centralContractValidationAllowed() const = 0;
 

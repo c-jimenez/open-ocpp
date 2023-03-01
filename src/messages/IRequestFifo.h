@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -39,7 +39,7 @@ class IRequestFifo
 
     /**
      * @brief Queue a request inside the FIFO
-     * @param connector_id Id of the connector related to the request 
+     * @param connector_id Id of the connector related to the request
      * @param action RPC action for the request
      * @param payload JSON payload of the request
      */

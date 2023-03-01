@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -170,7 +170,7 @@ bool ChargePointEventsHandlerStub::getLocalLimitationsSchedule(unsigned int     
 /** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
 bool ChargePointEventsHandlerStub::resetRequested(ocpp::types::ResetType reset_type)
 {
-    m_calls["transactionDeAuthorized"] = {{"reset_type", ResetTypeHelper.toString(reset_type)}};
+    m_calls["resetRequested"] = {{"reset_type", ResetTypeHelper.toString(reset_type)}};
     return callResult("resetRequested");
 }
 

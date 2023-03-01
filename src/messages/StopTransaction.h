@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -52,7 +52,7 @@ struct StopTransactionReq
     int transactionId;
     /** @brief Optional. This contains the reason why the transaction was stopped. MAY only
                be omitted when the Reason is "Local". */
-    ocpp::types::Reason reason;
+    ocpp::types::Optional<ocpp::types::Reason> reason;
     /** @brief Optional. This contains transaction usage details relevant for billing purposes */
     std::vector<ocpp::types::MeterValue> transactionData;
 };

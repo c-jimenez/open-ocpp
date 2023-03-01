@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -85,8 +85,14 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
     }
     else
     {
-        // Check connector id
-        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
+        // Check invalid connector id
+        if (request.connectorId.isSet() && !m_connectors.isValid(request.connectorId))
+        {
+            error_code      = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_message   = "Invalid connector id";
+            response.status = TriggerMessageStatus::Rejected;
+        }
+        else
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
@@ -99,11 +105,6 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
                 response.status = TriggerMessageStatus::Rejected;
                 LOG_WARNING << "Trigger message rejected : " << trigger_message;
             }
-        }
-        else
-        {
-            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
-            error_message = "Invalid connector id";
         }
     }
 
@@ -136,8 +137,14 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerM
     }
     else
     {
-        // Check connector id
-        if (!request.connectorId.isSet() || m_connectors.isValid(request.connectorId))
+        // Check invalid connector id
+        if (request.connectorId.isSet() && !m_connectors.isValid(request.connectorId))
+        {
+            error_code      = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
+            error_message   = "Invalid connector id";
+            response.status = TriggerMessageStatusEnumType::Rejected;
+        }
+        else
         {
             // Call handler
             if (it->second->onTriggerMessage(request.requestedMessage, request.connectorId))
@@ -150,11 +157,6 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerM
                 response.status = TriggerMessageStatusEnumType::Rejected;
                 LOG_WARNING << "Extended trigger message rejected : " << trigger_message;
             }
-        }
-        else
-        {
-            error_code    = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
-            error_message = "Invalid connector id";
         }
     }
 

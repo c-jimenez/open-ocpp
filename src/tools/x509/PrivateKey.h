@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -79,7 +79,7 @@ class PrivateKey
     /**
      * @brief Constructor to generate a key
      * @param type Type of key
-     * @param param Generation parameter : 
+     * @param param Generation parameter :
      *              \li For RSA : size of the key in bits
      *              \li For EC : Selected curve (Curve enum)
      * @param passphrase Passphrase to encrypt the key in PEM format (empty = no encryption)
@@ -157,13 +157,13 @@ class PrivateKey
      */
     unsigned int size() const { return m_size; }
 
-    /** 
+    /**
      * @brief Get the key algorithm
      * @return Key algorithm
      */
     const std::string& algo() const { return m_algo; }
 
-    /** 
+    /**
      * @brief Get the key algorithm parameter
      * @return Key algorithm parameter
      */

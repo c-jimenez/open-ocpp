@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -30,7 +30,7 @@ namespace x509
 namespace base64
 {
 
-/** 
+/**
  * @brief Encode an array of bytes in Base64
  * @param data Data to encode
  * @param size Size in bytes of the data to encode
@@ -38,7 +38,7 @@ namespace base64
  */
 std::string encode(const void* data, size_t size);
 
-/** 
+/**
  * @brief Decode a Base64 string into an array of bytes
  * @param b64_str  Base64 string to decode
  * @return Corresponding array of bytes or empty array if the string

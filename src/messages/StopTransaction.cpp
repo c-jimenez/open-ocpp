@@ -4,7 +4,7 @@ This file is part of OpenOCPP.
 
 OpenOCPP is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
 OpenOCPP is distributed in the hope that it will be useful,
@@ -57,7 +57,10 @@ bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "meterStop", data.meterStop);
     bool ret = extract(json, "timestamp", data.timestamp, error_message);
     extract(json, "transactionId", data.transactionId);
-    data.reason = ReasonHelper.fromString(json["reason"].GetString());
+    if (json.HasMember("reason"))
+    {
+        data.reason = ReasonHelper.fromString(json["reason"].GetString());
+    }
     if (json.HasMember("transactionData"))
     {
         const rapidjson::Value& transactionData = json["transactionData"];
@@ -84,7 +87,10 @@ bool StopTransactionReqConverter::toJson(const StopTransactionReq& data, rapidjs
     fill(json, "meterStop", data.meterStop);
     fill(json, "timestamp", data.timestamp);
     fill(json, "transactionId", data.transactionId);
-    fill(json, "reason", ReasonHelper.toString(data.reason));
+    if (data.reason.isSet())
+    {
+        fill(json, "reason", ReasonHelper.toString(data.reason));
+    }
     if (!data.transactionData.empty())
     {
         rapidjson::Value    transactionData(rapidjson::kArrayType);
