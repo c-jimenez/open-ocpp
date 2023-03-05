@@ -197,21 +197,34 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
     {
         if ((it->second & PARAM_WRITE) != 0)
         {
-            if ((it->second & PARAM_OCPP) != 0)
+            std::size_t key_is_interval = key.find("Interval");
+            if (key_is_interval != std::string::npos)
             {
-                m_config.set(OCPP_PARAMS, key, value);
+                std::size_t value_is_negative = key.find("-");
+                if(value_is_negative)
+                {
+                    ret = ConfigurationStatus::Rejected;
+                }
             }
-            else
+
+            if(ret != ConfigurationStatus::Rejected)
             {
-                m_config.set(STACK_PARAMS, key, value);
-            }
-            if ((it->second & PARAM_REBOOT) != 0)
-            {
-                ret = ConfigurationStatus::RebootRequired;
-            }
-            else
-            {
-                ret = ConfigurationStatus::Accepted;
+                if ((it->second & PARAM_OCPP) != 0)
+                {
+                    m_config.set(OCPP_PARAMS, key, value);
+                }
+                else
+                {
+                    m_config.set(STACK_PARAMS, key, value);
+                }
+                if ((it->second & PARAM_REBOOT) != 0)
+                {
+                    ret = ConfigurationStatus::RebootRequired;
+                }
+                else
+                {
+                    ret = ConfigurationStatus::Accepted;
+                }
             }
         }
         else
