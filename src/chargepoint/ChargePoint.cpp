@@ -367,6 +367,7 @@ bool ChargePoint::stop()
 
         // Stop connection
         ret = m_rpc_client->stop();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
         // Stop managers
         m_config_manager.reset();
