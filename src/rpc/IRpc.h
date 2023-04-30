@@ -77,6 +77,12 @@ class IRpc
      */
     virtual void registerSpy(ISpy& spy) = 0;
 
+    /**
+     * @brief Unregister a spy from the RPC exchanges
+     * @param spy Spy object
+     */
+    virtual void unregisterSpy(ISpy& spy) = 0;
+
     /** @brief Interface for the RPC listeners */
     class IListener
     {

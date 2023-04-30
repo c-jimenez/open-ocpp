@@ -260,7 +260,7 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @brief Remove a charge point from the connected charge points */
     void removeChargePoint(const std::string& identifier);
 
-  private:
+  protected:
     /** @brief Path to the V2G root CA */
     std::filesystem::path m_iso_v2g_root_ca;
     /** @brief Path to the MO root CA */

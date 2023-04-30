@@ -90,6 +90,19 @@ class LocalControllerConfig : public ocpp::config::ILocalControllerConfig
     /** @brief Disconnect from Charge Point on Central System disconnection */
     bool disconnectFromCpWhenCsDisconnected() const override { return getBool("DisconnectFromCpWhenCsDisconnected"); }
 
+    // Unused from Central System configuration interface
+
+    /** @brief Boot notification retry interval */
+    std::chrono::seconds bootNotificationRetryInterval() const override
+    {
+        return get<std::chrono::seconds>("BootNotificationRetryInterval");
+    }
+    /** @brief Heartbeat interval */
+    std::chrono::seconds heartbeatInterval() const override { return get<std::chrono::seconds>("HeartbeatInterval"); }
+    /** @brief If this variable set to true, then the Central System supports ISO 15118 plug and charge messages via the DataTransfer mechanism as
+               described in this application note. */
+    bool iso15118PnCEnabled() const override { return getBool("Iso15118PnCEnabled"); }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile& m_config;

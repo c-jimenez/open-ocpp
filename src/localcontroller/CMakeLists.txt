@@ -25,12 +25,5 @@ target_include_directories(localcontroller PRIVATE .
 
 # Dependencies
 target_link_libraries(localcontroller
-    config
-    database
-    messages
-    rpc
-    helpers
-    log
-    version
-    x509
+    centralsystem
 )

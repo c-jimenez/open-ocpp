@@ -26,7 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 #include <mutex>
 #include <thread>
-#include <vector>
+#include <unordered_set>
 
 namespace ocpp
 {
@@ -60,6 +60,9 @@ class RpcBase : public IRpc
 
     /** @copydoc void IRpc::registerSpy(ISpy&) */
     void registerSpy(IRpc::ISpy& spy) override;
+
+    /** @copydoc void IRpc::unregisterSpy(ISpy&) */
+    void unregisterSpy(IRpc::ISpy& spy) override;
 
   protected:
     /** @brief Start RPC operations */
@@ -124,7 +127,7 @@ class RpcBase : public IRpc
     /** @brief RPC listener */
     IRpc::IListener* m_rpc_listener;
     /** @brief RPC spies */
-    std::vector<IRpc::ISpy*> m_spies;
+    std::unordered_set<IRpc::ISpy*> m_spies;
     /** @brief Transaction id */
     int m_transaction_id;
     /** @brief Mutex for concurrent call access */

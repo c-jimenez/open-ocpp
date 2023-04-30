@@ -57,6 +57,15 @@ class RpcStub : public IRpc
     /** @copydoc void IRpc::registerSpy(ISpy&) */
     void registerSpy(IRpc::ISpy& spy) override { m_spy = &spy; }
 
+    /** @copydoc void IRpc::unregisterSpy(ISpy&) */
+    void unregisterSpy(IRpc::ISpy& spy) override
+    {
+        if (m_spy == &spy)
+        {
+            m_spy = nullptr;
+        }
+    }
+
     // API
 
     /** @brief Set the connectivity state */
