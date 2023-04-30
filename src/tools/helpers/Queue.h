@@ -131,7 +131,7 @@ class Queue
         if (m_queue.size() < MAX_SIZE)
         {
             // Add item
-            m_queue.push(item);
+            m_queue.push(std::move(item));
 
             // Wakeup waiting thread
             m_cond_var.notify_one();

@@ -358,6 +358,9 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
              << " - chargingRateUnit = "
              << (request.chargingRateUnit.isSet() ? ChargingRateUnitTypeHelper.toString(request.chargingRateUnit) : "not set");
 
+    // Lock profiles
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     // Prepare response
     response.status = GetCompositeScheduleStatus::Rejected;
 

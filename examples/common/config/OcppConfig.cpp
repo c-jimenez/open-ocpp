@@ -201,13 +201,13 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
             if (key_is_interval != std::string::npos)
             {
                 std::size_t value_is_negative = key.find("-");
-                if(value_is_negative)
+                if (value_is_negative)
                 {
                     ret = ConfigurationStatus::Rejected;
                 }
             }
 
-            if(ret != ConfigurationStatus::Rejected)
+            if (ret != ConfigurationStatus::Rejected)
             {
                 if ((it->second & PARAM_OCPP) != 0)
                 {
