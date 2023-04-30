@@ -25,6 +25,7 @@ SOFTWARE.
 #include "DefaultLocalControllerEventsHandler.h"
 #include "ILocalController.h"
 #include "LocalControllerDemoConfig.h"
+#include "WebsocketFactory.h"
 
 #include <cstring>
 #include <filesystem>
@@ -97,6 +98,10 @@ int main(int argc, char* argv[])
 
     // Event handler
     DefaultLocalControllerEventsHandler event_handler(config.stackConfig());
+
+    // Configure websocket pools => mandatory for local controller
+    ocpp::websockets::WebsocketFactory::setClientPoolCount(2u);
+    ocpp::websockets::WebsocketFactory::startClientPools();
 
     // Instanciate local controller
     std::unique_ptr<ILocalController> local_controller = ILocalController::create(config.stackConfig(), event_handler);

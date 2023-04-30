@@ -37,7 +37,7 @@ CentralSystemProxy::CentralSystemProxy(const std::string&                       
                                        const ocpp::config::ILocalControllerConfig& stack_config)
     : m_identifier(identifier),
       m_stack_config(stack_config),
-      m_websocket(ocpp::websockets::WebsocketFactory::newClient()),
+      m_websocket(ocpp::websockets::WebsocketFactory::newClientFromPool()),
       m_rpc(*m_websocket, "ocpp1.6"),
       m_messages_converter(messages_converter),
       m_msg_dispatcher(messages_validator),

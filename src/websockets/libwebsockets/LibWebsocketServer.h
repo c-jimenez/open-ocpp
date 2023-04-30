@@ -172,6 +172,8 @@ class LibWebsocketServer : public IWebsocketServer
 
     /** @brief Websocket context */
     struct lws_context* m_context;
+    /** @brief Websocket log context */
+    lws_log_cx_t m_logs_context;
     /** @brief Related wsi */
     struct lws* m_wsi;
     /** @brief Retry policy */

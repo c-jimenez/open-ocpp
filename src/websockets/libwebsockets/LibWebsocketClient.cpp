@@ -45,6 +45,7 @@ LibWebsocketClient::LibWebsocketClient()
       m_credentials(),
       m_connected(false),
       m_context(nullptr),
+      m_logs_context(),
       m_sched_list(),
       m_wsi(nullptr),
       m_retry_policy(),
@@ -85,6 +86,11 @@ bool LibWebsocketClient::connect(const std::string&        url,
             static const struct lws_protocols protocols[] = {
                 {"LibWebsocketClient", &LibWebsocketClient::eventCallback, 0, 0, 0, nullptr, 0}, {nullptr, nullptr, 0, 0, 0, nullptr, 0}};
 
+            // Initialize log context
+            memset(&m_logs_context, 0, sizeof(m_logs_context));
+            m_logs_context.u.emit    = LIBWEBSOCKET_LOG_OUTPUT_FN;
+            m_logs_context.lll_flags = LIBWEBSOCKET_LOG_FLAGS;
+
             // Fill context information
             struct lws_context_creation_info info;
             memset(&info, 0, sizeof info);
@@ -92,6 +98,7 @@ bool LibWebsocketClient::connect(const std::string&        url,
             info.port         = CONTEXT_PORT_NO_LISTEN;
             info.protocols    = protocols;
             info.timeout_secs = static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::seconds>(connect_timeout).count());
+            info.log_cx       = &m_logs_context;
             m_credentials     = credentials;
             if (m_url.protocol() == "wss")
             {

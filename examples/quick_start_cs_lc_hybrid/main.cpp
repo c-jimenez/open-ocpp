@@ -25,6 +25,7 @@ SOFTWARE.
 #include "HybridCentralSystemEventsHandler.h"
 #include "ICentralSystem.h"
 #include "LocalControllerDemoConfig.h"
+#include "WebsocketFactory.h"
 
 #include <cstring>
 #include <filesystem>
@@ -94,6 +95,10 @@ int main(int argc, char* argv[])
     std::filesystem::path path(working_dir);
     path /= "quick_start_cs_lc_hybrid.ini";
     LocalControllerDemoConfig config(path.string());
+
+    // Configure websocket pools => mandatory for local controller
+    ocpp::websockets::WebsocketFactory::setClientPoolCount(2u);
+    ocpp::websockets::WebsocketFactory::startClientPools();
 
     // Event handler
     HybridCentralSystemEventsHandler event_handler(config.stackConfig());

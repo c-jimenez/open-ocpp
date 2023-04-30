@@ -35,4 +35,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #pragma warning(pop)
 #endif // _MSC_VER
 
+/** @brief Log selection for the websocket library */
+#define LIBWEBSOCKET_LOG_FLAGS (LLL_ERR | LLL_WARN | LLL_NOTICE)
+
+/** @brief Log ouput function for the websocket library */
+#define LIBWEBSOCKET_LOG_OUTPUT_FN lwsl_emit_stderr
+
 #endif // OPENOCPP_WEBSOCKETS_H

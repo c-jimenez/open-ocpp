@@ -109,6 +109,8 @@ class LibWebsocketClient : public IWebsocketClient
 
     /** @brief Websocket context */
     struct lws_context* m_context;
+    /** @brief Websocket log context */
+    lws_log_cx_t m_logs_context;
     /** @brief Schedule list */
     lws_sorted_usec_list_t m_sched_list;
     /** @brief Related wsi */

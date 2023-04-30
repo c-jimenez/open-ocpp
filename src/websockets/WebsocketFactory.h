@@ -33,8 +33,19 @@ class WebsocketFactory
   public:
     /** @brief Instanciate a client websocket */
     static IWebsocketClient* newClient();
+    /** @brief Instanciate a client websocket from the pool (the pool must be started first) */
+    static IWebsocketClient* newClientFromPool();
     /** @brief Instanciate a server websocket */
     static IWebsocketServer* newServer();
+
+    /** @brief Set the number of client pools (can only be done once) */
+    static bool setClientPoolCount(size_t count);
+    /** @brief Start the client pools */
+    static bool startClientPools();
+    /** @brief Stop the client pools (all client communications must be terminated first)*/
+    static bool stopClientPools();
+    /** @brief Indicate to use the client pools even for new clients instanciated with the newClient API */
+    static void forceClientPoolsUsage();
 };
 
 } // namespace websockets
