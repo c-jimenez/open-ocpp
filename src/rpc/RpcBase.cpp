@@ -153,7 +153,13 @@ void RpcBase::registerListener(IRpc::IListener& listener)
 /** @copydoc void IRpc::registerSpy(ISpy&) */
 void RpcBase::registerSpy(IRpc::ISpy& spy)
 {
-    m_spies.push_back(&spy);
+    m_spies.insert(&spy);
+}
+
+/** @copydoc void IRpc::unregisterSpy(ISpy&) */
+void RpcBase::unregisterSpy(IRpc::ISpy& spy)
+{
+    m_spies.erase(&spy);
 }
 
 // RpcBase interface

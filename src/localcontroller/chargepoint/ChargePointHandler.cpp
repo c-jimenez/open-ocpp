@@ -56,35 +56,40 @@ ChargePointHandler::ChargePointHandler(const std::string&                       
       m_identifier(identifier),
       m_central_system(central_system)
 {
-    msg_dispatcher.registerHandler(AUTHORIZE_ACTION, *dynamic_cast<GenericMessageHandler<AuthorizeReq, AuthorizeConf>*>(this));
-    msg_dispatcher.registerHandler(BOOT_NOTIFICATION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<BootNotificationReq, BootNotificationConf>*>(this));
-    msg_dispatcher.registerHandler(DATA_TRANSFER_ACTION, *dynamic_cast<GenericMessageHandler<DataTransferReq, DataTransferConf>*>(this));
+    msg_dispatcher.registerHandler(AUTHORIZE_ACTION, *dynamic_cast<GenericMessageHandler<AuthorizeReq, AuthorizeConf>*>(this), true);
+    msg_dispatcher.registerHandler(
+        BOOT_NOTIFICATION_ACTION, *dynamic_cast<GenericMessageHandler<BootNotificationReq, BootNotificationConf>*>(this), true);
+    msg_dispatcher.registerHandler(
+        DATA_TRANSFER_ACTION, *dynamic_cast<GenericMessageHandler<DataTransferReq, DataTransferConf>*>(this), true);
     msg_dispatcher.registerHandler(
         DIAGNOSTIC_STATUS_NOTIFICATION_ACTION,
-        *dynamic_cast<GenericMessageHandler<DiagnosticsStatusNotificationReq, DiagnosticsStatusNotificationConf>*>(this));
+        *dynamic_cast<GenericMessageHandler<DiagnosticsStatusNotificationReq, DiagnosticsStatusNotificationConf>*>(this),
+        true);
     msg_dispatcher.registerHandler(
         FIRMWARE_STATUS_NOTIFICATION_ACTION,
-        *dynamic_cast<GenericMessageHandler<FirmwareStatusNotificationReq, FirmwareStatusNotificationConf>*>(this));
-    msg_dispatcher.registerHandler(HEARTBEAT_ACTION, *dynamic_cast<GenericMessageHandler<HeartbeatReq, HeartbeatConf>*>(this));
-    msg_dispatcher.registerHandler(METER_VALUES_ACTION, *dynamic_cast<GenericMessageHandler<MeterValuesReq, MeterValuesConf>*>(this));
-    msg_dispatcher.registerHandler(START_TRANSACTION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<StartTransactionReq, StartTransactionConf>*>(this));
-    msg_dispatcher.registerHandler(STATUS_NOTIFICATION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>*>(this));
-    msg_dispatcher.registerHandler(STOP_TRANSACTION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<StopTransactionReq, StopTransactionConf>*>(this));
-    msg_dispatcher.registerHandler(LOG_STATUS_NOTIFICATION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>*>(this));
+        *dynamic_cast<GenericMessageHandler<FirmwareStatusNotificationReq, FirmwareStatusNotificationConf>*>(this),
+        true);
+    msg_dispatcher.registerHandler(HEARTBEAT_ACTION, *dynamic_cast<GenericMessageHandler<HeartbeatReq, HeartbeatConf>*>(this), true);
+    msg_dispatcher.registerHandler(METER_VALUES_ACTION, *dynamic_cast<GenericMessageHandler<MeterValuesReq, MeterValuesConf>*>(this), true);
     msg_dispatcher.registerHandler(
-        SECURITY_EVENT_NOTIFICATION_ACTION,
-        *dynamic_cast<GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>*>(this));
-    msg_dispatcher.registerHandler(SIGN_CERTIFICATE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SignCertificateReq, SignCertificateConf>*>(this));
+        START_TRANSACTION_ACTION, *dynamic_cast<GenericMessageHandler<StartTransactionReq, StartTransactionConf>*>(this), true);
+    msg_dispatcher.registerHandler(
+        STATUS_NOTIFICATION_ACTION, *dynamic_cast<GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>*>(this), true);
+    msg_dispatcher.registerHandler(
+        STOP_TRANSACTION_ACTION, *dynamic_cast<GenericMessageHandler<StopTransactionReq, StopTransactionConf>*>(this), true);
+    msg_dispatcher.registerHandler(LOG_STATUS_NOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>*>(this),
+                                   true);
+    msg_dispatcher.registerHandler(SECURITY_EVENT_NOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>*>(this),
+                                   true);
+    msg_dispatcher.registerHandler(
+        SIGN_CERTIFICATE_ACTION, *dynamic_cast<GenericMessageHandler<SignCertificateReq, SignCertificateConf>*>(this), true);
 
     msg_dispatcher.registerHandler(
         SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION,
-        *dynamic_cast<GenericMessageHandler<SignedFirmwareStatusNotificationReq, SignedFirmwareStatusNotificationConf>*>(this));
+        *dynamic_cast<GenericMessageHandler<SignedFirmwareStatusNotificationReq, SignedFirmwareStatusNotificationConf>*>(this),
+        true);
 }
 /** @brief Destructor */
 ChargePointHandler::~ChargePointHandler() { }
