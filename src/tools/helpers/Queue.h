@@ -160,7 +160,7 @@ class Queue
             // Retrieve item
             if (m_enabled)
             {
-                item = m_queue.front();
+                item = std::move(m_queue.front());
                 m_queue.pop();
                 ret = true;
             }
