@@ -55,9 +55,6 @@ std::shared_ptr<IChargePointProxy> IChargePointProxy::createFrom(
 
         // Associate both
         centralsystem->setChargePointProxy(proxy);
-
-        // Release original instance
-        central_system_proxy.reset();
     }
 
     return proxy;
