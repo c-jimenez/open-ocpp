@@ -412,7 +412,7 @@ void MeterValuesManager::processTriggered(unsigned int connector_id)
             auto         measurands          = computeMeasurandList(meter_values, measurands_max_size);
             if (!measurands.empty())
             {
-                LOG_INFO << "Triggered mater values : " << meter_values;
+                LOG_INFO << "Triggered meter values : " << meter_values;
 
                 // Get connector
                 Connector* connector = m_connectors.getConnector(connector_id);
