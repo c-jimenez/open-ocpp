@@ -41,6 +41,7 @@ LibWebsocketServer::LibWebsocketServer()
       m_protocol(""),
       m_credentials(),
       m_context(nullptr),
+      m_logs_context(),
       m_wsi(nullptr),
       m_retry_policy(),
       m_protocols(),
@@ -90,11 +91,17 @@ bool LibWebsocketServer::start(const std::string&        url,
                               .jitter_percent = 0};
 #endif // _MSC_VER
 
+            // Initialize log context
+            memset(&m_logs_context, 0, sizeof(m_logs_context));
+            m_logs_context.u.emit    = LIBWEBSOCKET_LOG_OUTPUT_FN;
+            m_logs_context.lll_flags = LIBWEBSOCKET_LOG_FLAGS;
+
             // Fill context information
             struct lws_context_creation_info info;
             memset(&info, 0, sizeof info);
             info.options = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT | LWS_SERVER_OPTION_SKIP_SERVER_CANONICAL_NAME |
                            LWS_SERVER_OPTION_HTTP_HEADERS_SECURITY_BEST_PRACTICES_ENFORCE;
+            info.log_cx = &m_logs_context;
             if (m_url.port() != 0)
             {
                 info.port = static_cast<int>(m_url.port());
@@ -305,11 +312,14 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                         // BEGIN SNIPPET
 
                         // Did he send auth?
-                        int ml = lws_hdr_total_length(wsi, WSI_TOKEN_HTTP_AUTHORIZATION);
+                        bool authorized = false;
+                        int  ml         = lws_hdr_total_length(wsi, WSI_TOKEN_HTTP_AUTHORIZATION);
                         if (!ml)
                         {
-                            lwsl_err("missing basic authent header\n");
-                            ret = -1;
+                            lwsl_warn("missing basic authent header\n");
+
+                            // Notify connection without credentials
+                            authorized = server->m_listener->wsCheckCredentials(uri, "", "");
                         }
                         else
                         {
@@ -330,7 +340,9 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
 #endif // _MSC_VER
                                 {
                                     lwsl_err("auth missing basic: %s\n", b64);
-                                    ret = -1;
+
+                                    // Notify connection without credentials
+                                    authorized = server->m_listener->wsCheckCredentials(uri, "", "");
                                 }
                                 else
                                 {
@@ -356,38 +368,37 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                                             // Check credentials
                                             std::string username(plain, static_cast<size_t>(pcolon - plain));
                                             std::string password(pcolon + 1u);
-                                            if (!server->m_listener->wsCheckCredentials(uri, username, password))
-                                            {
-                                                // The following code snippet is from the lws_unauthorised_basic_auth() function in server.c file of libwebsockets
-                                                // BEGIN SNIPPET
-                                                unsigned char  frame_buffer[LWS_PRE + 1024u];
-                                                unsigned char* start = &frame_buffer[LWS_PRE];
-                                                unsigned char* p     = start;
-                                                unsigned char* end   = &frame_buffer[sizeof(frame_buffer) - 1u];
-                                                char           buf[64];
-                                                if (!lws_add_http_header_status(wsi, HTTP_STATUS_UNAUTHORIZED, &p, end))
-                                                {
-                                                    int n = lws_snprintf(buf, sizeof(buf), "Basic realm=\"Open OCPP\"");
-                                                    n     = lws_add_http_header_by_token(
-                                                        wsi, WSI_TOKEN_HTTP_WWW_AUTHENTICATE, (unsigned char*)buf, n, &p, end);
-                                                    n += lws_add_http_header_content_length(wsi, 0, &p, end);
-                                                    n += lws_finalize_http_header(wsi, &p, end);
-                                                    n += lws_write(
-                                                        wsi,
-                                                        start,
-                                                        lws_ptr_diff_size_t(p, start),
-                                                        static_cast<lws_write_protocol>(LWS_WRITE_HTTP_HEADERS | LWS_WRITE_H2_STREAM_END));
-                                                    n += lws_http_transaction_completed(wsi);
-                                                }
-                                                // END SNIPPET
-                                                ret = -1;
-                                            }
+                                            authorized = server->m_listener->wsCheckCredentials(uri, username, password);
                                         }
                                     }
                                 }
                             }
                         }
                         // END SNIPPET
+                        if (!authorized)
+                        {
+                            // The following code snippet is from the lws_unauthorised_basic_auth() function in server.c file of libwebsockets
+                            // BEGIN SNIPPET
+                            unsigned char  frame_buffer[LWS_PRE + 1024u];
+                            unsigned char* start = &frame_buffer[LWS_PRE];
+                            unsigned char* p     = start;
+                            unsigned char* end   = &frame_buffer[sizeof(frame_buffer) - 1u];
+                            char           buf[64];
+                            if (!lws_add_http_header_status(wsi, HTTP_STATUS_UNAUTHORIZED, &p, end))
+                            {
+                                int n = lws_snprintf(buf, sizeof(buf), "Basic realm=\"Open OCPP\"");
+                                n     = lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_WWW_AUTHENTICATE, (unsigned char*)buf, n, &p, end);
+                                n += lws_add_http_header_content_length(wsi, 0, &p, end);
+                                n += lws_finalize_http_header(wsi, &p, end);
+                                n += lws_write(wsi,
+                                               start,
+                                               lws_ptr_diff_size_t(p, start),
+                                               static_cast<lws_write_protocol>(LWS_WRITE_HTTP_HEADERS | LWS_WRITE_H2_STREAM_END));
+                                n += lws_http_transaction_completed(wsi);
+                            }
+                            // END SNIPPET
+                            ret = -1;
+                        }
                     }
                 }
                 else

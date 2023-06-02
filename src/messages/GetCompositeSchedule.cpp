@@ -78,7 +78,7 @@ bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&   json,
     if (json.HasMember("chargingSchedule"))
     {
         ChargingScheduleConverter charging_schedule_converter;
-        ret = charging_schedule_converter.fromJson(json[""], data.chargingSchedule.value(), error_code, error_message);
+        ret = charging_schedule_converter.fromJson(json["chargingSchedule"], data.chargingSchedule.value(), error_code, error_message);
     }
     if (!ret && error_code.empty())
     {
