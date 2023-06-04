@@ -93,9 +93,9 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
     std::shared_ptr<ocpp::helpers::WorkerThreadPool> m_worker_pool;
 
     /** @brief Database */
-    ocpp::database::Database m_database;
+    std::unique_ptr<ocpp::database::Database> m_database;
     /** @brief Internal configuration manager */
-    ocpp::config::InternalConfigManager m_internal_config;
+    std::unique_ptr<ocpp::config::InternalConfigManager> m_internal_config;
 
     /** @brief Messages converter */
     ocpp::messages::MessagesConverter m_messages_converter;
@@ -110,7 +110,7 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
     std::unique_ptr<ocpp::rpc::RpcPool> m_rpc_pool;
 
     /** @brief Uptime timer */
-    ocpp::helpers::Timer m_uptime_timer;
+    std::unique_ptr<ocpp::helpers::Timer> m_uptime_timer;
     /** @brief Uptime in seconds */
     unsigned int m_uptime;
     /** @brief Total uptime in seconds */
