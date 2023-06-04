@@ -106,6 +106,8 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
     std::unique_ptr<ocpp::websockets::IWebsocketServer> m_ws_server;
     /** @brief RPC server */
     std::unique_ptr<ocpp::rpc::RpcServer> m_rpc_server;
+    /** @brief RPC pool */
+    std::unique_ptr<ocpp::rpc::RpcPool> m_rpc_pool;
 
     /** @brief Uptime timer */
     ocpp::helpers::Timer m_uptime_timer;

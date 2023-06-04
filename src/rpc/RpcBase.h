@@ -33,12 +33,14 @@ namespace ocpp
 namespace rpc
 {
 
+class RpcPool;
+
 /** @brief Base class for RPC implementations */
 class RpcBase : public IRpc
 {
   public:
     /** @brief Constructor */
-    RpcBase();
+    RpcBase(RpcPool* pool = nullptr);
 
     /** @brief Destructor */
     virtual ~RpcBase();
@@ -63,6 +65,59 @@ class RpcBase : public IRpc
 
     /** @copydoc void IRpc::unregisterSpy(ISpy&) */
     void unregisterSpy(IRpc::ISpy& spy) override;
+
+    /** @brief RPC message owner */
+    struct RpcMessageOwner
+    {
+        /** @brief Constructor */
+        RpcMessageOwner(RpcBase& _rpc_base) : rpc_base(_rpc_base), is_operational(true) { }
+        /** @brief Lock associated to the owner */
+        std::mutex lock;
+        /** @brief Underlying RPC handler */
+        RpcBase& rpc_base;
+        /** @brief Indicate if the owner is operational to handle the message */
+        bool is_operational;
+    };
+
+    /** @brief RPC message */
+    struct RpcMessage
+    {
+        RpcMessage(const std::string& _unique_id, const char* _action, rapidjson::Document& _rpc_frame, rapidjson::Value& _payload)
+            : unique_id(_unique_id), action(_action), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
+        {
+            payload.Swap(_payload);
+        }
+        RpcMessage(const std::string&   _unique_id,
+                   rapidjson::Document& _rpc_frame,
+                   rapidjson::Value&    _payload,
+                   rapidjson::Value*    _error   = nullptr,
+                   rapidjson::Value*    _message = nullptr)
+            : unique_id(_unique_id), action(), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
+        {
+            payload.Swap(_payload);
+            if (_error)
+            {
+                error.Swap(*_error);
+            }
+            if (_message)
+            {
+                message.Swap(*_message);
+            }
+        }
+        const std::string              unique_id;
+        const std::string              action;
+        rapidjson::Document            rpc_frame;
+        rapidjson::Value               payload;
+        rapidjson::Value               error;
+        rapidjson::Value               message;
+        std::weak_ptr<RpcMessageOwner> owner;
+    };
+
+    /** 
+     * @brief Process an incoming RPC request 
+     * @param rpc_message RPC request to process
+     */
+    void processIncomingRequest(std::shared_ptr<RpcMessage>& rpc_message);
 
   protected:
     /** @brief Start RPC operations */
@@ -91,39 +146,8 @@ class RpcBase : public IRpc
         INVALID    = 5
     };
 
-    /** @brief RPC message */
-    struct RpcMessage
-    {
-        RpcMessage(const std::string& _unique_id, const char* _action, rapidjson::Document& _rpc_frame, rapidjson::Value& _payload)
-            : unique_id(_unique_id), action(_action), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
-        {
-            payload.Swap(_payload);
-        }
-        RpcMessage(const std::string&   _unique_id,
-                   rapidjson::Document& _rpc_frame,
-                   rapidjson::Value&    _payload,
-                   rapidjson::Value*    _error   = nullptr,
-                   rapidjson::Value*    _message = nullptr)
-            : unique_id(_unique_id), action(), rpc_frame(std::move(_rpc_frame)), payload(), error(), message()
-        {
-            payload.Swap(_payload);
-            if (_error)
-            {
-                error.Swap(*_error);
-            }
-            if (_message)
-            {
-                message.Swap(*_message);
-            }
-        }
-        const std::string   unique_id;
-        const std::string   action;
-        rapidjson::Document rpc_frame;
-        rapidjson::Value    payload;
-        rapidjson::Value    error;
-        rapidjson::Value    message;
-    };
-
+    /** @brief Associated RPC pool */
+    RpcPool* m_pool;
     /** @brief RPC listener */
     IRpc::IListener* m_rpc_listener;
     /** @brief RPC spies */
@@ -138,6 +162,8 @@ class RpcBase : public IRpc
     ocpp::helpers::Queue<std::shared_ptr<RpcMessage>> m_results_queue;
     /** @brief Reception thread */
     std::thread* m_rx_thread;
+    /** @brief RPC message owner */
+    std::shared_ptr<RpcMessageOwner> m_rpc_owner;
 
     /** @brief Send a message through the websocket connection */
     bool send(const std::string& msg);

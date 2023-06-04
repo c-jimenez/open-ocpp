@@ -37,10 +37,16 @@ HybridCentralSystemEventsHandler::HybridCentralSystemEventsHandler(LocalControll
                                                                    bool                   set_pending_status)
     : DefaultCentralSystemEventsHandler(iso_v2g_root_ca, iso_mo_root_ca, set_pending_status), m_config(config)
 {
+    // Start RPC pool
+    m_rpc_pool.start(config.incomingRequestsFromCsThreadPoolSize());
 }
 
 /** @brief Destructor */
-HybridCentralSystemEventsHandler::~HybridCentralSystemEventsHandler() { }
+HybridCentralSystemEventsHandler::~HybridCentralSystemEventsHandler()
+{
+    // Stop RPC pool
+    m_rpc_pool.stop();
+}
 
 // ICentralSystemEventsHandler interface
 
@@ -58,7 +64,7 @@ void HybridCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocpp
             if (ocpp::helpers::endsWith(chargepoint->identifier(), "lc"))
             {
                 // Create Local Controller proxy
-                auto proxy = ocpp::localcontroller::IChargePointProxy::createFrom(chargepoint, m_config);
+                auto proxy = ocpp::localcontroller::IChargePointProxy::createFrom(chargepoint, m_config, m_rpc_pool);
 
                 // Open connection to the Central System
                 ocpp::websockets::IWebsocketClient::Credentials credentials;

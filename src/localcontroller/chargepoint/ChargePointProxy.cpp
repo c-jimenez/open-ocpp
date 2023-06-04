@@ -33,7 +33,8 @@ namespace localcontroller
 /** @brief Instanciate local controller's charge point proxy from a central system's charge point proxy */
 std::shared_ptr<IChargePointProxy> IChargePointProxy::createFrom(
     std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>& central_system_proxy,
-    const ocpp::config::ILocalControllerConfig&                         stack_config)
+    const ocpp::config::ILocalControllerConfig&                         stack_config,
+    ocpp::rpc::RpcPool&                                                 rpc_pool)
 {
     std::shared_ptr<IChargePointProxy> proxy;
 
@@ -42,8 +43,8 @@ std::shared_ptr<IChargePointProxy> IChargePointProxy::createFrom(
     if (cs_proxy)
     {
         // Create associated Central System proxy
-        CentralSystemProxy* centralsystem =
-            new CentralSystemProxy(cs_proxy->identifier(), cs_proxy->messagesValidator(), cs_proxy->messagesConverter(), stack_config);
+        CentralSystemProxy* centralsystem = new CentralSystemProxy(
+            cs_proxy->identifier(), cs_proxy->messagesValidator(), cs_proxy->messagesConverter(), stack_config, rpc_pool);
 
         // Create the proxy
         proxy = std::shared_ptr<IChargePointProxy>(new ChargePointProxy(cs_proxy->identifier(),

@@ -193,7 +193,10 @@ bool CentralSystem::start()
             credentials.encoded_pem_certificates                  = false;
 
             // Start listening
-            ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
+            ret = m_rpc_server->start(m_stack_config.listenUrl(),
+                                      credentials,
+                                      m_stack_config.webSocketPingInterval(),
+                                      m_stack_config.incomingRequestsFromCpThreadPoolSize());
         }
         else
         {

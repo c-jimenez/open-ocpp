@@ -28,6 +28,7 @@ SOFTWARE.
 #include "DefaultCentralSystemEventsHandler.h"
 #include "IChargePointProxy.h"
 #include "LocalControllerConfig.h"
+#include "RpcPool.h"
 
 /** @brief Hybrid central system event handlers implementation for the examples */
 class HybridCentralSystemEventsHandler : public DefaultCentralSystemEventsHandler
@@ -92,6 +93,8 @@ class HybridCentralSystemEventsHandler : public DefaultCentralSystemEventsHandle
   private:
     /** @brief Configuration */
     LocalControllerConfig& m_config;
+    /** @brief RPC pool*/
+    ocpp::rpc::RpcPool m_rpc_pool;
     /** @brief Forwared charge points */
     std::map<std::string, std::shared_ptr<LocalControllerProxyEventsHandler>> m_fowarded_chargepoints;
 };

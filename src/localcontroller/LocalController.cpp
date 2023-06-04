@@ -73,6 +73,7 @@ LocalController::LocalController(const ocpp::config::ILocalControllerConfig&    
       m_messages_validator(),
       m_ws_server(),
       m_rpc_server(),
+      m_rpc_pool(),
       m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
       m_uptime(0),
       m_total_uptime(0)
@@ -180,6 +181,7 @@ bool LocalController::start()
             m_ws_server  = std::unique_ptr<ocpp::websockets::IWebsocketServer>(ocpp::websockets::WebsocketFactory::newServer());
             m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
             m_rpc_server->registerServerListener(*this);
+            m_rpc_pool = std::make_unique<ocpp::rpc::RpcPool>();
 
             // Configure websocket link
             ocpp::websockets::IWebsocketServer::Credentials credentials;
@@ -195,7 +197,11 @@ bool LocalController::start()
             credentials.encoded_pem_certificates                  = false;
 
             // Start listening
-            ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
+            ret = m_rpc_pool->start(m_stack_config.incomingRequestsFromCsThreadPoolSize());
+            ret = ret && m_rpc_server->start(m_stack_config.listenUrl(),
+                                             credentials,
+                                             m_stack_config.webSocketPingInterval(),
+                                             m_stack_config.incomingRequestsFromCpThreadPoolSize());
         }
         else
         {
@@ -226,10 +232,12 @@ bool LocalController::stop()
 
         // Stop connection
         ret = m_rpc_server->stop();
+        ret = ret && m_rpc_pool->stop();
 
         // Free resources
         m_ws_server.reset();
         m_rpc_server.reset();
+        m_rpc_pool.reset();
 
         // Close database
         m_database.close();
@@ -271,7 +279,8 @@ void LocalController::rpcClientConnected(const std::string& chargepoint_id, std:
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
 
     // Instanciate proxys
-    CentralSystemProxy* centralsystem = new CentralSystemProxy(chargepoint_id, m_messages_validator, m_messages_converter, m_stack_config);
+    CentralSystemProxy* centralsystem =
+        new CentralSystemProxy(chargepoint_id, m_messages_validator, m_messages_converter, m_stack_config, *m_rpc_pool);
     std::shared_ptr<IChargePointProxy> chargepoint(new ChargePointProxy(chargepoint_id,
                                                                         client,
                                                                         m_messages_validator,

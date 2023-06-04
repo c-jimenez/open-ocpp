@@ -27,7 +27,7 @@ namespace rpc
 
 /** @brief Constructor */
 RpcServer::RpcServer(ocpp::websockets::IWebsocketServer& websocket, const std::string& protocol)
-    : m_protocol(protocol), m_websocket(websocket), m_listener(nullptr), m_started(false)
+    : m_protocol(protocol), m_websocket(websocket), m_pool(), m_listener(nullptr), m_started(false)
 {
     m_websocket.registerListener(*this);
 }
@@ -41,7 +41,8 @@ RpcServer::~RpcServer()
 /** @brief Start the server */
 bool RpcServer::start(const std::string&                                     url,
                       const ocpp::websockets::IWebsocketServer::Credentials& credentials,
-                      std::chrono::milliseconds                              ping_interval)
+                      std::chrono::milliseconds                              ping_interval,
+                      unsigned int                                           incoming_req_thread_pool_size)
 
 {
     bool ret = false;
@@ -49,8 +50,11 @@ bool RpcServer::start(const std::string&                                     url
     // Check if already started
     if (!m_started && m_listener)
     {
+        // Start the pool
+        ret = m_pool.start(incoming_req_thread_pool_size);
+
         // Start websocket server
-        ret = m_websocket.start(url, m_protocol, credentials, ping_interval);
+        ret = ret && m_websocket.start(url, m_protocol, credentials, ping_interval);
         if (ret)
         {
             m_started = true;
@@ -69,7 +73,11 @@ bool RpcServer::stop()
     if (m_started)
     {
         // Disconnect from websocket
-        ret       = m_websocket.stop();
+        ret = m_websocket.stop();
+
+        // Stop the pool
+        ret = m_pool.stop() && ret;
+
         m_started = false;
     }
 
@@ -109,7 +117,7 @@ void RpcServer::wsClientConnected(const char* uri, std::shared_ptr<ocpp::websock
     std::string           chargepoint_id = uri_path.filename().string();
 
     // Instanciate client
-    std::shared_ptr<Client> rpc_client(new Client(client));
+    std::shared_ptr<Client> rpc_client(new Client(client, m_pool));
 
     // Notify connection
     m_listener->rpcClientConnected(chargepoint_id, rpc_client);
@@ -122,7 +130,8 @@ void RpcServer::wsServerError()
 }
 
 /** @brief Constructor */
-RpcServer::Client::Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket) : RpcBase(), m_websocket(websocket)
+RpcServer::Client::Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket, RpcPool& pool)
+    : RpcBase(&pool), m_websocket(websocket)
 {
     // Start processing
     m_websocket->registerListener(*this);
