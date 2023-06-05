@@ -101,7 +101,11 @@ target_link_libraries(open-ocpp-dynamic
     ws
     websockets
 )
-set_target_properties(open-ocpp-dynamic PROPERTIES OUTPUT_NAME "open-ocpp")
+set_target_properties(open-ocpp-dynamic PROPERTIES
+    OUTPUT_NAME "open-ocpp"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+)
 
 # Install commands
 include(GNUInstallDirs)
