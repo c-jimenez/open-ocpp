@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 2.6 protocol"
+project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
                  VERSION 1.2.0
 )
 
