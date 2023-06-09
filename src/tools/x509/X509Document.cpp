@@ -174,10 +174,10 @@ std::string X509Document::convertX509Name(const void* px509_name)
 }
 
 /** @brief Convert a list of strings in GENERAL_NAMES format to a standard vector of strings representation */
-std::vector<std::string> X509Document::convertGeneralNames(const void* pgeneral_names)
+std::vector<std::string> X509Document::convertGeneralNames(void* pgeneral_names)
 {
     std::vector<std::string> names;
-    const STACK_OF(GENERAL_NAME)* general_names = reinterpret_cast<const STACK_OF(GENERAL_NAME)*>(pgeneral_names);
+    STACK_OF(GENERAL_NAME)* general_names = reinterpret_cast<STACK_OF(GENERAL_NAME)*>(pgeneral_names);
 
     int names_count = sk_GENERAL_NAME_num(general_names);
     for (int i = 0; i < names_count; i++)
@@ -215,6 +215,8 @@ std::vector<std::string> X509Document::convertGeneralNames(const void* pgeneral_
         {
         }
     }
+
+    sk_GENERAL_NAME_pop_free(general_names, GENERAL_NAME_free);
 
     return names;
 }
