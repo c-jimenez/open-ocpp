@@ -144,7 +144,7 @@ void LibWebsocketClientPool::process()
 
     // Dummy vhost to handle context related events
     struct lws_protocols             protocols[] = {{"LibWebsocketClientPool", &LibWebsocketClientPool::eventCallback, 0, 0, 0, this, 0},
-                                                    LWS_PROTOCOL_LIST_TERM};
+                                        LWS_PROTOCOL_LIST_TERM};
     struct lws_context_creation_info vhost_info;
     memset(&vhost_info, 0, sizeof(vhost_info));
     vhost_info.protocols = protocols;

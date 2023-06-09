@@ -35,6 +35,8 @@ class ILocalControllerConfig : public ICentralSystemConfig
 
     // Behavior
 
+    /** @brief Size of the thread pool to handle incoming requests from the Central System */
+    virtual unsigned int incomingRequestsFromCsThreadPoolSize() const = 0;
     /** @brief Disconnect from Charge Point on Central System disconnection */
     virtual bool disconnectFromCpWhenCsDisconnected() const = 0;
 

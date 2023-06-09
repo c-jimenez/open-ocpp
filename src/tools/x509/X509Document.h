@@ -232,7 +232,7 @@ class X509Document
     /** @brief Convert a string in X509_NAME format to a standard string representation */
     static std::string convertX509Name(const void* px509_name);
     /** @brief Convert a list of strings in GENERAL_NAMES format to a standard vector of strings representation */
-    static std::vector<std::string> convertGeneralNames(const void* pgeneral_names);
+    static std::vector<std::string> convertGeneralNames(void* pgeneral_names);
     /** @brief Parse a subject's string */
     static void parseSubjectString(const void* px509_name, Subject& subject);
 };

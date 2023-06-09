@@ -15,6 +15,9 @@ PARALLEL_BUILD?=-j 4
 # Build type can be either Debug or Release
 BUILD_TYPE?=Release
 
+# Logger configuration
+EXTERNAL_LOGGER?=OFF
+
 # Default target
 default: gcc
 
@@ -66,7 +69,7 @@ install-gcc: gcc
 tests-install-gcc: gcc install-gcc
 	@echo "Testing Open OCPP library installation with gcc..."
 	@mkdir -p $(GCC_NATIVE_BUILD_DIR)/tests/deploy
-	@cd $(GCC_NATIVE_BUILD_DIR)/tests/deploy && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
+	@cd $(GCC_NATIVE_BUILD_DIR)/tests/deploy && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D EXTERNAL_LOGGER=$(EXTERNAL_LOGGER) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
 	@make --silent -C $(GCC_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
 	@make --silent -C $(GCC_NATIVE_BUILD_DIR)/tests/deploy test ARGS=--output-on-failure
 	@echo "gcc build installation checked!"
@@ -75,7 +78,7 @@ $(GCC_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating gcc makefiles..."
 	@mkdir -p $(GCC_NATIVE_BUILD_DIR)
 	@mkdir -p $(GCC_NATIVE_BIN_DIR)
-	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
+	@cd $(GCC_NATIVE_BUILD_DIR) && export CC=gcc && export CXX=g++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D BIN_DIR=$(GCC_NATIVE_BIN_DIR) -D EXTERNAL_LOGGER=$(EXTERNAL_LOGGER) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
 
 
 # Targets for clang build
@@ -104,7 +107,7 @@ install-clang: clang
 tests-install-clang: clang install-clang
 	@echo "Testing Open OCPP library installation with clang..."
 	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)/tests/deploy
-	@cd $(CLANG_NATIVE_BUILD_DIR)/tests/deploy && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
+	@cd $(CLANG_NATIVE_BUILD_DIR)/tests/deploy && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) -D EXTERNAL_LOGGER=$(EXTERNAL_LOGGER) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)/tests/deploy
 	@make --silent -C $(CLANG_NATIVE_BUILD_DIR)/tests/deploy $(VERBOSE) $(PARALLEL_BUILD)
 	@make --silent -C $(CLANG_NATIVE_BUILD_DIR)/tests/deploy test ARGS=--output-on-failure
 	@echo "clang build installation checked!"
@@ -113,4 +116,4 @@ $(CLANG_NATIVE_BUILD_DIR)/Makefile:
 	@echo "Generating clang makefiles..."
 	@mkdir -p $(CLANG_NATIVE_BUILD_DIR)
 	@mkdir -p $(CLANG_NATIVE_BIN_DIR)
-	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)
+	@cd $(CLANG_NATIVE_BUILD_DIR) && export CC=clang && export CXX=clang++ && cmake -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) -D _CMAKE_TOOLCHAIN_PREFIX=llvm- -D BIN_DIR=$(CLANG_NATIVE_BIN_DIR) -D EXTERNAL_LOGGER=$(EXTERNAL_LOGGER) $(CMAKE_INSTALL_PREFIX) $(ROOT_DIR)

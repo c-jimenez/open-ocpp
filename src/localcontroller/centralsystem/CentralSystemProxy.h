@@ -33,6 +33,10 @@ namespace config
 {
 class ILocalControllerConfig;
 } // namespace config
+namespace rpc
+{
+class RpcPool;
+} // namespace rpc
 
 namespace localcontroller
 {
@@ -50,11 +54,13 @@ class CentralSystemProxy : public ICentralSystemProxy,
      * @param messages_validator JSON schemas needed to validate payloads
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param stack_config Stack configuration
+     * @param rpc_pool RPC pool
      */
     CentralSystemProxy(const std::string&                          identifier,
                        const ocpp::messages::MessagesValidator&    messages_validator,
                        ocpp::messages::MessagesConverter&          messages_converter,
-                       const ocpp::config::ILocalControllerConfig& stack_config);
+                       const ocpp::config::ILocalControllerConfig& stack_config,
+                       ocpp::rpc::RpcPool&                         rpc_pool);
 
     /** @brief Destructor */
     virtual ~CentralSystemProxy();

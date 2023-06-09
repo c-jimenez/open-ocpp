@@ -8,6 +8,7 @@ add_library(rpc OBJECT
     RpcBase.cpp
     RpcClient.cpp
     RpcServer.cpp
+    RpcPool.cpp
 )
 
 # Exported includes

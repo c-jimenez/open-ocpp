@@ -29,8 +29,8 @@ namespace rpc
 {
 
 /** @brief Constructor */
-RpcClient::RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol)
-    : RpcBase(), m_protocol(protocol), m_websocket(websocket), m_listener(nullptr), m_started(false), m_stop_mutex()
+RpcClient::RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol, RpcPool* pool)
+    : RpcBase(pool), m_protocol(protocol), m_websocket(websocket), m_listener(nullptr), m_started(false), m_stop_mutex()
 {
     m_websocket.registerListener(*this);
 }

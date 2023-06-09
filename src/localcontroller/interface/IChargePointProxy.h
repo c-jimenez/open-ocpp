@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ICentralSystem.h"
 #include "ILocalControllerConfig.h"
+#include "RpcPool.h"
 
 #include "CancelReservation.h"
 #include "CertificateSigned.h"
@@ -69,10 +70,12 @@ class IChargePointProxy
      * @brief Instanciate local controller's charge point proxy from a central system's charge point proxy
      * @param central_system_proxy Central system's charge point proxy
      * @param stack_config Stack configuration for local controller
+     * @param rpc_pool RPC pool
      */
     static std::shared_ptr<IChargePointProxy> createFrom(
         std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>& central_system_proxy,
-        const ocpp::config::ILocalControllerConfig&                         stack_config);
+        const ocpp::config::ILocalControllerConfig&                         stack_config,
+        ocpp::rpc::RpcPool&                                                 rpc_pool);
 
     /**
      * @brief Get the IP address of the charge point

@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IWebsocketServer.h"
 #include "Queue.h"
 #include "RpcBase.h"
+#include "RpcPool.h"
 
 namespace ocpp
 {
@@ -47,11 +48,13 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
      * @param url URL to listen to
      * @param credentials Credentials to use
      * @param ping_interval Interval between 2 websocket PING messages when the socket is idle
+     * @param incoming_req_thread_pool_size Size of the thread pool to handle incoming requests from the clients 
      * @return true if the server has been started, false otherwise
      */
     bool start(const std::string&                                     url,
                const ocpp::websockets::IWebsocketServer::Credentials& credentials,
-               std::chrono::milliseconds                              ping_interval = std::chrono::seconds(5));
+               std::chrono::milliseconds                              ping_interval                 = std::chrono::seconds(5),
+               unsigned int                                           incoming_req_thread_pool_size = 10u);
 
     /**
      * @brief Stop the server
@@ -117,7 +120,7 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
     {
       public:
         /** @brief Constructor */
-        Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket);
+        Client(std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> websocket, RpcPool& pool);
         /** @brief Destructor */
         virtual ~Client();
 
@@ -164,6 +167,8 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
     const std::string m_protocol;
     /** @brief Websocket connection */
     ocpp::websockets::IWebsocketServer& m_websocket;
+    /** @brief RPC message handler pool */
+    RpcPool m_pool;
     /** @brief Listener */
     IListener* m_listener;
     /** @brief Started state */

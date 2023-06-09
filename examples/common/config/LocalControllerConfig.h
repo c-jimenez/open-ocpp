@@ -87,6 +87,16 @@ class LocalControllerConfig : public ocpp::config::ILocalControllerConfig
 
     // Behavior
 
+    /** @brief Size of the thread pool to handle incoming requests from the Charge Points */
+    unsigned int incomingRequestsFromCpThreadPoolSize() const override
+    {
+        return get<unsigned int>("IncomingRequestsFromCpThreadPoolSize");
+    };
+    /** @brief Size of the thread pool to handle incoming requests from the Central System */
+    unsigned int incomingRequestsFromCsThreadPoolSize() const override
+    {
+        return get<unsigned int>("IncomingRequestsFromCsThreadPoolSize");
+    };
     /** @brief Disconnect from Charge Point on Central System disconnection */
     bool disconnectFromCpWhenCsDisconnected() const override { return getBool("DisconnectFromCpWhenCsDisconnected"); }
 
