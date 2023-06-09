@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPENOCPP_CHARGEPOINTPROXY_H
-#define OPENOCPP_CHARGEPOINTPROXY_H
+#ifndef OPENOCPP_CS_CHARGEPOINTPROXY_H
+#define OPENOCPP_CS_CHARGEPOINTPROXY_H
 
 #include "ChargePointHandler.h"
 #include "GenericMessageSender.h"
@@ -309,6 +309,17 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @copydoc void IRpc::ISpy::rcpMessageSent(const std::string& msg) */
     void rcpMessageSent(const std::string& msg) override;
 
+    // Accessors
+
+    /** @brief RPC connection */
+    std::shared_ptr<ocpp::rpc::RpcServer::Client>& rpcClient() { return m_rpc; }
+
+    /** @brief Messages validator */
+    const ocpp::messages::MessagesValidator& messagesValidator() { return m_messages_validator; }
+
+    /** @brief Messages converters */
+    ocpp::messages::MessagesConverter& messagesConverter() { return m_messages_converter; }
+
   private:
     /** @brief Central System instance associated to the charge point */
     ICentralSystem& m_central_system;
@@ -322,8 +333,10 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     ocpp::messages::GenericMessageSender m_msg_sender;
     /** @brief Request handler */
     ChargePointHandler m_handler;
+    /** @brief Messages validator */
+    const ocpp::messages::MessagesValidator& m_messages_validator;
     /** @brief Messages converters */
-    const ocpp::messages::MessagesConverter& m_messages_converter;
+    ocpp::messages::MessagesConverter& m_messages_converter;
     /** @brief User request handler */
     IChargePointRequestHandler* m_user_handler;
 
@@ -400,4 +413,4 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
 } // namespace centralsystem
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGEPOINTPROXY_H
+#endif // OPENOCPP_CS_CHARGEPOINTPROXY_H

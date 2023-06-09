@@ -68,34 +68,44 @@ LocalController::LocalController(const ocpp::config::ILocalControllerConfig&    
       m_timer_pool(timer_pool),
       m_worker_pool(worker_pool),
       m_database(),
-      m_internal_config(m_database),
+      m_internal_config(),
       m_messages_converter(),
       m_messages_validator(),
       m_ws_server(),
       m_rpc_server(),
-      m_uptime_timer(*m_timer_pool.get(), "Uptime timer"),
+      m_rpc_pool(),
+      m_uptime_timer(),
       m_uptime(0),
       m_total_uptime(0)
 {
     // Open database
-    if (m_database.open(m_stack_config.databasePath()))
+    if (!m_stack_config.databasePath().empty())
     {
-        // Register logger
-        if (m_stack_config.logMaxEntriesCount() != 0)
+        m_database        = std::make_unique<ocpp::database::Database>();
+        m_internal_config = std::make_unique<ocpp::config::InternalConfigManager>(*m_database);
+        if (m_database->open(m_stack_config.databasePath()))
         {
-            ocpp::log::Logger::registerDefaultLogger(m_database, m_stack_config.logMaxEntriesCount());
-        }
+            // Register logger
+            if (m_stack_config.logMaxEntriesCount() != 0)
+            {
+                ocpp::log::Logger::registerDefaultLogger(*m_database, m_stack_config.logMaxEntriesCount());
+            }
 
-        // Initialize the database
-        initDatabase();
-    }
-    else
-    {
-        LOG_ERROR << "Unable to open database";
+            // Initialize the database
+            initDatabase();
+        }
+        else
+        {
+            LOG_ERROR << "Unable to open database";
+        }
     }
 
     // Uptime timer
-    m_uptime_timer.setCallback(std::bind(&LocalController::processUptime, this));
+    if (m_timer_pool && m_worker_pool && m_internal_config)
+    {
+        m_uptime_timer = std::make_unique<ocpp::helpers::Timer>(*m_timer_pool, "Uptime timer");
+        m_uptime_timer->setCallback(std::bind(&LocalController::processUptime, this));
+    }
 
     // Random numbers
     std::srand(static_cast<unsigned int>(time(nullptr)));
@@ -124,32 +134,35 @@ bool LocalController::resetData()
         }
 
         // Close database to invalid existing connexions
-        m_database.close();
-
-        // Delete database
-        if (std::filesystem::remove(m_stack_config.databasePath()))
+        if (m_database)
         {
-            // Open database
-            if (m_database.open(m_stack_config.databasePath()))
-            {
-                // Register logger
-                if (m_stack_config.logMaxEntriesCount() != 0)
-                {
-                    ocpp::log::Logger::registerDefaultLogger(m_database, m_stack_config.logMaxEntriesCount());
-                }
+            m_database->close();
 
-                // Re-initialize with default values
-                m_total_uptime = 0;
-                initDatabase();
+            // Delete database
+            if (std::filesystem::remove(m_stack_config.databasePath()))
+            {
+                // Open database
+                if (m_database->open(m_stack_config.databasePath()))
+                {
+                    // Register logger
+                    if (m_stack_config.logMaxEntriesCount() != 0)
+                    {
+                        ocpp::log::Logger::registerDefaultLogger(*m_database, m_stack_config.logMaxEntriesCount());
+                    }
+
+                    // Re-initialize with default values
+                    m_total_uptime = 0;
+                    initDatabase();
+                }
+                else
+                {
+                    LOG_ERROR << "Unable to open database";
+                }
             }
             else
             {
-                LOG_ERROR << "Unable to open database";
+                LOG_ERROR << "Unable to delete database";
             }
-        }
-        else
-        {
-            LOG_ERROR << "Unable to delete database";
         }
     }
 
@@ -170,16 +183,19 @@ bool LocalController::start()
         ret = m_messages_validator.load(m_stack_config.jsonSchemasPath());
         if (ret)
         {
-
             // Start uptime counter
-            m_uptime = 0;
-            m_internal_config.setKey(START_DATE_KEY, DateTime::now().str());
-            m_uptime_timer.start(std::chrono::seconds(1u));
+            if (m_uptime_timer)
+            {
+                m_uptime = 0;
+                m_internal_config->setKey(START_DATE_KEY, DateTime::now().str());
+                m_uptime_timer->start(std::chrono::seconds(1u));
+            }
 
             // Allocate resources
             m_ws_server  = std::unique_ptr<ocpp::websockets::IWebsocketServer>(ocpp::websockets::WebsocketFactory::newServer());
             m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
             m_rpc_server->registerServerListener(*this);
+            m_rpc_pool = std::make_unique<ocpp::rpc::RpcPool>();
 
             // Configure websocket link
             ocpp::websockets::IWebsocketServer::Credentials credentials;
@@ -195,7 +211,11 @@ bool LocalController::start()
             credentials.encoded_pem_certificates                  = false;
 
             // Start listening
-            ret = m_rpc_server->start(m_stack_config.listenUrl(), credentials, m_stack_config.webSocketPingInterval());
+            ret = m_rpc_pool->start(m_stack_config.incomingRequestsFromCsThreadPoolSize());
+            ret = ret && m_rpc_server->start(m_stack_config.listenUrl(),
+                                             credentials,
+                                             m_stack_config.webSocketPingInterval(),
+                                             m_stack_config.incomingRequestsFromCpThreadPoolSize());
         }
         else
         {
@@ -221,18 +241,26 @@ bool LocalController::stop()
         LOG_INFO << "Stopping OCPP stack";
 
         // Stop uptime counter
-        m_uptime_timer.stop();
-        saveUptime();
+        if (m_uptime_timer)
+        {
+            m_uptime_timer->stop();
+            saveUptime();
+        }
 
         // Stop connection
         ret = m_rpc_server->stop();
+        ret = ret && m_rpc_pool->stop();
 
         // Free resources
         m_ws_server.reset();
         m_rpc_server.reset();
+        m_rpc_pool.reset();
 
         // Close database
-        m_database.close();
+        if (m_database)
+        {
+            m_database->close();
+        }
     }
     else
     {
@@ -271,7 +299,8 @@ void LocalController::rpcClientConnected(const std::string& chargepoint_id, std:
     LOG_INFO << "Connection from Charge Point [" << chargepoint_id << "]";
 
     // Instanciate proxys
-    CentralSystemProxy* centralsystem = new CentralSystemProxy(chargepoint_id, m_messages_validator, m_messages_converter, m_stack_config);
+    CentralSystemProxy* centralsystem =
+        new CentralSystemProxy(chargepoint_id, m_messages_validator, m_messages_converter, m_stack_config, *m_rpc_pool);
     std::shared_ptr<IChargePointProxy> chargepoint(new ChargePointProxy(chargepoint_id,
                                                                         client,
                                                                         m_messages_validator,
@@ -294,33 +323,33 @@ void LocalController::rpcServerError()
 void LocalController::initDatabase()
 {
     // Initialize internal configuration
-    m_internal_config.initDatabaseTable();
+    m_internal_config->initDatabaseTable();
 
     // Internal keys
-    if (!m_internal_config.keyExist(STACK_VERSION_KEY))
+    if (!m_internal_config->keyExist(STACK_VERSION_KEY))
     {
-        m_internal_config.createKey(STACK_VERSION_KEY, OPEN_OCPP_VERSION);
+        m_internal_config->createKey(STACK_VERSION_KEY, OPEN_OCPP_VERSION);
     }
     else
     {
-        m_internal_config.setKey(STACK_VERSION_KEY, OPEN_OCPP_VERSION);
+        m_internal_config->setKey(STACK_VERSION_KEY, OPEN_OCPP_VERSION);
     }
-    if (!m_internal_config.keyExist(START_DATE_KEY))
+    if (!m_internal_config->keyExist(START_DATE_KEY))
     {
-        m_internal_config.createKey(START_DATE_KEY, "");
+        m_internal_config->createKey(START_DATE_KEY, "");
     }
-    if (!m_internal_config.keyExist(UPTIME_KEY))
+    if (!m_internal_config->keyExist(UPTIME_KEY))
     {
-        m_internal_config.createKey(UPTIME_KEY, "0");
+        m_internal_config->createKey(UPTIME_KEY, "0");
     }
-    if (!m_internal_config.keyExist(TOTAL_UPTIME_KEY))
+    if (!m_internal_config->keyExist(TOTAL_UPTIME_KEY))
     {
-        m_internal_config.createKey(TOTAL_UPTIME_KEY, "0");
+        m_internal_config->createKey(TOTAL_UPTIME_KEY, "0");
     }
     else
     {
         std::string value;
-        m_internal_config.getKey(TOTAL_UPTIME_KEY, value);
+        m_internal_config->getKey(TOTAL_UPTIME_KEY, value);
         m_total_uptime = static_cast<unsigned int>(std::atoi(value.c_str()));
     }
 }
@@ -342,8 +371,8 @@ void LocalController::processUptime()
 /** @brief Save the uptime counter in database */
 void LocalController::saveUptime()
 {
-    m_internal_config.setKey(UPTIME_KEY, std::to_string(m_uptime));
-    m_internal_config.setKey(TOTAL_UPTIME_KEY, std::to_string(m_total_uptime));
+    m_internal_config->setKey(UPTIME_KEY, std::to_string(m_uptime));
+    m_internal_config->setKey(TOTAL_UPTIME_KEY, std::to_string(m_total_uptime));
 }
 
 } // namespace localcontroller

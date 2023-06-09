@@ -223,6 +223,8 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
 {
     bool ret = false;
 
+    (void)error_code;
+
     LOG_INFO << "Set charging profile requested : chargingProfileId = " << request.csChargingProfiles.chargingProfileId
              << " - connectorId = " << request.connectorId << " - chargingProfilePurpose = "
              << ChargingProfilePurposeTypeHelper.toString(request.csChargingProfiles.chargingProfilePurpose)
@@ -329,14 +331,13 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
     if (ret)
     {
         response.status = ChargingProfileStatus::Accepted;
+        LOG_INFO << "Set charging profile status : Accepted";
     }
     else
     {
-        error_code      = ocpp::rpc::IRpc::RPC_ERROR_PROPERTY_CONSTRAINT_VIOLATION;
         response.status = ChargingProfileStatus::Rejected;
+        LOG_INFO << "Set charging profile status rejected : " << error_message;
     }
-
-    LOG_INFO << "Set charging profile status : " << ChargingProfileStatusHelper.toString(response.status);
 
     return ret;
 }
@@ -357,6 +358,9 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
     LOG_INFO << "GetCompositeSchedule requested : connectorId = " << request.connectorId << " - duration = " << request.duration
              << " - chargingRateUnit = "
              << (request.chargingRateUnit.isSet() ? ChargingRateUnitTypeHelper.toString(request.chargingRateUnit) : "not set");
+
+    // Lock profiles
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     // Prepare response
     response.status = GetCompositeScheduleStatus::Rejected;

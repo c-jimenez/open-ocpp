@@ -9,6 +9,7 @@ add_library(ws OBJECT
     Url.cpp
     WebsocketFactory.cpp
     libwebsockets/LibWebsocketClient.cpp
+    libwebsockets/LibWebsocketClientPool.cpp
     libwebsockets/LibWebsocketServer.cpp
  )
 

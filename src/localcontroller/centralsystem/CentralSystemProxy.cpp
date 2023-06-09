@@ -34,11 +34,12 @@ namespace localcontroller
 CentralSystemProxy::CentralSystemProxy(const std::string&                          identifier,
                                        const ocpp::messages::MessagesValidator&    messages_validator,
                                        ocpp::messages::MessagesConverter&          messages_converter,
-                                       const ocpp::config::ILocalControllerConfig& stack_config)
+                                       const ocpp::config::ILocalControllerConfig& stack_config,
+                                       ocpp::rpc::RpcPool&                         rpc_pool)
     : m_identifier(identifier),
       m_stack_config(stack_config),
-      m_websocket(ocpp::websockets::WebsocketFactory::newClient()),
-      m_rpc(*m_websocket, "ocpp1.6"),
+      m_websocket(ocpp::websockets::WebsocketFactory::newClientFromPool()),
+      m_rpc(*m_websocket, "ocpp1.6", &rpc_pool),
       m_messages_converter(messages_converter),
       m_msg_dispatcher(messages_validator),
       m_msg_sender(m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),

@@ -69,6 +69,7 @@ ChargePointProxy::ChargePointProxy(ICentralSystem&                              
       m_msg_dispatcher(messages_validator),
       m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
       m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config),
+      m_messages_validator(messages_validator),
       m_messages_converter(messages_converter)
 {
     m_rpc->registerSpy(*this);
@@ -76,7 +77,10 @@ ChargePointProxy::ChargePointProxy(ICentralSystem&                              
 }
 
 /** @brief Destructor */
-ChargePointProxy::~ChargePointProxy() { }
+ChargePointProxy::~ChargePointProxy()
+{
+    m_rpc->unregisterSpy(*this);
+}
 
 // ICentralSystem::IChargePoint interface
 

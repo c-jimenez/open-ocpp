@@ -17,6 +17,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ChargePointProxy.h"
+#include "../centralsystem/chargepoint/ChargePointProxy.h"
+#include "CentralSystemProxy.h"
 #include "ILocalControllerConfig.h"
 #include "MessagesConverter.h"
 
@@ -27,6 +29,37 @@ namespace ocpp
 {
 namespace localcontroller
 {
+
+/** @brief Instanciate local controller's charge point proxy from a central system's charge point proxy */
+std::shared_ptr<IChargePointProxy> IChargePointProxy::createFrom(
+    std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>& central_system_proxy,
+    const ocpp::config::ILocalControllerConfig&                         stack_config,
+    ocpp::rpc::RpcPool&                                                 rpc_pool)
+{
+    std::shared_ptr<IChargePointProxy> proxy;
+
+    // Instanciation can only be done from centralsytem::ChargePointProxy instance
+    ocpp::centralsystem::ChargePointProxy* cs_proxy = dynamic_cast<ocpp::centralsystem::ChargePointProxy*>(central_system_proxy.get());
+    if (cs_proxy)
+    {
+        // Create associated Central System proxy
+        CentralSystemProxy* centralsystem = new CentralSystemProxy(
+            cs_proxy->identifier(), cs_proxy->messagesValidator(), cs_proxy->messagesConverter(), stack_config, rpc_pool);
+
+        // Create the proxy
+        proxy = std::shared_ptr<IChargePointProxy>(new ChargePointProxy(cs_proxy->identifier(),
+                                                                        cs_proxy->rpcClient(),
+                                                                        cs_proxy->messagesValidator(),
+                                                                        cs_proxy->messagesConverter(),
+                                                                        stack_config,
+                                                                        std::shared_ptr<ICentralSystemProxy>(centralsystem)));
+
+        // Associate both
+        centralsystem->setChargePointProxy(proxy);
+    }
+
+    return proxy;
+}
 
 /** @brief Constructor */
 ChargePointProxy::ChargePointProxy(const std::string&                            identifier,

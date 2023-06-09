@@ -249,6 +249,7 @@ void Certificate::convertCertificateRequest(void* request, const void* issuer, v
     // Set the public key
     EVP_PKEY* public_key = X509_REQ_get_pubkey(cert_request);
     X509_set_pubkey(cert, public_key);
+    EVP_PKEY_free(public_key);
 
     // Set the extensions
     STACK_OF(X509_EXTENSION)* extensions = X509_REQ_get_extensions(cert_request);
@@ -278,7 +279,7 @@ void Certificate::convertCertificateRequest(void* request, const void* issuer, v
         if (val)
         {
             X509_add1_ext_i2d(cert, NID_issuer_alt_name, val, crit, 0);
-            OPENSSL_free(val);
+            sk_GENERAL_NAME_pop_free((STACK_OF(GENERAL_NAME)*)val, GENERAL_NAME_free);
         }
     }
 
@@ -388,13 +389,11 @@ void Certificate::readInfos(Certificate& certificate)
             {
                 void* ext                                              = X509_get_ext_d2i(cert, NID_issuer_alt_name, nullptr, nullptr);
                 certificate.m_x509v3_extensions.issuer_alternate_names = convertGeneralNames(ext);
-                OPENSSL_free(ext);
             }
             else if (extension_obj_nid == NID_subject_alt_name)
             {
                 void* ext                                               = X509_get_ext_d2i(cert, NID_subject_alt_name, nullptr, nullptr);
                 certificate.m_x509v3_extensions.subject_alternate_names = convertGeneralNames(ext);
-                OPENSSL_free(ext);
             }
             else if (extension_obj_nid == NID_basic_constraints)
             {
@@ -411,7 +410,7 @@ void Certificate::readInfos(Certificate& certificate)
                                 static_cast<unsigned int>(ASN1_INTEGER_get(basic_constraint->pathlen));
                         }
                     }
-                    OPENSSL_free(basic_constraint);
+                    BASIC_CONSTRAINTS_free(basic_constraint);
                 }
             }
             else

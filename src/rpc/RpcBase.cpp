@@ -17,6 +17,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "RpcBase.h"
+#include "RpcPool.h"
 
 #include <functional>
 #include <sstream>
@@ -34,8 +35,16 @@ static constexpr const char* CALLRESULT = "3";
 static constexpr const char* CALLERROR = "4";
 
 /** @brief Constructor */
-RpcBase::RpcBase()
-    : m_rpc_listener(nullptr), m_spies(), m_transaction_id(0), m_call_mutex(), m_requests_queue(), m_results_queue(), m_rx_thread(nullptr)
+RpcBase::RpcBase(RpcPool* pool)
+    : m_pool(pool),
+      m_rpc_listener(nullptr),
+      m_spies(),
+      m_transaction_id(0),
+      m_call_mutex(),
+      m_requests_queue(),
+      m_results_queue(),
+      m_rx_thread(nullptr),
+      m_rpc_owner()
 {
 }
 
@@ -153,23 +162,77 @@ void RpcBase::registerListener(IRpc::IListener& listener)
 /** @copydoc void IRpc::registerSpy(ISpy&) */
 void RpcBase::registerSpy(IRpc::ISpy& spy)
 {
-    m_spies.push_back(&spy);
+    m_spies.insert(&spy);
+}
+
+/** @copydoc void IRpc::unregisterSpy(ISpy&) */
+void RpcBase::unregisterSpy(IRpc::ISpy& spy)
+{
+    m_spies.erase(&spy);
 }
 
 // RpcBase interface
+
+/** @brief Process an incoming RPC request */
+void RpcBase::processIncomingRequest(std::shared_ptr<RpcMessage>& rpc_message)
+{
+    // Notify call
+    rapidjson::Document response;
+    std::string         error;
+    std::string         error_code;
+    response.Parse("{}");
+    if (m_rpc_listener->rpcCallReceived(rpc_message->action, rpc_message->payload, response, error_code, error))
+    {
+        // Serialize message
+        rapidjson::StringBuffer                    buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        response.Accept(writer);
+
+        std::stringstream serialized_message;
+        serialized_message << "[";
+        serialized_message << CALLRESULT << ", ";
+        serialized_message << "\"" << rpc_message->unique_id << "\", ";
+        serialized_message << buffer.GetString();
+        serialized_message << "]";
+
+        // Send message
+        std::string msg = serialized_message.str();
+        send(msg);
+    }
+    else
+    {
+        // Error
+        if (!error_code.empty())
+        {
+            sendCallError(rpc_message->unique_id, error_code.c_str(), error);
+        }
+    }
+
+    // Free resources
+    rpc_message.reset();
+}
 
 /** @brief Start RPC operations */
 void RpcBase::start()
 {
     // Check if already started
-    if (!m_rx_thread)
+    if (!m_rx_thread && !m_rpc_owner)
     {
         // Initialize transaction id sequence
         m_transaction_id = std::rand();
 
-        // Start reception thread
-        m_requests_queue.setEnable(true);
-        m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
+        // Check if a pool has been configured
+        if (m_pool)
+        {
+            // Initialize message owner structure
+            m_rpc_owner = std::make_shared<RpcMessageOwner>(*this);
+        }
+        else
+        {
+            // Start reception thread
+            m_requests_queue.setEnable(true);
+            m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
+        }
     }
 }
 
@@ -177,16 +240,30 @@ void RpcBase::start()
 void RpcBase::stop()
 {
     // Check if already started
-    if (m_rx_thread)
+    if (m_rx_thread || m_rpc_owner)
     {
         // Stop queues
         m_results_queue.setEnable(false);
         m_requests_queue.setEnable(false);
 
-        // Stop reception thread
-        m_rx_thread->join();
-        delete m_rx_thread;
-        m_rx_thread = nullptr;
+        // Check if a pool has been configured
+        if (m_pool)
+        {
+            // Disable owner
+            m_rpc_owner->lock.lock();
+            m_rpc_owner->is_operational = false;
+            m_rpc_owner->lock.unlock();
+
+            // Release message owner structure
+            m_rpc_owner.reset();
+        }
+        else
+        {
+            // Stop reception thread
+            m_rx_thread->join();
+            delete m_rx_thread;
+            m_rx_thread = nullptr;
+        }
 
         // Flush queues
         m_requests_queue.clear();
@@ -314,9 +391,21 @@ bool RpcBase::decodeCall(const std::string&      unique_id,
     // Check types
     if (action.IsString() && payload.IsObject())
     {
-        // Add request to the queue
+        // Create request
         auto msg = std::make_shared<RpcMessage>(unique_id, action.GetString(), rpc_frame, payload);
-        m_requests_queue.push(std::move(msg));
+
+        // Check if a pool has been configured
+        if (m_pool)
+        {
+            // Add request to the pool
+            msg->owner = m_rpc_owner;
+            m_pool->getRequestQueue().push(std::move(msg));
+        }
+        else
+        {
+            // Add request to the queue
+            m_requests_queue.push(std::move(msg));
+        }
 
         ret = true;
     }
@@ -389,40 +478,8 @@ void RpcBase::rxThread()
     std::shared_ptr<RpcMessage> rpc_message;
     while (m_requests_queue.pop(rpc_message))
     {
-        // Notify call
-        rapidjson::Document response;
-        std::string         error;
-        std::string         error_code;
-        response.Parse("{}");
-        if (m_rpc_listener->rpcCallReceived(rpc_message->action, rpc_message->payload, response, error_code, error))
-        {
-            // Serialize message
-            rapidjson::StringBuffer                    buffer;
-            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-            response.Accept(writer);
-
-            std::stringstream serialized_message;
-            serialized_message << "[";
-            serialized_message << CALLRESULT << ", ";
-            serialized_message << "\"" << rpc_message->unique_id << "\", ";
-            serialized_message << buffer.GetString();
-            serialized_message << "]";
-
-            // Send message
-            std::string msg = serialized_message.str();
-            send(msg);
-        }
-        else
-        {
-            // Error
-            if (!error_code.empty())
-            {
-                sendCallError(rpc_message->unique_id, error_code.c_str(), error);
-            }
-        }
-
-        // Free resources
-        rpc_message.reset();
+        // Process request
+        processIncomingRequest(rpc_message);
     }
 }
 

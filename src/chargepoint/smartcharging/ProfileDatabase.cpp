@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "ProfileDatabase.h"
 #include "ChargingProfile.h"
 #include "ChargingProfileConverter.h"
+#include "Connectors.h"
 #include "IOcppConfig.h"
 
 #include <algorithm>
@@ -248,11 +249,21 @@ bool ProfileDatabase::install(unsigned int connector_id, const ocpp::types::Char
 /** @brief Assign the pending TxProfile of a connector to a transaction */
 void ProfileDatabase::assignPendingTxProfiles(unsigned int connector_id, int transaction_id)
 {
+    std::vector<int> profiles_to_remove;
+
     // Look for pending profiles
     for (const auto& profile : m_tx_profiles)
     {
-        if ((profile.first == connector_id) && !profile.second.transactionId.isSet())
+        if (((profile.first == Connectors::CONNECTOR_ID_CHARGE_POINT) || (profile.first == connector_id)) &&
+            !profile.second.transactionId.isSet())
         {
+            // If no connector set, remove the profile completly
+            // so that it won't be used again
+            if (profile.first == Connectors::CONNECTOR_ID_CHARGE_POINT)
+            {
+                profiles_to_remove.push_back(profile.second.chargingProfileId);
+            }
+
             // Assign transaction to a new profile
             ChargingProfile assigned_profile = profile.second;
             assigned_profile.transactionId   = transaction_id;
@@ -260,6 +271,12 @@ void ProfileDatabase::assignPendingTxProfiles(unsigned int connector_id, int tra
             // Replace existing with assigned profile
             install(connector_id, assigned_profile);
         }
+    }
+
+    // Remove profiles
+    for (int profile_id : profiles_to_remove)
+    {
+        clear(profile_id);
     }
 }
 

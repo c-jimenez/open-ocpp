@@ -365,6 +365,10 @@ bool ChargePoint::stop()
         m_uptime_timer.stop();
         saveUptime();
 
+        // Stop connection
+        ret = m_rpc_client->stop();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
         // Stop managers
         m_config_manager.reset();
         m_authent_manager.reset();
@@ -378,9 +382,6 @@ bool ChargePoint::stop()
         m_maintenance_manager.reset();
         m_requests_fifo_manager.reset();
         m_iso15118_manager.reset();
-
-        // Stop connection
-        ret = m_rpc_client->stop();
 
         // Stop security manager
         m_security_manager.stop();
@@ -935,10 +936,14 @@ void ChargePoint::rpcClientFailed()
 /** @copydoc void IRpc::IListener::rpcDisconnected() */
 void ChargePoint::rpcDisconnected()
 {
-    LOG_ERROR << "Connection lost with Central System";
-    m_status_manager->updateConnectionStatus(false);
-    m_requests_fifo_manager->updateConnectionStatus(false);
-    m_events_handler.connectionStateChanged(false);
+    // Check if stop is in progress
+    if (m_uptime_timer.isStarted())
+    {
+        LOG_ERROR << "Connection lost with Central System";
+        m_status_manager->updateConnectionStatus(false);
+        m_requests_fifo_manager->updateConnectionStatus(false);
+        m_events_handler.connectionStateChanged(false);
+    }
 }
 
 /** @copydoc void IRpc::IListener::rpcError() */
@@ -958,7 +963,13 @@ bool ChargePoint::rpcCallReceived(const std::string&      action,
                                   std::string&            error_code,
                                   std::string&            error_message)
 {
-    return m_msg_dispatcher->dispatchMessage(action, payload, response, error_code, error_message);
+    bool ret = false;
+    // Check if stop is in progress
+    if (m_uptime_timer.isStarted())
+    {
+        ret = m_msg_dispatcher->dispatchMessage(action, payload, response, error_code, error_message);
+    }
+    return ret;
 }
 
 /** @copydoc void IRpc::ISpy::rcpMessageReceived(const std::string&) */

@@ -7,6 +7,7 @@ The following examples are available for OCPP 1.6 standard :
 * [Quick start Central System example](./quick_start_centralsystem/README.md)
 * [Quick start Charge Point example](./quick_start_chargepoint/README.md)
 * [Quick start Local Controller example](./quick_start_localcontroller/README.md)
+* [Quick start Hybrid Central System / Local Controller example](./quick_start_cs_lc_hybrid/README.md)
 * [Remote Charge Point example](./remote_chargepoint/README.md)
 
 The following examples are available for OCPP 1.6 security extensions :

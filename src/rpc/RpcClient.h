@@ -27,6 +27,8 @@ namespace ocpp
 namespace rpc
 {
 
+class RpcPool;
+
 /** @brief RPC client implementation */
 class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::IListener
 {
@@ -35,7 +37,7 @@ class RpcClient : public RpcBase, public ocpp::websockets::IWebsocketClient::ILi
     class IListener;
 
     /** @brief Constructor */
-    RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol);
+    RpcClient(ocpp::websockets::IWebsocketClient& websocket, const std::string& protocol, RpcPool* pool = nullptr);
 
     /** @brief Destructor */
     virtual ~RpcClient();

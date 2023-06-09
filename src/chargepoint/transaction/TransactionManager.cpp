@@ -273,7 +273,6 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
 
     LOG_INFO << "Remote start transaction requested : connector = " << request.connectorId << " - idTag = " << request.idTag.c_str();
 
-    // No remote start allowed without connector id
     bool authorized = false;
     if (request.connectorId.isSet() && (request.connectorId != Connectors::CONNECTOR_ID_CHARGE_POINT))
     {
@@ -293,6 +292,16 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
                     authorized = m_smart_charging_manager.installTxProfile(request.connectorId, request.chargingProfile);
                 }
             }
+        }
+    }
+    else
+    {
+        // The user application will determine which connector to use
+        authorized = m_events_handler.remoteStartTransactionRequested(Connectors::CONNECTOR_ID_CHARGE_POINT, request.idTag.str());
+        if (authorized && request.chargingProfile.isSet())
+        {
+            // Install associated charging profile
+            authorized = m_smart_charging_manager.installTxProfile(Connectors::CONNECTOR_ID_CHARGE_POINT, request.chargingProfile);
         }
     }
 

@@ -142,6 +142,7 @@ void RequestFifoManager::processFifoRequest()
                             Connector* connector = m_connectors.getConnector(request.connectorId);
                             if (connector)
                             {
+                                std::lock_guard<std::mutex> lock(connector->mutex);
                                 connector->transaction_id_offline = response.transactionId;
                                 m_connectors.saveConnector(request.connectorId);
                             }
@@ -152,6 +153,8 @@ void RequestFifoManager::processFifoRequest()
                                 // Look for the corresponding transaction
                                 if (connector && (connector->transaction_id < 0) && (connector->transaction_start == request.timestamp))
                                 {
+                                    std::lock_guard<std::mutex> lock(connector->mutex);
+
                                     // Update current transaction id
                                     connector->transaction_id = connector->transaction_id_offline;
                                     m_connectors.saveConnector(request.connectorId);
@@ -251,6 +254,7 @@ void RequestFifoManager::processFifoRequest()
             {
                 for (Connector* connector : m_connectors.getConnectors())
                 {
+                    std::lock_guard<std::mutex> lock(connector->mutex);
                     if (connector->transaction_id < 0)
                     {
                         connector->transaction_id = connector->transaction_id_offline;

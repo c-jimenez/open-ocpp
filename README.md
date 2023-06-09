@@ -32,7 +32,7 @@ As such it can be used and distributed in any commercial and non-commercial prod
       - [Extended trigger messages](#extended-trigger-messages)
       - [Certificate management](#certificate-management)
       - [Signed firmware update](#signed-firmware-update)
-    - [OCPP IS15118 PnC extensions](#ocpp-is15118-pnc-extensions)
+    - [OCPP ISO15118 PnC extensions](#ocpp-iso15118-pnc-extensions)
       - [Charge Point role](#charge-point-role)
       - [Central System role](#central-system-role)
     - [Internal configuration keys](#internal-configuration-keys)
@@ -231,7 +231,7 @@ If **InternalCertificateManagementEnabled** is set to **true**, the storage of c
 
 **Open OCPP** provides helper classes based on OpenSSL to ease private keys, certificate and certificate requests usage : generation, signature, verification. They can be used in the user application callbacks. These helpers can be found in the ocpp::tools::x509 namespace and are widely used in the **Open OCPP** source code and examples.
 
-### OCPP IS15118 PnC extensions
+### OCPP ISO15118 PnC extensions
 
 **Open OCPP** fully supports the whole messaging, data types and configuration keys set associated to the ISO15118 PnC extensions.
 
@@ -241,7 +241,7 @@ In Charge Point role these extensions consists mainly on forwarding messages fro
 
 **Open OCPP** implements the forwarding and provides callback and retries capabilities for certificates messages.
 
-Allthough **Open OCPP** is able to manage a certificate store, the Chare Point certificate used for ISO15118 communication won't be stored in it even if the **InternalCertificateManagementEnabled** configuration key is set to **true**. This is will allow for the ISO15118-2 stack to access this certificate and use it to secure its communications with the vehicule.
+Allthough **Open OCPP** is able to manage a certificate store, the Charge Point certificate used for ISO15118 communication won't be stored in it even if the **InternalCertificateManagementEnabled** configuration key is set to **true**. This is will allow for the ISO15118-2 stack to access this certificate and use it to secure its communications with the vehicule.
 
 #### Central System role
 
