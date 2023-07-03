@@ -197,18 +197,16 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
     {
         if ((it->second & PARAM_WRITE) != 0)
         {
-            std::size_t key_is_interval = key.find("Interval");
-            if (key_is_interval != std::string::npos)
-            {
-                std::size_t value_is_negative = key.find("-");
-                if (value_is_negative)
-                {
-                    ret = ConfigurationStatus::Rejected;
-                }
-            }
+             if (key.find("Interval") != std::string::npos)
+             {
+                 if (value.find("-") != std::string::npos)
+                 {
+                     ret = ConfigurationStatus::Rejected;
+                 }
+             }
 
-            if (ret != ConfigurationStatus::Rejected)
-            {
+             if (ret != ConfigurationStatus::Rejected)
+             {
                 if ((it->second & PARAM_OCPP) != 0)
                 {
                     m_config.set(OCPP_PARAMS, key, value);
@@ -225,7 +223,7 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
                 {
                     ret = ConfigurationStatus::Accepted;
                 }
-            }
+             }
         }
         else
         {
