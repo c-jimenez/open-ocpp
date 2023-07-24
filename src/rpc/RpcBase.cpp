@@ -231,6 +231,7 @@ void RpcBase::start()
         {
             // Start reception thread
             m_requests_queue.setEnable(true);
+            m_results_queue.setEnable(true);
             m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
         }
     }
