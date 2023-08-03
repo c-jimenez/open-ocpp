@@ -98,7 +98,7 @@ bool WebsocketFactory::setClientPoolCount(size_t count)
 /** @brief Start the client pools */
 bool WebsocketFactory::startClientPools()
 {
-    bool ret = false;
+    bool ret = true;
 
     std::lock_guard<std::mutex> lock(s_client_pools_mutex);
     if (!s_client_pools.empty())
@@ -115,7 +115,7 @@ bool WebsocketFactory::startClientPools()
 /** @brief Stop the client pools */
 bool WebsocketFactory::stopClientPools()
 {
-    bool ret = false;
+    bool ret = true;
 
     std::lock_guard<std::mutex> lock(s_client_pools_mutex);
     if (!s_client_pools.empty())
