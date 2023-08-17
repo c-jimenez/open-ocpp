@@ -30,7 +30,7 @@ TimerPool::TimerPool()
       m_update_wakeup_time(false),
       m_wakeup_mutex(),
       m_wakeup_cond(),
-      m_wake_up_time_point(std::chrono::system_clock::now() + std::chrono::hours(2400u)),
+      m_wake_up_time_point(std::chrono::steady_clock::now() + std::chrono::hours(2400u)),
       m_thread(std::bind(&TimerPool::threadLoop, this)),
       m_timers(),
       m_active_timers()
@@ -122,7 +122,7 @@ void TimerPool::computeNextWakeupTimepoint()
     if (m_active_timers.empty())
     {
         // Next wakeup in 100days
-        m_wake_up_time_point = std::chrono::system_clock::now() + std::chrono::hours(2400u);
+        m_wake_up_time_point = std::chrono::steady_clock::now() + std::chrono::hours(2400u);
     }
     else
     {
