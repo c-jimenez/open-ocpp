@@ -30,7 +30,7 @@ Timer::Timer(ITimerPool& pool, const char* name)
       m_name(name),
       m_single_shot(false),
       m_interval(std::chrono::milliseconds(0)),
-      m_wake_up_time_point(std::chrono::time_point<std::chrono::system_clock>::min()),
+      m_wake_up_time_point(std::chrono::time_point<std::chrono::steady_clock>::min()),
       m_started(false),
       m_callback()
 {
@@ -57,7 +57,7 @@ bool Timer::start(std::chrono::milliseconds interval, bool single_shot)
         // Configure timer
         m_interval           = interval;
         m_single_shot        = single_shot;
-        m_wake_up_time_point = std::chrono::system_clock::now() + m_interval;
+        m_wake_up_time_point = std::chrono::steady_clock::now() + m_interval;
 
         // Add timer to the list
         m_pool.addTimer(this);
@@ -92,7 +92,7 @@ bool Timer::restart(std::chrono::milliseconds interval, bool single_shot)
     // Configure timer
     m_interval           = interval;
     m_single_shot        = single_shot;
-    m_wake_up_time_point = std::chrono::system_clock::now() + m_interval;
+    m_wake_up_time_point = std::chrono::steady_clock::now() + m_interval;
 
     // Add timer to the list
     m_pool.addTimer(this);
