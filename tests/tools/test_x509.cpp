@@ -723,21 +723,32 @@ TEST_SUITE("Base64")
 {
     TEST_CASE("Encode/Decode nominal")
     {
-        // Data to encode
-        const std::string input_data =
-            "This string could have been some binary data but it is way more easier to do it with human readable data instead :) !";
+        // input_vector1 = defghijklmnopqrssrqponmlkjihgfed
+        // input_vector2 = FGHIJKLMNOPQRSTU
+        // input_vector3 = 012345678901
+        std::vector<uint8_t> input_vector1 = {100u, 101u, 102u, 103u, 104u, 105u, 106u, 107u, 108u, 109u, 110u,
+                                              111u, 112u, 113u, 114u, 115u, 115u, 114u, 113u, 112u, 111u, 110u,
+                                              109u, 108u, 107u, 106u, 105u, 104u, 103u, 102u, 101u, 100u};
+        std::vector<uint8_t> input_vector2 = {70u, 71u, 72u, 73u, 74u, 75u, 76u, 77u, 78u, 79u, 80u, 81u, 82u, 83u, 84u, 85u};
+        std::vector<uint8_t> input_vector3 = {48u, 49u, 50u, 51u, 52u, 53u, 54u, 55u, 56u, 57u, 48u, 49u};
 
-        // Expected result
-        const std::string expected_result = "VGhpcyBzdHJpbmcgY291bGQgaGF2ZSBiZWVuIHNvbWUgYmluYXJ5IGRhdGEgYnV0IGl0IGlzIHdheSBtb3JlIGVhc2llci"
-                                            "B0byBkbyBpdCB3aXRoIGh1bWFuIHJlYWRhYmxlIGRhdGEgaW5zdGVhZCA6KSAh";
+        // Encode with 1 trailing '='
+        auto encoded_vector1 = ocpp::x509::base64::encode(input_vector1.data(), input_vector1.size());
+        CHECK_EQ(encoded_vector1, "ZGVmZ2hpamtsbW5vcHFyc3NycXBvbm1sa2ppaGdmZWQ=");
+        auto decoded_vector1 = ocpp::x509::base64::decode(encoded_vector1);
+        CHECK_EQ(decoded_vector1, input_vector1);
 
-        // Check encoding
-        CHECK_EQ(ocpp::x509::base64::encode(input_data.c_str(), input_data.size()), expected_result);
+        // Encode with 2 trailing '='
+        auto encoded_vector2 = ocpp::x509::base64::encode(input_vector2.data(), input_vector2.size());
+        CHECK_EQ(encoded_vector2, "RkdISUpLTE1OT1BRUlNUVQ==");
+        auto decoded_vector2 = ocpp::x509::base64::decode(encoded_vector2);
+        CHECK_EQ(decoded_vector2, input_vector2);
 
-        // Check decoding
-        std::vector<uint8_t> decoded_data = ocpp::x509::base64::decode(expected_result);
-        std::string          decoded_data_str(reinterpret_cast<char*>(&decoded_data[0]), decoded_data.size());
-        CHECK_EQ(decoded_data_str, input_data);
+        // Encode without trailing '='
+        auto encoded_vector3 = ocpp::x509::base64::encode(input_vector3.data(), input_vector3.size());
+        CHECK_EQ(encoded_vector3, "MDEyMzQ1Njc4OTAx");
+        auto decoded_vector3 = ocpp::x509::base64::decode(encoded_vector3);
+        CHECK_EQ(decoded_vector3, input_vector3);
     }
 
     TEST_CASE("Encode/Decode limits")
