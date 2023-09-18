@@ -691,9 +691,13 @@ ocpp::types::UpdateFirmwareStatusEnumType DefaultChargePointEventsHandler::check
     if (!ca_certificates.empty())
     {
         // Check signing certificate
-        if (signing_certificate.verify(ca_certificates))
+        for (const auto& cer : ca_certificates)
         {
-            ret = UpdateFirmwareStatusEnumType::Accepted;
+            if (signing_certificate.verify(cer.certificateChain()))
+            {
+                ret = UpdateFirmwareStatusEnumType::Accepted;
+                break;
+            }
         }
     }
     else
