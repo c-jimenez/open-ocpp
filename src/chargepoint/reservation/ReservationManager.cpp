@@ -132,18 +132,26 @@ ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsign
                 Connector& charge_point = m_connectors.getChargePointConnector();
                 if (charge_point.status == ChargePointStatus::Reserved)
                 {
-                    // At least 1 connector must stay available
-                    unsigned int available_count = 0;
-                    for (const Connector* c : m_connectors.getConnectors())
-                    {
-                        if (c->status == ChargePointStatus::Available)
-                        {
-                            available_count++;
-                        }
-                    }
-                    if (available_count > 1)
+                    // Ensure that the module functions properly even when the gun is inserted first by the user.
+                    if (m_connectors.getConnector(connector_id)->status == ChargePointStatus::Preparing)
                     {
                         ret = AuthorizationStatus::Accepted;
+                    }
+                    else
+                    {
+                        // At least 1 connector must stay available
+                        unsigned int available_count = 0;
+                        for (const Connector* c : m_connectors.getConnectors())
+                        {
+                            if (c->status == ChargePointStatus::Available)
+                            {
+                                available_count++;
+                            }
+                        }
+                        if (available_count >= 1)
+                        {
+                            ret = AuthorizationStatus::Accepted;
+                        }
                     }
                 }
                 else
