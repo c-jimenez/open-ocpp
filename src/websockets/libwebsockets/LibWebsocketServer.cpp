@@ -459,6 +459,17 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                 // Remove client
                 server->m_clients.erase(iter_client);
             }
+            else
+            {
+                // Connection failed to be established
+
+                // Get client IP address
+                char ip_address[64];
+                lws_get_peer_simple(wsi, ip_address, sizeof(ip_address));
+
+                // Notify event
+                server->m_listener->wsClientFailedToConnect(ip_address);
+            }
         }
         break;
 

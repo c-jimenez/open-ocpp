@@ -123,6 +123,12 @@ void RpcServer::wsClientConnected(const char* uri, std::shared_ptr<ocpp::websock
     m_listener->rpcClientConnected(chargepoint_id, rpc_client);
 }
 
+/** @copydoc void IWebsocketServer::IListener::wsClientFailedToConnect(const char*) */
+void RpcServer::wsClientFailedToConnect(const char* ip_address)
+{
+    m_listener->rpcClientFailedToConnect(ip_address);
+}
+
 /** @copydoc void IWebsocketServer::IListener::wsServerError() */
 void RpcServer::wsServerError()
 {
