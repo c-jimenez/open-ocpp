@@ -173,6 +173,10 @@ bool RpcServer::Client::isConnected() const
 /** @brief void IWebsocketServer::IClient::IListener::wsClientDisconnected() */
 void RpcServer::Client::wsClientDisconnected()
 {
+    // Process disconnection event
+    processDisconnected();
+
+    // Notify listener
     rpcListener()->rpcDisconnected();
 }
 

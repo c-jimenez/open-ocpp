@@ -272,6 +272,14 @@ void RpcBase::stop()
     }
 }
 
+/** @brief Process the websocket disconnection event */
+void RpcBase::processDisconnected()
+{
+    // Disable queues
+    m_requests_queue.setEnable(false);
+    m_results_queue.setEnable(false);
+}
+
 /** @brief Process received data */
 void RpcBase::processReceivedData(const void* data, size_t size)
 {
