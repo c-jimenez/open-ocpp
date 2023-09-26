@@ -45,6 +45,7 @@ LibWebsocketServer::LibWebsocketServer()
       m_wsi(nullptr),
       m_retry_policy(),
       m_protocols(),
+      m_connecting_ip_address(nullptr),
       m_clients()
 {
 }
@@ -278,15 +279,30 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             struct lws_filter_network_conn_args* filter = reinterpret_cast<struct lws_filter_network_conn_args*>(user);
 
             // Get client IP address
-            char ip_address[64];
-            lws_sa46_write_numeric_address(reinterpret_cast<lws_sockaddr46*>(&filter->cli_addr), ip_address, sizeof(ip_address));
+            // => Save the current IP address so it can be retrieved
+            //    in the LWS_CALLBACK_WSI_CREATE calls which happens
+            //    during the same event loop processing
+            server->m_connecting_ip_address = new char[64u];
+            lws_sa46_write_numeric_address(reinterpret_cast<lws_sockaddr46*>(&filter->cli_addr), server->m_connecting_ip_address, 64u);
 
             // Notify user
-            if (!server->m_listener->wsAcceptConnection(ip_address))
+            if (!server->m_listener->wsAcceptConnection(server->m_connecting_ip_address))
             {
                 // Disconnect
                 ret = -1;
+
+                // Release memory
+                delete[] server->m_connecting_ip_address;
             }
+        }
+        break;
+
+        case LWS_CALLBACK_WSI_CREATE:
+        {
+            // Set client IP address
+            // => Must be done here to ensure that the event loop is still working
+            //    with the same client as in the LWS_CALLBACK_FILTER_NETWORK_CONNECTION call
+            lws_set_wsi_user(wsi, server->m_connecting_ip_address);
         }
         break;
 
@@ -418,8 +434,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
         case LWS_CALLBACK_ESTABLISHED:
         {
             // Get client IP address
-            char ip_address[64];
-            lws_get_peer_simple(wsi, ip_address, sizeof(ip_address));
+            char* ip_address = reinterpret_cast<char*>(lws_wsi_user(wsi));
 
             // Instanciate a new client
             std::shared_ptr<IClient> client(new Client(wsi, ip_address));
@@ -455,21 +470,30 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                 {
                     client->m_listener->wsClientDisconnected();
                 }
+            }
+        }
+        break;
 
+        case LWS_CALLBACK_WSI_DESTROY:
+        {
+            // Get client IP address
+            char* ip_address = reinterpret_cast<char*>(lws_wsi_user(wsi));
+
+            // Get corresponding client
+            auto iter_client = server->m_clients.find(wsi);
+            if (iter_client != server->m_clients.end())
+            {
                 // Remove client
                 server->m_clients.erase(iter_client);
             }
             else
             {
                 // Connection failed to be established
-
-                // Get client IP address
-                char ip_address[64];
-                lws_get_peer_simple(wsi, ip_address, sizeof(ip_address));
-
-                // Notify event
                 server->m_listener->wsClientFailedToConnect(ip_address);
             }
+
+            // Release memory
+            delete[] ip_address;
         }
         break;
 
