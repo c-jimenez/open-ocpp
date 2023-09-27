@@ -95,6 +95,9 @@ class CentralSystemProxy : public ICentralSystemProxy,
     /** @copydoc void ICentralSystemProxy::disconnect() */
     void disconnect() override;
 
+    /** @brief Indicate if the connection with the central system is active */
+    bool isConnected() const override;
+
     /** @copydoc void ICentralSystemProxy::registerListener(ILocalControllerProxyEventsHandler&) */
     void registerListener(ILocalControllerProxyEventsHandler& listener) override { m_listener = &listener; }
 
