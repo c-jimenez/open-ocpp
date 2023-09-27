@@ -48,6 +48,9 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @copydoc bool ICentralSystemEventsHandler::acceptConnection(const char*) */
     bool acceptConnection(const char* ip_address) override;
 
+    /** @copydoc void ICentralSystemEventsHandler::clientFailedToConnect(const char*) */
+    void clientFailedToConnect(const char* ip_address) override;
+
     /** @copydoc bool ICentralSystemEventsHandler::checkCredentials(const std::string&, const std::string&) */
     bool checkCredentials(const std::string& chargepoint_id, const std::string& password) override;
 

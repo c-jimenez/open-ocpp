@@ -124,6 +124,8 @@ class RpcBase : public IRpc
     void start();
     /** @brief Stop RPC operations */
     void stop();
+    /** @brief Process the websocket disconnection event */
+    void processDisconnected();
     /** @brief Process received data */
     void processReceivedData(const void* data, size_t size);
     /** @brief Get the RPC listener */

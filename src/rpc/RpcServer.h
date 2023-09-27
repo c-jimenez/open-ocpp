@@ -78,6 +78,9 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
     /** @copydoc void IWebsocketServer::IListener::wsClientConnected(const char*, std::shared_ptr<IClient>) */
     void wsClientConnected(const char* uri, std::shared_ptr<ocpp::websockets::IWebsocketServer::IClient> client) override;
 
+    /** @copydoc void IWebsocketServer::IListener::wsClientFailedToConnect(const char*) */
+    void wsClientFailedToConnect(const char* ip_address) override;
+
     /** @copydoc void IWebsocketServer::IListener::wsServerError() */
     void wsServerError() override;
 
@@ -110,6 +113,12 @@ class RpcServer : public ocpp::websockets::IWebsocketServer::IListener
          * @param client Client connection
          */
         virtual void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<Client> client) = 0;
+
+        /**
+         * @brief Called when connection fails to established
+         * @param ip_address IP address of the client
+         */
+        virtual void rpcClientFailedToConnect(const char* ip_address) = 0;
 
         /** @brief Called on critical error */
         virtual void rpcServerError() = 0;

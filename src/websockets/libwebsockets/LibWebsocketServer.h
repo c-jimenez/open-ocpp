@@ -180,6 +180,8 @@ class LibWebsocketServer : public IWebsocketServer
     lws_retry_bo_t m_retry_policy;
     /** @brief Protocols */
     std::array<struct lws_protocols, 2u> m_protocols;
+    /** @brief IP address of the currently connecting client */
+    char* m_connecting_ip_address;
 
     /** @brief Connected clients */
     std::unordered_map<struct lws*, std::shared_ptr<IClient>> m_clients;

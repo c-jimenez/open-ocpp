@@ -41,6 +41,12 @@ class ILocalControllerEventsHandler
     virtual bool acceptConnection(const char* ip_address) = 0;
 
     /**
+     * @brief Called when connection fails to established
+     * @param ip_address IP address of the client
+     */
+    virtual void clientFailedToConnect(const char* ip_address) = 0;
+
+    /**
      * @brief Called to check the charge point credentials for HTTP basic authentication
      * @param chargepoint_id Charge Point identifier
      * @param password Password
