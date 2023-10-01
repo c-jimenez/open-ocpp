@@ -95,6 +95,12 @@ class IWebsocketServer
          */
         virtual void wsClientConnected(const char* uri, std::shared_ptr<IClient> client) = 0;
 
+        /**
+         * @brief Called when connection fails to established
+         * @param ip_address IP address of the client
+         */
+        virtual void wsClientFailedToConnect(const char* ip_address) = 0;
+
         /** @brief Called on critical error */
         virtual void wsServerError() = 0;
     };

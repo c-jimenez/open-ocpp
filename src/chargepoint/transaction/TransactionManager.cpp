@@ -46,6 +46,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
                                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                                        ocpp::messages::GenericMessageSender&           msg_sender,
                                        ocpp::messages::IRequestFifo&                   requests_fifo,
+                                       IStatusManager&                                 status_manager,
                                        IAuthentManager&                                authent_manager,
                                        ReservationManager&                             reservation_manager,
                                        IMeterValuesManager&                            meter_values_manager,
@@ -56,6 +57,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
       m_events_handler(events_handler),
       m_connectors(connectors),
       m_msg_sender(msg_sender),
+      m_status_manager(status_manager),
       m_authent_manager(authent_manager),
       m_reservation_manager(reservation_manager),
       m_meter_values_manager(meter_values_manager),
@@ -121,6 +123,9 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
 
                                 // Clear reservation
                                 m_reservation_manager.clearReservation(connector_id);
+
+                                // Reset charge point status to Available
+                                m_status_manager.updateConnectorStatus(Connectors::CONNECTOR_ID_CHARGE_POINT, ChargePointStatus::Available);
                             }
                         }
                     }

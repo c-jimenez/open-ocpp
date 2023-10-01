@@ -106,6 +106,12 @@ class ICentralSystemProxy
     virtual void disconnect() = 0;
 
     /**
+     * @brief Indicate if the connection with the central system is active
+     * @return true if the connection is active, false otherwise
+     */
+    virtual bool isConnected() const = 0;
+
+    /**
      * @brief Register a listener to the proxy events
      * @param listener Listener to the proxy events
      */

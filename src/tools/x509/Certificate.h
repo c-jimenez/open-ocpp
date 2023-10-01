@@ -168,6 +168,12 @@ class Certificate : public X509Document
     const std::string& issuerString() const { return m_issuer_string; }
 
     /**
+     * @brief Get the issuer raw data
+     * @return Issuer raw data
+     */
+    const std::vector<uint8_t>& issuerDer() const { return m_issuer_der; }
+
+    /**
      * @brief Get the issuer alternate names
      * @return Issuer alternate names
      */
@@ -199,6 +205,8 @@ class Certificate : public X509Document
     Subject m_issuer;
     /** @brief Issuer string */
     std::string m_issuer_string;
+    /** @brief Issuer raw data */
+    std::vector<uint8_t> m_issuer_der;
     /** @brief Indicate if it is a self-signed certificate */
     bool m_is_self_signed;
 

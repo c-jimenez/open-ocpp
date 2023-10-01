@@ -84,7 +84,7 @@ bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& dat
     (void)error_code;
     (void)error_message;
     data.status = LogStatusEnumTypeHelper.fromString(json["status"].GetString());
-    extract(json, "fileName", data.fileName);
+    extract(json, "filename", data.fileName);
     return true;
 }
 
@@ -92,7 +92,7 @@ bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& dat
 bool GetLogConfConverter::toJson(const GetLogConf& data, rapidjson::Document& json)
 {
     fill(json, "status", LogStatusEnumTypeHelper.toString(data.status));
-    fill(json, "fileName", data.fileName);
+    fill(json, "filename", data.fileName);
     return true;
 }
 
