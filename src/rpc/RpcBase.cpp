@@ -231,6 +231,7 @@ void RpcBase::start()
         {
             // Start reception thread
             m_requests_queue.setEnable(true);
+            m_results_queue.setEnable(true);
             m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
         }
     }
@@ -269,6 +270,14 @@ void RpcBase::stop()
         m_requests_queue.clear();
         m_results_queue.clear();
     }
+}
+
+/** @brief Process the websocket disconnection event */
+void RpcBase::processDisconnected()
+{
+    // Disable queues
+    m_requests_queue.setEnable(false);
+    m_results_queue.setEnable(false);
 }
 
 /** @brief Process received data */

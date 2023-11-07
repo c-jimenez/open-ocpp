@@ -48,6 +48,12 @@ bool DefaultLocalControllerEventsHandler::acceptConnection(const char* ip_addres
     return true;
 }
 
+/** @copydoc void ILocalControllerEventsHandler::clientFailedToConnect(const char*) */
+void DefaultLocalControllerEventsHandler::clientFailedToConnect(const char* ip_address)
+{
+    cout << "Client [" << ip_address << "] failed to connect" << endl;
+}
+
 /** @copydoc bool ILocalControllerEventsHandler::checkCredentials(const std::string&, const std::string&) */
 bool DefaultLocalControllerEventsHandler::checkCredentials(const std::string& chargepoint_id, const std::string& password)
 {

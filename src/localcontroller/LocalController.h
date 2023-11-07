@@ -78,6 +78,9 @@ class LocalController : public ILocalController, public ocpp::rpc::RpcServer::IL
     /** @copydoc void RpcServer::IListener::rpcClientConnected(const std::string&, std::shared_ptr<Client>) */
     void rpcClientConnected(const std::string& chargepoint_id, std::shared_ptr<ocpp::rpc::RpcServer::Client> client) override;
 
+    /** @copydoc void RpcServer::IListener::rpcClientFailedToConnect(const char*) */
+    void rpcClientFailedToConnect(const char* ip_address) override;
+
     /** @copydoc void RpcServer::IListener::rpcServerError() */
     void rpcServerError() override;
 

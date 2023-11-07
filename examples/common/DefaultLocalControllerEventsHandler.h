@@ -46,6 +46,9 @@ class DefaultLocalControllerEventsHandler : public ocpp::localcontroller::ILocal
     /** @copydoc bool ILocalControllerEventsHandler::acceptConnection(const char*) */
     bool acceptConnection(const char* ip_address) override;
 
+    /** @copydoc void ILocalControllerEventsHandler::clientFailedToConnect(const char*) */
+    void clientFailedToConnect(const char* ip_address) override;
+
     /** @copydoc bool ILocalControllerEventsHandler::checkCredentials(const std::string&, const std::string&) */
     bool checkCredentials(const std::string& chargepoint_id, const std::string& password) override;
 

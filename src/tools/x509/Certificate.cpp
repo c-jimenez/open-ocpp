@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "openssl.h"
 #include "sign.h"
 
+#include <cstring>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -360,6 +361,14 @@ void Certificate::readInfos(Certificate& certificate)
         X509_NAME* issuer           = X509_get_issuer_name(cert);
         certificate.m_issuer_string = convertX509Name(issuer);
         parseSubjectString(issuer, certificate.m_issuer);
+        const unsigned char* issuer_der      = nullptr;
+        size_t               issuer_der_size = 0;
+        X509_NAME_get0_der(issuer, &issuer_der, &issuer_der_size);
+        if (issuer_der)
+        {
+            certificate.m_issuer_der.resize(issuer_der_size);
+            memcpy(certificate.m_issuer_der.data(), issuer_der, issuer_der_size);
+        }
         X509_NAME* subject           = X509_get_subject_name(cert);
         certificate.m_subject_string = convertX509Name(subject);
         parseSubjectString(subject, certificate.m_subject);

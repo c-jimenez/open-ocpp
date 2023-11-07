@@ -300,6 +300,14 @@ void CentralSystem::rpcClientConnected(const std::string& chargepoint_id, std::s
     m_events_handler.chargePointConnected(chargepoint);
 }
 
+/** @copydoc void RpcServer::IListener::rpcClientFailedToConnect(const char*) */
+void CentralSystem::rpcClientFailedToConnect(const char* ip_address)
+{
+    // Notify failure => no additional processing is done here
+    // to keep this callback has fast as possible
+    return m_events_handler.clientFailedToConnect(ip_address);
+}
+
 /** @copydoc void RpcServer::IListener::rpcServerError() */
 void CentralSystem::rpcServerError()
 {

@@ -66,6 +66,12 @@ bool DefaultCentralSystemEventsHandler::acceptConnection(const char* ip_address)
     return true;
 }
 
+/** @copydoc void ICentralSystemEventsHandler::clientFailedToConnect(const char*) */
+void DefaultCentralSystemEventsHandler::clientFailedToConnect(const char* ip_address)
+{
+    cout << "Client [" << ip_address << "] failed to connect" << endl;
+}
+
 /** @copydoc bool ICentralSystemEventsHandler::checkCredentials(const std::string&, const std::string&) */
 bool DefaultCentralSystemEventsHandler::checkCredentials(const std::string& chargepoint_id, const std::string& password)
 {

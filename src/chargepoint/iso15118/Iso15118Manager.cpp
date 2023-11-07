@@ -453,7 +453,7 @@ void Iso15118Manager::fillHashInfo(const ocpp::x509::Certificate& certificate, o
     // Compute hashes with SHA-256 algorithm
     Sha2 sha256;
     info.hashAlgorithm = HashAlgorithmEnumType::SHA256;
-    sha256.compute(certificate.issuerString().c_str(), certificate.issuerString().size());
+    sha256.compute(certificate.issuerDer().data(), certificate.issuerDer().size());
     info.issuerNameHash.assign(sha256.resultString());
     sha256.compute(&certificate.publicKey()[0], certificate.publicKey().size());
     info.issuerKeyHash.assign(sha256.resultString());

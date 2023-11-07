@@ -49,6 +49,7 @@ class ReservationManager;
 class IChargePointEventsHandler;
 class IMeterValuesManager;
 class ISmartChargingManager;
+class IStatusManager;
 
 /** @brief Handle charge point transaction requests */
 class TransactionManager
@@ -64,6 +65,7 @@ class TransactionManager
                        ocpp::messages::IMessageDispatcher&             msg_dispatcher,
                        ocpp::messages::GenericMessageSender&           msg_sender,
                        ocpp::messages::IRequestFifo&                   requests_fifo,
+                       IStatusManager&                                 status_manager,
                        IAuthentManager&                                authent_manager,
                        ReservationManager&                             reservation_manager,
                        IMeterValuesManager&                            meter_values_manager,
@@ -120,6 +122,8 @@ class TransactionManager
     Connectors& m_connectors;
     /** @brief Message sender */
     ocpp::messages::GenericMessageSender& m_msg_sender;
+    /** @brief Status manager */
+    IStatusManager& m_status_manager;
     /** @brief Authentication manager */
     IAuthentManager& m_authent_manager;
     /** @brief Reservation manager */

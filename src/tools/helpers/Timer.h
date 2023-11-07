@@ -113,7 +113,7 @@ class Timer
     /** @brief Wake uo interval */
     std::chrono::milliseconds m_interval;
     /** @brief Next wakeup time point */
-    std::chrono::time_point<std::chrono::system_clock> m_wake_up_time_point;
+    std::chrono::time_point<std::chrono::steady_clock> m_wake_up_time_point;
     /** @brief Indicate if the timer is started */
     bool m_started;
     /** @brief Callback */

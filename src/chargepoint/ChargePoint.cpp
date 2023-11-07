@@ -292,6 +292,7 @@ bool ChargePoint::start()
                                                                          *m_msg_dispatcher,
                                                                          *m_msg_sender,
                                                                          m_requests_fifo,
+                                                                         *m_status_manager,
                                                                          *m_authent_manager,
                                                                          *m_reservation_manager,
                                                                          *m_meter_values_manager,

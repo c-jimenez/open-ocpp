@@ -35,7 +35,7 @@ std::string encode(const void* data, size_t size)
     if (data && (size != 0))
     {
         // Prepare buffer at the maximum data length
-        b64_str.resize((4u * size) / 3u + 10u);
+        b64_str.resize((4u * (size + 2u)) / 3u);
 
         // Encode data
         int encoded_size = EVP_EncodeBlock(
@@ -43,7 +43,7 @@ std::string encode(const void* data, size_t size)
         if (encoded_size >= 0)
         {
             // Resize output
-            b64_str.resize(static_cast<unsigned int>(encoded_size));
+            b64_str.resize(static_cast<size_t>(encoded_size));
         }
         else
         {
@@ -63,7 +63,7 @@ std::vector<uint8_t> decode(const std::string& b64_str)
     if (b64_str.size() != 0)
     {
         // Prepare buffer at the maximum data length
-        data.resize((3u * b64_str.size()) / 4u + 10u);
+        data.resize((3u * b64_str.size()) / 4u);
 
         // Decode data
         int decoded_size =
@@ -71,7 +71,15 @@ std::vector<uint8_t> decode(const std::string& b64_str)
         if (decoded_size >= 0)
         {
             // Resize output
-            data.resize(static_cast<unsigned int>(decoded_size));
+            if (b64_str[b64_str.size() - 1u] == '=')
+            {
+                decoded_size--;
+            }
+            if (b64_str[b64_str.size() - 2u] == '=')
+            {
+                decoded_size--;
+            }
+            data.resize(static_cast<size_t>(decoded_size));
         }
         else
         {

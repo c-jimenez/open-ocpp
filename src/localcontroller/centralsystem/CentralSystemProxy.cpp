@@ -100,6 +100,12 @@ void CentralSystemProxy::disconnect()
     m_rpc.stop();
 }
 
+/** @brief Indicate if the connection with the central system is active */
+bool CentralSystemProxy::isConnected() const
+{
+    return m_rpc.isConnected();
+}
+
 /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::BootNotificationReq&,
  *                                          ocpp::messages::BootNotificationConf&,
  *                                          std::string&,
