@@ -148,11 +148,11 @@ int main(int argc, char* argv[])
     while (true)
     {
         // For each pending charge point
-        for (auto& iter_chargepoint : event_handler.pendingChargePoints())
+        auto pending_chargepoints = event_handler.pendingChargePoints();
+        for (auto& iter_chargepoint : pending_chargepoints)
         {
-            auto chargepoint   = iter_chargepoint.second;
-            auto iter_accepted = event_handler.acceptedChargePoints().find(chargepoint->identifier());
-            if (iter_accepted == event_handler.acceptedChargePoints().end())
+            auto chargepoint = iter_chargepoint.second;
+            if (!event_handler.isAcceptedChargePoint(chargepoint->identifier()))
             {
                 std::cout << "---------------------------------------------" << std::endl;
                 std::cout << "Pending Charge point : " << chargepoint->identifier() << std::endl;
@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
                 }
 
                 // Accept charge point
-                event_handler.acceptedChargePoints()[chargepoint->identifier()] = chargepoint;
+                event_handler.addAcceptedChargePoint(chargepoint);
 
                 // Trigger a boot notification to force it to update its registration status
                 chargepoint->triggerMessage(MessageTrigger::BootNotification, Optional<unsigned int>());
