@@ -45,7 +45,8 @@ using namespace ocpp::x509;
 DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler(std::filesystem::path iso_v2g_root_ca,
                                                                      std::filesystem::path iso_mo_root_ca,
                                                                      bool                  set_pending_status)
-    : m_iso_v2g_root_ca(iso_v2g_root_ca),
+    : m_chargepoints_mutex(),
+      m_iso_v2g_root_ca(iso_v2g_root_ca),
       m_iso_mo_root_ca(iso_mo_root_ca),
       m_set_pending_status(set_pending_status),
       m_chargepoints(),
@@ -83,6 +84,9 @@ bool DefaultCentralSystemEventsHandler::checkCredentials(const std::string& char
 void DefaultCentralSystemEventsHandler::chargePointConnected(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint)
 {
     cout << "Charge point [" << chargepoint->identifier() << "] connected" << endl;
+
+    std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+
     auto iter_chargepoint = m_chargepoints.find(chargepoint->identifier());
     if (iter_chargepoint == m_chargepoints.end())
     {
@@ -103,11 +107,36 @@ void DefaultCentralSystemEventsHandler::removeChargePoint(const std::string& ide
         [this, identifier = identifier]
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+            std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
             m_chargepoints.erase(identifier);
             m_pending_chargepoints.erase(identifier);
             m_accepted_chargepoints.erase(identifier);
         });
     t.detach();
+}
+
+/** @brief Indicate if a charge point must be accepted */
+bool DefaultCentralSystemEventsHandler::isAcceptedChargePoint(const std::string& identifier)
+{
+    std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+    return (m_accepted_chargepoints.find(identifier) != m_accepted_chargepoints.end());
+}
+
+/** @brief Add a charge point to the pending list */
+void DefaultCentralSystemEventsHandler::addPendingChargePoint(
+    std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint)
+{
+    std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+    m_pending_chargepoints[chargepoint->identifier()] = chargepoint;
+}
+
+/** @brief Add a charge point to the accepted list */
+void DefaultCentralSystemEventsHandler::addAcceptedChargePoint(
+    std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint)
+{
+    std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+    m_accepted_chargepoints[chargepoint->identifier()] = chargepoint;
 }
 
 /** @brief Constructor */
@@ -170,12 +199,9 @@ ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRe
     ocpp::types::RegistrationStatus ret = RegistrationStatus::Accepted;
     if (m_event_handler.setPendingEnabled())
     {
-        auto accepted_chargepoint = m_event_handler.acceptedChargePoints();
-        auto iter_accepted        = accepted_chargepoint.find(m_chargepoint->identifier());
-        if (iter_accepted == accepted_chargepoint.end())
+        if (!m_event_handler.isAcceptedChargePoint(m_chargepoint->identifier()))
         {
-            m_event_handler.pendingChargePoints()[m_chargepoint->identifier()] = m_chargepoint;
-
+            m_event_handler.addPendingChargePoint(m_chargepoint);
             ret = RegistrationStatus::Pending;
         }
     }
