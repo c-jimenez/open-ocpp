@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <filesystem>
 #include <map>
+#include <mutex>
 
 /** @brief Default central system event handlers implementation for the examples */
 class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSystemEventsHandler
@@ -237,19 +238,25 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         std::string m_generated_certificate;
     };
 
-    /** @brief Get the list of the connected charge points */
-    std::map<std::string, std::shared_ptr<ChargePointRequestHandler>>& chargePoints() { return m_chargepoints; }
-
-    /** @brief Get the list of the pending charge points */
-    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& pendingChargePoints()
+    /** @brief Get the number connected charge points */
+    size_t chargePointsCount()
     {
-        return m_pending_chargepoints;
+        std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+        return m_chargepoints.size();
     }
 
-    /** @brief Get the list of the accepted charge points */
-    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>>& acceptedChargePoints()
+    /** @brief Get the list of the connected charge points */
+    std::map<std::string, std::shared_ptr<ChargePointRequestHandler>> chargePoints()
     {
-        return m_accepted_chargepoints;
+        std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+        return m_chargepoints;
+    }
+
+    /** @brief Get the list of the pending charge points */
+    std::map<std::string, std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint>> pendingChargePoints()
+    {
+        std::lock_guard<std::mutex> lock(m_chargepoints_mutex);
+        return m_pending_chargepoints;
     }
 
     /** @brief Path to the V2G root CA */
@@ -263,7 +270,18 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
     /** @brief Remove a charge point from the connected charge points */
     void removeChargePoint(const std::string& identifier);
 
+    /** @brief Indicate if a charge point must be accepted */
+    bool isAcceptedChargePoint(const std::string& identifier);
+
+    /** @brief Add a charge point to the pending list */
+    void addPendingChargePoint(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint);
+
+    /** @brief Add a charge point to the accepted list */
+    void addAcceptedChargePoint(std::shared_ptr<ocpp::centralsystem::ICentralSystem::IChargePoint> chargepoint);
+
   protected:
+    /** @brief Mutex for charge point list */
+    std::mutex m_chargepoints_mutex;
     /** @brief Path to the V2G root CA */
     std::filesystem::path m_iso_v2g_root_ca;
     /** @brief Path to the MO root CA */

@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 1.4.0
+                 VERSION 1.4.1
 )
 
 # Definitions for Version.h file
@@ -34,6 +34,12 @@ add_subdirectory(3rdparty)
 
 # OpenSSL is mandatory
 find_package(OpenSSL REQUIRED COMPONENTS SSL Crypto)
+
+# libwesockets is mandatory if not built along the Open OCPP library
+if(NOT ${BUILD_LWS_LIBRARY})
+    find_package(PkgConfig)
+    pkg_check_modules(LIB_WEBSOCKETS REQUIRED libwebsockets)
+endif()
 
 # Tests
 if(${BUILD_UNIT_TESTS})

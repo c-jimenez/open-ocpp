@@ -118,7 +118,8 @@ int main(int argc, char* argv[])
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // For each connected charge point
-        for (auto& iter_chargepoint : event_handler.chargePoints())
+        auto connected_chargepoints = event_handler.chargePoints();
+        for (auto& iter_chargepoint : connected_chargepoints)
         {
             {
                 auto chargepoint = iter_chargepoint.second->proxy();

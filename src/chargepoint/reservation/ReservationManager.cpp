@@ -296,7 +296,7 @@ bool ReservationManager::handleMessage(const ocpp::messages::CancelReservationRe
         if ((connector->status == ChargePointStatus::Reserved) && (connector->reservation_id == request.reservationId))
         {
             // Cancel reservation
-            m_worker_pool.run<void>([this, &connector] { endReservation(connector->id, true); });
+            m_worker_pool.run<void>([this, connector_id = connector->id] { endReservation(connector_id, true); });
 
             // Prepare response
             response.status = CancelReservationStatus::Accepted;
