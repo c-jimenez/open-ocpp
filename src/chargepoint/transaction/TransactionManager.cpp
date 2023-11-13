@@ -299,7 +299,7 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
             }
         }
     }
-    else
+    else if (!request.connectorId.isSet())
     {
         // The user application will determine which connector to use
         authorized = m_events_handler.remoteStartTransactionRequested(Connectors::CONNECTOR_ID_CHARGE_POINT, request.idTag.str());
@@ -308,6 +308,12 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
             // Install associated charging profile
             authorized = m_smart_charging_manager.installTxProfile(Connectors::CONNECTOR_ID_CHARGE_POINT, request.chargingProfile);
         }
+    }
+    else
+    {
+        // Connector id is set but equal to CONNECTOR_ID_CHARGE_POINT
+        // This is not allowed by the ocpp1.6 standard
+        authorized = false;
     }
 
     // Response
