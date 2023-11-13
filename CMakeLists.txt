@@ -35,6 +35,12 @@ add_subdirectory(3rdparty)
 # OpenSSL is mandatory
 find_package(OpenSSL REQUIRED COMPONENTS SSL Crypto)
 
+# libwesockets is mandatory if not built along the Open OCPP library
+if(NOT ${BUILD_LWS_LIBRARY})
+    find_package(PkgConfig)
+    pkg_check_modules(LIB_WEBSOCKETS REQUIRED libwebsockets)
+endif()
+
 # Tests
 if(${BUILD_UNIT_TESTS})
     enable_testing()
