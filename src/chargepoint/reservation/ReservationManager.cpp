@@ -301,7 +301,7 @@ bool ReservationManager::handleMessage(const ocpp::messages::CancelReservationRe
     response.status = CancelReservationStatus::Rejected;
     for (const Connector* connector : m_connectors.getConnectors())
     {
-        if ((connector->reservation_id_tag.length() > 0) && (connector->reservation_id == request.reservationId))
+        if ((!connector->reservation_id_tag.empty()) && (connector->reservation_id == request.reservationId))
         {
             // Cancel reservation
             m_worker_pool.run<void>([this, connector_id = connector->id] { endReservation(connector_id, true); });
