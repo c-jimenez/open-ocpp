@@ -22,3 +22,6 @@ option(BUILD_UNIT_TESTS     "Build unit tests"                      ON)
 
 # Examples
 option(BUILD_EXAMPLES       "Build examples"                        ON)
+
+# Build the libwebsocket library along with the Open OCPP library
+option(BUILD_LWS_LIBRARY    "Build libwebsocket library"            ON)
