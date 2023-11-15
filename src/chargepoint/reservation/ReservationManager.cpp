@@ -180,7 +180,6 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
 {
     bool ret = false;
 
-    DateTime now = DateTime::now();
     // Get requested connector
     Connector* connector = m_connectors.getConnector(request.connectorId);
     if (connector)
