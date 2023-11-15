@@ -98,7 +98,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                 start_transaction_req.timestamp  = DateTime::now();
 
                 // Check reservations
-                if (connector->reservation_id_tag.length() > 0)
+                if (!connector->reservation_id_tag.empty())
                 {
                     // Fill reservation id
                     start_transaction_req.reservationId = connector->reservation_id;
@@ -112,7 +112,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                     if (m_ocpp_config.reserveConnectorZeroSupported())
                     {
                         Connector& charge_point = m_connectors.getChargePointConnector();
-                        if (charge_point.reservation_id_tag.length() > 0)
+                        if (!charge_point.reservation_id_tag.empty())
                         {
                             // Check if this transaction can be used for the charge point reservation
                             if (m_reservation_manager.isTransactionAllowed(Connectors::CONNECTOR_ID_CHARGE_POINT, id_tag) ==

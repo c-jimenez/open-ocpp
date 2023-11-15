@@ -102,7 +102,7 @@ ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsign
     if (connector)
     {
         // Check if connector is reserved
-        if (connector->reservation_id_tag.length() > 0)
+        if (!connector->reservation_id_tag.empty())
         {
             // Check if id tag match
             if (id_tag == connector->reservation_id_tag)
@@ -130,7 +130,7 @@ ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsign
             {
                 // Check if connector 0 is reserved
                 Connector& charge_point = m_connectors.getChargePointConnector();
-                if (charge_point.reservation_id_tag.length() > 0)
+                if (!charge_point.reservation_id_tag.empty())
                 {
                     // Ensure that the module functions properly even when the gun is inserted first by the user.
                     if (m_connectors.getConnector(connector_id)->status == ChargePointStatus::Preparing)
@@ -228,8 +228,6 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
                     connector->reservation_expiry_date   = request.expiryDate;
                     response.status                      = ReservationStatus::Accepted;
 
-                    if (connector->reservation_expiry_date > now)
-                    {
                     // Update connector status and notify new status
                     m_worker_pool.run<void>(
                         [this, connector]
@@ -237,11 +235,7 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
                             m_status_manager.updateConnectorStatus(connector->id, ChargePointStatus::Reserved);
                             m_events_handler.reservationStarted(connector->id);
                         });
-                    }
-                    else
-                    {
-                        response.status = ReservationStatus::Rejected;
-                    }
+
                     break;
                 }
 
@@ -324,7 +318,7 @@ void ReservationManager::checkExpiries()
     // Check reservations
     for (const Connector* connector : m_connectors.getConnectors())
     {
-        if ((connector->reservation_id_tag.length() > 0) && (connector->reservation_expiry_date <= now))
+        if ((!connector->reservation_id_tag.empty()) && (connector->reservation_expiry_date <= now))
         {
             // End reservation
             m_worker_pool.run<void>(std::bind(&ReservationManager::endReservation, this, connector->id, false));
