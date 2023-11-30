@@ -113,7 +113,7 @@ void StatusManager::updateConnectionStatus(bool is_connected)
             }
 
             // Restart heartbeat process
-            m_heartbeat_timer.start(m_heartbeat_timer.getInterval());
+            m_heartbeat_timer.start(m_ocpp_config.heartbeatInterval());
         }
     }
     else
@@ -197,7 +197,7 @@ void StatusManager::resetHeartBeatTimer()
 {
     if (m_heartbeat_timer.isStarted())
     {
-        m_heartbeat_timer.restart(m_heartbeat_timer.getInterval());
+        m_heartbeat_timer.restart(m_ocpp_config.heartbeatInterval());
     }
 }
 
