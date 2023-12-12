@@ -207,8 +207,8 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
                 }
             }
 
-            if (ret != ConfigurationStatus::Rejected)
-            {
+             if (ret != ConfigurationStatus::Rejected)
+             {
                 if ((it->second & PARAM_OCPP) != 0)
                 {
                     m_config.set(OCPP_PARAMS, key, value);
@@ -225,7 +225,7 @@ ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string&
                 {
                     ret = ConfigurationStatus::Accepted;
                 }
-            }
+             }
         }
         else
         {
