@@ -98,8 +98,10 @@ bool LibWebsocketClient::connect(const std::string&        url,
             info.port         = CONTEXT_PORT_NO_LISTEN;
             info.protocols    = protocols;
             info.timeout_secs = static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::seconds>(connect_timeout).count());
-            info.log_cx       = &m_logs_context;
-            m_credentials     = credentials;
+            info.connect_timeout_secs =
+                static_cast<unsigned int>(std::chrono::duration_cast<std::chrono::seconds>(connect_timeout).count());
+            info.log_cx   = &m_logs_context;
+            m_credentials = credentials;
             if (m_url.protocol() == "wss")
             {
                 if (!m_credentials.tls12_cipher_list.empty())
@@ -504,6 +506,12 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (client->m_retry_interval != 0)
             {
                 retry = true;
+            }
+
+            SendMsg* msg;
+            while (client->m_send_msgs.pop(msg, 0))
+            {
+                delete msg;
             }
             break;
 
