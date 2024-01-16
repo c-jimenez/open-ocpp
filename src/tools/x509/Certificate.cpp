@@ -88,6 +88,7 @@ Certificate::Certificate(const Certificate& copy)
       m_validity_to(copy.m_validity_to),
       m_issuer(copy.m_issuer),
       m_issuer_string(copy.m_issuer_string),
+      m_issuer_der(copy.m_issuer_der),
       m_is_self_signed(copy.m_is_self_signed)
 {
     // Duplicate OpenSSL object
