@@ -144,7 +144,7 @@ void LibWebsocketClientPool::process()
 
     // Dummy vhost to handle context related events
     struct lws_protocols             protocols[] = {{"LibWebsocketClientPool", &LibWebsocketClientPool::eventCallback, 0, 0, 0, this, 0},
-                                        LWS_PROTOCOL_LIST_TERM};
+                                                    LWS_PROTOCOL_LIST_TERM};
     struct lws_context_creation_info vhost_info;
     memset(&vhost_info, 0, sizeof(vhost_info));
     vhost_info.protocols = protocols;
@@ -443,11 +443,12 @@ void LibWebsocketClientPool::Client::connectCallback(struct lws_sorted_usec_list
             // Fill vhost information
             struct lws_context_creation_info vhost_info;
             memset(&vhost_info, 0, sizeof(vhost_info));
-            vhost_info.options      = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
-            vhost_info.port         = CONTEXT_PORT_NO_LISTEN;
-            vhost_info.timeout_secs = client->m_connect_timeout;
-            vhost_info.protocols    = protocols;
-            vhost_info.log_cx       = &pool->m_logs_context;
+            vhost_info.options              = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+            vhost_info.port                 = CONTEXT_PORT_NO_LISTEN;
+            vhost_info.timeout_secs         = client->m_connect_timeout;
+            vhost_info.connect_timeout_secs = client->m_connect_timeout;
+            vhost_info.protocols            = protocols;
+            vhost_info.log_cx               = &pool->m_logs_context;
             if (client->m_url.protocol() == "wss")
             {
                 if (!client->m_credentials.tls12_cipher_list.empty())
@@ -685,6 +686,12 @@ int LibWebsocketClientPool::Client::eventCallback(
             if (client->m_retry_interval != 0)
             {
                 retry = true;
+            }
+
+            SendMsg* msg;
+            while (client->m_send_msgs.pop(msg, 0))
+            {
+                delete msg;
             }
             break;
 
