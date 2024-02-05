@@ -144,23 +144,21 @@ bool StatusManager::updateConnectorStatus(unsigned int                      conn
     Connector* connector = m_connectors.getConnector(connector_id);
     if (connector)
     {
+        std::lock_guard<std::mutex> lock(connector->mutex);
+
         // Check if status has changed
         if (connector->status != status)
         {
-            {
-                std::lock_guard<std::mutex> lock(connector->mutex);
-
-                // Save new status
-                connector->status           = status;
-                connector->status_timestamp = DateTime::now();
-                connector->error_code       = error_code;
-                connector->info             = info;
-                connector->vendor_id        = vendor_id;
-                connector->vendor_error     = vendor_error;
-                m_connectors.saveConnector(connector->id);
-            }
-
             LOG_INFO << "Connector " << connector_id << " : " << ChargePointStatusHelper.toString(status);
+
+            // Save new status
+            connector->status           = status;
+            connector->status_timestamp = DateTime::now();
+            connector->error_code       = error_code;
+            connector->info             = info;
+            connector->vendor_id        = vendor_id;
+            connector->vendor_error     = vendor_error;
+            m_connectors.saveConnector(connector->id);
 
             // Check registration status
             if (m_registration_status == RegistrationStatus::Accepted)
@@ -170,7 +168,7 @@ bool StatusManager::updateConnectorStatus(unsigned int                      conn
                 if (duration == std::chrono::seconds(0))
                 {
                     // Notify now
-                    statusNotificationProcess(connector_id);
+                    m_worker_pool.run<void>(std::bind(&StatusManager::statusNotificationProcess, this, connector_id));
                 }
                 else
                 {
