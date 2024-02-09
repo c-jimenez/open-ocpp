@@ -58,6 +58,7 @@ class parse_exception : public std::logic_error
 };
 } // namespace rapidjson
 #define EXCEPTION_REASON_STRINGIFY(x) #x
+#define RAPIDJSON_ASSERT_THROWS
 #define RAPIDJSON_ASSERT(x) \
     if (!(x))               \
     throw parse_exception(EXCEPTION_REASON_STRINGIFY(x))
