@@ -168,24 +168,16 @@ bool DefaultChargePointEventsHandler::remoteStartTransactionRequested(unsigned i
 {
     bool ret = false;
     cout << "Remote start transaction : " << connector_id << " - " << id_tag << endl;
-    if (connector_id != 0)
+
+    if(connector_id > m_config.ocppConfig().numberOfConnectors() || connector_id == 0)
     {
-        m_remote_start_pending[connector_id - 1u] = true;
-        m_remote_start_id_tag[connector_id - 1u]  = id_tag;
-        ret                                       = true;
+        ret=false;
     }
     else
     {
-        for (size_t i = 1; i <= m_config.ocppConfig().numberOfConnectors(); i++)
-        {
-            if (m_chargepoint->getConnectorStatus(i) < ChargePointStatus::Charging)
-            {
-                m_remote_start_pending[i - 1u] = true;
-                m_remote_start_id_tag[i - 1u]  = id_tag;
-                ret                            = true;
-                break;
-            }
-        }
+        m_remote_start_pending[connector_id - 1u] = true;
+        m_remote_start_id_tag[connector_id - 1u]  = id_tag;
+        ret=true;
     }
     return ret;
 }
