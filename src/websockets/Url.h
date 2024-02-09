@@ -113,6 +113,9 @@ class Url
     unsigned int m_port;
     /** @brief Path part of the URL */
     std::string m_path;
+
+    /** @brief Encode an URL */
+    std::string encode(const std::string& url) const;
 };
 
 } // namespace websockets

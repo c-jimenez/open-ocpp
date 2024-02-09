@@ -18,7 +18,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Url.h"
 
+#include <iomanip>
 #include <regex>
+#include <sstream>
 
 namespace ocpp
 {
@@ -46,9 +48,9 @@ Url::Url(const std::string& url)
 
         // Convert path
         m_path = match[10].str();
-        if (m_path.empty())
+        if (!m_path.empty())
         {
-            m_path = "/";
+            m_path = encode(m_path);
         }
 
         // Convert port
@@ -68,11 +70,59 @@ Url::Url(const std::string& url)
                 m_is_valid = false;
             }
         }
+
+        // Rebuild URL
+        if (m_is_valid)
+        {
+            std::stringstream encoded_url;
+            encoded_url << m_protocol << "://";
+            if (!m_username.empty() || !m_password.empty())
+            {
+                encoded_url << m_username;
+                if (!m_password.empty())
+                {
+                    encoded_url << ":" << m_password;
+                }
+                encoded_url << "@";
+            }
+            encoded_url << m_address;
+            if (m_port != 0)
+            {
+                encoded_url << ":" << m_port;
+            }
+            encoded_url << m_path;
+            m_url = encoded_url.str();
+        }
     }
 }
 
 /** @brief Destructor */
 Url::~Url() { }
+
+/** @brief Encode an URL */
+std::string Url::encode(const std::string& url) const
+{
+    std::stringstream encoded_url;
+    encoded_url << std::hex;
+
+    for (const auto& c : url)
+    {
+        // Safe characters
+        if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')) || (c == '/'))
+        {
+            // No encoding
+            encoded_url << c;
+        }
+        else
+        {
+            // Percent encoding
+            encoded_url << '%';
+            encoded_url << std::setw(2) << std::setfill('0') << static_cast<int>(c);
+        }
+    }
+
+    return encoded_url.str();
+}
 
 } // namespace websockets
 } // namespace ocpp
