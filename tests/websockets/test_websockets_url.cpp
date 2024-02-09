@@ -29,12 +29,13 @@ TEST_SUITE("Nominal - hostname as string")
         Url url("ftp://pif.com");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://pif.com");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
         CHECK_EQ(url.address(), "pif.com");
         CHECK_EQ(url.port(), 0);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("Short URL with port")
@@ -42,6 +43,7 @@ TEST_SUITE("Nominal - hostname as string")
         Url url("ftp://pif.com:12345/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://pif.com:12345/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -50,11 +52,12 @@ TEST_SUITE("Nominal - hostname as string")
         CHECK_EQ(url.path(), "/");
     }
 
-    TEST_CASE("URL wth path")
+    TEST_CASE("URL with path")
     {
         Url url("ftp://pif.com/paf/pouf");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://pif.com/paf/pouf");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -68,6 +71,7 @@ TEST_SUITE("Nominal - hostname as string")
         Url url("ftp://pif.com:12345/paf/pouf/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://pif.com:12345/paf/pouf/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -76,17 +80,33 @@ TEST_SUITE("Nominal - hostname as string")
         CHECK_EQ(url.path(), "/paf/pouf/");
     }
 
+    TEST_CASE("URL with port and encoded path")
+    {
+        Url url("ftp://pif.com:12345/paf [ pouf /  + BIM_bam) = boum ] 10.11.12.13!");
+
+        CHECK(url.isValid());
+        CHECK_EQ(url.url(),
+                 R"(ftp://pif.com:12345/paf%20%5b%20pouf%20/%20%20%2b%20BIM%5fbam%29%20%3d%20boum%20%5d%2010%2e11%2e12%2e13%21)");
+        CHECK_EQ(url.protocol(), "ftp");
+        CHECK_EQ(url.username(), "");
+        CHECK_EQ(url.password(), "");
+        CHECK_EQ(url.address(), "pif.com");
+        CHECK_EQ(url.port(), 12345);
+        CHECK_EQ(url.path(), R"(/paf%20%5b%20pouf%20/%20%20%2b%20BIM%5fbam%29%20%3d%20boum%20%5d%2010%2e11%2e12%2e13%21)");
+    }
+
     TEST_CASE("URL with username and port")
     {
         Url url("ftp://yip76-84@pif.com:12345");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84@pif.com:12345");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "");
         CHECK_EQ(url.address(), "pif.com");
         CHECK_EQ(url.port(), 12345);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("URL with username, password and port")
@@ -94,12 +114,13 @@ TEST_SUITE("Nominal - hostname as string")
         Url url("ftp://yip76-84:£uiU*^gh#@pif.com:12345");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84:£uiU*^gh#@pif.com:12345");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "£uiU*^gh#");
         CHECK_EQ(url.address(), "pif.com");
         CHECK_EQ(url.port(), 12345);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("URL with username, password, port and path")
@@ -107,6 +128,7 @@ TEST_SUITE("Nominal - hostname as string")
         Url url("ftp://yip76-84:£uiU*^gh#@pif.com:12345/paf/pouf/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84:£uiU*^gh#@pif.com:12345/paf/pouf/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "£uiU*^gh#");
@@ -121,6 +143,7 @@ TEST_SUITE("Nominal - hostname as string")
         Url url2(url1);
 
         CHECK_EQ(url1.isValid(), url2.isValid());
+        CHECK_EQ(url1.url(), url2.url());
         CHECK_EQ(url1.protocol(), url2.protocol());
         CHECK_EQ(url1.username(), url2.username());
         CHECK_EQ(url1.password(), url2.password());
@@ -137,6 +160,7 @@ TEST_SUITE("Nominal - hostname as string")
         url2 = url1;
 
         CHECK_EQ(url1.isValid(), url2.isValid());
+        CHECK_EQ(url1.url(), url2.url());
         CHECK_EQ(url1.protocol(), url2.protocol());
         CHECK_EQ(url1.username(), url2.username());
         CHECK_EQ(url1.password(), url2.password());
@@ -153,12 +177,13 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url("ftp://10.189.70.3");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://10.189.70.3");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
         CHECK_EQ(url.address(), "10.189.70.3");
         CHECK_EQ(url.port(), 0);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("Short URL with port")
@@ -166,6 +191,7 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url("ftp://10.189.70.3:12345/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://10.189.70.3:12345/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -174,11 +200,12 @@ TEST_SUITE("Nominal - hostname as IP address")
         CHECK_EQ(url.path(), "/");
     }
 
-    TEST_CASE("URL wth path")
+    TEST_CASE("URL with path")
     {
         Url url("ftp://10.189.70.3/paf/pouf");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://10.189.70.3/paf/pouf");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -192,6 +219,7 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url("ftp://10.189.70.3:12345/paf/pouf/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://10.189.70.3:12345/paf/pouf/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "");
         CHECK_EQ(url.password(), "");
@@ -200,17 +228,33 @@ TEST_SUITE("Nominal - hostname as IP address")
         CHECK_EQ(url.path(), "/paf/pouf/");
     }
 
+    TEST_CASE("URL with port and encoded path")
+    {
+        Url url("ftp://10.189.70.3:12345/paf [ pouf /  + BIM_bam) = boum ] 10.11.12.13!");
+
+        CHECK(url.isValid());
+        CHECK_EQ(url.url(),
+                 R"(ftp://10.189.70.3:12345/paf%20%5b%20pouf%20/%20%20%2b%20BIM%5fbam%29%20%3d%20boum%20%5d%2010%2e11%2e12%2e13%21)");
+        CHECK_EQ(url.protocol(), "ftp");
+        CHECK_EQ(url.username(), "");
+        CHECK_EQ(url.password(), "");
+        CHECK_EQ(url.address(), "10.189.70.3");
+        CHECK_EQ(url.port(), 12345);
+        CHECK_EQ(url.path(), R"(/paf%20%5b%20pouf%20/%20%20%2b%20BIM%5fbam%29%20%3d%20boum%20%5d%2010%2e11%2e12%2e13%21)");
+    }
+
     TEST_CASE("URL with username and port")
     {
         Url url("ftp://yip76-84@10.189.70.3:12345");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84@10.189.70.3:12345");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "");
         CHECK_EQ(url.address(), "10.189.70.3");
         CHECK_EQ(url.port(), 12345);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("URL with username, password and port")
@@ -218,12 +262,13 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url("ftp://yip76-84:£uiU*^gh#@10.189.70.3:12345");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84:£uiU*^gh#@10.189.70.3:12345");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "£uiU*^gh#");
         CHECK_EQ(url.address(), "10.189.70.3");
         CHECK_EQ(url.port(), 12345);
-        CHECK_EQ(url.path(), "/");
+        CHECK_EQ(url.path(), "");
     }
 
     TEST_CASE("URL with username, password, port and path")
@@ -231,6 +276,7 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url("ftp://yip76-84:£uiU*^gh#@10.189.70.3:12345/paf/pouf/");
 
         CHECK(url.isValid());
+        CHECK_EQ(url.url(), "ftp://yip76-84:£uiU*^gh#@10.189.70.3:12345/paf/pouf/");
         CHECK_EQ(url.protocol(), "ftp");
         CHECK_EQ(url.username(), "yip76-84");
         CHECK_EQ(url.password(), "£uiU*^gh#");
@@ -245,6 +291,7 @@ TEST_SUITE("Nominal - hostname as IP address")
         Url url2(url1);
 
         CHECK_EQ(url1.isValid(), url2.isValid());
+        CHECK_EQ(url1.url(), url2.url());
         CHECK_EQ(url1.protocol(), url2.protocol());
         CHECK_EQ(url1.username(), url2.username());
         CHECK_EQ(url1.password(), url2.password());
@@ -261,6 +308,7 @@ TEST_SUITE("Nominal - hostname as IP address")
         url2 = url1;
 
         CHECK_EQ(url1.isValid(), url2.isValid());
+        CHECK_EQ(url1.url(), url2.url());
         CHECK_EQ(url1.protocol(), url2.protocol());
         CHECK_EQ(url1.username(), url2.username());
         CHECK_EQ(url1.password(), url2.password());
