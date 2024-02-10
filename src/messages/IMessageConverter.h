@@ -266,10 +266,10 @@ class IMessageConverter
     }
 
     /** @brief Set the allocator to use */
-    void setAllocator(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>* _allocator) { allocator = _allocator; }
+    void setAllocator(RAPIDJSON_DEFAULT_ALLOCATOR* _allocator) { allocator = _allocator; }
 
     /** @brief Allocator */
-    rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>* allocator;
+    RAPIDJSON_DEFAULT_ALLOCATOR* allocator;
 };
 
 /** @brief Helper macro to declare a converter class for req and conf messages
