@@ -278,6 +278,15 @@ void RpcBase::processDisconnected()
     // Disable queues
     m_requests_queue.setEnable(false);
     m_results_queue.setEnable(false);
+
+    // Check if a pool has been configured
+    if (m_pool)
+    {
+        // Disable owner
+        m_rpc_owner->lock.lock();
+        m_rpc_owner->is_operational = false;
+        m_rpc_owner->lock.unlock();
+    }
 }
 
 /** @brief Process received data */

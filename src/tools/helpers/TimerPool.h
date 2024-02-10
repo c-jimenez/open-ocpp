@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ITimerPool.h"
 
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -54,9 +55,9 @@ class TimerPool : public ITimerPool
 
   private:
     /** @brief Indicate that the timers must stop */
-    bool m_stop;
+    std::atomic<bool> m_stop;
     /** @brief Indicate that the next wakeup time has changed */
-    bool m_update_wakeup_time;
+    std::atomic<bool> m_update_wakeup_time;
     /** @brief Mutex for wakeup condition */
     std::mutex m_wakeup_mutex;
     /** @brief Wakeup condition */

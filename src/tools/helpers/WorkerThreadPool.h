@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Queue.h"
 
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -64,7 +65,7 @@ class JobBase : public IJob
     /** @brief Condition variable for end of job synchronization */
     std::condition_variable end_of_job_var;
     /** @brief Indicate end of job */
-    bool end;
+    std::atomic<bool> end;
     /** @brief Function to execute */
     std::function<ReturnType()> function;
 };
@@ -159,7 +160,7 @@ class Waiter
     {
         Job<ReturnType>*             job = dynamic_cast<Job<ReturnType>*>(m_job.get());
         std::unique_lock<std::mutex> lock(job->end_of_job_mutex);
-        return job->end_of_job_var.wait_for(lock, timeout, [job] { return job->end; });
+        return job->end_of_job_var.wait_for(lock, timeout, [job] { return job->end.operator bool(); });
     }
 
   private:
@@ -186,7 +187,7 @@ class Waiter<void>
     {
         Job<void>*                   job = dynamic_cast<Job<void>*>(m_job.get());
         std::unique_lock<std::mutex> lock(job->end_of_job_mutex);
-        return job->end_of_job_var.wait_for(lock, timeout, [job] { return job->end; });
+        return job->end_of_job_var.wait_for(lock, timeout, [job] { return job->end.operator bool(); });
     }
 
   private:
@@ -229,7 +230,7 @@ class WorkerThreadPool
 
   private:
     /** @brief Indicate that the threads must stop */
-    bool m_stop;
+    std::atomic<bool> m_stop;
     /** @brief Worker threads */
     std::vector<std::thread*> m_threads;
     /** @brief Job queue */
