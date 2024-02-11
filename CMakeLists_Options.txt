@@ -9,19 +9,25 @@ endif()
 add_compile_definitions(LOG_LEVEL=${LOG_LEVEL})
 
 # Logger
-option(EXTERNAL_LOGGER      "Use an external logger"                OFF)
+option(EXTERNAL_LOGGER              "Use an external logger"                                                OFF)
 if(EXTERNAL_LOGGER)
     add_compile_definitions(EXTERNAL_LOGGER=1)
 endif()
 
 # Static library
-option(BUILD_STATIC_LIBRARY "Build Open OCPP as a static library"   ON)
+option(BUILD_STATIC_LIBRARY         "Build Open OCPP as a static library"                                   ON)
 
 # Unit tests
-option(BUILD_UNIT_TESTS     "Build unit tests"                      ON)
+option(BUILD_UNIT_TESTS             "Build unit tests"                                                      ON)
 
 # Examples
-option(BUILD_EXAMPLES       "Build examples"                        ON)
+option(BUILD_EXAMPLES               "Build examples"                                                        ON)
 
 # Build the libwebsocket library along with the Open OCPP library
-option(BUILD_LWS_LIBRARY    "Build libwebsocket library"            ON)
+option(BUILD_LWS_LIBRARY            "Build libwebsocket library"                                            ON)
+
+# Use only the CrtAllocator in Rapidjson, not the MemoryPoolAllocator
+option(USE_CRT_ALLOC_FOR_RAPIDJSON  "Use the CrtAllocator for Rapidjson instead of the MemoryPoolAllocator" OFF)
+if(USE_CRT_ALLOC_FOR_RAPIDJSON)
+    add_compile_definitions(RAPIDJSON_DEFAULT_ALLOCATOR=::RAPIDJSON_NAMESPACE::CrtAllocator)
+endif()
