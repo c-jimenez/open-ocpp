@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_QUEUE_H
 #define OPENOCPP_QUEUE_H
 
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <cstddef>
@@ -208,7 +209,7 @@ class Queue
     /** @brief Queue to store data */
     std::queue<ItemType> m_queue;
     /** @brief Indicate that the queue is enabled */
-    bool m_enabled;
+    std::atomic<bool> m_enabled;
 };
 
 } // namespace helpers
