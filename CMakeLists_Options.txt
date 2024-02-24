@@ -14,6 +14,9 @@ if(EXTERNAL_LOGGER)
     add_compile_definitions(EXTERNAL_LOGGER=1)
 endif()
 
+# Shared library
+option(BUILD_SHARED_LIBRARY         "Build Open OCPP as a shared library"                                   ON)
+
 # Static library
 option(BUILD_STATIC_LIBRARY         "Build Open OCPP as a static library"                                   ON)
 
@@ -25,6 +28,12 @@ option(BUILD_EXAMPLES               "Build examples"                            
 
 # Build the libwebsocket library along with the Open OCPP library
 option(BUILD_LWS_LIBRARY            "Build libwebsocket library"                                            ON)
+
+# Build the sqlite3 library along with the Open OCPP library
+option(BUILD_SQLITE                 "Build sqlite3 library"                                                 ON)
+
+# Install the Doctest header
+option(INSTALL_DOCTEST              "Install doctest headers"                                               ON)
 
 # Use only the CrtAllocator in Rapidjson, not the MemoryPoolAllocator
 option(USE_CRT_ALLOC_FOR_RAPIDJSON  "Use the CrtAllocator for Rapidjson instead of the MemoryPoolAllocator" OFF)
