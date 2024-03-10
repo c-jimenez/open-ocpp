@@ -32,6 +32,14 @@ namespace helpers
 extern const std::string SPACE_STRING;
 
 /**
+ *  @brief Helper function to convert a string to lowercase
+ *         /!\ Works only on ASCII strings /!\
+ *  @param str String to convert
+ *  @return Reference to the converted string
+ */
+std::string tolower(const std::string& str);
+
+/**
  *  @brief Helper function to trim a string
  *  @param str String to trim
  *  @param chars Characters to remove from the start and from the end of the string
