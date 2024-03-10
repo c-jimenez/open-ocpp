@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 1.4.3
+                 VERSION 1.5.0
 )
 
 # Definitions for Version.h file
