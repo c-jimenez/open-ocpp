@@ -990,7 +990,7 @@ void ChargePoint::rcpMessageSent(const std::string& msg)
 void ChargePoint::configurationValueChanged(const std::string& key)
 {
     // Check configuration key
-    if (key == "AuthorizationKey")
+    if (key == "authorizationkey")
     {
         // Reconnect with new authorization key
         if (m_ocpp_config.securityProfile() != 3)
@@ -1001,7 +1001,7 @@ void ChargePoint::configurationValueChanged(const std::string& key)
 
         m_security_manager.logSecurityEvent(SECEVT_RECONFIG_SECURITY_PARAMETER, "AuthorizationKey");
     }
-    else if (key == "SecurityProfile")
+    else if (key == "securityprofile")
     {
         // Reconnect with new profile
         LOG_INFO << "SecurityProfile modified, reconnect with new security profile";
@@ -1164,8 +1164,10 @@ bool ChargePoint::doConnect()
     std::string authorization_key = m_ocpp_config.authorizationKey();
     if (!authorization_key.empty() && (security_profile <= 2))
     {
-        credentials.user     = m_stack_config.chargePointIdentifier();
-        credentials.password = authorization_key;
+        auto authentication_key = ocpp::helpers::fromHexString(authorization_key);
+        credentials.user        = m_stack_config.chargePointIdentifier();
+        credentials.password    = std::string(reinterpret_cast<const char*>(authentication_key.data()), authorization_key.size());
+        credentials.password.resize(authentication_key.size());
     }
     if (security_profile != 1)
     {

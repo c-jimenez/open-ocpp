@@ -18,6 +18,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "StringHelpers.h"
 
+#include <algorithm>
+#include <iomanip>
+#include <sstream>
+
 namespace ocpp
 {
 namespace helpers
@@ -25,6 +29,14 @@ namespace helpers
 
 /** @brief Space */
 const std::string SPACE_STRING = " ";
+
+/**  @brief Helper function to convert a string to lowercase */
+std::string tolower(const std::string& str)
+{
+    std::string ret = str;
+    std::transform(ret.begin(), ret.end(), ret.begin(), [](unsigned char c) { return std::tolower(c); });
+    return ret;
+}
 
 /** @brief Helper function to trim a string */
 std::string& trim(std::string& str, const std::string& chars)
@@ -110,6 +122,51 @@ bool endsWith(const std::string& str, const std::string& substr)
     {
         size_t start_index = str.size() - substr.size();
         ret                = (str.find(substr, start_index) == start_index);
+    }
+    return ret;
+}
+
+/** @brief Helper function to convert a buffer to an hexadecimal string representation */
+std::string toHexString(const void* buffer, size_t size)
+{
+    std::stringstream ss;
+    const uint8_t*    data = reinterpret_cast<const uint8_t*>(buffer);
+    if (data)
+    {
+        ss << std::hex;
+        for (size_t i = 0; i < size; i++)
+        {
+            ss << std::setw(2) << std::setfill('0') << static_cast<int>(data[i]) << "";
+        }
+    }
+    return ss.str();
+}
+
+/** @brief Helper function to convert an hexadecimal string representation into an array of bytes */
+std::vector<uint8_t> fromHexString(const std::string& hex_string)
+{
+    std::vector<uint8_t> ret;
+    if ((hex_string.size() & 1) == 0)
+    {
+        try
+        {
+            for (size_t i = 0; i < hex_string.size(); i += 2u)
+            {
+                std::string ss = hex_string.substr(i, 2u);
+                for (const auto& c : ss)
+                {
+                    if (!((c >= '0') && (c <= '9')) && !((c >= 'a') && (c <= 'f')) && !((c >= 'A') && (c <= 'F')))
+                    {
+                        throw std::out_of_range(ss);
+                    }
+                }
+                ret.push_back(static_cast<uint8_t>(std::stoul(ss, nullptr, 16)));
+            }
+        }
+        catch (...)
+        {
+            ret.clear();
+        }
     }
     return ret;
 }

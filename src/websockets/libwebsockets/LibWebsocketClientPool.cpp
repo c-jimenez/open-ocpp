@@ -22,6 +22,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <cstdint>
 #include <functional>
 
+/** @brief Generate basic authent header with bytes password (may contain \0 char) => implemented in LibWebsocketClient.cpp*/
+extern int lws_http_basic_auth_gen2(const char* user, const void* pw, size_t pwd_len, char* buf, size_t len);
+
 namespace ocpp
 {
 namespace websockets
@@ -599,7 +602,11 @@ int LibWebsocketClientPool::Client::eventCallback(
             if (client->m_credentials.user.empty())
                 break;
 
-            if (lws_http_basic_auth_gen(client->m_credentials.user.c_str(), client->m_credentials.password.c_str(), b, sizeof(b)))
+            if (lws_http_basic_auth_gen2(client->m_credentials.user.c_str(),
+                                         client->m_credentials.password.data(),
+                                         client->m_credentials.password.size(),
+                                         b,
+                                         sizeof(b)))
                 break;
             if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_AUTHORIZATION, (unsigned char*)b, (int)strlen(b), p, end))
                 return -1;

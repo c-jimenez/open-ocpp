@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 1.4.3
+                 VERSION 1.5.0
 )
 
 # Definitions for Version.h file
@@ -89,29 +89,32 @@ if(${BUILD_STATIC_LIBRARY})
 endif()
 
 # Open OCPP dynamic library
-add_library(open-ocpp-dynamic SHARED
-    src/version.cpp)
-target_link_libraries(open-ocpp-dynamic
-    centralsystem
-    chargepoint
-    localcontroller
-    config
-    database
-    messages
-    rpc
-    helpers
-    log
-    version
-    x509
-    json
-    ws
-    websockets
-)
-set_target_properties(open-ocpp-dynamic PROPERTIES
-    OUTPUT_NAME "open-ocpp"
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-)
+if (${BUILD_SHARED_LIBRARY})
+    add_library(open-ocpp-dynamic SHARED
+        src/version.cpp)
+    target_link_libraries(open-ocpp-dynamic
+        centralsystem
+        chargepoint
+        localcontroller
+        config
+        database
+        messages
+        rpc
+        helpers
+        log
+        version
+        x509
+        json
+        ws
+        websockets
+    )
+    set_target_properties(open-ocpp-dynamic PROPERTIES
+        OUTPUT_NAME "open-ocpp"
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+    )
+    set(OPEN_OCPP_SHARED_TARGET open-ocpp-dynamic)
+endif()
 
 # Install commands
 include(GNUInstallDirs)
@@ -121,7 +124,7 @@ file(GLOB_RECURSE PUBLIC_HEADERS
 file(GLOB OCPP_SCHEMAS
      LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/schemas/*.json")
 
-install(TARGETS open-ocpp-dynamic ${OPEN_OCPP_STATIC_TARGET}
+install(TARGETS ${OPEN_OCPP_SHARED_TARGET} ${OPEN_OCPP_STATIC_TARGET}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -145,12 +148,14 @@ set(PKG_CONFIG_INCLUDEDIR   "\${prefix}/include/openocpp")
 set(PKG_CONFIG_LIBS         "-L\${libdir}")
 set(PKG_CONFIG_CFLAGS       "-I\${includedir}")
 
-set(LIB_NAME                "open-ocpp")
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/deploy/libopen-ocpp.pc.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp.pc"
-)
-install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+if(${BUILD_SHARED_LIBRARY})
+    set(LIB_NAME                "open-ocpp")
+    configure_file(
+      "${CMAKE_CURRENT_SOURCE_DIR}/deploy/libopen-ocpp.pc.in"
+      "${CMAKE_CURRENT_BINARY_DIR}/libopen-ocpp.pc"
+    )
+    install(FILES "${CMAKE_BINARY_DIR}/libopen-ocpp.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif()
 
 if(${BUILD_STATIC_LIBRARY})
     set(LIB_NAME                "open-ocpp_static")

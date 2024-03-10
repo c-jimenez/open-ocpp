@@ -19,8 +19,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_STRING_H
 #define OPENOCPP_STRING_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
+
 namespace ocpp
 {
 namespace helpers
@@ -28,6 +30,14 @@ namespace helpers
 
 /** @brief Space */
 extern const std::string SPACE_STRING;
+
+/**
+ *  @brief Helper function to convert a string to lowercase
+ *         /!\ Works only on ASCII strings /!\
+ *  @param str String to convert
+ *  @return Reference to the converted string
+ */
+std::string tolower(const std::string& str);
 
 /**
  *  @brief Helper function to trim a string
@@ -86,6 +96,32 @@ bool startsWith(const std::string& str, const std::string& substr);
  * @return true if the string ends with the specified substring, false otherwise
  */
 bool endsWith(const std::string& str, const std::string& substr);
+
+/**
+ * @brief Helper function to convert a buffer to an hexadecimal string representation
+ * @param buffer Buffer to convert
+ * @param size Size of the buffer in bytes
+ * @return Buffer contents as an hexadecimal string
+ */
+std::string toHexString(const void* buffer, size_t size);
+
+/**
+ * @brief Helper function to convert a ContiguousContainer to an hexadecimal string representation
+ * @param cont container to convert
+ * @return Container contents as an hexadecimal string
+ */
+template <typename ContiguousContainer>
+std::string toHexString(const ContiguousContainer& cont)
+{
+    return toHexString(&cont[0], cont.size() * sizeof(cont[0]));
+}
+
+/**
+ * @brief Helper function to convert an hexadecimal string representation into an array of bytes
+ * @param hex_string Hexadecimal string to convert
+ * @return Corresponding array of bytes, empty if the input string is invalid
+ */
+std::vector<uint8_t> fromHexString(const std::string& hex_string);
 
 } // namespace helpers
 } // namespace ocpp

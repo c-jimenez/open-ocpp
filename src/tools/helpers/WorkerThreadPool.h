@@ -95,7 +95,10 @@ class Job : public JobBase<ReturnType>
         }
 
         // Notify end of job
-        this->end = true;
+        {
+            std::lock_guard<std::mutex> lock(this->end_of_job_mutex);
+            this->end = true;
+        }
         this->end_of_job_var.notify_all();
     }
 
@@ -132,7 +135,10 @@ class Job<void> : public JobBase<void>
         }
 
         // Notify end of job
-        this->end = true;
+        {
+            std::lock_guard<std::mutex> lock(this->end_of_job_mutex);
+            this->end = true;
+        }
         this->end_of_job_var.notify_all();
     }
 

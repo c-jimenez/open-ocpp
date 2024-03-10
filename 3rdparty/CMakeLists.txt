@@ -8,11 +8,15 @@ endif()
 target_include_directories(rapidjson INTERFACE rapidjson/include)
 
 # Doctest is an header only on library
-add_library(doctest INTERFACE)
-target_include_directories(doctest INTERFACE doctest/doctest)
+if(${INSTALL_DOCTEST})
+    add_library(doctest INTERFACE)
+    target_include_directories(doctest INTERFACE doctest/doctest)
+endif()
 
 # SQLite 3
-add_subdirectory(sqlite3)
+if(${BUILD_SQLITE})
+    add_subdirectory(sqlite3)
+endif()
 
 # libwebsockets
 if(${BUILD_LWS_LIBRARY})

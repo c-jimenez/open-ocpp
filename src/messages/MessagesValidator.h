@@ -19,7 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_MESSAGESVALIDATOR_H
 #define OPENOCPP_MESSAGESVALIDATOR_H
 
-#include <JsonValidator.h>
+#include "JsonValidator.h"
 
 #include <filesystem>
 #include <memory>

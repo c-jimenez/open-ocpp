@@ -95,6 +95,17 @@ class IMessageConverter
     }
 
     /**
+     * @brief Helper function to fill a floating point value in a JSON object
+     * @param json JSON object to fill
+     * @param field Name of the field to fill
+     * @param value Floating point value to fill
+     */
+    void fill(rapidjson::Value& json, const char* name, const double value)
+    {
+        json.AddMember(rapidjson::StringRef(name), rapidjson::Value(value), *allocator);
+    }
+
+    /**
      * @brief Helper function to fill a string value in a JSON object
      * @param json JSON object to fill
      * @param field Name of the field to fill

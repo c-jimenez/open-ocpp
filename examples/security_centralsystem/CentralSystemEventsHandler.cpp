@@ -25,6 +25,7 @@ SOFTWARE.
 #include "CentralSystemEventsHandler.h"
 #include "ChargePointDatabase.h"
 
+#include <array>
 #include <iostream>
 #include <random>
 #include <sstream>
@@ -99,7 +100,8 @@ bool CentralSystemEventsHandler::checkCredentials(const std::string& chargepoint
 {
     bool ret = false;
 
-    cout << "Check credentials for [" << chargepoint_id << "] : " << password << endl;
+    std::string hex_encoded_password = ocpp::helpers::toHexString(password);
+    cout << "Check credentials for [" << chargepoint_id << "] : " << hex_encoded_password << endl;
 
     // HTTP Basic Authentication is for Charge Points configured with Security Profile 1 or 2 only
 
@@ -111,7 +113,7 @@ bool CentralSystemEventsHandler::checkCredentials(const std::string& chargepoint
     {
         if ((security_profile == 1u) || (security_profile == 2u))
         {
-            ret = (password == authent_key);
+            ret = (hex_encoded_password == authent_key);
         }
         else
         {
@@ -257,14 +259,18 @@ ocpp::types::RegistrationStatus CentralSystemEventsHandler::ChargePointRequestHa
     }
     else
     {
-        // Generate an authent key for the charge point : minimal 16 bytes, max : 20 bytes
-        std::stringstream ss_authent_key;
-        ss_authent_key << std::hex;
-        for (int i = 0; i < 5; i++)
+        // Generate an authent key for the charge point : minimal 8 bytes, max : 20 bytes
+        std::mt19937                                rand_gen;
+        std::uniform_int_distribution<unsigned int> rand_distrib;
+        std::random_device                          rd;
+        rand_gen.seed(rd());
+
+        std::array<uint8_t, 17u> authent_key_bytes;
+        for (auto& val : authent_key_bytes)
         {
-            ss_authent_key << std::setfill('0') << std::setw(4) << std::rand();
+            val = static_cast<uint8_t>(rand_distrib(rand_gen));
         }
-        m_authent_key = ss_authent_key.str();
+        m_authent_key = ocpp::helpers::toHexString(authent_key_bytes);
 
         // Add the charge point to the database
         m_chargepoint_db.addChargePoint(this->proxy()->identifier(), serial_number, vendor, model, 0, m_authent_key);

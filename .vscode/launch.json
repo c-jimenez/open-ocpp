@@ -38,6 +38,26 @@
             "target": "${workspaceRoot}/build_gcc_native/tests/chargepoint/smartcharging/test_smartcharging_setpoint",
             "cwd": "${workspaceRoot}",
             "valuesFormatting": "parseText"
+        },
+        {
+            "type": "cppdbg",
+            "request": "attach",
+            "name": "Join process",
+            "program": "${workspaceRoot}/bin/gcc_native/quick_start_chargepoint",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Activer l'impression en mode Pretty pour gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Définir la version désassemblage sur Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }
