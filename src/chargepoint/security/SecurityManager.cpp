@@ -669,15 +669,16 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
 ocpp::types::ConfigurationStatus SecurityManager::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
 {
     (void)key;
-    ConfigurationStatus ret = ConfigurationStatus::Accepted;
+    ConfigurationStatus ret = ConfigurationStatus::Rejected;
 
-    // Authorization key length for security profiles 1 and 2 must be between 32 and 40 bytes
-    unsigned int security_profile = m_ocpp_config.securityProfile();
-    if ((security_profile == 1) || (security_profile == 2))
+    // Authorization key length for security profiles 1 and 2 must be between 16 and 40 bytes
+    // and must be a valid hexadecimal representation
+    if ((value.size() >= 16u) && (value.size() <= 40u))
     {
-        if ((value.size() < 32u) || (value.size() > 40u))
+        auto key_bytes = ocpp::helpers::fromHexString(value);
+        if (key_bytes.size() == (value.size() / 2u))
         {
-            ret = ConfigurationStatus::Rejected;
+            ret = ConfigurationStatus::Accepted;
         }
     }
 
