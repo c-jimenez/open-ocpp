@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "StringHelpers.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 
@@ -28,6 +29,14 @@ namespace helpers
 
 /** @brief Space */
 const std::string SPACE_STRING = " ";
+
+/**  @brief Helper function to convert a string to lowercase */
+std::string tolower(const std::string& str)
+{
+    std::string ret = str;
+    std::transform(ret.begin(), ret.end(), ret.begin(), [](unsigned char c) { return std::tolower(c); });
+    return ret;
+}
 
 /** @brief Helper function to trim a string */
 std::string& trim(std::string& str, const std::string& chars)

@@ -49,13 +49,15 @@ ConfigManager::~ConfigManager() { }
 /** @copydoc void registerCheckFunction(const std::string&, ConfigurationValueCheckFunc) */
 void ConfigManager::registerCheckFunction(const std::string& key, ConfigurationValueCheckFunc func)
 {
-    m_specific_checks[key] = func;
+    auto lower_case_key               = ocpp::helpers::tolower(key);
+    m_specific_checks[lower_case_key] = func;
 }
 
 /** @copydoc void IConfigManager::registerConfigChangedListener(const std::string&, IConfigChangedListener&) */
 void ConfigManager::registerConfigChangedListener(const std::string& key, IConfigChangedListener& listener)
 {
-    m_listeners[key] = &listener;
+    auto lower_case_key         = ocpp::helpers::tolower(key);
+    m_listeners[lower_case_key] = &listener;
 }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
@@ -93,10 +95,11 @@ bool ConfigManager::handleMessage(const ocpp::messages::ChangeConfigurationReq& 
     response.status = ConfigurationStatus::Accepted;
 
     // Specific check
-    auto it = m_specific_checks.find(request.key);
+    auto lower_case_key = ocpp::helpers::tolower(request.key);
+    auto it             = m_specific_checks.find(lower_case_key);
     if (it != m_specific_checks.end())
     {
-        response.status = it->second(request.key, request.value);
+        response.status = it->second(lower_case_key, request.value);
     }
     if (response.status == ConfigurationStatus::Accepted)
     {
@@ -105,10 +108,10 @@ bool ConfigManager::handleMessage(const ocpp::messages::ChangeConfigurationReq& 
         if (response.status == ConfigurationStatus::Accepted)
         {
             // Notify change
-            auto iter = m_listeners.find(request.key);
+            auto iter = m_listeners.find(lower_case_key);
             if (iter != m_listeners.end())
             {
-                iter->second->configurationValueChanged(request.key);
+                iter->second->configurationValueChanged(lower_case_key);
             }
         }
     }
