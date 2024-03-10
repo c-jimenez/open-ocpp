@@ -71,8 +71,8 @@ bool StatusNotificationReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "info", data.info);
     data.status = ChargePointStatusHelper.fromString(json["status"].GetString());
     ret         = ret && extract(json, "timestamp", data.timestamp, error_message);
-    extract(json, "info", data.vendorId);
-    extract(json, "info", data.vendorErrorCode);
+    extract(json, "vendorId", data.vendorId);
+    extract(json, "vendorErrorCode", data.vendorErrorCode);
     if (!ret)
     {
         error_code = ocpp::rpc::IRpc::RPC_ERROR_TYPE_CONSTRAINT_VIOLATION;
@@ -87,12 +87,15 @@ bool StatusNotificationReqConverter::toJson(const StatusNotificationReq& data, r
     fill(json, "errorCode", ChargePointErrorCodeHelper.toString(data.errorCode));
     fill(json, "status", ChargePointStatusHelper.toString(data.status));
     fill(json, "timestamp", data.timestamp);
-    if (data.errorCode != ChargePointErrorCode::NoError)
-    {
-        fill(json, "info", data.info);
-        fill(json, "vendorId", data.vendorId);
-        fill(json, "vendorErrorCode", data.vendorErrorCode);
-    }
+    //if (data.errorCode != ChargePointErrorCode::NoError)
+    //{
+       if(data.info.isSet())
+           fill(json, "info", data.info);
+       if(data.vendorId.isSet())
+           fill(json, "vendorId", data.vendorId);
+       if(data.vendorErrorCode.isSet())
+           fill(json, "vendorErrorCode", data.vendorErrorCode);
+   // }
     return true;
 }
 
