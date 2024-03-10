@@ -383,7 +383,8 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                                         {
                                             // Check credentials
                                             std::string username(plain, static_cast<size_t>(pcolon - plain));
-                                            std::string password(pcolon + 1u);
+                                            std::string password(pcolon + 1u, m - (username.size() + 1u));
+                                            password.resize(m - (username.size() + 1u));
                                             authorized = server->m_listener->wsCheckCredentials(uri, username, password);
                                         }
                                     }
