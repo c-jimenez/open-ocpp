@@ -303,7 +303,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
                         }
                         else
                         {
-                            ret = false;
+                            ret           = false;
                             error_message = "Recurring profiles must have a start schedule and a duration";
                         }
                     }

@@ -75,6 +75,7 @@ bool RpcBase::call(const std::string&         action,
         // Serialize message
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        writer.SetMaxDecimalPlaces(1); // OCPP decimals have 1 digit precision
         payload.Accept(writer);
 
         std::stringstream serialized_message;
@@ -186,6 +187,7 @@ void RpcBase::processIncomingRequest(std::shared_ptr<RpcMessage>& rpc_message)
         // Serialize message
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        writer.SetMaxDecimalPlaces(1); // OCPP decimals have 1 digit precision
         response.Accept(writer);
 
         std::stringstream serialized_message;
