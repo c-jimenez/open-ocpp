@@ -23,6 +23,29 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <functional>
 #include <iostream>
 
+/** @brief Generate basic authent header with bytes password (may contain \0 char) */
+int lws_http_basic_auth_gen2(const char* user, const void* pw, size_t pwd_len, char* buf, size_t len)
+{
+    size_t n = strlen(user), m = pwd_len;
+    char   b[128];
+
+    if (len < 6 + ((4 * (n + m + 1)) / 3) + 1)
+        return 1;
+
+    memcpy(buf, "Basic ", 6);
+
+    n = (unsigned int)lws_snprintf(b, sizeof(b), "%s:", user);
+    if ((n + pwd_len) >= sizeof(b) - 2)
+        return 2;
+    memcpy(&b[n], pw, pwd_len);
+    n += pwd_len;
+
+    lws_b64_encode_string(b, (int)n, buf + 6, (int)len - 6);
+    buf[len - 1] = '\0';
+
+    return 0;
+}
+
 namespace ocpp
 {
 namespace websockets
@@ -411,7 +434,11 @@ int LibWebsocketClient::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (client->m_credentials.user.empty())
                 break;
 
-            if (lws_http_basic_auth_gen(client->m_credentials.user.c_str(), client->m_credentials.password.c_str(), b, sizeof(b)))
+            if (lws_http_basic_auth_gen2(client->m_credentials.user.c_str(),
+                                         client->m_credentials.password.data(),
+                                         client->m_credentials.password.size(),
+                                         b,
+                                         sizeof(b)))
                 break;
             if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_AUTHORIZATION, (unsigned char*)b, (int)strlen(b), p, end))
                 return -1;
