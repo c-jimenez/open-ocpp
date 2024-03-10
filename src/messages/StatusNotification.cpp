@@ -87,15 +87,12 @@ bool StatusNotificationReqConverter::toJson(const StatusNotificationReq& data, r
     fill(json, "errorCode", ChargePointErrorCodeHelper.toString(data.errorCode));
     fill(json, "status", ChargePointStatusHelper.toString(data.status));
     fill(json, "timestamp", data.timestamp);
-    //if (data.errorCode != ChargePointErrorCode::NoError)
-    //{
-       if(data.info.isSet())
-           fill(json, "info", data.info);
-       if(data.vendorId.isSet())
-           fill(json, "vendorId", data.vendorId);
-       if(data.vendorErrorCode.isSet())
-           fill(json, "vendorErrorCode", data.vendorErrorCode);
-   // }
+    if (data.info.isSet())
+        fill(json, "info", data.info);
+    if (data.vendorId.isSet())
+        fill(json, "vendorId", data.vendorId);
+    if (data.vendorErrorCode.isSet())
+        fill(json, "vendorErrorCode", data.vendorErrorCode);
     return true;
 }
 

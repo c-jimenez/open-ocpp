@@ -362,6 +362,7 @@ std::string ProfileDatabase::serialize(const ocpp::types::ChargingProfile& profi
 
     rapidjson::StringBuffer                    buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    writer.SetMaxDecimalPlaces(1); // OCPP decimals have 1 digit precision
     profile_json.Accept(writer);
     profile_str = buffer.GetString();
     return profile_str;
