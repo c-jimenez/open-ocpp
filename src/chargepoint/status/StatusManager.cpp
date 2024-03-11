@@ -412,13 +412,13 @@ void StatusManager::bootNotificationProcess()
     boot_req.imsi.value().assign(m_stack_config.imsi());
     boot_req.meterSerialNumber.value().assign(m_stack_config.meterSerialNumber());
 
+    m_registration_status = RegistrationStatus::Rejected;
     // Send BootNotificationRequest
     BootNotificationConf boot_conf;
     CallResult           result = m_msg_sender.call(BOOT_NOTIFICATION_ACTION, boot_req, boot_conf);
     if (result == CallResult::Ok)
-    {
-        m_registration_status = boot_conf.status;
-        if (m_registration_status == RegistrationStatus::Accepted)
+    {       
+        if (boot_conf.status == RegistrationStatus::Accepted)
         {
             // Send first status notifications
             for (unsigned int id = 0; id <= m_connectors.getCount(); id++)
@@ -437,6 +437,7 @@ void StatusManager::bootNotificationProcess()
             m_boot_notification_timer.start(std::chrono::seconds(boot_conf.interval), true);
         }
 
+        m_registration_status = boot_conf.status;
         std::string registration_status = RegistrationStatusHelper.toString(m_registration_status);
         LOG_INFO << "Registration status : " << registration_status;
 
