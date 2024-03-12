@@ -48,10 +48,6 @@ Url::Url(const std::string& url)
 
         // Convert path
         m_path = match[10].str();
-        if (!m_path.empty())
-        {
-            m_path = encode(m_path);
-        }
 
         // Convert port
         std::string sport = match[9].str();
@@ -70,54 +66,52 @@ Url::Url(const std::string& url)
                 m_is_valid = false;
             }
         }
-
-        // Rebuild URL
-        if (m_is_valid)
-        {
-            std::stringstream encoded_url;
-            encoded_url << m_protocol << "://";
-            if (!m_username.empty() || !m_password.empty())
-            {
-                encoded_url << m_username;
-                if (!m_password.empty())
-                {
-                    encoded_url << ":" << m_password;
-                }
-                encoded_url << "@";
-            }
-            encoded_url << m_address;
-            if (m_port != 0)
-            {
-                encoded_url << ":" << m_port;
-            }
-            encoded_url << m_path;
-            m_url = encoded_url.str();
-        }
     }
 }
 
 /** @brief Destructor */
 Url::~Url() { }
 
-/** @brief Encode an URL */
-std::string Url::encode(const std::string& url) const
+/** @brief Encode a part of an URL using RFC3986 percent encoding */
+std::string Url::encode(const std::string& url)
 {
+    // RFC3986 : Un reserved chars which must not be encoded
+    static const char unreserved_char[] = {'-', '_', '.', '~'};
+
     std::stringstream encoded_url;
-    encoded_url << std::hex;
+    encoded_url << std::uppercase << std::hex;
 
     for (const auto& c : url)
     {
-        // Safe characters
-        if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')) || (c == '/'))
+        // RFC3986 :  Only alphanumeric and unreserved chars may be used
+        //            unencoded within a URL
+        bool encode = true;
+        if (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')))
         {
-            // No encoding
-            encoded_url << c;
+            encode = false;
         }
         else
+        {
+            for (size_t i = 0; i < sizeof(unreserved_char) / sizeof(char); i++)
+            {
+                if (c == unreserved_char[i])
+                {
+                    encode = false;
+                    break;
+                }
+            }
+        }
+
+        if (encode)
         {
             // Percent encoding
             encoded_url << '%';
             encoded_url << std::setw(2) << std::setfill('0') << static_cast<int>(c);
+        }
+        else
+        {
+            // No encoding
+            encoded_url << c;
         }
     }
 

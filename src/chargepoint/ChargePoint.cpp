@@ -35,6 +35,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "TimerPool.h"
 #include "TransactionManager.h"
 #include "TriggerMessageManager.h"
+#include "Url.h"
 #include "Version.h"
 #include "WebsocketFactory.h"
 #include "WorkerThreadPool.h"
@@ -1142,7 +1143,7 @@ bool ChargePoint::doConnect()
     {
         connection_url += "/";
     }
-    connection_url += m_stack_config.chargePointIdentifier();
+    connection_url += ocpp::websockets::Url::encode(m_stack_config.chargePointIdentifier());
 
     // Check if URL has changed since last connection
     std::string last_url;
@@ -1166,7 +1167,7 @@ bool ChargePoint::doConnect()
     {
         auto authentication_key = ocpp::helpers::fromHexString(authorization_key);
         credentials.user        = m_stack_config.chargePointIdentifier();
-        credentials.password    = std::string(reinterpret_cast<const char*>(authentication_key.data()), authorization_key.size());
+        credentials.password    = std::string(reinterpret_cast<const char*>(authentication_key.data()), authentication_key.size());
         credentials.password.resize(authentication_key.size());
     }
     if (security_profile != 1)
