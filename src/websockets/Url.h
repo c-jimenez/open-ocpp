@@ -96,6 +96,9 @@ class Url
      */
     const std::string& path() const { return m_path; }
 
+    /** @brief Encode a part of an URL using RFC3986 percent encoding */
+    static std::string encode(const std::string& url);
+
   private:
     /** @brief Full URL */
     std::string m_url;
@@ -113,9 +116,6 @@ class Url
     unsigned int m_port;
     /** @brief Path part of the URL */
     std::string m_path;
-
-    /** @brief Encode an URL */
-    std::string encode(const std::string& url) const;
 };
 
 } // namespace websockets
