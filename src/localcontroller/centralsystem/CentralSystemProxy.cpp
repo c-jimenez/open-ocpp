@@ -18,6 +18,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CentralSystemProxy.h"
 #include "ILocalControllerConfig.h"
+#include "Url.h"
 #include "WebsocketFactory.h"
 
 #include <sstream>
@@ -86,7 +87,7 @@ bool CentralSystemProxy::connect(const std::string&                             
         {
             full_url << "/";
         }
-        full_url << m_identifier;
+        full_url << ocpp::websockets::Url::encode(m_identifier);
 
         // Connect
         ret = m_rpc.start(full_url.str(), credentials, connect_timeout, retry_interval, ping_interval);
