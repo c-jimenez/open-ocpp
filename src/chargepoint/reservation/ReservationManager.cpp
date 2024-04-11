@@ -185,8 +185,8 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
     if (connector)
     {
         // Check if reservation is allowed on connector
-         if (((request.connectorId != 0) || ((request.connectorId == 0) && m_ocpp_config.reserveConnectorZeroSupported()))
-            &&( m_ocpp_config.supportedFeatureProfiles().find("Reservation")!= std::string::npos) )
+        if (((request.connectorId != 0) || ((request.connectorId == 0) && m_ocpp_config.reserveConnectorZeroSupported())) &&
+            (m_ocpp_config.supportedFeatureProfiles().find("Reservation") != std::string::npos))
         {
             std::lock_guard<std::mutex> lock(connector->mutex);
 
