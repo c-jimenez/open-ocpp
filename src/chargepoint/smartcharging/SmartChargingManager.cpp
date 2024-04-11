@@ -362,16 +362,19 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
         if (m_ocpp_config.chargingScheduleAllowedChargingRateUnit().find("Power") != std::string::npos)
         {
             charging_rate_unit = types::ChargingRateUnitType::W;
-        } else
+        }
+        else
         {
             charging_rate_unit = types::ChargingRateUnitType::A;
         }
-    } else {
+    }
+    else
+    {
         charging_rate_unit = request.chargingRateUnit.value();
     }
 
     LOG_INFO << "GetCompositeSchedule requested : connectorId = " << request.connectorId << " - duration = " << request.duration
-             << " - chargingRateUnit = " <<  ChargingRateUnitTypeHelper.toString(charging_rate_unit)
+             << " - chargingRateUnit = " << ChargingRateUnitTypeHelper.toString(charging_rate_unit)
              << (!request.chargingRateUnit.isSet() ? " (from allowed charging unit)" : "");
 
     // Lock profiles
