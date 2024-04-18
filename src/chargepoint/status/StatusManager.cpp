@@ -64,7 +64,8 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
       m_msg_sender(msg_sender),
       m_registration_status(RegistrationStatus::Rejected),
       m_force_boot_notification(false),
-      m_boot_notification_timer(timer_pool, "Boot notification"),
+      m_boot_notification_sent(false),
+      m_boot_notification_timer(timer_pool, "Boot notification"),      
       m_heartbeat_timer(timer_pool, "Heartbeat")
 {
     m_boot_notification_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::bootNotificationProcess, this)); });
@@ -400,57 +401,77 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
 
 /** @brief Boot notification process thread */
 void StatusManager::bootNotificationProcess()
-{
-    // Fill boot notification request
-    BootNotificationReq boot_req;
-    boot_req.chargeBoxSerialNumber.value().assign(m_stack_config.chargeBoxSerialNumber());
-    boot_req.chargePointModel.assign(m_stack_config.chargePointModel());
-    boot_req.chargePointSerialNumber.value().assign(m_stack_config.chargePointSerialNumber());
-    boot_req.chargePointVendor.assign(m_stack_config.chargePointVendor());
-    boot_req.firmwareVersion.value().assign(m_stack_config.firmwareVersion());
-    boot_req.iccid.value().assign(m_stack_config.iccid());
-    boot_req.imsi.value().assign(m_stack_config.imsi());
-    boot_req.meterSerialNumber.value().assign(m_stack_config.meterSerialNumber());
-
-    // Send BootNotificationRequest
-    BootNotificationConf boot_conf;
-    CallResult           result = m_msg_sender.call(BOOT_NOTIFICATION_ACTION, boot_req, boot_conf);
-    if (result == CallResult::Ok)
+{   
+    if(m_boot_notification_sent == false)
     {
-        m_registration_status = boot_conf.status;
-        if (m_registration_status == RegistrationStatus::Accepted)
+        // Fill boot notification request
+        BootNotificationReq boot_req;
+        boot_req.chargeBoxSerialNumber.value().assign(m_stack_config.chargeBoxSerialNumber());
+        boot_req.chargePointModel.assign(m_stack_config.chargePointModel());
+        boot_req.chargePointSerialNumber.value().assign(m_stack_config.chargePointSerialNumber());
+        boot_req.chargePointVendor.assign(m_stack_config.chargePointVendor());
+        boot_req.firmwareVersion.value().assign(m_stack_config.firmwareVersion());
+        boot_req.iccid.value().assign(m_stack_config.iccid());
+        boot_req.imsi.value().assign(m_stack_config.imsi());
+        boot_req.meterSerialNumber.value().assign(m_stack_config.meterSerialNumber());
+
+        m_registration_status = RegistrationStatus::Rejected;
+        // Send BootNotificationRequest
+        BootNotificationConf boot_conf;
+        CallResult           result = m_msg_sender.call(BOOT_NOTIFICATION_ACTION, boot_req, boot_conf);
+        if (result == CallResult::Ok)
         {
-            // Send first status notifications
-            for (unsigned int id = 0; id <= m_connectors.getCount(); id++)
+            if (boot_conf.status == RegistrationStatus::Accepted)
             {
-                statusNotificationProcess(id);
+                 m_boot_notification_sent = true;
+                // Send first status notifications
+                for (unsigned int id = 0; id <= m_connectors.getCount(); id++)
+                {
+                    statusNotificationProcess(id);
+                }
+
+                // Configure hearbeat
+                std::chrono::seconds interval(boot_conf.interval);
+                m_ocpp_config.heartbeatInterval(interval);
+                m_heartbeat_timer.start(std::chrono::milliseconds(interval));
+            }
+            else
+            {
+                // Schedule next retry
+                m_boot_notification_timer.start(std::chrono::seconds(boot_conf.interval), true);
             }
 
-            // Configure hearbeat
-            std::chrono::seconds interval(boot_conf.interval);
-            m_ocpp_config.heartbeatInterval(interval);
-            m_heartbeat_timer.start(std::chrono::milliseconds(interval));
+            m_registration_status = boot_conf.status;
+            std::string registration_status = RegistrationStatusHelper.toString(m_registration_status);
+            LOG_INFO << "Registration status : " << registration_status;
+
+            // Save registration status
+            m_force_boot_notification = false;
+            m_internal_config.setKey(LAST_REGISTRATION_STATUS_KEY, registration_status);
+
+            // Notify boot
+            m_events_handler.bootNotification(m_registration_status, boot_conf.currentTime);
         }
         else
         {
             // Schedule next retry
-            m_boot_notification_timer.start(std::chrono::seconds(boot_conf.interval), true);
+            m_boot_notification_timer.start(m_stack_config.retryInterval(), true);
         }
-
-        std::string registration_status = RegistrationStatusHelper.toString(m_registration_status);
-        LOG_INFO << "Registration status : " << registration_status;
-
-        // Save registration status
-        m_force_boot_notification = false;
-        m_internal_config.setKey(LAST_REGISTRATION_STATUS_KEY, registration_status);
-
-        // Notify boot
-        m_events_handler.bootNotification(m_registration_status, boot_conf.currentTime);
     }
     else
     {
-        // Schedule next retry
-        m_boot_notification_timer.start(m_stack_config.retryInterval(), true);
+        // If the status of a connector has changed since the last notification
+        // to the central system, send the new connector status
+        for (const Connector* connector : m_connectors.getConnectors())
+        {
+            if (connector->status != connector->last_notified_status)
+            {
+                statusNotificationProcess(connector->id);
+            }
+        }
+
+        // Configure hearbeat
+        m_heartbeat_timer.start(m_ocpp_config.heartbeatInterval());
     }
 }
 
