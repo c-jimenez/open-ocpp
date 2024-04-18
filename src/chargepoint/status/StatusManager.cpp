@@ -65,7 +65,7 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
       m_registration_status(RegistrationStatus::Rejected),
       m_force_boot_notification(false),
       m_boot_notification_sent(false),
-      m_boot_notification_timer(timer_pool, "Boot notification"),      
+      m_boot_notification_timer(timer_pool, "Boot notification"),
       m_heartbeat_timer(timer_pool, "Heartbeat")
 {
     m_boot_notification_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::bootNotificationProcess, this)); });
@@ -401,8 +401,8 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
 
 /** @brief Boot notification process thread */
 void StatusManager::bootNotificationProcess()
-{   
-    if(m_boot_notification_sent == false)
+{
+    if (m_boot_notification_sent == false)
     {
         // Fill boot notification request
         BootNotificationReq boot_req;
@@ -416,6 +416,7 @@ void StatusManager::bootNotificationProcess()
         boot_req.meterSerialNumber.value().assign(m_stack_config.meterSerialNumber());
 
         m_registration_status = RegistrationStatus::Rejected;
+
         // Send BootNotificationRequest
         BootNotificationConf boot_conf;
         CallResult           result = m_msg_sender.call(BOOT_NOTIFICATION_ACTION, boot_req, boot_conf);
@@ -423,7 +424,8 @@ void StatusManager::bootNotificationProcess()
         {
             if (boot_conf.status == RegistrationStatus::Accepted)
             {
-                 m_boot_notification_sent = true;
+                m_boot_notification_sent = true;
+
                 // Send first status notifications
                 for (unsigned int id = 0; id <= m_connectors.getCount(); id++)
                 {
@@ -441,7 +443,7 @@ void StatusManager::bootNotificationProcess()
                 m_boot_notification_timer.start(std::chrono::seconds(boot_conf.interval), true);
             }
 
-            m_registration_status = boot_conf.status;
+            m_registration_status           = boot_conf.status;
             std::string registration_status = RegistrationStatusHelper.toString(m_registration_status);
             LOG_INFO << "Registration status : " << registration_status;
 

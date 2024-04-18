@@ -281,13 +281,13 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
                             // Check if a transaction is in progress for the specific connector
                             if (connector->transaction_id != 0)
                             {
-                                if(request.csChargingProfiles.transactionId.isSet())
+                                if (request.csChargingProfiles.transactionId.isSet())
                                 {
-                                  if(request.csChargingProfiles.transactionId.value() == connector->transaction_id)
-                                  {
-                                      // Add profile
-                                      ret = true;
-                                  }
+                                    if (request.csChargingProfiles.transactionId.value() == connector->transaction_id)
+                                    {
+                                        // Add profile
+                                        ret = true;
+                                    }
                                 }
                                 else
                                 {

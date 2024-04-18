@@ -142,6 +142,7 @@ class StatusManager
     ocpp::types::RegistrationStatus m_registration_status;
     /** @brief Indicate if the boot notification message must be inconditionnaly sent on connection */
     bool m_force_boot_notification;
+    /** @brief Indicate if the boot notification message has been sent */
     bool m_boot_notification_sent;
     /** @brief Boot notification process timer */
     ocpp::helpers::Timer m_boot_notification_timer;
