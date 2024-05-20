@@ -281,8 +281,19 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
                             // Check if a transaction is in progress for the specific connector
                             if (connector->transaction_id != 0)
                             {
-                                // Add profile
-                                ret = true;
+                                if (request.csChargingProfiles.transactionId.isSet())
+                                {
+                                    if (request.csChargingProfiles.transactionId.value() == connector->transaction_id)
+                                    {
+                                        // Add profile
+                                        ret = true;
+                                    }
+                                }
+                                else
+                                {
+                                    // Add profile
+                                    ret = true;
+                                }
                             }
                         }
                         break;
@@ -340,7 +351,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
         LOG_INFO << "Set charging profile status rejected : " << error_message;
     }
 
-    return ret;
+    return true;
 }
 
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
@@ -356,9 +367,26 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
     (void)error_code;
     (void)error_message;
 
+    ocpp::types::ChargingRateUnitType charging_rate_unit;
+    if (!request.chargingRateUnit.isSet())
+    {
+        if (m_ocpp_config.chargingScheduleAllowedChargingRateUnit().find("Power") != std::string::npos)
+        {
+            charging_rate_unit = types::ChargingRateUnitType::W;
+        }
+        else
+        {
+            charging_rate_unit = types::ChargingRateUnitType::A;
+        }
+    }
+    else
+    {
+        charging_rate_unit = request.chargingRateUnit.value();
+    }
+
     LOG_INFO << "GetCompositeSchedule requested : connectorId = " << request.connectorId << " - duration = " << request.duration
-             << " - chargingRateUnit = "
-             << (request.chargingRateUnit.isSet() ? ChargingRateUnitTypeHelper.toString(request.chargingRateUnit) : "not set");
+             << " - chargingRateUnit = " << ChargingRateUnitTypeHelper.toString(charging_rate_unit)
+             << (!request.chargingRateUnit.isSet() ? " (from allowed charging unit)" : "");
 
     // Lock profiles
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -442,14 +470,8 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeSched
 
             ChargingSchedule& schedule = response.chargingSchedule.value();
             schedule.duration          = 0;
-            if (request.chargingRateUnit.isSet())
-            {
-                schedule.chargingRateUnit = request.chargingRateUnit;
-            }
-            else
-            {
-                schedule.chargingRateUnit = ChargingRateUnitType::A;
-            }
+            schedule.chargingRateUnit  = charging_rate_unit;
+
             // Adjust start if needed since first period must start at 0
             time_t offset          = periods[0].start;
             schedule.startSchedule = DateTime(now.timestamp() + offset);
