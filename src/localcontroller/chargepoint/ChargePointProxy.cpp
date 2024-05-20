@@ -56,6 +56,9 @@ std::shared_ptr<IChargePointProxy> IChargePointProxy::createFrom(
 
         // Associate both
         centralsystem->setChargePointProxy(proxy);
+
+        // Unregister old proxy from RPC spy events
+        cs_proxy->unregisterFromRpcSpy();
     }
 
     return proxy;

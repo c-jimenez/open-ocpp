@@ -79,6 +79,12 @@ ChargePointProxy::ChargePointProxy(ICentralSystem&                              
 /** @brief Destructor */
 ChargePointProxy::~ChargePointProxy()
 {
+    unregisterFromRpcSpy();
+}
+
+/** @brief Unregister to the IRpc::ISpy interface messages */
+void ChargePointProxy::unregisterFromRpcSpy()
+{
     m_rpc->unregisterSpy(*this);
 }
 

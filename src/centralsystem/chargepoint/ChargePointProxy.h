@@ -58,6 +58,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
     /** @brief Destructor */
     virtual ~ChargePointProxy();
 
+    /** @brief Unregister to the IRpc::ISpy interface messages */
+    void unregisterFromRpcSpy();
+
     // ICentralSystem::IChargePoint interface
 
     /** @copydoc ICentralSystem&& ICentralSystem::IChargePoint::centralSystem() */
