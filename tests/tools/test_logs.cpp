@@ -201,7 +201,10 @@ TEST_SUITE("Database class test suite")
         CHECK_FALSE(query->next());
     }
 
-    TEST_CASE("Cleanup") { std::filesystem::remove(test_database_path); }
+    TEST_CASE("Cleanup")
+    {
+        std::filesystem::remove(test_database_path);
+    }
 }
 
 #endif // EXTERNAL_LOGGER

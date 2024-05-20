@@ -135,5 +135,8 @@ TEST_SUITE("Database class test suite")
         CHECK_EQ(query.get(), nullptr);
     }
 
-    TEST_CASE("Cleanup") { std::filesystem::remove(test_database_path); }
+    TEST_CASE("Cleanup")
+    {
+        std::filesystem::remove(test_database_path);
+    }
 }
