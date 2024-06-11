@@ -53,12 +53,12 @@ void RequestFifo::push(unsigned int connector_id, const std::string& action, con
     m_fifo.emplace(m_id, connector_id, action, request);
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0, m_id);
         m_insert_query->bind(1, connector_id);
         m_insert_query->bind(2, action);
         m_insert_query->bind(3, request);
         m_insert_query->exec();
+        m_insert_query->reset();
     }
 
     // Prepare for next entry
@@ -105,9 +105,9 @@ void RequestFifo::pop()
     m_fifo.pop();
     if (m_delete_query)
     {
-        m_delete_query->reset();
         m_delete_query->bind(0, id);
         m_delete_query->exec();
+        m_delete_query->reset();
     }
 }
 

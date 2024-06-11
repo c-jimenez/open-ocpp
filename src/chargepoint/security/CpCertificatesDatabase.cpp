@@ -100,11 +100,10 @@ void CpCertificatesDatabase::saveCertificateRequest(const ocpp::x509::Certificat
     if (m_delete_csr_query && m_insert_csr_query)
     {
         // Delete any existing request
-        m_delete_csr_query->reset();
         m_delete_csr_query->exec();
+        m_delete_csr_query->reset();
 
         // Insert new request
-        m_insert_csr_query->reset();
         m_insert_csr_query->bind(0, certificate_request.pem());
         m_insert_csr_query->bind(1, private_key.privatePem());
         if (!m_insert_csr_query->exec())
@@ -113,7 +112,6 @@ void CpCertificatesDatabase::saveCertificateRequest(const ocpp::x509::Certificat
         }
 
         // Reset all queries
-        m_delete_csr_query->reset();
         m_insert_csr_query->reset();
     }
 }
@@ -126,7 +124,6 @@ std::string CpCertificatesDatabase::getCertificateRequest(unsigned int& id)
     if (m_find_csr_query)
     {
         // Look for the certificate request
-        m_find_csr_query->reset();
         if (m_find_csr_query->exec())
         {
             // Read data
@@ -149,7 +146,6 @@ bool CpCertificatesDatabase::installCertificate(unsigned int request_id, const o
     if (m_update_csr_to_cert_query)
     {
         // Install certificate
-        m_update_csr_to_cert_query->reset();
         m_update_csr_to_cert_query->bind(0, static_cast<int64_t>(certificate.validityFrom()));
         m_update_csr_to_cert_query->bind(1, static_cast<int64_t>(certificate.validityTo()));
         m_update_csr_to_cert_query->bind(2, certificate.pem());
@@ -178,7 +174,6 @@ bool CpCertificatesDatabase::isValidCertificateInstalled()
     if (m_list_query)
     {
         // Find valid certificates
-        m_list_query->reset();
         m_list_query->bind(0, static_cast<int64_t>(DateTime::now().timestamp()));
         m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
         ret = (m_list_query->exec() && m_list_query->hasRows());
@@ -198,7 +193,6 @@ std::string CpCertificatesDatabase::getChargePointCertificate(std::string& priva
     if (m_list_query)
     {
         // Find valid certificates
-        m_list_query->reset();
         m_list_query->bind(0, static_cast<int64_t>(DateTime::now().timestamp()));
         m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
         if (m_list_query->exec() && m_list_query->hasRows())

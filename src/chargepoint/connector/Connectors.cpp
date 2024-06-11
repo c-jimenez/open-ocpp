@@ -230,7 +230,6 @@ bool Connectors::loadConnector(Connector& connector)
 
     if (m_find_query)
     {
-        m_find_query->reset();
         m_find_query->bind(0, connector.id);
         ret = m_find_query->exec();
         if (ret)
@@ -272,6 +271,7 @@ bool Connectors::loadConnector(Connector& connector)
         {
             LOG_ERROR << "Could not search for connector " << connector.id << " : " << m_find_query->lastError();
         }
+        m_find_query->reset();
     }
 
     return ret;
@@ -284,7 +284,6 @@ bool Connectors::saveConnector(const Connector& connector)
 
     if (m_update_query)
     {
-        m_update_query->reset();
         m_update_query->bind(0u, static_cast<int>(connector.status));
         m_update_query->bind(1u, static_cast<int>(connector.last_notified_status));
         m_update_query->bind(2u, connector.transaction_id);
@@ -306,6 +305,7 @@ bool Connectors::saveConnector(const Connector& connector)
         {
             LOG_ERROR << "Could not update connector " << connector.id << " : " << m_update_query->lastError();
         }
+        m_update_query->reset();
     }
 
     return ret;
@@ -318,7 +318,6 @@ bool Connectors::createConnector(const Connector& connector)
 
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0u, connector.id);
         m_insert_query->bind(1u, static_cast<int>(connector.status));
         m_insert_query->bind(2u, static_cast<int>(connector.last_notified_status));
@@ -340,6 +339,7 @@ bool Connectors::createConnector(const Connector& connector)
         {
             LOG_ERROR << "Could not create connector " << connector.id << " : " << m_insert_query->lastError();
         }
+        m_insert_query->reset();
     }
 
     return ret;
