@@ -158,7 +158,6 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
     {
         // Get data from database
         meter_values.clear();
-        m_find_query->reset();
         m_find_query->bind(0, connector->transaction_id);
         if (m_find_query->exec() && m_find_query->hasRows())
         {
@@ -175,12 +174,14 @@ void MeterValuesManager::getTxStopMeterValues(unsigned int connector_id, std::ve
                     meter_values.pop_back();
                 }
             } while (m_find_query->next());
+            m_find_query->reset();
 
             // Clear data from database
-            m_delete_query->reset();
             m_delete_query->bind(0, connector->transaction_id);
             m_delete_query->exec();
+            m_delete_query->reset();
         }
+        m_find_query->reset();
     }
 }
 
@@ -335,10 +336,10 @@ void MeterValuesManager::processClockAligned(void)
                                 std::string meter_value_str = serialize(meter_value);
 
                                 // Store into database
-                                m_insert_query->reset();
                                 m_insert_query->bind(0u, connector->transaction_id);
                                 m_insert_query->bind(1u, meter_value_str);
                                 m_insert_query->exec();
+                                m_insert_query->reset();
                             }
                         }
                     }
@@ -385,10 +386,10 @@ void MeterValuesManager::processSampled(unsigned int connector_id)
                             std::string meter_value_str = serialize(meter_value);
 
                             // Store into database
-                            m_insert_query->reset();
                             m_insert_query->bind(0u, connector->transaction_id);
                             m_insert_query->bind(1u, meter_value_str);
                             m_insert_query->exec();
+                            m_insert_query->reset();
                         }
                     }
                 }
@@ -573,9 +574,9 @@ void MeterValuesManager::initDatabaseTable()
             if (!found && m_delete_query)
             {
                 LOG_INFO << "Cleaning meter values associated to not ongoing transaction : " << transaction_id;
-                m_delete_query->reset();
                 m_delete_query->bind(0, transaction_id);
                 m_delete_query->exec();
+                m_delete_query->reset();
             }
         } while (query->next());
     }

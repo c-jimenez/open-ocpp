@@ -111,7 +111,6 @@ ocpp::types::DeleteCertificateStatusEnumType CaCertificatesDatabase::deleteCerti
             if (!in_use)
             {
                 // Delete the requested certificate
-                m_delete_query->reset();
                 m_delete_query->bind(0, id);
                 if (m_delete_query->exec())
                 {
@@ -144,7 +143,6 @@ void CaCertificatesDatabase::getCertificateList(ocpp::types::CertificateUseEnumT
     if (m_list_query)
     {
         // List certificates
-        m_list_query->reset();
         m_list_query->bind(0, static_cast<unsigned int>(type));
         m_list_query->bind(1, static_cast<int64_t>(std::numeric_limits<std::time_t>::max()));
         m_list_query->bind(2, 0);
@@ -175,7 +173,6 @@ std::string CaCertificatesDatabase::getCertificateListPem(ocpp::types::Certifica
     if (m_list_query)
     {
         // List certificates
-        m_list_query->reset();
         m_list_query->bind(0, static_cast<unsigned int>(type));
         m_list_query->bind(1, static_cast<int64_t>(DateTime::now().timestamp()));
         m_list_query->bind(2, static_cast<int64_t>(DateTime::now().timestamp()));
@@ -215,7 +212,6 @@ unsigned int CaCertificatesDatabase::getCertificateCount(ocpp::types::Certificat
             validity_from = std::numeric_limits<std::time_t>::max();
             validity_to   = 0;
         }
-        m_count_query->reset();
         m_count_query->bind(0, static_cast<unsigned int>(type));
         m_count_query->bind(1, static_cast<int64_t>(validity_from));
         m_count_query->bind(2, static_cast<int64_t>(validity_to));
@@ -247,7 +243,6 @@ bool CaCertificatesDatabase::addCertificate(ocpp::types::CertificateUseEnumType 
         if (!findCertificate(hash_data, id, in_use))
         {
             // Add certificate
-            m_insert_query->reset();
             m_insert_query->bind(0, static_cast<unsigned int>(type));
             m_insert_query->bind(1, static_cast<int64_t>(certificate.validityFrom()));
             m_insert_query->bind(2, static_cast<int64_t>(certificate.validityTo()));
@@ -284,7 +279,6 @@ bool CaCertificatesDatabase::findCertificate(const ocpp::types::CertificateHashD
     if (m_find_query)
     {
         // Look for the requested certificate
-        m_find_query->reset();
         m_find_query->bind(0, certificate.issuerNameHash);
         m_find_query->bind(1, certificate.issuerKeyHash);
         m_find_query->bind(2, certificate.serialNumber);

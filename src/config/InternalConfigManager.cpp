@@ -37,7 +37,6 @@ bool InternalConfigManager::keyExist(const std::string& key)
 
     if (m_find_query)
     {
-        m_find_query->reset();
         m_find_query->bind(0, key);
         ret = m_find_query->exec();
         if (ret)
@@ -48,6 +47,7 @@ bool InternalConfigManager::keyExist(const std::string& key)
         {
             LOG_ERROR << "Could not search key [" << key << "] : " << m_insert_query->lastError();
         }
+        m_find_query->reset();
     }
 
     return ret;
@@ -60,7 +60,6 @@ bool InternalConfigManager::createKey(const std::string& key, const std::string&
 
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0, key);
         m_insert_query->bind(1, value);
         ret = m_insert_query->exec();
@@ -68,6 +67,7 @@ bool InternalConfigManager::createKey(const std::string& key, const std::string&
         {
             LOG_ERROR << "Could not insert key [" << key << "] : " << m_insert_query->lastError();
         }
+        m_insert_query->reset();
     }
 
     return ret;
@@ -80,7 +80,6 @@ bool InternalConfigManager::setKey(const std::string& key, const std::string& va
 
     if (m_update_query)
     {
-        m_update_query->reset();
         m_update_query->bind(1, key);
         m_update_query->bind(0, value);
         ret = m_update_query->exec();
@@ -88,6 +87,7 @@ bool InternalConfigManager::setKey(const std::string& key, const std::string& va
         {
             LOG_ERROR << "Could not update key [" << key << "] : " << m_insert_query->lastError();
         }
+        m_update_query->reset();
     }
 
     return ret;
@@ -100,7 +100,6 @@ bool InternalConfigManager::getKey(const std::string& key, std::string& value)
 
     if (m_find_query)
     {
-        m_find_query->reset();
         m_find_query->bind(0, key);
         ret = m_find_query->exec();
         if (ret)
@@ -119,6 +118,7 @@ bool InternalConfigManager::getKey(const std::string& key, std::string& value)
         {
             LOG_ERROR << "Could not search key [" << key << "] : " << m_insert_query->lastError();
         }
+        m_find_query->reset();
     }
 
     return ret;

@@ -51,7 +51,6 @@ bool ChargePointDatabase::addChargePoint(const std::string& identifier,
 
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0, identifier);
         m_insert_query->bind(1, serial_number);
         m_insert_query->bind(2, vendor);
@@ -59,6 +58,7 @@ bool ChargePointDatabase::addChargePoint(const std::string& identifier,
         m_insert_query->bind(4, security_profile);
         m_insert_query->bind(5, authent_key);
         ret = m_insert_query->exec();
+        m_insert_query->reset();
     }
 
     return ret;
@@ -74,7 +74,6 @@ bool ChargePointDatabase::getChargePoint(const std::string& identifier,
 
     if (m_find_query)
     {
-        m_find_query->reset();
         m_find_query->bind(0, identifier);
         if (m_find_query->exec() && m_find_query->hasRows())
         {
@@ -83,6 +82,7 @@ bool ChargePointDatabase::getChargePoint(const std::string& identifier,
             authent_key      = m_find_query->getString(5);
             ret              = true;
         }
+        m_find_query->reset();
     }
 
     return ret;
@@ -95,10 +95,10 @@ bool ChargePointDatabase::setChargePointProfile(const std::string& identifier, u
 
     if (m_update_profile_query)
     {
-        m_update_profile_query->reset();
         m_update_profile_query->bind(0, security_profile);
         m_update_profile_query->bind(1, identifier);
         ret = m_update_profile_query->exec();
+        m_update_profile_query->reset();
     }
 
     return ret;
