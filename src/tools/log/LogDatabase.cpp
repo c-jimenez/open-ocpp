@@ -42,12 +42,12 @@ void LogDatabase::log(std::time_t timestamp, unsigned int level, const std::stri
 {
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0, static_cast<int64_t>(timestamp));
         m_insert_query->bind(1, level);
         m_insert_query->bind(2, file);
         m_insert_query->bind(3, message);
         m_insert_query->exec();
+        m_insert_query->reset();
     }
 }
 

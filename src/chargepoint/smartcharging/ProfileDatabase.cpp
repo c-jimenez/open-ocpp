@@ -98,9 +98,9 @@ bool ProfileDatabase::clear(ocpp::types::Optional<int>                          
                 // Erase from database
                 if (m_delete_query)
                 {
-                    m_delete_query->reset();
                     m_delete_query->bind(0, id);
                     m_delete_query->exec();
+                    m_delete_query->reset();
                 }
                 ret = true;
                 break;
@@ -157,9 +157,9 @@ bool ProfileDatabase::clear(ocpp::types::Optional<int>                          
                 // Erase in database
                 if (m_delete_query)
                 {
-                    m_delete_query->reset();
                     m_delete_query->bind(0, iter->second.chargingProfileId);
                     m_delete_query->exec();
+                    m_delete_query->reset();
                 }
 
                 // Erase in list
@@ -212,9 +212,9 @@ bool ProfileDatabase::install(unsigned int connector_id, const ocpp::types::Char
         // Erase existing profile
         if (m_delete_query)
         {
-            m_delete_query->reset();
             m_delete_query->bind(0, iter_profile->second.chargingProfileId);
             m_delete_query->exec();
+            m_delete_query->reset();
         }
         profiles_list->erase(iter_profile);
     }
@@ -233,11 +233,11 @@ bool ProfileDatabase::install(unsigned int connector_id, const ocpp::types::Char
             std::string profile_str = serialize(profile);
 
             // Insert
-            m_insert_query->reset();
             m_insert_query->bind(0, profile.chargingProfileId);
             m_insert_query->bind(1, connector_id);
             m_insert_query->bind(2, profile_str);
             m_insert_query->exec();
+            m_insert_query->reset();
         }
 
         ret = true;

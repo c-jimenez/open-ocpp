@@ -47,7 +47,6 @@ bool SecurityLogsDatabase::log(const std::string& type, const std::string& messa
 
     if (m_insert_query)
     {
-        m_insert_query->reset();
         m_insert_query->bind(0, static_cast<int64_t>(timestamp));
         m_insert_query->bind(1, type);
         m_insert_query->bind(2, message);
@@ -57,6 +56,7 @@ bool SecurityLogsDatabase::log(const std::string& type, const std::string& messa
         {
             LOG_ERROR << "Unable to store security log : " << m_insert_query->lastError();
         }
+        m_insert_query->reset();
     }
 
     return ret;
@@ -69,12 +69,12 @@ bool SecurityLogsDatabase::clear()
 
     if (m_clear_query)
     {
-        m_clear_query->reset();
         ret = m_clear_query->exec();
         if (!ret)
         {
             LOG_ERROR << "Unable to clear security logs : " << m_clear_query->lastError();
         }
+        m_clear_query->reset();
     }
 
     return ret;

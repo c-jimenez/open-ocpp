@@ -130,9 +130,9 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
                     // Entry is no more valid, delete entry
                     if (m_delete_query)
                     {
-                        m_delete_query->reset();
                         m_delete_query->bind(0, id_tag);
                         m_delete_query->exec();
+                        m_delete_query->reset();
                     }
                     ret = false;
                 }
