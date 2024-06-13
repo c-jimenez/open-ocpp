@@ -219,7 +219,11 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
             if (!id_tag.empty())
             {
                 stop_transaction_req.idTag.value().assign(id_tag);
+            } else {
+                // Retrieve the session ID from cache when power loss occurs as it's not directly available.
+                stop_transaction_req.idTag.value().assign(connector->transaction_id_tag);
             }
+            
             stop_transaction_req.meterStop     = m_events_handler.getTxStartStopMeterValue(connector_id);
             stop_transaction_req.timestamp     = DateTime::now();
             stop_transaction_req.transactionId = connector->transaction_id;
