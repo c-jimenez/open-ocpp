@@ -211,10 +211,17 @@ int LibWebsocketClientPool::eventCallback(struct lws* wsi, enum lws_callback_rea
                 {
                     lws_set_timeout(waiting_client->m_wsi, static_cast<pending_timeout>(1), LWS_TO_KILL_SYNC);
                 }
-                lws_vhost_destroy(waiting_client->m_vhost);
-                waiting_client->m_vhost                   = nullptr;
-                waiting_client->m_connected               = false;
-                waiting_client->m_disconnect_process_done = true;
+                if (waiting_client->m_vhost)
+                {
+                    lws_vhost_destroy(waiting_client->m_vhost);
+                }
+
+                std::lock_guard<std::mutex> lock(waiting_client->m_disconnect_mutex);
+                waiting_client->m_protocol.clear();
+                waiting_client->m_vhost                          = nullptr;
+                waiting_client->m_connected                      = false;
+                waiting_client->m_disconnect_process_in_progress = false;
+                waiting_client->m_disconnect_process_done        = true;
                 waiting_client->m_disconnect_cond_var.notify_all();
             }
         }
@@ -242,6 +249,7 @@ LibWebsocketClientPool::Client::Client(LibWebsocketClientPool& pool)
       m_connected(false),
       m_disconnect_cond_var(),
       m_disconnect_mutex(),
+      m_disconnect_process_in_progress(false),
       m_disconnect_process_done(false),
       m_context(m_pool.m_context),
       m_vhost(nullptr),
@@ -281,6 +289,8 @@ bool LibWebsocketClientPool::Client::connect(const std::string&        url,
                                              std::chrono::milliseconds ping_interval)
 {
     bool ret = false;
+
+    std::lock_guard<std::mutex> lock(m_disconnect_mutex);
 
     // Check if thread is alive and if a listener has been registered
     if (!m_vhost && m_listener)
@@ -334,19 +344,21 @@ bool LibWebsocketClientPool::Client::disconnect()
 {
     bool ret = false;
 
+    std::unique_lock<std::mutex> lock(m_disconnect_mutex);
+
     // Check if connected
-    if (m_vhost)
+    if (!m_disconnect_process_in_progress && !m_protocol.empty())
     {
         // Schedule disconnection
-        m_retry_interval          = 0;
-        m_disconnect_process_done = false;
+        m_retry_interval                 = 0;
+        m_disconnect_process_in_progress = true;
+        m_disconnect_process_done        = false;
         m_pool.m_waiting_disconnect_queue.push(this);
         lws_cancel_service(m_context);
 
         // Wait actual disconnection
         if (std::this_thread::get_id() != m_pool.m_thread->get_id())
         {
-            std::unique_lock<std::mutex> lock(m_disconnect_mutex);
             m_disconnect_cond_var.wait(lock, [&] { return m_disconnect_process_done; });
         }
     }
@@ -373,6 +385,8 @@ bool LibWebsocketClientPool::Client::isConnected()
 bool LibWebsocketClientPool::Client::send(const void* data, size_t size)
 {
     bool ret = false;
+
+    std::lock_guard<std::mutex> lock(m_disconnect_mutex);
 
     // Check if connected
     if (m_connected)
@@ -434,136 +448,144 @@ void LibWebsocketClientPool::Client::connectCallback(struct lws_sorted_usec_list
     ScheduleData* schedule_data = lws_container_of(sul, ScheduleData, sched_list);
     if (schedule_data)
     {
-        // Check if vhost has been created
-        Client* client = schedule_data->client;
-        if (!client->m_vhost)
-        {
-            // Define callback
-            struct lws_protocols protocols[] = {
-                {"LibWebsocketClientPoolClient", &LibWebsocketClientPool::Client::eventCallback, 0, 0, 0, client, 0},
-                LWS_PROTOCOL_LIST_TERM};
+        Client*                     client = schedule_data->client;
+        std::lock_guard<std::mutex> lock(client->m_disconnect_mutex);
 
-            // Fill vhost information
-            struct lws_context_creation_info vhost_info;
-            memset(&vhost_info, 0, sizeof(vhost_info));
-            vhost_info.options              = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
-            vhost_info.port                 = CONTEXT_PORT_NO_LISTEN;
-            vhost_info.timeout_secs         = client->m_connect_timeout;
-            vhost_info.connect_timeout_secs = client->m_connect_timeout;
-            vhost_info.protocols            = protocols;
-            vhost_info.log_cx               = &pool->m_logs_context;
-            if (client->m_url.protocol() == "wss")
+        // Check if a disconnect process is in progress
+        if (!client->m_disconnect_process_in_progress)
+        {
+            // Check if vhost has been created
+            if (!client->m_vhost)
             {
-                if (!client->m_credentials.tls12_cipher_list.empty())
+                // Define callback
+                struct lws_protocols protocols[] = {
+                    {"LibWebsocketClientPoolClient", &LibWebsocketClientPool::Client::eventCallback, 0, 0, 0, client, 0},
+                    LWS_PROTOCOL_LIST_TERM};
+
+                // Fill vhost information
+                struct lws_context_creation_info vhost_info;
+                memset(&vhost_info, 0, sizeof(vhost_info));
+                vhost_info.options              = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+                vhost_info.port                 = CONTEXT_PORT_NO_LISTEN;
+                vhost_info.timeout_secs         = client->m_connect_timeout;
+                vhost_info.connect_timeout_secs = client->m_connect_timeout;
+                vhost_info.protocols            = protocols;
+                vhost_info.log_cx               = &pool->m_logs_context;
+                if (client->m_url.protocol() == "wss")
                 {
-                    vhost_info.client_ssl_cipher_list = client->m_credentials.tls12_cipher_list.c_str();
+                    if (!client->m_credentials.tls12_cipher_list.empty())
+                    {
+                        vhost_info.client_ssl_cipher_list = client->m_credentials.tls12_cipher_list.c_str();
+                    }
+                    if (!client->m_credentials.tls13_cipher_list.empty())
+                    {
+                        vhost_info.client_tls_1_3_plus_cipher_list = client->m_credentials.tls13_cipher_list.c_str();
+                    }
+                    if (client->m_credentials.encoded_pem_certificates)
+                    {
+                        // Use PEM encoded data
+                        if (!client->m_credentials.server_certificate_ca.empty())
+                        {
+                            vhost_info.client_ssl_ca_mem = client->m_credentials.server_certificate_ca.c_str();
+                            vhost_info.client_ssl_ca_mem_len =
+                                static_cast<unsigned int>(client->m_credentials.server_certificate_ca.size());
+                        }
+                        if (!client->m_credentials.client_certificate.empty())
+                        {
+                            vhost_info.client_ssl_cert_mem     = client->m_credentials.client_certificate.c_str();
+                            vhost_info.client_ssl_cert_mem_len = static_cast<unsigned int>(client->m_credentials.client_certificate.size());
+                        }
+                        if (!client->m_credentials.client_certificate_private_key.empty())
+                        {
+                            vhost_info.client_ssl_key_mem = client->m_credentials.client_certificate_private_key.c_str();
+                            vhost_info.client_ssl_key_mem_len =
+                                static_cast<unsigned int>(client->m_credentials.client_certificate_private_key.size());
+                        }
+                    }
+                    else
+                    {
+                        // Load PEM files from filesystem
+                        if (!client->m_credentials.server_certificate_ca.empty())
+                        {
+                            vhost_info.client_ssl_ca_filepath = client->m_credentials.server_certificate_ca.c_str();
+                        }
+                        if (!client->m_credentials.client_certificate.empty())
+                        {
+                            vhost_info.client_ssl_cert_filepath = client->m_credentials.client_certificate.c_str();
+                        }
+                        if (!client->m_credentials.client_certificate_private_key.empty())
+                        {
+                            vhost_info.client_ssl_private_key_filepath = client->m_credentials.client_certificate_private_key.c_str();
+                        }
+                    }
+                    if (!client->m_credentials.client_certificate_private_key_passphrase.empty())
+                    {
+                        vhost_info.client_ssl_private_key_password =
+                            client->m_credentials.client_certificate_private_key_passphrase.c_str();
+                    }
                 }
-                if (!client->m_credentials.tls13_cipher_list.empty())
+
+                // Create vhost
+                client->m_vhost = lws_create_vhost(client->m_context, &vhost_info);
+            }
+            if (client->m_vhost)
+            {
+                // Connexion parameters
+                struct lws_client_connect_info connect_info;
+                memset(&connect_info, 0, sizeof(connect_info));
+                connect_info.context = client->m_context;
+                connect_info.vhost   = client->m_vhost;
+                connect_info.address = client->m_url.address().c_str();
+                connect_info.path    = client->m_url.path().c_str();
+                connect_info.host    = connect_info.address;
+                connect_info.origin  = connect_info.address;
+                if (client->m_url.protocol() == "wss")
                 {
-                    vhost_info.client_tls_1_3_plus_cipher_list = client->m_credentials.tls13_cipher_list.c_str();
-                }
-                if (client->m_credentials.encoded_pem_certificates)
-                {
-                    // Use PEM encoded data
-                    if (!client->m_credentials.server_certificate_ca.empty())
+                    connect_info.ssl_connection = LCCSCF_USE_SSL;
+                    if (client->m_credentials.allow_selfsigned_certificates)
                     {
-                        vhost_info.client_ssl_ca_mem     = client->m_credentials.server_certificate_ca.c_str();
-                        vhost_info.client_ssl_ca_mem_len = static_cast<unsigned int>(client->m_credentials.server_certificate_ca.size());
+                        connect_info.ssl_connection |= LCCSCF_ALLOW_SELFSIGNED;
                     }
-                    if (!client->m_credentials.client_certificate.empty())
+                    if (client->m_credentials.allow_expired_certificates)
                     {
-                        vhost_info.client_ssl_cert_mem     = client->m_credentials.client_certificate.c_str();
-                        vhost_info.client_ssl_cert_mem_len = static_cast<unsigned int>(client->m_credentials.client_certificate.size());
+                        connect_info.ssl_connection |= LCCSCF_ALLOW_EXPIRED;
                     }
-                    if (!client->m_credentials.client_certificate_private_key.empty())
+                    if (client->m_credentials.accept_untrusted_certificates)
                     {
-                        vhost_info.client_ssl_key_mem = client->m_credentials.client_certificate_private_key.c_str();
-                        vhost_info.client_ssl_key_mem_len =
-                            static_cast<unsigned int>(client->m_credentials.client_certificate_private_key.size());
+                        connect_info.ssl_connection |= LCCSCF_ALLOW_INSECURE;
                     }
+                    if (client->m_credentials.skip_server_name_check)
+                    {
+                        connect_info.ssl_connection |= LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
+                    }
+                    connect_info.port = 443;
                 }
                 else
                 {
-                    // Load PEM files from filesystem
-                    if (!client->m_credentials.server_certificate_ca.empty())
-                    {
-                        vhost_info.client_ssl_ca_filepath = client->m_credentials.server_certificate_ca.c_str();
-                    }
-                    if (!client->m_credentials.client_certificate.empty())
-                    {
-                        vhost_info.client_ssl_cert_filepath = client->m_credentials.client_certificate.c_str();
-                    }
-                    if (!client->m_credentials.client_certificate_private_key.empty())
-                    {
-                        vhost_info.client_ssl_private_key_filepath = client->m_credentials.client_certificate_private_key.c_str();
-                    }
+                    connect_info.port = 80;
                 }
-                if (!client->m_credentials.client_certificate_private_key_passphrase.empty())
+                if (client->m_url.port())
                 {
-                    vhost_info.client_ssl_private_key_password = client->m_credentials.client_certificate_private_key_passphrase.c_str();
+                    connect_info.port = static_cast<int>(client->m_url.port());
                 }
-            }
+                connect_info.protocol              = client->m_protocol.c_str();
+                connect_info.local_protocol_name   = "LibWebsocketClientPoolClient";
+                connect_info.pwsi                  = &client->m_wsi;
+                connect_info.retry_and_idle_policy = &client->m_retry_policy;
+                connect_info.userdata              = client;
 
-            // Create vhost
-            client->m_vhost = lws_create_vhost(client->m_context, &vhost_info);
-        }
-        if (client->m_vhost)
-        {
-            // Connexion parameters
-            struct lws_client_connect_info connect_info;
-            memset(&connect_info, 0, sizeof(connect_info));
-            connect_info.context = client->m_context;
-            connect_info.vhost   = client->m_vhost;
-            connect_info.address = client->m_url.address().c_str();
-            connect_info.path    = client->m_url.path().c_str();
-            connect_info.host    = connect_info.address;
-            connect_info.origin  = connect_info.address;
-            if (client->m_url.protocol() == "wss")
-            {
-                connect_info.ssl_connection = LCCSCF_USE_SSL;
-                if (client->m_credentials.allow_selfsigned_certificates)
+                // Start connection
+                if (!lws_client_connect_via_info(&connect_info))
                 {
-                    connect_info.ssl_connection |= LCCSCF_ALLOW_SELFSIGNED;
+                    // Schedule a retry
+                    client->m_retry_count = 0;
+                    lws_retry_sul_schedule(pool->m_context,
+                                           0,
+                                           sul,
+                                           &client->m_retry_policy,
+                                           &LibWebsocketClientPool::Client::connectCallback,
+                                           &client->m_retry_count);
                 }
-                if (client->m_credentials.allow_expired_certificates)
-                {
-                    connect_info.ssl_connection |= LCCSCF_ALLOW_EXPIRED;
-                }
-                if (client->m_credentials.accept_untrusted_certificates)
-                {
-                    connect_info.ssl_connection |= LCCSCF_ALLOW_INSECURE;
-                }
-                if (client->m_credentials.skip_server_name_check)
-                {
-                    connect_info.ssl_connection |= LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
-                }
-                connect_info.port = 443;
-            }
-            else
-            {
-                connect_info.port = 80;
-            }
-            if (client->m_url.port())
-            {
-                connect_info.port = static_cast<int>(client->m_url.port());
-            }
-            connect_info.protocol              = client->m_protocol.c_str();
-            connect_info.local_protocol_name   = "LibWebsocketClientPoolClient";
-            connect_info.pwsi                  = &client->m_wsi;
-            connect_info.retry_and_idle_policy = &client->m_retry_policy;
-            connect_info.userdata              = client;
-
-            // Start connection
-            if (!lws_client_connect_via_info(&connect_info))
-            {
-                // Schedule a retry
-                client->m_retry_count = 0;
-                lws_retry_sul_schedule(pool->m_context,
-                                       0,
-                                       sul,
-                                       &client->m_retry_policy,
-                                       &LibWebsocketClientPool::Client::connectCallback,
-                                       &client->m_retry_count);
             }
         }
     }
