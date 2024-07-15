@@ -52,9 +52,10 @@ class ISmartChargingManager;
 class IStatusManager;
 
 /** @brief Handle charge point transaction requests */
-class TransactionManager
-    : public ocpp::messages::GenericMessageHandler<ocpp::messages::RemoteStartTransactionReq, ocpp::messages::RemoteStartTransactionConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::RemoteStopTransactionReq, ocpp::messages::RemoteStopTransactionConf>
+class TransactionManager : public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::RemoteStartTransactionReq,
+                                                                        ocpp::messages::ocpp16::RemoteStartTransactionConf>,
+                           public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::RemoteStopTransactionReq,
+                                                                        ocpp::messages::ocpp16::RemoteStopTransactionConf>
 {
   public:
     /** @brief Constructor */
@@ -78,9 +79,9 @@ class TransactionManager
      * @brief Start a transaction
      * @param connector_id Id of the connector
      * @param id_tag Id of the user
-     * @return ocpp::types::AuthorizationStatus (see AuthorizationStatus enum)
+     * @return ocpp::types::ocpp16::AuthorizationStatus (see AuthorizationStatus enum)
      */
-    ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag);
+    ocpp::types::ocpp16::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag);
 
     /**
      * @brief Stop a transaction
@@ -89,7 +90,7 @@ class TransactionManager
      * @param reason Stop reason
      * @return true if a corresponding transaction exist and has been stopped, false otherwise
      */
-    bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason);
+    bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::ocpp16::Reason reason);
 
     // GenericMessageHandler interface
 
@@ -98,20 +99,20 @@ class TransactionManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
-                       ocpp::messages::RemoteStartTransactionConf&      response,
-                       std::string&                                     error_code,
-                       std::string&                                     error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::RemoteStartTransactionReq& request,
+                       ocpp::messages::ocpp16::RemoteStartTransactionConf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
-                       ocpp::messages::RemoteStopTransactionConf&      response,
-                       std::string&                                    error_code,
-                       std::string&                                    error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::RemoteStopTransactionReq& request,
+                       ocpp::messages::ocpp16::RemoteStopTransactionConf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
 
   private:
     /** @brief Standard OCPP configuration */

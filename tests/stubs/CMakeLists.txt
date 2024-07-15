@@ -30,8 +30,8 @@ target_link_libraries(unit_tests_stubs
     centralsystem
     chargepoint
     config 
-    types
-    messages
+    types16
+    messages16
     log
     database
     json

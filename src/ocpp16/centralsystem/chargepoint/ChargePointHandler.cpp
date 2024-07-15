@@ -24,7 +24,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessageDispatcher.h"
 
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -32,10 +34,10 @@ namespace centralsystem
 {
 
 /** @brief Constructor */
-ChargePointHandler::ChargePointHandler(const std::string&                        identifier,
-                                       const ocpp::messages::MessagesConverter&  messages_converter,
-                                       ocpp::messages::MessageDispatcher&        msg_dispatcher,
-                                       const ocpp::config::ICentralSystemConfig& stack_config)
+ChargePointHandler::ChargePointHandler(const std::string&                               identifier,
+                                       const ocpp::messages::ocpp16::MessagesConverter& messages_converter,
+                                       ocpp::messages::MessageDispatcher&               msg_dispatcher,
+                                       const ocpp::config::ICentralSystemConfig&        stack_config)
     : GenericMessageHandler<AuthorizeReq, AuthorizeConf>(AUTHORIZE_ACTION, messages_converter),
       GenericMessageHandler<BootNotificationReq, BootNotificationConf>(BOOT_NOTIFICATION_ACTION, messages_converter),
       GenericMessageHandler<DataTransferReq, DataTransferConf>(DATA_TRANSFER_ACTION, messages_converter),
@@ -99,10 +101,10 @@ ChargePointHandler::~ChargePointHandler() { }
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& request,
-                                       ocpp::messages::AuthorizeConf&      response,
-                                       std::string&                        error_code,
-                                       std::string&                        error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::AuthorizeReq& request,
+                                       ocpp::messages::ocpp16::AuthorizeConf&      response,
+                                       std::string&                                error_code,
+                                       std::string&                                error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -130,10 +132,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::AuthorizeReq& reque
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq& request,
-                                       ocpp::messages::BootNotificationConf&      response,
-                                       std::string&                               error_code,
-                                       std::string&                               error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::BootNotificationReq& request,
+                                       ocpp::messages::ocpp16::BootNotificationConf&      response,
+                                       std::string&                                       error_code,
+                                       std::string&                                       error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -179,10 +181,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::BootNotificationReq
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& request,
-                                       ocpp::messages::DataTransferConf&      response,
-                                       std::string&                           error_code,
-                                       std::string&                           error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::DataTransferReq& request,
+                                       ocpp::messages::ocpp16::DataTransferConf&      response,
+                                       std::string&                                   error_code,
+                                       std::string&                                   error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -262,10 +264,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DataTransferReq& re
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNotificationReq& request,
-                                       ocpp::messages::DiagnosticsStatusNotificationConf&      response,
-                                       std::string&                                            error_code,
-                                       std::string&                                            error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq& request,
+                                       ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&      response,
+                                       std::string&                                                    error_code,
+                                       std::string&                                                    error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -295,10 +297,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::DiagnosticsStatusNo
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotificationReq& request,
-                                       ocpp::messages::FirmwareStatusNotificationConf&      response,
-                                       std::string&                                         error_code,
-                                       std::string&                                         error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq& request,
+                                       ocpp::messages::ocpp16::FirmwareStatusNotificationConf&      response,
+                                       std::string&                                                 error_code,
+                                       std::string&                                                 error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -328,10 +330,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::FirmwareStatusNotif
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& request,
-                                       ocpp::messages::HeartbeatConf&      response,
-                                       std::string&                        error_code,
-                                       std::string&                        error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::HeartbeatReq& request,
+                                       ocpp::messages::ocpp16::HeartbeatConf&      response,
+                                       std::string&                                error_code,
+                                       std::string&                                error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -352,10 +354,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& reque
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& request,
-                                       ocpp::messages::MeterValuesConf&      response,
-                                       std::string&                          error_code,
-                                       std::string&                          error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::MeterValuesReq& request,
+                                       ocpp::messages::ocpp16::MeterValuesConf&      response,
+                                       std::string&                                  error_code,
+                                       std::string&                                  error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -386,10 +388,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::MeterValuesReq& req
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq& request,
-                                       ocpp::messages::StartTransactionConf&      response,
-                                       std::string&                               error_code,
-                                       std::string&                               error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::StartTransactionReq& request,
+                                       ocpp::messages::ocpp16::StartTransactionConf&      response,
+                                       std::string&                                       error_code,
+                                       std::string&                                       error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -423,10 +425,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StartTransactionReq
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationReq& request,
-                                       ocpp::messages::StatusNotificationConf&      response,
-                                       std::string&                                 error_code,
-                                       std::string&                                 error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::StatusNotificationReq& request,
+                                       ocpp::messages::ocpp16::StatusNotificationConf&      response,
+                                       std::string&                                         error_code,
+                                       std::string&                                         error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -463,10 +465,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StatusNotificationR
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq& request,
-                                       ocpp::messages::StopTransactionConf&      response,
-                                       std::string&                              error_code,
-                                       std::string&                              error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::StopTransactionReq& request,
+                                       ocpp::messages::ocpp16::StopTransactionConf&      response,
+                                       std::string&                                      error_code,
+                                       std::string&                                      error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -505,10 +507,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::StopTransactionReq&
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificationReq& request,
-                                       ocpp::messages::LogStatusNotificationConf&      response,
-                                       std::string&                                    error_code,
-                                       std::string&                                    error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::LogStatusNotificationReq& request,
+                                       ocpp::messages::ocpp16::LogStatusNotificationConf&      response,
+                                       std::string&                                            error_code,
+                                       std::string&                                            error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -539,10 +541,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::LogStatusNotificati
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotificationReq& request,
-                                       ocpp::messages::SecurityEventNotificationConf&      response,
-                                       std::string&                                        error_code,
-                                       std::string&                                        error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::SecurityEventNotificationReq& request,
+                                       ocpp::messages::ocpp16::SecurityEventNotificationConf&      response,
+                                       std::string&                                                error_code,
+                                       std::string&                                                error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -573,10 +575,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SecurityEventNotifi
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq& request,
-                                       ocpp::messages::SignCertificateConf&      response,
-                                       std::string&                              error_code,
-                                       std::string&                              error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::SignCertificateReq& request,
+                                       ocpp::messages::ocpp16::SignCertificateConf&      response,
+                                       std::string&                                      error_code,
+                                       std::string&                                      error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -616,10 +618,10 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq&
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
-                                       ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
-                                       std::string&                                               error_code,
-                                       std::string&                                               error_message)
+bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq& request,
+                                       ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&      response,
+                                       std::string&                                                       error_code,
+                                       std::string&                                                       error_message)
 {
     bool ret = false;
     (void)error_message;
@@ -648,7 +650,8 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::SignedFirmwareStatu
 // ISO 15118 PnC extensions
 
 /** @brief Handle an Iso15118Authorize request */
-void ChargePointHandler::handleMessage(const ocpp::messages::Iso15118AuthorizeReq& request, ocpp::messages::Iso15118AuthorizeConf& response)
+void ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::Iso15118AuthorizeReq& request,
+                                       ocpp::messages::ocpp16::Iso15118AuthorizeConf&      response)
 {
     LOG_INFO << "[" << m_identifier << "] - [ISO15118] Authorize requested : idToken = " << request.idToken.str()
              << " -  certificate = " << (request.certificate.isSet() ? std::to_string(request.certificate.value().size()) : "not set");
@@ -672,8 +675,8 @@ void ChargePointHandler::handleMessage(const ocpp::messages::Iso15118AuthorizeRe
 }
 
 /** @brief Handle a Get15118EVCertificate request */
-void ChargePointHandler::handleMessage(const ocpp::messages::Get15118EVCertificateReq& request,
-                                       ocpp::messages::Get15118EVCertificateConf&      response)
+void ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::Get15118EVCertificateReq& request,
+                                       ocpp::messages::ocpp16::Get15118EVCertificateConf&      response)
 {
     LOG_INFO << "[" << m_identifier
              << "] - [ISO15118] Get EV certificate requested : action = " << CertificateActionEnumTypeHelper.toString(request.action)
@@ -692,8 +695,8 @@ void ChargePointHandler::handleMessage(const ocpp::messages::Get15118EVCertifica
 }
 
 /** @brief Handle a GetCertificateStatus request */
-void ChargePointHandler::handleMessage(const ocpp::messages::GetCertificateStatusReq& request,
-                                       ocpp::messages::GetCertificateStatusConf&      response)
+void ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::GetCertificateStatusReq& request,
+                                       ocpp::messages::ocpp16::GetCertificateStatusConf&      response)
 {
     LOG_INFO << "[" << m_identifier << "] - [ISO15118] Get certificate status requested : hashAlgorithm = "
              << HashAlgorithmEnumTypeHelper.toString(request.ocspRequestData.hashAlgorithm)
@@ -718,7 +721,8 @@ void ChargePointHandler::handleMessage(const ocpp::messages::GetCertificateStatu
 }
 
 /** @brief Handle a SignCertificate request */
-void ChargePointHandler::handleMessage(const ocpp::messages::SignCertificateReq& request, ocpp::messages::SignCertificateConf& response)
+void ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::SignCertificateReq& request,
+                                       ocpp::messages::ocpp16::SignCertificateConf&      response)
 {
     LOG_INFO << "[" << m_identifier << "] - [ISO15118] Sign certificate requested : csr size = " << request.csr.size();
 

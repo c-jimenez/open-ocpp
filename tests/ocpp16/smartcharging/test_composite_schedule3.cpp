@@ -38,7 +38,9 @@ using namespace ocpp::chargepoint;
 using namespace ocpp::config;
 using namespace ocpp::database;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::rpc;
 using namespace ocpp::helpers;
 
@@ -49,8 +51,10 @@ class CustomChargePointEventsHandlerStub : public ChargePointEventsHandlerStub
   public:
     ChargingSchedule schedule;
 
-    /** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ChargingSchedule&) */
-    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& _schedule) override
+    /** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ocpp16::ChargingSchedule&) */
+    bool getLocalLimitationsSchedule(unsigned int                           connector_id,
+                                     unsigned int                           duration,
+                                     ocpp::types::ocpp16::ChargingSchedule& _schedule) override
     {
         (void)connector_id;
         (void)duration;

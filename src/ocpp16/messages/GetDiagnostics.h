@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetDiagnostics messages */
 static const std::string GET_DIAGNOSTICS_ACTION = "GetDiagnostics";
@@ -67,6 +69,7 @@ struct GetDiagnosticsConf
 // Message converters
 MESSAGE_CONVERTERS(GetDiagnostics)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

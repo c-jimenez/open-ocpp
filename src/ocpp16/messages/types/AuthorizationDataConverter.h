@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for AuthorizationData type */
-class AuthorizationDataConverter : public IMessageConverter<ocpp::types::AuthorizationData>
+class AuthorizationDataConverter : public IMessageConverter<ocpp::types::ocpp16::AuthorizationData>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::AuthorizationData>* IMessageConverter<ocpp::types::AuthorizationData>::clone() const */
-    IMessageConverter<ocpp::types::AuthorizationData>* clone() const override { return new AuthorizationDataConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::AuthorizationData>* IMessageConverter<ocpp::types::ocpp16::AuthorizationData>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::AuthorizationData>* clone() const override { return new AuthorizationDataConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::AuthorizationData&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::AuthorizationData>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::AuthorizationData&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value&         json,
-                  ocpp::types::AuthorizationData& data,
-                  std::string&                    error_code,
-                  std::string&                    error_message) override;
+    bool fromJson(const rapidjson::Value&                 json,
+                  ocpp::types::ocpp16::AuthorizationData& data,
+                  std::string&                            error_code,
+                  std::string&                            error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::toJson(const ocpp::types::AuthorizationData&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::AuthorizationData>::toJson(const ocpp::types::ocpp16::AuthorizationData&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::AuthorizationData& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::AuthorizationData& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

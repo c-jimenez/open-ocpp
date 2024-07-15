@@ -21,20 +21,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @bcopydoc bool IMessageConverter<ocpp::types::OcspRequestDataType>::fromJson(const rapidjson::Value&,
- *                                                                               ocpp::types::OcspRequestDataType&,
+/** @bcopydoc bool IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>::fromJson(const rapidjson::Value&,
+ *                                                                               ocpp::types::ocpp16::OcspRequestDataType&,
  *                                                                               std::string&,
  *                                                                               std::string&) */
-bool OcspRequestDataTypeConverter::fromJson(const rapidjson::Value&           json,
-                                            ocpp::types::OcspRequestDataType& data,
-                                            std::string&                      error_code,
-                                            std::string&                      error_message)
+bool OcspRequestDataTypeConverter::fromJson(const rapidjson::Value&                   json,
+                                            ocpp::types::ocpp16::OcspRequestDataType& data,
+                                            std::string&                              error_code,
+                                            std::string&                              error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -46,9 +49,9 @@ bool OcspRequestDataTypeConverter::fromJson(const rapidjson::Value&           js
     return true;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::OcspRequestDataType>::toJson(const ocpp::types::OcspRequestDataType&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>::toJson(const ocpp::types::ocpp16::OcspRequestDataType&,
  *                                                                            rapidjson::Document&) */
-bool OcspRequestDataTypeConverter::toJson(const ocpp::types::OcspRequestDataType& data, rapidjson::Document& json)
+bool OcspRequestDataTypeConverter::toJson(const ocpp::types::ocpp16::OcspRequestDataType& data, rapidjson::Document& json)
 {
     fill(json, "hashAlgorithm", HashAlgorithmEnumTypeHelper.toString(data.hashAlgorithm));
     fill(json, "issuerKeyHash", data.issuerKeyHash);
@@ -58,5 +61,6 @@ bool OcspRequestDataTypeConverter::toJson(const ocpp::types::OcspRequestDataType
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Logger.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {

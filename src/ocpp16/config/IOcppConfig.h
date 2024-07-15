@@ -51,7 +51,7 @@ class IOcppConfig
      * @param unknown_values List of unknown parameters in the [keys] list
      */
     virtual void getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>& keys,
-                                  std::vector<ocpp::types::KeyValue>&                values,
+                                  std::vector<ocpp::types::ocpp16::KeyValue>&        values,
                                   std::vector<ocpp::types::CiStringType<50u>>&       unknown_values) = 0;
 
     /**
@@ -60,7 +60,7 @@ class IOcppConfig
      * @param value New value
      * @return Status of the operation (see ConfigurationStatus)
      */
-    virtual ocpp::types::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) = 0;
+    virtual ocpp::types::ocpp16::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) = 0;
 
     //
     // Specific getters

@@ -40,10 +40,11 @@ namespace chargepoint
 {
 
 /** @brief Handle charge point configuration requests */
-class ConfigManager
-    : public IConfigManager,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetConfigurationReq, ocpp::messages::GetConfigurationConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::ChangeConfigurationReq, ocpp::messages::ChangeConfigurationConf>
+class ConfigManager : public IConfigManager,
+                      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetConfigurationReq,
+                                                                   ocpp::messages::ocpp16::GetConfigurationConf>,
+                      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ChangeConfigurationReq,
+                                                                   ocpp::messages::ocpp16::ChangeConfigurationConf>
 {
   public:
     /** @brief Constructor */
@@ -69,20 +70,20 @@ class ConfigManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetConfigurationReq& request,
-                       ocpp::messages::GetConfigurationConf&      response,
-                       std::string&                               error_code,
-                       std::string&                               error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::GetConfigurationReq& request,
+                       ocpp::messages::ocpp16::GetConfigurationConf&      response,
+                       std::string&                                       error_code,
+                       std::string&                                       error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
-                       ocpp::messages::ChangeConfigurationConf&      response,
-                       std::string&                                  error_code,
-                       std::string&                                  error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ChangeConfigurationReq& request,
+                       ocpp::messages::ocpp16::ChangeConfigurationConf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
 
   private:
     /** @brief Standard OCPP configuration */

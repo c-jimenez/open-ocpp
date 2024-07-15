@@ -43,7 +43,10 @@ namespace messages
 {
 class IRequestFifo;
 class GenericMessageSender;
+namespace ocpp16
+{
 struct SecurityEventNotificationReq;
+} // namespace ocpp16
 } // namespace messages
 namespace helpers
 {
@@ -58,14 +61,16 @@ class IChargePoint;
 class IChargePointEventsHandler;
 
 /** @brief Handle security operations for the charge point */
-class SecurityManager
-    : public ISecurityManager,
-      public ITriggerMessageManager::IExtendedTriggerMessageHandler,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::CertificateSignedReq, ocpp::messages::CertificateSignedConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::DeleteCertificateReq, ocpp::messages::DeleteCertificateConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetInstalledCertificateIdsReq,
-                                                   ocpp::messages::GetInstalledCertificateIdsConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::InstallCertificateReq, ocpp::messages::InstallCertificateConf>
+class SecurityManager : public ISecurityManager,
+                        public ITriggerMessageManager::IExtendedTriggerMessageHandler,
+                        public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::CertificateSignedReq,
+                                                                     ocpp::messages::ocpp16::CertificateSignedConf>,
+                        public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::DeleteCertificateReq,
+                                                                     ocpp::messages::ocpp16::DeleteCertificateConf>,
+                        public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetInstalledCertificateIdsReq,
+                                                                     ocpp::messages::ocpp16::GetInstalledCertificateIdsConf>,
+                        public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::InstallCertificateReq,
+                                                                     ocpp::messages::ocpp16::InstallCertificateConf>
 {
   public:
     /** @brief Constructor */
@@ -128,13 +133,14 @@ class SecurityManager
                               const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                               const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
 
-    /** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType) */
-    std::string getCaCertificates(ocpp::types::CertificateUseEnumType type) override;
+    /** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::ocpp16::CertificateUseEnumType) */
+    std::string getCaCertificates(ocpp::types::ocpp16::CertificateUseEnumType type) override;
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                          const ocpp::types::Optional<unsigned int>&  connector_id) override;
 
     // GenericMessageHandler interface
 
@@ -143,40 +149,40 @@ class SecurityManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::CertificateSignedReq& request,
-                       ocpp::messages::CertificateSignedConf&      response,
-                       std::string&                                error_code,
-                       std::string&                                error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+                       ocpp::messages::ocpp16::CertificateSignedConf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::DeleteCertificateReq& request,
-                       ocpp::messages::DeleteCertificateConf&      response,
-                       std::string&                                error_code,
-                       std::string&                                error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+                       ocpp::messages::ocpp16::DeleteCertificateConf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetInstalledCertificateIdsReq& request,
-                       ocpp::messages::GetInstalledCertificateIdsConf&      response,
+    bool handleMessage(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq& request,
+                       ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&      response,
+                       std::string&                                                 error_code,
+                       std::string&                                                 error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp16::InstallCertificateReq& request,
+                       ocpp::messages::ocpp16::InstallCertificateConf&      response,
                        std::string&                                         error_code,
                        std::string&                                         error_message) override;
-
-    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-    bool handleMessage(const ocpp::messages::InstallCertificateReq& request,
-                       ocpp::messages::InstallCertificateConf&      response,
-                       std::string&                                 error_code,
-                       std::string&                                 error_message) override;
 
   private:
     /** @brief Stack configuration */
@@ -190,7 +196,7 @@ class SecurityManager
     /** @brief Transaction related requests FIFO */
     ocpp::messages::IRequestFifo& m_requests_fifo;
     /** @brief Message converter for SecurityEventNotificationReq */
-    std::unique_ptr<ocpp::messages::IMessageConverter<ocpp::messages::SecurityEventNotificationReq>> m_security_event_req_converter;
+    std::unique_ptr<ocpp::messages::IMessageConverter<ocpp::messages::ocpp16::SecurityEventNotificationReq>> m_security_event_req_converter;
     /** @brief Charge Point */
     IChargePoint& m_charge_point;
 
@@ -205,12 +211,12 @@ class SecurityManager
     ocpp::messages::GenericMessageSender* m_msg_sender;
 
     /** @brief Specific configuration check for parameter : AuthorizationKey */
-    ocpp::types::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
+    ocpp::types::ocpp16::ConfigurationStatus checkAuthorizationKeyParameter(const std::string& key, const std::string& value);
     /** @brief Specific configuration check for parameter : SecurityProfile */
-    ocpp::types::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
+    ocpp::types::ocpp16::ConfigurationStatus checkSecurityProfileParameter(const std::string& key, const std::string& value);
 
     /** @brief Fill the hash information of a certificat */
-    void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info);
+    void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::ocpp16::CertificateHashDataType& info);
 };
 
 } // namespace chargepoint

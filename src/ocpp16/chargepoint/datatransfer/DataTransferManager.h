@@ -42,8 +42,9 @@ namespace chargepoint
 class IChargePointEventsHandler;
 
 /** @brief Handle charge point data transfer requests */
-class DataTransferManager : public IDataTransferManager,
-                            public ocpp::messages::GenericMessageHandler<ocpp::messages::DataTransferReq, ocpp::messages::DataTransferConf>
+class DataTransferManager
+    : public IDataTransferManager,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::DataTransferReq, ocpp::messages::ocpp16::DataTransferConf>
 {
   public:
     /** @brief Constructor */
@@ -64,11 +65,11 @@ class DataTransferManager : public IDataTransferManager,
      * @param response_data Data associated with the response
      * @return true if the data transfer has been done, false otherwise
      */
-    bool dataTransfer(const std::string&               vendor_id,
-                      const std::string&               message_id,
-                      const std::string&               request_data,
-                      ocpp::types::DataTransferStatus& status,
-                      std::string&                     response_data);
+    bool dataTransfer(const std::string&                       vendor_id,
+                      const std::string&                       message_id,
+                      const std::string&                       request_data,
+                      ocpp::types::ocpp16::DataTransferStatus& status,
+                      std::string&                             response_data);
 
     // IDataTransferManager interface
 
@@ -82,10 +83,10 @@ class DataTransferManager : public IDataTransferManager,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::DataTransferReq& request,
-                       ocpp::messages::DataTransferConf&      response,
-                       std::string&                           error_code,
-                       std::string&                           error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::DataTransferReq& request,
+                       ocpp::messages::ocpp16::DataTransferConf&      response,
+                       std::string&                                   error_code,
+                       std::string&                                   error_message) override;
 
   private:
     /** @brief User defined events handler */

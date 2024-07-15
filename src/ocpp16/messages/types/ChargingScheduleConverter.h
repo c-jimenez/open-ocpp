@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for ChargingSchedule type */
-class ChargingScheduleConverter : public IMessageConverter<ocpp::types::ChargingSchedule>
+class ChargingScheduleConverter : public IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::ChargingSchedule>* IMessageConverter<ocpp::types::ChargingSchedule>::clone() const */
-    IMessageConverter<ocpp::types::ChargingSchedule>* clone() const override { return new ChargingScheduleConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>* IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>* clone() const override { return new ChargingScheduleConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::ChargingSchedule&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::ChargingSchedule&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value&        json,
-                  ocpp::types::ChargingSchedule& data,
-                  std::string&                   error_code,
-                  std::string&                   error_message) override;
+    bool fromJson(const rapidjson::Value&                json,
+                  ocpp::types::ocpp16::ChargingSchedule& data,
+                  std::string&                           error_code,
+                  std::string&                           error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::toJson(const ocpp::types::ChargingSchedule&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>::toJson(const ocpp::types::ocpp16::ChargingSchedule&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::ChargingSchedule& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::ChargingSchedule& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

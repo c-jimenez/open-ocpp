@@ -43,7 +43,7 @@ class IChargePointEventsHandler
      * @brief Called when the first attempt to connect to the central system has failed
      * @param status Previous registration status (if Accepted, some offline operations are allowed)
      */
-    virtual void connectionFailed(ocpp::types::RegistrationStatus status) = 0;
+    virtual void connectionFailed(ocpp::types::ocpp16::RegistrationStatus status) = 0;
 
     /**
      * @brief Called when the charge point connection status has changed
@@ -56,7 +56,7 @@ class IChargePointEventsHandler
      * @param status Registration status
      * @param datetime Date and time of the central system
      */
-    virtual void bootNotification(ocpp::types::RegistrationStatus status, const ocpp::types::DateTime& datetime) = 0;
+    virtual void bootNotification(ocpp::types::ocpp16::RegistrationStatus status, const ocpp::types::DateTime& datetime) = 0;
 
     /**
      * @brief Called when the date and time must be adjusted with the one of the central system
@@ -69,8 +69,8 @@ class IChargePointEventsHandler
      * @param availability Requested availability
      * @return Status of the requested availability change (see AvailabilityStatus)
      */
-    virtual ocpp::types::AvailabilityStatus changeAvailabilityRequested(unsigned int                  connector_id,
-                                                                        ocpp::types::AvailabilityType availability) = 0;
+    virtual ocpp::types::ocpp16::AvailabilityStatus changeAvailabilityRequested(unsigned int                          connector_id,
+                                                                                ocpp::types::ocpp16::AvailabilityType availability) = 0;
 
     /**
      * @brief Called to retrieve the meter value in Wh for a connector at the start or at the end of a transaction
@@ -100,10 +100,10 @@ class IChargePointEventsHandler
      * @param response_data Data associated with the response
      * @return Response status (see DataTransferStatus enum)
      */
-    virtual ocpp::types::DataTransferStatus dataTransferRequested(const std::string& vendor_id,
-                                                                  const std::string& message_id,
-                                                                  const std::string& request_data,
-                                                                  std::string&       response_data) = 0;
+    virtual ocpp::types::ocpp16::DataTransferStatus dataTransferRequested(const std::string& vendor_id,
+                                                                          const std::string& message_id,
+                                                                          const std::string& request_data,
+                                                                          std::string&       response_data) = 0;
 
     /**
      * @brief Get a meter value associated to a connector
@@ -112,9 +112,10 @@ class IChargePointEventsHandler
      * @param meter_value Meter value to fill (the context and measurand fields of SampleValues doesn't need to be filled)
      * @return true if the meter value can be retrived, false otherwise
      */
-    virtual bool getMeterValue(unsigned int                                                                        connector_id,
-                               const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>& measurand,
-                               ocpp::types::MeterValue&                                                            meter_value) = 0;
+    virtual bool getMeterValue(
+        unsigned int                                                                                        connector_id,
+        const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>& measurand,
+        ocpp::types::ocpp16::MeterValue&                                                                    meter_value) = 0;
 
     /**
      * @brief Called when a remote start transaction request has been received
@@ -145,21 +146,23 @@ class IChargePointEventsHandler
      * @param schedule Schedule containing the local limitations for the requested duration
      * @return true if a schedule has been defined, false if there are no local limitations for the requested duration
      */
-    virtual bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) = 0;
+    virtual bool getLocalLimitationsSchedule(unsigned int                           connector_id,
+                                             unsigned int                           duration,
+                                             ocpp::types::ocpp16::ChargingSchedule& schedule) = 0;
 
     /**
      * @brief Called on a reset request from the Central System
      * @param reset_type Type of reset
      * @return true if the request is accepted, false otherwise
      */
-    virtual bool resetRequested(ocpp::types::ResetType reset_type) = 0;
+    virtual bool resetRequested(ocpp::types::ocpp16::ResetType reset_type) = 0;
 
     /**
      * @brief Called on an unlock connector request from the Central System
      * @param connector_id Id of the concerned connector
      * @return Unlock status (see UnlockStatus documentation)
      */
-    virtual ocpp::types::UnlockStatus unlockConnectorRequested(unsigned int connector_id) = 0;
+    virtual ocpp::types::ocpp16::UnlockStatus unlockConnectorRequested(unsigned int connector_id) = 0;
 
     /**
      * @brief Called on a diagnostic request
@@ -212,8 +215,8 @@ class IChargePointEventsHandler
      * @param certificate CA certificate to install
      * @return Installation status (see CertificateStatusEnumType enum)
      */
-    virtual ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType type,
-                                                                         const ocpp::x509::Certificate&      certificate) = 0;
+    virtual ocpp::types::ocpp16::CertificateStatusEnumType caCertificateReceived(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                                                                 const ocpp::x509::Certificate& certificate) = 0;
 
     /**
      * @brief Called when a charge point certificate has been received and must be installed
@@ -232,10 +235,11 @@ class IChargePointEventsHandler
      * @param serial_number Serial number of the certificate
      * @return Deletion status (see DeleteCertificateStatusEnumType enum)
      */
-    virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
-                                                                           const std::string&                 issuer_name_hash,
-                                                                           const std::string&                 issuer_key_hash,
-                                                                           const std::string&                 serial_number) = 0;
+    virtual ocpp::types::ocpp16::DeleteCertificateStatusEnumType deleteCertificate(
+        ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+        const std::string&                         issuer_name_hash,
+        const std::string&                         issuer_key_hash,
+        const std::string&                         serial_number) = 0;
 
     /**
      * @brief Called to generate a CSR in PEM format which will be used by the Central System
@@ -251,7 +255,8 @@ class IChargePointEventsHandler
      * @param type Type of CA certificate
      * @param certificates Installed certificates
      */
-    virtual void getInstalledCertificates(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::x509::Certificate>& certificates) = 0;
+    virtual void getInstalledCertificates(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                          std::vector<ocpp::x509::Certificate>&       certificates) = 0;
 
     /**
      * @brief Called on a log request
@@ -263,7 +268,7 @@ class IChargePointEventsHandler
      * @return Path to the generated log file to upload to the Central System, or empty
      *         string if no log are available
      */
-    virtual std::string getLog(ocpp::types::LogEnumType                            type,
+    virtual std::string getLog(ocpp::types::ocpp16::LogEnumType                    type,
                                const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                                const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) = 0;
 
@@ -287,7 +292,7 @@ class IChargePointEventsHandler
      * @param signing_certificate Certificate to check
      * @return Check status (see UpdateFirmwareStatusEnumType enum)
      */
-    virtual ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(
+    virtual ocpp::types::ocpp16::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(
         const ocpp::x509::Certificate& signing_certificate) = 0;
 
     // ISO 15118 PnC extensions
@@ -314,10 +319,11 @@ class IChargePointEventsHandler
      * @param serial_number Serial number of the certificate
      * @return Deletion status (see DeleteCertificateStatusEnumType enum)
      */
-    virtual ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
-                                                                                   const std::string&                 issuer_name_hash,
-                                                                                   const std::string&                 issuer_key_hash,
-                                                                                   const std::string&                 serial_number) = 0;
+    virtual ocpp::types::ocpp16::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
+        ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+        const std::string&                         issuer_name_hash,
+        const std::string&                         issuer_key_hash,
+        const std::string&                         serial_number) = 0;
 
     /**
      * @brief Called to get the list of installed ISO15118 certificates
@@ -330,7 +336,8 @@ class IChargePointEventsHandler
         bool v2g_root_certificate,
         bool mo_root_certificate,
         bool v2g_certificate_chain,
-        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+        std::vector<
+            std::tuple<ocpp::types::ocpp16::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
             certificates) = 0;
 
     /**
@@ -339,8 +346,8 @@ class IChargePointEventsHandler
      * @param certificate certificate to install
      * @return Installation status (see InstallCertificateStatusEnumType enum)
      */
-    virtual ocpp::types::InstallCertificateStatusEnumType iso15118CertificateReceived(ocpp::types::InstallCertificateUseEnumType type,
-                                                                                      const ocpp::x509::Certificate& certificate) = 0;
+    virtual ocpp::types::ocpp16::InstallCertificateStatusEnumType iso15118CertificateReceived(
+        ocpp::types::ocpp16::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate) = 0;
 
     /**
      * @brief Called to generate a CSR in PEM format which will be used by the Central System

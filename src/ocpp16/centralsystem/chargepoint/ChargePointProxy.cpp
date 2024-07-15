@@ -48,8 +48,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "UnlockConnector.h"
 #include "UpdateFirmware.h"
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -57,12 +59,12 @@ namespace centralsystem
 {
 
 /** @brief Constructor */
-ChargePointProxy::ChargePointProxy(ICentralSystem&                               central_system,
-                                   const std::string&                            identifier,
-                                   std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                                   const ocpp::messages::MessagesValidator&      messages_validator,
-                                   ocpp::messages::MessagesConverter&            messages_converter,
-                                   const ocpp::config::ICentralSystemConfig&     stack_config)
+ChargePointProxy::ChargePointProxy(ICentralSystem&                                  central_system,
+                                   const std::string&                               identifier,
+                                   std::shared_ptr<ocpp::rpc::RpcServer::Client>    rpc,
+                                   const ocpp::messages::ocpp16::MessagesValidator& messages_validator,
+                                   ocpp::messages::ocpp16::MessagesConverter&       messages_converter,
+                                   const ocpp::config::ICentralSystemConfig&        stack_config)
     : m_central_system(central_system),
       m_identifier(identifier),
       m_rpc(rpc),
@@ -144,8 +146,9 @@ bool ChargePointProxy::cancelReservation(int reservation_id)
     return ret;
 }
 
-/** @copydoc ocpp::types::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(unsigned int, ocpp::types::AvailabilityType) */
-ocpp::types::AvailabilityStatus ChargePointProxy::changeAvailability(unsigned int connector_id, ocpp::types::AvailabilityType availability)
+/** @copydoc ocpp::types::ocpp16::AvailabilityStatus ICentralSystem::IChargePoint::changeAvailability(unsigned int, ocpp::types::ocpp16::AvailabilityType) */
+ocpp::types::ocpp16::AvailabilityStatus ChargePointProxy::changeAvailability(unsigned int                          connector_id,
+                                                                             ocpp::types::ocpp16::AvailabilityType availability)
 {
     AvailabilityStatus ret = AvailabilityStatus::Rejected;
 
@@ -173,8 +176,8 @@ ocpp::types::AvailabilityStatus ChargePointProxy::changeAvailability(unsigned in
     return ret;
 }
 
-/** @copydoc ocpp::types::ConfigurationStatus ICentralSystem::IChargePoint::changeConfiguration(const std::string&, const std::string&) */
-ocpp::types::ConfigurationStatus ChargePointProxy::changeConfiguration(const std::string& key, const std::string& value)
+/** @copydoc ocpp::types::ocpp16::ConfigurationStatus ICentralSystem::IChargePoint::changeConfiguration(const std::string&, const std::string&) */
+ocpp::types::ocpp16::ConfigurationStatus ChargePointProxy::changeConfiguration(const std::string& key, const std::string& value)
 {
     ConfigurationStatus ret = ConfigurationStatus::Rejected;
 
@@ -229,12 +232,12 @@ bool ChargePointProxy::clearCache()
 
 /** @copydoc bool ICentralSystem::IChargePoint::clearChargingProfile(const ocpp::types::Optional<int>&,
                                                                      const ocpp::types::Optional<unsigned int>&,
-                                                                     const ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>&,
+                                                                     const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType>&,
                                                                      const ocpp::types::Optional<unsigned int>&) */
-bool ChargePointProxy::clearChargingProfile(const ocpp::types::Optional<int>&                                     profile_id,
-                                            const ocpp::types::Optional<unsigned int>&                            connector_id,
-                                            const ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>& purpose,
-                                            const ocpp::types::Optional<unsigned int>&                            stack_level)
+bool ChargePointProxy::clearChargingProfile(const ocpp::types::Optional<int>&                                             profile_id,
+                                            const ocpp::types::Optional<unsigned int>&                                    connector_id,
+                                            const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType>& purpose,
+                                            const ocpp::types::Optional<unsigned int>&                                    stack_level)
 {
     bool ret = false;
 
@@ -269,13 +272,13 @@ bool ChargePointProxy::clearChargingProfile(const ocpp::types::Optional<int>&   
 /** @copydoc bool ICentralSystem::IChargePoint::dataTransfer(const std::string&,
                                                              const std::string&,
                                                              const std::string&,
-                                                             ocpp::types::DataTransferStatus&,
+                                                             ocpp::types::ocpp16::DataTransferStatus&,
                                                              std::string&) */
-bool ChargePointProxy::dataTransfer(const std::string&               vendor_id,
-                                    const std::string&               message_id,
-                                    const std::string&               request_data,
-                                    ocpp::types::DataTransferStatus& status,
-                                    std::string&                     response_data)
+bool ChargePointProxy::dataTransfer(const std::string&                       vendor_id,
+                                    const std::string&                       message_id,
+                                    const std::string&                       request_data,
+                                    ocpp::types::ocpp16::DataTransferStatus& status,
+                                    std::string&                             response_data)
 {
     bool ret = false;
 
@@ -315,16 +318,16 @@ bool ChargePointProxy::dataTransfer(const std::string&               vendor_id,
 
 /** @copydoc bool ICentralSystem::IChargePoint::getCompositeSchedule(unsigned int,
                                                                      std::chrono::seconds,
-                                                                     const ocpp::types::Optional<ocpp::types::ChargingRateUnitType>&,
+                                                                     const ocpp::types::Optional<ocpp::types::ocpp16::ChargingRateUnitType>&,
                                                                      ocpp::types::Optional<unsigned int>&,
                                                                      ocpp::types::Optional<ocpp::types::DateTime>&,
-                                                                     ocpp::types::Optional<ocpp::types::ChargingSchedule>&) */
-bool ChargePointProxy::getCompositeSchedule(unsigned int                                                    connector_id,
-                                            std::chrono::seconds                                            duration,
-                                            const ocpp::types::Optional<ocpp::types::ChargingRateUnitType>& unit,
-                                            ocpp::types::Optional<unsigned int>&                            schedule_connector_id,
-                                            ocpp::types::Optional<ocpp::types::DateTime>&                   schedule_start,
-                                            ocpp::types::Optional<ocpp::types::ChargingSchedule>&           schedule)
+                                                                     ocpp::types::Optional<ocpp::types::ocpp16::ChargingSchedule>&) */
+bool ChargePointProxy::getCompositeSchedule(unsigned int                                                            connector_id,
+                                            std::chrono::seconds                                                    duration,
+                                            const ocpp::types::Optional<ocpp::types::ocpp16::ChargingRateUnitType>& unit,
+                                            ocpp::types::Optional<unsigned int>&                                    schedule_connector_id,
+                                            ocpp::types::Optional<ocpp::types::DateTime>&                           schedule_start,
+                                            ocpp::types::Optional<ocpp::types::ocpp16::ChargingSchedule>&           schedule)
 {
     bool ret = false;
 
@@ -361,11 +364,11 @@ bool ChargePointProxy::getCompositeSchedule(unsigned int                        
 }
 
 /** @copydoc bool ICentralSystem::IChargePoint::getConfiguration(const std::vector<std::string>&,
-                                                                 std::vector<ocpp::types::KeyValue>&,
+                                                                 std::vector<ocpp::types::ocpp16::KeyValue>&,
                                                                  std::vector<std::string>&) */
-bool ChargePointProxy::getConfiguration(const std::vector<std::string>&     keys,
-                                        std::vector<ocpp::types::KeyValue>& config_keys,
-                                        std::vector<std::string>&           unknown_keys)
+bool ChargePointProxy::getConfiguration(const std::vector<std::string>&             keys,
+                                        std::vector<ocpp::types::ocpp16::KeyValue>& config_keys,
+                                        std::vector<std::string>&                   unknown_keys)
 {
     bool ret = false;
 
@@ -488,10 +491,10 @@ bool ChargePointProxy::getLocalListVersion(int& version)
 
 /** @copydoc bool ICentralSystem::IChargePoint::remoteStartTransaction(const ocpp::types::Optional<unsigned int>&,
                                                                        const std::string&,
-                                                                       const ocpp::types::Optional<ocpp::types::ChargingProfile>&) */
-bool ChargePointProxy::remoteStartTransaction(const ocpp::types::Optional<unsigned int>&                 connector_id,
-                                              const std::string&                                         id_tag,
-                                              const ocpp::types::Optional<ocpp::types::ChargingProfile>& profile)
+                                                                       const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfile>&) */
+bool ChargePointProxy::remoteStartTransaction(const ocpp::types::Optional<unsigned int>&                         connector_id,
+                                              const std::string&                                                 id_tag,
+                                              const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfile>& profile)
 {
     bool ret = false;
 
@@ -548,16 +551,16 @@ bool ChargePointProxy::remoteStopTransaction(int transaction_id)
     return ret;
 }
 
-/** @copydoc ocpp::types::ReservationStatus ICentralSystem::IChargePoint::reserveNow(unsigned int,
+/** @copydoc ocpp::types::ocpp16::ReservationStatus ICentralSystem::IChargePoint::reserveNow(unsigned int,
                                                                                      const ocpp::types::DateTime&,
                                                                                      const std::string&,
                                                                                      const std::string&,
                                                                                      int)*/
-ocpp::types::ReservationStatus ChargePointProxy::reserveNow(unsigned int                 connector_id,
-                                                            const ocpp::types::DateTime& expiry_date,
-                                                            const std::string&           id_tag,
-                                                            const std::string&           parent_id_tag,
-                                                            int                          reservation_id)
+ocpp::types::ocpp16::ReservationStatus ChargePointProxy::reserveNow(unsigned int                 connector_id,
+                                                                    const ocpp::types::DateTime& expiry_date,
+                                                                    const std::string&           id_tag,
+                                                                    const std::string&           parent_id_tag,
+                                                                    int                          reservation_id)
 {
     ReservationStatus ret = ReservationStatus::Rejected;
 
@@ -591,8 +594,8 @@ ocpp::types::ReservationStatus ChargePointProxy::reserveNow(unsigned int        
     return ret;
 }
 
-/** @copydoc bool ICentralSystem::IChargePoint::reset(ocpp::types::ResetType) */
-bool ChargePointProxy::reset(ocpp::types::ResetType type)
+/** @copydoc bool ICentralSystem::IChargePoint::reset(ocpp::types::ocpp16::ResetType) */
+bool ChargePointProxy::reset(ocpp::types::ocpp16::ResetType type)
 {
     bool ret = false;
 
@@ -618,12 +621,11 @@ bool ChargePointProxy::reset(ocpp::types::ResetType type)
     return ret;
 }
 
-/** @copydoc ocpp::types::UpdateStatus ICentralSystem::IChargePoint::sendLocalList(int,
-                                                                                   const std::vector<ocpp::types::AuthorizationData>&,
-                                                                                   ocpp::types::UpdateType) */
-ocpp::types::UpdateStatus ChargePointProxy::sendLocalList(int                                                version,
-                                                          const std::vector<ocpp::types::AuthorizationData>& authorization_list,
-                                                          ocpp::types::UpdateType                            update_type)
+/** @copydoc ocpp::types::ocpp16::UpdateStatus ICentralSystem::IChargePoint::sendLocalList(int,
+                                                                                   const std::vector<ocpp::types::ocpp16::AuthorizationData>&,
+                                                                                   ocpp::types::ocpp16::UpdateType) */
+ocpp::types::ocpp16::UpdateStatus ChargePointProxy::sendLocalList(
+    int version, const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_list, ocpp::types::ocpp16::UpdateType update_type)
 {
     UpdateStatus ret = UpdateStatus::Failed;
 
@@ -653,10 +655,10 @@ ocpp::types::UpdateStatus ChargePointProxy::sendLocalList(int                   
     return ret;
 }
 
-/** @copydoc ocpp::types::ChargingProfileStatus ICentralSystem::IChargePoint::setChargingProfile(unsigned int,
-                                                                                                 const ocpp::types::ChargingProfile&) */
-ocpp::types::ChargingProfileStatus ChargePointProxy::setChargingProfile(unsigned int                        connector_id,
-                                                                        const ocpp::types::ChargingProfile& profile)
+/** @copydoc ocpp::types::ocpp16::ChargingProfileStatus ICentralSystem::IChargePoint::setChargingProfile(unsigned int,
+                                                                                                 const ocpp::types::ocpp16::ChargingProfile&) */
+ocpp::types::ocpp16::ChargingProfileStatus ChargePointProxy::setChargingProfile(unsigned int                                connector_id,
+                                                                                const ocpp::types::ocpp16::ChargingProfile& profile)
 {
     ChargingProfileStatus ret = ChargingProfileStatus::Rejected;
 
@@ -685,10 +687,10 @@ ocpp::types::ChargingProfileStatus ChargePointProxy::setChargingProfile(unsigned
     return ret;
 }
 
-/** @copydoc ocpp::types::TriggerMessageStatus ICentralSystem::IChargePoint::triggerMessage(ocpp::types::MessageTrigger,
+/** @copydoc ocpp::types::ocpp16::TriggerMessageStatus ICentralSystem::IChargePoint::triggerMessage(ocpp::types::ocpp16::MessageTrigger,
                                                                                                 const ocpp::types::Optional<unsigned int>) */
-ocpp::types::TriggerMessageStatus ChargePointProxy::triggerMessage(ocpp::types::MessageTrigger               message,
-                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+ocpp::types::ocpp16::TriggerMessageStatus ChargePointProxy::triggerMessage(ocpp::types::ocpp16::MessageTrigger       message,
+                                                                           const ocpp::types::Optional<unsigned int> connector_id)
 {
     TriggerMessageStatus ret = TriggerMessageStatus::Rejected;
 
@@ -716,8 +718,8 @@ ocpp::types::TriggerMessageStatus ChargePointProxy::triggerMessage(ocpp::types::
     return ret;
 }
 
-/** @copydoc ocpp::types::UnlockStatus ICentralSystem::IChargePoint::unlockConnector(unsigned int) */
-ocpp::types::UnlockStatus ChargePointProxy::unlockConnector(unsigned int connector_id)
+/** @copydoc ocpp::types::ocpp16::UnlockStatus ICentralSystem::IChargePoint::unlockConnector(unsigned int) */
+ocpp::types::ocpp16::UnlockStatus ChargePointProxy::unlockConnector(unsigned int connector_id)
 {
     UnlockStatus ret = UnlockStatus::UnlockFailed;
 
@@ -813,8 +815,9 @@ bool ChargePointProxy::certificateSigned(const ocpp::x509::Certificate& certific
     return ret;
 }
 
-/** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::CertificateHashDataType&) */
-ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate(const ocpp::types::CertificateHashDataType& certificate)
+/** @copydoc ocpp::types::ocpp16::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::deleteCertificate(const ocpp::types::ocpp16::CertificateHashDataType&) */
+ocpp::types::ocpp16::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate(
+    const ocpp::types::ocpp16::CertificateHashDataType& certificate)
 
 {
     DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::Failed;
@@ -841,10 +844,10 @@ ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::deleteCertificate
     return ret;
 }
 
-/** @copydoc ocpp::types::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType,
+/** @copydoc ocpp::types::ocpp16::TriggerMessageStatusEnumType ICentralSystem::IChargePoint::extendedTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType,
                                                                                                             const ocpp::types::Optional<unsigned int>) */
-ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(ocpp::types::MessageTriggerEnumType       message,
-                                                                                   const ocpp::types::Optional<unsigned int> connector_id)
+ocpp::types::ocpp16::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessage(
+    ocpp::types::ocpp16::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id)
 {
     TriggerMessageStatusEnumType ret = TriggerMessageStatusEnumType::Rejected;
 
@@ -873,10 +876,10 @@ ocpp::types::TriggerMessageStatusEnumType ChargePointProxy::extendedTriggerMessa
     return ret;
 }
 
-/** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType,
-                                                                           std::vector<ocpp::types::CertificateHashDataType>&) */
-bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
-                                                  std::vector<ocpp::types::CertificateHashDataType>& certificates)
+/** @copydoc bool ICentralSystem::IChargePoint::getInstalledCertificateIds(ocpp::types::ocpp16::CertificateUseEnumType,
+                                                                           std::vector<ocpp::types::ocpp16::CertificateHashDataType>&) */
+bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::ocpp16::CertificateUseEnumType                type,
+                                                  std::vector<ocpp::types::ocpp16::CertificateHashDataType>& certificates)
 {
     bool ret = false;
 
@@ -906,7 +909,7 @@ bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::CertificateUseEnu
     return ret;
 }
 
-/** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::LogEnumType,
+/** @copydoc bool ICentralSystem::IChargePoint::getLog(ocpp::types::ocpp16::LogEnumType,
                                                            int,
                                                            const std::string&,
                                                            const ocpp::types::Optional<unsigned int>&,
@@ -914,7 +917,7 @@ bool ChargePointProxy::getInstalledCertificateIds(ocpp::types::CertificateUseEnu
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                            std::string&) */
-bool ChargePointProxy::getLog(ocpp::types::LogEnumType                            type,
+bool ChargePointProxy::getLog(ocpp::types::ocpp16::LogEnumType                    type,
                               int                                                 request_id,
                               const std::string&                                  uri,
                               const ocpp::types::Optional<unsigned int>&          retries,
@@ -962,10 +965,10 @@ bool ChargePointProxy::getLog(ocpp::types::LogEnumType                          
     return ret;
 }
 
-/** @copydoc ocpp::types::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::CertificateUseEnumType,
+/** @copydoc ocpp::types::ocpp16::CertificateStatusEnumType ICentralSystem::installCertificate(ocpp::types::ocpp16::CertificateUseEnumType,
                                                                                            const ocpp::x509::Certificate&) */
-ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::CertificateUseEnumType type,
-                                                                            const ocpp::x509::Certificate&      certificate)
+ocpp::types::ocpp16::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                                                                    const ocpp::x509::Certificate&              certificate)
 {
     CertificateStatusEnumType ret = CertificateStatusEnumType::Rejected;
 
@@ -993,7 +996,7 @@ ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp
     return ret;
 }
 
-/** @copydoc ocpp::types::UpdateFirmwareStatusEnumType ICentralSystem::signedUpdateFirmware(
+/** @copydoc ocpp::types::ocpp16::UpdateFirmwareStatusEnumType ICentralSystem::signedUpdateFirmware(
                                                                   int,
                                                                   const std::string&,
                                                                   const ocpp::types::Optional<unsigned int>&,
@@ -1002,7 +1005,7 @@ ocpp::types::CertificateStatusEnumType ChargePointProxy::installCertificate(ocpp
                                                                   const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                                   const ocpp::x509::Certificate&,
                                                                   const std::string&) */
-ocpp::types::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware(
+ocpp::types::ocpp16::UpdateFirmwareStatusEnumType ChargePointProxy::signedUpdateFirmware(
     int                                                 request_id,
     const std::string&                                  uri,
     const ocpp::types::Optional<unsigned int>&          retries,
@@ -1082,10 +1085,10 @@ bool ChargePointProxy::iso15118CertificateSigned(const ocpp::x509::Certificate& 
     return ret;
 }
 
-/** @copydoc ocpp::types::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118DeleteCertificate(
-                                const ocpp::types::CertificateHashDataType&) */
-ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::iso15118DeleteCertificate(
-    const ocpp::types::CertificateHashDataType& certificate)
+/** @copydoc ocpp::types::ocpp16::DeleteCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118DeleteCertificate(
+                                const ocpp::types::ocpp16::CertificateHashDataType&) */
+ocpp::types::ocpp16::DeleteCertificateStatusEnumType ChargePointProxy::iso15118DeleteCertificate(
+    const ocpp::types::ocpp16::CertificateHashDataType& certificate)
 {
     DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::Failed;
 
@@ -1112,10 +1115,10 @@ ocpp::types::DeleteCertificateStatusEnumType ChargePointProxy::iso15118DeleteCer
     return ret;
 }
 
-/** @copydoc bool ICentralSystem::IChargePoint::iso15118GetInstalledCertificateIds(ocpp::types::GetCertificateIdUseEnumType,
-                                                                                       std::vector<ocpp::types::CertificateHashDataChainType>&) */
-bool ChargePointProxy::iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>& types,
-                                                          std::vector<ocpp::types::CertificateHashDataChainType>&      certificates)
+/** @copydoc bool ICentralSystem::IChargePoint::iso15118GetInstalledCertificateIds(ocpp::types::ocpp16::GetCertificateIdUseEnumType,
+                                                                                       std::vector<ocpp::types::ocpp16::CertificateHashDataChainType>&) */
+bool ChargePointProxy::iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::ocpp16::GetCertificateIdUseEnumType>& types,
+                                                          std::vector<ocpp::types::ocpp16::CertificateHashDataChainType>&      certificates)
 {
     bool ret = false;
 
@@ -1144,11 +1147,11 @@ bool ChargePointProxy::iso15118GetInstalledCertificateIds(const std::vector<ocpp
     return ret;
 }
 
-/** @copydoc ocpp::types::InstallCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118CertificateSigned(
-                                                                ocpp::types::InstallCertificateUseEnumType,
+/** @copydoc ocpp::types::ocpp16::InstallCertificateStatusEnumType ICentralSystem::IChargePoint::iso15118CertificateSigned(
+                                                                ocpp::types::ocpp16::InstallCertificateUseEnumType,
                                                                 const ocpp::x509::Certificate&) */
-ocpp::types::InstallCertificateStatusEnumType ChargePointProxy::iso15118InstallCertificate(ocpp::types::InstallCertificateUseEnumType type,
-                                                                                           const ocpp::x509::Certificate& certificate)
+ocpp::types::ocpp16::InstallCertificateStatusEnumType ChargePointProxy::iso15118InstallCertificate(
+    ocpp::types::ocpp16::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
 {
     InstallCertificateStatusEnumType ret = InstallCertificateStatusEnumType::Rejected;
 

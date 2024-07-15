@@ -66,13 +66,14 @@ class IChargePointEventsHandler;
 class MaintenanceManager
     : public ITriggerMessageManager::ITriggerMessageHandler,
       public ITriggerMessageManager::IExtendedTriggerMessageHandler,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::ResetReq, ocpp::messages::ResetConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::UnlockConnectorReq, ocpp::messages::UnlockConnectorConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetDiagnosticsReq, ocpp::messages::GetDiagnosticsConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::UpdateFirmwareReq, ocpp::messages::UpdateFirmwareConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ResetReq, ocpp::messages::ocpp16::ResetConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::UnlockConnectorReq, ocpp::messages::ocpp16::UnlockConnectorConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetDiagnosticsReq, ocpp::messages::ocpp16::GetDiagnosticsConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::UpdateFirmwareReq, ocpp::messages::ocpp16::UpdateFirmwareConf>,
       // Security extensions
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLogReq, ocpp::messages::GetLogConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::SignedUpdateFirmwareReq, ocpp::messages::SignedUpdateFirmwareConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetLogReq, ocpp::messages::ocpp16::GetLogConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::SignedUpdateFirmwareReq,
+                                                   ocpp::messages::ocpp16::SignedUpdateFirmwareConf>
 {
   public:
     /** @brief Constructor */
@@ -103,15 +104,16 @@ class MaintenanceManager
      * @param status Installation status (see FirmwareStatusEnumType documentation)
      * @return true if the notification has been sent, false otherwise
      */
-    bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status);
+    bool notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType status);
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                          const ocpp::types::Optional<unsigned int>&  connector_id) override;
 
     // GenericMessageHandler interface
 
@@ -120,40 +122,40 @@ class MaintenanceManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ResetReq& request,
-                       ocpp::messages::ResetConf&      response,
-                       std::string&                    error_code,
-                       std::string&                    error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ResetReq& request,
+                       ocpp::messages::ocpp16::ResetConf&      response,
+                       std::string&                            error_code,
+                       std::string&                            error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::UnlockConnectorReq& request,
-                       ocpp::messages::UnlockConnectorConf&      response,
-                       std::string&                              error_code,
-                       std::string&                              error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::UnlockConnectorReq& request,
+                       ocpp::messages::ocpp16::UnlockConnectorConf&      response,
+                       std::string&                                      error_code,
+                       std::string&                                      error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetDiagnosticsReq& request,
-                       ocpp::messages::GetDiagnosticsConf&      response,
-                       std::string&                             error_code,
-                       std::string&                             error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::GetDiagnosticsReq& request,
+                       ocpp::messages::ocpp16::GetDiagnosticsConf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::UpdateFirmwareReq& request,
-                       ocpp::messages::UpdateFirmwareConf&      response,
-                       std::string&                             error_code,
-                       std::string&                             error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::UpdateFirmwareReq& request,
+                       ocpp::messages::ocpp16::UpdateFirmwareConf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
 
     // Security extensions
 
@@ -162,20 +164,20 @@ class MaintenanceManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetLogReq& request,
-                       ocpp::messages::GetLogConf&      response,
-                       std::string&                     error_code,
-                       std::string&                     error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::GetLogReq& request,
+                       ocpp::messages::ocpp16::GetLogConf&      response,
+                       std::string&                             error_code,
+                       std::string&                             error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
-                       ocpp::messages::SignedUpdateFirmwareConf&      response,
-                       std::string&                                   error_code,
-                       std::string&                                   error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq& request,
+                       ocpp::messages::ocpp16::SignedUpdateFirmwareConf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
 
   private:
     /** @brief Stack configuration */
@@ -196,18 +198,18 @@ class MaintenanceManager
     /** @brief Diagnostics thread */
     std::thread* m_diagnostics_thread;
     /** @brief Diagnostics status */
-    ocpp::types::DiagnosticsStatus m_diagnostics_status;
+    ocpp::types::ocpp16::DiagnosticsStatus m_diagnostics_status;
     /** @brief Logs status */
-    ocpp::types::UploadLogStatusEnumType m_logs_status;
+    ocpp::types::ocpp16::UploadLogStatusEnumType m_logs_status;
     /** @brief Logs request id */
     ocpp::types::Optional<int> m_logs_request_id;
 
     /** @brief Firmware update thread */
     std::thread* m_firmware_thread;
     /** @brief Firmware update status */
-    ocpp::types::FirmwareStatus m_firmware_status;
+    ocpp::types::ocpp16::FirmwareStatus m_firmware_status;
     /** @brief Signed firmware update status */
-    ocpp::types::FirmwareStatusEnumType m_signed_firmware_status;
+    ocpp::types::ocpp16::FirmwareStatusEnumType m_signed_firmware_status;
     /** @brief Signed firmware update request id */
     ocpp::types::Optional<int> m_firmware_request_id;
 
@@ -232,7 +234,7 @@ class MaintenanceManager
     // Security extensions
 
     /** @brief Process the upload of the logs */
-    void processGetLog(ocpp::types::LogEnumType            type,
+    void processGetLog(ocpp::types::ocpp16::LogEnumType    type,
                        std::string                         location,
                        ocpp::types::Optional<unsigned int> retries,
                        ocpp::types::Optional<unsigned int> retry_interval,

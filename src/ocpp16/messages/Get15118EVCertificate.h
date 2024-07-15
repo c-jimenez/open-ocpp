@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Get15118EVCertificate messages */
 static const std::string GET_15118_EV_CERTIFICATE_ACTION = "Get15118EVCertificate";
@@ -39,7 +41,7 @@ struct Get15118EVCertificateReq
                stream by the Central System */
     ocpp::types::CiStringType<50u> iso15118SchemaVersion;
     /** @brief Required. Defines whether certificate needs to be installed or updated */
-    ocpp::types::CertificateActionEnumType action;
+    ocpp::types::ocpp16::CertificateActionEnumType action;
     /** @brief Required. Raw CertificateInstallationReq request from EV, Base64 encoded */
     ocpp::types::CiStringType<5600u> exiRequest;
 };
@@ -48,7 +50,7 @@ struct Get15118EVCertificateReq
 struct Get15118EVCertificateConf
 {
     /** @brief Required. Indicates whether the message was processed properly */
-    ocpp::types::Iso15118EVCertificateStatusEnumType status;
+    ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType status;
     /** @brief Required. Raw CertificateInstallationRes response for the EV, Base64 encoded */
     ocpp::types::CiStringType<5600u> exiResponse;
 };
@@ -56,6 +58,7 @@ struct Get15118EVCertificateConf
 // Message converters
 MESSAGE_CONVERTERS(Get15118EVCertificate)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

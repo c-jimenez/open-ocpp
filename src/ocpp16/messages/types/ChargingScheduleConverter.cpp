@@ -21,20 +21,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::fromJson(const rapidjson::Value&,
- *                                                                    ocpp::types::ChargingSchedule&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>::fromJson(const rapidjson::Value&,
+ *                                                                    ocpp::types::ocpp16::ChargingSchedule&,
  *                                                                    std::string&,
  *                                                                    std::string&) */
-bool ChargingScheduleConverter::fromJson(const rapidjson::Value&        json,
-                                         ocpp::types::ChargingSchedule& data,
-                                         std::string&                   error_code,
-                                         std::string&                   error_message)
+bool ChargingScheduleConverter::fromJson(const rapidjson::Value&                json,
+                                         ocpp::types::ocpp16::ChargingSchedule& data,
+                                         std::string&                           error_code,
+                                         std::string&                           error_message)
 {
     bool ret = extract(json, "startSchedule", data.startSchedule, error_message);
     extract(json, "duration", data.duration);
@@ -67,9 +70,9 @@ bool ChargingScheduleConverter::fromJson(const rapidjson::Value&        json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::ChargingSchedule>::toJson(const ocpp::types::ChargingSchedule&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingSchedule>::toJson(const ocpp::types::ocpp16::ChargingSchedule&,
  *                                                                  rapidjson::Document&) */
-bool ChargingScheduleConverter::toJson(const ocpp::types::ChargingSchedule& data, rapidjson::Document& json)
+bool ChargingScheduleConverter::toJson(const ocpp::types::ocpp16::ChargingSchedule& data, rapidjson::Document& json)
 {
     fill(json, "startSchedule", data.startSchedule);
     fill(json, "duration", data.duration);
@@ -91,5 +94,6 @@ bool ChargingScheduleConverter::toJson(const ocpp::types::ChargingSchedule& data
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Contains information about a specific configuration key. It is returned in GetConfiguration.conf */
 struct KeyValue
@@ -38,6 +40,7 @@ struct KeyValue
     Optional<CiStringType<500u>> value;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

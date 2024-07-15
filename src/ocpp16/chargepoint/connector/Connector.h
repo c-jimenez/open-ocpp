@@ -38,8 +38,8 @@ struct Connector
     Connector(unsigned int _id, ocpp::helpers::ITimerPool& timer_pool)
         : id(_id),
           mutex(),
-          status(ocpp::types::ChargePointStatus::Available),
-          error_code(ocpp::types::ChargePointErrorCode::NoError),
+          status(ocpp::types::ocpp16::ChargePointStatus::Available),
+          error_code(ocpp::types::ocpp16::ChargePointErrorCode::NoError),
           status_timestamp(ocpp::types::DateTime::now()),
           info(),
           vendor_id(),
@@ -67,9 +67,9 @@ struct Connector
     // Status notification data
 
     /** @brief Status */
-    ocpp::types::ChargePointStatus status;
+    ocpp::types::ocpp16::ChargePointStatus status;
     /** @brief Error code */
-    ocpp::types::ChargePointErrorCode error_code;
+    ocpp::types::ocpp16::ChargePointErrorCode error_code;
     /** @brief Timestamp of the last status notification */
     ocpp::types::DateTime status_timestamp;
     /** @brief Info */
@@ -81,7 +81,7 @@ struct Connector
     /** @brief Timer for status duration */
     ocpp::helpers::Timer status_timer;
     /** @brief Last status notified to the central system */
-    ocpp::types::ChargePointStatus last_notified_status;
+    ocpp::types::ocpp16::ChargePointStatus last_notified_status;
 
     // Transaction data
 

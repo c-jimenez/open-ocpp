@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetCertificateStatus messages */
 static const std::string GET_CERTIFICATE_STATUS_ACTION = "GetCertificateStatus";
@@ -37,14 +39,14 @@ static const std::string GET_CERTIFICATE_STATUS_ACTION = "GetCertificateStatus";
 struct GetCertificateStatusReq
 {
     /** @brief Required. Indicates the certificate of which the status is requested */
-    ocpp::types::OcspRequestDataType ocspRequestData;
+    ocpp::types::ocpp16::OcspRequestDataType ocspRequestData;
 };
 
 /** @brief GetCertificateStatus.conf message */
 struct GetCertificateStatusConf
 {
     /** @brief Required. This indicates whether the charging station was able to retrieve the OCSP certificate status */
-    ocpp::types::GetCertificateStatusEnumType status;
+    ocpp::types::ocpp16::GetCertificateStatusEnumType status;
     /** @brief Optional. OCSPResponse class as defined in IETF RFC 6960.
                DER encoded (as defined in IETF RFC 6960), and then base64
                encoded. MAY only be omitted when status is not Accepted */
@@ -54,6 +56,7 @@ struct GetCertificateStatusConf
 // Message converters
 MESSAGE_CONVERTERS(GetCertificateStatus)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

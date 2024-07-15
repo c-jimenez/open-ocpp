@@ -20,21 +20,25 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
-
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a ResetType enum to string */
 const EnumToStringFromString<ResetType> ResetTypeHelper = {{ResetType::Hard, "Hard"}, {ResetType::Soft, "Soft"}};
 /** @brief Helper to convert a ResetStatus enum to string */
 const EnumToStringFromString<ResetStatus> ResetStatusHelper = {{ResetStatus::Accepted, "Accepted"}, {ResetStatus::Rejected, "Rejected"}};
+} // namespace ocpp16
 } // namespace types
 
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ResetReqConverter::fromJson(const rapidjson::Value& json, ResetReq& data, std::string& error_code, std::string& error_message)
 {
@@ -67,5 +71,6 @@ bool ResetConfConverter::toJson(const ResetConf& data, rapidjson::Document& json
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

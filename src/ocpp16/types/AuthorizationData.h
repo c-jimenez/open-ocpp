@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Elements that constitute an entry of a Local Authorization List update. */
 struct AuthorizationData
@@ -41,6 +43,7 @@ struct AuthorizationData
     Optional<IdTagInfo> idTagInfo;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

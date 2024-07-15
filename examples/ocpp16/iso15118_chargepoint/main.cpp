@@ -33,6 +33,7 @@ SOFTWARE.
 
 using namespace ocpp::chargepoint;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 /** @brief Entry point */

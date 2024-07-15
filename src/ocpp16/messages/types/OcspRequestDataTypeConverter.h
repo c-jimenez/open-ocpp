@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for OcspRequestDataType type */
-class OcspRequestDataTypeConverter : public IMessageConverter<ocpp::types::OcspRequestDataType>
+class OcspRequestDataTypeConverter : public IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::OcspRequestDataType>* IMessageConverter<ocpp::types::OcspRequestDataType>::clone() const */
-    IMessageConverter<ocpp::types::OcspRequestDataType>* clone() const override { return new OcspRequestDataTypeConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>* IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>* clone() const override { return new OcspRequestDataTypeConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::OcspRequestDataType>::fromJson(const rapidjson::Value&,
-    *                                                                               ocpp::types::OcspRequestDataType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>::fromJson(const rapidjson::Value&,
+    *                                                                               ocpp::types::ocpp16::OcspRequestDataType&,
     *                                                                               std::string&,
     *                                                                               std::string&) */
-    bool fromJson(const rapidjson::Value&           json,
-                  ocpp::types::OcspRequestDataType& data,
-                  std::string&                      error_code,
-                  std::string&                      error_message) override;
+    bool fromJson(const rapidjson::Value&                   json,
+                  ocpp::types::ocpp16::OcspRequestDataType& data,
+                  std::string&                              error_code,
+                  std::string&                              error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::OcspRequestDataType>::toJson(const ocpp::types::OcspRequestDataType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::OcspRequestDataType>::toJson(const ocpp::types::ocpp16::OcspRequestDataType&,
      *                                                                            rapidjson::Document&) */
-    bool toJson(const ocpp::types::OcspRequestDataType& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::OcspRequestDataType& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -22,7 +22,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MessagesConverter.h"
 
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -31,9 +33,9 @@ namespace localcontroller
 {
 
 /** @brief Constructor */
-CentralSystemHandler::CentralSystemHandler(const std::string&                       identifier,
-                                           const ocpp::messages::MessagesConverter& messages_converter,
-                                           ocpp::messages::MessageDispatcher&       msg_dispatcher)
+CentralSystemHandler::CentralSystemHandler(const std::string&                               identifier,
+                                           const ocpp::messages::ocpp16::MessagesConverter& messages_converter,
+                                           ocpp::messages::MessageDispatcher&               msg_dispatcher)
     : GenericMessageHandler<CancelReservationReq, CancelReservationConf>(CANCEL_RESERVATION_ACTION, messages_converter),
       GenericMessageHandler<ChangeAvailabilityReq, ChangeAvailabilityConf>(CHANGE_AVAILABILITY_ACTION, messages_converter),
       GenericMessageHandler<ChangeConfigurationReq, ChangeConfigurationConf>(CHANGE_CONFIGURATION_ACTION, messages_converter),
@@ -127,10 +129,10 @@ CentralSystemHandler::~CentralSystemHandler() { }
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::CancelReservationReq& request,
-                                         ocpp::messages::CancelReservationConf&      response,
-                                         std::string&                                error_code,
-                                         std::string&                                error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::CancelReservationReq& request,
+                                         ocpp::messages::ocpp16::CancelReservationConf&      response,
+                                         std::string&                                        error_code,
+                                         std::string&                                        error_message)
 {
     return forward(CANCEL_RESERVATION_ACTION, request, response, error_code, error_message);
 }
@@ -140,10 +142,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::CancelReservation
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
-                                         ocpp::messages::ChangeAvailabilityConf&      response,
-                                         std::string&                                 error_code,
-                                         std::string&                                 error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ChangeAvailabilityReq& request,
+                                         ocpp::messages::ocpp16::ChangeAvailabilityConf&      response,
+                                         std::string&                                         error_code,
+                                         std::string&                                         error_message)
 {
     return forward(CHANGE_AVAILABILITY_ACTION, request, response, error_code, error_message);
 }
@@ -153,10 +155,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ChangeAvailabilit
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
-                                         ocpp::messages::ChangeConfigurationConf&      response,
-                                         std::string&                                  error_code,
-                                         std::string&                                  error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ChangeConfigurationReq& request,
+                                         ocpp::messages::ocpp16::ChangeConfigurationConf&      response,
+                                         std::string&                                          error_code,
+                                         std::string&                                          error_message)
 {
     return forward(CHANGE_CONFIGURATION_ACTION, request, response, error_code, error_message);
 }
@@ -166,10 +168,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ChangeConfigurati
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ClearCacheReq& request,
-                                         ocpp::messages::ClearCacheConf&      response,
-                                         std::string&                         error_code,
-                                         std::string&                         error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ClearCacheReq& request,
+                                         ocpp::messages::ocpp16::ClearCacheConf&      response,
+                                         std::string&                                 error_code,
+                                         std::string&                                 error_message)
 {
     return forward(CLEAR_CACHE_ACTION, request, response, error_code, error_message);
 }
@@ -179,10 +181,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ClearCacheReq& re
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ClearChargingProfileReq& request,
-                                         ocpp::messages::ClearChargingProfileConf&      response,
-                                         std::string&                                   error_code,
-                                         std::string&                                   error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ClearChargingProfileReq& request,
+                                         ocpp::messages::ocpp16::ClearChargingProfileConf&      response,
+                                         std::string&                                           error_code,
+                                         std::string&                                           error_message)
 {
     return forward(CLEAR_CHARGING_PROFILE_ACTION, request, response, error_code, error_message);
 }
@@ -192,10 +194,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ClearChargingProf
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::DataTransferReq& request,
-                                         ocpp::messages::DataTransferConf&      response,
-                                         std::string&                           error_code,
-                                         std::string&                           error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::DataTransferReq& request,
+                                         ocpp::messages::ocpp16::DataTransferConf&      response,
+                                         std::string&                                   error_code,
+                                         std::string&                                   error_message)
 {
     return forward(DATA_TRANSFER_ACTION, request, response, error_code, error_message);
 }
@@ -205,10 +207,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::DataTransferReq& 
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetCompositeScheduleReq& request,
-                                         ocpp::messages::GetCompositeScheduleConf&      response,
-                                         std::string&                                   error_code,
-                                         std::string&                                   error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetCompositeScheduleReq& request,
+                                         ocpp::messages::ocpp16::GetCompositeScheduleConf&      response,
+                                         std::string&                                           error_code,
+                                         std::string&                                           error_message)
 {
     return forward(GET_COMPOSITE_SCHEDULE_ACTION, request, response, error_code, error_message);
 }
@@ -218,10 +220,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetCompositeSched
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetConfigurationReq& request,
-                                         ocpp::messages::GetConfigurationConf&      response,
-                                         std::string&                               error_code,
-                                         std::string&                               error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetConfigurationReq& request,
+                                         ocpp::messages::ocpp16::GetConfigurationConf&      response,
+                                         std::string&                                       error_code,
+                                         std::string&                                       error_message)
 {
     return forward(GET_CONFIGURATION_ACTION, request, response, error_code, error_message);
 }
@@ -231,10 +233,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetConfigurationR
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetDiagnosticsReq& request,
-                                         ocpp::messages::GetDiagnosticsConf&      response,
-                                         std::string&                             error_code,
-                                         std::string&                             error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetDiagnosticsReq& request,
+                                         ocpp::messages::ocpp16::GetDiagnosticsConf&      response,
+                                         std::string&                                     error_code,
+                                         std::string&                                     error_message)
 {
     return forward(GET_DIAGNOSTICS_ACTION, request, response, error_code, error_message);
 }
@@ -244,10 +246,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetDiagnosticsReq
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetLocalListVersionReq& request,
-                                         ocpp::messages::GetLocalListVersionConf&      response,
-                                         std::string&                                  error_code,
-                                         std::string&                                  error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetLocalListVersionReq& request,
+                                         ocpp::messages::ocpp16::GetLocalListVersionConf&      response,
+                                         std::string&                                          error_code,
+                                         std::string&                                          error_message)
 {
     return forward(GET_LOCAL_LIST_VERSION_ACTION, request, response, error_code, error_message);
 }
@@ -257,10 +259,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetLocalListVersi
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
-                                         ocpp::messages::RemoteStartTransactionConf&      response,
-                                         std::string&                                     error_code,
-                                         std::string&                                     error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::RemoteStartTransactionReq& request,
+                                         ocpp::messages::ocpp16::RemoteStartTransactionConf&      response,
+                                         std::string&                                             error_code,
+                                         std::string&                                             error_message)
 {
     return forward(REMOTE_START_TRANSACTION_ACTION, request, response, error_code, error_message);
 }
@@ -270,10 +272,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::RemoteStartTransa
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
-                                         ocpp::messages::RemoteStopTransactionConf&      response,
-                                         std::string&                                    error_code,
-                                         std::string&                                    error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::RemoteStopTransactionReq& request,
+                                         ocpp::messages::ocpp16::RemoteStopTransactionConf&      response,
+                                         std::string&                                            error_code,
+                                         std::string&                                            error_message)
 {
     return forward(REMOTE_STOP_TRANSACTION_ACTION, request, response, error_code, error_message);
 }
@@ -283,10 +285,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::RemoteStopTransac
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ReserveNowReq& request,
-                                         ocpp::messages::ReserveNowConf&      response,
-                                         std::string&                         error_code,
-                                         std::string&                         error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ReserveNowReq& request,
+                                         ocpp::messages::ocpp16::ReserveNowConf&      response,
+                                         std::string&                                 error_code,
+                                         std::string&                                 error_message)
 {
     return forward(RESERVE_NOW_ACTION, request, response, error_code, error_message);
 }
@@ -296,10 +298,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ReserveNowReq& re
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ResetReq& request,
-                                         ocpp::messages::ResetConf&      response,
-                                         std::string&                    error_code,
-                                         std::string&                    error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ResetReq& request,
+                                         ocpp::messages::ocpp16::ResetConf&      response,
+                                         std::string&                            error_code,
+                                         std::string&                            error_message)
 {
     return forward(RESET_ACTION, request, response, error_code, error_message);
 }
@@ -309,10 +311,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ResetReq& request
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::SendLocalListReq& request,
-                                         ocpp::messages::SendLocalListConf&      response,
-                                         std::string&                            error_code,
-                                         std::string&                            error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::SendLocalListReq& request,
+                                         ocpp::messages::ocpp16::SendLocalListConf&      response,
+                                         std::string&                                    error_code,
+                                         std::string&                                    error_message)
 {
     return forward(SEND_LOCAL_LIST_ACTION, request, response, error_code, error_message);
 }
@@ -322,10 +324,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::SendLocalListReq&
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::SetChargingProfileReq& request,
-                                         ocpp::messages::SetChargingProfileConf&      response,
-                                         std::string&                                 error_code,
-                                         std::string&                                 error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::SetChargingProfileReq& request,
+                                         ocpp::messages::ocpp16::SetChargingProfileConf&      response,
+                                         std::string&                                         error_code,
+                                         std::string&                                         error_message)
 {
     return forward(SET_CHARGING_PROFILE_ACTION, request, response, error_code, error_message);
 }
@@ -335,10 +337,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::SetChargingProfil
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::TriggerMessageReq& request,
-                                         ocpp::messages::TriggerMessageConf&      response,
-                                         std::string&                             error_code,
-                                         std::string&                             error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::TriggerMessageReq& request,
+                                         ocpp::messages::ocpp16::TriggerMessageConf&      response,
+                                         std::string&                                     error_code,
+                                         std::string&                                     error_message)
 {
     return forward(TRIGGER_MESSAGE_ACTION, request, response, error_code, error_message);
 }
@@ -348,10 +350,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::TriggerMessageReq
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::UnlockConnectorReq& request,
-                                         ocpp::messages::UnlockConnectorConf&      response,
-                                         std::string&                              error_code,
-                                         std::string&                              error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::UnlockConnectorReq& request,
+                                         ocpp::messages::ocpp16::UnlockConnectorConf&      response,
+                                         std::string&                                      error_code,
+                                         std::string&                                      error_message)
 {
     return forward(UNLOCK_CONNECTOR_ACTION, request, response, error_code, error_message);
 }
@@ -361,10 +363,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::UnlockConnectorRe
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::UpdateFirmwareReq& request,
-                                         ocpp::messages::UpdateFirmwareConf&      response,
-                                         std::string&                             error_code,
-                                         std::string&                             error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::UpdateFirmwareReq& request,
+                                         ocpp::messages::ocpp16::UpdateFirmwareConf&      response,
+                                         std::string&                                     error_code,
+                                         std::string&                                     error_message)
 {
     return forward(UPDATE_FIRMWARE_ACTION, request, response, error_code, error_message);
 }
@@ -376,10 +378,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::UpdateFirmwareReq
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::CertificateSignedReq& request,
-                                         ocpp::messages::CertificateSignedConf&      response,
-                                         std::string&                                error_code,
-                                         std::string&                                error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+                                         ocpp::messages::ocpp16::CertificateSignedConf&      response,
+                                         std::string&                                        error_code,
+                                         std::string&                                        error_message)
 {
     return forward(CERTIFICATE_SIGNED_ACTION, request, response, error_code, error_message);
 }
@@ -389,10 +391,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::CertificateSigned
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::DeleteCertificateReq& request,
-                                         ocpp::messages::DeleteCertificateConf&      response,
-                                         std::string&                                error_code,
-                                         std::string&                                error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+                                         ocpp::messages::ocpp16::DeleteCertificateConf&      response,
+                                         std::string&                                        error_code,
+                                         std::string&                                        error_message)
 {
     return forward(DELETE_CERTIFICATE_ACTION, request, response, error_code, error_message);
 }
@@ -402,10 +404,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::DeleteCertificate
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
-                                         ocpp::messages::ExtendedTriggerMessageConf&      response,
-                                         std::string&                                     error_code,
-                                         std::string&                                     error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq& request,
+                                         ocpp::messages::ocpp16::ExtendedTriggerMessageConf&      response,
+                                         std::string&                                             error_code,
+                                         std::string&                                             error_message)
 {
     return forward(EXTENDED_TRIGGER_MESSAGE_ACTION, request, response, error_code, error_message);
 }
@@ -415,10 +417,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::ExtendedTriggerMe
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetInstalledCertificateIdsReq& request,
-                                         ocpp::messages::GetInstalledCertificateIdsConf&      response,
-                                         std::string&                                         error_code,
-                                         std::string&                                         error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq& request,
+                                         ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&      response,
+                                         std::string&                                                 error_code,
+                                         std::string&                                                 error_message)
 {
     return forward(GET_INSTALLED_CERTIFICATE_IDS_ACTION, request, response, error_code, error_message);
 }
@@ -428,10 +430,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetInstalledCerti
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::GetLogReq& request,
-                                         ocpp::messages::GetLogConf&      response,
-                                         std::string&                     error_code,
-                                         std::string&                     error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::GetLogReq& request,
+                                         ocpp::messages::ocpp16::GetLogConf&      response,
+                                         std::string&                             error_code,
+                                         std::string&                             error_message)
 {
     return forward(GET_LOG_ACTION, request, response, error_code, error_message);
 }
@@ -441,10 +443,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::GetLogReq& reques
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::InstallCertificateReq& request,
-                                         ocpp::messages::InstallCertificateConf&      response,
-                                         std::string&                                 error_code,
-                                         std::string&                                 error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::InstallCertificateReq& request,
+                                         ocpp::messages::ocpp16::InstallCertificateConf&      response,
+                                         std::string&                                         error_code,
+                                         std::string&                                         error_message)
 {
     return forward(INSTALL_CERTIFICATE_ACTION, request, response, error_code, error_message);
 }
@@ -454,10 +456,10 @@ bool CentralSystemHandler::handleMessage(const ocpp::messages::InstallCertificat
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler::handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
-                                         ocpp::messages::SignedUpdateFirmwareConf&      response,
-                                         std::string&                                   error_code,
-                                         std::string&                                   error_message)
+bool CentralSystemHandler::handleMessage(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq& request,
+                                         ocpp::messages::ocpp16::SignedUpdateFirmwareConf&      response,
+                                         std::string&                                           error_code,
+                                         std::string&                                           error_message)
 {
     return forward(SIGNED_UPDATE_FIRMWARE_ACTION, request, response, error_code, error_message);
 }

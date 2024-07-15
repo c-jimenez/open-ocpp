@@ -36,6 +36,7 @@ SOFTWARE.
 
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 /** @brief Create the certificates for the ISO15118 communications */
@@ -170,7 +171,7 @@ int main(int argc, char* argv[])
                     std::cout << "Charge point supports ISO15118 PnC extensions" << std::endl;
 
                     // List installed certificates
-                    std::vector<ocpp::types::CertificateHashDataChainType> certificates;
+                    std::vector<ocpp::types::ocpp16::CertificateHashDataChainType> certificates;
                     if (chargepoint->iso15118GetInstalledCertificateIds(
                             std::vector<GetCertificateIdUseEnumType>{GetCertificateIdUseEnumType::V2GRootCertificate,
                                                                      GetCertificateIdUseEnumType::MORootCertificate},

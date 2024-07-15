@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be
            delivered per time interval */
@@ -58,6 +60,7 @@ struct ChargingProfile
     ChargingSchedule chargingSchedule;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

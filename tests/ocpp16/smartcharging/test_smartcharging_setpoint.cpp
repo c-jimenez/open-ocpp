@@ -38,7 +38,9 @@ using namespace ocpp::chargepoint;
 using namespace ocpp::config;
 using namespace ocpp::database;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::rpc;
 using namespace ocpp::helpers;
 
@@ -130,8 +132,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile1.chargingSchedule.duration         = 300;
         CHECK(installProfile(0, profile1, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -177,8 +179,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile1.chargingSchedule.duration         = 300;
         CHECK(installProfile(0, profile1, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -219,8 +221,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile1.chargingSchedule.duration         = 300;
         CHECK(installProfile(0, profile1, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -266,8 +268,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile1.chargingSchedule.duration         = 300;
         CHECK(installProfile(0, profile1, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -329,8 +331,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile2.chargingSchedule.minChargingRate  = 8.f;
         CHECK(installProfile(1, profile2, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -397,8 +399,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile2.chargingSchedule.minChargingRate  = 6.f;
         CHECK(installProfile(0, profile2, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK(charge_point_setpoint.isSet());
@@ -469,8 +471,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile2.chargingSchedule.minChargingRate  = 8.f;
         CHECK(installProfile(1, profile2, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -537,8 +539,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile2.chargingSchedule.minChargingRate  = 8.f;
         CHECK(installProfile(1, profile2, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK_FALSE(charge_point_setpoint.isSet());
@@ -628,8 +630,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile3.chargingSchedule.minChargingRate  = 6.f;
         CHECK(installProfile(0, profile3, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK(charge_point_setpoint.isSet());
@@ -723,8 +725,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile3.chargingSchedule.minChargingRate  = 6.f;
         CHECK(installProfile(0, profile3, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK(charge_point_setpoint.isSet());
@@ -818,8 +820,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile3.chargingSchedule.minChargingRate  = 6.f;
         CHECK(installProfile(0, profile3, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK(charge_point_setpoint.isSet());
@@ -912,8 +914,8 @@ TEST_SUITE("Get composite schedule - multiple OCPP profiles")
         profile3.chargingSchedule.minChargingRate  = 6.f;
         CHECK(installProfile(0, profile3, smartcharging_mgr));
 
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> charge_point_setpoint;
-        ocpp::types::Optional<ocpp::types::SmartChargingSetpoint> connector_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> charge_point_setpoint;
+        ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint> connector_setpoint;
         CHECK(smartcharging_mgr.getSetpoint(1u, charge_point_setpoint, connector_setpoint, ChargingRateUnitType::A));
 
         CHECK(charge_point_setpoint.isSet());

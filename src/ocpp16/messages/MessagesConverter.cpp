@@ -78,6 +78,9 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
+
 /** @brief Constructor */
 MessagesConverter::MessagesConverter()
 {
@@ -179,5 +182,6 @@ MessagesConverter::~MessagesConverter()
     DELETE_CONVERTER(UpdateFirmware);
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

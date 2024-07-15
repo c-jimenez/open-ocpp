@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Represents a copy of the firmware that can be loaded/updated on the Charge Point.
            FirmwareType is used by: SignedUpdateFirmware.req */
@@ -44,6 +46,7 @@ struct FirmwareType
     CiStringType<800> signature;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

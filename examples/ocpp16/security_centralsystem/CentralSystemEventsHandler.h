@@ -96,7 +96,7 @@ class CentralSystemEventsHandler : public DefaultCentralSystemEventsHandler
         /** @copydoc void IChargePointRequestHandler::disconnected() */
         void disconnected() override;
 
-        /** @copydoc ocpp::types::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
+        /** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
@@ -104,14 +104,14 @@ class CentralSystemEventsHandler : public DefaultCentralSystemEventsHandler
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&) */
-        ocpp::types::RegistrationStatus bootNotification(const std::string& model,
-                                                         const std::string& serial_number,
-                                                         const std::string& vendor,
-                                                         const std::string& firmware_version,
-                                                         const std::string& iccid,
-                                                         const std::string& imsi,
-                                                         const std::string& meter_serial_number,
-                                                         const std::string& meter_type) override;
+        ocpp::types::ocpp16::RegistrationStatus bootNotification(const std::string& model,
+                                                                 const std::string& serial_number,
+                                                                 const std::string& vendor,
+                                                                 const std::string& firmware_version,
+                                                                 const std::string& iccid,
+                                                                 const std::string& imsi,
+                                                                 const std::string& meter_serial_number,
+                                                                 const std::string& meter_type) override;
 
         // Security extensions
 

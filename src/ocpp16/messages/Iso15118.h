@@ -25,10 +25,13 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Vendor id for ISO 15118 PnC extensions messages */
 static const std::string ISO15118_VENDOR_ID = "org.openchargealliance.iso15118pnc";
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -42,10 +42,10 @@ class ISmartChargingManager
      * @param unit Setpoint unit (A or W)
      * @return true if the setpoints have been computed, false otherwise
      */
-    virtual bool getSetpoint(unsigned int                                               connector_id,
-                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                             ocpp::types::ChargingRateUnitType                          unit = ocpp::types::ChargingRateUnitType::A) = 0;
+    virtual bool getSetpoint(unsigned int                                                       connector_id,
+                             ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                             ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                             ocpp::types::ocpp16::ChargingRateUnitType unit = ocpp::types::ocpp16::ChargingRateUnitType::A) = 0;
 
     /**
      * @brief Install a TxProfile charging profile on a connector
@@ -53,7 +53,7 @@ class ISmartChargingManager
      * @param profile Charging profile to install
      * @return true if the charging profile has been installed, false otherwise
      */
-    virtual bool installTxProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile) = 0;
+    virtual bool installTxProfile(unsigned int connector_id, const ocpp::types::ocpp16::ChargingProfile& profile) = 0;
 
     /**
      * @brief Assign the pending TxProfile of a connector to a transaction

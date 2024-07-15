@@ -41,28 +41,28 @@ class IAuthentManager
      * @param parent_id If of the user's parent tag
      * @return Authorization status (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::AuthorizationStatus authorize(const std::string& id_tag, std::string& parent_id) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus authorize(const std::string& id_tag, std::string& parent_id) = 0;
 
     /**
      * @brief Update a tag information
      * @param id_tag Id of the tag to update
      * @param id_tag_info New tag informations
      */
-    virtual void update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info) = 0;
+    virtual void update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo& tag_info) = 0;
 
     /**
      * @brief Ask for authorization of an ISO15118 operation
      * @param token_id Token id of the user's
      * @return Authorization status (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::AuthorizationStatus iso15118Authorize(const std::string& token_id) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const std::string& token_id) = 0;
 
     /**
      * @brief Update an ISO15118 token information
      * @param token_id Id of the token to update
      * @param token_info New token informations
      */
-    virtual void iso15118Update(const std::string& token_id, const ocpp::types::IdTokenInfoType& token_info) = 0;
+    virtual void iso15118Update(const std::string& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info) = 0;
 };
 
 } // namespace chargepoint

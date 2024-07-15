@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SecurityEventNotification messages */
 static const std::string SECURITY_EVENT_NOTIFICATION_ACTION = "SecurityEventNotification";
@@ -52,6 +54,7 @@ struct SecurityEventNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(SecurityEventNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

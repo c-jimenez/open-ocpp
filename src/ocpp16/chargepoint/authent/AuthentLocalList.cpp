@@ -27,8 +27,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 
 using namespace ocpp::database;
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -79,10 +81,10 @@ AuthentLocalList::~AuthentLocalList() { }
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool AuthentLocalList::handleMessage(const ocpp::messages::GetLocalListVersionReq& request,
-                                     ocpp::messages::GetLocalListVersionConf&      response,
-                                     std::string&                                  error_code,
-                                     std::string&                                  error_message)
+bool AuthentLocalList::handleMessage(const ocpp::messages::ocpp16::GetLocalListVersionReq& request,
+                                     ocpp::messages::ocpp16::GetLocalListVersionConf&      response,
+                                     std::string&                                          error_code,
+                                     std::string&                                          error_message)
 {
     (void)request;
     (void)error_code;
@@ -108,10 +110,10 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::GetLocalListVersionRe
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& request,
-                                     ocpp::messages::SendLocalListConf&      response,
-                                     std::string&                            error_code,
-                                     std::string&                            error_message)
+bool AuthentLocalList::handleMessage(const ocpp::messages::ocpp16::SendLocalListReq& request,
+                                     ocpp::messages::ocpp16::SendLocalListConf&      response,
+                                     std::string&                                    error_code,
+                                     std::string&                                    error_message)
 {
     (void)request;
     (void)response;
@@ -199,7 +201,7 @@ bool AuthentLocalList::handleMessage(const ocpp::messages::SendLocalListReq& req
 }
 
 /** @brief Look for a tag id in the local list */
-bool AuthentLocalList::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_info)
+bool AuthentLocalList::check(const std::string& id_tag, ocpp::types::ocpp16::IdTagInfo& tag_info)
 {
     bool ret = false;
 
@@ -282,7 +284,7 @@ void AuthentLocalList::initDatabaseTable()
 }
 
 /** @brief Perform the full update of the local list */
-bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::AuthorizationData>& authorization_datas)
+bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_datas)
 {
     bool ret = true;
 
@@ -359,7 +361,7 @@ bool AuthentLocalList::performFullUpdate(const std::vector<ocpp::types::Authoriz
 }
 
 /** @brief Perform the partial update of the local list */
-bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::AuthorizationData>& authorization_datas)
+bool AuthentLocalList::performPartialUpdate(const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_datas)
 {
     bool ret = true;
 

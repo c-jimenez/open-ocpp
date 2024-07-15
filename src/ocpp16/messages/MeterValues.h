@@ -30,6 +30,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the MeterValues messages */
 static const std::string METER_VALUES_ACTION = "MeterValues";
@@ -43,7 +45,7 @@ struct MeterValuesReq
     /** @brief Optional. The transaction to which these meter samples are related */
     ocpp::types::Optional<int> transactionId;
     /** @brief Required. The sampled meter values with timestamps */
-    std::vector<ocpp::types::MeterValue> meterValue;
+    std::vector<ocpp::types::ocpp16::MeterValue> meterValue;
 };
 
 /** @brief MeterValues.conf message */
@@ -55,6 +57,7 @@ struct MeterValuesConf
 // Message converters
 MESSAGE_CONVERTERS(MeterValues)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

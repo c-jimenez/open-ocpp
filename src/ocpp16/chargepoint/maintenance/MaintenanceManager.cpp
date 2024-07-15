@@ -36,8 +36,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <filesystem>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 namespace ocpp
@@ -146,7 +148,7 @@ bool MaintenanceManager::notifyFirmwareUpdateStatus(bool success)
 }
 
 /** @brief Notify the end of a signed firmware update operation */
-bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status)
+bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType status)
 {
     // Update status
     m_signed_firmware_status = status;
@@ -162,8 +164,9 @@ bool MaintenanceManager::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareS
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger        message,
+                                          const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     (void)connector_id;
@@ -203,9 +206,9 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTrigger message, c
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
-                                          const ocpp::types::Optional<unsigned int>& connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool MaintenanceManager::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                                          const ocpp::types::Optional<unsigned int>&  connector_id)
 {
     bool ret = true;
     (void)connector_id;
@@ -250,10 +253,10 @@ bool MaintenanceManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::ResetReq& request,
-                                       ocpp::messages::ResetConf&      response,
-                                       std::string&                    error_code,
-                                       std::string&                    error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::ResetReq& request,
+                                       ocpp::messages::ocpp16::ResetConf&      response,
+                                       std::string&                            error_code,
+                                       std::string&                            error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -280,10 +283,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::ResetReq& request,
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::UnlockConnectorReq& request,
-                                       ocpp::messages::UnlockConnectorConf&      response,
-                                       std::string&                              error_code,
-                                       std::string&                              error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::UnlockConnectorReq& request,
+                                       ocpp::messages::ocpp16::UnlockConnectorConf&      response,
+                                       std::string&                                      error_code,
+                                       std::string&                                      error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -312,10 +315,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UnlockConnectorReq&
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::GetDiagnosticsReq& request,
-                                       ocpp::messages::GetDiagnosticsConf&      response,
-                                       std::string&                             error_code,
-                                       std::string&                             error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::GetDiagnosticsReq& request,
+                                       ocpp::messages::ocpp16::GetDiagnosticsConf&      response,
+                                       std::string&                                     error_code,
+                                       std::string&                                     error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -358,10 +361,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetDiagnosticsReq& 
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& request,
-                                       ocpp::messages::UpdateFirmwareConf&      response,
-                                       std::string&                             error_code,
-                                       std::string&                             error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::UpdateFirmwareReq& request,
+                                       ocpp::messages::ocpp16::UpdateFirmwareConf&      response,
+                                       std::string&                                     error_code,
+                                       std::string&                                     error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -396,10 +399,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::UpdateFirmwareReq& 
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
-                                       ocpp::messages::GetLogConf&      response,
-                                       std::string&                     error_code,
-                                       std::string&                     error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::GetLogReq& request,
+                                       ocpp::messages::ocpp16::GetLogConf&      response,
+                                       std::string&                             error_code,
+                                       std::string&                             error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -466,10 +469,10 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetLogReq& request,
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool MaintenanceManager::handleMessage(const ocpp::messages::SignedUpdateFirmwareReq& request,
-                                       ocpp::messages::SignedUpdateFirmwareConf&      response,
-                                       std::string&                                   error_code,
-                                       std::string&                                   error_message)
+bool MaintenanceManager::handleMessage(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq& request,
+                                       ocpp::messages::ocpp16::SignedUpdateFirmwareConf&      response,
+                                       std::string&                                           error_code,
+                                       std::string&                                           error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -740,7 +743,7 @@ bool MaintenanceManager::sendFirmwareStatusNotification()
 // Security extensions
 
 /** @brief Process the upload of the logs */
-void MaintenanceManager::processGetLog(ocpp::types::LogEnumType            type,
+void MaintenanceManager::processGetLog(ocpp::types::ocpp16::LogEnumType    type,
                                        std::string                         location,
                                        ocpp::types::Optional<unsigned int> retries,
                                        ocpp::types::Optional<unsigned int> retry_interval,

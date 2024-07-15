@@ -33,8 +33,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <functional>
 #include <thread>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -71,12 +73,12 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
     m_boot_notification_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::bootNotificationProcess, this)); });
     m_heartbeat_timer.setCallback([this] { m_worker_pool.run<void>(std::bind(&StatusManager::heartBeatProcess, this)); });
 
-    trigger_manager.registerHandler(ocpp::types::MessageTrigger::BootNotification, *this);
-    trigger_manager.registerHandler(ocpp::types::MessageTrigger::Heartbeat, *this);
-    trigger_manager.registerHandler(ocpp::types::MessageTrigger::StatusNotification, *this);
-    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::BootNotification, *this);
-    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::Heartbeat, *this);
-    trigger_manager.registerHandler(ocpp::types::MessageTriggerEnumType::StatusNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTrigger::BootNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTrigger::Heartbeat, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTrigger::StatusNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType::BootNotification, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType::Heartbeat, *this);
+    trigger_manager.registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType::StatusNotification, *this);
 
     msg_dispatcher.registerHandler(CHANGE_AVAILABILITY_ACTION, *this);
 }
@@ -84,8 +86,8 @@ StatusManager::StatusManager(const ocpp::config::IChargePointConfig&         sta
 /** @brief Destructor */
 StatusManager::~StatusManager() { }
 
-/** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::RegistrationStatus) */
-void StatusManager::forceRegistrationStatus(ocpp::types::RegistrationStatus status)
+/** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus) */
+void StatusManager::forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus status)
 {
     m_registration_status     = status;
     m_force_boot_notification = true;
@@ -126,18 +128,18 @@ void StatusManager::updateConnectionStatus(bool is_connected)
 }
 
 /** @copydoc bool IStatusManager::updateConnectorStatus(unsigned int,
- *                                                      ocpp::types::ChargePointStatus,
- *                                                      ocpp::types::ChargePointErrorCode,
+ *                                                      ocpp::types::ocpp16::ChargePointStatus,
+ *                                                      ocpp::types::ocpp16::ChargePointErrorCode,
  *                                                      const std::string&,
  *                                                      const std::string&,
  *                                                      const std::string&)
 */
-bool StatusManager::updateConnectorStatus(unsigned int                      connector_id,
-                                          ocpp::types::ChargePointStatus    status,
-                                          ocpp::types::ChargePointErrorCode error_code,
-                                          const std::string&                info,
-                                          const std::string&                vendor_id,
-                                          const std::string&                vendor_error)
+bool StatusManager::updateConnectorStatus(unsigned int                              connector_id,
+                                          ocpp::types::ocpp16::ChargePointStatus    status,
+                                          ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                                          const std::string&                        info,
+                                          const std::string&                        vendor_id,
+                                          const std::string&                        vendor_error)
 {
     bool ret = false;
 
@@ -202,8 +204,8 @@ void StatusManager::resetHeartBeatTimer()
 
 // ITriggerMessageHandler interfaces
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
-bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+bool StatusManager::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id)
 {
     bool ret = true;
     switch (message)
@@ -272,8 +274,9 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTrigger message, const 
     return ret;
 }
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool StatusManager::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                                     const ocpp::types::Optional<unsigned int>&  connector_id)
 {
     bool ret = true;
     switch (message)
@@ -349,10 +352,10 @@ bool StatusManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
-                                  ocpp::messages::ChangeAvailabilityConf&      response,
-                                  std::string&                                 error_code,
-                                  std::string&                                 error_message)
+bool StatusManager::handleMessage(const ocpp::messages::ocpp16::ChangeAvailabilityReq& request,
+                                  ocpp::messages::ocpp16::ChangeAvailabilityConf&      response,
+                                  std::string&                                         error_code,
+                                  std::string&                                         error_message)
 {
     bool ret = false;
 

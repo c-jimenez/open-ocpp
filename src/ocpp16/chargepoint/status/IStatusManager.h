@@ -35,13 +35,13 @@ class IStatusManager
      * @brief Get the registration status with the central system
      * @return Registration status (see RegistrationStatus enum)
      */
-    virtual ocpp::types::RegistrationStatus getRegistrationStatus() = 0;
+    virtual ocpp::types::ocpp16::RegistrationStatus getRegistrationStatus() = 0;
 
     /**
      * @brief Force the registration status with the central system
      * @param status New registration status
      */
-    virtual void forceRegistrationStatus(ocpp::types::RegistrationStatus status) = 0;
+    virtual void forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus status) = 0;
 
     /**
      * @brief Update the charge point connection status
@@ -59,12 +59,13 @@ class IStatusManager
      * @param vendor_error Vendor specific error code
      * @return true if the status has been notified, false otherwise
      */
-    virtual bool updateConnectorStatus(unsigned int                      connector_id,
-                                       ocpp::types::ChargePointStatus    status,
-                                       ocpp::types::ChargePointErrorCode error_code   = ocpp::types::ChargePointErrorCode::NoError,
-                                       const std::string&                info         = "",
-                                       const std::string&                vendor_id    = "",
-                                       const std::string&                vendor_error = "") = 0;
+    virtual bool updateConnectorStatus(
+        unsigned int                              connector_id,
+        ocpp::types::ocpp16::ChargePointStatus    status,
+        ocpp::types::ocpp16::ChargePointErrorCode error_code   = ocpp::types::ocpp16::ChargePointErrorCode::NoError,
+        const std::string&                        info         = "",
+        const std::string&                        vendor_id    = "",
+        const std::string&                        vendor_error = "") = 0;
 
     /** @brief Reset the hearbeat timer */
     virtual void resetHeartBeatTimer() = 0;

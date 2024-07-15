@@ -120,10 +120,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::CancelReservationReq& request,
-                      ocpp::messages::CancelReservationConf&      response,
-                      std::string&                                error,
-                      std::string&                                message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::CancelReservationReq& request,
+                      ocpp::messages::ocpp16::CancelReservationConf&      response,
+                      std::string&                                        error,
+                      std::string&                                        message) = 0;
 
     /**
      * @brief Change the availability state of a connector
@@ -133,10 +133,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ChangeAvailabilityReq& request,
-                      ocpp::messages::ChangeAvailabilityConf&      response,
-                      std::string&                                 error,
-                      std::string&                                 message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ChangeAvailabilityReq& request,
+                      ocpp::messages::ocpp16::ChangeAvailabilityConf&      response,
+                      std::string&                                         error,
+                      std::string&                                         message) = 0;
 
     /**
      * @brief Change the value of a configuration key
@@ -146,10 +146,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ChangeConfigurationReq& request,
-                      ocpp::messages::ChangeConfigurationConf&      response,
-                      std::string&                                  error,
-                      std::string&                                  message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ChangeConfigurationReq& request,
+                      ocpp::messages::ocpp16::ChangeConfigurationConf&      response,
+                      std::string&                                          error,
+                      std::string&                                          message) = 0;
 
     /**
      * @brief Clear the authentication cache
@@ -159,10 +159,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ClearCacheReq& request,
-                      ocpp::messages::ClearCacheConf&      response,
-                      std::string&                         error,
-                      std::string&                         message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ClearCacheReq& request,
+                      ocpp::messages::ocpp16::ClearCacheConf&      response,
+                      std::string&                                 error,
+                      std::string&                                 message) = 0;
 
     /**
      * @brief Clear 1 or more charging profiles
@@ -172,10 +172,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ClearChargingProfileReq& request,
-                      ocpp::messages::ClearChargingProfileConf&      response,
-                      std::string&                                   error,
-                      std::string&                                   message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ClearChargingProfileReq& request,
+                      ocpp::messages::ocpp16::ClearChargingProfileConf&      response,
+                      std::string&                                           error,
+                      std::string&                                           message) = 0;
 
     /**
      * @brief Send a data transfer request
@@ -185,10 +185,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::DataTransferReq& request,
-                      ocpp::messages::DataTransferConf&      response,
-                      std::string&                           error,
-                      std::string&                           message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::DataTransferReq& request,
+                      ocpp::messages::ocpp16::DataTransferConf&      response,
+                      std::string&                                   error,
+                      std::string&                                   message) = 0;
 
     /**
      * @brief Get a smart charging composite schedule
@@ -198,10 +198,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetCompositeScheduleReq& request,
-                      ocpp::messages::GetCompositeScheduleConf&      response,
-                      std::string&                                   error,
-                      std::string&                                   message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetCompositeScheduleReq& request,
+                      ocpp::messages::ocpp16::GetCompositeScheduleConf&      response,
+                      std::string&                                           error,
+                      std::string&                                           message) = 0;
 
     /**
      * @brief Get the value of the configuration keys
@@ -211,10 +211,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetConfigurationReq& request,
-                      ocpp::messages::GetConfigurationConf&      response,
-                      std::string&                               error,
-                      std::string&                               message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetConfigurationReq& request,
+                      ocpp::messages::ocpp16::GetConfigurationConf&      response,
+                      std::string&                                       error,
+                      std::string&                                       message) = 0;
 
     /**
      * @brief Get the diagnostic file
@@ -224,10 +224,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetDiagnosticsReq& request,
-                      ocpp::messages::GetDiagnosticsConf&      response,
-                      std::string&                             error,
-                      std::string&                             message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetDiagnosticsReq& request,
+                      ocpp::messages::ocpp16::GetDiagnosticsConf&      response,
+                      std::string&                                     error,
+                      std::string&                                     message) = 0;
 
     /**
      * @brief Get the version of the local authorization list
@@ -237,10 +237,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetLocalListVersionReq& request,
-                      ocpp::messages::GetLocalListVersionConf&      response,
-                      std::string&                                  error,
-                      std::string&                                  message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetLocalListVersionReq& request,
+                      ocpp::messages::ocpp16::GetLocalListVersionConf&      response,
+                      std::string&                                          error,
+                      std::string&                                          message) = 0;
 
     /**
      * @brief Send a remote start transaction request
@@ -250,10 +250,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::RemoteStartTransactionReq& request,
-                      ocpp::messages::RemoteStartTransactionConf&      response,
-                      std::string&                                     error,
-                      std::string&                                     message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::RemoteStartTransactionReq& request,
+                      ocpp::messages::ocpp16::RemoteStartTransactionConf&      response,
+                      std::string&                                             error,
+                      std::string&                                             message) = 0;
 
     /**
      * @brief Send a remote stop transaction request
@@ -263,10 +263,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::RemoteStopTransactionReq& request,
-                      ocpp::messages::RemoteStopTransactionConf&      response,
-                      std::string&                                    error,
-                      std::string&                                    message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::RemoteStopTransactionReq& request,
+                      ocpp::messages::ocpp16::RemoteStopTransactionConf&      response,
+                      std::string&                                            error,
+                      std::string&                                            message) = 0;
 
     /**
      * @brief Reserve a connector
@@ -276,10 +276,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ReserveNowReq& request,
-                      ocpp::messages::ReserveNowConf&      response,
-                      std::string&                         error,
-                      std::string&                         message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ReserveNowReq& request,
+                      ocpp::messages::ocpp16::ReserveNowConf&      response,
+                      std::string&                                 error,
+                      std::string&                                 message) = 0;
 
     /**
      * @brief Reset the charge point
@@ -289,10 +289,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ResetReq& request,
-                      ocpp::messages::ResetConf&      response,
-                      std::string&                    error,
-                      std::string&                    message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ResetReq& request,
+                      ocpp::messages::ocpp16::ResetConf&      response,
+                      std::string&                            error,
+                      std::string&                            message) = 0;
 
     /**
      * @brief Send or upgrade a local authorization list
@@ -302,10 +302,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::SendLocalListReq& request,
-                      ocpp::messages::SendLocalListConf&      response,
-                      std::string&                            error,
-                      std::string&                            message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::SendLocalListReq& request,
+                      ocpp::messages::ocpp16::SendLocalListConf&      response,
+                      std::string&                                    error,
+                      std::string&                                    message) = 0;
 
     /**
      * @brief Set a charging profile in the charge point
@@ -315,10 +315,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::SetChargingProfileReq& request,
-                      ocpp::messages::SetChargingProfileConf&      response,
-                      std::string&                                 error,
-                      std::string&                                 message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::SetChargingProfileReq& request,
+                      ocpp::messages::ocpp16::SetChargingProfileConf&      response,
+                      std::string&                                         error,
+                      std::string&                                         message) = 0;
 
     /**
      * @brief Request the send of a specific message
@@ -328,10 +328,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::TriggerMessageReq& request,
-                      ocpp::messages::TriggerMessageConf&      response,
-                      std::string&                             error,
-                      std::string&                             message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::TriggerMessageReq& request,
+                      ocpp::messages::ocpp16::TriggerMessageConf&      response,
+                      std::string&                                     error,
+                      std::string&                                     message) = 0;
 
     /**
      * @brief Unlock a connector
@@ -341,10 +341,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::UnlockConnectorReq& request,
-                      ocpp::messages::UnlockConnectorConf&      response,
-                      std::string&                              error,
-                      std::string&                              message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::UnlockConnectorReq& request,
+                      ocpp::messages::ocpp16::UnlockConnectorConf&      response,
+                      std::string&                                      error,
+                      std::string&                                      message) = 0;
 
     /**
      * @brief Update the firmware of the charge point
@@ -354,10 +354,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::UpdateFirmwareReq& request,
-                      ocpp::messages::UpdateFirmwareConf&      response,
-                      std::string&                             error,
-                      std::string&                             message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::UpdateFirmwareReq& request,
+                      ocpp::messages::ocpp16::UpdateFirmwareConf&      response,
+                      std::string&                                     error,
+                      std::string&                                     message) = 0;
 
     // Security extensions
 
@@ -369,10 +369,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::CertificateSignedReq& request,
-                      ocpp::messages::CertificateSignedConf&      response,
-                      std::string&                                error,
-                      std::string&                                message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+                      ocpp::messages::ocpp16::CertificateSignedConf&      response,
+                      std::string&                                        error,
+                      std::string&                                        message) = 0;
 
     /**
      * @brief Delete an installed CA certificate
@@ -382,10 +382,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::DeleteCertificateReq& request,
-                      ocpp::messages::DeleteCertificateConf&      response,
-                      std::string&                                error,
-                      std::string&                                message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+                      ocpp::messages::ocpp16::DeleteCertificateConf&      response,
+                      std::string&                                        error,
+                      std::string&                                        message) = 0;
 
     /**
      * @brief Request the send of a specific message
@@ -395,10 +395,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ExtendedTriggerMessageReq& request,
-                      ocpp::messages::ExtendedTriggerMessageConf&      response,
-                      std::string&                                     error,
-                      std::string&                                     message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq& request,
+                      ocpp::messages::ocpp16::ExtendedTriggerMessageConf&      response,
+                      std::string&                                             error,
+                      std::string&                                             message) = 0;
 
     /**
      * @brief Get the list of installed CA certificates
@@ -408,10 +408,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetInstalledCertificateIdsReq& request,
-                      ocpp::messages::GetInstalledCertificateIdsConf&      response,
-                      std::string&                                         error,
-                      std::string&                                         message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq& request,
+                      ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&      response,
+                      std::string&                                                 error,
+                      std::string&                                                 message) = 0;
 
     /**
      * @brief Get the log file
@@ -421,10 +421,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::GetLogReq& request,
-                      ocpp::messages::GetLogConf&      response,
-                      std::string&                     error,
-                      std::string&                     message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::GetLogReq& request,
+                      ocpp::messages::ocpp16::GetLogConf&      response,
+                      std::string&                             error,
+                      std::string&                             message) = 0;
 
     /**
      * @brief Install a CA certificate
@@ -434,10 +434,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::InstallCertificateReq& request,
-                      ocpp::messages::InstallCertificateConf&      response,
-                      std::string&                                 error,
-                      std::string&                                 message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::InstallCertificateReq& request,
+                      ocpp::messages::ocpp16::InstallCertificateConf&      response,
+                      std::string&                                         error,
+                      std::string&                                         message) = 0;
 
     /**
      * @brief Update the firmware of the charge point
@@ -447,10 +447,10 @@ class IChargePointProxy
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::SignedUpdateFirmwareReq& request,
-                      ocpp::messages::SignedUpdateFirmwareConf&      response,
-                      std::string&                                   error,
-                      std::string&                                   message) = 0;
+    virtual bool call(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq& request,
+                      ocpp::messages::ocpp16::SignedUpdateFirmwareConf&      response,
+                      std::string&                                           error,
+                      std::string&                                           message) = 0;
 
     /**
      * @brief Register a handler for the Authorize request
@@ -458,7 +458,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, std::string&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::ocpp16::AuthorizeReq&, ocpp::messages::ocpp16::AuthorizeConf&, std::string&, std::string&)>
+            handler) = 0;
 
     /**
      * @brief Register a handler for the BootNotification request
@@ -466,7 +467,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, std::string&, std::string&)>
+        std::function<bool(
+            const ocpp::messages::ocpp16::BootNotificationReq&, ocpp::messages::ocpp16::BootNotificationConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -475,7 +477,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>
+        std::function<
+            bool(const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -483,8 +486,8 @@ class IChargePointProxy
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
-                                                    ocpp::messages::DiagnosticsStatusNotificationConf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq&,
+                                                    ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
 
@@ -493,8 +496,8 @@ class IChargePointProxy
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
-                                                    ocpp::messages::FirmwareStatusNotificationConf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq&,
+                                                    ocpp::messages::ocpp16::FirmwareStatusNotificationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
 
@@ -504,7 +507,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, std::string&, std::string&)> handler) = 0;
+        std::function<bool(const ocpp::messages::ocpp16::HeartbeatReq&, ocpp::messages::ocpp16::HeartbeatConf&, std::string&, std::string&)>
+            handler) = 0;
 
     /**
      * @brief Register a handler for the MeterValues request
@@ -512,7 +516,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, std::string&, std::string&)>
+        std::function<
+            bool(const ocpp::messages::ocpp16::MeterValuesReq&, ocpp::messages::ocpp16::MeterValuesConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -521,7 +526,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, std::string&, std::string&)>
+        std::function<bool(
+            const ocpp::messages::ocpp16::StartTransactionReq&, ocpp::messages::ocpp16::StartTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -529,10 +535,10 @@ class IChargePointProxy
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, std::string&, std::string&)>
-            handler) = 0;
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::StatusNotificationReq&,
+                                                    ocpp::messages::ocpp16::StatusNotificationConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the StopTransaction request
@@ -540,7 +546,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, std::string&, std::string&)>
+        std::function<bool(
+            const ocpp::messages::ocpp16::StopTransactionReq&, ocpp::messages::ocpp16::StopTransactionConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -548,18 +555,18 @@ class IChargePointProxy
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, std::string&, std::string&)>
-            handler) = 0;
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::LogStatusNotificationReq&,
+                                                    ocpp::messages::ocpp16::LogStatusNotificationConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
 
     /**
      * @brief Register a handler for the SecurityEventNotification request
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
-                                                    ocpp::messages::SecurityEventNotificationConf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SecurityEventNotificationReq&,
+                                                    ocpp::messages::ocpp16::SecurityEventNotificationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
 
@@ -569,7 +576,8 @@ class IChargePointProxy
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, std::string&, std::string&)>
+        std::function<bool(
+            const ocpp::messages::ocpp16::SignCertificateReq&, ocpp::messages::ocpp16::SignCertificateConf&, std::string&, std::string&)>
             handler) = 0;
 
     /**
@@ -577,8 +585,8 @@ class IChargePointProxy
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
-                                                    ocpp::messages::SignedFirmwareStatusNotificationConf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq&,
+                                                    ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
 };

@@ -53,8 +53,9 @@ class IChargePointEventsHandler;
 
 /** @brief Handle charge point reservation requests */
 class ReservationManager
-    : public ocpp::messages::GenericMessageHandler<ocpp::messages::ReserveNowReq, ocpp::messages::ReserveNowConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::CancelReservationReq, ocpp::messages::CancelReservationConf>
+    : public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ReserveNowReq, ocpp::messages::ocpp16::ReserveNowConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::CancelReservationReq,
+                                                   ocpp::messages::ocpp16::CancelReservationConf>
 {
   public:
     /** @brief Constructor */
@@ -81,9 +82,9 @@ class ReservationManager
      * @brief Indicate if a transaction is allowed on a connector using a specific id tag
      * @param connector_id Id of the connector
      * @param id_tag Id of the user
-     * @return ocpp::types::AuthorizationStatus (see AuthorizationStatus enum)
+     * @return ocpp::types::ocpp16::AuthorizationStatus (see AuthorizationStatus enum)
      */
-    ocpp::types::AuthorizationStatus isTransactionAllowed(unsigned int connector_id, const std::string& id_tag);
+    ocpp::types::ocpp16::AuthorizationStatus isTransactionAllowed(unsigned int connector_id, const std::string& id_tag);
 
     // GenericMessageHandler interface
 
@@ -92,20 +93,20 @@ class ReservationManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ReserveNowReq& request,
-                       ocpp::messages::ReserveNowConf&      response,
-                       std::string&                         error_code,
-                       std::string&                         error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ReserveNowReq& request,
+                       ocpp::messages::ocpp16::ReserveNowConf&      response,
+                       std::string&                                 error_code,
+                       std::string&                                 error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::CancelReservationReq& request,
-                       ocpp::messages::CancelReservationConf&      response,
-                       std::string&                                error_code,
-                       std::string&                                error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::CancelReservationReq& request,
+                       ocpp::messages::ocpp16::CancelReservationConf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
 
   private:
     /** @brief Standard OCPP configuration */

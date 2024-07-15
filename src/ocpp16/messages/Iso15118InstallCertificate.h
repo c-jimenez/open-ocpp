@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Iso15118InstallCertificate messages */
 static const std::string ISO15118_INSTALL_CERTIFICATE_ACTION = "InstallCertificate";
@@ -37,7 +39,7 @@ static const std::string ISO15118_INSTALL_CERTIFICATE_ACTION = "InstallCertifica
 struct Iso15118InstallCertificateReq
 {
     /** @brief Required. Indicates the certificate type that is sent */
-    ocpp::types::InstallCertificateUseEnumType certificateType;
+    ocpp::types::ocpp16::InstallCertificateUseEnumType certificateType;
     /** @brief Required. An PEM encoded X.509 certificate */
     ocpp::types::CiStringType<5500u> certificate;
 };
@@ -46,12 +48,13 @@ struct Iso15118InstallCertificateReq
 struct Iso15118InstallCertificateConf
 {
     /** @brief Required. Charge Point indicates if installation was successful */
-    ocpp::types::InstallCertificateStatusEnumType status;
+    ocpp::types::ocpp16::InstallCertificateStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(Iso15118InstallCertificate)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

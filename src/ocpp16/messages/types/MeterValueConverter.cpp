@@ -20,20 +20,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::fromJson(const rapidjson::Value&,
- *                                                                    ocpp::types::MeterValue&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::MeterValue>::fromJson(const rapidjson::Value&,
+ *                                                                    ocpp::types::ocpp16::MeterValue&,
  *                                                                    std::string&,
  *                                                                    std::string&) */
-bool MeterValueConverter::fromJson(const rapidjson::Value&  json,
-                                   ocpp::types::MeterValue& data,
-                                   std::string&             error_code,
-                                   std::string&             error_message)
+bool MeterValueConverter::fromJson(const rapidjson::Value&          json,
+                                   ocpp::types::ocpp16::MeterValue& data,
+                                   std::string&                     error_code,
+                                   std::string&                     error_message)
 {
     bool ret = extract(json, "timestamp", data.timestamp, error_message);
 
@@ -77,9 +80,9 @@ bool MeterValueConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::toJson(const ocpp::types::MeterValue&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::MeterValue>::toJson(const ocpp::types::ocpp16::MeterValue&,
  *                                                                  rapidjson::Document&) */
-bool MeterValueConverter::toJson(const ocpp::types::MeterValue& data, rapidjson::Document& json)
+bool MeterValueConverter::toJson(const ocpp::types::ocpp16::MeterValue& data, rapidjson::Document& json)
 {
     fill(json, "timestamp", data.timestamp);
 
@@ -120,5 +123,6 @@ bool MeterValueConverter::toJson(const ocpp::types::MeterValue& data, rapidjson:
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

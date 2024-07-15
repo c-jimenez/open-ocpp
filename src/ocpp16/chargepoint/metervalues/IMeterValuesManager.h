@@ -41,7 +41,7 @@ class IMeterValuesManager
      * @param values Meter values to send
      * @return true if the meter values have been sent, false otherwise
      */
-    virtual bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) = 0;
+    virtual bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::ocpp16::MeterValue>& values) = 0;
 
     /**
      * @brief Start sending sampled meter values for a given connector
@@ -60,7 +60,7 @@ class IMeterValuesManager
      * @param connector_id Id of the connector
      * @param meter_values Transaction meter values
      */
-    virtual void getTxStopMeterValues(unsigned int connector_id, std::vector<ocpp::types::MeterValue>& meter_values) = 0;
+    virtual void getTxStopMeterValues(unsigned int connector_id, std::vector<ocpp::types::ocpp16::MeterValue>& meter_values) = 0;
 };
 
 } // namespace chargepoint

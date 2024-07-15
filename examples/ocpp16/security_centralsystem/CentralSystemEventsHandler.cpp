@@ -33,6 +33,7 @@ SOFTWARE.
 
 using namespace std;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 /** @brief Constructor */
 CentralSystemEventsHandler::CentralSystemEventsHandler(ChargePointDatabase& chargepoint_db)
@@ -213,7 +214,7 @@ void CentralSystemEventsHandler::ChargePointRequestHandler::disconnected()
     m_event_handler.removeChargePoint(this->proxy()->identifier());
 }
 
-/** @copydoc ocpp::types::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
+/** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
@@ -221,7 +222,7 @@ void CentralSystemEventsHandler::ChargePointRequestHandler::disconnected()
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&) */
-ocpp::types::RegistrationStatus CentralSystemEventsHandler::ChargePointRequestHandler::bootNotification(
+ocpp::types::ocpp16::RegistrationStatus CentralSystemEventsHandler::ChargePointRequestHandler::bootNotification(
     const std::string& model,
     const std::string& serial_number,
     const std::string& vendor,

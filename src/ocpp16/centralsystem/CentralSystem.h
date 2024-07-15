@@ -101,9 +101,9 @@ class CentralSystem : public ICentralSystem, public ocpp::rpc::RpcServer::IListe
     std::unique_ptr<ocpp::config::InternalConfigManager> m_internal_config;
 
     /** @brief Messages converter */
-    ocpp::messages::MessagesConverter m_messages_converter;
+    ocpp::messages::ocpp16::MessagesConverter m_messages_converter;
     /** @brief Messages validator */
-    ocpp::messages::MessagesValidator m_messages_validator;
+    ocpp::messages::ocpp16::MessagesValidator m_messages_validator;
 
     /** @brief Websocket server */
     std::unique_ptr<ocpp::websockets::IWebsocketServer> m_ws_server;

@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetInstalledCertificateIds messages */
 static const std::string GET_INSTALLED_CERTIFICATE_IDS_ACTION = "GetInstalledCertificateIds";
@@ -37,22 +39,23 @@ static const std::string GET_INSTALLED_CERTIFICATE_IDS_ACTION = "GetInstalledCer
 struct GetInstalledCertificateIdsReq
 {
     /** @brief Required. Indicates the type of certificates requested */
-    ocpp::types::CertificateUseEnumType certificateType;
+    ocpp::types::ocpp16::CertificateUseEnumType certificateType;
 };
 
 /** @brief GetInstalledCertificateIds.conf message */
 struct GetInstalledCertificateIdsConf
 {
     /** @brief Required. Charge Point indicates if it can process the request */
-    ocpp::types::GetInstalledCertificateStatusEnumType status;
+    ocpp::types::ocpp16::GetInstalledCertificateStatusEnumType status;
     /** @brief Optional. The Charge Point includes the Certificate information for each
                available certificate */
-    std::vector<ocpp::types::CertificateHashDataType> certificateHashData;
+    std::vector<ocpp::types::ocpp16::CertificateHashDataType> certificateHashData;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(GetInstalledCertificateIds)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

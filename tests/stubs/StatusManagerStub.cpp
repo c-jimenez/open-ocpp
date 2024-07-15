@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "StatusManagerStub.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -36,18 +37,18 @@ StatusManagerStub::StatusManagerStub()
 StatusManagerStub::~StatusManagerStub() { }
 
 /** @copydoc bool IStatusManager::updateConnectorStatus(unsigned int,
- *                                                      ocpp::types::ChargePointStatus,
- *                                                      ocpp::types::ChargePointErrorCode,
+ *                                                      ocpp::types::ocpp16::ChargePointStatus,
+ *                                                      ocpp::types::ocpp16::ChargePointErrorCode,
  *                                                      const std::string&,
  *                                                      const std::string&,
  *                                                      const std::string&)
 */
-bool StatusManagerStub::updateConnectorStatus(unsigned int                      connector_id,
-                                              ocpp::types::ChargePointStatus    status,
-                                              ocpp::types::ChargePointErrorCode error_code,
-                                              const std::string&                info,
-                                              const std::string&                vendor_id,
-                                              const std::string&                vendor_error)
+bool StatusManagerStub::updateConnectorStatus(unsigned int                              connector_id,
+                                              ocpp::types::ocpp16::ChargePointStatus    status,
+                                              ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                                              const std::string&                        info,
+                                              const std::string&                        vendor_id,
+                                              const std::string&                        vendor_error)
 {
     auto connector_status      = std::make_tuple(status, error_code, info, vendor_id, vendor_error);
     m_connectors[connector_id] = connector_status;
@@ -55,7 +56,7 @@ bool StatusManagerStub::updateConnectorStatus(unsigned int                      
 }
 
 /** @brief Get the status of a connector */
-ocpp::types::ChargePointStatus StatusManagerStub::StatusManagerStub::getConnectorStatus(unsigned int connector_id)
+ocpp::types::ocpp16::ChargePointStatus StatusManagerStub::StatusManagerStub::getConnectorStatus(unsigned int connector_id)
 {
     ChargePointStatus status = ChargePointStatus::Unavailable;
 
@@ -69,7 +70,7 @@ ocpp::types::ChargePointStatus StatusManagerStub::StatusManagerStub::getConnecto
 }
 
 /** @brief Get the error code of a connector */
-ocpp::types::ChargePointErrorCode StatusManagerStub::getConnectorErrorCode(unsigned int connector_id)
+ocpp::types::ocpp16::ChargePointErrorCode StatusManagerStub::getConnectorErrorCode(unsigned int connector_id)
 {
     ChargePointErrorCode error = ChargePointErrorCode::OtherError;
 

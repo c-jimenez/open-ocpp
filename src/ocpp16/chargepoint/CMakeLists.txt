@@ -53,7 +53,7 @@ target_include_directories(chargepoint PRIVATE authent
 target_link_libraries(chargepoint PUBLIC
     config
     database
-    messages
+    messages16
     rpc
     helpers
     log

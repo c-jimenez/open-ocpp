@@ -25,6 +25,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 using namespace ocpp;
 using namespace ocpp::config;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::centralsystem;
 using namespace ocpp::chargepoint;
 
@@ -260,7 +261,7 @@ class OcppConfig : public IOcppConfig
      * @param unknown_values List of unknown parameters in the [keys] list
      */
     void getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>& keys,
-                          std::vector<ocpp::types::KeyValue>&                values,
+                          std::vector<ocpp::types::ocpp16::KeyValue>&        values,
                           std::vector<ocpp::types::CiStringType<50u>>&       unknown_values) override
     {
         (void)keys;
@@ -274,7 +275,7 @@ class OcppConfig : public IOcppConfig
      * @param value New value
      * @return Status of the operation (see ConfigurationStatus)
      */
-    ocpp::types::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override
+    ocpp::types::ocpp16::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override
     {
         (void)key;
         (void)value;
@@ -524,7 +525,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @brief Called when the first attempt to connect to the central system has failed
      * @param status Previous registration status (if Accepted, some offline operations are allowed)
      */
-    void connectionFailed(ocpp::types::RegistrationStatus status) override { (void)status; }
+    void connectionFailed(ocpp::types::ocpp16::RegistrationStatus status) override { (void)status; }
 
     /**
      * @brief Called when the charge point connection status has changed
@@ -537,7 +538,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param status Registration status
      * @param datetime Date and time of the central system
      */
-    void bootNotification(ocpp::types::RegistrationStatus status, const ocpp::types::DateTime& datetime) override
+    void bootNotification(ocpp::types::ocpp16::RegistrationStatus status, const ocpp::types::DateTime& datetime) override
     {
         (void)status;
         (void)datetime;
@@ -554,8 +555,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param availability Requested availability
      * @return Status of the requested availability change (see AvailabilityStatus)
      */
-    ocpp::types::AvailabilityStatus changeAvailabilityRequested(unsigned int                  connector_id,
-                                                                ocpp::types::AvailabilityType availability) override
+    ocpp::types::ocpp16::AvailabilityStatus changeAvailabilityRequested(unsigned int                          connector_id,
+                                                                        ocpp::types::ocpp16::AvailabilityType availability) override
     {
         (void)connector_id;
         (void)availability;
@@ -598,10 +599,10 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param response_data Data associated with the response
      * @return Response status (see DataTransferStatus enum)
      */
-    ocpp::types::DataTransferStatus dataTransferRequested(const std::string& vendor_id,
-                                                          const std::string& message_id,
-                                                          const std::string& request_data,
-                                                          std::string&       response_data) override
+    ocpp::types::ocpp16::DataTransferStatus dataTransferRequested(const std::string& vendor_id,
+                                                                  const std::string& message_id,
+                                                                  const std::string& request_data,
+                                                                  std::string&       response_data) override
     {
         (void)vendor_id;
         (void)message_id;
@@ -617,9 +618,9 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param meter_value Meter value to fill (the context and measurand fields of SampleValues doesn't need to be filled)
      * @return true if the meter value can be retrived, false otherwise
      */
-    bool getMeterValue(unsigned int                                                                        connector_id,
-                       const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>& measurand,
-                       ocpp::types::MeterValue&                                                            meter_value) override
+    bool getMeterValue(unsigned int                                                                                        connector_id,
+                       const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>& measurand,
+                       ocpp::types::ocpp16::MeterValue& meter_value) override
     {
         (void)connector_id;
         (void)measurand;
@@ -665,7 +666,9 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param schedule Schedule containing the local limitations for the requested duration
      * @return true if a schedule has been defined, false if there are no local limitations for the requested duration
      */
-    bool getLocalLimitationsSchedule(unsigned int connector_id, unsigned int duration, ocpp::types::ChargingSchedule& schedule) override
+    bool getLocalLimitationsSchedule(unsigned int                           connector_id,
+                                     unsigned int                           duration,
+                                     ocpp::types::ocpp16::ChargingSchedule& schedule) override
     {
         (void)connector_id;
         (void)duration;
@@ -678,7 +681,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param reset_type Type of reset
      * @return true if the request is accepted, false otherwise
      */
-    bool resetRequested(ocpp::types::ResetType reset_type) override
+    bool resetRequested(ocpp::types::ocpp16::ResetType reset_type) override
     {
         (void)reset_type;
         return false;
@@ -689,7 +692,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param connector_id Id of the concerned connector
      * @return Unlock status (see UnlockStatus documentation)
      */
-    ocpp::types::UnlockStatus unlockConnectorRequested(unsigned int connector_id) override
+    ocpp::types::ocpp16::UnlockStatus unlockConnectorRequested(unsigned int connector_id) override
     {
         (void)connector_id;
         return UnlockStatus::NotSupported;
@@ -761,8 +764,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param certificate CA certificate to install
      * @return Installation status (see CertificateStatusEnumType enum)
      */
-    ocpp::types::CertificateStatusEnumType caCertificateReceived(ocpp::types::CertificateUseEnumType type,
-                                                                 const ocpp::x509::Certificate&      certificate) override
+    ocpp::types::ocpp16::CertificateStatusEnumType caCertificateReceived(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                                                         const ocpp::x509::Certificate&              certificate) override
     {
         (void)type;
         (void)certificate;
@@ -790,10 +793,10 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param serial_number Serial number of the certificate
      * @return Deletion status (see DeleteCertificateStatusEnumType enum)
      */
-    ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
-                                                                   const std::string&                 issuer_name_hash,
-                                                                   const std::string&                 issuer_key_hash,
-                                                                   const std::string&                 serial_number) override
+    ocpp::types::ocpp16::DeleteCertificateStatusEnumType deleteCertificate(ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+                                                                           const std::string&                         issuer_name_hash,
+                                                                           const std::string&                         issuer_key_hash,
+                                                                           const std::string& serial_number) override
     {
         (void)hash_algorithm;
         (void)issuer_name_hash;
@@ -816,7 +819,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param type Type of CA certificate
      * @param certificates Installed certificates
      */
-    void getInstalledCertificates(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::x509::Certificate>& certificates) override
+    void getInstalledCertificates(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                  std::vector<ocpp::x509::Certificate>&       certificates) override
     {
         (void)type;
         (void)certificates;
@@ -832,7 +836,7 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @return Path to the generated log file to upload to the Central System, or empty
      *         string if no log are available
      */
-    std::string getLog(ocpp::types::LogEnumType                            type,
+    std::string getLog(ocpp::types::ocpp16::LogEnumType                    type,
                        const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                        const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override
     {
@@ -862,7 +866,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param signing_certificate Certificate to check
      * @return Check status (see UpdateFirmwareStatusEnumType enum)
      */
-    ocpp::types::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(const ocpp::x509::Certificate& signing_certificate) override
+    ocpp::types::ocpp16::UpdateFirmwareStatusEnumType checkFirmwareSigningCertificate(
+        const ocpp::x509::Certificate& signing_certificate) override
     {
         (void)signing_certificate;
         return UpdateFirmwareStatusEnumType::Rejected;
@@ -900,10 +905,11 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param serial_number Serial number of the certificate
      * @return Deletion status (see DeleteCertificateStatusEnumType enum)
      */
-    ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType hash_algorithm,
-                                                                           const std::string&                 issuer_name_hash,
-                                                                           const std::string&                 issuer_key_hash,
-                                                                           const std::string&                 serial_number) override
+    ocpp::types::ocpp16::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
+        ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+        const std::string&                         issuer_name_hash,
+        const std::string&                         issuer_key_hash,
+        const std::string&                         serial_number) override
     {
         (void)hash_algorithm;
         (void)issuer_name_hash;
@@ -923,7 +929,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
         bool v2g_root_certificate,
         bool mo_root_certificate,
         bool v2g_certificate_chain,
-        std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+        std::vector<
+            std::tuple<ocpp::types::ocpp16::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
             certificates) override
     {
         (void)v2g_root_certificate;
@@ -938,8 +945,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
      * @param certificate certificate to install
      * @return Installation status (see InstallCertificateStatusEnumType enum)
      */
-    ocpp::types::InstallCertificateStatusEnumType iso15118CertificateReceived(ocpp::types::InstallCertificateUseEnumType type,
-                                                                              const ocpp::x509::Certificate& certificate) override
+    ocpp::types::ocpp16::InstallCertificateStatusEnumType iso15118CertificateReceived(
+        ocpp::types::ocpp16::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate) override
     {
         (void)type;
         (void)certificate;

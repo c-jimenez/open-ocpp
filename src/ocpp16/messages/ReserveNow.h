@@ -30,6 +30,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ReserveNow messages */
 static const std::string RESERVE_NOW_ACTION = "ReserveNow";
@@ -44,9 +46,9 @@ struct ReserveNowReq
                  means that the reservation is not for a specific connector */
     ocpp::types::DateTime expiryDate;
     /** @brief Required. The identifier for which the Charge Point has to reserve a connector */
-    ocpp::types::IdToken idTag;
+    ocpp::types::ocpp16::IdToken idTag;
     /** @brief Optional. The parent idTag */
-    ocpp::types::Optional<ocpp::types::IdToken> parentIdTag;
+    ocpp::types::Optional<ocpp::types::ocpp16::IdToken> parentIdTag;
     /** @brief Required. Unique id for this reservation */
     int reservationId;
 };
@@ -55,12 +57,13 @@ struct ReserveNowReq
 struct ReserveNowConf
 {
     /** @brief Required. This indicates the success or failure of the reservation */
-    ocpp::types::ReservationStatus status;
+    ocpp::types::ocpp16::ReservationStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ReserveNow)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -29,7 +29,9 @@ using namespace ocpp::chargepoint;
 using namespace ocpp::config;
 using namespace ocpp::database;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 static constexpr const char* DATABASE_PATH = "/tmp/test.db";
 

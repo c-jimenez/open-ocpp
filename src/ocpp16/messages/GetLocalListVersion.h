@@ -25,6 +25,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetLocalListVersion messages */
 static const std::string GET_LOCAL_LIST_VERSION_ACTION = "GetLocalListVersion";
@@ -46,6 +48,7 @@ struct GetLocalListVersionConf
 // Message converters
 MESSAGE_CONVERTERS(GetLocalListVersion)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -41,28 +41,28 @@ class StatusManagerStub : public IStatusManager
 
     // IStatusManager interface
 
-    /** @copydoc ocpp::types::RegistrationStatus IStatusManager::getRegistrationStatus() */
-    ocpp::types::RegistrationStatus getRegistrationStatus() override { return m_registration_status; }
+    /** @copydoc ocpp::types::ocpp16::RegistrationStatus IStatusManager::getRegistrationStatus() */
+    ocpp::types::ocpp16::RegistrationStatus getRegistrationStatus() override { return m_registration_status; }
 
-    /** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::RegistrationStatus) */
-    void forceRegistrationStatus(ocpp::types::RegistrationStatus status) override { m_registration_status = status; }
+    /** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus) */
+    void forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus status) override { m_registration_status = status; }
 
     /** @copydoc void IStatusManager::updateConnectionStatus(bool) */
     void updateConnectionStatus(bool is_connected) override { m_connected = is_connected; }
 
     /** @copydoc bool IStatusManager::updateConnectorStatus(unsigned int,
-     *                                                      ocpp::types::ChargePointStatus,
-     *                                                      ocpp::types::ChargePointErrorCode,
+     *                                                      ocpp::types::ocpp16::ChargePointStatus,
+     *                                                      ocpp::types::ocpp16::ChargePointErrorCode,
      *                                                      const std::string&,
      *                                                      const std::string&,
      *                                                      const std::string&)
     */
-    bool updateConnectorStatus(unsigned int                      connector_id,
-                               ocpp::types::ChargePointStatus    status,
-                               ocpp::types::ChargePointErrorCode error_code   = ocpp::types::ChargePointErrorCode::NoError,
-                               const std::string&                info         = "",
-                               const std::string&                vendor_id    = "",
-                               const std::string&                vendor_error = "") override;
+    bool updateConnectorStatus(unsigned int                              connector_id,
+                               ocpp::types::ocpp16::ChargePointStatus    status,
+                               ocpp::types::ocpp16::ChargePointErrorCode error_code   = ocpp::types::ocpp16::ChargePointErrorCode::NoError,
+                               const std::string&                        info         = "",
+                               const std::string&                        vendor_id    = "",
+                               const std::string&                        vendor_error = "") override;
 
     /** @copydoc void IStatusManager::resetHeartBeatTimer() */
     void resetHeartBeatTimer() override { m_hb_timer_reset = true; }
@@ -75,9 +75,9 @@ class StatusManagerStub : public IStatusManager
     bool isHeartbeatTimerReset() const { return m_hb_timer_reset; }
 
     /** @brief Get the status of a connector */
-    ocpp::types::ChargePointStatus getConnectorStatus(unsigned int connector_id);
+    ocpp::types::ocpp16::ChargePointStatus getConnectorStatus(unsigned int connector_id);
     /** @brief Get the error code of a connector */
-    ocpp::types::ChargePointErrorCode getConnectorErrorCode(unsigned int connector_id);
+    ocpp::types::ocpp16::ChargePointErrorCode getConnectorErrorCode(unsigned int connector_id);
     /** @brief Get the info of a connector */
     std::string getConnectorInfo(unsigned int connector_id);
     /** @brief Get the vendor id of a connector */
@@ -90,14 +90,16 @@ class StatusManagerStub : public IStatusManager
 
   private:
     /** @brief Registration status */
-    ocpp::types::RegistrationStatus m_registration_status;
+    ocpp::types::ocpp16::RegistrationStatus m_registration_status;
     /** @brief Connection status */
     bool m_connected;
     /** @brief Indicate if the heartbeat timer has been reset */
     bool m_hb_timer_reset;
     /** @brief Connectors status */
-    std::map<unsigned int,
-             std::tuple<ocpp::types::ChargePointStatus, ocpp::types::ChargePointErrorCode, std::string, std::string, std::string>>
+    std::map<
+        unsigned int,
+        std::
+            tuple<ocpp::types::ocpp16::ChargePointStatus, ocpp::types::ocpp16::ChargePointErrorCode, std::string, std::string, std::string>>
         m_connectors;
 };
 

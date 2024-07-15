@@ -1,11 +1,10 @@
 ######################################################
-#               OCPP messages library                #
+#            OCPP 1.6 messages library               #
 ######################################################
 
 
 # Library target
-add_library(messages OBJECT
-    MessageDispatcher.cpp
+add_library(messages16 OBJECT
     MessagesConverter.cpp
     MessagesValidator.cpp
 
@@ -67,13 +66,7 @@ add_library(messages OBJECT
 )
 
 # Exported includes
-target_include_directories(messages PUBLIC . types)
+target_include_directories(messages16 PUBLIC . types)
 
 # Dependencies
-target_link_libraries(messages PUBLIC
-    rpc
-    json
-    helpers
-    types
-    log
-)
+target_link_libraries(messages16 PUBLIC types16 messages)

@@ -105,56 +105,58 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::reconnect() */
     bool reconnect() override;
 
-    /** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
-    ocpp::types::RegistrationStatus getRegistrationStatus() override;
+    /** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePoint::getRegistrationStatus() */
+    ocpp::types::ocpp16::RegistrationStatus getRegistrationStatus() override;
 
-    /** @copydoc ocpp::types::ChargePointStatus IChargePoint::getConnectorStatus(unsigned int) */
-    ocpp::types::ChargePointStatus getConnectorStatus(unsigned int connector_id) override;
+    /** @copydoc ocpp::types::ocpp16::ChargePointStatus IChargePoint::getConnectorStatus(unsigned int) */
+    ocpp::types::ocpp16::ChargePointStatus getConnectorStatus(unsigned int connector_id) override;
 
     /** @copydoc bool IChargePoint::statusNotification(unsigned int,
-     *                                                 ocpp::types::ChargePointStatus,
-     *                                                 ocpp::types::ChargePointErrorCode,
+     *                                                 ocpp::types::ocpp16::ChargePointStatus,
+     *                                                 ocpp::types::ocpp16::ChargePointErrorCode,
      *                                                 const std::string&,
      *                                                 const std::string&,
      *                                                 const std::string&) */
-    bool statusNotification(unsigned int                      connector_id,
-                            ocpp::types::ChargePointStatus    status,
-                            ocpp::types::ChargePointErrorCode error_code,
-                            const std::string&                info,
-                            const std::string&                vendor_id,
-                            const std::string&                vendor_error) override;
+    bool statusNotification(unsigned int                              connector_id,
+                            ocpp::types::ocpp16::ChargePointStatus    status,
+                            ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                            const std::string&                        info,
+                            const std::string&                        vendor_id,
+                            const std::string&                        vendor_error) override;
 
-    /** @copydoc ocpp::types::AuthorizationStatus IChargePoint::authorize(unsigned int, const std::string&, std::string&) */
-    ocpp::types::AuthorizationStatus authorize(unsigned int connector_id, const std::string& id_tag, std::string& parent_id) override;
+    /** @copydoc ocpp::types::ocpp16::AuthorizationStatus IChargePoint::authorize(unsigned int, const std::string&, std::string&) */
+    ocpp::types::ocpp16::AuthorizationStatus authorize(unsigned int       connector_id,
+                                                       const std::string& id_tag,
+                                                       std::string&       parent_id) override;
 
-    /** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&) */
-    ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) override;
+    /** @copydoc ocpp::types::ocpp16::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&) */
+    ocpp::types::ocpp16::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) override;
 
-    /** @copydoc bool IChargePoint::stopTransaction(unsigned int, const std::string&, ocpp::types::Reason) */
-    bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason) override;
+    /** @copydoc bool IChargePoint::stopTransaction(unsigned int, const std::string&, ocpp::types::ocpp16::Reason) */
+    bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::ocpp16::Reason reason) override;
 
     /** @copydoc bool IChargePoint::dataTransfer(const std::string&,
                                                  const std::string&,
                                                  const std::string&,
-                                                 ocpp::types::DataTransferStatus&,
+                                                 ocpp::types::ocpp16::DataTransferStatus&,
                                                  std::string& ) */
-    bool dataTransfer(const std::string&               vendor_id,
-                      const std::string&               message_id,
-                      const std::string&               request_data,
-                      ocpp::types::DataTransferStatus& status,
-                      std::string&                     response_data) override;
+    bool dataTransfer(const std::string&                       vendor_id,
+                      const std::string&                       message_id,
+                      const std::string&                       request_data,
+                      ocpp::types::ocpp16::DataTransferStatus& status,
+                      std::string&                             response_data) override;
 
-    /** @copydoc bool IChargePoint::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
-    bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
+    /** @copydoc bool IChargePoint::sendMeterValues(unsigned int, const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+    bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::ocpp16::MeterValue>& values) override;
 
     /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
-                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                ocpp::types::ChargingRateUnitType) */
-    bool getSetpoint(unsigned int                                               connector_id,
-                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                     ocpp::types::ChargingRateUnitType                          unit) override;
+                                                ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                ocpp::types::ocpp16::ChargingRateUnitType) */
+    bool getSetpoint(unsigned int                                                       connector_id,
+                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                     ocpp::types::ocpp16::ChargingRateUnitType                          unit) override;
 
     /** @copydoc bool IChargePoint::notifyFirmwareUpdateStatus(bool) */
     bool notifyFirmwareUpdateStatus(bool success) override;
@@ -173,32 +175,32 @@ class ChargePoint : public IChargePoint,
     /** @copydoc bool IChargePoint::signCertificate() */
     bool signCertificate() override;
 
-    /** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType) */
-    bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) override;
+    /** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType) */
+    bool notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType status) override;
 
     // ISO 15118 PnC extensions
 
-    /** @copydoc ocpp::types::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
+    /** @copydoc ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
                                                                     const std::string&,
-                                                                    const std::vector<ocpp::types::OcspRequestDataType>&,
-                                                                    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) */
-    ocpp::types::AuthorizationStatus iso15118Authorize(
-        const ocpp::x509::Certificate&                                          certificate,
-        const std::string&                                                      id_token,
-        const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-        ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
+                                                                    const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
+                                                                    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) */
+    ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(
+        const ocpp::x509::Certificate&                                                  certificate,
+        const std::string&                                                              id_token,
+        const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status) override;
 
     /** @copydoc bool IChargePoint::iso15118GetEVCertificate(const std::string&,
-                                                             ocpp::types::CertificateActionEnumType,
+                                                             ocpp::types::ocpp16::CertificateActionEnumType,
                                                              const std::string&,
                                                              std::string&) */
-    bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
-                                  ocpp::types::CertificateActionEnumType action,
-                                  const std::string&                     exi_request,
-                                  std::string&                           exi_response) override;
+    bool iso15118GetEVCertificate(const std::string&                             iso15118_schema_version,
+                                  ocpp::types::ocpp16::CertificateActionEnumType action,
+                                  const std::string&                             exi_request,
+                                  std::string&                                   exi_response) override;
 
-    /** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType&, std::string&) */
-    bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) override;
+    /** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType&, std::string&) */
+    bool iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result) override;
 
     /** @copydoc bool IChargePoint::iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
     bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& csr) override;
@@ -262,9 +264,9 @@ class ChargePoint : public IChargePoint,
     ocpp::config::InternalConfigManager m_internal_config;
 
     /** @brief Messages converter */
-    ocpp::messages::MessagesConverter m_messages_converter;
+    ocpp::messages::ocpp16::MessagesConverter m_messages_converter;
     /** @brief Messaes validator */
-    ocpp::messages::MessagesValidator m_messages_validator;
+    ocpp::messages::ocpp16::MessagesValidator m_messages_validator;
     /** @brief Requests FIFO */
     RequestFifo m_requests_fifo;
     /** @brief Security manager */

@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SendLocalList messages */
 static const std::string SEND_LOCAL_LIST_ACTION = "SendLocalList";
@@ -46,10 +48,10 @@ struct SendLocalListReq
                authorization list in the Charge Point. Maximum number of
                AuthorizationData elements is available in the configuration key:
                SendLocalListMaxLength */
-    std::vector<ocpp::types::AuthorizationData> localAuthorizationList;
+    std::vector<ocpp::types::ocpp16::AuthorizationData> localAuthorizationList;
     /** @brief Required. This contains the type of update (full or differential) of
                this request */
-    ocpp::types::UpdateType updateType;
+    ocpp::types::ocpp16::UpdateType updateType;
 };
 
 /** @brief SendLocalList.conf message */
@@ -57,12 +59,13 @@ struct SendLocalListConf
 {
     /** @brief Required. This indicates whether the Charge Point has successfully received and
                applied the update of the local authorization list */
-    ocpp::types::UpdateStatus status;
+    ocpp::types::ocpp16::UpdateStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(SendLocalList)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

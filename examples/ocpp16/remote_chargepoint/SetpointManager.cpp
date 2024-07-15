@@ -25,6 +25,7 @@ SOFTWARE.
 #include "SetpointManager.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 /** @brief Constructor */
 SetpointManager::SetpointManager(ocpp::chargepoint::IChargePoint& charge_point,

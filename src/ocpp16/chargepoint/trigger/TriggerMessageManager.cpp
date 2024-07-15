@@ -22,7 +22,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Logger.h"
 
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 namespace ocpp
 {
 namespace chargepoint
@@ -47,14 +49,14 @@ TriggerMessageManager::TriggerMessageManager(Connectors&                        
 /** @brief Destructor */
 TriggerMessageManager::~TriggerMessageManager() { }
 
-/** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
-void TriggerMessageManager::registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler)
+/** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTrigger, ITriggerMessageHandler&) */
+void TriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTrigger message, ITriggerMessageHandler& handler)
 {
     m_standard_handlers[message] = &handler;
 }
 
-/** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
-void TriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler)
+/** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+void TriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler)
 {
     m_extended_handlers[message] = &handler;
 }
@@ -64,10 +66,10 @@ void TriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType 
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageReq& request,
-                                          ocpp::messages::TriggerMessageConf&      response,
-                                          std::string&                             error_code,
-                                          std::string&                             error_message)
+bool TriggerMessageManager::handleMessage(const ocpp::messages::ocpp16::TriggerMessageReq& request,
+                                          ocpp::messages::ocpp16::TriggerMessageConf&      response,
+                                          std::string&                                     error_code,
+                                          std::string&                                     error_message)
 {
     bool ret = true;
 
@@ -116,10 +118,10 @@ bool TriggerMessageManager::handleMessage(const ocpp::messages::TriggerMessageRe
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool TriggerMessageManager::handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
-                                          ocpp::messages::ExtendedTriggerMessageConf&      response,
-                                          std::string&                                     error_code,
-                                          std::string&                                     error_message)
+bool TriggerMessageManager::handleMessage(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq& request,
+                                          ocpp::messages::ocpp16::ExtendedTriggerMessageConf&      response,
+                                          std::string&                                             error_code,
+                                          std::string&                                             error_message)
 {
     bool ret = true;
 

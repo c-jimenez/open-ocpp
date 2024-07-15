@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace ocpp::config;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::helpers;
 using namespace ocpp::database;
 using namespace ocpp::chargepoint;

@@ -17,10 +17,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "MessageDispatcher.h"
+#include "IMessagesValidator.h"
 #include "IRpc.h"
 #include "JsonValidator.h"
 #include "Logger.h"
-#include "MessagesValidator.h"
 
 #include <filesystem>
 
@@ -30,7 +30,7 @@ namespace messages
 {
 
 /** @brief Constructor */
-MessageDispatcher::MessageDispatcher(const MessagesValidator& messages_validator) : m_messages_validator(messages_validator), m_handlers()
+MessageDispatcher::MessageDispatcher(const IMessagesValidator& messages_validator) : m_messages_validator(messages_validator), m_handlers()
 {
 }
 

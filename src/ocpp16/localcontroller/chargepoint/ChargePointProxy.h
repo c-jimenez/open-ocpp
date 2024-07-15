@@ -50,12 +50,12 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
      * @param stack_config Stack configuration
      * @param central_system Proxy to forward requests to the central system
      */
-    ChargePointProxy(const std::string&                            identifier,
-                     std::shared_ptr<ocpp::rpc::RpcServer::Client> rpc,
-                     const ocpp::messages::MessagesValidator&      messages_validator,
-                     ocpp::messages::MessagesConverter&            messages_converter,
-                     const ocpp::config::ILocalControllerConfig&   stack_config,
-                     std::shared_ptr<ICentralSystemProxy>          central_system);
+    ChargePointProxy(const std::string&                               identifier,
+                     std::shared_ptr<ocpp::rpc::RpcServer::Client>    rpc,
+                     const ocpp::messages::ocpp16::MessagesValidator& messages_validator,
+                     ocpp::messages::ocpp16::MessagesConverter&       messages_converter,
+                     const ocpp::config::ILocalControllerConfig&      stack_config,
+                     std::shared_ptr<ICentralSystemProxy>             central_system);
     /** @brief Destructor */
     virtual ~ChargePointProxy();
 
@@ -85,333 +85,339 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
 
     // OCPP operations
 
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::CancelReservationReq&,
-     *                                        ocpp::messages::CancelReservationConf&,
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::CancelReservationReq&,
+     *                                        ocpp::messages::ocpp16::CancelReservationConf&,
      *                                        std::string&,
      *                                        std::string&) */
-    bool call(const ocpp::messages::CancelReservationReq& request,
-              ocpp::messages::CancelReservationConf&      response,
-              std::string&                                error,
-              std::string&                                message) override;
+    bool call(const ocpp::messages::ocpp16::CancelReservationReq& request,
+              ocpp::messages::ocpp16::CancelReservationConf&      response,
+              std::string&                                        error,
+              std::string&                                        message) override;
 
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ChangeAvailabilityReq&,
-     *                                        ocpp::messages::ChangeAvailabilityConf&,
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ChangeAvailabilityReq&,
+     *                                        ocpp::messages::ocpp16::ChangeAvailabilityConf&,
      *                                        std::string&,
      *                                        std::string&) */
-    bool call(const ocpp::messages::ChangeAvailabilityReq& request,
-              ocpp::messages::ChangeAvailabilityConf&      response,
-              std::string&                                 error,
-              std::string&                                 message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ChangeConfigurationReq&,
-     *                                        ocpp::messages::ChangeConfigurationConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ChangeConfigurationReq& request,
-              ocpp::messages::ChangeConfigurationConf&      response,
-              std::string&                                  error,
-              std::string&                                  message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ClearCacheReq&,
-     *                                        ocpp::messages::ClearCacheConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ClearCacheReq& request,
-              ocpp::messages::ClearCacheConf&      response,
-              std::string&                         error,
-              std::string&                         message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ClearChargingProfileReq&,
-     *                                        cpp::messages::ClearChargingProfileConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ClearChargingProfileReq& request,
-              ocpp::messages::ClearChargingProfileConf&      response,
-              std::string&                                   error,
-              std::string&                                   message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::DataTransferReq&,
-     *                                        ocpp::messages::DataTransferConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::DataTransferReq& request,
-              ocpp::messages::DataTransferConf&      response,
-              std::string&                           error,
-              std::string&                           message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetCompositeScheduleReq&,
-     *                                        ocpp::messages::GetCompositeScheduleConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::GetCompositeScheduleReq& request,
-              ocpp::messages::GetCompositeScheduleConf&      response,
-              std::string&                                   error,
-              std::string&                                   message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetConfigurationReq&,
-     *                                        ocpp::messages::GetConfigurationConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::GetConfigurationReq& request,
-              ocpp::messages::GetConfigurationConf&      response,
-              std::string&                               error,
-              std::string&                               message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetDiagnosticsReq&,
-     *                                        ocpp::messages::GetDiagnosticsConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::GetDiagnosticsReq& request,
-              ocpp::messages::GetDiagnosticsConf&      response,
-              std::string&                             error,
-              std::string&                             message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetLocalListVersionReq&,
-     *                                        ocpp::messages::GetLocalListVersionConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::GetLocalListVersionReq& request,
-              ocpp::messages::GetLocalListVersionConf&      response,
-              std::string&                                  error,
-              std::string&                                  message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::RemoteStartTransactionReq&,
-     *                                        ocpp::messages::RemoteStartTransactionConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::RemoteStartTransactionReq& request,
-              ocpp::messages::RemoteStartTransactionConf&      response,
-              std::string&                                     error,
-              std::string&                                     message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::RemoteStopTransactionReq&,
-     *                                        ocpp::messages::RemoteStopTransactionConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::RemoteStopTransactionReq& request,
-              ocpp::messages::RemoteStopTransactionConf&      response,
-              std::string&                                    error,
-              std::string&                                    message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ReserveNowReq&,
-     *                                        ocpp::messages::ReserveNowConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ReserveNowReq& request,
-              ocpp::messages::ReserveNowConf&      response,
-              std::string&                         error,
-              std::string&                         message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ResetReq&,
-     *                                        ocpp::messages::ResetConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ResetReq& request,
-              ocpp::messages::ResetConf&      response,
-              std::string&                    error,
-              std::string&                    message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::SendLocalListReq&,
-     *                                        ocpp::messages::SendLocalListConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::SendLocalListReq& request,
-              ocpp::messages::SendLocalListConf&      response,
-              std::string&                            error,
-              std::string&                            message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::SetChargingProfileReq&,
-     *                                        ocpp::messages::SetChargingProfileConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::SetChargingProfileReq& request,
-              ocpp::messages::SetChargingProfileConf&      response,
-              std::string&                                 error,
-              std::string&                                 message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::TriggerMessageReq&,
-     *                                        opp::messages::TriggerMessageConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::TriggerMessageReq& request,
-              ocpp::messages::TriggerMessageConf&      response,
-              std::string&                             error,
-              std::string&                             message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::UnlockConnectorReq&,
-     *                                        ocpp::messages::UnlockConnectorConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::UnlockConnectorReq& request,
-              ocpp::messages::UnlockConnectorConf&      response,
-              std::string&                              error,
-              std::string&                              message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::UpdateFirmwareReq&,
-     *                                        ocpp::messages::UpdateFirmwareConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::UpdateFirmwareReq& request,
-              ocpp::messages::UpdateFirmwareConf&      response,
-              std::string&                             error,
-              std::string&                             message) override;
-
-    // Security extensions
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::CertificateSignedReq&,
-     *                                        ocpp::messages::CertificateSignedConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::CertificateSignedReq& request,
-              ocpp::messages::CertificateSignedConf&      response,
-              std::string&                                error,
-              std::string&                                message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::DeleteCertificateReq&,
-     *                                        ocpp::messages::DeleteCertificateConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::DeleteCertificateReq& request,
-              ocpp::messages::DeleteCertificateConf&      response,
-              std::string&                                error,
-              std::string&                                message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ExtendedTriggerMessageReq&,
-     *                                        ocpp::messages::ExtendedTriggerMessageConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::ExtendedTriggerMessageReq& request,
-              ocpp::messages::ExtendedTriggerMessageConf&      response,
-              std::string&                                     error,
-              std::string&                                     message) override;
-
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetInstalledCertificateIdsReq&,
-     *                                        ocpp::messages::GetInstalledCertificateIdsConf&,
-     *                                        std::string&,
-     *                                        std::string&) */
-    bool call(const ocpp::messages::GetInstalledCertificateIdsReq& request,
-              ocpp::messages::GetInstalledCertificateIdsConf&      response,
+    bool call(const ocpp::messages::ocpp16::ChangeAvailabilityReq& request,
+              ocpp::messages::ocpp16::ChangeAvailabilityConf&      response,
               std::string&                                         error,
               std::string&                                         message) override;
 
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::GetLogReq&,
-     *                                        ocpp::messages::GetLogConf&,
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ChangeConfigurationReq&,
+     *                                        ocpp::messages::ocpp16::ChangeConfigurationConf&,
      *                                        std::string&,
      *                                        std::string&) */
-    bool call(const ocpp::messages::GetLogReq& request,
-              ocpp::messages::GetLogConf&      response,
-              std::string&                     error,
-              std::string&                     message) override;
+    bool call(const ocpp::messages::ocpp16::ChangeConfigurationReq& request,
+              ocpp::messages::ocpp16::ChangeConfigurationConf&      response,
+              std::string&                                          error,
+              std::string&                                          message) override;
 
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::InstallCertificateReq&,
-     *                                        ocpp::messages::InstallCertificateConf&,
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ClearCacheReq&,
+     *                                        ocpp::messages::ocpp16::ClearCacheConf&,
      *                                        std::string&,
      *                                        std::string&) */
-    bool call(const ocpp::messages::InstallCertificateReq& request,
-              ocpp::messages::InstallCertificateConf&      response,
+    bool call(const ocpp::messages::ocpp16::ClearCacheReq& request,
+              ocpp::messages::ocpp16::ClearCacheConf&      response,
               std::string&                                 error,
               std::string&                                 message) override;
 
-    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::SignedUpdateFirmwareReq&,
-     *                                        ocpp::messages::SignedUpdateFirmwareConf&,
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ClearChargingProfileReq&,
+     *                                        cpp::messages::ClearChargingProfileConf&,
      *                                        std::string&,
      *                                        std::string&) */
-    bool call(const ocpp::messages::SignedUpdateFirmwareReq& request,
-              ocpp::messages::SignedUpdateFirmwareConf&      response,
+    bool call(const ocpp::messages::ocpp16::ClearChargingProfileReq& request,
+              ocpp::messages::ocpp16::ClearChargingProfileConf&      response,
+              std::string&                                           error,
+              std::string&                                           message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::DataTransferReq&,
+     *                                        ocpp::messages::ocpp16::DataTransferConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::DataTransferReq& request,
+              ocpp::messages::ocpp16::DataTransferConf&      response,
               std::string&                                   error,
               std::string&                                   message) override;
 
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::AuthorizeReq&, ocpp::messages::AuthorizeConf&, std::string&, std::string&)> handler)
-        override;
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetCompositeScheduleReq&,
+     *                                        ocpp::messages::ocpp16::GetCompositeScheduleConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetCompositeScheduleReq& request,
+              ocpp::messages::ocpp16::GetCompositeScheduleConf&      response,
+              std::string&                                           error,
+              std::string&                                           message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetConfigurationReq&,
+     *                                        ocpp::messages::ocpp16::GetConfigurationConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetConfigurationReq& request,
+              ocpp::messages::ocpp16::GetConfigurationConf&      response,
+              std::string&                                       error,
+              std::string&                                       message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetDiagnosticsReq&,
+     *                                        ocpp::messages::ocpp16::GetDiagnosticsConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetDiagnosticsReq& request,
+              ocpp::messages::ocpp16::GetDiagnosticsConf&      response,
+              std::string&                                     error,
+              std::string&                                     message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetLocalListVersionReq&,
+     *                                        ocpp::messages::ocpp16::GetLocalListVersionConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetLocalListVersionReq& request,
+              ocpp::messages::ocpp16::GetLocalListVersionConf&      response,
+              std::string&                                          error,
+              std::string&                                          message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::RemoteStartTransactionReq&,
+     *                                        ocpp::messages::ocpp16::RemoteStartTransactionConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::RemoteStartTransactionReq& request,
+              ocpp::messages::ocpp16::RemoteStartTransactionConf&      response,
+              std::string&                                             error,
+              std::string&                                             message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::RemoteStopTransactionReq&,
+     *                                        ocpp::messages::ocpp16::RemoteStopTransactionConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::RemoteStopTransactionReq& request,
+              ocpp::messages::ocpp16::RemoteStopTransactionConf&      response,
+              std::string&                                            error,
+              std::string&                                            message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ReserveNowReq&,
+     *                                        ocpp::messages::ocpp16::ReserveNowConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::ReserveNowReq& request,
+              ocpp::messages::ocpp16::ReserveNowConf&      response,
+              std::string&                                 error,
+              std::string&                                 message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ResetReq&,
+     *                                        ocpp::messages::ocpp16::ResetConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::ResetReq& request,
+              ocpp::messages::ocpp16::ResetConf&      response,
+              std::string&                            error,
+              std::string&                            message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::SendLocalListReq&,
+     *                                        ocpp::messages::ocpp16::SendLocalListConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::SendLocalListReq& request,
+              ocpp::messages::ocpp16::SendLocalListConf&      response,
+              std::string&                                    error,
+              std::string&                                    message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::SetChargingProfileReq&,
+     *                                        ocpp::messages::ocpp16::SetChargingProfileConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::SetChargingProfileReq& request,
+              ocpp::messages::ocpp16::SetChargingProfileConf&      response,
+              std::string&                                         error,
+              std::string&                                         message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::TriggerMessageReq&,
+     *                                        opp::messages::TriggerMessageConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::TriggerMessageReq& request,
+              ocpp::messages::ocpp16::TriggerMessageConf&      response,
+              std::string&                                     error,
+              std::string&                                     message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::UnlockConnectorReq&,
+     *                                        ocpp::messages::ocpp16::UnlockConnectorConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::UnlockConnectorReq& request,
+              ocpp::messages::ocpp16::UnlockConnectorConf&      response,
+              std::string&                                      error,
+              std::string&                                      message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::UpdateFirmwareReq&,
+     *                                        ocpp::messages::ocpp16::UpdateFirmwareConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::UpdateFirmwareReq& request,
+              ocpp::messages::ocpp16::UpdateFirmwareConf&      response,
+              std::string&                                     error,
+              std::string&                                     message) override;
+
+    // Security extensions
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::CertificateSignedReq&,
+     *                                        ocpp::messages::ocpp16::CertificateSignedConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+              ocpp::messages::ocpp16::CertificateSignedConf&      response,
+              std::string&                                        error,
+              std::string&                                        message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::DeleteCertificateReq&,
+     *                                        ocpp::messages::ocpp16::DeleteCertificateConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+              ocpp::messages::ocpp16::DeleteCertificateConf&      response,
+              std::string&                                        error,
+              std::string&                                        message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq&,
+     *                                        ocpp::messages::ocpp16::ExtendedTriggerMessageConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq& request,
+              ocpp::messages::ocpp16::ExtendedTriggerMessageConf&      response,
+              std::string&                                             error,
+              std::string&                                             message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq&,
+     *                                        ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq& request,
+              ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&      response,
+              std::string&                                                 error,
+              std::string&                                                 message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::GetLogReq&,
+     *                                        ocpp::messages::ocpp16::GetLogConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::GetLogReq& request,
+              ocpp::messages::ocpp16::GetLogConf&      response,
+              std::string&                             error,
+              std::string&                             message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::InstallCertificateReq&,
+     *                                        ocpp::messages::ocpp16::InstallCertificateConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::InstallCertificateReq& request,
+              ocpp::messages::ocpp16::InstallCertificateConf&      response,
+              std::string&                                         error,
+              std::string&                                         message) override;
+
+    /** @copydoc bool IChargePointProxy::call(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq&,
+     *                                        ocpp::messages::ocpp16::SignedUpdateFirmwareConf&,
+     *                                        std::string&,
+     *                                        std::string&) */
+    bool call(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq& request,
+              ocpp::messages::ocpp16::SignedUpdateFirmwareConf&      response,
+              std::string&                                           error,
+              std::string&                                           message) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::AuthorizeReq&, ocpp::messages::ocpp16::AuthorizeConf&, std::string&, std::string&)>) */
     bool registerHandler(
-        std::function<bool(const ocpp::messages::BootNotificationReq&, ocpp::messages::BootNotificationConf&, std::string&, std::string&)>
+        std::function<bool(const ocpp::messages::ocpp16::AuthorizeReq&, ocpp::messages::ocpp16::AuthorizeConf&, std::string&, std::string&)>
             handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
-                                         ocpp::messages::DiagnosticsStatusNotificationConf&, std::string&, std::string&)>) */
-    bool registerHandler(std::function<bool(const ocpp::messages::DiagnosticsStatusNotificationReq&,
-                                            ocpp::messages::DiagnosticsStatusNotificationConf&,
-                                            std::string&,
-                                            std::string&)> handler) override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
-                                         ocpp::messages::FirmwareStatusNotificationConf&, std::string&, std::string&)>) */
-    bool registerHandler(std::function<bool(const ocpp::messages::FirmwareStatusNotificationReq&,
-                                            ocpp::messages::FirmwareStatusNotificationConf&,
-                                            std::string&,
-                                            std::string&)> handler) override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::HeartbeatReq&, ocpp::messages::HeartbeatConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::MeterValuesReq&, ocpp::messages::MeterValuesConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::StartTransactionReq&, ocpp::messages::StartTransactionConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::BootNotificationReq&, ocpp::messages::ocpp16::BootNotificationConf&, std::string&, std::string&)>) */
     bool registerHandler(
         std::function<bool(
-            const ocpp::messages::StatusNotificationReq&, ocpp::messages::StatusNotificationConf&, std::string&, std::string&)> handler)
+            const ocpp::messages::ocpp16::BootNotificationReq&, ocpp::messages::ocpp16::BootNotificationConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)> handler)
         override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::StopTransactionReq&, ocpp::messages::StopTransactionConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::LogStatusNotificationReq&, ocpp::messages::LogStatusNotificationConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
-                                         ocpp::messages::SecurityEventNotificationConf&, std::string&, std::string&)>) */
-    bool registerHandler(std::function<bool(const ocpp::messages::SecurityEventNotificationReq&,
-                                            ocpp::messages::SecurityEventNotificationConf&,
+                      std::function<bool(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq&,
+                                         ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq&,
+                                            ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&,
                                             std::string&,
                                             std::string&)> handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq&,
+                                         ocpp::messages::ocpp16::FirmwareStatusNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq&,
+                                            ocpp::messages::ocpp16::FirmwareStatusNotificationConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::HeartbeatReq&, ocpp::messages::ocpp16::HeartbeatConf&, std::string&, std::string&)>) */
     bool registerHandler(
-        std::function<bool(const ocpp::messages::SignCertificateReq&, ocpp::messages::SignCertificateConf&, std::string&, std::string&)>
+        std::function<bool(const ocpp::messages::ocpp16::HeartbeatReq&, ocpp::messages::ocpp16::HeartbeatConf&, std::string&, std::string&)>
             handler) override;
 
     /** @copydoc bool IChargePointProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
-                                         ocpp::messages::SignedFirmwareStatusNotificationConf&, std::string&, std::string&)>) */
-    bool registerHandler(std::function<bool(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
-                                            ocpp::messages::SignedFirmwareStatusNotificationConf&,
+                      std::function<bool(const ocpp::messages::ocpp16::MeterValuesReq&, ocpp::messages::ocpp16::MeterValuesConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::MeterValuesReq&, ocpp::messages::ocpp16::MeterValuesConf&, std::string&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::StartTransactionReq&, ocpp::messages::ocpp16::StartTransactionConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::StartTransactionReq&, ocpp::messages::ocpp16::StartTransactionConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::StatusNotificationReq&, ocpp::messages::ocpp16::StatusNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::StatusNotificationReq&,
+                                            ocpp::messages::ocpp16::StatusNotificationConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::StopTransactionReq&, ocpp::messages::ocpp16::StopTransactionConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::StopTransactionReq&, ocpp::messages::ocpp16::StopTransactionConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::LogStatusNotificationReq&, ocpp::messages::ocpp16::LogStatusNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::LogStatusNotificationReq&,
+                                            ocpp::messages::ocpp16::LogStatusNotificationConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SecurityEventNotificationReq&,
+                                         ocpp::messages::ocpp16::SecurityEventNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SecurityEventNotificationReq&,
+                                            ocpp::messages::ocpp16::SecurityEventNotificationConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SignCertificateReq&, ocpp::messages::ocpp16::SignCertificateConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::SignCertificateReq&, ocpp::messages::ocpp16::SignCertificateConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool IChargePointProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq&,
+                                         ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq&,
+                                            ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&,
                                             std::string&,
                                             std::string&)> handler) override;
 
@@ -448,7 +454,7 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
     /** @brief RPC connection */
     std::shared_ptr<ocpp::rpc::RpcServer::Client> m_rpc;
     /** @brief Messages converter */
-    ocpp::messages::MessagesConverter& m_messages_converter;
+    ocpp::messages::ocpp16::MessagesConverter& m_messages_converter;
     /** @brief Message dispatcher */
     ocpp::messages::MessageDispatcher m_msg_dispatcher;
     /** @brief Message sender */

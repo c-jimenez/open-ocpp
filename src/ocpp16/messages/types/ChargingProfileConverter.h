@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for ChargingProfile type */
-class ChargingProfileConverter : public IMessageConverter<ocpp::types::ChargingProfile>
+class ChargingProfileConverter : public IMessageConverter<ocpp::types::ocpp16::ChargingProfile>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::ChargingProfile>* IMessageConverter<ocpp::types::ChargingProfile>::clone() const */
-    IMessageConverter<ocpp::types::ChargingProfile>* clone() const override { return new ChargingProfileConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::ChargingProfile>* IMessageConverter<ocpp::types::ocpp16::ChargingProfile>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::ChargingProfile>* clone() const override { return new ChargingProfileConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::ChargingProfile&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingProfile>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::ChargingProfile&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value&       json,
-                  ocpp::types::ChargingProfile& data,
-                  std::string&                  error_code,
-                  std::string&                  error_message) override;
+    bool fromJson(const rapidjson::Value&               json,
+                  ocpp::types::ocpp16::ChargingProfile& data,
+                  std::string&                          error_code,
+                  std::string&                          error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::toJson(const ocpp::types::ChargingProfile&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingProfile>::toJson(const ocpp::types::ocpp16::ChargingProfile&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::ChargingProfile& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::ChargingProfile& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

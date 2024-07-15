@@ -27,8 +27,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <algorithm>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -74,13 +76,13 @@ SmartChargingManager::SmartChargingManager(const ocpp::config::IChargePointConfi
 SmartChargingManager::~SmartChargingManager() { }
 
 /** @copydoc bool ISmartChargingManager::getSetpoint(unsigned int,
-                                                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                     ocpp::types::ChargingRateUnitType) */
-bool SmartChargingManager::getSetpoint(unsigned int                                               connector_id,
-                                       ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                                       ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                                       ocpp::types::ChargingRateUnitType                          unit)
+                                                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                     ocpp::types::ocpp16::ChargingRateUnitType) */
+bool SmartChargingManager::getSetpoint(unsigned int                                                       connector_id,
+                                       ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                                       ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                                       ocpp::types::ocpp16::ChargingRateUnitType                          unit)
 {
     bool ret = false;
 
@@ -129,8 +131,8 @@ bool SmartChargingManager::getSetpoint(unsigned int                             
     return ret;
 }
 
-/** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ChargingProfile&) */
-bool SmartChargingManager::installTxProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile)
+/** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ocpp16::ChargingProfile&) */
+bool SmartChargingManager::installTxProfile(unsigned int connector_id, const ocpp::types::ocpp16::ChargingProfile& profile)
 {
     bool ret = false;
 
@@ -178,10 +180,10 @@ void SmartChargingManager::clearTxProfiles(unsigned int connector_id)
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SmartChargingManager::handleMessage(const ocpp::messages::ClearChargingProfileReq& request,
-                                         ocpp::messages::ClearChargingProfileConf&      response,
-                                         std::string&                                   error_code,
-                                         std::string&                                   error_message)
+bool SmartChargingManager::handleMessage(const ocpp::messages::ocpp16::ClearChargingProfileReq& request,
+                                         ocpp::messages::ocpp16::ClearChargingProfileConf&      response,
+                                         std::string&                                           error_code,
+                                         std::string&                                           error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -216,10 +218,10 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::ClearChargingProf
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfileReq& request,
-                                         ocpp::messages::SetChargingProfileConf&      response,
-                                         std::string&                                 error_code,
-                                         std::string&                                 error_message)
+bool SmartChargingManager::handleMessage(const ocpp::messages::ocpp16::SetChargingProfileReq& request,
+                                         ocpp::messages::ocpp16::SetChargingProfileConf&      response,
+                                         std::string&                                         error_code,
+                                         std::string&                                         error_message)
 {
     bool ret = false;
 
@@ -359,24 +361,24 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SmartChargingManager::handleMessage(const ocpp::messages::GetCompositeScheduleReq& request,
-                                         ocpp::messages::GetCompositeScheduleConf&      response,
-                                         std::string&                                   error_code,
-                                         std::string&                                   error_message)
+bool SmartChargingManager::handleMessage(const ocpp::messages::ocpp16::GetCompositeScheduleReq& request,
+                                         ocpp::messages::ocpp16::GetCompositeScheduleConf&      response,
+                                         std::string&                                           error_code,
+                                         std::string&                                           error_message)
 {
     (void)error_code;
     (void)error_message;
 
-    ocpp::types::ChargingRateUnitType charging_rate_unit;
+    ocpp::types::ocpp16::ChargingRateUnitType charging_rate_unit;
     if (!request.chargingRateUnit.isSet())
     {
         if (m_ocpp_config.chargingScheduleAllowedChargingRateUnit().find("Power") != std::string::npos)
         {
-            charging_rate_unit = types::ChargingRateUnitType::W;
+            charging_rate_unit = ocpp::types::ocpp16::ChargingRateUnitType::W;
         }
         else
         {
-            charging_rate_unit = types::ChargingRateUnitType::A;
+            charging_rate_unit = ocpp::types::ocpp16::ChargingRateUnitType::A;
         }
     }
     else
@@ -562,10 +564,10 @@ void SmartChargingManager::cleanupProfiles()
 }
 
 /** @brief Compute the setpoint of a given connector with a profile list */
-void SmartChargingManager::computeSetpoint(Connector*                                                 connector,
-                                           ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                                           ocpp::types::ChargingRateUnitType                          unit,
-                                           const ProfileDatabase::ChargingProfileList&                profiles_list)
+void SmartChargingManager::computeSetpoint(Connector*                                                         connector,
+                                           ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                                           ocpp::types::ocpp16::ChargingRateUnitType                          unit,
+                                           const ProfileDatabase::ChargingProfileList&                        profiles_list)
 {
     for (const auto& profile : profiles_list)
     {
@@ -587,10 +589,10 @@ void SmartChargingManager::computeSetpoint(Connector*                           
 }
 
 /** @brief Check if the given profile is active */
-bool SmartChargingManager::isProfileActive(Connector*                          connector,
-                                           const ocpp::types::ChargingProfile& profile,
-                                           size_t&                             period,
-                                           const ocpp::types::DateTime&        time_point)
+bool SmartChargingManager::isProfileActive(Connector*                                  connector,
+                                           const ocpp::types::ocpp16::ChargingProfile& profile,
+                                           size_t&                                     period,
+                                           const ocpp::types::DateTime&                time_point)
 {
     bool ret = false;
 
@@ -629,10 +631,10 @@ bool SmartChargingManager::isProfileActive(Connector*                          c
 }
 
 /** @brief Fill a setpoint structure with a charging profile and a charging schedule period */
-void SmartChargingManager::fillSetpoint(ocpp::types::SmartChargingSetpoint&        setpoint,
-                                        ocpp::types::ChargingRateUnitType          unit,
-                                        const ocpp::types::ChargingProfile&        profile,
-                                        const ocpp::types::ChargingSchedulePeriod& period)
+void SmartChargingManager::fillSetpoint(ocpp::types::ocpp16::SmartChargingSetpoint&        setpoint,
+                                        ocpp::types::ocpp16::ChargingRateUnitType          unit,
+                                        const ocpp::types::ocpp16::ChargingProfile&        profile,
+                                        const ocpp::types::ocpp16::ChargingSchedulePeriod& period)
 {
     setpoint.min_charging_rate = profile.chargingSchedule.minChargingRate;
     if (period.numberPhases.isSet())
@@ -658,7 +660,7 @@ void SmartChargingManager::fillSetpoint(ocpp::types::SmartChargingSetpoint&     
 }
 
 /** @brief Convert charging rate units */
-float SmartChargingManager::convertToUnit(float value, ocpp::types::ChargingRateUnitType unit, unsigned int number_phases)
+float SmartChargingManager::convertToUnit(float value, ocpp::types::ocpp16::ChargingRateUnitType unit, unsigned int number_phases)
 {
     float ret;
     if (unit == ChargingRateUnitType::A)
@@ -673,7 +675,7 @@ float SmartChargingManager::convertToUnit(float value, ocpp::types::ChargingRate
 }
 
 /** @brief Indicate if a charging profile is valid at a given point in time */
-bool SmartChargingManager::isProfileValid(const ocpp::types::ChargingProfile& profile, const ocpp::types::DateTime& time_point)
+bool SmartChargingManager::isProfileValid(const ocpp::types::ocpp16::ChargingProfile& profile, const ocpp::types::DateTime& time_point)
 {
     bool ret = false;
     if ((!profile.validFrom.isSet() || (time_point >= profile.validFrom)) && (!profile.validTo.isSet() || (time_point <= profile.validTo)))
@@ -684,7 +686,7 @@ bool SmartChargingManager::isProfileValid(const ocpp::types::ChargingProfile& pr
 }
 
 /** @brief Get the kind of charging profile */
-ocpp::types::ChargingProfileKindType SmartChargingManager::getProfileKind(const ocpp::types::ChargingProfile& profile)
+ocpp::types::ocpp16::ChargingProfileKindType SmartChargingManager::getProfileKind(const ocpp::types::ocpp16::ChargingProfile& profile)
 {
     ChargingProfileKindType kind = profile.chargingProfileKind;
     if (kind == ChargingProfileKindType::Absolute)
@@ -700,10 +702,10 @@ ocpp::types::ChargingProfileKindType SmartChargingManager::getProfileKind(const 
 }
 
 /** @brief Get the start time of a charging profile schedule */
-ocpp::types::DateTime SmartChargingManager::getProfileStartTime(Connector*                           connector,
-                                                                const ocpp::types::ChargingProfile&  profile,
-                                                                ocpp::types::ChargingProfileKindType kind,
-                                                                const ocpp::types::DateTime&         time_point)
+ocpp::types::DateTime SmartChargingManager::getProfileStartTime(Connector*                                   connector,
+                                                                const ocpp::types::ocpp16::ChargingProfile&  profile,
+                                                                ocpp::types::ocpp16::ChargingProfileKindType kind,
+                                                                const ocpp::types::DateTime&                 time_point)
 {
     DateTime start_of_schedule;
     switch (kind)
@@ -785,10 +787,10 @@ ocpp::types::DateTime SmartChargingManager::getProfileStartTime(Connector*      
 }
 
 /** @brief Get the composite schedule periods corresponding to a charging profile */
-std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriods(Connector*                          connector,
-                                                                                  const ocpp::types::ChargingProfile& profile,
-                                                                                  const ocpp::types::DateTime&        time_point,
-                                                                                  unsigned int                        duration)
+std::vector<SmartChargingManager::Period> SmartChargingManager::getProfilePeriods(Connector*                                  connector,
+                                                                                  const ocpp::types::ocpp16::ChargingProfile& profile,
+                                                                                  const ocpp::types::DateTime&                time_point,
+                                                                                  unsigned int                                duration)
 {
     std::vector<Period> periods;
 

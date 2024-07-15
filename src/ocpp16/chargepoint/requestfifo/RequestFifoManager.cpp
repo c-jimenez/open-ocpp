@@ -30,8 +30,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "StopTransaction.h"
 #include "WorkerThreadPool.h"
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {

@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Collection of one or more sampled values in MeterValues.req and StopTransaction.req. All sampled values in a
            MeterValue are sampled at the same point in time */
@@ -40,6 +42,7 @@ struct MeterValue
     std::vector<SampledValue> sampledValue;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

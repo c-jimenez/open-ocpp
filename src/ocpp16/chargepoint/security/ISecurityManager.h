@@ -70,7 +70,7 @@ class ISecurityManager
      * @param type Type of certificate
      * @return Installed CA certificates as PEM encoded data
      */
-    virtual std::string getCaCertificates(ocpp::types::CertificateUseEnumType type) = 0;
+    virtual std::string getCaCertificates(ocpp::types::ocpp16::CertificateUseEnumType type) = 0;
 };
 
 } // namespace chargepoint
