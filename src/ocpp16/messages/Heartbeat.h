@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Heartbeat messages */
 static const std::string HEARTBEAT_ACTION = "Heartbeat";
@@ -46,6 +48,7 @@ struct HeartbeatConf
 // Message converters
 MESSAGE_CONVERTERS(Heartbeat)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

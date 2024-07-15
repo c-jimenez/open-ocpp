@@ -44,7 +44,8 @@ namespace chargepoint
 {
 
 /** @brief Handle charge point authentication cache */
-class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages::ClearCacheReq, ocpp::messages::ClearCacheConf>
+class AuthentCache
+    : public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ClearCacheReq, ocpp::messages::ocpp16::ClearCacheConf>
 {
   public:
     /** @brief Constructor */
@@ -64,10 +65,10 @@ class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ClearCacheReq& request,
-                       ocpp::messages::ClearCacheConf&      response,
-                       std::string&                         error_code,
-                       std::string&                         error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ClearCacheReq& request,
+                       ocpp::messages::ocpp16::ClearCacheConf&      response,
+                       std::string&                                 error_code,
+                       std::string&                                 error_message) override;
 
     // AuthentCache interface
 
@@ -77,14 +78,14 @@ class AuthentCache : public ocpp::messages::GenericMessageHandler<ocpp::messages
      * @param tag_info Information for this id
      * @return true if the id has been found in the cache, false otherwise
      */
-    bool check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_info);
+    bool check(const std::string& id_tag, ocpp::types::ocpp16::IdTagInfo& tag_info);
 
     /**
      * @brief Update a tag id entry in the cache
      * @param id_tag Tag to update
      * @param tag_info Tag information to update
      */
-    void update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info);
+    void update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo& tag_info);
 
   private:
     /** @brief Stack configuration */

@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the TriggerMessage messages */
 static const std::string TRIGGER_MESSAGE_ACTION = "TriggerMessage";
@@ -36,7 +38,7 @@ static const std::string TRIGGER_MESSAGE_ACTION = "TriggerMessage";
 struct TriggerMessageReq
 {
     /** @brief Required. This contains the message requested by the Central System */
-    ocpp::types::MessageTrigger requestedMessage;
+    ocpp::types::ocpp16::MessageTrigger requestedMessage;
     /** @brief Optional. Only filled in when request applies to a specific connector */
     ocpp::types::Optional<unsigned int> connectorId;
 };
@@ -46,12 +48,13 @@ struct TriggerMessageConf
 {
     /** @brief Required. Indicates whether the Charge Point will send the requested
                notification or not */
-    ocpp::types::TriggerMessageStatus status;
+    ocpp::types::ocpp16::TriggerMessageStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(TriggerMessage)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

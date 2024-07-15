@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the UpdateFirmware messages */
 static const std::string UPDATE_FIRMWARE_ACTION = "UpdateFirmware";
@@ -60,6 +62,7 @@ struct UpdateFirmwareConf
 // Message converters
 MESSAGE_CONVERTERS(UpdateFirmware)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -40,7 +40,8 @@ class IConfigManager
     virtual ~IConfigManager() { }
 
     /** @brief Configuration value check function */
-    typedef std::function<ocpp::types::ConfigurationStatus(const std::string& key, const std::string& value)> ConfigurationValueCheckFunc;
+    typedef std::function<ocpp::types::ocpp16::ConfigurationStatus(const std::string& key, const std::string& value)>
+        ConfigurationValueCheckFunc;
 
     /**
      * @brief Register a check function for a specific configuration value before it is modified

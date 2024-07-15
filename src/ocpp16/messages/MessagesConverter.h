@@ -25,6 +25,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Stores all the needed message converters */
 class MessagesConverter : public GenericMessagesConverter
@@ -36,6 +38,7 @@ class MessagesConverter : public GenericMessagesConverter
     virtual ~MessagesConverter();
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

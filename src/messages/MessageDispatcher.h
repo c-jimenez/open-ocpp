@@ -33,7 +33,7 @@ class JsonValidator;
 namespace messages
 {
 
-class MessagesValidator;
+class IMessagesValidator;
 
 /** @brief Messages dispatcher */
 class MessageDispatcher : public IMessageDispatcher
@@ -42,7 +42,7 @@ class MessageDispatcher : public IMessageDispatcher
     /** @brief Constructor
      *  @param messages_validator JSON schemas needed to validate payloads
      */
-    MessageDispatcher(const MessagesValidator& messages_validator);
+    MessageDispatcher(const IMessagesValidator& messages_validator);
 
     /** @brief Destructor */
     virtual ~MessageDispatcher();
@@ -63,7 +63,7 @@ class MessageDispatcher : public IMessageDispatcher
 
   private:
     /** @brief JSON schemas needed to validate payloads */
-    const MessagesValidator& m_messages_validator;
+    const IMessagesValidator& m_messages_validator;
     /** @brief Handlers */
     std::unordered_map<std::string, std::pair<ocpp::json::JsonValidator*, IMessageHandler*>> m_handlers;
 };

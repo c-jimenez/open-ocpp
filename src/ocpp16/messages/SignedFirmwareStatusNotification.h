@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SignedFirmwareStatusNotification messages */
 static const std::string SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION = "SignedFirmwareStatusNotification";
@@ -35,7 +37,7 @@ static const std::string SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION = "SignedFir
 struct SignedFirmwareStatusNotificationReq
 {
     /** @brief Required. This contains the progress status of the firmware installation */
-    ocpp::types::FirmwareStatusEnumType status;
+    ocpp::types::ocpp16::FirmwareStatusEnumType status;
     /** @brief Optional. The request id that was provided in the SignedUpdateFirmware.req
                that started this firmware update. This field is mandatory, unless the message
                was triggered by a TriggerMessage.req or the ExtendedTriggerMessage.req AND
@@ -52,6 +54,7 @@ struct SignedFirmwareStatusNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(SignedFirmwareStatusNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -20,12 +20,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool RemoteStopTransactionReqConverter::fromJson(const rapidjson::Value&   json,
                                                  RemoteStopTransactionReq& data,
@@ -64,5 +66,6 @@ bool RemoteStopTransactionConfConverter::toJson(const RemoteStopTransactionConf&
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

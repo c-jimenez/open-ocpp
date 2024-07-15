@@ -20,7 +20,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IOcppConfig.h"
 
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -65,10 +67,10 @@ void ConfigManager::registerConfigChangedListener(const std::string& key, IConfi
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ConfigManager::handleMessage(const ocpp::messages::GetConfigurationReq& request,
-                                  ocpp::messages::GetConfigurationConf&      response,
-                                  std::string&                               error_code,
-                                  std::string&                               error_message)
+bool ConfigManager::handleMessage(const ocpp::messages::ocpp16::GetConfigurationReq& request,
+                                  ocpp::messages::ocpp16::GetConfigurationConf&      response,
+                                  std::string&                                       error_code,
+                                  std::string&                                       error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -83,10 +85,10 @@ bool ConfigManager::handleMessage(const ocpp::messages::GetConfigurationReq& req
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ConfigManager::handleMessage(const ocpp::messages::ChangeConfigurationReq& request,
-                                  ocpp::messages::ChangeConfigurationConf&      response,
-                                  std::string&                                  error_code,
-                                  std::string&                                  error_message)
+bool ConfigManager::handleMessage(const ocpp::messages::ocpp16::ChangeConfigurationReq& request,
+                                  ocpp::messages::ocpp16::ChangeConfigurationConf&      response,
+                                  std::string&                                          error_code,
+                                  std::string&                                          error_message)
 {
     (void)error_code;
     (void)error_message;

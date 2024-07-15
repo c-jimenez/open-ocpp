@@ -45,6 +45,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <random>
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -425,8 +426,8 @@ bool ChargePoint::reconnect()
 
     return ret;
 }
-/** @copydoc ocpp::types::RegistrationStatus IChargePoint::getRegistrationStatus() */
-ocpp::types::RegistrationStatus ChargePoint::getRegistrationStatus()
+/** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePoint::getRegistrationStatus() */
+ocpp::types::ocpp16::RegistrationStatus ChargePoint::getRegistrationStatus()
 {
     RegistrationStatus ret = RegistrationStatus::Rejected;
 
@@ -438,8 +439,8 @@ ocpp::types::RegistrationStatus ChargePoint::getRegistrationStatus()
     return ret;
 }
 
-/** @copydoc ocpp::types::ChargePointStatus IChargePoint::getConnectorStatus(unsigned int) */
-ocpp::types::ChargePointStatus ChargePoint::getConnectorStatus(unsigned int connector_id)
+/** @copydoc ocpp::types::ocpp16::ChargePointStatus IChargePoint::getConnectorStatus(unsigned int) */
+ocpp::types::ocpp16::ChargePointStatus ChargePoint::getConnectorStatus(unsigned int connector_id)
 {
     ChargePointStatus status = ChargePointStatus::Unavailable;
 
@@ -457,17 +458,17 @@ ocpp::types::ChargePointStatus ChargePoint::getConnectorStatus(unsigned int conn
 }
 
 /** @copydoc bool IChargePoint::statusNotification(unsigned int,
- *                                                 ocpp::types::ChargePointStatus,
- *                                                 ocpp::types::ChargePointErrorCode,
+ *                                                 ocpp::types::ocpp16::ChargePointStatus,
+ *                                                 ocpp::types::ocpp16::ChargePointErrorCode,
  *                                                 const std::string&,
  *                                                 const std::string&,
  *                                                 const std::string&) */
-bool ChargePoint::statusNotification(unsigned int                      connector_id,
-                                     ocpp::types::ChargePointStatus    status,
-                                     ocpp::types::ChargePointErrorCode error_code,
-                                     const std::string&                info,
-                                     const std::string&                vendor_id,
-                                     const std::string&                vendor_error)
+bool ChargePoint::statusNotification(unsigned int                              connector_id,
+                                     ocpp::types::ocpp16::ChargePointStatus    status,
+                                     ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                                     const std::string&                        info,
+                                     const std::string&                        vendor_id,
+                                     const std::string&                        vendor_error)
 {
     bool ret = false;
 
@@ -483,8 +484,10 @@ bool ChargePoint::statusNotification(unsigned int                      connector
     return ret;
 }
 
-/** @copydoc ocpp::types::AuthorizationStatus IChargePoint::authorize(unsigned int, const std::string&, std::string&) */
-ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_id, const std::string& id_tag, std::string& parent_id)
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IChargePoint::authorize(unsigned int, const std::string&, std::string&) */
+ocpp::types::ocpp16::AuthorizationStatus ChargePoint::authorize(unsigned int       connector_id,
+                                                                const std::string& id_tag,
+                                                                std::string&       parent_id)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -543,8 +546,8 @@ ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_i
     return ret;
 }
 
-/** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&, int&) */
-ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&, int&) */
+AuthorizationStatus ChargePoint::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -567,8 +570,8 @@ ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int conn
     return ret;
 }
 
-/** @copydoc bool IChargePoint::stopTransaction(unsigned int, const std::string&, ocpp::types::Reason) */
-bool ChargePoint::stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason)
+/** @copydoc bool IChargePoint::stopTransaction(unsigned int, const std::string&, ocpp::types::ocpp16::Reason) */
+bool ChargePoint::stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::ocpp16::Reason reason)
 {
     bool ret = false;
 
@@ -594,13 +597,13 @@ bool ChargePoint::stopTransaction(unsigned int connector_id, const std::string& 
 /** @copydoc bool IChargePoint::dataTransfer(const std::string&,
                                              const std::string&,
                                              const std::string&,
-                                             ocpp::types::DataTransferStatus&,
+                                             ocpp::types::ocpp16::DataTransferStatus&,
                                              std::string& ) */
-bool ChargePoint::dataTransfer(const std::string&               vendor_id,
-                               const std::string&               message_id,
-                               const std::string&               request_data,
-                               ocpp::types::DataTransferStatus& status,
-                               std::string&                     response_data)
+bool ChargePoint::dataTransfer(const std::string&                       vendor_id,
+                               const std::string&                       message_id,
+                               const std::string&                       request_data,
+                               ocpp::types::ocpp16::DataTransferStatus& status,
+                               std::string&                             response_data)
 {
     bool ret = false;
 
@@ -623,8 +626,8 @@ bool ChargePoint::dataTransfer(const std::string&               vendor_id,
     return ret;
 }
 
-/** @copydoc bool IChargePoint::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
-bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values)
+/** @copydoc bool IChargePoint::sendMeterValues(unsigned int, const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::ocpp16::MeterValue>& values)
 {
     bool ret = false;
 
@@ -648,13 +651,13 @@ bool ChargePoint::sendMeterValues(unsigned int connector_id, const std::vector<o
 }
 
 /** @copydoc bool IChargePoint::getSetpoint(unsigned int,
-                                            ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                            ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                            ocpp::types::ChargingRateUnitType) */
-bool ChargePoint::getSetpoint(unsigned int                                               connector_id,
-                              ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                              ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                              ocpp::types::ChargingRateUnitType                          unit)
+                                            ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                            ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                            ocpp::types::ocpp16::ChargingRateUnitType) */
+bool ChargePoint::getSetpoint(unsigned int                                                       connector_id,
+                              ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                              ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                              ocpp::types::ocpp16::ChargingRateUnitType                          unit)
 {
     bool ret = false;
 
@@ -770,8 +773,8 @@ bool ChargePoint::signCertificate()
     return ret;
 }
 
-/** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType) */
-bool ChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status)
+/** @copydoc bool IChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType) */
+bool ChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType status)
 {
     bool ret = false;
 
@@ -796,15 +799,15 @@ bool ChargePoint::notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEn
 
 // ISO 15118 PnC extensions
 
-/** @copydoc ocpp::types::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const ocpp::x509::Certificate&,
                                                                     const std::string&,
-                                                                    const std::vector<ocpp::types::OcspRequestDataType>&,
-                                                                    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) */
-ocpp::types::AuthorizationStatus ChargePoint::iso15118Authorize(
-    const ocpp::x509::Certificate&                                          certificate,
-    const std::string&                                                      id_token,
-    const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status)
+                                                                    const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
+                                                                    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) */
+ocpp::types::ocpp16::AuthorizationStatus ChargePoint::iso15118Authorize(
+    const ocpp::x509::Certificate&                                                  certificate,
+    const std::string&                                                              id_token,
+    const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -828,13 +831,13 @@ ocpp::types::AuthorizationStatus ChargePoint::iso15118Authorize(
 }
 
 /** @copydoc bool IChargePoint::iso15118GetEVCertificate(const std::string&,
-                                                             ocpp::types::CertificateActionEnumType,
+                                                             ocpp::types::ocpp16::CertificateActionEnumType,
                                                              const std::string&,
                                                              std::string&) */
-bool ChargePoint::iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
-                                           ocpp::types::CertificateActionEnumType action,
-                                           const std::string&                     exi_request,
-                                           std::string&                           exi_response)
+bool ChargePoint::iso15118GetEVCertificate(const std::string&                             iso15118_schema_version,
+                                           ocpp::types::ocpp16::CertificateActionEnumType action,
+                                           const std::string&                             exi_request,
+                                           std::string&                                   exi_response)
 {
     bool ret = false;
 
@@ -858,8 +861,8 @@ bool ChargePoint::iso15118GetEVCertificate(const std::string&                   
     return ret;
 }
 
-/** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType&, std::string&) */
-bool ChargePoint::iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
+/** @copydoc bool IChargePoint::iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType&, std::string&) */
+bool ChargePoint::iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
 {
     bool ret = false;
 
@@ -1155,7 +1158,7 @@ bool ChargePoint::doConnect()
 
         // Reset registration status
         m_internal_config.setKey(LAST_REGISTRATION_STATUS_KEY, RegistrationStatusHelper.toString(RegistrationStatus::Rejected));
-        
+
         // Notify that the connection URL has changed
         m_events_handler.connectionUrlChanged(connection_url);
 
@@ -1231,7 +1234,8 @@ bool ChargePoint::doConnect()
  */
 ConfigManager& ChargePoint::getConfigManager(void) const
 {
-    if (!m_config_manager) {
+    if (!m_config_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_config_manager.get();
@@ -1244,7 +1248,8 @@ ConfigManager& ChargePoint::getConfigManager(void) const
  */
 StatusManager& ChargePoint::getStatusManager(void) const
 {
-    if (!m_status_manager) {
+    if (!m_status_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_status_manager.get();
@@ -1257,7 +1262,8 @@ StatusManager& ChargePoint::getStatusManager(void) const
  */
 AuthentManager& ChargePoint::getAuthentManager(void) const
 {
-    if (!m_authent_manager) {
+    if (!m_authent_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_authent_manager.get();
@@ -1270,7 +1276,8 @@ AuthentManager& ChargePoint::getAuthentManager(void) const
  */
 TransactionManager& ChargePoint::getTransactionManager(void) const
 {
-    if (!m_transaction_manager) {
+    if (!m_transaction_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_transaction_manager.get();
@@ -1283,7 +1290,8 @@ TransactionManager& ChargePoint::getTransactionManager(void) const
  */
 TriggerMessageManager& ChargePoint::getTriggerManager(void) const
 {
-    if (!m_trigger_manager) {
+    if (!m_trigger_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_trigger_manager.get();
@@ -1296,7 +1304,8 @@ TriggerMessageManager& ChargePoint::getTriggerManager(void) const
  */
 ReservationManager& ChargePoint::getReservationManager(void) const
 {
-    if (!m_reservation_manager) {
+    if (!m_reservation_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_reservation_manager.get();
@@ -1309,7 +1318,8 @@ ReservationManager& ChargePoint::getReservationManager(void) const
  */
 DataTransferManager& ChargePoint::getDataTransferManager(void) const
 {
-    if (!m_data_transfer_manager) {
+    if (!m_data_transfer_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_data_transfer_manager.get();
@@ -1322,7 +1332,8 @@ DataTransferManager& ChargePoint::getDataTransferManager(void) const
  */
 MeterValuesManager& ChargePoint::getMeterValuesManager(void) const
 {
-    if (!m_meter_values_manager) {
+    if (!m_meter_values_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_meter_values_manager.get();
@@ -1335,7 +1346,8 @@ MeterValuesManager& ChargePoint::getMeterValuesManager(void) const
  */
 SmartChargingManager& ChargePoint::getSmartChargingManager(void) const
 {
-    if (!m_smart_charging_manager) {
+    if (!m_smart_charging_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_smart_charging_manager.get();
@@ -1348,7 +1360,8 @@ SmartChargingManager& ChargePoint::getSmartChargingManager(void) const
  */
 MaintenanceManager& ChargePoint::getMaintenanceManager(void) const
 {
-    if (!m_maintenance_manager) {
+    if (!m_maintenance_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_maintenance_manager.get();
@@ -1361,7 +1374,8 @@ MaintenanceManager& ChargePoint::getMaintenanceManager(void) const
  */
 RequestFifoManager& ChargePoint::getRequestsFifoManager(void) const
 {
-    if (!m_requests_fifo_manager) {
+    if (!m_requests_fifo_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_requests_fifo_manager.get();
@@ -1374,7 +1388,8 @@ RequestFifoManager& ChargePoint::getRequestsFifoManager(void) const
  */
 Iso15118Manager& ChargePoint::getIso15118Manager(void) const
 {
-    if (!m_iso15118_manager) {
+    if (!m_iso15118_manager)
+    {
         throw std::runtime_error("Stack is not started!");
     }
     return *m_iso15118_manager.get();

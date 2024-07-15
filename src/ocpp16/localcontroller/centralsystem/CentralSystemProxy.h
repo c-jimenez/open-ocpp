@@ -56,11 +56,11 @@ class CentralSystemProxy : public ICentralSystemProxy,
      * @param stack_config Stack configuration
      * @param rpc_pool RPC pool
      */
-    CentralSystemProxy(const std::string&                          identifier,
-                       const ocpp::messages::MessagesValidator&    messages_validator,
-                       ocpp::messages::MessagesConverter&          messages_converter,
-                       const ocpp::config::ILocalControllerConfig& stack_config,
-                       ocpp::rpc::RpcPool&                         rpc_pool);
+    CentralSystemProxy(const std::string&                               identifier,
+                       const ocpp::messages::ocpp16::MessagesValidator& messages_validator,
+                       ocpp::messages::ocpp16::MessagesConverter&       messages_converter,
+                       const ocpp::config::ILocalControllerConfig&      stack_config,
+                       ocpp::rpc::RpcPool&                              rpc_pool);
 
     /** @brief Destructor */
     virtual ~CentralSystemProxy();
@@ -101,299 +101,313 @@ class CentralSystemProxy : public ICentralSystemProxy,
     /** @copydoc void ICentralSystemProxy::registerListener(ILocalControllerProxyEventsHandler&) */
     void registerListener(ILocalControllerProxyEventsHandler& listener) override { m_listener = &listener; }
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::BootNotificationReq&,
-     *                                          ocpp::messages::BootNotificationConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::BootNotificationReq&,
+     *                                          ocpp::messages::ocpp16::BootNotificationConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::BootNotificationReq& request,
-              ocpp::messages::BootNotificationConf&      response,
-              std::string&                               error,
-              std::string&                               message) override;
+    bool call(const ocpp::messages::ocpp16::BootNotificationReq& request,
+              ocpp::messages::ocpp16::BootNotificationConf&      response,
+              std::string&                                       error,
+              std::string&                                       message) override;
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StatusNotificationReq&,
-     *                                          ocpp::messages::StatusNotificationConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StatusNotificationReq&,
+     *                                          ocpp::messages::ocpp16::StatusNotificationConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::StatusNotificationReq& request,
-              ocpp::messages::StatusNotificationConf&      response,
-              std::string&                                 error,
-              std::string&                                 message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::AuthorizeReq&,
-     *                                          ocpp::messages::AuthorizeConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::AuthorizeReq& request,
-              ocpp::messages::AuthorizeConf&      response,
-              std::string&                        error,
-              std::string&                        message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StartTransactionReq&,
-     *                                          ocpp::messages::StartTransactionConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::StartTransactionReq& request,
-              ocpp::messages::StartTransactionConf&      response,
-              std::string&                               error,
-              std::string&                               message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StopTransactionReq&,
-     *                                          ocpp::messages::StopTransactionConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::StopTransactionReq& request,
-              ocpp::messages::StopTransactionConf&      response,
-              std::string&                              error,
-              std::string&                              message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::DataTransferReq&,
-     *                                          ocpp::messages::DataTransferConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::DataTransferReq& request,
-              ocpp::messages::DataTransferConf&      response,
-              std::string&                           error,
-              std::string&                           message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::MeterValuesReq&,
-     *                                          ocpp::messages::MeterValuesConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::MeterValuesReq& request,
-              ocpp::messages::MeterValuesConf&      response,
-              std::string&                          error,
-              std::string&                          message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::DiagnosticsStatusNotificationReq&,
-     *                                          ocpp::messages::DiagnosticsStatusNotificationConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::DiagnosticsStatusNotificationReq& request,
-              ocpp::messages::DiagnosticsStatusNotificationConf&      response,
-              std::string&                                            error,
-              std::string&                                            message) override;
-
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::FirmwareStatusNotificationReq&,
-     *                                          ocpp::messages::FirmwareStatusNotificationConf&,
-     *                                          std::string&,
-     *                                          std::string&) */
-    bool call(const ocpp::messages::FirmwareStatusNotificationReq& request,
-              ocpp::messages::FirmwareStatusNotificationConf&      response,
+    bool call(const ocpp::messages::ocpp16::StatusNotificationReq& request,
+              ocpp::messages::ocpp16::StatusNotificationConf&      response,
               std::string&                                         error,
               std::string&                                         message) override;
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::HeartbeatReq&,
-     *                                          ocpp::messages::HeartbeatConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::AuthorizeReq&,
+     *                                          ocpp::messages::ocpp16::AuthorizeConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::HeartbeatReq& request,
-              ocpp::messages::HeartbeatConf&      response,
-              std::string&                        error,
-              std::string&                        message) override;
+    bool call(const ocpp::messages::ocpp16::AuthorizeReq& request,
+              ocpp::messages::ocpp16::AuthorizeConf&      response,
+              std::string&                                error,
+              std::string&                                message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StartTransactionReq&,
+     *                                          ocpp::messages::ocpp16::StartTransactionConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::StartTransactionReq& request,
+              ocpp::messages::ocpp16::StartTransactionConf&      response,
+              std::string&                                       error,
+              std::string&                                       message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StopTransactionReq&,
+     *                                          ocpp::messages::ocpp16::StopTransactionConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::StopTransactionReq& request,
+              ocpp::messages::ocpp16::StopTransactionConf&      response,
+              std::string&                                      error,
+              std::string&                                      message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::DataTransferReq&,
+     *                                          ocpp::messages::ocpp16::DataTransferConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::DataTransferReq& request,
+              ocpp::messages::ocpp16::DataTransferConf&      response,
+              std::string&                                   error,
+              std::string&                                   message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::MeterValuesReq&,
+     *                                          ocpp::messages::ocpp16::MeterValuesConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::MeterValuesReq& request,
+              ocpp::messages::ocpp16::MeterValuesConf&      response,
+              std::string&                                  error,
+              std::string&                                  message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq&,
+     *                                          ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq& request,
+              ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&      response,
+              std::string&                                                    error,
+              std::string&                                                    message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq&,
+     *                                          ocpp::messages::ocpp16::FirmwareStatusNotificationConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq& request,
+              ocpp::messages::ocpp16::FirmwareStatusNotificationConf&      response,
+              std::string&                                                 error,
+              std::string&                                                 message) override;
+
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::HeartbeatReq&,
+     *                                          ocpp::messages::ocpp16::HeartbeatConf&,
+     *                                          std::string&,
+     *                                          std::string&) */
+    bool call(const ocpp::messages::ocpp16::HeartbeatReq& request,
+              ocpp::messages::ocpp16::HeartbeatConf&      response,
+              std::string&                                error,
+              std::string&                                message) override;
 
     // Security extensions
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SecurityEventNotificationReq&,
-     *                                          ocpp::messages::SecurityEventNotificationConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SecurityEventNotificationReq&,
+     *                                          ocpp::messages::ocpp16::SecurityEventNotificationConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::SecurityEventNotificationReq& request,
-              ocpp::messages::SecurityEventNotificationConf&      response,
-              std::string&                                        error,
-              std::string&                                        message) override;
+    bool call(const ocpp::messages::ocpp16::SecurityEventNotificationReq& request,
+              ocpp::messages::ocpp16::SecurityEventNotificationConf&      response,
+              std::string&                                                error,
+              std::string&                                                message) override;
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SignCertificateReq&,
-     *                                          ocpp::messages::SignCertificateConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SignCertificateReq&,
+     *                                          ocpp::messages::ocpp16::SignCertificateConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::SignCertificateReq& request,
-              ocpp::messages::SignCertificateConf&      response,
-              std::string&                              error,
-              std::string&                              message) override;
+    bool call(const ocpp::messages::ocpp16::SignCertificateReq& request,
+              ocpp::messages::ocpp16::SignCertificateConf&      response,
+              std::string&                                      error,
+              std::string&                                      message) override;
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::LogStatusNotificationReq&,
-     *                                          ocpp::messages::LogStatusNotificationConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::LogStatusNotificationReq&,
+     *                                          ocpp::messages::ocpp16::LogStatusNotificationConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::LogStatusNotificationReq& request,
-              ocpp::messages::LogStatusNotificationConf&      response,
-              std::string&                                    error,
-              std::string&                                    message) override;
+    bool call(const ocpp::messages::ocpp16::LogStatusNotificationReq& request,
+              ocpp::messages::ocpp16::LogStatusNotificationConf&      response,
+              std::string&                                            error,
+              std::string&                                            message) override;
 
-    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
-     *                                          ocpp::messages::SignedFirmwareStatusNotificationConf&,
+    /** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq&,
+     *                                          ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&,
      *                                          std::string&,
      *                                          std::string&) */
-    bool call(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
-              ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
-              std::string&                                               error,
-              std::string&                                               message) override;
+    bool call(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq& request,
+              ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&      response,
+              std::string&                                                       error,
+              std::string&                                                       message) override;
 
     /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, std::string&, std::string&)> handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, std::string&, std::string&)> handler)
-        override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<
-            bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, std::string&, std::string&)>
-            handler) override;
-
-    /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&, ocpp::messages::GetInstalledCertificateIdsConf&, std::string&, std::string&)>) */
-    bool registerHandler(std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&,
-                                            ocpp::messages::GetInstalledCertificateIdsConf&,
+                      std::function<bool(const ocpp::messages::ocpp16::CancelReservationReq&, ocpp::messages::ocpp16::CancelReservationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::CancelReservationReq&,
+                                            ocpp::messages::ocpp16::CancelReservationConf&,
                                             std::string&,
                                             std::string&)> handler) override;
 
     /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, std::string&, std::string&)>) */
-    bool registerHandler(
-        std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, std::string&, std::string&)> handler) override;
+                      std::function<bool(const ocpp::messages::ocpp16::ChangeAvailabilityReq&, ocpp::messages::ocpp16::ChangeAvailabilityConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::ChangeAvailabilityReq&,
+                                            ocpp::messages::ocpp16::ChangeAvailabilityConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
 
     /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ChangeConfigurationReq&, ocpp::messages::ocpp16::ChangeConfigurationConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::ChangeConfigurationReq&,
+                                            ocpp::messages::ocpp16::ChangeConfigurationConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::ClearCacheReq&, ocpp::messages::ocpp16::ClearCacheConf&, std::string&, std::string&)>) */
     bool registerHandler(
         std::function<bool(
-            const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, std::string&, std::string&)> handler)
+            const ocpp::messages::ocpp16::ClearCacheReq&, ocpp::messages::ocpp16::ClearCacheConf&, std::string&, std::string&)> handler)
         override;
 
     /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ClearChargingProfileReq&, ocpp::messages::ocpp16::ClearChargingProfileConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::ClearChargingProfileReq&,
+                                            ocpp::messages::ocpp16::ClearChargingProfileConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)>) */
     bool registerHandler(
         std::function<bool(
-            const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, std::string&, std::string&)> handler)
+            const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)> handler)
         override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetCompositeScheduleReq&, ocpp::messages::ocpp16::GetCompositeScheduleConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetCompositeScheduleReq&,
+                                            ocpp::messages::ocpp16::GetCompositeScheduleConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetConfigurationReq&, ocpp::messages::ocpp16::GetConfigurationConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::GetConfigurationReq&, ocpp::messages::ocpp16::GetConfigurationConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetDiagnosticsReq&, ocpp::messages::ocpp16::GetDiagnosticsConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp16::GetDiagnosticsReq&, ocpp::messages::ocpp16::GetDiagnosticsConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetLocalListVersionReq&, ocpp::messages::ocpp16::GetLocalListVersionConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetLocalListVersionReq&,
+                                            ocpp::messages::ocpp16::GetLocalListVersionConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::RemoteStartTransactionReq&, ocpp::messages::ocpp16::RemoteStartTransactionConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::RemoteStartTransactionReq&,
+                                            ocpp::messages::ocpp16::RemoteStartTransactionConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::RemoteStopTransactionReq&, ocpp::messages::ocpp16::RemoteStopTransactionConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::RemoteStopTransactionReq&,
+                                            ocpp::messages::ocpp16::RemoteStopTransactionConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::ReserveNowReq&, ocpp::messages::ocpp16::ReserveNowConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::ReserveNowReq&, ocpp::messages::ocpp16::ReserveNowConf&, std::string&, std::string&)> handler)
+        override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::ResetReq&, ocpp::messages::ocpp16::ResetConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::ocpp16::ResetReq&, ocpp::messages::ocpp16::ResetConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SendLocalListReq&, ocpp::messages::ocpp16::SendLocalListConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp16::SendLocalListReq&, ocpp::messages::ocpp16::SendLocalListConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SetChargingProfileReq&, ocpp::messages::ocpp16::SetChargingProfileConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SetChargingProfileReq&,
+                                            ocpp::messages::ocpp16::SetChargingProfileConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::TriggerMessageReq&, ocpp::messages::ocpp16::TriggerMessageConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp16::TriggerMessageReq&, ocpp::messages::ocpp16::TriggerMessageConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::UnlockConnectorReq&, ocpp::messages::ocpp16::UnlockConnectorConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(
+            const ocpp::messages::ocpp16::UnlockConnectorReq&, ocpp::messages::ocpp16::UnlockConnectorConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::UpdateFirmwareReq&, ocpp::messages::ocpp16::UpdateFirmwareConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp16::UpdateFirmwareReq&, ocpp::messages::ocpp16::UpdateFirmwareConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::CertificateSignedReq&, ocpp::messages::ocpp16::CertificateSignedConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::CertificateSignedReq&,
+                                            ocpp::messages::ocpp16::CertificateSignedConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::DeleteCertificateReq&, ocpp::messages::ocpp16::DeleteCertificateConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::DeleteCertificateReq&,
+                                            ocpp::messages::ocpp16::DeleteCertificateConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq&, ocpp::messages::ocpp16::ExtendedTriggerMessageConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq&,
+                                            ocpp::messages::ocpp16::ExtendedTriggerMessageConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq&, ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq&,
+                                            ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::GetLogReq&, ocpp::messages::ocpp16::GetLogConf&, std::string&, std::string&)>) */
+    bool registerHandler(
+        std::function<bool(const ocpp::messages::ocpp16::GetLogReq&, ocpp::messages::ocpp16::GetLogConf&, std::string&, std::string&)>
+            handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::InstallCertificateReq&, ocpp::messages::ocpp16::InstallCertificateConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::InstallCertificateReq&,
+                                            ocpp::messages::ocpp16::InstallCertificateConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
+
+    /** @copydoc bool ICentralSystemProxy::registerHandler(
+                      std::function<bool(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq&, ocpp::messages::ocpp16::SignedUpdateFirmwareConf&, std::string&, std::string&)>) */
+    bool registerHandler(std::function<bool(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq&,
+                                            ocpp::messages::ocpp16::SignedUpdateFirmwareConf&,
+                                            std::string&,
+                                            std::string&)> handler) override;
 
     // IRpc::IListener interface
 
@@ -440,7 +454,7 @@ class CentralSystemProxy : public ICentralSystemProxy,
     /** @brief RPC connection */
     ocpp::rpc::RpcClient m_rpc;
     /** @brief Messages converter */
-    ocpp::messages::MessagesConverter& m_messages_converter;
+    ocpp::messages::ocpp16::MessagesConverter& m_messages_converter;
     /** @brief Message dispatcher */
     ocpp::messages::MessageDispatcher m_msg_dispatcher;
     /** @brief Message sender */

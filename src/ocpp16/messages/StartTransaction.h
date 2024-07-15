@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the StartTransaction messages */
 static const std::string START_TRANSACTION_ACTION = "StartTransaction";
@@ -37,7 +39,7 @@ struct StartTransactionReq
     /** @brief Required. This identifies which connector of the Charge Point is used */
     unsigned int connectorId;
     /** @brief Required. This contains the identifier for which a transaction has to be started */
-    ocpp::types::IdToken idTag;
+    ocpp::types::ocpp16::IdToken idTag;
     /** @brief Required. This contains the meter value in Wh for the connector at start of the
                transaction */
     int meterStart;
@@ -53,7 +55,7 @@ struct StartTransactionConf
 {
     /** @brief Required. This contains information about authorization status, expiry and
                parent id */
-    ocpp::types::IdTagInfo idTagInfo;
+    ocpp::types::ocpp16::IdTagInfo idTagInfo;
     /** @brief Required. This contains the transaction id supplied by the Central System */
     int transactionId;
 };
@@ -61,6 +63,7 @@ struct StartTransactionConf
 // Message converters
 MESSAGE_CONVERTERS(StartTransaction)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

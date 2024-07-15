@@ -63,6 +63,9 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
+
 /** @brief Constructor */
 MessagesValidator::MessagesValidator() : m_req_validators(), m_resp_validators() { }
 
@@ -189,5 +192,6 @@ bool MessagesValidator::addValidator(const std::filesystem::path& validator_path
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

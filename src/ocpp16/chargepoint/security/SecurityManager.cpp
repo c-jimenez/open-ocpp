@@ -35,8 +35,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <unordered_map>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 namespace ocpp
@@ -360,16 +362,17 @@ bool SecurityManager::exportSecurityEvents(const std::string&                   
     return m_security_logs_db.exportSecurityEvents(filepath, start_time, stop_time);
 }
 
-/** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType) */
-std::string SecurityManager::getCaCertificates(ocpp::types::CertificateUseEnumType type)
+/** @copydoc std::string ISecurityManager::getCaCertificates(ocpp::types::ocpp16::CertificateUseEnumType) */
+std::string SecurityManager::getCaCertificates(ocpp::types::ocpp16::CertificateUseEnumType type)
 {
     return m_ca_certificates_db.getCertificateListPem(type);
 }
 
 // ITriggerMessageManager::ITriggerMessageHandler interface
 
-/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id)
+/** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+bool SecurityManager::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                                       const ocpp::types::Optional<unsigned int>&  connector_id)
 {
     bool ret = false;
     (void)connector_id;
@@ -414,10 +417,10 @@ bool SecurityManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType messa
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& request,
-                                    ocpp::messages::CertificateSignedConf&      response,
-                                    std::string&                                error_code,
-                                    std::string&                                error_message)
+bool SecurityManager::handleMessage(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+                                    ocpp::messages::ocpp16::CertificateSignedConf&      response,
+                                    std::string&                                        error_code,
+                                    std::string&                                        error_message)
 {
     bool ret                 = true;
     bool send_security_event = true;
@@ -498,10 +501,10 @@ bool SecurityManager::handleMessage(const ocpp::messages::CertificateSignedReq& 
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& request,
-                                    ocpp::messages::DeleteCertificateConf&      response,
-                                    std::string&                                error_code,
-                                    std::string&                                error_message)
+bool SecurityManager::handleMessage(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+                                    ocpp::messages::ocpp16::DeleteCertificateConf&      response,
+                                    std::string&                                        error_code,
+                                    std::string&                                        error_message)
 {
     bool ret = true;
 
@@ -538,10 +541,10 @@ bool SecurityManager::handleMessage(const ocpp::messages::DeleteCertificateReq& 
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificateIdsReq& request,
-                                    ocpp::messages::GetInstalledCertificateIdsConf&      response,
-                                    std::string&                                         error_code,
-                                    std::string&                                         error_message)
+bool SecurityManager::handleMessage(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq& request,
+                                    ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&      response,
+                                    std::string&                                                 error_code,
+                                    std::string&                                                 error_message)
 {
     bool ret = true;
 
@@ -598,10 +601,10 @@ bool SecurityManager::handleMessage(const ocpp::messages::GetInstalledCertificat
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq& request,
-                                    ocpp::messages::InstallCertificateConf&      response,
-                                    std::string&                                 error_code,
-                                    std::string&                                 error_message)
+bool SecurityManager::handleMessage(const ocpp::messages::ocpp16::InstallCertificateReq& request,
+                                    ocpp::messages::ocpp16::InstallCertificateConf&      response,
+                                    std::string&                                         error_code,
+                                    std::string&                                         error_message)
 {
     bool ret = true;
 
@@ -666,7 +669,7 @@ bool SecurityManager::handleMessage(const ocpp::messages::InstallCertificateReq&
 }
 
 /** @brief Specific configuration check for parameter : AuthorizationKey */
-ocpp::types::ConfigurationStatus SecurityManager::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
+ocpp::types::ocpp16::ConfigurationStatus SecurityManager::checkAuthorizationKeyParameter(const std::string& key, const std::string& value)
 {
     (void)key;
     ConfigurationStatus ret = ConfigurationStatus::Rejected;
@@ -686,7 +689,7 @@ ocpp::types::ConfigurationStatus SecurityManager::checkAuthorizationKeyParameter
 }
 
 /** @brief Specific configuration check for parameter : SecurityProfile */
-ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(const std::string& key, const std::string& value)
+ocpp::types::ocpp16::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(const std::string& key, const std::string& value)
 {
     (void)key;
     ConfigurationStatus ret = ConfigurationStatus::Rejected;
@@ -770,7 +773,7 @@ ocpp::types::ConfigurationStatus SecurityManager::checkSecurityProfileParameter(
 }
 
 /** @brief Fill the hash information of a certificat */
-void SecurityManager::fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info)
+void SecurityManager::fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::ocpp16::CertificateHashDataType& info)
 {
     // Compute hashes with SHA-256 algorithm
     Sha2 sha256;

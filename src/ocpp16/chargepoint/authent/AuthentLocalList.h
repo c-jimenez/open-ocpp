@@ -45,8 +45,9 @@ namespace chargepoint
 
 /** @brief Handle charge point authentication local list */
 class AuthentLocalList
-    : public ocpp::messages::GenericMessageHandler<ocpp::messages::GetLocalListVersionReq, ocpp::messages::GetLocalListVersionConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::SendLocalListReq, ocpp::messages::SendLocalListConf>
+    : public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetLocalListVersionReq,
+                                                   ocpp::messages::ocpp16::GetLocalListVersionConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::SendLocalListReq, ocpp::messages::ocpp16::SendLocalListConf>
 {
   public:
     /** @brief Constructor */
@@ -66,20 +67,20 @@ class AuthentLocalList
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetLocalListVersionReq& request,
-                       ocpp::messages::GetLocalListVersionConf&      response,
-                       std::string&                                  error_code,
-                       std::string&                                  error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::GetLocalListVersionReq& request,
+                       ocpp::messages::ocpp16::GetLocalListVersionConf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::SendLocalListReq& request,
-                       ocpp::messages::SendLocalListConf&      response,
-                       std::string&                            error_code,
-                       std::string&                            error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::SendLocalListReq& request,
+                       ocpp::messages::ocpp16::SendLocalListConf&      response,
+                       std::string&                                    error_code,
+                       std::string&                                    error_message) override;
 
     // AuthentLocalList interface
 
@@ -89,7 +90,7 @@ class AuthentLocalList
      * @param tag_info Information for this id
      * @return true if the id has been found in the local list, false otherwise
      */
-    bool check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_info);
+    bool check(const std::string& id_tag, ocpp::types::ocpp16::IdTagInfo& tag_info);
 
   private:
     /** @brief Standard OCPP configuration */
@@ -114,9 +115,9 @@ class AuthentLocalList
     /** @brief Initialize the database table */
     void initDatabaseTable();
     /** @brief Perform the full update of the local list */
-    bool performFullUpdate(const std::vector<ocpp::types::AuthorizationData>& authorization_datas);
+    bool performFullUpdate(const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_datas);
     /** @brief Perform the partial update of the local list */
-    bool performPartialUpdate(const std::vector<ocpp::types::AuthorizationData>& authorization_datas);
+    bool performPartialUpdate(const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_datas);
 };
 
 } // namespace chargepoint

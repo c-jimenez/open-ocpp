@@ -26,8 +26,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IOcppConfig.h"
 #include "Logger.h"
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -56,8 +58,8 @@ AuthentManager::~AuthentManager()
     delete &m_local_list;
 }
 
-/** @copydoc ocpp::types::AuthorizationStatus IAuthentManager::authorize(const std::string&, std::string&) */
-ocpp::types::AuthorizationStatus AuthentManager::authorize(const std::string& id_tag, std::string& parent_id)
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::authorize(const std::string&, std::string&) */
+ocpp::types::ocpp16::AuthorizationStatus AuthentManager::authorize(const std::string& id_tag, std::string& parent_id)
 {
     bool                retry;
     AuthorizationStatus status;
@@ -168,8 +170,8 @@ ocpp::types::AuthorizationStatus AuthentManager::authorize(const std::string& id
     return status;
 }
 
-/** @copydoc void IAuthentManager::update(const std::string& id_tag, const ocpp::types::IdTagInfo&) */
-void AuthentManager::update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info)
+/** @copydoc void IAuthentManager::update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo&) */
+void AuthentManager::update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo& tag_info)
 {
     // Check if the cache is enabled
     if (m_ocpp_config.authorizationCacheEnabled())
@@ -189,8 +191,8 @@ void AuthentManager::update(const std::string& id_tag, const ocpp::types::IdTagI
     }
 }
 
-/** @copydoc ocpp::types::AuthorizationStatus IAuthentManager::iso15118Authorize(const std::string&) */
-ocpp::types::AuthorizationStatus AuthentManager::iso15118Authorize(const std::string& token_id)
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::iso15118Authorize(const std::string&) */
+ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const std::string& token_id)
 {
     AuthorizationStatus status = AuthorizationStatus::Invalid;
 
@@ -242,8 +244,8 @@ ocpp::types::AuthorizationStatus AuthentManager::iso15118Authorize(const std::st
     return status;
 }
 
-/** @copydoc void IAuthentManager::iso15118Update(const std::string&, const ocpp::types::IdTokenInfoType&) */
-void AuthentManager::iso15118Update(const std::string& token_id, const ocpp::types::IdTokenInfoType& token_info)
+/** @copydoc void IAuthentManager::iso15118Update(const std::string&, const ocpp::types::ocpp16::IdTokenInfoType&) */
+void AuthentManager::iso15118Update(const std::string& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info)
 {
     // Check if the cache is enabled
     if (m_ocpp_config.authorizationCacheEnabled())

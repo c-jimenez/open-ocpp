@@ -23,6 +23,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 // Standard OCPP security events
 
@@ -66,6 +68,7 @@ static constexpr const char* SECEVT_INVALID_TLS_VERSION = "InvalidTLSVersion";
 /** @brief The Central System did only allow connections using TLS cipher suites that are not allowed by the security specification */
 static constexpr const char* SECEVT_INVALID_TLS_CIPHER_SUITE = "InvalidTLSCipherSuite";
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

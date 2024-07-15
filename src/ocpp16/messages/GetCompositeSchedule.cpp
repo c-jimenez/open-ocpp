@@ -21,20 +21,25 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 /** @brief Helper to convert a enum class GetCompositeScheduleStatus enum to string */
 const EnumToStringFromString<GetCompositeScheduleStatus> GetCompositeScheduleStatusHelper = {
     {GetCompositeScheduleStatus::Accepted, "Accepted"}, {GetCompositeScheduleStatus::Rejected, "Rejected"}};
 
+} // namespace ocpp16
 } // namespace types
 
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&  json,
                                                 GetCompositeScheduleReq& data,
@@ -107,5 +112,6 @@ bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& d
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

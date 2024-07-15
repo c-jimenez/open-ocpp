@@ -60,10 +60,10 @@ class IDataTransferManager
          * @param response_data Data associated with the response
          * @return Response status (see DataTransferStatus enum)
          */
-        virtual ocpp::types::DataTransferStatus onDataTransferRequest(const std::string& vendor_id,
-                                                                      const std::string& message_id,
-                                                                      const std::string& request_data,
-                                                                      std::string&       response_data) = 0;
+        virtual ocpp::types::ocpp16::DataTransferStatus onDataTransferRequest(const std::string& vendor_id,
+                                                                              const std::string& message_id,
+                                                                              const std::string& request_data,
+                                                                              std::string&       response_data) = 0;
     };
 };
 

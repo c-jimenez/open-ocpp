@@ -165,8 +165,8 @@ class ICentralSystem
          * @param availability Availability state (see AvailabilityType documentation)
          * @return Operation status (see AvailabilityStatus documentation)
          */
-        virtual ocpp::types::AvailabilityStatus changeAvailability(unsigned int                  connector_id,
-                                                                   ocpp::types::AvailabilityType availability) = 0;
+        virtual ocpp::types::ocpp16::AvailabilityStatus changeAvailability(unsigned int                          connector_id,
+                                                                           ocpp::types::ocpp16::AvailabilityType availability) = 0;
 
         /**
          * @brief Change the value of a configuration key
@@ -174,7 +174,7 @@ class ICentralSystem
          * @param value New value
          * @return Operation status (see ConfigurationStatus documentation)
          */
-        virtual ocpp::types::ConfigurationStatus changeConfiguration(const std::string& key, const std::string& value) = 0;
+        virtual ocpp::types::ocpp16::ConfigurationStatus changeConfiguration(const std::string& key, const std::string& value) = 0;
 
         /**
          * @brief Clear the authentication cache
@@ -190,10 +190,10 @@ class ICentralSystem
          * @param stack_level Stack level of the charging profile
          * @return true if at least one charging profile has been cleared, false otherwise
          */
-        virtual bool clearChargingProfile(const ocpp::types::Optional<int>&                                     profile_id,
-                                          const ocpp::types::Optional<unsigned int>&                            connector_id,
-                                          const ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>& purpose,
-                                          const ocpp::types::Optional<unsigned int>&                            stack_level) = 0;
+        virtual bool clearChargingProfile(const ocpp::types::Optional<int>&                                             profile_id,
+                                          const ocpp::types::Optional<unsigned int>&                                    connector_id,
+                                          const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType>& purpose,
+                                          const ocpp::types::Optional<unsigned int>&                                    stack_level) = 0;
 
         /**
          * @brief Send a data transfer request
@@ -204,11 +204,11 @@ class ICentralSystem
          * @param response_data Data associated with the response
          * @return true if the data transfer has been done, false otherwise
          */
-        virtual bool dataTransfer(const std::string&               vendor_id,
-                                  const std::string&               message_id,
-                                  const std::string&               request_data,
-                                  ocpp::types::DataTransferStatus& status,
-                                  std::string&                     response_data) = 0;
+        virtual bool dataTransfer(const std::string&                       vendor_id,
+                                  const std::string&                       message_id,
+                                  const std::string&                       request_data,
+                                  ocpp::types::ocpp16::DataTransferStatus& status,
+                                  std::string&                             response_data) = 0;
         /**
          * @brief Get a smart charging composite schedule
          * @param connector_id Id of the connector for which the schedule is requested
@@ -219,12 +219,12 @@ class ICentralSystem
          * @param schedule Computed composite schedule
          * @return true if the composite schedule has been computed, false otherwise
          */
-        virtual bool getCompositeSchedule(unsigned int                                                    connector_id,
-                                          std::chrono::seconds                                            duration,
-                                          const ocpp::types::Optional<ocpp::types::ChargingRateUnitType>& unit,
-                                          ocpp::types::Optional<unsigned int>&                            schedule_connector_id,
-                                          ocpp::types::Optional<ocpp::types::DateTime>&                   schedule_start,
-                                          ocpp::types::Optional<ocpp::types::ChargingSchedule>&           schedule) = 0;
+        virtual bool getCompositeSchedule(unsigned int                                                            connector_id,
+                                          std::chrono::seconds                                                    duration,
+                                          const ocpp::types::Optional<ocpp::types::ocpp16::ChargingRateUnitType>& unit,
+                                          ocpp::types::Optional<unsigned int>&                                    schedule_connector_id,
+                                          ocpp::types::Optional<ocpp::types::DateTime>&                           schedule_start,
+                                          ocpp::types::Optional<ocpp::types::ocpp16::ChargingSchedule>&           schedule) = 0;
 
         /**
          * @brief Get the value of the configuration keys
@@ -233,9 +233,9 @@ class ICentralSystem
          * @param unknown_keys Unknown configuration keys
          * @return true if the configuration has been retrieved, false otherwise
          */
-        virtual bool getConfiguration(const std::vector<std::string>&     keys,
-                                      std::vector<ocpp::types::KeyValue>& config_keys,
-                                      std::vector<std::string>&           unknown_keys) = 0;
+        virtual bool getConfiguration(const std::vector<std::string>&             keys,
+                                      std::vector<ocpp::types::ocpp16::KeyValue>& config_keys,
+                                      std::vector<std::string>&                   unknown_keys) = 0;
 
         /**
          * @brief Get the diagnostic file
@@ -268,9 +268,9 @@ class ICentralSystem
          * @param profile Profile to be used for the requested transaction
          * @return true if the request has been accepted, false otherwise
          */
-        virtual bool remoteStartTransaction(const ocpp::types::Optional<unsigned int>&                 connector_id,
-                                            const std::string&                                         id_tag,
-                                            const ocpp::types::Optional<ocpp::types::ChargingProfile>& profile) = 0;
+        virtual bool remoteStartTransaction(const ocpp::types::Optional<unsigned int>&                         connector_id,
+                                            const std::string&                                                 id_tag,
+                                            const ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfile>& profile) = 0;
 
         /**
          * @brief Send a remote stop transaction request
@@ -288,18 +288,18 @@ class ICentralSystem
          * @param reservation_id Unique id for this reservation
          * @return Operation status (see ReservationStatus documentation)
          */
-        virtual ocpp::types::ReservationStatus reserveNow(unsigned int                 connector_id,
-                                                          const ocpp::types::DateTime& expiry_date,
-                                                          const std::string&           id_tag,
-                                                          const std::string&           parent_id_tag,
-                                                          int                          reservation_id) = 0;
+        virtual ocpp::types::ocpp16::ReservationStatus reserveNow(unsigned int                 connector_id,
+                                                                  const ocpp::types::DateTime& expiry_date,
+                                                                  const std::string&           id_tag,
+                                                                  const std::string&           parent_id_tag,
+                                                                  int                          reservation_id) = 0;
 
         /**
          * @brief Reset the charge point
          * @param type Type of reset
          * @return true if the request has been accepted, false otherwise
          */
-        virtual bool reset(ocpp::types::ResetType type) = 0;
+        virtual bool reset(ocpp::types::ocpp16::ResetType type) = 0;
 
         /**
          * @brief Send or upgrade a local authorization list
@@ -308,9 +308,10 @@ class ICentralSystem
          * @param update_type Update type
          * @return Operation status (see UpdateStatus documentation)
          */
-        virtual ocpp::types::UpdateStatus sendLocalList(int                                                version,
-                                                        const std::vector<ocpp::types::AuthorizationData>& authorization_list,
-                                                        ocpp::types::UpdateType                            update_type) = 0;
+        virtual ocpp::types::ocpp16::UpdateStatus sendLocalList(
+            int                                                        version,
+            const std::vector<ocpp::types::ocpp16::AuthorizationData>& authorization_list,
+            ocpp::types::ocpp16::UpdateType                            update_type) = 0;
 
         /**
          * @brief Set a charging profile in the charge point
@@ -318,8 +319,8 @@ class ICentralSystem
          * @param profile Charging profile to apply
          * @return Operation status (see ChargingProfileStatus documentation)
          */
-        virtual ocpp::types::ChargingProfileStatus setChargingProfile(unsigned int                        connector_id,
-                                                                      const ocpp::types::ChargingProfile& profile) = 0;
+        virtual ocpp::types::ocpp16::ChargingProfileStatus setChargingProfile(unsigned int                                connector_id,
+                                                                              const ocpp::types::ocpp16::ChargingProfile& profile) = 0;
 
         /**
          * @brief Request the send of a specific message
@@ -327,15 +328,15 @@ class ICentralSystem
          * @param connector_id Id of the connector on which the message applies
          * @return Operation status (see TriggerMessageStatus documentation)
          */
-        virtual ocpp::types::TriggerMessageStatus triggerMessage(ocpp::types::MessageTrigger               message,
-                                                                 const ocpp::types::Optional<unsigned int> connector_id) = 0;
+        virtual ocpp::types::ocpp16::TriggerMessageStatus triggerMessage(ocpp::types::ocpp16::MessageTrigger       message,
+                                                                         const ocpp::types::Optional<unsigned int> connector_id) = 0;
 
         /**
          * @brief Unlock a connector
          * @param connector_id Id of the connector to unlock
          * @return Operation status (see UnlockStatus documentation)
          */
-        virtual ocpp::types::UnlockStatus unlockConnector(unsigned int connector_id) = 0;
+        virtual ocpp::types::ocpp16::UnlockStatus unlockConnector(unsigned int connector_id) = 0;
 
         /**
          * @brief Update the firmware of the charge point
@@ -364,7 +365,8 @@ class ICentralSystem
          * @param certificate Certificate information
          * @return Operation status (see DeleteCertificateStatusEnumType documentation)
          */
-        virtual ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate) = 0;
+        virtual ocpp::types::ocpp16::DeleteCertificateStatusEnumType deleteCertificate(
+            const ocpp::types::ocpp16::CertificateHashDataType& certificate) = 0;
 
         /**
          * @brief Request the send of a specific message
@@ -372,8 +374,8 @@ class ICentralSystem
          * @param connector_id Id of the connector on which the message applies
          * @return Operation status (see TriggerMessageStatus documentation)
          */
-        virtual ocpp::types::TriggerMessageStatusEnumType extendedTriggerMessage(
-            ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id) = 0;
+        virtual ocpp::types::ocpp16::TriggerMessageStatusEnumType extendedTriggerMessage(
+            ocpp::types::ocpp16::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int> connector_id) = 0;
 
         /**
          * @brief Get the list of installed CA certificates
@@ -381,8 +383,8 @@ class ICentralSystem
          * @param certificates Certificates information
          * @return true is the list has been retrieved, false otherwise
          */
-        virtual bool getInstalledCertificateIds(ocpp::types::CertificateUseEnumType                type,
-                                                std::vector<ocpp::types::CertificateHashDataType>& certificates) = 0;
+        virtual bool getInstalledCertificateIds(ocpp::types::ocpp16::CertificateUseEnumType                type,
+                                                std::vector<ocpp::types::ocpp16::CertificateHashDataType>& certificates) = 0;
         /**
          * @brief Get the log file
          * @param type Type of log to retrieve
@@ -395,7 +397,7 @@ class ICentralSystem
          * @param log_filename Name of the diagnostic file which will be uploaded
          * @return true if the operation has started, false otherwise
          */
-        virtual bool getLog(ocpp::types::LogEnumType                            type,
+        virtual bool getLog(ocpp::types::ocpp16::LogEnumType                    type,
                             int                                                 request_id,
                             const std::string&                                  uri,
                             const ocpp::types::Optional<unsigned int>&          retries,
@@ -410,8 +412,8 @@ class ICentralSystem
          * @param certificate CA certificate to install
          * @return Operation status (see CertificateStatusEnumType documentation)
          */
-        virtual ocpp::types::CertificateStatusEnumType installCertificate(ocpp::types::CertificateUseEnumType type,
-                                                                          const ocpp::x509::Certificate&      certificate) = 0;
+        virtual ocpp::types::ocpp16::CertificateStatusEnumType installCertificate(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                                                                  const ocpp::x509::Certificate& certificate) = 0;
 
         /**
          * @brief Update the firmware of the charge point
@@ -425,7 +427,7 @@ class ICentralSystem
          * @param signature Base64 encoded firmware signature
          * @return Operation status (see UpdateFirmwareStatusEnumType documentation)
          */
-        virtual ocpp::types::UpdateFirmwareStatusEnumType signedUpdateFirmware(
+        virtual ocpp::types::ocpp16::UpdateFirmwareStatusEnumType signedUpdateFirmware(
             int                                                 request_id,
             const std::string&                                  uri,
             const ocpp::types::Optional<unsigned int>&          retries,
@@ -449,8 +451,8 @@ class ICentralSystem
          * @param certificate Certificate information
          * @return Operation status (see DeleteCertificateStatusEnumType documentation)
          */
-        virtual ocpp::types::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
-            const ocpp::types::CertificateHashDataType& certificate) = 0;
+        virtual ocpp::types::ocpp16::DeleteCertificateStatusEnumType iso15118DeleteCertificate(
+            const ocpp::types::ocpp16::CertificateHashDataType& certificate) = 0;
 
         /**
          * @brief Get the list of installed ISO15118 CA certificates
@@ -458,8 +460,8 @@ class ICentralSystem
          * @param certificates Certificates information
          * @return true is the list has been retrieved, false otherwise
          */
-        virtual bool iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::GetCertificateIdUseEnumType>& types,
-                                                        std::vector<ocpp::types::CertificateHashDataChainType>&      certificates) = 0;
+        virtual bool iso15118GetInstalledCertificateIds(const std::vector<ocpp::types::ocpp16::GetCertificateIdUseEnumType>& types,
+                                                        std::vector<ocpp::types::ocpp16::CertificateHashDataChainType>& certificates) = 0;
 
         /**
          * @brief Install an ISO15118 CA certificate
@@ -467,8 +469,8 @@ class ICentralSystem
          * @param certificate CA certificate to install
          * @return Operation status (see InstallCertificateStatusEnumType documentation)
          */
-        virtual ocpp::types::InstallCertificateStatusEnumType iso15118InstallCertificate(ocpp::types::InstallCertificateUseEnumType type,
-                                                                                         const ocpp::x509::Certificate& certificate) = 0;
+        virtual ocpp::types::ocpp16::InstallCertificateStatusEnumType iso15118InstallCertificate(
+            ocpp::types::ocpp16::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate) = 0;
 
         /**
          * @brief Request the send of an ISO15118 SignCertificate request from the charge point

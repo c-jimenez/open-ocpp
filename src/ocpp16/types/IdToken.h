@@ -25,11 +25,14 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Contains the identifier to use for authorization. It is a case insensitive string. In future releases this may become
            a complex type to support multiple forms of identifiers */
 typedef CiStringType<20u> IdToken;
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

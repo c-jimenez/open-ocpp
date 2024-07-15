@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ChangeAvailability messages */
 static const std::string CHANGE_AVAILABILITY_ACTION = "ChangeAvailability";
@@ -41,7 +43,7 @@ struct ChangeAvailabilityReq
     unsigned int connectorId;
     /** @brief Required. This contains the type of availability change that the Charge Point
                should perform. */
-    ocpp::types::AvailabilityType type;
+    ocpp::types::ocpp16::AvailabilityType type;
 };
 
 /** @brief ChangeAvailability.conf message */
@@ -49,12 +51,13 @@ struct ChangeAvailabilityConf
 {
     /** @brief Required. This indicates whether the Charge Point is able to perform the
                availability change */
-    ocpp::types::AvailabilityStatus status;
+    ocpp::types::ocpp16::AvailabilityStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ChangeAvailability)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

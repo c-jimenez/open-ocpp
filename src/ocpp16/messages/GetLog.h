@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetLog messages */
 static const std::string GET_LOG_ACTION = "GetLog";
@@ -36,7 +38,7 @@ static const std::string GET_LOG_ACTION = "GetLog";
 struct GetLogReq
 {
     /** @brief Required. This contains the type of log file that the Charge Point should send */
-    ocpp::types::LogEnumType logType;
+    ocpp::types::ocpp16::LogEnumType logType;
     /** @brief Required. The Id of this request */
     int requestId;
     /** @brief Optional. This specifies how many times the Charge Point must try to upload the
@@ -49,7 +51,7 @@ struct GetLogReq
     ocpp::types::Optional<unsigned int> retryInterval;
     /** @brief Required. This field specifies the requested log and the location to which the log
                should be sent */
-    ocpp::types::LogParametersType log;
+    ocpp::types::ocpp16::LogParametersType log;
 };
 
 /** @brief GetLog.conf message */
@@ -57,7 +59,7 @@ struct GetLogConf
 {
     /** @brief Required. This field indicates whether the Charge Point was able to accept the
                request */
-    ocpp::types::LogStatusEnumType status;
+    ocpp::types::ocpp16::LogStatusEnumType status;
     /** @brief Optional. This contains the name of the log file that will be uploaded. This field is
                not present when no logging information is available. */
     ocpp::types::CiStringType<255> fileName;
@@ -66,6 +68,7 @@ struct GetLogConf
 // Message converters
 MESSAGE_CONVERTERS(GetLog)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

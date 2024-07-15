@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SignCertificate messages */
 static const std::string SIGN_CERTIFICATE_ACTION = "SignCertificate";
@@ -44,12 +46,13 @@ struct SignCertificateReq
 struct SignCertificateConf
 {
     /** @brief Required. Specifies whether the Central System can process the request */
-    ocpp::types::GenericStatusEnumType status;
+    ocpp::types::ocpp16::GenericStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(SignCertificate)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -30,8 +30,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "StartTransaction.h"
 #include "StopTransaction.h"
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -75,7 +77,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
 TransactionManager::~TransactionManager() { }
 
 /** @brief Start a transaction */
-ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
+AuthorizationStatus TransactionManager::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -201,7 +203,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
 }
 
 /** @brief Stop a transaction */
-bool TransactionManager::stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason)
+bool TransactionManager::stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::ocpp16::Reason reason)
 {
     bool ret = false;
 
@@ -269,10 +271,10 @@ bool TransactionManager::stopTransaction(unsigned int connector_id, const std::s
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransactionReq& request,
-                                       ocpp::messages::RemoteStartTransactionConf&      response,
-                                       std::string&                                     error_code,
-                                       std::string&                                     error_message)
+bool TransactionManager::handleMessage(const ocpp::messages::ocpp16::RemoteStartTransactionReq& request,
+                                       ocpp::messages::ocpp16::RemoteStartTransactionConf&      response,
+                                       std::string&                                             error_code,
+                                       std::string&                                             error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -338,10 +340,10 @@ bool TransactionManager::handleMessage(const ocpp::messages::RemoteStartTransact
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool TransactionManager::handleMessage(const ocpp::messages::RemoteStopTransactionReq& request,
-                                       ocpp::messages::RemoteStopTransactionConf&      response,
-                                       std::string&                                    error_code,
-                                       std::string&                                    error_message)
+bool TransactionManager::handleMessage(const ocpp::messages::ocpp16::RemoteStopTransactionReq& request,
+                                       ocpp::messages::ocpp16::RemoteStopTransactionConf&      response,
+                                       std::string&                                            error_code,
+                                       std::string&                                            error_message)
 {
     (void)error_code;
     (void)error_message;

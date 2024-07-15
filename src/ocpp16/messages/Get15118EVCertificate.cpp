@@ -20,10 +20,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a enum class CertificateActionEnumType enum to string */
 const EnumToStringFromString<CertificateActionEnumType> CertificateActionEnumTypeHelper = {{CertificateActionEnumType::Install, "Install"},
@@ -33,8 +36,11 @@ const EnumToStringFromString<CertificateActionEnumType> CertificateActionEnumTyp
 const EnumToStringFromString<Iso15118EVCertificateStatusEnumType> Iso15118EVCertificateStatusEnumTypeHelper = {
     {Iso15118EVCertificateStatusEnumType::Accepted, "Accepted"}, {Iso15118EVCertificateStatusEnumType::Failed, "Failed"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -81,5 +87,6 @@ bool Get15118EVCertificateConfConverter::toJson(const Get15118EVCertificateConf&
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

@@ -43,8 +43,9 @@ class Connectors;
 /** @brief Manage TriggerMessage requests */
 class TriggerMessageManager
     : public ITriggerMessageManager,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::TriggerMessageReq, ocpp::messages::TriggerMessageConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::ExtendedTriggerMessageReq, ocpp::messages::ExtendedTriggerMessageConf>
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::TriggerMessageReq, ocpp::messages::ocpp16::TriggerMessageConf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ExtendedTriggerMessageReq,
+                                                   ocpp::messages::ocpp16::ExtendedTriggerMessageConf>
 {
   public:
     /** @brief Constructor */
@@ -57,11 +58,11 @@ class TriggerMessageManager
 
     // ITriggerMessageManager interface
 
-    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
-    void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) override;
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTrigger, ITriggerMessageHandler&) */
+    void registerHandler(ocpp::types::ocpp16::MessageTrigger message, ITriggerMessageHandler& handler) override;
 
-    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
-    void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override;
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+    void registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override;
 
     // GenericMessageHandler interface
 
@@ -70,10 +71,10 @@ class TriggerMessageManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::TriggerMessageReq& request,
-                       ocpp::messages::TriggerMessageConf&      response,
-                       std::string&                             error_code,
-                       std::string&                             error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::TriggerMessageReq& request,
+                       ocpp::messages::ocpp16::TriggerMessageConf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
 
     // Security extensions
 
@@ -82,20 +83,20 @@ class TriggerMessageManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ExtendedTriggerMessageReq& request,
-                       ocpp::messages::ExtendedTriggerMessageConf&      response,
-                       std::string&                                     error_code,
-                       std::string&                                     error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq& request,
+                       ocpp::messages::ocpp16::ExtendedTriggerMessageConf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
 
   private:
     /** @brief Charge point's connectors */
     Connectors& m_connectors;
 
     /** @brief Handlers for standard trigger messages */
-    std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
+    std::map<ocpp::types::ocpp16::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
 
     /** @brief Handlers for extended trigger messages */
-    std::map<ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
+    std::map<ocpp::types::ocpp16::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
 };
 
 } // namespace chargepoint

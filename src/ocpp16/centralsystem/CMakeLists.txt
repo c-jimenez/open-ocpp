@@ -22,7 +22,7 @@ target_include_directories(centralsystem PRIVATE chargepoint
 target_link_libraries(centralsystem
     config
     database
-    messages
+    messages16
     rpc
     helpers
     log

@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Iso15118TriggerMessage messages */
 static const std::string ISO15118_TRIGGER_MESSAGE_ACTION = "TriggerMessage";
@@ -41,12 +43,13 @@ struct Iso15118TriggerMessageConf
 {
     /** @brief Required. Indicates whether the Charge Point will send the requested
                notification or not */
-    ocpp::types::TriggerMessageStatusEnumType status;
+    ocpp::types::ocpp16::TriggerMessageStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(Iso15118TriggerMessage)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

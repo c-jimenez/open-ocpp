@@ -30,6 +30,7 @@ SOFTWARE.
 
 using namespace std;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::helpers;
 
 /** @brief Read attribute */
@@ -123,11 +124,11 @@ static const map<string, int> CONFIGURATION_VALUES = {
 OcppConfig::OcppConfig(ocpp::helpers::IniFile& config) : m_config(config) { }
 
 /** @copydoc void IOcppConfig::getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>&,
- *                                              std::vector<ocpp::types::KeyValue>&,
+ *                                              std::vector<ocpp::types::ocpp16::KeyValue>&,
  *                                              std::vector<ocpp::types::CiStringType<50u>>&);
  */
 void OcppConfig::getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>& keys,
-                                  std::vector<ocpp::types::KeyValue>&                values,
+                                  std::vector<ocpp::types::ocpp16::KeyValue>&        values,
                                   std::vector<ocpp::types::CiStringType<50u>>&       unknown_values)
 {
     if (keys.empty())
@@ -189,7 +190,7 @@ void OcppConfig::getConfiguration(const std::vector<ocpp::types::CiStringType<50
 }
 
 /** @copydoc ConfigurationStatus IOcppConfig::setConfiguration(const std::string&, const std::string&) */
-ocpp::types::ConfigurationStatus OcppConfig::setConfiguration(const std::string& key, const std::string& value)
+ocpp::types::ocpp16::ConfigurationStatus OcppConfig::setConfiguration(const std::string& key, const std::string& value)
 {
     ConfigurationStatus ret = ConfigurationStatus::NotSupported;
     const auto          it  = CONFIGURATION_VALUES.find(key);

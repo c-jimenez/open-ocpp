@@ -21,20 +21,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @bcopydoc bool IMessageConverter<ocpp::types::IdTokenInfoType>::fromJson(const rapidjson::Value&,
- *                                                                     ocpp::types::IdTokenInfoType&,
+/** @bcopydoc bool IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>::fromJson(const rapidjson::Value&,
+ *                                                                     ocpp::types::ocpp16::IdTokenInfoType&,
  *                                                                     std::string&,
  *                                                                     std::string&) */
-bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
-                                        ocpp::types::IdTokenInfoType& data,
-                                        std::string&                  error_code,
-                                        std::string&                  error_message)
+bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&               json,
+                                        ocpp::types::ocpp16::IdTokenInfoType& data,
+                                        std::string&                          error_code,
+                                        std::string&                          error_message)
 {
     data.status = AuthorizationStatusHelper.fromString(json["status"].GetString());
     bool ret    = extract(json, "cacheExpiryDateTime", data.cacheExpiryDateTime, error_message);
@@ -45,9 +48,9 @@ bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::IdTokenInfoType>::toJson(const ocpp::types::IdTokenInfoType&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>::toJson(const ocpp::types::ocpp16::IdTokenInfoType&,
  *                                                                  rapidjson::Document&) */
-bool IdTokenInfoTypeConverter::toJson(const ocpp::types::IdTokenInfoType& data, rapidjson::Document& json)
+bool IdTokenInfoTypeConverter::toJson(const ocpp::types::ocpp16::IdTokenInfoType& data, rapidjson::Document& json)
 {
     fill(json, "status", AuthorizationStatusHelper.toString(data.status));
     if (data.cacheExpiryDateTime.isSet())
@@ -57,5 +60,6 @@ bool IdTokenInfoTypeConverter::toJson(const ocpp::types::IdTokenInfoType& data, 
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

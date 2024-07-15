@@ -20,21 +20,26 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a ConfigurationStatus enum to string */
 const EnumToStringFromString<ConfigurationStatus> ConfigurationStatusHelper = {{ConfigurationStatus::Accepted, "Accepted"},
                                                                                {ConfigurationStatus::Rejected, "Rejected"},
                                                                                {ConfigurationStatus::RebootRequired, "RebootRequired"},
                                                                                {ConfigurationStatus::NotSupported, "NotSupported"}};
+} // namespace ocpp16
 } // namespace types
 
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool ChangeConfigurationReqConverter::fromJson(const rapidjson::Value& json,
                                                ChangeConfigurationReq& data,
@@ -75,5 +80,6 @@ bool ChangeConfigurationConfConverter::toJson(const ChangeConfigurationConf& dat
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

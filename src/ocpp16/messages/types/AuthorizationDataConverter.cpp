@@ -22,20 +22,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IdTagInfoConverter.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @bcopydoc bool IMessageConverter<ocpp::types::AuthorizationData>::fromJson(const rapidjson::Value&,
- *                                                                     ocpp::types::AuthorizationData&,
+/** @bcopydoc bool IMessageConverter<ocpp::types::ocpp16::AuthorizationData>::fromJson(const rapidjson::Value&,
+ *                                                                     ocpp::types::ocpp16::AuthorizationData&,
  *                                                                     std::string&,
  *                                                                     std::string&) */
-bool AuthorizationDataConverter::fromJson(const rapidjson::Value&         json,
-                                          ocpp::types::AuthorizationData& data,
-                                          std::string&                    error_code,
-                                          std::string&                    error_message)
+bool AuthorizationDataConverter::fromJson(const rapidjson::Value&                 json,
+                                          ocpp::types::ocpp16::AuthorizationData& data,
+                                          std::string&                            error_code,
+                                          std::string&                            error_message)
 {
     bool ret = true;
     extract(json, "idTag", data.idTag);
@@ -47,9 +50,9 @@ bool AuthorizationDataConverter::fromJson(const rapidjson::Value&         json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::AuthorizationData>::toJson(const ocpp::types::AuthorizationData&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::AuthorizationData>::toJson(const ocpp::types::ocpp16::AuthorizationData&,
  *                                                                  rapidjson::Document&) */
-bool AuthorizationDataConverter::toJson(const ocpp::types::AuthorizationData& data, rapidjson::Document& json)
+bool AuthorizationDataConverter::toJson(const ocpp::types::ocpp16::AuthorizationData& data, rapidjson::Document& json)
 {
     bool ret = true;
     fill(json, "idTag", data.idTag);
@@ -65,5 +68,6 @@ bool AuthorizationDataConverter::toJson(const ocpp::types::AuthorizationData& da
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

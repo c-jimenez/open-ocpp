@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the FirmwareStatusNotification messages */
 static const std::string FIRMWARE_STATUS_NOTIFICATION_ACTION = "FirmwareStatusNotification";
@@ -34,7 +36,7 @@ static const std::string FIRMWARE_STATUS_NOTIFICATION_ACTION = "FirmwareStatusNo
 struct FirmwareStatusNotificationReq
 {
     /** @brief Required. This contains the progress status of the firmware installation */
-    ocpp::types::FirmwareStatus status;
+    ocpp::types::ocpp16::FirmwareStatus status;
 };
 
 /** @brief FirmwareStatusNotification.conf message */
@@ -46,6 +48,7 @@ struct FirmwareStatusNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(FirmwareStatusNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

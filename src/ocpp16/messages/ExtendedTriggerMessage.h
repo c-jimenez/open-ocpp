@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ExtendedTriggerMessage messages */
 static const std::string EXTENDED_TRIGGER_MESSAGE_ACTION = "ExtendedTriggerMessage";
@@ -36,7 +38,7 @@ static const std::string EXTENDED_TRIGGER_MESSAGE_ACTION = "ExtendedTriggerMessa
 struct ExtendedTriggerMessageReq
 {
     /** @brief Required. Type of the message to be triggered */
-    ocpp::types::MessageTriggerEnumType requestedMessage;
+    ocpp::types::ocpp16::MessageTriggerEnumType requestedMessage;
     /** @brief Optional. Only filled in when request applies to a specific connector */
     ocpp::types::Optional<unsigned int> connectorId;
 };
@@ -46,12 +48,13 @@ struct ExtendedTriggerMessageConf
 {
     /** @brief Required. Indicates whether the Charge Point will send the requested
                notification or not */
-    ocpp::types::TriggerMessageStatusEnumType status;
+    ocpp::types::ocpp16::TriggerMessageStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ExtendedTriggerMessage)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

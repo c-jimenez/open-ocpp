@@ -27,8 +27,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 
 using namespace ocpp::database;
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -54,10 +56,10 @@ ProfileDatabase::~ProfileDatabase() { }
 
 /** @brief Clear one or multiple charging profiles with match criteria
  *         (if none specified, all the profiles are cleared) */
-bool ProfileDatabase::clear(ocpp::types::Optional<int>                                     id,
-                            ocpp::types::Optional<unsigned int>                            connector_id,
-                            ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType> purpose,
-                            ocpp::types::Optional<unsigned int>                            level)
+bool ProfileDatabase::clear(ocpp::types::Optional<int>                                             id,
+                            ocpp::types::Optional<unsigned int>                                    connector_id,
+                            ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType> purpose,
+                            ocpp::types::Optional<unsigned int>                                    level)
 {
     bool ret = false;
 
@@ -172,7 +174,7 @@ bool ProfileDatabase::clear(ocpp::types::Optional<int>                          
 }
 
 /** @brief Install a charging profile */
-bool ProfileDatabase::install(unsigned int connector_id, const ocpp::types::ChargingProfile& profile)
+bool ProfileDatabase::install(unsigned int connector_id, const ocpp::types::ocpp16::ChargingProfile& profile)
 {
     bool ret = false;
 
@@ -350,7 +352,7 @@ void ProfileDatabase::load()
 }
 
 /** @brief Serialize a profile to a string */
-std::string ProfileDatabase::serialize(const ocpp::types::ChargingProfile& profile)
+std::string ProfileDatabase::serialize(const ocpp::types::ocpp16::ChargingProfile& profile)
 {
     std::string profile_str;
 
@@ -369,7 +371,7 @@ std::string ProfileDatabase::serialize(const ocpp::types::ChargingProfile& profi
 }
 
 /** @brief Deserialize a profile from a string */
-bool ProfileDatabase::deserialize(const std::string& profile_str, ocpp::types::ChargingProfile& profile)
+bool ProfileDatabase::deserialize(const std::string& profile_str, ocpp::types::ocpp16::ChargingProfile& profile)
 {
     std::string         error_code;
     std::string         error_message;

@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Authorize messages */
 static const std::string AUTHORIZE_ACTION = "Authorize";
@@ -34,7 +36,7 @@ static const std::string AUTHORIZE_ACTION = "Authorize";
 struct AuthorizeReq
 {
     /** @brief Required. This contains the identifier that needs to be authorized */
-    ocpp::types::IdToken idTag;
+    ocpp::types::ocpp16::IdToken idTag;
 };
 
 /** @brief Authorize.conf message */
@@ -42,12 +44,13 @@ struct AuthorizeConf
 {
     /** @brief Required. This contains information about authorization status, expiry and
                 parent id */
-    ocpp::types::IdTagInfo idTagInfo;
+    ocpp::types::ocpp16::IdTagInfo idTagInfo;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(Authorize)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

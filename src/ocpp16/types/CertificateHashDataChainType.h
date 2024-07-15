@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief CertificateHashDataChainType is used by: GetInstalledCertificateIds.conf */
 struct CertificateHashDataChainType
@@ -40,6 +42,7 @@ struct CertificateHashDataChainType
     std::vector<CertificateHashDataType> childCertificateHashData;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

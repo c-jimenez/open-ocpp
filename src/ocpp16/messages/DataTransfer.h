@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the DataTransfer messages */
 static const std::string DATA_TRANSFER_ACTION = "DataTransfer";
@@ -47,7 +49,7 @@ struct DataTransferReq
 struct DataTransferConf
 {
     /** @brief Required. This indicates the success or failure of the data transfer */
-    ocpp::types::DataTransferStatus status;
+    ocpp::types::ocpp16::DataTransferStatus status;
     /** @brief Optional. Data in response to request */
     ocpp::types::Optional<std::string> data;
 };
@@ -55,6 +57,7 @@ struct DataTransferConf
 // Message converters
 MESSAGE_CONVERTERS(DataTransfer)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -21,10 +21,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 
 /** @brief Helper to convert a enum class ChargingProfileStatus enum to string */
@@ -45,8 +48,11 @@ const EnumToStringFromString<RecurrencyKindType> RecurrencyKindTypeHelper = {{Re
 const EnumToStringFromString<ChargingRateUnitType> ChargingRateUnitTypeHelper = {{ChargingRateUnitType::W, "W"},
                                                                                  {ChargingRateUnitType::A, "A"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -108,5 +114,6 @@ bool SetChargingProfileConfConverter::toJson(const SetChargingProfileConf& data,
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

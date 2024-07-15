@@ -20,22 +20,26 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
-
 namespace types
+{
+namespace ocpp16
 {
 
 /** @brief Helper to convert a UnlockStatus enum to string */
 const EnumToStringFromString<UnlockStatus> UnlockStatusHelper = {
     {UnlockStatus::Unlocked, "Unlocked"}, {UnlockStatus::UnlockFailed, "UnlockFailed"}, {UnlockStatus::NotSupported, "NotSupported"}};
 
+} // namespace ocpp16
 } // namespace types
 
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool UnlockConnectorReqConverter::fromJson(const rapidjson::Value& json,
                                            UnlockConnectorReq&     data,
@@ -77,5 +81,6 @@ bool UnlockConnectorConfConverter::toJson(const UnlockConnectorConf& data, rapid
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

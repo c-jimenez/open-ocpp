@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for IdTokenInfoType type */
-class IdTokenInfoTypeConverter : public IMessageConverter<ocpp::types::IdTokenInfoType>
+class IdTokenInfoTypeConverter : public IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::IdTokenInfoType>* IMessageConverter<ocpp::types::IdTokenInfoType>::clone() const */
-    IMessageConverter<ocpp::types::IdTokenInfoType>* clone() const override { return new IdTokenInfoTypeConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>* IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>* clone() const override { return new IdTokenInfoTypeConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::IdTokenInfoType>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::IdTokenInfoType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::IdTokenInfoType&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value&       json,
-                  ocpp::types::IdTokenInfoType& data,
-                  std::string&                  error_code,
-                  std::string&                  error_message) override;
+    bool fromJson(const rapidjson::Value&               json,
+                  ocpp::types::ocpp16::IdTokenInfoType& data,
+                  std::string&                          error_code,
+                  std::string&                          error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::IdTokenInfoType>::toJson(const ocpp::types::IdTokenInfoType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::IdTokenInfoType>::toJson(const ocpp::types::ocpp16::IdTokenInfoType&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::IdTokenInfoType& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::IdTokenInfoType& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

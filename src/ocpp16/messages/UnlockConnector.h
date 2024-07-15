@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the UnlockConnector messages */
 static const std::string UNLOCK_CONNECTOR_ACTION = "UnlockConnector";
@@ -41,12 +43,13 @@ struct UnlockConnectorReq
 struct UnlockConnectorConf
 {
     /** @brief Required. This indicates whether the Charge Point has unlocked the connector */
-    ocpp::types::UnlockStatus status;
+    ocpp::types::ocpp16::UnlockStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(UnlockConnector)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

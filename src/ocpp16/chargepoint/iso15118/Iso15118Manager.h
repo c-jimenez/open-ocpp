@@ -43,6 +43,8 @@ class IOcppConfig;
 } // namespace config
 namespace messages
 {
+namespace ocpp16
+{
 struct CertificateSignedReq;
 struct CertificateSignedConf;
 struct DeleteCertificateReq;
@@ -53,6 +55,7 @@ struct Iso15118InstallCertificateReq;
 struct Iso15118InstallCertificateConf;
 struct Iso15118TriggerMessageReq;
 struct Iso15118TriggerMessageConf;
+} // namespace ocpp16
 } // namespace messages
 namespace helpers
 {
@@ -95,10 +98,11 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
      *                    return 'CertificateRevoked
      * @return Authorization status (see AuthorizationStatus type)
     */
-    ocpp::types::AuthorizationStatus authorize(const ocpp::x509::Certificate&                                          certificate,
-                                               const std::string&                                                      id_token,
-                                               const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-                                               ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status);
+    ocpp::types::ocpp16::AuthorizationStatus authorize(
+        const ocpp::x509::Certificate&                                                  certificate,
+        const std::string&                                                              id_token,
+        const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status);
     /**
      * @brief Get or update an ISO15118 EV certificate
      * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
@@ -107,10 +111,10 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
      * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
      * @return Operation status (see Iso15118EVCertificateStatusEnumType enum)
      */
-    ocpp::types::Iso15118EVCertificateStatusEnumType get15118EVCertificate(const std::string&                     iso15118_schema_version,
-                                                                           ocpp::types::CertificateActionEnumType action,
-                                                                           const std::string&                     exi_request,
-                                                                           std::string&                           exi_response);
+    ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType get15118EVCertificate(const std::string& iso15118_schema_version,
+                                                                                   ocpp::types::ocpp16::CertificateActionEnumType action,
+                                                                                   const std::string& exi_request,
+                                                                                   std::string&       exi_response);
 
     /**
      * @brief Get the status of an ISO15118 certificate
@@ -118,8 +122,8 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
      * @param ocsp_result OCSPResponse class as defined in IETF RFC 6960. DER encoded (as defined in IETF RFC 6960), and then base64 encoded
      * @return Operation status (see GetCertificateStatusEnumType enum)
      */
-    ocpp::types::GetCertificateStatusEnumType getCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                   std::string&                            ocsp_result);
+    ocpp::types::ocpp16::GetCertificateStatusEnumType getCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request,
+                                                                           std::string&                                    ocsp_result);
 
     /**
      * @brief Send a CSR request to sign an ISO15118 certificate
@@ -130,14 +134,14 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
 
     // IDataTransferManager::IDataTransferHandler interface
 
-    /** @copydoc ocpp::types::DataTransferStatus IDataTransferHandler::onDataTransferRequest(const std::string&,
+    /** @copydoc ocpp::types::ocpp16::DataTransferStatus IDataTransferHandler::onDataTransferRequest(const std::string&,
                                                                                              const std::string&,
                                                                                              const std::string&,
                                                                                              std::string&) */
-    ocpp::types::DataTransferStatus onDataTransferRequest(const std::string& vendor_id,
-                                                          const std::string& message_id,
-                                                          const std::string& request_data,
-                                                          std::string&       response_data) override;
+    ocpp::types::ocpp16::DataTransferStatus onDataTransferRequest(const std::string& vendor_id,
+                                                                  const std::string& message_id,
+                                                                  const std::string& request_data,
+                                                                  std::string&       response_data) override;
 
   private:
     /** @brief Standard OCPP configuration */
@@ -179,8 +183,8 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
         auto resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
 
         // Prepare request
-        ocpp::messages::DataTransferReq req;
-        req.vendorId.assign(ocpp::messages::ISO15118_VENDOR_ID);
+        ocpp::messages::ocpp16::DataTransferReq req;
+        req.vendorId.assign(ocpp::messages::ocpp16::ISO15118_VENDOR_ID);
         req.messageId.value().assign(action);
 
         // Convert request to JSON
@@ -194,10 +198,10 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
         req.data.value() = buffer.GetString();
 
         // Send request
-        ocpp::messages::DataTransferConf resp;
-        if (m_msg_sender.call(ocpp::messages::DATA_TRANSFER_ACTION, req, resp) == ocpp::messages::CallResult::Ok)
+        ocpp::messages::ocpp16::DataTransferConf resp;
+        if (m_msg_sender.call(ocpp::messages::ocpp16::DATA_TRANSFER_ACTION, req, resp) == ocpp::messages::CallResult::Ok)
         {
-            if (resp.status == ocpp::types::DataTransferStatus::Accepted)
+            if (resp.status == ocpp::types::ocpp16::DataTransferStatus::Accepted)
             {
                 try
                 {
@@ -223,7 +227,7 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
             }
             else
             {
-                LOG_ERROR << "[ISO15118] Data transfer error : " << ocpp::types::DataTransferStatusHelper.toString(resp.status);
+                LOG_ERROR << "[ISO15118] Data transfer error : " << ocpp::types::ocpp16::DataTransferStatusHelper.toString(resp.status);
             }
         }
 
@@ -238,11 +242,11 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
      * @return Response status (see DataTransferStatus enum)
      */
     template <typename RequestType, typename ResponseType>
-    ocpp::types::DataTransferStatus handle(const std::string& type_id, const std::string& request_data, std::string& response_data)
+    ocpp::types::ocpp16::DataTransferStatus handle(const std::string& type_id, const std::string& request_data, std::string& response_data)
     {
-        ocpp::types::DataTransferStatus status         = ocpp::types::DataTransferStatus::Rejected;
-        auto                            req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
-        auto                            resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
+        ocpp::types::ocpp16::DataTransferStatus status         = ocpp::types::ocpp16::DataTransferStatus::Rejected;
+        auto                                    req_converter  = m_messages_converter.getRequestConverter<RequestType>(type_id);
+        auto                                    resp_converter = m_messages_converter.getResponseConverter<ResponseType>(type_id);
         try
         {
             // Parse JSON
@@ -273,7 +277,7 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
                         response.Accept(writer);
                         response_data = buffer.GetString();
 
-                        status = ocpp::types::DataTransferStatus::Accepted;
+                        status = ocpp::types::ocpp16::DataTransferStatus::Accepted;
                     }
                 }
                 else
@@ -294,19 +298,21 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
     }
 
     /** @brief Handle a CertificateSigned request */
-    void handle(const ocpp::messages::CertificateSignedReq& request, ocpp::messages::CertificateSignedConf& response);
+    void handle(const ocpp::messages::ocpp16::CertificateSignedReq& request, ocpp::messages::ocpp16::CertificateSignedConf& response);
     /** @brief Handle a DeleteCertificate request */
-    void handle(const ocpp::messages::DeleteCertificateReq& request, ocpp::messages::DeleteCertificateConf& response);
+    void handle(const ocpp::messages::ocpp16::DeleteCertificateReq& request, ocpp::messages::ocpp16::DeleteCertificateConf& response);
     /** @brief Handle an Iso15118GetInstalledCertificateIds request */
-    void handle(const ocpp::messages::Iso15118GetInstalledCertificateIdsReq& request,
-                ocpp::messages::Iso15118GetInstalledCertificateIdsConf&      response);
+    void handle(const ocpp::messages::ocpp16::Iso15118GetInstalledCertificateIdsReq& request,
+                ocpp::messages::ocpp16::Iso15118GetInstalledCertificateIdsConf&      response);
     /** @brief Handle an InstallCertificate request */
-    void handle(const ocpp::messages::Iso15118InstallCertificateReq& request, ocpp::messages::Iso15118InstallCertificateConf& response);
+    void handle(const ocpp::messages::ocpp16::Iso15118InstallCertificateReq& request,
+                ocpp::messages::ocpp16::Iso15118InstallCertificateConf&      response);
     /** @brief Handle a TriggerMessage request */
-    void handle(const ocpp::messages::Iso15118TriggerMessageReq& request, ocpp::messages::Iso15118TriggerMessageConf& response);
+    void handle(const ocpp::messages::ocpp16::Iso15118TriggerMessageReq& request,
+                ocpp::messages::ocpp16::Iso15118TriggerMessageConf&      response);
 
     /** @brief Fill the hash information of a certificat */
-    void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info);
+    void fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::ocpp16::CertificateHashDataType& info);
 
     /** @brief Send a CSR request to sign an ISO15118 certificate */
     bool sendSignCertificate();

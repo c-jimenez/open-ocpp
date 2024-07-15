@@ -75,6 +75,7 @@ if(${BUILD_STATIC_LIBRARY})
         config
         database
         messages
+        messages16
         rpc
         helpers
         log
@@ -99,6 +100,7 @@ if (${BUILD_SHARED_LIBRARY})
         config
         database
         messages
+        messages16
         rpc
         helpers
         log

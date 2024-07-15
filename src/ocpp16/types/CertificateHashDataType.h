@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief CertificateHashDataType is used by: DeleteCertificate.req, GetInstalledCertificateIds.conf */
 struct CertificateHashDataType
@@ -40,6 +42,7 @@ struct CertificateHashDataType
     CiStringType<40u> serialNumber;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

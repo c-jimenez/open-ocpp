@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetCompositeSchedule messages */
 static const std::string GET_COMPOSITE_SCHEDULE_ACTION = "GetCompositeSchedule";
@@ -42,7 +44,7 @@ struct GetCompositeScheduleReq
     /** @brief Required. Time in seconds. length of requested schedule */
     unsigned int duration;
     /** @brief Optional. Can be used to force a power or current profile */
-    ocpp::types::Optional<ocpp::types::ChargingRateUnitType> chargingRateUnit;
+    ocpp::types::Optional<ocpp::types::ocpp16::ChargingRateUnitType> chargingRateUnit;
 };
 
 /** @brief GetCompositeSchedule.conf message */
@@ -50,7 +52,7 @@ struct GetCompositeScheduleConf
 {
     /** @brief Required. Status of the request. The Charge Point will indicate if it
                was able to process the request */
-    ocpp::types::GetCompositeScheduleStatus status;
+    ocpp::types::ocpp16::GetCompositeScheduleStatus status;
     /** @brief Optional. The charging schedule contained in this notification
                applies to a Connector */
     ocpp::types::Optional<unsigned int> connectorId;
@@ -61,12 +63,13 @@ struct GetCompositeScheduleConf
     /** @brief Optional. Planned Composite Charging Schedule, the energy
                consumption over time. Always relative to ScheduleStart.
                If status is "Rejected", this field may be absent */
-    ocpp::types::Optional<ocpp::types::ChargingSchedule> chargingSchedule;
+    ocpp::types::Optional<ocpp::types::ocpp16::ChargingSchedule> chargingSchedule;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(GetCompositeSchedule)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

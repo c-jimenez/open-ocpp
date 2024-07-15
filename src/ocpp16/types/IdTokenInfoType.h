@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Contains status information about an identifier */
 struct IdTokenInfoType
@@ -37,6 +39,7 @@ struct IdTokenInfoType
     Optional<DateTime> cacheExpiryDateTime;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

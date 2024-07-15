@@ -26,28 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for MeterValue type */
-class MeterValueConverter : public IMessageConverter<ocpp::types::MeterValue>
+class MeterValueConverter : public IMessageConverter<ocpp::types::ocpp16::MeterValue>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::MeterValue>* IMessageConverter<ocpp::types::MeterValue>::clone() const */
-    IMessageConverter<ocpp::types::MeterValue>* clone() const override { return new MeterValueConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::MeterValue>* IMessageConverter<ocpp::types::ocpp16::MeterValue>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::MeterValue>* clone() const override { return new MeterValueConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::MeterValue&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::MeterValue>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::MeterValue&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value&  json,
-                  ocpp::types::MeterValue& data,
-                  std::string&             error_code,
-                  std::string&             error_message) override;
+    bool fromJson(const rapidjson::Value&          json,
+                  ocpp::types::ocpp16::MeterValue& data,
+                  std::string&                     error_code,
+                  std::string&                     error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::MeterValue>::toJson(const ocpp::types::MeterValue&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::MeterValue>::toJson(const ocpp::types::ocpp16::MeterValue&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::MeterValue& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::MeterValue& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

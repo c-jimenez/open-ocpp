@@ -21,10 +21,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Url.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 
 /** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
@@ -35,8 +38,11 @@ const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusE
     {UpdateFirmwareStatusEnumType::InvalidCertificate, "InvalidCertificate"},
     {UpdateFirmwareStatusEnumType::RevokedCertificate, "RevokedCertificate"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -102,5 +108,6 @@ bool SignedUpdateFirmwareConfConverter::toJson(const SignedUpdateFirmwareConf& d
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SetChargingProfile messages */
 static const std::string SET_CHARGING_PROFILE_ACTION = "SetChargingProfile";
@@ -38,7 +40,7 @@ struct SetChargingProfileReq
                the message contains an overall limit for the Charge Point */
     unsigned int connectorId;
     /** @brief Required. The charging profile to be set at the Charge Point */
-    ocpp::types::ChargingProfile csChargingProfiles;
+    ocpp::types::ocpp16::ChargingProfile csChargingProfiles;
 };
 
 /** @brief SetChargingProfile.conf message */
@@ -48,12 +50,13 @@ struct SetChargingProfileConf
                message successfully. This does not guarantee the schedule will be followed to
                the letter. There might be other constraints the Charge Point may need to take
                into account */
-    ocpp::types::ChargingProfileStatus status;
+    ocpp::types::ocpp16::ChargingProfileStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(SetChargingProfile)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 
