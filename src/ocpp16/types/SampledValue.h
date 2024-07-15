@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Single sampled value in MeterValues. Each value can be accompanied by optional fields */
 struct SampledValue
@@ -55,6 +57,7 @@ struct SampledValue
     Optional<UnitOfMeasure> unit;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

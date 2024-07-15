@@ -22,20 +22,23 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::fromJson(const rapidjson::Value&,
- *                                                                    ocpp::types::ChargingProfile&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingProfile>::fromJson(const rapidjson::Value&,
+ *                                                                    ocpp::types::ocpp16::ChargingProfile&,
  *                                                                    std::string&,
  *                                                                    std::string&) */
-bool ChargingProfileConverter::fromJson(const rapidjson::Value&       json,
-                                        ocpp::types::ChargingProfile& data,
-                                        std::string&                  error_code,
-                                        std::string&                  error_message)
+bool ChargingProfileConverter::fromJson(const rapidjson::Value&               json,
+                                        ocpp::types::ocpp16::ChargingProfile& data,
+                                        std::string&                          error_code,
+                                        std::string&                          error_message)
 {
     bool ret;
     extract(json, "chargingProfileId", data.chargingProfileId);
@@ -60,9 +63,9 @@ bool ChargingProfileConverter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::ChargingProfile>::toJson(const ocpp::types::ChargingProfile&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::ChargingProfile>::toJson(const ocpp::types::ocpp16::ChargingProfile&,
  *                                                                  rapidjson::Document&) */
-bool ChargingProfileConverter::toJson(const ocpp::types::ChargingProfile& data, rapidjson::Document& json)
+bool ChargingProfileConverter::toJson(const ocpp::types::ocpp16::ChargingProfile& data, rapidjson::Document& json)
 {
     fill(json, "chargingProfileId", data.chargingProfileId);
     fill(json, "transactionId", data.transactionId);
@@ -86,5 +89,6 @@ bool ChargingProfileConverter::toJson(const ocpp::types::ChargingProfile& data, 
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

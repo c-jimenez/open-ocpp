@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the DiagnosticsStatusNotification messages */
 static const std::string DIAGNOSTIC_STATUS_NOTIFICATION_ACTION = "DiagnosticsStatusNotification";
@@ -34,7 +36,7 @@ static const std::string DIAGNOSTIC_STATUS_NOTIFICATION_ACTION = "DiagnosticsSta
 struct DiagnosticsStatusNotificationReq
 {
     /** @brief Required. This contains the status of the diagnostics upload */
-    ocpp::types::DiagnosticsStatus status;
+    ocpp::types::ocpp16::DiagnosticsStatus status;
 };
 
 /** @brief DiagnosticsStatusNotification.conf message */
@@ -46,6 +48,7 @@ struct DiagnosticsStatusNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(DiagnosticsStatusNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -20,10 +20,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a ChargePointErrorCode enum to string */
 const EnumToStringFromString<ChargePointErrorCode> ChargePointErrorCodeHelper = {
@@ -55,8 +58,11 @@ const EnumToStringFromString<ChargePointStatus> ChargePointStatusHelper = {{Char
                                                                            {ChargePointStatus::SuspendedEVSE, "SuspendedEVSE"},
                                                                            {ChargePointStatus::Unavailable, "Unavailable"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -117,5 +123,6 @@ bool StatusNotificationConfConverter::toJson(const StatusNotificationConf& data,
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

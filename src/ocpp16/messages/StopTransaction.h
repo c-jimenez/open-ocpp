@@ -31,6 +31,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the StopTransaction messages */
 static const std::string STOP_TRANSACTION_ACTION = "StopTransaction";
@@ -41,7 +43,7 @@ struct StopTransactionReq
     /** @brief Optional. This contains the identifier which requested to stop the charging. It is
                optional because a Charge Point may terminate charging without the presence
                of an idTag, e.g. in case of a reset. A Charge Point SHALL send the idTag if known */
-    ocpp::types::Optional<ocpp::types::IdToken> idTag;
+    ocpp::types::Optional<ocpp::types::ocpp16::IdToken> idTag;
     /** @brief Required. This contains the meter value in Wh for the connector at end of the
                transaction */
     int meterStop;
@@ -52,9 +54,9 @@ struct StopTransactionReq
     int transactionId;
     /** @brief Optional. This contains the reason why the transaction was stopped. MAY only
                be omitted when the Reason is "Local". */
-    ocpp::types::Optional<ocpp::types::Reason> reason;
+    ocpp::types::Optional<ocpp::types::ocpp16::Reason> reason;
     /** @brief Optional. This contains transaction usage details relevant for billing purposes */
-    std::vector<ocpp::types::MeterValue> transactionData;
+    std::vector<ocpp::types::ocpp16::MeterValue> transactionData;
 };
 
 /** @brief StopTransaction.conf message */
@@ -63,12 +65,13 @@ struct StopTransactionConf
     /** @brief Optional. This contains information about authorization status, expiry and
                parent id. It is optional, because a transaction may have been stopped without
                an identifier */
-    ocpp::types::Optional<ocpp::types::IdTagInfo> idTagInfo;
+    ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> idTagInfo;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(StopTransaction)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -39,6 +39,7 @@ SOFTWARE.
 using namespace std;
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 /** @brief Constructor */
@@ -159,8 +160,8 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::disconnected(
     m_event_handler.removeChargePoint(m_chargepoint->identifier());
 }
 
-/** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */
-ocpp::types::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHandler::authorize(const std::string& id_tag)
+/** @copydoc ocpp::types::ocpp16::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */
+ocpp::types::ocpp16::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHandler::authorize(const std::string& id_tag)
 {
     cout << "[" << m_chargepoint->identifier() << "] - Authorize : " << id_tag << endl;
 
@@ -170,7 +171,7 @@ ocpp::types::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHand
     return tag_info;
 }
 
-/** @copydoc ocpp::types::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
+/** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
                                                                                           const std::string&,
                                                                                           const std::string&,
                                                                                           const std::string&,
@@ -178,7 +179,7 @@ ocpp::types::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHand
                                                                                           const std::string&,
                                                                                           const std::string&,
                                                                                           const std::string&) */
-ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRequestHandler::bootNotification(
+ocpp::types::ocpp16::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRequestHandler::bootNotification(
     const std::string& model,
     const std::string& serial_number,
     const std::string& vendor,
@@ -196,7 +197,7 @@ ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRe
     cout << "[" << m_chargepoint->identifier() << "] - Boot notification : vendor = " << vendor << " - model = " << model
          << " - s/n = " << serial_number << " - firmware = " << firmware_version << endl;
 
-    ocpp::types::RegistrationStatus ret = RegistrationStatus::Accepted;
+    ocpp::types::ocpp16::RegistrationStatus ret = RegistrationStatus::Accepted;
     if (m_event_handler.setPendingEnabled())
     {
         if (!m_event_handler.isAcceptedChargePoint(m_chargepoint->identifier()))
@@ -209,14 +210,12 @@ ocpp::types::RegistrationStatus DefaultCentralSystemEventsHandler::ChargePointRe
     return ret;
 }
 
-/** @copydoc ocpp::types::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
+/** @copydoc ocpp::types::ocpp16::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
                                                                                       const std::string&,
                                                                                       const std::string&,
                                                                                       std::string&) */
-ocpp::types::DataTransferStatus DefaultCentralSystemEventsHandler::ChargePointRequestHandler::dataTransfer(const std::string& vendor_id,
-                                                                                                           const std::string& message_id,
-                                                                                                           const std::string& request_data,
-                                                                                                           std::string&       response_data)
+ocpp::types::ocpp16::DataTransferStatus DefaultCentralSystemEventsHandler::ChargePointRequestHandler::dataTransfer(
+    const std::string& vendor_id, const std::string& message_id, const std::string& request_data, std::string& response_data)
 {
     cout << "[" << m_chargepoint->identifier() << "] - Data transfer : vendor = " << vendor_id << " - message = " << message_id
          << " - data = " << request_data << endl;
@@ -225,25 +224,27 @@ ocpp::types::DataTransferStatus DefaultCentralSystemEventsHandler::ChargePointRe
     return DataTransferStatus::UnknownVendorId;
 }
 
-/** @copydoc void IChargePointRequestHandler::diagnosticStatusNotification(ocpp::types::DiagnosticsStatus) */
-void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::diagnosticStatusNotification(ocpp::types::DiagnosticsStatus status)
+/** @copydoc void IChargePointRequestHandler::diagnosticStatusNotification(ocpp::types::ocpp16::DiagnosticsStatus) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::diagnosticStatusNotification(
+    ocpp::types::ocpp16::DiagnosticsStatus status)
 {
     cout << "[" << m_chargepoint->identifier() << "] - Diagnostic status notification : " << DiagnosticsStatusHelper.toString(status)
          << endl;
 }
 
-/** @copydoc void IChargePointRequestHandler::firmwareStatusNotification(ocpp::types::FirmwareStatus) */
-void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::firmwareStatusNotification(ocpp::types::FirmwareStatus status)
+/** @copydoc void IChargePointRequestHandler::firmwareStatusNotification(ocpp::types::ocpp16::FirmwareStatus) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::firmwareStatusNotification(ocpp::types::ocpp16::FirmwareStatus status)
 {
     cout << "[" << m_chargepoint->identifier() << "] - Firmware status notification : " << FirmwareStatusHelper.toString(status) << endl;
 }
 
 /** @copydoc void IChargePointRequestHandler::meterValues(unsigned int,
                                                           const ocpp::types::Optional<int>&,
-                                                          const std::vector<ocpp::types::MeterValue>&) */
-void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::meterValues(unsigned int                                connector_id,
-                                                                               const ocpp::types::Optional<int>&           transaction_id,
-                                                                               const std::vector<ocpp::types::MeterValue>& meter_values)
+                                                          const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::meterValues(
+    unsigned int                                        connector_id,
+    const ocpp::types::Optional<int>&                   transaction_id,
+    const std::vector<ocpp::types::ocpp16::MeterValue>& meter_values)
 {
     cout << "[" << m_chargepoint->identifier() << "] - Meter values : connector = " << connector_id
          << " - transaction = " << (transaction_id.isSet() ? std::to_string(transaction_id) : "not set") << endl;
@@ -282,13 +283,13 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::meterValues(u
     }
 }
 
-/** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::startTransaction(unsigned int,
+/** @copydoc ocpp::types::ocpp16::IdTagInfo IChargePointRequestHandler::startTransaction(unsigned int,
                                                                                  const std::string&,
                                                                                  int,
                                                                                  const ocpp::types::Optional<int>&,
                                                                                  const ocpp::types::DateTime&,
                                                                                  int&) */
-ocpp::types::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHandler::startTransaction(
+ocpp::types::ocpp16::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHandler::startTransaction(
     unsigned int                      connector_id,
     const std::string&                id_tag,
     int                               meter_start,
@@ -313,19 +314,19 @@ ocpp::types::IdTagInfo DefaultCentralSystemEventsHandler::ChargePointRequestHand
 }
 
 /** @copydoc void IChargePointRequestHandler::statusNotification(unsigned int,
-                                                                 ocpp::types::ChargePointErrorCode,
+                                                                 ocpp::types::ocpp16::ChargePointErrorCode,
                                                                  const std::string&,
-                                                                 ocpp::types::ChargePointStatus,
+                                                                 ocpp::types::ocpp16::ChargePointStatus,
                                                                  const ocpp::types::DateTime&,
                                                                  const std::string&,
                                                                  const std::string&) */
-void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::statusNotification(unsigned int                      connector_id,
-                                                                                      ocpp::types::ChargePointErrorCode error_code,
-                                                                                      const std::string&                info,
-                                                                                      ocpp::types::ChargePointStatus    status,
-                                                                                      const ocpp::types::DateTime&      timestamp,
-                                                                                      const std::string&                vendor_id,
-                                                                                      const std::string&                vendor_error)
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::statusNotification(unsigned int connector_id,
+                                                                                      ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                                                                                      const std::string&                        info,
+                                                                                      ocpp::types::ocpp16::ChargePointStatus    status,
+                                                                                      const ocpp::types::DateTime&              timestamp,
+                                                                                      const std::string&                        vendor_id,
+                                                                                      const std::string& vendor_error)
 {
     (void)vendor_id;
     (void)vendor_error;
@@ -335,27 +336,27 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::statusNotific
          << " - info = " << info << " - timestamp = " << ((timestamp == DateTime(0)) ? "not set" : timestamp.str()) << endl;
 }
 
-/** @copydoc ocpp::types::Optional<ocpp::types::IdTagInfo> IChargePointRequestHandler::stopTransaction(
+/** @copydoc ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> IChargePointRequestHandler::stopTransaction(
                                                                                 const std::string&,
                                                                                 int,
                                                                                 const ocpp::types::DateTime&,
                                                                                 int,
-                                                                                ocpp::types::Reason,
-                                                                                const std::vector<ocpp::types::MeterValue>&) */
-ocpp::types::Optional<ocpp::types::IdTagInfo> DefaultCentralSystemEventsHandler::ChargePointRequestHandler::stopTransaction(
-    const std::string&                          id_tag,
-    int                                         meter_stop,
-    const ocpp::types::DateTime&                timestamp,
-    int                                         transaction_id,
-    ocpp::types::Reason                         reason,
-    const std::vector<ocpp::types::MeterValue>& transaction_data)
+                                                                                ocpp::types::ocpp16::Reason,
+                                                                                const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> DefaultCentralSystemEventsHandler::ChargePointRequestHandler::stopTransaction(
+    const std::string&                                  id_tag,
+    int                                                 meter_stop,
+    const ocpp::types::DateTime&                        timestamp,
+    int                                                 transaction_id,
+    ocpp::types::ocpp16::Reason                         reason,
+    const std::vector<ocpp::types::ocpp16::MeterValue>& transaction_data)
 {
     (void)transaction_data;
     cout << "[" << m_chargepoint->identifier() << "] - Stop transaction : transaction = " << transaction_id
          << " - id tag = " << (id_tag.empty() ? "not set" : id_tag) << " - meter stop = " << meter_stop
          << " - reason = " << ReasonHelper.toString(reason) << " - timestamp = " << timestamp.str() << endl;
 
-    ocpp::types::Optional<ocpp::types::IdTagInfo> ret;
+    ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> ret;
     if (!id_tag.empty())
     {
         IdTagInfo& tag_info = ret.value();
@@ -367,9 +368,9 @@ ocpp::types::Optional<ocpp::types::IdTagInfo> DefaultCentralSystemEventsHandler:
 
 // Security extensions
 
-/** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
-void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType status,
-                                                                                         const ocpp::types::Optional<int>&    request_id)
+/** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::ocpp16::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
+void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::logStatusNotification(
+    ocpp::types::ocpp16::UploadLogStatusEnumType status, const ocpp::types::Optional<int>& request_id)
 {
     cout << "[" << m_chargepoint->identifier()
          << "] - Log status notification : status = " << UploadLogStatusEnumTypeHelper.toString(status)
@@ -472,10 +473,10 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
     return ret;
 }
 
-/** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType,
+/** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::ocpp16::FirmwareStatusEnumType,
                                                                                              const ocpp::types::Optional<int>&) */
 void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwareUpdateStatusNotification(
-    ocpp::types::FirmwareStatusEnumType status, const ocpp::types::Optional<int>& request_id)
+    ocpp::types::ocpp16::FirmwareStatusEnumType status, const ocpp::types::Optional<int>& request_id)
 {
     cout << "[" << m_chargepoint->identifier()
          << "] - Signed firmware update status notification : status = " << FirmwareStatusEnumTypeHelper.toString(status)
@@ -484,22 +485,22 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwar
 
 // ISO 15118 PnC extensions
 
-/** @copydoc ocpp::types::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
+/** @copydoc ocpp::types::ocpp16::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
                                                           const ocpp::x509::Certificate&,
                                                           const std::string&,
-                                                          const std::vector<ocpp::types::OcspRequestDataType>&,
-                                                          ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) override; */
-ocpp::types::IdTokenInfoType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118Authorize(
-    const ocpp::x509::Certificate&                                          certificate,
-    const std::string&                                                      id_token,
-    const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status)
+                                                          const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
+                                                          ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) override; */
+ocpp::types::ocpp16::IdTokenInfoType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118Authorize(
+    const ocpp::x509::Certificate&                                                  certificate,
+    const std::string&                                                              id_token,
+    const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status)
 {
     cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Authorize : certificate = " << certificate.pem().size()
          << " - id_token = " << id_token << " - cert_hash_data size = " << cert_hash_data.size() << endl;
 
     // Prepare response
-    ocpp::types::IdTokenInfoType ret;
+    ocpp::types::ocpp16::IdTokenInfoType ret;
     ret.status = AuthorizationStatus::Invalid;
 
     // Check certificate if present
@@ -522,16 +523,16 @@ ocpp::types::IdTokenInfoType DefaultCentralSystemEventsHandler::ChargePointReque
     return ret;
 }
 
-/** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
+/** @copydoc ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
                                                           const std::string&,
-                                                          ocpp::types::CertificateActionEnumType,
+                                                          ocpp::types::ocpp16::CertificateActionEnumType,
                                                           const std::string&,
                                                           std::string&) */
-ocpp::types::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118GetEVCertificate(
-    const std::string&                     iso15118_schema_version,
-    ocpp::types::CertificateActionEnumType action,
-    const std::string&                     exi_request,
-    std::string&                           exi_response)
+ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::
+    iso15118GetEVCertificate(const std::string&                             iso15118_schema_version,
+                             ocpp::types::ocpp16::CertificateActionEnumType action,
+                             const std::string&                             exi_request,
+                             std::string&                                   exi_response)
 {
     cout << "[" << m_chargepoint->identifier()
          << "] - [ISO15118] Get EV certificate : iso15118_schema_version = " << iso15118_schema_version
@@ -565,11 +566,11 @@ ocpp::types::Iso15118EVCertificateStatusEnumType DefaultCentralSystemEventsHandl
     return Iso15118EVCertificateStatusEnumType::Accepted;
 }
 
-/** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
-                                                          const ocpp::types::OcspRequestDataType&,
+/** @copydoc ocpp::types::ocpp16::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
+                                                          const ocpp::types::ocpp16::OcspRequestDataType&,
                                                           std::string&) */
-ocpp::types::GetCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118GetCertificateStatus(
-    const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
+ocpp::types::ocpp16::GetCertificateStatusEnumType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::
+    iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
 {
 
     cout << "[" << m_chargepoint->identifier()

@@ -25,6 +25,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Setpoint computed by OCPP smart charging */
 struct SmartChargingSetpoint
@@ -37,6 +39,7 @@ struct SmartChargingSetpoint
     Optional<float> min_charging_rate;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

@@ -38,8 +38,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <thread>
 
 using namespace ocpp::x509;
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -74,11 +76,11 @@ Iso15118Manager::Iso15118Manager(ocpp::config::IOcppConfig&                     
 Iso15118Manager::~Iso15118Manager() { }
 
 /** @brief Authorize an ISO15118 transaction */
-ocpp::types::AuthorizationStatus Iso15118Manager::authorize(
-    const ocpp::x509::Certificate&                                          certificate,
-    const std::string&                                                      id_token,
-    const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status)
+ocpp::types::ocpp16::AuthorizationStatus Iso15118Manager::authorize(
+    const ocpp::x509::Certificate&                                                  certificate,
+    const std::string&                                                              id_token,
+    const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status)
 {
     LOG_INFO << "[ISO15118] Authorize : token = " << id_token;
 
@@ -136,10 +138,11 @@ ocpp::types::AuthorizationStatus Iso15118Manager::authorize(
 }
 
 /** @brief Get or update an ISO15118 EV certificate */
-ocpp::types::Iso15118EVCertificateStatusEnumType Iso15118Manager::get15118EVCertificate(const std::string& iso15118_schema_version,
-                                                                                        ocpp::types::CertificateActionEnumType action,
-                                                                                        const std::string&                     exi_request,
-                                                                                        std::string&                           exi_response)
+ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType Iso15118Manager::get15118EVCertificate(
+    const std::string&                             iso15118_schema_version,
+    ocpp::types::ocpp16::CertificateActionEnumType action,
+    const std::string&                             exi_request,
+    std::string&                                   exi_response)
 {
     LOG_INFO << "[ISO15118] Get EV certificate : schema version = " << iso15118_schema_version
              << " - action = " << CertificateActionEnumTypeHelper.toString(action);
@@ -167,8 +170,8 @@ ocpp::types::Iso15118EVCertificateStatusEnumType Iso15118Manager::get15118EVCert
 }
 
 /** @brief Get the status of an ISO15118 certificate */
-ocpp::types::GetCertificateStatusEnumType Iso15118Manager::getCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                                std::string&                            ocsp_result)
+ocpp::types::ocpp16::GetCertificateStatusEnumType Iso15118Manager::getCertificateStatus(
+    const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result)
 {
     LOG_INFO << "[ISO15118] Get certificate status : serial number = " << ocsp_request.serialNumber.c_str()
              << " - responder = " << ocsp_request.responderURL.c_str();
@@ -209,14 +212,14 @@ bool Iso15118Manager::signCertificate(const ocpp::x509::CertificateRequest& csr)
 
 // IDataTransferManager::IDataTransferHandler interface
 
-/** @copydoc ocpp::types::DataTransferStatus IDataTransferHandler::onDataTransferRequest(const std::string&,
+/** @copydoc ocpp::types::ocpp16::DataTransferStatus IDataTransferHandler::onDataTransferRequest(const std::string&,
                                                                                          const std::string&,
                                                                                             const std::string&,
                                                                                             std::string&) */
-ocpp::types::DataTransferStatus Iso15118Manager::onDataTransferRequest(const std::string& vendor_id,
-                                                                       const std::string& message_id,
-                                                                       const std::string& request_data,
-                                                                       std::string&       response_data)
+ocpp::types::ocpp16::DataTransferStatus Iso15118Manager::onDataTransferRequest(const std::string& vendor_id,
+                                                                               const std::string& message_id,
+                                                                               const std::string& request_data,
+                                                                               std::string&       response_data)
 {
     (void)vendor_id;
     (void)request_data;
@@ -273,7 +276,8 @@ ocpp::types::DataTransferStatus Iso15118Manager::onDataTransferRequest(const std
 }
 
 /** @brief Handle a CertificateSigned request */
-void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request, ocpp::messages::CertificateSignedConf& response)
+void Iso15118Manager::handle(const ocpp::messages::ocpp16::CertificateSignedReq& request,
+                             ocpp::messages::ocpp16::CertificateSignedConf&      response)
 {
     LOG_INFO << "[ISO15118] Certificate signed message received : certificate size = " << request.certificateChain.size();
 
@@ -309,7 +313,8 @@ void Iso15118Manager::handle(const ocpp::messages::CertificateSignedReq& request
 }
 
 /** @brief Handle a DeleteCertificate request */
-void Iso15118Manager::handle(const ocpp::messages::DeleteCertificateReq& request, ocpp::messages::DeleteCertificateConf& response)
+void Iso15118Manager::handle(const ocpp::messages::ocpp16::DeleteCertificateReq& request,
+                             ocpp::messages::ocpp16::DeleteCertificateConf&      response)
 {
     LOG_INFO << "[ISO15118] Delete certificate request received : hashAlgorithm = "
              << HashAlgorithmEnumTypeHelper.toString(request.certificateHashData.hashAlgorithm)
@@ -327,8 +332,8 @@ void Iso15118Manager::handle(const ocpp::messages::DeleteCertificateReq& request
 }
 
 /** @brief Handle an Iso15118GetInstalledCertificateIds request */
-void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertificateIdsReq& request,
-                             ocpp::messages::Iso15118GetInstalledCertificateIdsConf&      response)
+void Iso15118Manager::handle(const ocpp::messages::ocpp16::Iso15118GetInstalledCertificateIdsReq& request,
+                             ocpp::messages::ocpp16::Iso15118GetInstalledCertificateIdsConf&      response)
 {
     LOG_INFO << "[ISO15118] Get installed certificate ids request received : certificateType count = " << request.certificateType.size();
 
@@ -401,8 +406,8 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
 }
 
 /** @brief Handle an InstallCertificate request */
-void Iso15118Manager::handle(const ocpp::messages::Iso15118InstallCertificateReq& request,
-                             ocpp::messages::Iso15118InstallCertificateConf&      response)
+void Iso15118Manager::handle(const ocpp::messages::ocpp16::Iso15118InstallCertificateReq& request,
+                             ocpp::messages::ocpp16::Iso15118InstallCertificateConf&      response)
 {
     LOG_INFO << "[ISO15118] Install certificate request received : certificateType = "
              << InstallCertificateUseEnumTypeHelper.toString(request.certificateType)
@@ -423,7 +428,8 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118InstallCertificateReq
 }
 
 /** @brief Handle a TriggerMessage request */
-void Iso15118Manager::handle(const ocpp::messages::Iso15118TriggerMessageReq& request, ocpp::messages::Iso15118TriggerMessageConf& response)
+void Iso15118Manager::handle(const ocpp::messages::ocpp16::Iso15118TriggerMessageReq& request,
+                             ocpp::messages::ocpp16::Iso15118TriggerMessageConf&      response)
 {
     (void)request;
 
@@ -448,7 +454,7 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118TriggerMessageReq& re
 }
 
 /** @brief Fill the hash information of a certificat */
-void Iso15118Manager::fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::CertificateHashDataType& info)
+void Iso15118Manager::fillHashInfo(const ocpp::x509::Certificate& certificate, ocpp::types::ocpp16::CertificateHashDataType& info)
 {
     // Compute hashes with SHA-256 algorithm
     Sha2 sha256;

@@ -25,7 +25,8 @@ namespace ocpp
 {
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool HeartbeatReqConverter::fromJson(const rapidjson::Value& json, HeartbeatReq& data, std::string& error_code, std::string& error_message)
 {
@@ -65,5 +66,6 @@ bool HeartbeatConfConverter::toJson(const HeartbeatConf& data, rapidjson::Docume
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

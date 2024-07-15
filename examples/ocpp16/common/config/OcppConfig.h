@@ -43,11 +43,11 @@ class OcppConfig : public ocpp::config::IOcppConfig
     ///
 
     /** @copydoc void IOcppConfig::getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>&,
-     *                                              std::vector<ocpp::types::KeyValue>&,
+     *                                              std::vector<ocpp::types::ocpp16::KeyValue>&,
      *                                              std::vector<ocpp::types::CiStringType<50u>>&);
      */
     void getConfiguration(const std::vector<ocpp::types::CiStringType<50u>>& keys,
-                          std::vector<ocpp::types::KeyValue>&                values,
+                          std::vector<ocpp::types::ocpp16::KeyValue>&        values,
                           std::vector<ocpp::types::CiStringType<50u>>&       unknown_values) override;
 
     ///
@@ -55,7 +55,7 @@ class OcppConfig : public ocpp::config::IOcppConfig
     ///
 
     /** @copydoc ConfigurationStatus IOcppConfig::setConfiguration(const std::string&, const std::string&) */
-    ocpp::types::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override;
+    ocpp::types::ocpp16::ConfigurationStatus setConfiguration(const std::string& key, const std::string& value) override;
 
     //
     // Specific getters

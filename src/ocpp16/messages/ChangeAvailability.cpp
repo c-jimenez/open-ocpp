@@ -20,10 +20,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a AvailabilityType enum to string */
 const EnumToStringFromString<AvailabilityType> AvailabilityTypeHelper = {{AvailabilityType::Inoperative, "Inoperative"},
@@ -33,8 +36,11 @@ const EnumToStringFromString<AvailabilityType> AvailabilityTypeHelper = {{Availa
 const EnumToStringFromString<AvailabilityStatus> AvailabilityStatusHelper = {
     {AvailabilityStatus::Accepted, "Accepted"}, {AvailabilityStatus::Rejected, "Rejected"}, {AvailabilityStatus::Scheduled, "Scheduled"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -80,5 +86,6 @@ bool ChangeAvailabilityConfConverter::toJson(const ChangeAvailabilityConf& data,
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

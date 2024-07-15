@@ -47,10 +47,10 @@ class ChargePointEventsHandler : public DefaultChargePointEventsHandler
     /** @copydoc int IChargePointEventsHandler::getTxStartStopMeterValue(unsigned int) */
     int getTxStartStopMeterValue(unsigned int connector_id) override;
 
-    /** @copydoc bool IChargePointEventsHandler::getMeterValue(unsigned int, const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>&, ocpp::types::MeterValue&) */
-    bool getMeterValue(unsigned int                                                                        connector_id,
-                       const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>& measurand,
-                       ocpp::types::MeterValue&                                                            meter_value) override;
+    /** @copydoc bool IChargePointEventsHandler::getMeterValue(unsigned int, const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>&, ocpp::types::ocpp16::MeterValue&) */
+    bool getMeterValue(unsigned int                                                                                        connector_id,
+                       const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>& measurand,
+                       ocpp::types::ocpp16::MeterValue& meter_value) override;
 
     // API
 

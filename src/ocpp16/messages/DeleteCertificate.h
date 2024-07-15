@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the DeleteCertificate messages */
 static const std::string DELETE_CERTIFICATE_ACTION = "DeleteCertificate";
@@ -35,19 +37,20 @@ static const std::string DELETE_CERTIFICATE_ACTION = "DeleteCertificate";
 struct DeleteCertificateReq
 {
     /** @brief Required. Indicates the certificate of which deletion is requested */
-    ocpp::types::CertificateHashDataType certificateHashData;
+    ocpp::types::ocpp16::CertificateHashDataType certificateHashData;
 };
 
 /** @brief DeleteCertificate.conf message */
 struct DeleteCertificateConf
 {
     /** @brief Required. Charge Point indicates if it can process the request */
-    ocpp::types::DeleteCertificateStatusEnumType status;
+    ocpp::types::ocpp16::DeleteCertificateStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(DeleteCertificate)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

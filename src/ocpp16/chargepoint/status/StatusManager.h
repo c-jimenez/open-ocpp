@@ -51,11 +51,11 @@ class Connectors;
 class IChargePointEventsHandler;
 
 /** @brief Handle charge point status (boot notification, status notification, heartbeat) */
-class StatusManager
-    : public IStatusManager,
-      public ITriggerMessageManager::ITriggerMessageHandler,
-      public ITriggerMessageManager::IExtendedTriggerMessageHandler,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::ChangeAvailabilityReq, ocpp::messages::ChangeAvailabilityConf>
+class StatusManager : public IStatusManager,
+                      public ITriggerMessageManager::ITriggerMessageHandler,
+                      public ITriggerMessageManager::IExtendedTriggerMessageHandler,
+                      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ChangeAvailabilityReq,
+                                                                   ocpp::messages::ocpp16::ChangeAvailabilityConf>
 {
   public:
     /** @brief Constructor */
@@ -76,39 +76,40 @@ class StatusManager
 
     // IStatusManager interface
 
-    /** @copydoc ocpp::types::RegistrationStatus IStatusManager::getRegistrationStatus() */
-    ocpp::types::RegistrationStatus getRegistrationStatus() override { return m_registration_status; }
+    /** @copydoc ocpp::types::ocpp16::RegistrationStatus IStatusManager::getRegistrationStatus() */
+    ocpp::types::ocpp16::RegistrationStatus getRegistrationStatus() override { return m_registration_status; }
 
-    /** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::RegistrationStatus) */
-    void forceRegistrationStatus(ocpp::types::RegistrationStatus status) override;
+    /** @copydoc void IStatusManager::forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus) */
+    void forceRegistrationStatus(ocpp::types::ocpp16::RegistrationStatus status) override;
 
     /** @copydoc void IStatusManager::updateConnectionStatus(bool) */
     void updateConnectionStatus(bool is_connected) override;
 
     /** @copydoc bool IStatusManager::updateConnectorStatus(unsigned int,
-     *                                                      ocpp::types::ChargePointStatus,
-     *                                                      ocpp::types::ChargePointErrorCode,
+     *                                                      ocpp::types::ocpp16::ChargePointStatus,
+     *                                                      ocpp::types::ocpp16::ChargePointErrorCode,
      *                                                      const std::string&,
      *                                                      const std::string&,
      *                                                      const std::string&)
     */
-    bool updateConnectorStatus(unsigned int                      connector_id,
-                               ocpp::types::ChargePointStatus    status,
-                               ocpp::types::ChargePointErrorCode error_code   = ocpp::types::ChargePointErrorCode::NoError,
-                               const std::string&                info         = "",
-                               const std::string&                vendor_id    = "",
-                               const std::string&                vendor_error = "") override;
+    bool updateConnectorStatus(unsigned int                              connector_id,
+                               ocpp::types::ocpp16::ChargePointStatus    status,
+                               ocpp::types::ocpp16::ChargePointErrorCode error_code   = ocpp::types::ocpp16::ChargePointErrorCode::NoError,
+                               const std::string&                        info         = "",
+                               const std::string&                        vendor_id    = "",
+                               const std::string&                        vendor_error = "") override;
 
     /** @copydoc void IStatusManager::resetHeartBeatTimer() */
     void resetHeartBeatTimer() override;
 
     // ITriggerMessageHandler interfaces
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    /** @copydoc bool ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType, const ocpp::types::Optional<unsigned int>&) */
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                          const ocpp::types::Optional<unsigned int>&  connector_id) override;
 
     // GenericMessageHandler interface
 
@@ -117,10 +118,10 @@ class StatusManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ChangeAvailabilityReq& request,
-                       ocpp::messages::ChangeAvailabilityConf&      response,
-                       std::string&                                 error_code,
-                       std::string&                                 error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ChangeAvailabilityReq& request,
+                       ocpp::messages::ocpp16::ChangeAvailabilityConf&      response,
+                       std::string&                                         error_code,
+                       std::string&                                         error_message) override;
 
   private:
     /** @brief Stack configuration */
@@ -139,7 +140,7 @@ class StatusManager
     ocpp::messages::GenericMessageSender& m_msg_sender;
 
     /** @brief Registration status */
-    ocpp::types::RegistrationStatus m_registration_status;
+    ocpp::types::ocpp16::RegistrationStatus m_registration_status;
     /** @brief Indicate if the boot notification message must be inconditionnaly sent on connection */
     bool m_force_boot_notification;
     /** @brief Indicate if the boot notification message has been sent */

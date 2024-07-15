@@ -22,11 +22,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "MeterValueConverter.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
-
 namespace types
+{
+namespace ocpp16
 {
 
 /** @brief Helper to convert a Reason enum to string */
@@ -42,11 +44,13 @@ const EnumToStringFromString<Reason> ReasonHelper = {{Reason::DeAuthorized, "DeA
                                                      {Reason::SoftReset, "SoftReset"},
                                                      {Reason::UnlockCommand, "UnlockCommand"}};
 
+} // namespace ocpp16
 } // namespace types
 
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool StopTransactionReqConverter::fromJson(const rapidjson::Value& json,
                                            StopTransactionReq&     data,
@@ -140,5 +144,6 @@ bool StopTransactionConfConverter::toJson(const StopTransactionConf& data, rapid
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

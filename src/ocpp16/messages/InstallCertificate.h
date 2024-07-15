@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the InstallCertificate messages */
 static const std::string INSTALL_CERTIFICATE_ACTION = "InstallCertificate";
@@ -37,7 +39,7 @@ static const std::string INSTALL_CERTIFICATE_ACTION = "InstallCertificate";
 struct InstallCertificateReq
 {
     /** @brief Required. Indicates the certificate type that is sent */
-    ocpp::types::CertificateUseEnumType certificateType;
+    ocpp::types::ocpp16::CertificateUseEnumType certificateType;
     /** @brief Required. An PEM encoded X.509 certificate */
     ocpp::types::CiStringType<5500u> certificate;
 };
@@ -46,12 +48,13 @@ struct InstallCertificateReq
 struct InstallCertificateConf
 {
     /** @brief Required. Charge Point indicates if installation was successful */
-    ocpp::types::CertificateStatusEnumType status;
+    ocpp::types::ocpp16::CertificateStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(InstallCertificate)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

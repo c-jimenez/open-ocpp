@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the RemoteStopTransaction messages */
 static const std::string REMOTE_STOP_TRANSACTION_ACTION = "RemoteStopTransaction";
@@ -43,12 +45,13 @@ struct RemoteStopTransactionConf
 {
     /** @brief Required. Status indicating whether Charge Point accepts the
                request to stop a transaction */
-    ocpp::types::RemoteStartStopStatus status;
+    ocpp::types::ocpp16::RemoteStartStopStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(RemoteStopTransaction)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

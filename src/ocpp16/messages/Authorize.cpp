@@ -21,10 +21,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IdTagInfoConverter.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a AuthorizationStatus enum to string */
 const EnumToStringFromString<AuthorizationStatus> AuthorizationStatusHelper = {{AuthorizationStatus::Accepted, "Accepted"},
@@ -32,8 +35,11 @@ const EnumToStringFromString<AuthorizationStatus> AuthorizationStatusHelper = {{
                                                                                {AuthorizationStatus::ConcurrentTx, "ConcurrentTx"},
                                                                                {AuthorizationStatus::Expired, "Expired"},
                                                                                {AuthorizationStatus::Invalid, "Invalid"}};
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -75,5 +81,6 @@ bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Docume
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

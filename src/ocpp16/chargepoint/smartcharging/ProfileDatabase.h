@@ -50,7 +50,7 @@ class ProfileDatabase
     // ProfileDatabase interface
 
     /** @brief Stores a profile alongside its target connector */
-    typedef std::pair<unsigned int, ocpp::types::ChargingProfile> ChargingProfileInfo;
+    typedef std::pair<unsigned int, ocpp::types::ocpp16::ChargingProfile> ChargingProfileInfo;
     /** @brief Allow sorting of profiles by stack level and connector id*/
     struct ChargingProfileInfoLess
     {
@@ -71,10 +71,10 @@ class ProfileDatabase
      * @param level Specifies the stackLevel for which charging profiles will be cleared
      * @return true if at least 1 profile matched the criteria, false otherwise
      */
-    bool clear(ocpp::types::Optional<int>                                     id,
-               ocpp::types::Optional<unsigned int>                            connector_id = ocpp::types::Optional<unsigned int>(),
-               ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType> purpose =
-                   ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType>(),
+    bool clear(ocpp::types::Optional<int>                                             id,
+               ocpp::types::Optional<unsigned int>                                    connector_id = ocpp::types::Optional<unsigned int>(),
+               ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType> purpose =
+                   ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType>(),
                ocpp::types::Optional<unsigned int> level = ocpp::types::Optional<unsigned int>());
 
     /**
@@ -83,7 +83,7 @@ class ProfileDatabase
      * @param profile Charging profile to install
      * @return true if the charging profile has been installed, false otherwise
      */
-    bool install(unsigned int connector_id, const ocpp::types::ChargingProfile& profile);
+    bool install(unsigned int connector_id, const ocpp::types::ocpp16::ChargingProfile& profile);
 
     /**
      * @brief Assign the pending TxProfile of a connector to a transaction
@@ -126,9 +126,9 @@ class ProfileDatabase
     void load();
 
     /** @brief Serialize a profile to a string */
-    std::string serialize(const ocpp::types::ChargingProfile& profile);
+    std::string serialize(const ocpp::types::ocpp16::ChargingProfile& profile);
     /** @brief Deserialize a profile from a string */
-    bool deserialize(const std::string& profile_str, ocpp::types::ChargingProfile& profile);
+    bool deserialize(const std::string& profile_str, ocpp::types::ocpp16::ChargingProfile& profile);
 };
 
 } // namespace chargepoint

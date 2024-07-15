@@ -26,31 +26,34 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for CertificateHashDataChainType type */
-class CertificateHashDataChainTypeConverter : public IMessageConverter<ocpp::types::CertificateHashDataChainType>
+class CertificateHashDataChainTypeConverter : public IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::CertificateHashDataChainType>* IMessageConverter<ocpp::types::CertificateHashDataChainType>::clone() const */
-    IMessageConverter<ocpp::types::CertificateHashDataChainType>* clone() const override
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>* IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>* clone() const override
     {
         return new CertificateHashDataChainTypeConverter();
     }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataChainType>::fromJson(const rapidjson::Value&,
-    *                                                                                        ocpp::types::CertificateHashDataChainType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>::fromJson(const rapidjson::Value&,
+    *                                                                                        ocpp::types::ocpp16::CertificateHashDataChainType&,
     *                                                                                        std::string&,
     *                                                                                        std::string&) */
-    bool fromJson(const rapidjson::Value&                    json,
-                  ocpp::types::CertificateHashDataChainType& data,
-                  std::string&                               error_code,
-                  std::string&                               error_message) override;
+    bool fromJson(const rapidjson::Value&                            json,
+                  ocpp::types::ocpp16::CertificateHashDataChainType& data,
+                  std::string&                                       error_code,
+                  std::string&                                       error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataChainType>::toJson(const ocpp::types::CertificateHashDataChainType&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::CertificateHashDataChainType>::toJson(const ocpp::types::ocpp16::CertificateHashDataChainType&,
      *                                                                                     rapidjson::Document&) */
-    bool toJson(const ocpp::types::CertificateHashDataChainType& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::CertificateHashDataChainType& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

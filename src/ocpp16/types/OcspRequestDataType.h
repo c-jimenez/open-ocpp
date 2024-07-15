@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief OcspRequestDataType is used by: Authorize.req, GetCertificateStatus.req */
 struct OcspRequestDataType
@@ -42,6 +44,7 @@ struct OcspRequestDataType
     CiStringType<512u> responderURL;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

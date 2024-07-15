@@ -25,6 +25,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Result of registration in response to BootNotification.req */
 enum class RegistrationStatus
@@ -1082,6 +1084,7 @@ enum class Iso15118EVCertificateStatusEnumType
 /** @brief Helper to convert a Iso15118EVCertificateStatusEnumType enum to string */
 extern const EnumToStringFromString<Iso15118EVCertificateStatusEnumType> Iso15118EVCertificateStatusEnumTypeHelper;
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

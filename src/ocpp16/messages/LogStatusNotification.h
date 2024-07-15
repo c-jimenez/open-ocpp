@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the LogStatusNotification messages */
 static const std::string LOG_STATUS_NOTIFICATION_ACTION = "LogStatusNotification";
@@ -35,7 +37,7 @@ static const std::string LOG_STATUS_NOTIFICATION_ACTION = "LogStatusNotification
 struct LogStatusNotificationReq
 {
     /** @brief Required. This contains the status of the log upload */
-    ocpp::types::UploadLogStatusEnumType status;
+    ocpp::types::ocpp16::UploadLogStatusEnumType status;
     /** @brief Optional. The request id that was provided in the GetLog.req that started this log
                upload */
     ocpp::types::Optional<int> requestId;
@@ -50,6 +52,7 @@ struct LogStatusNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(LogStatusNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

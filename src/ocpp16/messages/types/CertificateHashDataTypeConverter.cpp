@@ -21,27 +21,33 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 /** @brief Helper to convert a enum class HashAlgorithmEnumType enum to string */
 const EnumToStringFromString<HashAlgorithmEnumType> HashAlgorithmEnumTypeHelper = {
     {HashAlgorithmEnumType::SHA256, "SHA256"}, {HashAlgorithmEnumType::SHA384, "SHA384"}, {HashAlgorithmEnumType::SHA512, "SHA512"}};
 
+} // namespace ocpp16
 } // namespace types
 namespace messages
 {
+namespace ocpp16
+{
 
-/** @bcopydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::fromJson(const rapidjson::Value&,
- *                                                                     ocpp::types::CertificateHashDataType&,
+/** @bcopydoc bool IMessageConverter<ocpp::types::ocpp16::CertificateHashDataType>::fromJson(const rapidjson::Value&,
+ *                                                                     ocpp::types::ocpp16::CertificateHashDataType&,
  *                                                                     std::string&,
  *                                                                     std::string&) */
-bool CertificateHashDataTypeConverter::fromJson(const rapidjson::Value&               json,
-                                                ocpp::types::CertificateHashDataType& data,
-                                                std::string&                          error_code,
-                                                std::string&                          error_message)
+bool CertificateHashDataTypeConverter::fromJson(const rapidjson::Value&                       json,
+                                                ocpp::types::ocpp16::CertificateHashDataType& data,
+                                                std::string&                                  error_code,
+                                                std::string&                                  error_message)
 {
     (void)error_code;
     (void)error_message;
@@ -52,9 +58,9 @@ bool CertificateHashDataTypeConverter::fromJson(const rapidjson::Value&         
     return true;
 }
 
-/** @copydoc bool IMessageConverter<ocpp::types::CertificateHashDataType>::toJson(const ocpp::types::CertificateHashDataType&,
+/** @copydoc bool IMessageConverter<ocpp::types::ocpp16::CertificateHashDataType>::toJson(const ocpp::types::ocpp16::CertificateHashDataType&,
  *                                                                  rapidjson::Document&) */
-bool CertificateHashDataTypeConverter::toJson(const ocpp::types::CertificateHashDataType& data, rapidjson::Document& json)
+bool CertificateHashDataTypeConverter::toJson(const ocpp::types::ocpp16::CertificateHashDataType& data, rapidjson::Document& json)
 {
     fill(json, "hashAlgorithm", HashAlgorithmEnumTypeHelper.toString(data.hashAlgorithm));
     fill(json, "issuerKeyHash", data.issuerKeyHash);
@@ -63,5 +69,6 @@ bool CertificateHashDataTypeConverter::toJson(const ocpp::types::CertificateHash
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

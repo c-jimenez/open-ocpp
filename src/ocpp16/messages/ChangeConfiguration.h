@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ChangeConfiguration messages */
 static const std::string CHANGE_CONFIGURATION_ACTION = "ChangeConfiguration";
@@ -44,12 +46,13 @@ struct ChangeConfigurationReq
 struct ChangeConfigurationConf
 {
     /** @brief Required. Returns whether configuration change has been accepted */
-    ocpp::types::ConfigurationStatus status;
+    ocpp::types::ocpp16::ConfigurationStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ChangeConfiguration)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

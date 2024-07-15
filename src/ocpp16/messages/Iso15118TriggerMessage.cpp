@@ -20,12 +20,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IRpc.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool Iso15118TriggerMessageReqConverter::fromJson(const rapidjson::Value&    json,
                                                   Iso15118TriggerMessageReq& data,
@@ -66,5 +68,6 @@ bool Iso15118TriggerMessageConfConverter::toJson(const Iso15118TriggerMessageCon
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

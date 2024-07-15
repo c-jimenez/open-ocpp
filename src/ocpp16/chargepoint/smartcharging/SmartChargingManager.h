@@ -57,11 +57,13 @@ struct Connector;
 class IChargePointEventsHandler;
 
 /** @brief Handle smart charging for the charge point */
-class SmartChargingManager
-    : public ISmartChargingManager,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::ClearChargingProfileReq, ocpp::messages::ClearChargingProfileConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::SetChargingProfileReq, ocpp::messages::SetChargingProfileConf>,
-      public ocpp::messages::GenericMessageHandler<ocpp::messages::GetCompositeScheduleReq, ocpp::messages::GetCompositeScheduleConf>
+class SmartChargingManager : public ISmartChargingManager,
+                             public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::ClearChargingProfileReq,
+                                                                          ocpp::messages::ocpp16::ClearChargingProfileConf>,
+                             public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::SetChargingProfileReq,
+                                                                          ocpp::messages::ocpp16::SetChargingProfileConf>,
+                             public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp16::GetCompositeScheduleReq,
+                                                                          ocpp::messages::ocpp16::GetCompositeScheduleConf>
 
 {
   public:
@@ -82,16 +84,16 @@ class SmartChargingManager
     // ISmartChargingManager interface
 
     /** @copydoc bool ISmartChargingManager::getSetpoint(unsigned int,
-                                                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>&,
-                                                         ocpp::types::ChargingRateUnitType) */
-    bool getSetpoint(unsigned int                                               connector_id,
-                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                     ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                     ocpp::types::ChargingRateUnitType                          unit) override;
+                                                         ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                         ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>&,
+                                                         ocpp::types::ocpp16::ChargingRateUnitType) */
+    bool getSetpoint(unsigned int                                                       connector_id,
+                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                     ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                     ocpp::types::ocpp16::ChargingRateUnitType                          unit) override;
 
-    /** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ChargingProfile&) */
-    bool installTxProfile(unsigned int connector_id, const ocpp::types::ChargingProfile& profile) override;
+    /** @copydoc bool ISmartChargingManager::installTxProfile(unsigned int, const ocpp::types::ocpp16::ChargingProfile&) */
+    bool installTxProfile(unsigned int connector_id, const ocpp::types::ocpp16::ChargingProfile& profile) override;
 
     /** @copydoc void ISmartChargingManager::assignPendingTxProfiles(unsigned int), unsigned int) */
     void assignPendingTxProfiles(unsigned int connector_id, int transaction_id) override;
@@ -106,30 +108,30 @@ class SmartChargingManager
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::ClearChargingProfileReq& request,
-                       ocpp::messages::ClearChargingProfileConf&      response,
-                       std::string&                                   error_code,
-                       std::string&                                   error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::ClearChargingProfileReq& request,
+                       ocpp::messages::ocpp16::ClearChargingProfileConf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::SetChargingProfileReq& request,
-                       ocpp::messages::SetChargingProfileConf&      response,
-                       std::string&                                 error_code,
-                       std::string&                                 error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::SetChargingProfileReq& request,
+                       ocpp::messages::ocpp16::SetChargingProfileConf&      response,
+                       std::string&                                         error_code,
+                       std::string&                                         error_message) override;
 
     /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-    bool handleMessage(const ocpp::messages::GetCompositeScheduleReq& request,
-                       ocpp::messages::GetCompositeScheduleConf&      response,
-                       std::string&                                   error_code,
-                       std::string&                                   error_message) override;
+    bool handleMessage(const ocpp::messages::ocpp16::GetCompositeScheduleReq& request,
+                       ocpp::messages::ocpp16::GetCompositeScheduleConf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
 
   private:
     /** @brief Stack configuration */
@@ -161,7 +163,7 @@ class SmartChargingManager
         /** @brief Setpoint for the period */
         float setpoint;
         /** @brief Unit of the setpoint for the period */
-        ocpp::types::ChargingRateUnitType unit;
+        ocpp::types::ocpp16::ChargingRateUnitType unit;
         /** @brief Number of phases */
         unsigned int nb_phases;
     };
@@ -170,43 +172,43 @@ class SmartChargingManager
     void cleanupProfiles();
 
     /** @brief Compute the setpoint of a given connector with a profile list */
-    void computeSetpoint(Connector*                                                 connector,
-                         ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                         ocpp::types::ChargingRateUnitType                          unit,
-                         const ProfileDatabase::ChargingProfileList&                profiles_list);
+    void computeSetpoint(Connector*                                                         connector,
+                         ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                         ocpp::types::ocpp16::ChargingRateUnitType                          unit,
+                         const ProfileDatabase::ChargingProfileList&                        profiles_list);
 
     /** @brief Check if the given profile is active */
-    bool isProfileActive(Connector*                          connector,
-                         const ocpp::types::ChargingProfile& profile,
-                         size_t&                             period,
-                         const ocpp::types::DateTime&        time_point);
+    bool isProfileActive(Connector*                                  connector,
+                         const ocpp::types::ocpp16::ChargingProfile& profile,
+                         size_t&                                     period,
+                         const ocpp::types::DateTime&                time_point);
 
     /** @brief Fill a setpoint structure with a charging profile and a charging schedule period */
-    void fillSetpoint(ocpp::types::SmartChargingSetpoint&        setpoint,
-                      ocpp::types::ChargingRateUnitType          unit,
-                      const ocpp::types::ChargingProfile&        profile,
-                      const ocpp::types::ChargingSchedulePeriod& period);
+    void fillSetpoint(ocpp::types::ocpp16::SmartChargingSetpoint&        setpoint,
+                      ocpp::types::ocpp16::ChargingRateUnitType          unit,
+                      const ocpp::types::ocpp16::ChargingProfile&        profile,
+                      const ocpp::types::ocpp16::ChargingSchedulePeriod& period);
 
     /** @brief Convert charging rate units */
-    float convertToUnit(float value, ocpp::types::ChargingRateUnitType unit, unsigned int number_phases);
+    float convertToUnit(float value, ocpp::types::ocpp16::ChargingRateUnitType unit, unsigned int number_phases);
 
     /** @brief Indicate if a charging profile is valid at a given point in time */
-    bool isProfileValid(const ocpp::types::ChargingProfile& profile, const ocpp::types::DateTime& time_point);
+    bool isProfileValid(const ocpp::types::ocpp16::ChargingProfile& profile, const ocpp::types::DateTime& time_point);
 
     /** @brief Get the kind of charging profile */
-    ocpp::types::ChargingProfileKindType getProfileKind(const ocpp::types::ChargingProfile& profile);
+    ocpp::types::ocpp16::ChargingProfileKindType getProfileKind(const ocpp::types::ocpp16::ChargingProfile& profile);
 
     /** @brief Get the start time of a charging profile schedule */
-    ocpp::types::DateTime getProfileStartTime(Connector*                           connector,
-                                              const ocpp::types::ChargingProfile&  profile,
-                                              ocpp::types::ChargingProfileKindType kind,
-                                              const ocpp::types::DateTime&         time_point);
+    ocpp::types::DateTime getProfileStartTime(Connector*                                   connector,
+                                              const ocpp::types::ocpp16::ChargingProfile&  profile,
+                                              ocpp::types::ocpp16::ChargingProfileKindType kind,
+                                              const ocpp::types::DateTime&                 time_point);
 
     /** @brief Get the composite schedule periods corresponding to a charging profile */
-    std::vector<Period> getProfilePeriods(Connector*                          connector,
-                                          const ocpp::types::ChargingProfile& profile,
-                                          const ocpp::types::DateTime&        time_point,
-                                          unsigned int                        duration);
+    std::vector<Period> getProfilePeriods(Connector*                                  connector,
+                                          const ocpp::types::ocpp16::ChargingProfile& profile,
+                                          const ocpp::types::DateTime&                time_point,
+                                          unsigned int                                duration);
 
     /** @brief Merge charging profiles periods */
     std::vector<Period> mergeProfilePeriods(const std::vector<Period>& ref_periods, const std::vector<Period>& new_periods);

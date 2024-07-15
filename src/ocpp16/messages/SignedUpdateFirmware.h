@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the SignedUpdateFirmware messages */
 static const std::string SIGNED_UPDATE_FIRMWARE_ACTION = "SignedUpdateFirmware";
@@ -47,19 +49,20 @@ struct SignedUpdateFirmwareReq
     int requestId;
 
     /** @brief Required.Specifies the firmware to be updated on the Charge Point */
-    ocpp::types::FirmwareType firmware;
+    ocpp::types::ocpp16::FirmwareType firmware;
 };
 
 /** @brief SignedUpdateFirmware.conf message */
 struct SignedUpdateFirmwareConf
 {
     /** @brief Required. This field indicates whether the Charge Point was able to accept the request */
-    ocpp::types::UpdateFirmwareStatusEnumType status;
+    ocpp::types::ocpp16::UpdateFirmwareStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(SignedUpdateFirmware)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -31,6 +31,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Iso15118Authorize messages */
 static const std::string ISO15118_AUTHORIZE_ACTION = "Authorize";
@@ -41,9 +43,9 @@ struct Iso15118AuthorizeReq
     /** @brief Optional. The X.509 certificated presented by EV and encoded in PEM format */
     ocpp::types::Optional<ocpp::types::CiStringType<5500u>> certificate;
     /** @brief Required. This contains the identifier that needs to be authorized */
-    ocpp::types::IdToken idToken;
+    ocpp::types::ocpp16::IdToken idToken;
     /** @brief Optional. Contains the information needed to verify the EV Contract Certificate via OCSP */
-    std::vector<ocpp::types::OcspRequestDataType> iso15118CertificateHashData;
+    std::vector<ocpp::types::ocpp16::OcspRequestDataType> iso15118CertificateHashData;
 };
 
 /** @brief Iso15118Authorize.conf message */
@@ -52,15 +54,16 @@ struct Iso15118AuthorizeConf
     /** @brief Optional. Certificate status information. - if all certificates are
                valid: return 'Accepted'. - if one of the certificates was revoked,
                return 'CertificateRevoked' */
-    ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType> certificateStatus;
+    ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType> certificateStatus;
     /** @brief Required. This contains information about authorization status,
                expiry and group id */
-    ocpp::types::IdTokenInfoType idTokenInfo;
+    ocpp::types::ocpp16::IdTokenInfoType idTokenInfo;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(Iso15118Authorize)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -76,8 +76,8 @@ class MeterValuesManager : public IMeterValuesManager,
 
     // IMeterValuesManager interface
 
-    /** @copydoc bool IMeterValuesManager::sendMeterValues(unsigned int, const std::vector<ocpp::types::MeterValue>&) */
-    bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) override;
+    /** @copydoc bool IMeterValuesManager::sendMeterValues(unsigned int, const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+    bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::ocpp16::MeterValue>& values) override;
 
     /** @copydoc void IMeterValuesManager::startSampledMeterValues(unsigned int) */
     void startSampledMeterValues(unsigned int connector_id) override;
@@ -85,18 +85,19 @@ class MeterValuesManager : public IMeterValuesManager,
     /** @copydoc void IMeterValuesManager::stopSampledMeterValues(unsigned int) */
     void stopSampledMeterValues(unsigned int connector_id) override;
 
-    /** @copydoc void IMeterValuesManager::getTxStopMeterValues(unsigned int, std::vector<ocpp::types::MeterValue>&) */
-    void getTxStopMeterValues(unsigned int connector_id, std::vector<ocpp::types::MeterValue>& meter_values) override;
+    /** @copydoc void IMeterValuesManager::getTxStopMeterValues(unsigned int, std::vector<ocpp::types::ocpp16::MeterValue>&) */
+    void getTxStopMeterValues(unsigned int connector_id, std::vector<ocpp::types::ocpp16::MeterValue>& meter_values) override;
 
     // ITriggerMessageManager::ITriggerMessageHandler interface
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTrigger message,
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTrigger message,
      *                                                                                 const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) override;
 
-    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::MessageTriggerEnumType message,
+    /** @copydoc bool ITriggerMessageManager::ITriggerMessageHandler::onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
      *                                                                                 const ocpp::types::Optional<unsigned int>&) */
-    bool onTriggerMessage(ocpp::types::MessageTriggerEnumType message, const ocpp::types::Optional<unsigned int>& connector_id) override;
+    bool onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                          const ocpp::types::Optional<unsigned int>&  connector_id) override;
 
     // IConfigChangedListener interface
 
@@ -144,27 +145,29 @@ class MeterValuesManager : public IMeterValuesManager,
     void processTriggered(unsigned int connector_id);
 
     /** @brief Send a meter value request for a given measurand list on a connector */
-    void sendMeterValues(unsigned int                                                                                     connector_id,
-                         const std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>>& measurands,
-                         ocpp::types::ReadingContext                                                                      context,
-                         const ocpp::types::Optional<int>& transaction_id = ocpp::types::Optional<int>());
+    void sendMeterValues(
+        unsigned int                                                                                                     connector_id,
+        const std::vector<std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>>& measurands,
+        ocpp::types::ocpp16::ReadingContext                                                                              context,
+        const ocpp::types::Optional<int>& transaction_id = ocpp::types::Optional<int>());
 
     /** @brief Compute the measurand list from a CSL configuration string */
-    std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>> computeMeasurandList(
+    std::vector<std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>> computeMeasurandList(
         const std::string& meter_values, const unsigned int max_count);
 
     /** @brief Fill a meter value element */
-    bool fillMeterValue(unsigned int                                                                                     connector_id,
-                        const std::vector<std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>>& measurands,
-                        ocpp::types::MeterValue&                                                                         meter_value,
-                        ocpp::types::ReadingContext                                                                      context);
+    bool fillMeterValue(
+        unsigned int                                                                                                     connector_id,
+        const std::vector<std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>>& measurands,
+        ocpp::types::ocpp16::MeterValue&                                                                                 meter_value,
+        ocpp::types::ocpp16::ReadingContext                                                                              context);
 
     /** @brief Initialize the database table */
     void initDatabaseTable();
     /** @brief Serialize a meter value to a string */
-    std::string serialize(const ocpp::types::MeterValue& meter_value);
+    std::string serialize(const ocpp::types::ocpp16::MeterValue& meter_value);
     /** @brief Deserialize a meter value from a string */
-    bool deserialize(const std::string& meter_value_str, ocpp::types::MeterValue& meter_value);
+    bool deserialize(const std::string& meter_value_str, ocpp::types::ocpp16::MeterValue& meter_value);
 };
 
 } // namespace chargepoint

@@ -25,8 +25,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 
 using namespace ocpp::database;
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -60,10 +62,10 @@ AuthentCache::~AuthentCache() { }
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool AuthentCache::handleMessage(const ocpp::messages::ClearCacheReq& request,
-                                 ocpp::messages::ClearCacheConf&      response,
-                                 std::string&                         error_code,
-                                 std::string&                         error_message)
+bool AuthentCache::handleMessage(const ocpp::messages::ocpp16::ClearCacheReq& request,
+                                 ocpp::messages::ocpp16::ClearCacheConf&      response,
+                                 std::string&                                 error_code,
+                                 std::string&                                 error_message)
 {
     (void)request;
     (void)error_code;
@@ -87,7 +89,7 @@ bool AuthentCache::handleMessage(const ocpp::messages::ClearCacheReq& request,
 }
 
 /** @brief Look for a tag id in the cache */
-bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_info)
+bool AuthentCache::check(const std::string& id_tag, ocpp::types::ocpp16::IdTagInfo& tag_info)
 {
     bool ret = false;
 
@@ -144,7 +146,7 @@ bool AuthentCache::check(const std::string& id_tag, ocpp::types::IdTagInfo& tag_
 }
 
 /** @brief Update a tag id entry in the cache */
-void AuthentCache::update(const std::string& id_tag, const ocpp::types::IdTagInfo& tag_info)
+void AuthentCache::update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo& tag_info)
 {
     // Look for the entry
     if (m_find_query)

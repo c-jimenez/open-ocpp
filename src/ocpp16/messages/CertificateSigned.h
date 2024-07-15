@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the CertificateSigned messages */
 static const std::string CERTIFICATE_SIGNED_ACTION = "CertificateSigned";
@@ -45,12 +47,13 @@ struct CertificateSignedConf
 {
     /** @brief Required. Returns whether certificate signing has been accepted, otherwise
                rejected */
-    ocpp::types::CertificateSignedStatusEnumType status;
+    ocpp::types::ocpp16::CertificateSignedStatusEnumType status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(CertificateSigned)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

@@ -28,8 +28,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <functional>
 #include <thread>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -93,7 +95,7 @@ void ReservationManager::clearReservation(unsigned int connector_id)
 }
 
 /** @brief Indicate if a transaction is allowed on a connector using a specific id tag */
-ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsigned int connector_id, const std::string& id_tag)
+ocpp::types::ocpp16::AuthorizationStatus ReservationManager::isTransactionAllowed(unsigned int connector_id, const std::string& id_tag)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -173,10 +175,10 @@ ocpp::types::AuthorizationStatus ReservationManager::isTransactionAllowed(unsign
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& request,
-                                       ocpp::messages::ReserveNowConf&      response,
-                                       std::string&                         error_code,
-                                       std::string&                         error_message)
+bool ReservationManager::handleMessage(const ocpp::messages::ocpp16::ReserveNowReq& request,
+                                       ocpp::messages::ocpp16::ReserveNowConf&      response,
+                                       std::string&                                 error_code,
+                                       std::string&                                 error_message)
 {
     bool ret = false;
 
@@ -283,10 +285,10 @@ bool ReservationManager::handleMessage(const ocpp::messages::ReserveNowReq& requ
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool ReservationManager::handleMessage(const ocpp::messages::CancelReservationReq& request,
-                                       ocpp::messages::CancelReservationConf&      response,
-                                       std::string&                                error_code,
-                                       std::string&                                error_message)
+bool ReservationManager::handleMessage(const ocpp::messages::ocpp16::CancelReservationReq& request,
+                                       ocpp::messages::ocpp16::CancelReservationConf&      response,
+                                       std::string&                                        error_code,
+                                       std::string&                                        error_message)
 {
     (void)error_code;
     (void)error_message;

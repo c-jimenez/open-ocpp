@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the RemoteStartTransaction messages */
 static const std::string REMOTE_START_TRANSACTION_ACTION = "RemoteStartTransaction";
@@ -40,10 +42,10 @@ struct RemoteStartTransactionReq
                connectorId SHALL be > 0 */
     ocpp::types::Optional<unsigned int> connectorId;
     /** @brief Required. The identifier that Charge Point must use to start a transaction */
-    ocpp::types::IdToken idTag;
+    ocpp::types::ocpp16::IdToken idTag;
     /** @brief Optional. Charging Profile to be used by the Charge Point for the requested
                transaction. ChargingProfilePurpose MUST be set to TxProfile */
-    ocpp::types::Optional<ocpp::types::ChargingProfile> chargingProfile;
+    ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfile> chargingProfile;
 };
 
 /** @brief RemoteStopTransaction.conf message */
@@ -51,12 +53,13 @@ struct RemoteStartTransactionConf
 {
     /** @brief Required. Status indicating whether Charge Point accepts the
                request to start a transaction */
-    ocpp::types::RemoteStartStopStatus status;
+    ocpp::types::ocpp16::RemoteStartStopStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(RemoteStartTransaction)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

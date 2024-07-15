@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the Reset messages */
 static const std::string RESET_ACTION = "Reset";
@@ -34,19 +36,20 @@ static const std::string RESET_ACTION = "Reset";
 struct ResetReq
 {
     /** @brief Required. This contains the type of reset that the Charge Point should perform. */
-    ocpp::types::ResetType type;
+    ocpp::types::ocpp16::ResetType type;
 };
 
 /** @brief Reset.conf message */
 struct ResetConf
 {
     /** @brief Required. This indicates whether the Charge Point is able to perform the reset */
-    ocpp::types::ResetStatus status;
+    ocpp::types::ocpp16::ResetStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(Reset)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

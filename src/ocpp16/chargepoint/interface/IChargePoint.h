@@ -119,14 +119,14 @@ class IChargePoint
      * @brief Get the registration status of the charge point
      * @return Registration of the charge point
      */
-    virtual ocpp::types::RegistrationStatus getRegistrationStatus() = 0;
+    virtual ocpp::types::ocpp16::RegistrationStatus getRegistrationStatus() = 0;
 
     /**
      * @brief Get the status of a connector
      * @param connector_id Id of the connector
      * @return Status of the connector
      */
-    virtual ocpp::types::ChargePointStatus getConnectorStatus(unsigned int connector_id) = 0;
+    virtual ocpp::types::ocpp16::ChargePointStatus getConnectorStatus(unsigned int connector_id) = 0;
 
     /**
      * @brief Notify a new status for a connector
@@ -138,12 +138,13 @@ class IChargePoint
      * @param vendor_error Vendor specific error code
      * @return true if the status has been notified, false otherwise
      */
-    virtual bool statusNotification(unsigned int                      connector_id,
-                                    ocpp::types::ChargePointStatus    status,
-                                    ocpp::types::ChargePointErrorCode error_code   = ocpp::types::ChargePointErrorCode::NoError,
-                                    const std::string&                info         = "",
-                                    const std::string&                vendor_id    = "",
-                                    const std::string&                vendor_error = "") = 0;
+    virtual bool statusNotification(
+        unsigned int                              connector_id,
+        ocpp::types::ocpp16::ChargePointStatus    status,
+        ocpp::types::ocpp16::ChargePointErrorCode error_code   = ocpp::types::ocpp16::ChargePointErrorCode::NoError,
+        const std::string&                        info         = "",
+        const std::string&                        vendor_id    = "",
+        const std::string&                        vendor_error = "") = 0;
 
     /**
      * @brief Ask for authorization of an operation on a connector
@@ -152,15 +153,17 @@ class IChargePoint
      * @param parent_id If of the user's parent tag
      * @return Authorization status (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::AuthorizationStatus authorize(unsigned int connector_id, const std::string& id_tag, std::string& parent_id) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus authorize(unsigned int       connector_id,
+                                                               const std::string& id_tag,
+                                                               std::string&       parent_id) = 0;
 
     /**
      * @brief Start a transaction
      * @param connector_id Id of the connector
      * @param id_tag Id of the user
-     * @return ocpp::types::AuthorizationStatus (see AuthorizationStatus enum)
+     * @return ocpp::types::ocpp16::AuthorizationStatus (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) = 0;
 
     /**
      * @brief Stop a transaction
@@ -169,7 +172,7 @@ class IChargePoint
      * @param reason Stop reason
      * @return true if a corresponding transaction exist and has been stopped, false otherwise
      */
-    virtual bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason) = 0;
+    virtual bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::ocpp16::Reason reason) = 0;
 
     /**
      * @brief Send a data transfer request
@@ -180,11 +183,11 @@ class IChargePoint
      * @param response_data Data associated with the response
      * @return true if the data transfer has been done, false otherwise
      */
-    virtual bool dataTransfer(const std::string&               vendor_id,
-                              const std::string&               message_id,
-                              const std::string&               request_data,
-                              ocpp::types::DataTransferStatus& status,
-                              std::string&                     response_data) = 0;
+    virtual bool dataTransfer(const std::string&                       vendor_id,
+                              const std::string&                       message_id,
+                              const std::string&                       request_data,
+                              ocpp::types::ocpp16::DataTransferStatus& status,
+                              std::string&                             response_data) = 0;
 
     /**
      * @brief Send meter values to Central System for a given connector
@@ -192,7 +195,7 @@ class IChargePoint
      * @param values Meter values to send
      * @return true if the meter values have been sent, false otherwise
      */
-    virtual bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::MeterValue>& values) = 0;
+    virtual bool sendMeterValues(unsigned int connector_id, const std::vector<ocpp::types::ocpp16::MeterValue>& values) = 0;
 
     /**
      * @brief Get the smart charging setpoints for a connector and the whole charge point
@@ -202,10 +205,10 @@ class IChargePoint
      * @param unit Setpoint unit (A or W)
      * @return true if the setpoints have been computed, false otherwise
      */
-    virtual bool getSetpoint(unsigned int                                               connector_id,
-                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& charge_point_setpoint,
-                             ocpp::types::Optional<ocpp::types::SmartChargingSetpoint>& connector_setpoint,
-                             ocpp::types::ChargingRateUnitType                          unit = ocpp::types::ChargingRateUnitType::A) = 0;
+    virtual bool getSetpoint(unsigned int                                                       connector_id,
+                             ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& charge_point_setpoint,
+                             ocpp::types::Optional<ocpp::types::ocpp16::SmartChargingSetpoint>& connector_setpoint,
+                             ocpp::types::ocpp16::ChargingRateUnitType unit = ocpp::types::ocpp16::ChargingRateUnitType::A) = 0;
 
     /**
      * @brief Notify the end of a firmware update operation
@@ -253,7 +256,7 @@ class IChargePoint
      * @param status Installation status (see FirmwareStatusEnumType documentation)
      * @return true if the notification has been sent, false otherwise
      */
-    virtual bool notifySignedUpdateFirmwareStatus(ocpp::types::FirmwareStatusEnumType status) = 0;
+    virtual bool notifySignedUpdateFirmwareStatus(ocpp::types::ocpp16::FirmwareStatusEnumType status) = 0;
 
     // ISO 15118 PnC extensions
 
@@ -267,11 +270,11 @@ class IChargePoint
      *                    return 'CertificateRevoked
      * @return Authorization status (see AuthorizationStatus type)
     */
-    virtual ocpp::types::AuthorizationStatus iso15118Authorize(
-        const ocpp::x509::Certificate&                                          certificate,
-        const std::string&                                                      id_token,
-        const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-        ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(
+        const ocpp::x509::Certificate&                                                  certificate,
+        const std::string&                                                              id_token,
+        const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+        ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
 
     /**
      * @brief Get or update an ISO15118 EV certificate
@@ -281,10 +284,10 @@ class IChargePoint
      * @param exi_response Raw CertificateInstallationRes response for the EV, Base64 encoded
      * @return true if the processing of the message has been successful and an EXI response has been included, false otherwise
      */
-    virtual bool iso15118GetEVCertificate(const std::string&                     iso15118_schema_version,
-                                          ocpp::types::CertificateActionEnumType action,
-                                          const std::string&                     exi_request,
-                                          std::string&                           exi_response) = 0;
+    virtual bool iso15118GetEVCertificate(const std::string&                             iso15118_schema_version,
+                                          ocpp::types::ocpp16::CertificateActionEnumType action,
+                                          const std::string&                             exi_request,
+                                          std::string&                                   exi_response) = 0;
 
     /**
      * @brief Get the status of an ISO15118 certificate
@@ -292,7 +295,7 @@ class IChargePoint
      * @param ocsp_result OCSPResponse class as defined in IETF RFC 6960. DER encoded (as defined in IETF RFC 6960), and then base64 encoded
      * @return true if the status of the certificate has been successfully retrieved, false otherwise
      */
-    virtual bool iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request, std::string& ocsp_result) = 0;
+    virtual bool iso15118GetCertificateStatus(const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result) = 0;
 
     /**
      * @brief Send a CSR request to sign an ISO15118 certificate

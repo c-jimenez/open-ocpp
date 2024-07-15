@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the StatusNotification messages */
 static const std::string STATUS_NOTIFICATION_ACTION = "StatusNotification";
@@ -41,11 +43,11 @@ struct StatusNotificationReq
     unsigned int connectorId;
     /** @brief Required. This contains the error code reported by the Charge
                Point */
-    ocpp::types::ChargePointErrorCode errorCode;
+    ocpp::types::ocpp16::ChargePointErrorCode errorCode;
     /** @brief Optional. Additional free format information related to the error */
     ocpp::types::Optional<ocpp::types::CiStringType<50u>> info;
     /** @brief Required. This contains the current status of the Charge Point */
-    ocpp::types::ChargePointStatus status;
+    ocpp::types::ocpp16::ChargePointStatus status;
     /** @brief Optional. The time for which the status is reported. If absent time
                of receipt of the message will be assumed */
     ocpp::types::Optional<ocpp::types::DateTime> timestamp;
@@ -64,6 +66,7 @@ struct StatusNotificationConf
 // Message converters
 MESSAGE_CONVERTERS(StatusNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

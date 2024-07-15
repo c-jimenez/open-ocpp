@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ClearChargingProfile messages */
 static const std::string CLEAR_CHARGING_PROFILE_ACTION = "ClearChargingProfile";
@@ -43,7 +45,7 @@ struct ClearChargingProfileReq
     ocpp::types::Optional<unsigned int> connectorId;
     /** @brief Optional. Specifies to purpose of the charging profiles that will be
                cleared, if they meet the other criteria in the request */
-    ocpp::types::Optional<ocpp::types::ChargingProfilePurposeType> chargingProfilePurpose;
+    ocpp::types::Optional<ocpp::types::ocpp16::ChargingProfilePurposeType> chargingProfilePurpose;
     /** @brief Optional. specifies the stackLevel for which charging profiles will
                be cleared, if they meet the other criteria in the request */
     ocpp::types::Optional<unsigned int> stackLevel;
@@ -54,12 +56,13 @@ struct ClearChargingProfileConf
 {
     /** @brief Required. Indicates if the Charge Point was able to execute the
                request */
-    ocpp::types::ClearChargingProfileStatus status;
+    ocpp::types::ocpp16::ClearChargingProfileStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ClearChargingProfile)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

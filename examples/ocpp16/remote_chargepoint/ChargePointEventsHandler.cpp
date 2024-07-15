@@ -32,6 +32,7 @@ SOFTWARE.
 
 using namespace std;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 /** @brief Constructor */
 ChargePointEventsHandler::ChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir)
@@ -55,10 +56,11 @@ int ChargePointEventsHandler::getTxStartStopMeterValue(unsigned int connector_id
     return ret;
 }
 
-/** @copydoc bool getMeterValue(unsigned int, const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>&, ocpp::types::MeterValue&) */
-bool ChargePointEventsHandler::getMeterValue(unsigned int connector_id,
-                                             const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>& measurand,
-                                             ocpp::types::MeterValue& meter_value)
+/** @copydoc bool getMeterValue(unsigned int, const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>&, ocpp::types::ocpp16::MeterValue&) */
+bool ChargePointEventsHandler::getMeterValue(
+    unsigned int                                                                                        connector_id,
+    const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>& measurand,
+    ocpp::types::ocpp16::MeterValue&                                                                    meter_value)
 {
     bool ret = false;
 

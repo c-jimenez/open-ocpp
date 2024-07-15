@@ -30,6 +30,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Charging schedule structure defines a list of charging periods, as used in: GetCompositeSchedule.conf and
            ChargingProfile */
@@ -56,6 +58,7 @@ struct ChargingSchedule
     Optional<float> minChargingRate;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

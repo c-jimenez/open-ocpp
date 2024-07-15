@@ -43,14 +43,14 @@ class ITriggerMessageManager
      * @param message Type of trigger message requested
      * @param handler Handler to register
      */
-    virtual void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) = 0;
+    virtual void registerHandler(ocpp::types::ocpp16::MessageTrigger message, ITriggerMessageHandler& handler) = 0;
 
     /**
      * @brief Register a handler for a specific extended trigger request
      * @param message Type of trigger message requested
      * @param handler Handler to register
      */
-    virtual void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) = 0;
+    virtual void registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) = 0;
 
     /** @brief Interface for standard trigger message handlers implementations */
     class ITriggerMessageHandler
@@ -65,7 +65,8 @@ class ITriggerMessageManager
          * @param connector_id Id of the connector concerned by the request
          * @return true if the requested message can be sent, false otherwise
          */
-        virtual bool onTriggerMessage(ocpp::types::MessageTrigger message, const ocpp::types::Optional<unsigned int>& connector_id) = 0;
+        virtual bool onTriggerMessage(ocpp::types::ocpp16::MessageTrigger        message,
+                                      const ocpp::types::Optional<unsigned int>& connector_id) = 0;
     };
 
     /** @brief Interface for extended trigger message handlers implementations */
@@ -81,8 +82,8 @@ class ITriggerMessageManager
          * @param connector_id Id of the connector concerned by the request
          * @return true if the requested message can be sent, false otherwise
          */
-        virtual bool onTriggerMessage(ocpp::types::MessageTriggerEnumType        message,
-                                      const ocpp::types::Optional<unsigned int>& connector_id) = 0;
+        virtual bool onTriggerMessage(ocpp::types::ocpp16::MessageTriggerEnumType message,
+                                      const ocpp::types::Optional<unsigned int>&  connector_id) = 0;
     };
 };
 

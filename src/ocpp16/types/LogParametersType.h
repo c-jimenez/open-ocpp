@@ -27,6 +27,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Class for detailed information the retrieval of logging entries.
            LogParametersType is used by: GetLog.req */
@@ -43,6 +45,7 @@ struct LogParametersType
     Optional<DateTime> latestTimestamp;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

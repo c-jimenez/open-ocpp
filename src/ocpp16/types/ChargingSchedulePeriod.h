@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Charging schedule period structure defines a time period in a charging schedule, as used in: ChargingSchedule */
 struct ChargingSchedulePeriod
@@ -45,6 +47,7 @@ struct ChargingSchedulePeriod
     Optional<unsigned int> numberPhases;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

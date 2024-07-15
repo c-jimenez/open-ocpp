@@ -37,14 +37,14 @@ class TriggerMessageManagerStub : public ITriggerMessageManager
     /** @brief Destructor */
     virtual ~TriggerMessageManagerStub() { }
 
-    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTrigger, ITriggerMessageHandler&) */
-    void registerHandler(ocpp::types::MessageTrigger message, ITriggerMessageHandler& handler) override
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTrigger, ITriggerMessageHandler&) */
+    void registerHandler(ocpp::types::ocpp16::MessageTrigger message, ITriggerMessageHandler& handler) override
     {
         m_standard_handlers[message] = &handler;
     }
 
-    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
-    void registerHandler(ocpp::types::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override
+    /** @copydoc void ITriggerMessageManager::registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType, IExtendedTriggerMessageHandler&) */
+    void registerHandler(ocpp::types::ocpp16::MessageTriggerEnumType message, IExtendedTriggerMessageHandler& handler) override
     {
         m_extended_handlers[message] = &handler;
     }
@@ -52,23 +52,23 @@ class TriggerMessageManagerStub : public ITriggerMessageManager
     // API
 
     /** @brief Check if a handler has been registered for a message */
-    bool isMessageHandlerRegistered(ocpp::types::MessageTrigger message) const
+    bool isMessageHandlerRegistered(ocpp::types::ocpp16::MessageTrigger message) const
     {
         return (m_standard_handlers.find(message) != m_standard_handlers.end());
     }
 
     /** @brief Check if a handler has been registered for a message */
-    bool isMessageHandlerRegistered(ocpp::types::MessageTriggerEnumType message) const
+    bool isMessageHandlerRegistered(ocpp::types::ocpp16::MessageTriggerEnumType message) const
     {
         return (m_extended_handlers.find(message) != m_extended_handlers.end());
     }
 
   private:
     /** @brief Handlers for standard trigger messages */
-    std::map<ocpp::types::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
+    std::map<ocpp::types::ocpp16::MessageTrigger, ITriggerMessageHandler*> m_standard_handlers;
 
     /** @brief Handlers for extended trigger messages */
-    std::map<ocpp::types::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
+    std::map<ocpp::types::ocpp16::MessageTriggerEnumType, IExtendedTriggerMessageHandler*> m_extended_handlers;
 };
 
 } // namespace chargepoint

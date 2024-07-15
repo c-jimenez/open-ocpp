@@ -82,10 +82,10 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         /** @copydoc void IChargePointRequestHandler::disconnected() */
         void disconnected() override;
 
-        /** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */
-        ocpp::types::IdTagInfo authorize(const std::string& id_tag) override;
+        /** @copydoc ocpp::types::ocpp16::IdTagInfo IChargePointRequestHandler::authorize(const std::string&) */
+        ocpp::types::ocpp16::IdTagInfo authorize(const std::string& id_tag) override;
 
-        /** @copydoc ocpp::types::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
+        /** @copydoc ocpp::types::ocpp16::RegistrationStatus IChargePointRequestHandler::bootNotification(const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
@@ -93,84 +93,85 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&) */
-        ocpp::types::RegistrationStatus bootNotification(const std::string& model,
-                                                         const std::string& serial_number,
-                                                         const std::string& vendor,
-                                                         const std::string& firmware_version,
-                                                         const std::string& iccid,
-                                                         const std::string& imsi,
-                                                         const std::string& meter_serial_number,
-                                                         const std::string& meter_type) override;
+        ocpp::types::ocpp16::RegistrationStatus bootNotification(const std::string& model,
+                                                                 const std::string& serial_number,
+                                                                 const std::string& vendor,
+                                                                 const std::string& firmware_version,
+                                                                 const std::string& iccid,
+                                                                 const std::string& imsi,
+                                                                 const std::string& meter_serial_number,
+                                                                 const std::string& meter_type) override;
 
-        /** @copydoc ocpp::types::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
+        /** @copydoc ocpp::types::ocpp16::DataTransferStatus IChargePointRequestHandler::dataTransfer(const std::string&,
                                                                                               const std::string&,
                                                                                               const std::string&,
                                                                                               std::string&) */
-        ocpp::types::DataTransferStatus dataTransfer(const std::string& vendor_id,
-                                                     const std::string& message_id,
-                                                     const std::string& request_data,
-                                                     std::string&       response_data) override;
+        ocpp::types::ocpp16::DataTransferStatus dataTransfer(const std::string& vendor_id,
+                                                             const std::string& message_id,
+                                                             const std::string& request_data,
+                                                             std::string&       response_data) override;
 
-        /** @copydoc void IChargePointRequestHandler::diagnosticStatusNotification(ocpp::types::DiagnosticsStatus) */
-        void diagnosticStatusNotification(ocpp::types::DiagnosticsStatus status) override;
+        /** @copydoc void IChargePointRequestHandler::diagnosticStatusNotification(ocpp::types::ocpp16::DiagnosticsStatus) */
+        void diagnosticStatusNotification(ocpp::types::ocpp16::DiagnosticsStatus status) override;
 
-        /** @copydoc void IChargePointRequestHandler::firmwareStatusNotification(ocpp::types::FirmwareStatus) */
-        void firmwareStatusNotification(ocpp::types::FirmwareStatus status) override;
+        /** @copydoc void IChargePointRequestHandler::firmwareStatusNotification(ocpp::types::ocpp16::FirmwareStatus) */
+        void firmwareStatusNotification(ocpp::types::ocpp16::FirmwareStatus status) override;
 
         /** @copydoc void IChargePointRequestHandler::meterValues(unsigned int,
                                                                   const ocpp::types::Optional<int>&,
-                                                                  const std::vector<ocpp::types::MeterValue>&) */
-        void meterValues(unsigned int                                connector_id,
-                         const ocpp::types::Optional<int>&           transaction_id,
-                         const std::vector<ocpp::types::MeterValue>& meter_values) override;
+                                                                  const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+        void meterValues(unsigned int                                        connector_id,
+                         const ocpp::types::Optional<int>&                   transaction_id,
+                         const std::vector<ocpp::types::ocpp16::MeterValue>& meter_values) override;
 
-        /** @copydoc ocpp::types::IdTagInfo IChargePointRequestHandler::startTransaction(unsigned int,
+        /** @copydoc ocpp::types::ocpp16::IdTagInfo IChargePointRequestHandler::startTransaction(unsigned int,
                                                                                          const std::string&,
                                                                                          int,
                                                                                          const ocpp::types::Optional<int>&,
                                                                                          const ocpp::types::DateTime&,
                                                                                          int&) */
-        ocpp::types::IdTagInfo startTransaction(unsigned int                      connector_id,
-                                                const std::string&                id_tag,
-                                                int                               meter_start,
-                                                const ocpp::types::Optional<int>& reservation_id,
-                                                const ocpp::types::DateTime&      timestamp,
-                                                int&                              transaction_id) override;
+        ocpp::types::ocpp16::IdTagInfo startTransaction(unsigned int                      connector_id,
+                                                        const std::string&                id_tag,
+                                                        int                               meter_start,
+                                                        const ocpp::types::Optional<int>& reservation_id,
+                                                        const ocpp::types::DateTime&      timestamp,
+                                                        int&                              transaction_id) override;
 
         /** @copydoc void IChargePointRequestHandler::statusNotification(unsigned int,
-                                                                         ocpp::types::ChargePointErrorCode,
+                                                                         ocpp::types::ocpp16::ChargePointErrorCode,
                                                                          const std::string&,
-                                                                         ocpp::types::ChargePointStatus,
+                                                                         ocpp::types::ocpp16::ChargePointStatus,
                                                                          const ocpp::types::DateTime&,
                                                                          const std::string&,
                                                                          const std::string&) */
-        void statusNotification(unsigned int                      connector_id,
-                                ocpp::types::ChargePointErrorCode error_code,
-                                const std::string&                info,
-                                ocpp::types::ChargePointStatus    status,
-                                const ocpp::types::DateTime&      timestamp,
-                                const std::string&                vendor_id,
-                                const std::string&                vendor_error) override;
+        void statusNotification(unsigned int                              connector_id,
+                                ocpp::types::ocpp16::ChargePointErrorCode error_code,
+                                const std::string&                        info,
+                                ocpp::types::ocpp16::ChargePointStatus    status,
+                                const ocpp::types::DateTime&              timestamp,
+                                const std::string&                        vendor_id,
+                                const std::string&                        vendor_error) override;
 
-        /** @copydoc ocpp::types::Optional<ocpp::types::IdTagInfo> IChargePointRequestHandler::stopTransaction(
+        /** @copydoc ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> IChargePointRequestHandler::stopTransaction(
                                                                                 const std::string&,
                                                                                 int,
                                                                                 const ocpp::types::DateTime&,
                                                                                 int,
-                                                                                ocpp::types::Reason,
-                                                                                const std::vector<ocpp::types::MeterValue>&) */
-        ocpp::types::Optional<ocpp::types::IdTagInfo> stopTransaction(
-            const std::string&                          id_tag,
-            int                                         meter_stop,
-            const ocpp::types::DateTime&                timestamp,
-            int                                         transaction_id,
-            ocpp::types::Reason                         reason,
-            const std::vector<ocpp::types::MeterValue>& transaction_data) override;
+                                                                                ocpp::types::ocpp16::Reason,
+                                                                                const std::vector<ocpp::types::ocpp16::MeterValue>&) */
+        ocpp::types::Optional<ocpp::types::ocpp16::IdTagInfo> stopTransaction(
+            const std::string&                                  id_tag,
+            int                                                 meter_stop,
+            const ocpp::types::DateTime&                        timestamp,
+            int                                                 transaction_id,
+            ocpp::types::ocpp16::Reason                         reason,
+            const std::vector<ocpp::types::ocpp16::MeterValue>& transaction_data) override;
 
         // Security extensions
 
-        /** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
-        void logStatusNotification(ocpp::types::UploadLogStatusEnumType status, const ocpp::types::Optional<int>& request_id) override;
+        /** @copydoc void IChargePointRequestHandler::logStatusNotification(ocpp::types::ocpp16::UploadLogStatusEnumType, const ocpp::types::Optional<int>&) */
+        void logStatusNotification(ocpp::types::ocpp16::UploadLogStatusEnumType status,
+                                   const ocpp::types::Optional<int>&            request_id) override;
 
         /** @copydoc void IChargePointRequestHandler::securityEventNotification(const std::string&,
                                                                                 const ocpp::types::DateTime&,
@@ -182,39 +183,40 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
         /** @copydoc bool IChargePointRequestHandler::signCertificate(const ocpp::x509::CertificateRequest&) */
         bool signCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;
 
-        /** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType,
+        /** @copydoc void IChargePointRequestHandler::signedFirmwareUpdateStatusNotification(ocpp::types::ocpp16::FirmwareStatusEnumType,
                                                                                              const ocpp::types::Optional<int>&) */
-        void signedFirmwareUpdateStatusNotification(ocpp::types::FirmwareStatusEnumType status,
-                                                    const ocpp::types::Optional<int>&   request_id) override;
+        void signedFirmwareUpdateStatusNotification(ocpp::types::ocpp16::FirmwareStatusEnumType status,
+                                                    const ocpp::types::Optional<int>&           request_id) override;
 
         // ISO 15118 PnC extensions
 
-        /** @copydoc ocpp::types::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
+        /** @copydoc ocpp::types::ocpp16::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
                                                           const ocpp::x509::Certificate&,
                                                           const std::string&,
-                                                          const std::vector<ocpp::types::OcspRequestDataType>&,
-                                                          ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>&) override; */
-        ocpp::types::IdTokenInfoType iso15118Authorize(
-            const ocpp::x509::Certificate&                                          certificate,
-            const std::string&                                                      id_token,
-            const std::vector<ocpp::types::OcspRequestDataType>&                    cert_hash_data,
-            ocpp::types::Optional<ocpp::types::AuthorizeCertificateStatusEnumType>& cert_status) override;
+                                                          const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
+                                                          ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) override; */
+        ocpp::types::ocpp16::IdTokenInfoType iso15118Authorize(
+            const ocpp::x509::Certificate&                                                  certificate,
+            const std::string&                                                              id_token,
+            const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
+            ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status) override;
 
-        /** @copydoc ocpp::types::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
+        /** @copydoc ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType IChargePointRequestHandler::iso15118GetEVCertificate(
                                                           const std::string&,
-                                                          ocpp::types::CertificateActionEnumType,
+                                                          ocpp::types::ocpp16::CertificateActionEnumType,
                                                           const std::string&,
                                                           std::string&) */
-        ocpp::types::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(const std::string& iso15118_schema_version,
-                                                                                  ocpp::types::CertificateActionEnumType action,
-                                                                                  const std::string&                     exi_request,
-                                                                                  std::string& exi_response) override;
+        ocpp::types::ocpp16::Iso15118EVCertificateStatusEnumType iso15118GetEVCertificate(
+            const std::string&                             iso15118_schema_version,
+            ocpp::types::ocpp16::CertificateActionEnumType action,
+            const std::string&                             exi_request,
+            std::string&                                   exi_response) override;
 
-        /** @copydoc ocpp::types::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
-                                                          const ocpp::types::OcspRequestDataType&,
+        /** @copydoc ocpp::types::ocpp16::GetCertificateStatusEnumType IChargePointRequestHandler::iso15118GetCertificateStatus(
+                                                          const ocpp::types::ocpp16::OcspRequestDataType&,
                                                           std::string&) */
-        ocpp::types::GetCertificateStatusEnumType iso15118GetCertificateStatus(const ocpp::types::OcspRequestDataType& ocsp_request,
-                                                                               std::string& ocsp_result) override;
+        ocpp::types::ocpp16::GetCertificateStatusEnumType iso15118GetCertificateStatus(
+            const ocpp::types::ocpp16::OcspRequestDataType& ocsp_request, std::string& ocsp_result) override;
 
         /** @copydoc bool iso15118SignCertificate(const ocpp::x509::CertificateRequest&) */
         bool iso15118SignCertificate(const ocpp::x509::CertificateRequest& certificate_request) override;

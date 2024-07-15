@@ -62,21 +62,22 @@ class CaCertificatesDatabase
      * @param certificate Certificate information
      * @return Operation status (see DeleteCertificateStatusEnumType documentation)
      */
-    ocpp::types::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::CertificateHashDataType& certificate);
+    ocpp::types::ocpp16::DeleteCertificateStatusEnumType deleteCertificate(const ocpp::types::ocpp16::CertificateHashDataType& certificate);
 
     /**
      * @brief Get the list of certificates
      * @param type Type of certificates
      * @param certificates List of certificates to fill
      */
-    void getCertificateList(ocpp::types::CertificateUseEnumType type, std::vector<ocpp::types::CertificateHashDataType>& certificates);
+    void getCertificateList(ocpp::types::ocpp16::CertificateUseEnumType                type,
+                            std::vector<ocpp::types::ocpp16::CertificateHashDataType>& certificates);
 
     /**
      * @brief Get the list of valid certificates in PEM encoded data format
      * @param type Type of certificates
      * @return List of valid certificates in PEM encoded data format
      */
-    std::string getCertificateListPem(ocpp::types::CertificateUseEnumType type);
+    std::string getCertificateListPem(ocpp::types::ocpp16::CertificateUseEnumType type);
 
     /**
      * @brief Get the number of installed certificates
@@ -84,7 +85,7 @@ class CaCertificatesDatabase
      * @param check_validity Check the validity of the certificates
      * @return Number of installed certificates
      */
-    unsigned int getCertificateCount(ocpp::types::CertificateUseEnumType type, bool check_validity);
+    unsigned int getCertificateCount(ocpp::types::ocpp16::CertificateUseEnumType type, bool check_validity);
 
     /**
      * @brief Add a new certificate
@@ -93,9 +94,9 @@ class CaCertificatesDatabase
      * @param hash_data Certificate information
      * @return true if the certificate has been added, false otherwise
      */
-    bool addCertificate(ocpp::types::CertificateUseEnumType         type,
-                        const ocpp::x509::Certificate&              certificate,
-                        const ocpp::types::CertificateHashDataType& hash_data);
+    bool addCertificate(ocpp::types::ocpp16::CertificateUseEnumType         type,
+                        const ocpp::x509::Certificate&                      certificate,
+                        const ocpp::types::ocpp16::CertificateHashDataType& hash_data);
 
   private:
     /** @brief Stack configuration */
@@ -115,7 +116,7 @@ class CaCertificatesDatabase
     std::unique_ptr<ocpp::database::Database::Query> m_insert_query;
 
     /** @brief Look for a certificate */
-    bool findCertificate(const ocpp::types::CertificateHashDataType& certificate, unsigned int& id, bool& in_use);
+    bool findCertificate(const ocpp::types::ocpp16::CertificateHashDataType& certificate, unsigned int& id, bool& in_use);
 };
 
 } // namespace chargepoint

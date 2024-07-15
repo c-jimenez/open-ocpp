@@ -27,6 +27,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace ocpp::database;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 namespace ocpp
@@ -95,8 +96,8 @@ void CaCertificatesDatabase::initDatabaseTable()
 }
 
 /** @brief Delete an installed CA certificate */
-ocpp::types::DeleteCertificateStatusEnumType CaCertificatesDatabase::deleteCertificate(
-    const ocpp::types::CertificateHashDataType& certificate)
+ocpp::types::ocpp16::DeleteCertificateStatusEnumType CaCertificatesDatabase::deleteCertificate(
+    const ocpp::types::ocpp16::CertificateHashDataType& certificate)
 {
     DeleteCertificateStatusEnumType ret = DeleteCertificateStatusEnumType::NotFound;
 
@@ -137,8 +138,8 @@ ocpp::types::DeleteCertificateStatusEnumType CaCertificatesDatabase::deleteCerti
 }
 
 /** @brief Get the list of certificates */
-void CaCertificatesDatabase::getCertificateList(ocpp::types::CertificateUseEnumType                type,
-                                                std::vector<ocpp::types::CertificateHashDataType>& certificates)
+void CaCertificatesDatabase::getCertificateList(ocpp::types::ocpp16::CertificateUseEnumType                type,
+                                                std::vector<ocpp::types::ocpp16::CertificateHashDataType>& certificates)
 {
     if (m_list_query)
     {
@@ -166,7 +167,7 @@ void CaCertificatesDatabase::getCertificateList(ocpp::types::CertificateUseEnumT
 }
 
 /** @brief Get the list of valid certificates in PEM encoded data format */
-std::string CaCertificatesDatabase::getCertificateListPem(ocpp::types::CertificateUseEnumType type)
+std::string CaCertificatesDatabase::getCertificateListPem(ocpp::types::ocpp16::CertificateUseEnumType type)
 {
     std::string ca_certificates_pem;
 
@@ -193,7 +194,7 @@ std::string CaCertificatesDatabase::getCertificateListPem(ocpp::types::Certifica
 }
 
 /** @brief Get the number of installed certificates */
-unsigned int CaCertificatesDatabase::getCertificateCount(ocpp::types::CertificateUseEnumType type, bool check_validity)
+unsigned int CaCertificatesDatabase::getCertificateCount(ocpp::types::ocpp16::CertificateUseEnumType type, bool check_validity)
 {
     unsigned int ret = 0;
 
@@ -229,9 +230,9 @@ unsigned int CaCertificatesDatabase::getCertificateCount(ocpp::types::Certificat
 }
 
 /** @brief Add a new certificate */
-bool CaCertificatesDatabase::addCertificate(ocpp::types::CertificateUseEnumType         type,
-                                            const ocpp::x509::Certificate&              certificate,
-                                            const ocpp::types::CertificateHashDataType& hash_data)
+bool CaCertificatesDatabase::addCertificate(ocpp::types::ocpp16::CertificateUseEnumType         type,
+                                            const ocpp::x509::Certificate&                      certificate,
+                                            const ocpp::types::ocpp16::CertificateHashDataType& hash_data)
 {
     bool ret = false;
 
@@ -272,7 +273,9 @@ bool CaCertificatesDatabase::addCertificate(ocpp::types::CertificateUseEnumType 
 }
 
 /** @brief Look for a certificate */
-bool CaCertificatesDatabase::findCertificate(const ocpp::types::CertificateHashDataType& certificate, unsigned int& id, bool& in_use)
+bool CaCertificatesDatabase::findCertificate(const ocpp::types::ocpp16::CertificateHashDataType& certificate,
+                                             unsigned int&                                       id,
+                                             bool&                                               in_use)
 {
     bool found = false;
 

@@ -20,8 +20,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "IChargePointEventsHandler.h"
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -45,11 +47,11 @@ DataTransferManager::DataTransferManager(IChargePointEventsHandler&             
 DataTransferManager::~DataTransferManager() { }
 
 /** @brief Send a data transfer request */
-bool DataTransferManager::dataTransfer(const std::string&               vendor_id,
-                                       const std::string&               message_id,
-                                       const std::string&               request_data,
-                                       ocpp::types::DataTransferStatus& status,
-                                       std::string&                     response_data)
+bool DataTransferManager::dataTransfer(const std::string&                       vendor_id,
+                                       const std::string&                       message_id,
+                                       const std::string&                       request_data,
+                                       ocpp::types::ocpp16::DataTransferStatus& status,
+                                       std::string&                             response_data)
 {
     bool ret = false;
 
@@ -89,10 +91,10 @@ void DataTransferManager::registerHandler(const std::string& vendor_id, IDataTra
  *                                                                                std::string& error_code,
  *                                                                                std::string& error_message)
  */
-bool DataTransferManager::handleMessage(const ocpp::messages::DataTransferReq& request,
-                                        ocpp::messages::DataTransferConf&      response,
-                                        std::string&                           error_code,
-                                        std::string&                           error_message)
+bool DataTransferManager::handleMessage(const ocpp::messages::ocpp16::DataTransferReq& request,
+                                        ocpp::messages::ocpp16::DataTransferConf&      response,
+                                        std::string&                                   error_code,
+                                        std::string&                                   error_message)
 {
     (void)error_code;
     (void)error_message;

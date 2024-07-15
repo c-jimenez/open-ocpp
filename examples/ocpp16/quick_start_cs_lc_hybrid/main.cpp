@@ -33,8 +33,10 @@ SOFTWARE.
 #include <thread>
 
 using namespace ocpp::centralsystem;
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 /** @brief Entry point */
 int main(int argc, char* argv[])

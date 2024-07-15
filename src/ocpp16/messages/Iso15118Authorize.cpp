@@ -22,10 +22,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "OcspRequestDataTypeConverter.h"
 
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
 namespace types
+{
+namespace ocpp16
 {
 /** @brief Helper to convert a AuthorizeCertificateStatusEnumType enum to string */
 const EnumToStringFromString<AuthorizeCertificateStatusEnumType> AuthorizeCertificateStatusEnumTypeHelper = {
@@ -36,8 +39,11 @@ const EnumToStringFromString<AuthorizeCertificateStatusEnumType> AuthorizeCertif
     {AuthorizeCertificateStatusEnumType::ContractCancelled, "ContractCancelled"},
     {AuthorizeCertificateStatusEnumType::NoCertificateAvailable, "NoCertificateAvailable"},
     {AuthorizeCertificateStatusEnumType::SignatureError, "SignatureError"}};
+} // namespace ocpp16
 } // namespace types
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
@@ -120,5 +126,6 @@ bool Iso15118AuthorizeConfConverter::toJson(const Iso15118AuthorizeConf& data, r
     return ret;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

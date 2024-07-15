@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the GetConfiguration messages */
 static const std::string GET_CONFIGURATION_ACTION = "GetConfiguration";
@@ -44,7 +46,7 @@ struct GetConfigurationReq
 struct GetConfigurationConf
 {
     /** @brief Optional. List of requested or known keys */
-    ocpp::types::Optional<std::vector<ocpp::types::KeyValue>> configurationKey;
+    ocpp::types::Optional<std::vector<ocpp::types::ocpp16::KeyValue>> configurationKey;
     /** @brief Optional. Requested keys that are unknown */
     ocpp::types::Optional<std::vector<ocpp::types::CiStringType<50u>>> unknownKey;
 };
@@ -52,6 +54,7 @@ struct GetConfigurationConf
 // Message converters
 MESSAGE_CONVERTERS(GetConfiguration)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

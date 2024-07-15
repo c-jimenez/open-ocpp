@@ -29,6 +29,8 @@ namespace ocpp
 {
 namespace types
 {
+namespace ocpp16
+{
 
 /** @brief Contains status information about an identifier. It is returned in Authorize, Start Transaction and Stop
            Transaction responses.
@@ -46,6 +48,7 @@ struct IdTagInfo
     AuthorizationStatus status;
 };
 
+} // namespace ocpp16
 } // namespace types
 } // namespace ocpp
 

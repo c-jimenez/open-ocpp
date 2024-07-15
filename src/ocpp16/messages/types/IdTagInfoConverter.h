@@ -26,25 +26,31 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Converter class for IdTagInfo type */
-class IdTagInfoConverter : public IMessageConverter<ocpp::types::IdTagInfo>
+class IdTagInfoConverter : public IMessageConverter<ocpp::types::ocpp16::IdTagInfo>
 {
   public:
-    /** @copydoc IMessageConverter<ocpp::types::IdTagInfo>* IMessageConverter<ocpp::types::IdTagInfo>::clone() const */
-    IMessageConverter<ocpp::types::IdTagInfo>* clone() const override { return new IdTagInfoConverter(); }
+    /** @copydoc IMessageConverter<ocpp::types::ocpp16::IdTagInfo>* IMessageConverter<ocpp::types::ocpp16::IdTagInfo>::clone() const */
+    IMessageConverter<ocpp::types::ocpp16::IdTagInfo>* clone() const override { return new IdTagInfoConverter(); }
 
-    /** @copydoc bool IMessageConverter<ocpp::types::IdTagInfo>::fromJson(const rapidjson::Value&,
-     *                                                                    ocpp::types::IdTagInfo&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::IdTagInfo>::fromJson(const rapidjson::Value&,
+     *                                                                    ocpp::types::ocpp16::IdTagInfo&,
      *                                                                    std::string&,
      *                                                                    std::string&) */
-    bool fromJson(const rapidjson::Value& json, ocpp::types::IdTagInfo& data, std::string& error_code, std::string& error_message) override;
+    bool fromJson(const rapidjson::Value&         json,
+                  ocpp::types::ocpp16::IdTagInfo& data,
+                  std::string&                    error_code,
+                  std::string&                    error_message) override;
 
-    /** @copydoc bool IMessageConverter<ocpp::types::IdTagInfo>::toJson(const ocpp::types::IdTagInfo&,
+    /** @copydoc bool IMessageConverter<ocpp::types::ocpp16::IdTagInfo>::toJson(const ocpp::types::ocpp16::IdTagInfo&,
      *                                                                  rapidjson::Document&) */
-    bool toJson(const ocpp::types::IdTagInfo& data, rapidjson::Document& json) override;
+    bool toJson(const ocpp::types::ocpp16::IdTagInfo& data, rapidjson::Document& json) override;
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

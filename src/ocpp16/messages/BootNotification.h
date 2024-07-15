@@ -24,10 +24,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Enums.h"
 #include "IMessageConverter.h"
 #include "Optional.h"
+
 #include <string>
+
 namespace ocpp
 {
 namespace messages
+{
+namespace ocpp16
 {
 
 /** @brief Action corresponding to the BootNotification messages */
@@ -75,12 +79,13 @@ struct BootNotificationConf
     unsigned int interval;
     /** @brief Required. This contains whether the Charge Point has been registered within the
                System Central */
-    ocpp::types::RegistrationStatus status;
+    ocpp::types::ocpp16::RegistrationStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(BootNotification)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

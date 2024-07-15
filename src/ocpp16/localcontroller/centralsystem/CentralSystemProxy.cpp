@@ -23,8 +23,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <sstream>
 
-using namespace ocpp::types;
 using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp16;
+using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 namespace ocpp
 {
@@ -32,11 +34,11 @@ namespace localcontroller
 {
 
 /** @brief Constructor */
-CentralSystemProxy::CentralSystemProxy(const std::string&                          identifier,
-                                       const ocpp::messages::MessagesValidator&    messages_validator,
-                                       ocpp::messages::MessagesConverter&          messages_converter,
-                                       const ocpp::config::ILocalControllerConfig& stack_config,
-                                       ocpp::rpc::RpcPool&                         rpc_pool)
+CentralSystemProxy::CentralSystemProxy(const std::string&                               identifier,
+                                       const ocpp::messages::ocpp16::MessagesValidator& messages_validator,
+                                       ocpp::messages::ocpp16::MessagesConverter&       messages_converter,
+                                       const ocpp::config::ILocalControllerConfig&      stack_config,
+                                       ocpp::rpc::RpcPool&                              rpc_pool)
     : m_identifier(identifier),
       m_stack_config(stack_config),
       m_websocket(ocpp::websockets::WebsocketFactory::newClientFromPool()),
@@ -107,410 +109,433 @@ bool CentralSystemProxy::isConnected() const
     return m_rpc.isConnected();
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::BootNotificationReq&,
- *                                          ocpp::messages::BootNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::BootNotificationReq&,
+ *                                          ocpp::messages::ocpp16::BootNotificationConf&,
  *                                          std::string&,
  *                                          std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::BootNotificationReq& request,
-                              ocpp::messages::BootNotificationConf&      response,
-                              std::string&                               error,
-                              std::string&                               message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::BootNotificationReq& request,
+                              ocpp::messages::ocpp16::BootNotificationConf&      response,
+                              std::string&                                       error,
+                              std::string&                                       message)
 {
     return call(BOOT_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StatusNotificationReq&,
-     *                                      ocpp::messages::StatusNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StatusNotificationReq&,
+     *                                      ocpp::messages::ocpp16::StatusNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::StatusNotificationReq& request,
-                              ocpp::messages::StatusNotificationConf&      response,
-                              std::string&                                 error,
-                              std::string&                                 message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::StatusNotificationReq& request,
+                              ocpp::messages::ocpp16::StatusNotificationConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message)
 {
     return call(STATUS_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::AuthorizeReq&,
-     *                                      ocpp::messages::AuthorizeConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::AuthorizeReq&,
+     *                                      ocpp::messages::ocpp16::AuthorizeConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::AuthorizeReq& request,
-                              ocpp::messages::AuthorizeConf&      response,
-                              std::string&                        error,
-                              std::string&                        message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::AuthorizeReq& request,
+                              ocpp::messages::ocpp16::AuthorizeConf&      response,
+                              std::string&                                error,
+                              std::string&                                message)
 {
     return call(AUTHORIZE_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StartTransactionReq&,
-     *                                      ocpp::messages::StartTransactionConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StartTransactionReq&,
+     *                                      ocpp::messages::ocpp16::StartTransactionConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::StartTransactionReq& request,
-                              ocpp::messages::StartTransactionConf&      response,
-                              std::string&                               error,
-                              std::string&                               message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::StartTransactionReq& request,
+                              ocpp::messages::ocpp16::StartTransactionConf&      response,
+                              std::string&                                       error,
+                              std::string&                                       message)
 {
     return call(START_TRANSACTION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::StopTransactionReq&,
-     *                                      ocpp::messages::StopTransactionConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::StopTransactionReq&,
+     *                                      ocpp::messages::ocpp16::StopTransactionConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::StopTransactionReq& request,
-                              ocpp::messages::StopTransactionConf&      response,
-                              std::string&                              error,
-                              std::string&                              message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::StopTransactionReq& request,
+                              ocpp::messages::ocpp16::StopTransactionConf&      response,
+                              std::string&                                      error,
+                              std::string&                                      message)
 {
     return call(STOP_TRANSACTION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::DataTransferReq&,
-     *                                      ocpp::messages::DataTransferConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::DataTransferReq&,
+     *                                      ocpp::messages::ocpp16::DataTransferConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::DataTransferReq& request,
-                              ocpp::messages::DataTransferConf&      response,
-                              std::string&                           error,
-                              std::string&                           message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::DataTransferReq& request,
+                              ocpp::messages::ocpp16::DataTransferConf&      response,
+                              std::string&                                   error,
+                              std::string&                                   message)
 {
     return call(DATA_TRANSFER_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::MeterValuesReq&,
-     *                                      ocpp::messages::MeterValuesConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::MeterValuesReq&,
+     *                                      ocpp::messages::ocpp16::MeterValuesConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::MeterValuesReq& request,
-                              ocpp::messages::MeterValuesConf&      response,
-                              std::string&                          error,
-                              std::string&                          message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::MeterValuesReq& request,
+                              ocpp::messages::ocpp16::MeterValuesConf&      response,
+                              std::string&                                  error,
+                              std::string&                                  message)
 {
     return call(METER_VALUES_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::DiagnosticsStatusNotificationReq&,
-     *                                      ocpp::messages::DiagnosticsStatusNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq&,
+     *                                      ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::DiagnosticsStatusNotificationReq& request,
-                              ocpp::messages::DiagnosticsStatusNotificationConf&      response,
-                              std::string&                                            error,
-                              std::string&                                            message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::DiagnosticsStatusNotificationReq& request,
+                              ocpp::messages::ocpp16::DiagnosticsStatusNotificationConf&      response,
+                              std::string&                                                    error,
+                              std::string&                                                    message)
 {
     return call(DIAGNOSTIC_STATUS_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::FirmwareStatusNotificationReq&,
-     *                                      ocpp::messages::FirmwareStatusNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq&,
+     *                                      ocpp::messages::ocpp16::FirmwareStatusNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::FirmwareStatusNotificationReq& request,
-                              ocpp::messages::FirmwareStatusNotificationConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::FirmwareStatusNotificationReq& request,
+                              ocpp::messages::ocpp16::FirmwareStatusNotificationConf&      response,
+                              std::string&                                                 error,
+                              std::string&                                                 message)
 {
     return call(FIRMWARE_STATUS_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::HeartbeatReq&,
-     *                                      ocpp::messages::HeartbeatConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::HeartbeatReq&,
+     *                                      ocpp::messages::ocpp16::HeartbeatConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::HeartbeatReq& request,
-                              ocpp::messages::HeartbeatConf&      response,
-                              std::string&                        error,
-                              std::string&                        message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::HeartbeatReq& request,
+                              ocpp::messages::ocpp16::HeartbeatConf&      response,
+                              std::string&                                error,
+                              std::string&                                message)
 {
     return call(HEARTBEAT_ACTION, request, response, error, message);
 }
 
 // Security extensions
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SecurityEventNotificationReq&,
-     *                                      ocpp::messages::SecurityEventNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SecurityEventNotificationReq&,
+     *                                      ocpp::messages::ocpp16::SecurityEventNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::SecurityEventNotificationReq& request,
-                              ocpp::messages::SecurityEventNotificationConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::SecurityEventNotificationReq& request,
+                              ocpp::messages::ocpp16::SecurityEventNotificationConf&      response,
+                              std::string&                                                error,
+                              std::string&                                                message)
 {
     return call(SECURITY_EVENT_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SignCertificateReq&,
-     *                                      ocpp::messages::SignCertificateConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SignCertificateReq&,
+     *                                      ocpp::messages::ocpp16::SignCertificateConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::SignCertificateReq& request,
-                              ocpp::messages::SignCertificateConf&      response,
-                              std::string&                              error,
-                              std::string&                              message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::SignCertificateReq& request,
+                              ocpp::messages::ocpp16::SignCertificateConf&      response,
+                              std::string&                                      error,
+                              std::string&                                      message)
 {
     return call(SIGN_CERTIFICATE_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::LogStatusNotificationReq&,
-     *                                      ocpp::messages::LogStatusNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::LogStatusNotificationReq&,
+     *                                      ocpp::messages::ocpp16::LogStatusNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::LogStatusNotificationReq& request,
-                              ocpp::messages::LogStatusNotificationConf&      response,
-                              std::string&                                    error,
-                              std::string&                                    message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::LogStatusNotificationReq& request,
+                              ocpp::messages::ocpp16::LogStatusNotificationConf&      response,
+                              std::string&                                            error,
+                              std::string&                                            message)
 {
     return call(LOG_STATUS_NOTIFICATION_ACTION, request, response, error, message);
 }
 
-/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::SignedFirmwareStatusNotificationReq&,
-     *                                      ocpp::messages::SignedFirmwareStatusNotificationConf&,
+/** @copydoc bool ICentralSystemProxy::call(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq&,
+     *                                      ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&,
      *                                      std::string&,
      *                                      std::string&) */
-bool CentralSystemProxy::call(const ocpp::messages::SignedFirmwareStatusNotificationReq& request,
-                              ocpp::messages::SignedFirmwareStatusNotificationConf&      response,
-                              std::string&                                               error,
-                              std::string&                                               message)
+bool CentralSystemProxy::call(const ocpp::messages::ocpp16::SignedFirmwareStatusNotificationReq& request,
+                              ocpp::messages::ocpp16::SignedFirmwareStatusNotificationConf&      response,
+                              std::string&                                                       error,
+                              std::string&                                                       message)
 {
     return call(SIGNED_FIRMWARE_STATUS_NOTIFICATION_ACTION, request, response, error, message);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::CancelReservationReq&, ocpp::messages::ocpp16::CancelReservationConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::CancelReservationReq&, ocpp::messages::CancelReservationConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::CancelReservationReq&, ocpp::messages::ocpp16::CancelReservationConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(CANCEL_RESERVATION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ChangeAvailabilityReq&, ocpp::messages::ocpp16::ChangeAvailabilityConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::ChangeAvailabilityReq&, ocpp::messages::ChangeAvailabilityConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::ChangeAvailabilityReq&, ocpp::messages::ocpp16::ChangeAvailabilityConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(CHANGE_AVAILABILITY_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::ChangeConfigurationReq&, ocpp::messages::ChangeConfigurationConf&, std::string&, std::string&)>
-        handler)
+                      std::function<bool(const ocpp::messages::ocpp16::ChangeConfigurationReq&, ocpp::messages::ocpp16::ChangeConfigurationConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::ChangeConfigurationReq&,
+                                                            ocpp::messages::ocpp16::ChangeConfigurationConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 {
     return registerHandler(CHANGE_CONFIGURATION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ClearCacheReq&, ocpp::messages::ocpp16::ClearCacheConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::ClearCacheReq&, ocpp::messages::ClearCacheConf&, std::string&, std::string&)> handler)
+    std::function<bool(const ocpp::messages::ocpp16::ClearCacheReq&, ocpp::messages::ocpp16::ClearCacheConf&, std::string&, std::string&)>
+        handler)
 
 {
     return registerHandler(CLEAR_CACHE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::ClearChargingProfileReq&, ocpp::messages::ClearChargingProfileConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::ClearChargingProfileReq&, ocpp::messages::ocpp16::ClearChargingProfileConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::ClearChargingProfileReq&,
+                                                            ocpp::messages::ocpp16::ClearChargingProfileConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(CLEAR_CHARGING_PROFILE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::DataTransferReq&, ocpp::messages::DataTransferConf&, std::string&, std::string&)> handler)
+    std::function<bool(
+        const ocpp::messages::ocpp16::DataTransferReq&, ocpp::messages::ocpp16::DataTransferConf&, std::string&, std::string&)> handler)
 
 {
     return registerHandler(DATA_TRANSFER_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::GetCompositeScheduleReq&, ocpp::messages::GetCompositeScheduleConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::GetCompositeScheduleReq&, ocpp::messages::ocpp16::GetCompositeScheduleConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetCompositeScheduleReq&,
+                                                            ocpp::messages::ocpp16::GetCompositeScheduleConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(GET_COMPOSITE_SCHEDULE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::GetConfigurationReq&, ocpp::messages::ocpp16::GetConfigurationConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::GetConfigurationReq&, ocpp::messages::GetConfigurationConf&, std::string&, std::string&)>
+    std::function<
+        bool(const ocpp::messages::ocpp16::GetConfigurationReq&, ocpp::messages::ocpp16::GetConfigurationConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(GET_CONFIGURATION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::GetDiagnosticsReq&, ocpp::messages::ocpp16::GetDiagnosticsConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::GetDiagnosticsReq&, ocpp::messages::GetDiagnosticsConf&, std::string&, std::string&)> handler)
+    std::function<bool(
+        const ocpp::messages::ocpp16::GetDiagnosticsReq&, ocpp::messages::ocpp16::GetDiagnosticsConf&, std::string&, std::string&)> handler)
 
 {
     return registerHandler(GET_DIAGNOSTICS_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::GetLocalListVersionReq&, ocpp::messages::GetLocalListVersionConf&, std::string&, std::string&)>
-        handler)
+                      std::function<bool(const ocpp::messages::ocpp16::GetLocalListVersionReq&, ocpp::messages::ocpp16::GetLocalListVersionConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetLocalListVersionReq&,
+                                                            ocpp::messages::ocpp16::GetLocalListVersionConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 {
     return registerHandler(GET_LOCAL_LIST_VERSION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::RemoteStartTransactionReq&, ocpp::messages::RemoteStartTransactionConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::RemoteStartTransactionReq&, ocpp::messages::ocpp16::RemoteStartTransactionConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::RemoteStartTransactionReq&,
+                                                            ocpp::messages::ocpp16::RemoteStartTransactionConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(REMOTE_START_TRANSACTION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::RemoteStopTransactionReq&, ocpp::messages::RemoteStopTransactionConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::RemoteStopTransactionReq&, ocpp::messages::ocpp16::RemoteStopTransactionConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::RemoteStopTransactionReq&,
+                                                            ocpp::messages::ocpp16::RemoteStopTransactionConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(REMOTE_STOP_TRANSACTION_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ReserveNowReq&, ocpp::messages::ocpp16::ReserveNowConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::ReserveNowReq&, ocpp::messages::ReserveNowConf&, std::string&, std::string&)> handler)
+    std::function<bool(const ocpp::messages::ocpp16::ReserveNowReq&, ocpp::messages::ocpp16::ReserveNowConf&, std::string&, std::string&)>
+        handler)
 
 {
     return registerHandler(RESERVE_NOW_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::ResetReq&, ocpp::messages::ocpp16::ResetConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::ResetReq&, ocpp::messages::ResetConf&, std::string&, std::string&)> handler)
+    std::function<bool(const ocpp::messages::ocpp16::ResetReq&, ocpp::messages::ocpp16::ResetConf&, std::string&, std::string&)> handler)
 {
     return registerHandler(RESET_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::SendLocalListReq&, ocpp::messages::ocpp16::SendLocalListConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::SendLocalListReq&, ocpp::messages::SendLocalListConf&, std::string&, std::string&)> handler)
+    std::function<bool(
+        const ocpp::messages::ocpp16::SendLocalListReq&, ocpp::messages::ocpp16::SendLocalListConf&, std::string&, std::string&)> handler)
 
 {
     return registerHandler(SEND_LOCAL_LIST_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::SetChargingProfileReq&, ocpp::messages::ocpp16::SetChargingProfileConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::SetChargingProfileReq&, ocpp::messages::SetChargingProfileConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::SetChargingProfileReq&, ocpp::messages::ocpp16::SetChargingProfileConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(SET_CHARGING_PROFILE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::TriggerMessageReq&, ocpp::messages::ocpp16::TriggerMessageConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::TriggerMessageReq&, ocpp::messages::TriggerMessageConf&, std::string&, std::string&)> handler)
+    std::function<bool(
+        const ocpp::messages::ocpp16::TriggerMessageReq&, ocpp::messages::ocpp16::TriggerMessageConf&, std::string&, std::string&)> handler)
 
 {
     return registerHandler(TRIGGER_MESSAGE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::UnlockConnectorReq&, ocpp::messages::ocpp16::UnlockConnectorConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::UnlockConnectorReq&, ocpp::messages::UnlockConnectorConf&, std::string&, std::string&)>
+    std::function<
+        bool(const ocpp::messages::ocpp16::UnlockConnectorReq&, ocpp::messages::ocpp16::UnlockConnectorConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(UNLOCK_CONNECTOR_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::UpdateFirmwareReq&, ocpp::messages::ocpp16::UpdateFirmwareConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::UpdateFirmwareReq&, ocpp::messages::UpdateFirmwareConf&, std::string&, std::string&)> handler)
+    std::function<bool(
+        const ocpp::messages::ocpp16::UpdateFirmwareReq&, ocpp::messages::ocpp16::UpdateFirmwareConf&, std::string&, std::string&)> handler)
 
 {
     return registerHandler(UPDATE_FIRMWARE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::CertificateSignedReq&, ocpp::messages::ocpp16::CertificateSignedConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::CertificateSignedReq&, ocpp::messages::CertificateSignedConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::CertificateSignedReq&, ocpp::messages::ocpp16::CertificateSignedConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(CERTIFICATE_SIGNED_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::DeleteCertificateReq&, ocpp::messages::ocpp16::DeleteCertificateConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::DeleteCertificateReq&, ocpp::messages::DeleteCertificateConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::DeleteCertificateReq&, ocpp::messages::ocpp16::DeleteCertificateConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(DELETE_CERTIFICATE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::ExtendedTriggerMessageReq&, ocpp::messages::ExtendedTriggerMessageConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq&, ocpp::messages::ocpp16::ExtendedTriggerMessageConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::ExtendedTriggerMessageReq&,
+                                                            ocpp::messages::ocpp16::ExtendedTriggerMessageConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(EXTENDED_TRIGGER_MESSAGE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetInstalledCertificateIdsReq&, ocpp::messages::GetInstalledCertificateIdsConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::GetInstalledCertificateIdsReq&, ocpp::messages::GetInstalledCertificateIdsConf&, std::string&, std::string&)>
-        handler)
+                      std::function<bool(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq&, ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::GetInstalledCertificateIdsReq&,
+                                                            ocpp::messages::ocpp16::GetInstalledCertificateIdsConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 {
     return registerHandler(GET_INSTALLED_CERTIFICATE_IDS_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::GetLogReq&, ocpp::messages::ocpp16::GetLogConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::GetLogReq&, ocpp::messages::GetLogConf&, std::string&, std::string&)> handler)
+    std::function<bool(const ocpp::messages::ocpp16::GetLogReq&, ocpp::messages::ocpp16::GetLogConf&, std::string&, std::string&)> handler)
 {
     return registerHandler(GET_LOG_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, std::string&, std::string&)>) */
+                      std::function<bool(const ocpp::messages::ocpp16::InstallCertificateReq&, ocpp::messages::ocpp16::InstallCertificateConf&, std::string&, std::string&)>) */
 bool CentralSystemProxy::registerHandler(
-    std::function<bool(const ocpp::messages::InstallCertificateReq&, ocpp::messages::InstallCertificateConf&, std::string&, std::string&)>
+    std::function<bool(
+        const ocpp::messages::ocpp16::InstallCertificateReq&, ocpp::messages::ocpp16::InstallCertificateConf&, std::string&, std::string&)>
         handler)
 {
     return registerHandler(INSTALL_CERTIFICATE_ACTION, handler);
 }
 
 /** @copydoc bool ICentralSystemProxy::registerHandler(
-                      std::function<bool(const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, std::string&, std::string&)>) */
-bool CentralSystemProxy::registerHandler(
-    std::function<bool(
-        const ocpp::messages::SignedUpdateFirmwareReq&, ocpp::messages::SignedUpdateFirmwareConf&, std::string&, std::string&)> handler)
+                      std::function<bool(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq&, ocpp::messages::ocpp16::SignedUpdateFirmwareConf&, std::string&, std::string&)>) */
+bool CentralSystemProxy::registerHandler(std::function<bool(const ocpp::messages::ocpp16::SignedUpdateFirmwareReq&,
+                                                            ocpp::messages::ocpp16::SignedUpdateFirmwareConf&,
+                                                            std::string&,
+                                                            std::string&)> handler)
 
 {
     return registerHandler(SIGNED_UPDATE_FIRMWARE_ACTION, handler);

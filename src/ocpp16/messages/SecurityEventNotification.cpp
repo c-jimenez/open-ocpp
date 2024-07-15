@@ -25,7 +25,8 @@ namespace ocpp
 {
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool SecurityEventNotificationReqConverter::fromJson(const rapidjson::Value&       json,
                                                      SecurityEventNotificationReq& data,
@@ -72,5 +73,6 @@ bool SecurityEventNotificationConfConverter::toJson(const SecurityEventNotificat
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

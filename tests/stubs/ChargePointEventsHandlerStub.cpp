@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 
 /** @brief Constructor */
 ChargePointEventsHandlerStub::ChargePointEventsHandlerStub()
@@ -38,8 +39,8 @@ ChargePointEventsHandlerStub::ChargePointEventsHandlerStub()
 /** @brief Destructor */
 ChargePointEventsHandlerStub::~ChargePointEventsHandlerStub() { }
 
-/** @copydoc void IChargePointEventsHandler::connectionStateChanged(ocpp::types::RegistrationStatus) */
-void ChargePointEventsHandlerStub::connectionFailed(ocpp::types::RegistrationStatus status)
+/** @copydoc void IChargePointEventsHandler::connectionStateChanged(ocpp::types::ocpp16::RegistrationStatus) */
+void ChargePointEventsHandlerStub::connectionFailed(ocpp::types::ocpp16::RegistrationStatus status)
 {
     m_calls["connectionFailed"] = {{"status", RegistrationStatusHelper.toString(status)}};
 }
@@ -50,8 +51,8 @@ void ChargePointEventsHandlerStub::connectionStateChanged(bool isConnected)
     m_calls["connectionStateChanged"] = {{"isConnected", std::to_string(isConnected)}};
 }
 
-/** @copydoc void IChargePointEventsHandler::bootNotification(ocpp::types::RegistrationStatus, const ocpp::types::DateTime&) */
-void ChargePointEventsHandlerStub::bootNotification(ocpp::types::RegistrationStatus status, const ocpp::types::DateTime& datetime)
+/** @copydoc void IChargePointEventsHandler::bootNotification(ocpp::types::ocpp16::RegistrationStatus, const ocpp::types::DateTime&) */
+void ChargePointEventsHandlerStub::bootNotification(ocpp::types::ocpp16::RegistrationStatus status, const ocpp::types::DateTime& datetime)
 {
     m_calls["bootNotification"] = {{"status", RegistrationStatusHelper.toString(status)}, {"dateTime", datetime.str()}};
 }
@@ -62,9 +63,9 @@ void ChargePointEventsHandlerStub::datetimeReceived(const ocpp::types::DateTime&
     m_calls["datetimeReceived"] = {{"dateTime", datetime.str()}};
 }
 
-/** @copydoc AvailabilityStatus IChargePointEventsHandler::changeAvailabilityRequested(unsigned int, ocpp::types::AvailabilityType) */
-ocpp::types::AvailabilityStatus ChargePointEventsHandlerStub::changeAvailabilityRequested(unsigned int                  connector_id,
-                                                                                          ocpp::types::AvailabilityType availability)
+/** @copydoc AvailabilityStatus IChargePointEventsHandler::changeAvailabilityRequested(unsigned int, ocpp::types::ocpp16::AvailabilityType) */
+ocpp::types::ocpp16::AvailabilityStatus ChargePointEventsHandlerStub::changeAvailabilityRequested(
+    unsigned int connector_id, ocpp::types::ocpp16::AvailabilityType availability)
 {
     m_calls["changeAvailabilityRequested"] = {{"connector_id", std::to_string(connector_id)},
                                               {"availability", AvailabilityTypeHelper.toString(availability)}};
@@ -91,25 +92,25 @@ void ChargePointEventsHandlerStub::reservationEnded(unsigned int connector_id, b
     m_calls["reservationStarted"] = {{"connector_id", std::to_string(connector_id)}, {"canceled", std::to_string(canceled)}};
 }
 
-/** @copydoc ocpp::types::DataTransferStatus IChargePointEventsHandler::dataTransferRequested(const std::string&,
+/** @copydoc ocpp::types::ocpp16::DataTransferStatus IChargePointEventsHandler::dataTransferRequested(const std::string&,
                                                                                                   const std::string&,
                                                                                                   const std::string&,
                                                                                                   std::string&) */
-ocpp::types::DataTransferStatus ChargePointEventsHandlerStub::dataTransferRequested(const std::string& vendor_id,
-                                                                                    const std::string& message_id,
-                                                                                    const std::string& request_data,
-                                                                                    std::string&       response_data)
+ocpp::types::ocpp16::DataTransferStatus ChargePointEventsHandlerStub::dataTransferRequested(const std::string& vendor_id,
+                                                                                            const std::string& message_id,
+                                                                                            const std::string& request_data,
+                                                                                            std::string&       response_data)
 {
     (void)response_data;
     m_calls["dataTransferRequested"] = {{"vendor_id", vendor_id}, {"message_id", message_id}, {"request_data", request_data}};
     return m_data_transfer_status;
 }
 
-/** @copydoc bool getMeterValue(unsigned int, const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>&, ocpp::types::MeterValue&) */
+/** @copydoc bool getMeterValue(unsigned int, const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>&, ocpp::types::ocpp16::MeterValue&) */
 bool ChargePointEventsHandlerStub::getMeterValue(
-    unsigned int                                                                        connector_id,
-    const std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>>& measurand,
-    ocpp::types::MeterValue&                                                            meter_value)
+    unsigned int                                                                                        connector_id,
+    const std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>>& measurand,
+    ocpp::types::ocpp16::MeterValue&                                                                    meter_value)
 {
     m_calls["getMeterValue"] = {{"connector_id", std::to_string(connector_id)},
                                 {"measurand", MeasurandHelper.toString(measurand.first)},
@@ -157,25 +158,25 @@ void ChargePointEventsHandlerStub::transactionDeAuthorized(unsigned int connecto
     m_calls["transactionDeAuthorized"] = {{"connector_id", std::to_string(connector_id)}};
 }
 
-/** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ChargingSchedule&) */
-bool ChargePointEventsHandlerStub::getLocalLimitationsSchedule(unsigned int                   connector_id,
-                                                               unsigned int                   duration,
-                                                               ocpp::types::ChargingSchedule& schedule)
+/** @copydoc bool IChargePointEventsHandler::getLocalLimitationsSchedule(unsigned int, unsigned int, ocpp::types::ocpp16::ChargingSchedule&) */
+bool ChargePointEventsHandlerStub::getLocalLimitationsSchedule(unsigned int                           connector_id,
+                                                               unsigned int                           duration,
+                                                               ocpp::types::ocpp16::ChargingSchedule& schedule)
 {
     (void)schedule;
     m_calls["getLocalLimitationsSchedule"] = {{"connector_id", std::to_string(connector_id)}, {"duration", std::to_string(duration)}};
     return false;
 }
 
-/** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ResetType) */
-bool ChargePointEventsHandlerStub::resetRequested(ocpp::types::ResetType reset_type)
+/** @copydoc bool IChargePointEventsHandler::resetRequested(ocpp::types::ocpp16::ResetType) */
+bool ChargePointEventsHandlerStub::resetRequested(ocpp::types::ocpp16::ResetType reset_type)
 {
     m_calls["resetRequested"] = {{"reset_type", ResetTypeHelper.toString(reset_type)}};
     return callResult("resetRequested");
 }
 
-/** @copydoc ocpp::types::UnlockStatus IChargePointEventsHandler::unlockConnectorRequested(unsigned int) */
-ocpp::types::UnlockStatus ChargePointEventsHandlerStub::unlockConnectorRequested(unsigned int connector_id)
+/** @copydoc ocpp::types::ocpp16::UnlockStatus IChargePointEventsHandler::unlockConnectorRequested(unsigned int) */
+ocpp::types::ocpp16::UnlockStatus ChargePointEventsHandlerStub::unlockConnectorRequested(unsigned int connector_id)
 {
     m_calls["unlockConnectorRequested"] = {{"connector_id", std::to_string(connector_id)}};
     return m_unlock_status;
@@ -220,10 +221,10 @@ bool ChargePointEventsHandlerStub::downloadFile(const std::string& url, const st
 
 // Security extensions
 
-/** @copydoc ocpp::types::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::CertificateUseEnumType,
+/** @copydoc ocpp::types::ocpp16::CertificateStatusEnumType IChargePointEventsHandler::caCertificateReceived(ocpp::types::ocpp16::CertificateUseEnumType,
                                                                                                      const ocpp::x509::Certificate&) */
-ocpp::types::CertificateStatusEnumType ChargePointEventsHandlerStub::caCertificateReceived(ocpp::types::CertificateUseEnumType type,
-                                                                                           const ocpp::x509::Certificate&      certificate)
+ocpp::types::ocpp16::CertificateStatusEnumType ChargePointEventsHandlerStub::caCertificateReceived(
+    ocpp::types::ocpp16::CertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
 {
     m_calls["caCertificateReceived"] = {{"type", CertificateUseEnumTypeHelper.toString(type)}, {"certificate", certificate.pem()}};
     return CertificateStatusEnumType::Accepted;
@@ -236,15 +237,15 @@ bool ChargePointEventsHandlerStub::chargePointCertificateReceived(const ocpp::x5
     return m_call_results["chargePointCertificateReceived"];
 }
 
-/** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::HashAlgorithmEnumType,
+/** @copydoc ocpp::types::ocpp16::DeleteCertificateStatusEnumType IChargePointEventsHandler::deleteCertificate(ocpp::types::ocpp16::HashAlgorithmEnumType,
                                                                                                            const std::string&,
                                                                                                            const std::string&,
                                                                                                            const std::string&) */
-ocpp::types::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::deleteCertificate(
-    ocpp::types::HashAlgorithmEnumType hash_algorithm,
-    const std::string&                 issuer_name_hash,
-    const std::string&                 issuer_key_hash,
-    const std::string&                 serial_number)
+ocpp::types::ocpp16::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::deleteCertificate(
+    ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+    const std::string&                         issuer_name_hash,
+    const std::string&                         issuer_key_hash,
+    const std::string&                         serial_number)
 {
     m_calls["deleteCertificate"] = {{"hash_algorithm", HashAlgorithmEnumTypeHelper.toString(hash_algorithm)},
                                     {"issuer_name_hash", issuer_name_hash},
@@ -260,19 +261,19 @@ void ChargePointEventsHandlerStub::generateCsr(std::string& csr)
     m_calls["generateCsr"] = {{}};
 }
 
-/** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::CertificateUseEnumType,
+/** @copydoc void IChargePointEventsHandler::getInstalledCertificates(ocpp::types::ocpp16::CertificateUseEnumType,
  *                                                                    std::vector<ocpp::x509::Certificate>&) */
-void ChargePointEventsHandlerStub::getInstalledCertificates(ocpp::types::CertificateUseEnumType   type,
-                                                            std::vector<ocpp::x509::Certificate>& certificates)
+void ChargePointEventsHandlerStub::getInstalledCertificates(ocpp::types::ocpp16::CertificateUseEnumType type,
+                                                            std::vector<ocpp::x509::Certificate>&       certificates)
 {
     (void)certificates;
     m_calls["getInstalledCertificates"] = {{"type", CertificateUseEnumTypeHelper.toString(type)}};
 }
 
-/** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::LogEnumType,
+/** @copydoc std::string IChargePointEventsHandler::getLog(ocpp::types::ocpp16::LogEnumType,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&,
                                                            const ocpp::types::Optional<ocpp::types::DateTime>&) */
-std::string ChargePointEventsHandlerStub::getLog(ocpp::types::LogEnumType                            type,
+std::string ChargePointEventsHandlerStub::getLog(ocpp::types::ocpp16::LogEnumType                    type,
                                                  const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                                                  const ocpp::types::Optional<ocpp::types::DateTime>& stop_time)
 {
@@ -293,9 +294,9 @@ bool ChargePointEventsHandlerStub::hasChargePointCertificateInstalled()
     return m_call_results["hasChargePointCertificateInstalled"];
 }
 
-/** @copydoc ocpp::types::UpdateFirmwareStatusEnumType IChargePointEventsHandler::checkFirmwareSigningCertificate(
+/** @copydoc ocpp::types::ocpp16::UpdateFirmwareStatusEnumType IChargePointEventsHandler::checkFirmwareSigningCertificate(
  *                                            const ocpp::x509::Certificate&) */
-ocpp::types::UpdateFirmwareStatusEnumType ChargePointEventsHandlerStub::checkFirmwareSigningCertificate(
+ocpp::types::ocpp16::UpdateFirmwareStatusEnumType ChargePointEventsHandlerStub::checkFirmwareSigningCertificate(
     const ocpp::x509::Certificate& signing_certificate)
 {
     m_calls["checkFirmwareSigningCertificate"] = {{"signing_certificate", signing_certificate.pem()}};
@@ -318,15 +319,15 @@ bool ChargePointEventsHandlerStub::iso15118ChargePointCertificateReceived(const 
     return true;
 }
 
-/** @copydoc ocpp::types::DeleteCertificateStatusEnumType IChargePointEventsHandler::iso15118DeleteCertificate(ocpp::types::HashAlgorithmEnumType,
+/** @copydoc ocpp::types::ocpp16::DeleteCertificateStatusEnumType IChargePointEventsHandler::iso15118DeleteCertificate(ocpp::types::ocpp16::HashAlgorithmEnumType,
                                                                                                                    const std::string&,
                                                                                                                    const std::string&,
                                                                                                                    const std::string&) */
-ocpp::types::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118DeleteCertificate(
-    ocpp::types::HashAlgorithmEnumType hash_algorithm,
-    const std::string&                 issuer_name_hash,
-    const std::string&                 issuer_key_hash,
-    const std::string&                 serial_number)
+ocpp::types::ocpp16::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118DeleteCertificate(
+    ocpp::types::ocpp16::HashAlgorithmEnumType hash_algorithm,
+    const std::string&                         issuer_name_hash,
+    const std::string&                         issuer_key_hash,
+    const std::string&                         serial_number)
 {
     m_calls["iso15118ChargePointCertificateReceived"] = {{"hash_algorithm", HashAlgorithmEnumTypeHelper.toString(hash_algorithm)},
                                                          {"issuer_name_hash", issuer_name_hash},
@@ -344,7 +345,8 @@ void ChargePointEventsHandlerStub::iso15118GetInstalledCertificates(
     bool v2g_root_certificate,
     bool mo_root_certificate,
     bool v2g_certificate_chain,
-    std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
+    std::vector<
+        std::tuple<ocpp::types::ocpp16::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
         certificates)
 {
     (void)certificates;
@@ -353,11 +355,11 @@ void ChargePointEventsHandlerStub::iso15118GetInstalledCertificates(
                                                    {"v2g_certificate_chain", std::to_string(v2g_certificate_chain)}};
 }
 
-/** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
-                                    ocpp::types::InstallCertificateUseEnumType type,
+/** @copydoc ocpp::types::ocpp16::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
+                                    ocpp::types::ocpp16::InstallCertificateUseEnumType type,
                                     const ocpp::x509::Certificate&) */
-ocpp::types::InstallCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118CertificateReceived(
-    ocpp::types::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
+ocpp::types::ocpp16::InstallCertificateStatusEnumType ChargePointEventsHandlerStub::iso15118CertificateReceived(
+    ocpp::types::ocpp16::InstallCertificateUseEnumType type, const ocpp::x509::Certificate& certificate)
 {
     m_calls["iso15118CertificateReceived"] = {{"type", InstallCertificateUseEnumTypeHelper.toString(type)},
                                               {"certificate", certificate.pem()}};
@@ -402,9 +404,10 @@ bool ChargePointEventsHandlerStub::callResult(const std::string method_name)
 }
 
 /** @brief Set a meter value */
-void ChargePointEventsHandlerStub::setMeterValue(unsigned int                                                                 connector_id,
-                                                 std::pair<ocpp::types::Measurand, ocpp::types::Optional<ocpp::types::Phase>> measurand,
-                                                 const ocpp::types::MeterValue&                                               meter_value)
+void ChargePointEventsHandlerStub::setMeterValue(
+    unsigned int                                                                                 connector_id,
+    std::pair<ocpp::types::ocpp16::Measurand, ocpp::types::Optional<ocpp::types::ocpp16::Phase>> measurand,
+    const ocpp::types::ocpp16::MeterValue&                                                       meter_value)
 {
     std::stringstream ss;
     ss << MeasurandHelper.toString(measurand.first) << "-";

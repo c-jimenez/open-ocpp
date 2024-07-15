@@ -41,6 +41,7 @@ SOFTWARE.
 
 using namespace ocpp::centralsystem;
 using namespace ocpp::types;
+using namespace ocpp::types::ocpp16;
 using namespace ocpp::x509;
 
 /** @brief Passphrase for the certificates' private keys */

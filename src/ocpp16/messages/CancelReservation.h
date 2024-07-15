@@ -28,6 +28,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the CancelReservation messages */
 static const std::string CANCEL_RESERVATION_ACTION = "CancelReservation";
@@ -44,12 +46,13 @@ struct CancelReservationConf
 {
     /** @brief Required. This indicates the success or failure of the cancelling of
                a reservation by Central System */
-    ocpp::types::CancelReservationStatus status;
+    ocpp::types::ocpp16::CancelReservationStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(CancelReservation)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

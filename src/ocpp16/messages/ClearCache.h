@@ -26,6 +26,8 @@ namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Action corresponding to the ClearCache messages */
 static const std::string CLEAR_CACHE_ACTION = "ClearCache";
@@ -41,12 +43,13 @@ struct ClearCacheConf
 {
     /** @brief Required. Accepted if the Charge Point has executed the request, otherwise
                rejected */
-    ocpp::types::ClearCacheStatus status;
+    ocpp::types::ocpp16::ClearCacheStatus status;
 };
 
 // Message converters
 MESSAGE_CONVERTERS(ClearCache)
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 

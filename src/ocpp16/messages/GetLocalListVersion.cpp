@@ -25,7 +25,8 @@ namespace ocpp
 {
 namespace messages
 {
-
+namespace ocpp16
+{
 /** @copydoc bool IMessageConverter<DataType>::fromJson(const rapidjson::Value&, DataType&, std::string&, std::string&) */
 bool GetLocalListVersionReqConverter::fromJson(const rapidjson::Value& json,
                                                GetLocalListVersionReq& data,
@@ -66,5 +67,6 @@ bool GetLocalListVersionConfConverter::toJson(const GetLocalListVersionConf& dat
     return true;
 }
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp

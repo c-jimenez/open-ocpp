@@ -19,20 +19,21 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_MESSAGESVALIDATOR_H
 #define OPENOCPP_MESSAGESVALIDATOR_H
 
-#include "JsonValidator.h"
+#include "IMessagesValidator.h"
 
 #include <filesystem>
 #include <memory>
-#include <string>
 #include <unordered_map>
 
 namespace ocpp
 {
 namespace messages
 {
+namespace ocpp16
+{
 
 /** @brief Stores all the needed message validators */
-class MessagesValidator
+class MessagesValidator : public IMessagesValidator
 {
   public:
     /** @brief Constructor */
@@ -46,13 +47,8 @@ class MessagesValidator
      */
     bool load(const std::string& schemas_path);
 
-    /**
-     * @brief Get the message validator corresponding to a given action
-     * @param action Action corresponding to the message
-     * @param is_req Indicate if the validator if for the request or the response
-     * @return Message validator if it exists, nullptr otherwise
-    */
-    ocpp::json::JsonValidator* getValidator(const std::string& action, bool is_req) const;
+    /** @copydoc ocpp::json::JsonValidator* IMessagesValidator::getValidator(const std::string&, bool) const */
+    ocpp::json::JsonValidator* getValidator(const std::string& action, bool is_req) const override;
 
   private:
     /** @brief Messages validators for requests */
@@ -66,6 +62,7 @@ class MessagesValidator
     bool addValidator(const std::filesystem::path& validator_path, const std::string& action, bool is_req);
 };
 
+} // namespace ocpp16
 } // namespace messages
 } // namespace ocpp
 
