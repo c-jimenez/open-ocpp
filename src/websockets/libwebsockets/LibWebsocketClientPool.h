@@ -171,6 +171,8 @@ class LibWebsocketClientPool
         std::condition_variable m_disconnect_cond_var;
         /** @brief Disconnect mutex */
         std::mutex m_disconnect_mutex;
+        /** @brief Indicate that the disconnect process is in progress */
+        bool m_disconnect_process_in_progress;
         /** @brief Indicate that the disconnect process is done */
         bool m_disconnect_process_done;
 
