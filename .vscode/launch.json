@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -58,6 +55,13 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "json2cpp",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceRoot}/tools/json2cpp/json2cpp.py",
+            "args": ["-i", "${workspaceRoot}/schemas/ocpp20", "-o", "${workspaceRoot}/out", "-t", "${workspaceRoot}/tools/json2cpp/templates", "-v", "ocpp20"]
         }
     ]
 }
