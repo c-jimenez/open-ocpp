@@ -88,14 +88,11 @@ ChargePointProxy::ChargePointProxy(const std::string&                           
 /** @brief Destructor */
 ChargePointProxy::~ChargePointProxy()
 {
-    if (m_rpc->isConnected())
-    {
-        // Disconnect from the charge point
-        m_rpc->disconnect(false);
+    // Disconnect from the charge point
+    m_rpc->disconnect(false);
 
-        // Disconnect from the central system
-        m_central_system->disconnect();
-    }
+    // Disconnect from the central system
+    m_central_system->disconnect();
 }
 
 // IChargePointProxy interface
