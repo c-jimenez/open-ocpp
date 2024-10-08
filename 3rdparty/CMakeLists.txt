@@ -34,6 +34,7 @@ if(${BUILD_LWS_LIBRARY})
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE_INIT} ${DISABLED_WARNING_LWS}")
     endif()
 
-    set(LWS_WITH_NETLINK OFF)
+    set(LWS_WITH_NETLINK OFF CACHE BOOL "Monitor Netlink for Routing Table changes")
+    SET(LWS_WITH_SYS_ASYNC_DNS ON CACHE BOOL "Nonblocking internal IPv4 + IPv6 DNS resolver")
     add_subdirectory(libwebsockets)
 endif()
