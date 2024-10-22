@@ -65,7 +65,7 @@ class IChargePointRequestHandler20
     virtual void disconnected() = 0;
     /**
      * @brief Called on reception of a BootNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -77,7 +77,7 @@ class IChargePointRequestHandler20
                                       std::string&                                         message) = 0;
     /**
      * @brief Called on reception of a Authorize20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -89,7 +89,7 @@ class IChargePointRequestHandler20
                                std::string&                                  message) = 0;
     /**
      * @brief Called on reception of a ClearedChargingLimit20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -101,7 +101,7 @@ class IChargePointRequestHandler20
                                           std::string&                                             message) = 0;
     /**
      * @brief Called on reception of a CostUpdated20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -113,7 +113,7 @@ class IChargePointRequestHandler20
                                  std::string&                                    message) = 0;
     /**
      * @brief Called on reception of a DataTransfer20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -125,7 +125,7 @@ class IChargePointRequestHandler20
                                   std::string&                                     message) = 0;
     /**
      * @brief Called on reception of a FirmwareStatusNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -137,7 +137,7 @@ class IChargePointRequestHandler20
                                                 std::string&                                                   message) = 0;
     /**
      * @brief Called on reception of a Heartbeat20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -149,7 +149,7 @@ class IChargePointRequestHandler20
                                std::string&                                  message) = 0;
     /**
      * @brief Called on reception of a LogStatusNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -161,7 +161,7 @@ class IChargePointRequestHandler20
                                            std::string&                                              message) = 0;
     /**
      * @brief Called on reception of a MeterValues20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -173,7 +173,7 @@ class IChargePointRequestHandler20
                                  std::string&                                    message) = 0;
     /**
      * @brief Called on reception of a NotifyChargingLimit20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -185,7 +185,7 @@ class IChargePointRequestHandler20
                                          std::string&                                            message) = 0;
     /**
      * @brief Called on reception of a NotifyCustomerInformation20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -197,7 +197,7 @@ class IChargePointRequestHandler20
                                                std::string&                                                  message) = 0;
     /**
      * @brief Called on reception of a NotifyDisplayMessages20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -209,7 +209,7 @@ class IChargePointRequestHandler20
                                            std::string&                                              message) = 0;
     /**
      * @brief Called on reception of a NotifyEVChargingNeeds20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -221,7 +221,7 @@ class IChargePointRequestHandler20
                                            std::string&                                              message) = 0;
     /**
      * @brief Called on reception of a NotifyEVChargingSchedule20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -233,7 +233,7 @@ class IChargePointRequestHandler20
                                               std::string&                                                 message) = 0;
     /**
      * @brief Called on reception of a NotifyEvent20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -245,7 +245,7 @@ class IChargePointRequestHandler20
                                  std::string&                                    message) = 0;
     /**
      * @brief Called on reception of a NotifyMonitoringReport20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -257,7 +257,7 @@ class IChargePointRequestHandler20
                                             std::string&                                               message) = 0;
     /**
      * @brief Called on reception of a NotifyReport20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -269,7 +269,7 @@ class IChargePointRequestHandler20
                                   std::string&                                     message) = 0;
     /**
      * @brief Called on reception of a PublishFirmwareStatusNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -281,7 +281,7 @@ class IChargePointRequestHandler20
                                                        std::string&                                                          message) = 0;
     /**
      * @brief Called on reception of a ReportChargingProfiles20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -293,7 +293,7 @@ class IChargePointRequestHandler20
                                             std::string&                                               message) = 0;
     /**
      * @brief Called on reception of a ReservationStatusUpdate20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -305,7 +305,7 @@ class IChargePointRequestHandler20
                                              std::string&                                                message) = 0;
     /**
      * @brief Called on reception of a SecurityEventNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -317,7 +317,7 @@ class IChargePointRequestHandler20
                                                std::string&                                                  message) = 0;
     /**
      * @brief Called on reception of a SignCertificate20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -329,7 +329,7 @@ class IChargePointRequestHandler20
                                      std::string&                                        message) = 0;
     /**
      * @brief Called on reception of a StatusNotification20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
@@ -341,7 +341,7 @@ class IChargePointRequestHandler20
                                         std::string&                                           message) = 0;
     /**
      * @brief Called on reception of a TransactionEvent20 request from the charge point
-     * @param request Request to received
+     * @param request Request received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)

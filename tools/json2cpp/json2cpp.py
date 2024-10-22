@@ -310,37 +310,46 @@ def read_code_templates(params) -> dict:
     templates = {}
 
     try:
-        template_file_path = os.path.join(params.templates_dir, "enum_header.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "types", "enum_header.template.j2")
         template_file = open(template_file_path, "rt")
         templates["enum_header"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "enum_impl.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "types", "enum_impl.template.j2")
         template_file = open(template_file_path, "rt")
         templates["enum_impl"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "type_header.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "types", "type_header.template.j2")
         template_file = open(template_file_path, "rt")
         templates["type_header"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "type_impl.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "types", "type_impl.template.j2")
         template_file = open(template_file_path, "rt")
         templates["type_impl"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "msg_header.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "messages", "msg_header.template.j2")
         template_file = open(template_file_path, "rt")
         templates["msg_header"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "msg_impl.template.j2")
+        template_file_path = os.path.join(params.templates_dir, "messages", "msg_impl.template.j2")
         template_file = open(template_file_path, "rt")
         templates["msg_impl"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "MessagesConverter.cpp.j2")
+        template_file_path = os.path.join(params.templates_dir, "messages", "MessagesConverter.cpp.j2")
         template_file = open(template_file_path, "rt")
         templates["msg_converter_impl"] = template_file.read()
 
-        template_file_path = os.path.join(params.templates_dir, "MessagesValidator.cpp.j2")
+        template_file_path = os.path.join(params.templates_dir, "messages", "MessagesValidator.cpp.j2")
         template_file = open(template_file_path, "rt")
         templates["msg_validator_impl"] = template_file.read()
+
+
+        template_file_path = os.path.join(params.templates_dir, "chargepoint", "IChargePoint.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["cs_ichargepoint"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "chargepoint", "IChargePointEventsHandler.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["cs_ichargepointeventshandler"] = template_file.read()
 
         
         template_file_path = os.path.join(params.templates_dir, "centralsystem", "ICentralSystem.h.j2")
@@ -705,6 +714,49 @@ def gen_converters(templates, params, msg_list):
     gen_file.write(rendered_template)
     gen_file.close()
 
+def gen_chargepoint(templates, params, msg_list):
+    ''' 
+        Generate the code for the charge point features
+
+        @param templates: Code templates
+        @type templates: {string,string}
+
+        @param params: Command line parameters
+        @type params: Parameters
+
+        @param msg_list: List of OCPP messages per roles
+        @type msg_list: {string, [string]}
+    '''
+    
+    # Create output directories
+    cs_dir = os.path.join(params.output_dir, "chargepoint")
+    cs_dirs = [cs_dir]
+    cs_dirs.append(os.path.join(cs_dir, "interface"))
+    for dir in cs_dirs:
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+
+    # Generate interfaces
+    cs_interface_dir = cs_dirs[1]
+    ocpp_version_suffix = params.ocpp_version[4:]
+
+    gen_file_path = os.path.join(cs_interface_dir, f"IChargePoint{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["cs_ichargepoint"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(cs_interface_dir, f"IChargePointEventsHandler{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["cs_ichargepointeventshandler"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+
 def gen_centralsystem(templates, params, msg_list):
     ''' 
         Generate the code for the central system features
@@ -953,9 +1005,12 @@ if __name__ == '__main__':
 
             # Generate messages
             gen_converters(templates, params, msg_list)
-            for ocpp_message in ocpp_messages:
-                print(f"Generating {ocpp_message} message...")
-                gen_ocpp_message(ocpp_message,templates, params)
+            # for ocpp_message in ocpp_messages:
+            #     print(f"Generating {ocpp_message} message...")
+            #     gen_ocpp_message(ocpp_message,templates, params)
+
+            # Generate charge point interfaces and classes
+            gen_chargepoint(templates, params, msg_list)
 
             # Generate central system interfaces and classes
             gen_centralsystem(templates, params, msg_list)
