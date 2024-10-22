@@ -59,7 +59,7 @@ class ICentralSystem{{ocpp_version_suffix}}
      * @param stack_config Stack configuration
      * @param event_handler Stack event handler
      */
-    static std::unique_ptr<ICentralSystem20> create(const ocpp::config::ICentralSystemConfig{{ocpp_version_suffix}}& stack_config,
+    static std::unique_ptr<ICentralSystem{{ocpp_version_suffix}}> create(const ocpp::config::ICentralSystemConfig{{ocpp_version_suffix}}& stack_config,
                                                   ICentralSystemEventsHandler{{ocpp_version_suffix}}&              events_handler);
 
     /**
@@ -71,13 +71,13 @@ class ICentralSystem{{ocpp_version_suffix}}
      * @param timer_pool Timer pool
      * @param worker_pool Worker thread pool
      */
-    static std::unique_ptr<ICentralSystem20> create(const ocpp::config::ICentralSystemConfig{{ocpp_version_suffix}}&        stack_config,
+    static std::unique_ptr<ICentralSystem{{ocpp_version_suffix}}> create(const ocpp::config::ICentralSystemConfig{{ocpp_version_suffix}}&        stack_config,
                                                   ICentralSystemEventsHandler{{ocpp_version_suffix}}&                     events_handler,
                                                   std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
                                                   std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
 
     /** @brief Destructor */
-    virtual ~ICentralSystem20() { }
+    virtual ~ICentralSystem{{ocpp_version_suffix}}() { }
 
     /**
      * @brief Get the configuration associated to the central system
