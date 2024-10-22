@@ -24,13 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_VARIABLEATTRIBUTETYPE_H
 #define OPENOCPP_VARIABLEATTRIBUTETYPE_H
 
-#include "CustomDataType.h"
 #include "AttributeEnumType.h"
+#include "CustomDataType.h"
 #include "MutabilityEnumType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -68,7 +68,7 @@ class VariableAttributeTypeConverter : public ocpp::messages::IMessageConverter<
 
     /** @brief Convert a VariableAttributeType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VariableAttributeType&                data,
+                  VariableAttributeType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

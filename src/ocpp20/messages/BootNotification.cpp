@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a BootNotificationReq from a JSON representation */
-bool BootNotificationReqConverter::fromJson(const rapidjson::Value&       json,
-                                     BootNotificationReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool BootNotificationReqConverter::fromJson(const rapidjson::Value& json,
+                                            BootNotificationReq&    data,
+                                            std::string&            error_code,
+                                            std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // chargingStation
@@ -63,19 +63,19 @@ bool BootNotificationReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a BootNotificationReq to a JSON representation */
-bool BootNotificationReqConverter::toJson(const BootNotificationReq& data, rapidjson::Document& json) 
+bool BootNotificationReqConverter::toJson(const BootNotificationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // chargingStation
@@ -93,18 +93,18 @@ bool BootNotificationReqConverter::toJson(const BootNotificationReq& data, rapid
 }
 
 /** @brief Convert a BootNotificationConf from a JSON representation */
-bool BootNotificationConfConverter::fromJson(const rapidjson::Value&       json,
-                                     BootNotificationConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool BootNotificationConfConverter::fromJson(const rapidjson::Value& json,
+                                             BootNotificationConf&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // currentTime
@@ -119,8 +119,8 @@ bool BootNotificationConfConverter::fromJson(const rapidjson::Value&       json,
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -132,19 +132,19 @@ bool BootNotificationConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a BootNotificationConf to a JSON representation */
-bool BootNotificationConfConverter::toJson(const BootNotificationConf& data, rapidjson::Document& json) 
+bool BootNotificationConfConverter::toJson(const BootNotificationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // currentTime
@@ -159,12 +159,12 @@ bool BootNotificationConfConverter::toJson(const BootNotificationConf& data, rap
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

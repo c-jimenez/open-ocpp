@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a TriggerMessageStatusEnumType enum to string */
 const EnumToStringFromString<TriggerMessageStatusEnumType> TriggerMessageStatusEnumTypeHelper = {
-    { TriggerMessageStatusEnumType::Accepted, "Accepted" },
-    { TriggerMessageStatusEnumType::Rejected, "Rejected" },
-    { TriggerMessageStatusEnumType::NotImplemented, "NotImplemented" },
+    {TriggerMessageStatusEnumType::Accepted, "Accepted"},
+    {TriggerMessageStatusEnumType::Rejected, "Rejected"},
+    {TriggerMessageStatusEnumType::NotImplemented, "NotImplemented"},
 };
 
 } // namespace ocpp20

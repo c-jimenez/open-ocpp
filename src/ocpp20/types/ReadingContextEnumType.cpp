@@ -32,14 +32,14 @@ namespace ocpp20
 
 /** @brief Helper to convert a ReadingContextEnumType enum to string */
 const EnumToStringFromString<ReadingContextEnumType> ReadingContextEnumTypeHelper = {
-    { ReadingContextEnumType::Interruption_Begin, "Interruption.Begin" },
-    { ReadingContextEnumType::Interruption_End, "Interruption.End" },
-    { ReadingContextEnumType::Other, "Other" },
-    { ReadingContextEnumType::Sample_Clock, "Sample.Clock" },
-    { ReadingContextEnumType::Sample_Periodic, "Sample.Periodic" },
-    { ReadingContextEnumType::Transaction_Begin, "Transaction.Begin" },
-    { ReadingContextEnumType::Transaction_End, "Transaction.End" },
-    { ReadingContextEnumType::Trigger, "Trigger" },
+    {ReadingContextEnumType::Interruption_Begin, "Interruption.Begin"},
+    {ReadingContextEnumType::Interruption_End, "Interruption.End"},
+    {ReadingContextEnumType::Other, "Other"},
+    {ReadingContextEnumType::Sample_Clock, "Sample.Clock"},
+    {ReadingContextEnumType::Sample_Periodic, "Sample.Periodic"},
+    {ReadingContextEnumType::Transaction_Begin, "Transaction.Begin"},
+    {ReadingContextEnumType::Transaction_End, "Transaction.End"},
+    {ReadingContextEnumType::Trigger, "Trigger"},
 };
 
 } // namespace ocpp20

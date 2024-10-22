@@ -24,12 +24,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_APNTYPE_H
 #define OPENOCPP_APNTYPE_H
 
-#include "CustomDataType.h"
 #include "APNAuthenticationEnumType.h"
+#include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -86,7 +86,7 @@ class APNTypeConverter : public ocpp::messages::IMessageConverter<APNType>
 
     /** @brief Convert a APNType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  APNType&                data,
+                  APNType&                      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

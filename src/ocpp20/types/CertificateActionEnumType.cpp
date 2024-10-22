@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a CertificateActionEnumType enum to string */
 const EnumToStringFromString<CertificateActionEnumType> CertificateActionEnumTypeHelper = {
-    { CertificateActionEnumType::Install, "Install" },
-    { CertificateActionEnumType::Update, "Update" },
+    {CertificateActionEnumType::Install, "Install"},
+    {CertificateActionEnumType::Update, "Update"},
 };
 
 } // namespace ocpp20

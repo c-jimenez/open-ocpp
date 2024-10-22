@@ -330,6 +330,81 @@ def read_code_templates(params) -> dict:
         template_file_path = os.path.join(params.templates_dir, "msg_impl.template.j2")
         template_file = open(template_file_path, "rt")
         templates["msg_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "MessagesConverter.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["msg_converter_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "MessagesValidator.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["msg_validator_impl"] = template_file.read()
+
+        
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "ICentralSystem.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_icentralsystem"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "IChargePointRequestHandler.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_ichargepointrequesthandler"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "ChargePointProxy.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_chargepointproxy_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "ChargePointProxy.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_chargepointproxy_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "ChargePointHandler.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_chargepointhandler_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "centralsystem", "ChargePointHandler.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["csms_chargepointhandler_impl"] = template_file.read()
+
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "ICentralSystemProxy.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_icentralsystemproxy"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "IChargePointProxy.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_ichargepointproxy"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "CentralSystemProxy.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_centralsystemproxy_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "CentralSystemProxy.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_centralsystemproxy_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "CentralSystemHandler.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_centralsystemhandler_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "CentralSystemHandler.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_centralsystemhandler_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "ChargePointProxy.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_chargepointproxy_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "ChargePointProxy.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_chargepointproxy_impl"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "ChargePointHandler.h.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_chargepointhandler_header"] = template_file.read()
+
+        template_file_path = os.path.join(params.templates_dir, "localcontroller", "ChargePointHandler.cpp.j2")
+        template_file = open(template_file_path, "rt")
+        templates["lc_chargepointhandler_impl"] = template_file.read()
+
     except IOError:
         print(f"Unable to open template file : {template_file_path}")
         templates = None
@@ -585,6 +660,230 @@ def gen_ocpp_message(message, templates, params) -> None:
 
     return
 
+def gen_converters(templates, params, msg_list):
+    ''' 
+        Generate the code for the message converters
+
+        @param templates: Code templates
+        @type templates: {string,string}
+
+        @param params: Command line parameters
+        @type params: Parameters
+
+        @param msg_list: List of OCPP messages per roles
+        @type msg_list: {string, [string]}
+    '''
+  
+    # Generate implementations
+    ocpp_version_suffix = params.ocpp_version[4:]
+
+    gen_file_path = os.path.join(params.messages_dir, f"MessagesConverter{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["msg_converter_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(params.messages_dir, f"MessagesValidator{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["msg_validator_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+def gen_centralsystem(templates, params, msg_list):
+    ''' 
+        Generate the code for the central system features
+
+        @param templates: Code templates
+        @type templates: {string,string}
+
+        @param params: Command line parameters
+        @type params: Parameters
+
+        @param msg_list: List of OCPP messages per roles
+        @type msg_list: {string, [string]}
+    '''
+    
+    # Create output directories
+    csms_dir = os.path.join(params.output_dir, "centralsystem")
+    csms_dirs = [csms_dir]
+    csms_dirs.append(os.path.join(csms_dir, "chargepoint"))
+    csms_dirs.append(os.path.join(csms_dir, "interface"))
+    for dir in csms_dirs:
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+
+    # Generate interfaces
+    csms_interface_dir = csms_dirs[2]
+    ocpp_version_suffix = params.ocpp_version[4:]
+
+    gen_file_path = os.path.join(csms_interface_dir, f"ICentralSystem{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_icentralsystem"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(csms_interface_dir, f"IChargePointRequestHandler{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_ichargepointrequesthandler"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    # Generate central system classes
+    chargepoint_dir = csms_dirs[1]
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointProxy{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_chargepointproxy_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointProxy{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_chargepointproxy_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointHandler{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_chargepointhandler_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointHandler{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["csms_chargepointhandler_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+
+def gen_localcontroller(templates, params, msg_list):
+    ''' 
+        Generate the code for the local controller features
+
+        @param templates: Code templates
+        @type templates: {string,string}
+
+        @param params: Command line parameters
+        @type params: Parameters
+
+        @param msg_list: List of OCPP messages per roles
+        @type msg_list: {string, [string]}
+    '''
+    
+    # Create output directories
+    lc_dir = os.path.join(params.output_dir, "localcontroller")
+    lc_dirs = [lc_dir]
+    lc_dirs.append(os.path.join(lc_dir, "centralsystem"))
+    lc_dirs.append(os.path.join(lc_dir, "chargepoint"))
+    lc_dirs.append(os.path.join(lc_dir, "interface"))
+    for dir in lc_dirs:
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+
+    # Generate interfaces
+    lc_interface_dir = lc_dirs[3]
+    ocpp_version_suffix = params.ocpp_version[4:]
+
+    gen_file_path = os.path.join(lc_interface_dir, f"IChargePointProxy{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_ichargepointproxy"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(lc_interface_dir, f"ICentralSystemProxy{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_icentralsystemproxy"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    # Generate central system classes
+    centralsystem_dir = lc_dirs[1]
+    gen_file_path = os.path.join(centralsystem_dir, f"CentralSystemProxy{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_centralsystemproxy_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(centralsystem_dir, f"CentralSystemProxy{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_centralsystemproxy_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(centralsystem_dir, f"CentralSystemHandler{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_centralsystemhandler_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(centralsystem_dir, f"CentralSystemHandler{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_centralsystemhandler_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    # Generate charge point classes
+    chargepoint_dir = lc_dirs[2]
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointProxy{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_chargepointproxy_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointProxy{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_chargepointproxy_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointHandler{ocpp_version_suffix}.h")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_chargepointhandler_header"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+    gen_file_path = os.path.join(chargepoint_dir, f"ChargePointHandler{ocpp_version_suffix}.cpp")
+    gen_file = open(gen_file_path, "wt")
+    env = jinja2.Environment()
+    template = env.from_string(templates["lc_chargepointhandler_impl"])
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    gen_file.write(rendered_template)
+    gen_file.close()
+
+
 
 # Entry point
 if __name__ == '__main__':
@@ -610,6 +909,13 @@ if __name__ == '__main__':
 
         print(f"Generating files from {params.input_dir}")
 
+        # Read messages list
+        msg_list_file_path = os.path.join(params.input_dir, "list.json")
+        try:
+            msg_list = json.load(open(msg_list_file_path, "rt"))
+        except:
+            print(f"Unable to load messages list file : {msg_list_file_path}")
+
         # Code templates
         templates = read_code_templates(params)
         if templates:
@@ -619,9 +925,16 @@ if __name__ == '__main__':
             print(f"{len(ocpp_messages)} messages found")
 
             # Generate messages
-            for ocpp_message in ocpp_messages:
-                print(f"Generating {ocpp_message} message...")
-                gen_ocpp_message(ocpp_message,templates, params)
+            gen_converters(templates, params, msg_list)
+            # for ocpp_message in ocpp_messages:
+            #     print(f"Generating {ocpp_message} message...")
+            #     gen_ocpp_message(ocpp_message,templates, params)
+
+            # Generate central system interfaces and classes
+            gen_centralsystem(templates, params, msg_list)
+
+            # Generate localcontroller interfaces and classes
+            gen_localcontroller(templates, params, msg_list)
 
             ret = True
 

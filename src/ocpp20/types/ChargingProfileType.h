@@ -24,17 +24,17 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CHARGINGPROFILETYPE_H
 #define OPENOCPP_CHARGINGPROFILETYPE_H
 
-#include "CustomDataType.h"
-#include "ChargingProfilePurposeEnumType.h"
 #include "ChargingProfileKindEnumType.h"
-#include "RecurrencyKindEnumType.h"
+#include "ChargingProfilePurposeEnumType.h"
 #include "ChargingScheduleType.h"
+#include "CustomDataType.h"
+#include "RecurrencyKindEnumType.h"
 
-#include "Optional.h"
-#include "DateTime.h"
-#include <vector>
 #include "CiStringType.h"
+#include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -88,7 +88,7 @@ class ChargingProfileTypeConverter : public ocpp::messages::IMessageConverter<Ch
 
     /** @brief Convert a ChargingProfileType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingProfileType&                data,
+                  ChargingProfileType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingProfilePurposeEnumType enum to string */
 const EnumToStringFromString<ChargingProfilePurposeEnumType> ChargingProfilePurposeEnumTypeHelper = {
-    { ChargingProfilePurposeEnumType::ChargingStationExternalConstraints, "ChargingStationExternalConstraints" },
-    { ChargingProfilePurposeEnumType::ChargingStationMaxProfile, "ChargingStationMaxProfile" },
-    { ChargingProfilePurposeEnumType::TxDefaultProfile, "TxDefaultProfile" },
-    { ChargingProfilePurposeEnumType::TxProfile, "TxProfile" },
+    {ChargingProfilePurposeEnumType::ChargingStationExternalConstraints, "ChargingStationExternalConstraints"},
+    {ChargingProfilePurposeEnumType::ChargingStationMaxProfile, "ChargingStationMaxProfile"},
+    {ChargingProfilePurposeEnumType::TxDefaultProfile, "TxDefaultProfile"},
+    {ChargingProfilePurposeEnumType::TxProfile, "TxProfile"},
 };
 
 } // namespace ocpp20

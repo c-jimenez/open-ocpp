@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a ResetEnumType enum to string */
 const EnumToStringFromString<ResetEnumType> ResetEnumTypeHelper = {
-    { ResetEnumType::Immediate, "Immediate" },
-    { ResetEnumType::OnIdle, "OnIdle" },
+    {ResetEnumType::Immediate, "Immediate"},
+    {ResetEnumType::OnIdle, "OnIdle"},
 };
 
 } // namespace ocpp20

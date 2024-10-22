@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingStateEnumType enum to string */
 const EnumToStringFromString<ChargingStateEnumType> ChargingStateEnumTypeHelper = {
-    { ChargingStateEnumType::Charging, "Charging" },
-    { ChargingStateEnumType::EVConnected, "EVConnected" },
-    { ChargingStateEnumType::SuspendedEV, "SuspendedEV" },
-    { ChargingStateEnumType::SuspendedEVSE, "SuspendedEVSE" },
-    { ChargingStateEnumType::Idle, "Idle" },
+    {ChargingStateEnumType::Charging, "Charging"},
+    {ChargingStateEnumType::EVConnected, "EVConnected"},
+    {ChargingStateEnumType::SuspendedEV, "SuspendedEV"},
+    {ChargingStateEnumType::SuspendedEVSE, "SuspendedEVSE"},
+    {ChargingStateEnumType::Idle, "Idle"},
 };
 
 } // namespace ocpp20

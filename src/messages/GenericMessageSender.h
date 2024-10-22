@@ -19,10 +19,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_GENERICMESSAGESENDER_H
 #define OPENOCPP_GENERICMESSAGESENDER_H
 
+#include "EnumToStringFromString.h"
+#include "GenericMessagesConverter.h"
 #include "IMessagesValidator.h"
 #include "IRequestFifo.h"
 #include "IRpc.h"
-#include "MessagesConverter.h"
 
 namespace ocpp
 {
@@ -41,6 +42,9 @@ enum class CallResult
     /** @brief A call error message has been received */
     Error
 };
+
+/** @brief Helper to convert a CallResult enum to string */
+extern const ocpp::types::EnumToStringFromString<CallResult> CallResultHelper;
 
 /** @brief Generic message sender with C++ data type to JSON conversion */
 class GenericMessageSender

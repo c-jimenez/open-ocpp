@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ReportDataType from a JSON representation */
 bool ReportDataTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ReportDataType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                       ReportDataType&               data,
+                                       std::string&                  error_code,
+                                       [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // component
@@ -56,19 +56,20 @@ bool ReportDataTypeConverter::fromJson(const rapidjson::Value&       json,
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     // variableAttribute
-    const rapidjson::Value& variableAttribute_json = json["variableAttribute"];
+    const rapidjson::Value&        variableAttribute_json = json["variableAttribute"];
     VariableAttributeTypeConverter variableAttribute_converter;
     for (auto it = variableAttribute_json.Begin(); ret && (it != variableAttribute_json.End()); ++it)
     {
         VariableAttributeType& item = data.variableAttribute.emplace_back();
-        ret = ret && variableAttribute_converter.fromJson(*it, item, error_code, error_message);
+        ret                         = ret && variableAttribute_converter.fromJson(*it, item, error_code, error_message);
     }
 
     // variableCharacteristics
     if (json.HasMember("variableCharacteristics"))
     {
-    VariableCharacteristicsTypeConverter variableCharacteristics_converter;
-    ret = ret && variableCharacteristics_converter.fromJson(json["variableCharacteristics"], data.variableCharacteristics, error_code, error_message);
+        VariableCharacteristicsTypeConverter variableCharacteristics_converter;
+        ret = ret && variableCharacteristics_converter.fromJson(
+                         json["variableCharacteristics"], data.variableCharacteristics, error_code, error_message);
     }
 
     if (!ret)
@@ -80,19 +81,19 @@ bool ReportDataTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ReportDataType to a JSON representation */
-bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Document& json) 
+bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // component
@@ -114,7 +115,7 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     // variableAttribute
     if (!data.variableAttribute.empty())
     {
-        rapidjson::Value variableAttribute_json(rapidjson::kArrayType);
+        rapidjson::Value               variableAttribute_json(rapidjson::kArrayType);
         VariableAttributeTypeConverter variableAttribute_converter;
         variableAttribute_converter.setAllocator(allocator);
         for (const VariableAttributeType& item : data.variableAttribute)
@@ -130,12 +131,12 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     // variableCharacteristics
     if (data.variableCharacteristics.isSet())
     {
-    VariableCharacteristicsTypeConverter variableCharacteristics_converter;
-    variableCharacteristics_converter.setAllocator(allocator);
-    rapidjson::Document variableCharacteristics_doc;
-    variableCharacteristics_doc.Parse("{}");
-    ret = ret && variableCharacteristics_converter.toJson(data.variableCharacteristics, variableCharacteristics_doc);
-    json.AddMember(rapidjson::StringRef("variableCharacteristics"), variableCharacteristics_doc.Move(), *allocator);
+        VariableCharacteristicsTypeConverter variableCharacteristics_converter;
+        variableCharacteristics_converter.setAllocator(allocator);
+        rapidjson::Document variableCharacteristics_doc;
+        variableCharacteristics_doc.Parse("{}");
+        ret = ret && variableCharacteristics_converter.toJson(data.variableCharacteristics, variableCharacteristics_doc);
+        json.AddMember(rapidjson::StringRef("variableCharacteristics"), variableCharacteristics_doc.Move(), *allocator);
     }
 
     return ret;

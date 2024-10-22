@@ -27,8 +27,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 
 #include "CustomDataType.h"
-#include "ReportBaseEnumType.h"
 #include "GenericDeviceModelStatusEnumType.h"
+#include "ReportBaseEnumType.h"
 #include "StatusInfoType.h"
 
 namespace ocpp

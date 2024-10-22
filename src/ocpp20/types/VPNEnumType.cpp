@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a VPNEnumType enum to string */
 const EnumToStringFromString<VPNEnumType> VPNEnumTypeHelper = {
-    { VPNEnumType::IKEv2, "IKEv2" },
-    { VPNEnumType::IPSec, "IPSec" },
-    { VPNEnumType::L2TP, "L2TP" },
-    { VPNEnumType::PPTP, "PPTP" },
+    {VPNEnumType::IKEv2, "IKEv2"},
+    {VPNEnumType::IPSec, "IPSec"},
+    {VPNEnumType::L2TP, "L2TP"},
+    {VPNEnumType::PPTP, "PPTP"},
 };
 
 } // namespace ocpp20

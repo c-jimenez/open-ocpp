@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a SetNetworkProfileStatusEnumType enum to string */
 const EnumToStringFromString<SetNetworkProfileStatusEnumType> SetNetworkProfileStatusEnumTypeHelper = {
-    { SetNetworkProfileStatusEnumType::Accepted, "Accepted" },
-    { SetNetworkProfileStatusEnumType::Rejected, "Rejected" },
-    { SetNetworkProfileStatusEnumType::Failed, "Failed" },
+    {SetNetworkProfileStatusEnumType::Accepted, "Accepted"},
+    {SetNetworkProfileStatusEnumType::Rejected, "Rejected"},
+    {SetNetworkProfileStatusEnumType::Failed, "Failed"},
 };
 
 } // namespace ocpp20

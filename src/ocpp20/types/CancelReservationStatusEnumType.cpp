@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a CancelReservationStatusEnumType enum to string */
 const EnumToStringFromString<CancelReservationStatusEnumType> CancelReservationStatusEnumTypeHelper = {
-    { CancelReservationStatusEnumType::Accepted, "Accepted" },
-    { CancelReservationStatusEnumType::Rejected, "Rejected" },
+    {CancelReservationStatusEnumType::Accepted, "Accepted"},
+    {CancelReservationStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

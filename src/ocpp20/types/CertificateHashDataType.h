@@ -27,9 +27,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "HashAlgorithmEnumType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -62,7 +62,7 @@ class CertificateHashDataTypeConverter : public ocpp::messages::IMessageConverte
 
     /** @brief Convert a CertificateHashDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CertificateHashDataType&                data,
+                  CertificateHashDataType&      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

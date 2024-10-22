@@ -34,26 +34,26 @@ namespace ocpp20
 
 /** @brief Convert a IdTokenType from a JSON representation */
 bool IdTokenTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      IdTokenType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                    IdTokenType&                  data,
+                                    std::string&                  error_code,
+                                    [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // additionalInfo
-    const rapidjson::Value& additionalInfo_json = json["additionalInfo"];
+    const rapidjson::Value&     additionalInfo_json = json["additionalInfo"];
     AdditionalInfoTypeConverter additionalInfo_converter;
     for (auto it = additionalInfo_json.Begin(); ret && (it != additionalInfo_json.End()); ++it)
     {
         AdditionalInfoType& item = data.additionalInfo.emplace_back();
-        ret = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
+        ret                      = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
     }
 
     // idToken
@@ -71,25 +71,25 @@ bool IdTokenTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a IdTokenType to a JSON representation */
-bool IdTokenTypeConverter::toJson(const IdTokenType& data, rapidjson::Document& json) 
+bool IdTokenTypeConverter::toJson(const IdTokenType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // additionalInfo
     if (!data.additionalInfo.empty())
     {
-        rapidjson::Value additionalInfo_json(rapidjson::kArrayType);
+        rapidjson::Value            additionalInfo_json(rapidjson::kArrayType);
         AdditionalInfoTypeConverter additionalInfo_converter;
         additionalInfo_converter.setAllocator(allocator);
         for (const AdditionalInfoType& item : data.additionalInfo)

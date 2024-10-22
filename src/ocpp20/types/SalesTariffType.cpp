@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a SalesTariffType from a JSON representation */
 bool SalesTariffTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      SalesTariffType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                        SalesTariffType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // id
@@ -57,12 +57,12 @@ bool SalesTariffTypeConverter::fromJson(const rapidjson::Value&       json,
     extract(json, "numEPriceLevels", data.numEPriceLevels);
 
     // salesTariffEntry
-    const rapidjson::Value& salesTariffEntry_json = json["salesTariffEntry"];
+    const rapidjson::Value&       salesTariffEntry_json = json["salesTariffEntry"];
     SalesTariffEntryTypeConverter salesTariffEntry_converter;
     for (auto it = salesTariffEntry_json.Begin(); ret && (it != salesTariffEntry_json.End()); ++it)
     {
         SalesTariffEntryType& item = data.salesTariffEntry.emplace_back();
-        ret = ret && salesTariffEntry_converter.fromJson(*it, item, error_code, error_message);
+        ret                        = ret && salesTariffEntry_converter.fromJson(*it, item, error_code, error_message);
     }
 
     if (!ret)
@@ -74,19 +74,19 @@ bool SalesTariffTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a SalesTariffType to a JSON representation */
-bool SalesTariffTypeConverter::toJson(const SalesTariffType& data, rapidjson::Document& json) 
+bool SalesTariffTypeConverter::toJson(const SalesTariffType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // id
@@ -101,7 +101,7 @@ bool SalesTariffTypeConverter::toJson(const SalesTariffType& data, rapidjson::Do
     // salesTariffEntry
     if (!data.salesTariffEntry.empty())
     {
-        rapidjson::Value salesTariffEntry_json(rapidjson::kArrayType);
+        rapidjson::Value              salesTariffEntry_json(rapidjson::kArrayType);
         SalesTariffEntryTypeConverter salesTariffEntry_converter;
         salesTariffEntry_converter.setAllocator(allocator);
         for (const SalesTariffEntryType& item : data.salesTariffEntry)

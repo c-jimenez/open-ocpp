@@ -27,8 +27,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 
 #include "CustomDataType.h"
-#include "LogParametersType.h"
 #include "LogEnumType.h"
+#include "LogParametersType.h"
 #include "LogStatusEnumType.h"
 #include "StatusInfoType.h"
 

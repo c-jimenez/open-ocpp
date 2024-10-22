@@ -33,25 +33,26 @@ namespace ocpp20
 {
 
 /** @brief Convert a ReservationStatusUpdateReq from a JSON representation */
-bool ReservationStatusUpdateReqConverter::fromJson(const rapidjson::Value&       json,
-                                     ReservationStatusUpdateReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ReservationStatusUpdateReqConverter::fromJson(const rapidjson::Value&     json,
+                                                   ReservationStatusUpdateReq& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // reservationId
     extract(json, "reservationId", data.reservationId);
 
     // reservationUpdateStatus
-    data.reservationUpdateStatus = ocpp::types::ocpp20::ReservationUpdateStatusEnumTypeHelper.fromString(json["reservationUpdateStatus"].GetString());
+    data.reservationUpdateStatus =
+        ocpp::types::ocpp20::ReservationUpdateStatusEnumTypeHelper.fromString(json["reservationUpdateStatus"].GetString());
 
     if (!ret)
     {
@@ -62,43 +63,44 @@ bool ReservationStatusUpdateReqConverter::fromJson(const rapidjson::Value&      
 }
 
 /** @brief Convert a ReservationStatusUpdateReq to a JSON representation */
-bool ReservationStatusUpdateReqConverter::toJson(const ReservationStatusUpdateReq& data, rapidjson::Document& json) 
+bool ReservationStatusUpdateReqConverter::toJson(const ReservationStatusUpdateReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // reservationId
     fill(json, "reservationId", data.reservationId);
 
     // reservationUpdateStatus
-    fill(json, "reservationUpdateStatus", ocpp::types::ocpp20::ReservationUpdateStatusEnumTypeHelper.toString(data.reservationUpdateStatus));
+    fill(
+        json, "reservationUpdateStatus", ocpp::types::ocpp20::ReservationUpdateStatusEnumTypeHelper.toString(data.reservationUpdateStatus));
 
     return ret;
 }
 
 /** @brief Convert a ReservationStatusUpdateConf from a JSON representation */
-bool ReservationStatusUpdateConfConverter::fromJson(const rapidjson::Value&       json,
-                                     ReservationStatusUpdateConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ReservationStatusUpdateConfConverter::fromJson(const rapidjson::Value&      json,
+                                                    ReservationStatusUpdateConf& data,
+                                                    std::string&                 error_code,
+                                                    std::string&                 error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -110,19 +112,19 @@ bool ReservationStatusUpdateConfConverter::fromJson(const rapidjson::Value&     
 }
 
 /** @brief Convert a ReservationStatusUpdateConf to a JSON representation */
-bool ReservationStatusUpdateConfConverter::toJson(const ReservationStatusUpdateConf& data, rapidjson::Document& json) 
+bool ReservationStatusUpdateConfConverter::toJson(const ReservationStatusUpdateConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

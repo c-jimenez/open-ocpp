@@ -34,9 +34,9 @@ namespace ocpp20
 
 /** @brief Convert a CustomDataType from a JSON representation */
 bool CustomDataTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      CustomDataType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                       CustomDataType&               data,
+                                       std::string&                  error_code,
+                                       [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
@@ -52,7 +52,7 @@ bool CustomDataTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a CustomDataType to a JSON representation */
-bool CustomDataTypeConverter::toJson(const CustomDataType& data, rapidjson::Document& json) 
+bool CustomDataTypeConverter::toJson(const CustomDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 

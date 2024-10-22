@@ -32,14 +32,14 @@ namespace ocpp20
 
 /** @brief Helper to convert a IdTokenEnumType enum to string */
 const EnumToStringFromString<IdTokenEnumType> IdTokenEnumTypeHelper = {
-    { IdTokenEnumType::Central, "Central" },
-    { IdTokenEnumType::eMAID, "eMAID" },
-    { IdTokenEnumType::ISO14443, "ISO14443" },
-    { IdTokenEnumType::ISO15693, "ISO15693" },
-    { IdTokenEnumType::KeyCode, "KeyCode" },
-    { IdTokenEnumType::Local, "Local" },
-    { IdTokenEnumType::MacAddress, "MacAddress" },
-    { IdTokenEnumType::NoAuthorization, "NoAuthorization" },
+    {IdTokenEnumType::Central, "Central"},
+    {IdTokenEnumType::eMAID, "eMAID"},
+    {IdTokenEnumType::ISO14443, "ISO14443"},
+    {IdTokenEnumType::ISO15693, "ISO15693"},
+    {IdTokenEnumType::KeyCode, "KeyCode"},
+    {IdTokenEnumType::Local, "Local"},
+    {IdTokenEnumType::MacAddress, "MacAddress"},
+    {IdTokenEnumType::NoAuthorization, "NoAuthorization"},
 };
 
 } // namespace ocpp20

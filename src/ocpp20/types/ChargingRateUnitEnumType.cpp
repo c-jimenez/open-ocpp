@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingRateUnitEnumType enum to string */
 const EnumToStringFromString<ChargingRateUnitEnumType> ChargingRateUnitEnumTypeHelper = {
-    { ChargingRateUnitEnumType::W, "W" },
-    { ChargingRateUnitEnumType::A, "A" },
+    {ChargingRateUnitEnumType::W, "W"},
+    {ChargingRateUnitEnumType::A, "A"},
 };
 
 } // namespace ocpp20

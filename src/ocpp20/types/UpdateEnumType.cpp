@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a UpdateEnumType enum to string */
 const EnumToStringFromString<UpdateEnumType> UpdateEnumTypeHelper = {
-    { UpdateEnumType::Differential, "Differential" },
-    { UpdateEnumType::Full, "Full" },
+    {UpdateEnumType::Differential, "Differential"},
+    {UpdateEnumType::Full, "Full"},
 };
 
 } // namespace ocpp20

@@ -26,10 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
+#include "ChargingProfileType.h"
 #include "CustomDataType.h"
 #include "IdTokenType.h"
-#include "IdTokenType.h"
-#include "ChargingProfileType.h"
 #include "RequestStartStopStatusEnumType.h"
 #include "StatusInfoType.h"
 

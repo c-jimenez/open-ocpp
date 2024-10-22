@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a CertificateSignedReq from a JSON representation */
-bool CertificateSignedReqConverter::fromJson(const rapidjson::Value&       json,
-                                     CertificateSignedReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool CertificateSignedReqConverter::fromJson(const rapidjson::Value& json,
+                                             CertificateSignedReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // certificateChain
@@ -53,7 +53,7 @@ bool CertificateSignedReqConverter::fromJson(const rapidjson::Value&       json,
     // certificateType
     if (json.HasMember("certificateType"))
     {
-    data.certificateType = ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.fromString(json["certificateType"].GetString());
+        data.certificateType = ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.fromString(json["certificateType"].GetString());
     }
 
     if (!ret)
@@ -65,19 +65,19 @@ bool CertificateSignedReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a CertificateSignedReq to a JSON representation */
-bool CertificateSignedReqConverter::toJson(const CertificateSignedReq& data, rapidjson::Document& json) 
+bool CertificateSignedReqConverter::toJson(const CertificateSignedReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // certificateChain
@@ -86,25 +86,25 @@ bool CertificateSignedReqConverter::toJson(const CertificateSignedReq& data, rap
     // certificateType
     if (data.certificateType.isSet())
     {
-    fill(json, "certificateType", ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.toString(data.certificateType));
+        fill(json, "certificateType", ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.toString(data.certificateType));
     }
 
     return ret;
 }
 
 /** @brief Convert a CertificateSignedConf from a JSON representation */
-bool CertificateSignedConfConverter::fromJson(const rapidjson::Value&       json,
-                                     CertificateSignedConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool CertificateSignedConfConverter::fromJson(const rapidjson::Value& json,
+                                              CertificateSignedConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -113,8 +113,8 @@ bool CertificateSignedConfConverter::fromJson(const rapidjson::Value&       json
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -126,19 +126,19 @@ bool CertificateSignedConfConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a CertificateSignedConf to a JSON representation */
-bool CertificateSignedConfConverter::toJson(const CertificateSignedConf& data, rapidjson::Document& json) 
+bool CertificateSignedConfConverter::toJson(const CertificateSignedConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -147,12 +147,12 @@ bool CertificateSignedConfConverter::toJson(const CertificateSignedConf& data, r
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

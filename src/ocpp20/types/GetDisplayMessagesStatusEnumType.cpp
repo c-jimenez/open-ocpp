@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a GetDisplayMessagesStatusEnumType enum to string */
 const EnumToStringFromString<GetDisplayMessagesStatusEnumType> GetDisplayMessagesStatusEnumTypeHelper = {
-    { GetDisplayMessagesStatusEnumType::Accepted, "Accepted" },
-    { GetDisplayMessagesStatusEnumType::Unknown, "Unknown" },
+    {GetDisplayMessagesStatusEnumType::Accepted, "Accepted"},
+    {GetDisplayMessagesStatusEnumType::Unknown, "Unknown"},
 };
 
 } // namespace ocpp20

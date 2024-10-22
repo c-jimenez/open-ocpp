@@ -26,10 +26,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -69,7 +69,7 @@ class LogParametersTypeConverter : public ocpp::messages::IMessageConverter<LogP
 
     /** @brief Convert a LogParametersType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  LogParametersType&                data,
+                  LogParametersType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

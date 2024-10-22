@@ -34,33 +34,34 @@ namespace ocpp20
 
 /** @brief Convert a SalesTariffEntryType from a JSON representation */
 bool SalesTariffEntryTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      SalesTariffEntryType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                             SalesTariffEntryType&         data,
+                                             std::string&                  error_code,
+                                             [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // relativeTimeInterval
     RelativeTimeIntervalTypeConverter relativeTimeInterval_converter;
-    ret = ret && relativeTimeInterval_converter.fromJson(json["relativeTimeInterval"], data.relativeTimeInterval, error_code, error_message);
+    ret =
+        ret && relativeTimeInterval_converter.fromJson(json["relativeTimeInterval"], data.relativeTimeInterval, error_code, error_message);
 
     // ePriceLevel
     extract(json, "ePriceLevel", data.ePriceLevel);
 
     // consumptionCost
-    const rapidjson::Value& consumptionCost_json = json["consumptionCost"];
+    const rapidjson::Value&      consumptionCost_json = json["consumptionCost"];
     ConsumptionCostTypeConverter consumptionCost_converter;
     for (auto it = consumptionCost_json.Begin(); ret && (it != consumptionCost_json.End()); ++it)
     {
         ConsumptionCostType& item = data.consumptionCost.emplace_back();
-        ret = ret && consumptionCost_converter.fromJson(*it, item, error_code, error_message);
+        ret                       = ret && consumptionCost_converter.fromJson(*it, item, error_code, error_message);
     }
 
     if (!ret)
@@ -72,19 +73,19 @@ bool SalesTariffEntryTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a SalesTariffEntryType to a JSON representation */
-bool SalesTariffEntryTypeConverter::toJson(const SalesTariffEntryType& data, rapidjson::Document& json) 
+bool SalesTariffEntryTypeConverter::toJson(const SalesTariffEntryType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // relativeTimeInterval
@@ -101,7 +102,7 @@ bool SalesTariffEntryTypeConverter::toJson(const SalesTariffEntryType& data, rap
     // consumptionCost
     if (!data.consumptionCost.empty())
     {
-        rapidjson::Value consumptionCost_json(rapidjson::kArrayType);
+        rapidjson::Value             consumptionCost_json(rapidjson::kArrayType);
         ConsumptionCostTypeConverter consumptionCost_converter;
         consumptionCost_converter.setAllocator(allocator);
         for (const ConsumptionCostType& item : data.consumptionCost)

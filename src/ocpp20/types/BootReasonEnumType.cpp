@@ -32,15 +32,15 @@ namespace ocpp20
 
 /** @brief Helper to convert a BootReasonEnumType enum to string */
 const EnumToStringFromString<BootReasonEnumType> BootReasonEnumTypeHelper = {
-    { BootReasonEnumType::ApplicationReset, "ApplicationReset" },
-    { BootReasonEnumType::FirmwareUpdate, "FirmwareUpdate" },
-    { BootReasonEnumType::LocalReset, "LocalReset" },
-    { BootReasonEnumType::PowerUp, "PowerUp" },
-    { BootReasonEnumType::RemoteReset, "RemoteReset" },
-    { BootReasonEnumType::ScheduledReset, "ScheduledReset" },
-    { BootReasonEnumType::Triggered, "Triggered" },
-    { BootReasonEnumType::Unknown, "Unknown" },
-    { BootReasonEnumType::Watchdog, "Watchdog" },
+    {BootReasonEnumType::ApplicationReset, "ApplicationReset"},
+    {BootReasonEnumType::FirmwareUpdate, "FirmwareUpdate"},
+    {BootReasonEnumType::LocalReset, "LocalReset"},
+    {BootReasonEnumType::PowerUp, "PowerUp"},
+    {BootReasonEnumType::RemoteReset, "RemoteReset"},
+    {BootReasonEnumType::ScheduledReset, "ScheduledReset"},
+    {BootReasonEnumType::Triggered, "Triggered"},
+    {BootReasonEnumType::Unknown, "Unknown"},
+    {BootReasonEnumType::Watchdog, "Watchdog"},
 };
 
 } // namespace ocpp20

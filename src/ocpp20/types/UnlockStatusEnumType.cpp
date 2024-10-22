@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a UnlockStatusEnumType enum to string */
 const EnumToStringFromString<UnlockStatusEnumType> UnlockStatusEnumTypeHelper = {
-    { UnlockStatusEnumType::Unlocked, "Unlocked" },
-    { UnlockStatusEnumType::UnlockFailed, "UnlockFailed" },
-    { UnlockStatusEnumType::OngoingAuthorizedTransaction, "OngoingAuthorizedTransaction" },
-    { UnlockStatusEnumType::UnknownConnector, "UnknownConnector" },
+    {UnlockStatusEnumType::Unlocked, "Unlocked"},
+    {UnlockStatusEnumType::UnlockFailed, "UnlockFailed"},
+    {UnlockStatusEnumType::OngoingAuthorizedTransaction, "OngoingAuthorizedTransaction"},
+    {UnlockStatusEnumType::UnknownConnector, "UnknownConnector"},
 };
 
 } // namespace ocpp20

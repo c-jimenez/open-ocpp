@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a RecurrencyKindEnumType enum to string */
 const EnumToStringFromString<RecurrencyKindEnumType> RecurrencyKindEnumTypeHelper = {
-    { RecurrencyKindEnumType::Daily, "Daily" },
-    { RecurrencyKindEnumType::Weekly, "Weekly" },
+    {RecurrencyKindEnumType::Daily, "Daily"},
+    {RecurrencyKindEnumType::Weekly, "Weekly"},
 };
 
 } // namespace ocpp20

@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a OCPPTransportEnumType enum to string */
 const EnumToStringFromString<OCPPTransportEnumType> OCPPTransportEnumTypeHelper = {
-    { OCPPTransportEnumType::JSON, "JSON" },
-    { OCPPTransportEnumType::SOAP, "SOAP" },
+    {OCPPTransportEnumType::JSON, "JSON"},
+    {OCPPTransportEnumType::SOAP, "SOAP"},
 };
 
 } // namespace ocpp20

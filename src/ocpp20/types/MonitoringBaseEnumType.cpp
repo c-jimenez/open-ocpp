@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a MonitoringBaseEnumType enum to string */
 const EnumToStringFromString<MonitoringBaseEnumType> MonitoringBaseEnumTypeHelper = {
-    { MonitoringBaseEnumType::All, "All" },
-    { MonitoringBaseEnumType::FactoryDefault, "FactoryDefault" },
-    { MonitoringBaseEnumType::HardWiredOnly, "HardWiredOnly" },
+    {MonitoringBaseEnumType::All, "All"},
+    {MonitoringBaseEnumType::FactoryDefault, "FactoryDefault"},
+    {MonitoringBaseEnumType::HardWiredOnly, "HardWiredOnly"},
 };
 
 } // namespace ocpp20

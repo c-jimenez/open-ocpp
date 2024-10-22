@@ -34,24 +34,24 @@ namespace ocpp20
 
 /** @brief Convert a MessageInfoType from a JSON representation */
 bool MessageInfoTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      MessageInfoType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                        MessageInfoType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // display
     if (json.HasMember("display"))
     {
-    ComponentTypeConverter display_converter;
-    ret = ret && display_converter.fromJson(json["display"], data.display, error_code, error_message);
+        ComponentTypeConverter display_converter;
+        ret = ret && display_converter.fromJson(json["display"], data.display, error_code, error_message);
     }
 
     // id
@@ -63,7 +63,7 @@ bool MessageInfoTypeConverter::fromJson(const rapidjson::Value&       json,
     // state
     if (json.HasMember("state"))
     {
-    data.state = MessageStateEnumTypeHelper.fromString(json["state"].GetString());
+        data.state = MessageStateEnumTypeHelper.fromString(json["state"].GetString());
     }
 
     // startDateTime
@@ -88,30 +88,30 @@ bool MessageInfoTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a MessageInfoType to a JSON representation */
-bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Document& json) 
+bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // display
     if (data.display.isSet())
     {
-    ComponentTypeConverter display_converter;
-    display_converter.setAllocator(allocator);
-    rapidjson::Document display_doc;
-    display_doc.Parse("{}");
-    ret = ret && display_converter.toJson(data.display, display_doc);
-    json.AddMember(rapidjson::StringRef("display"), display_doc.Move(), *allocator);
+        ComponentTypeConverter display_converter;
+        display_converter.setAllocator(allocator);
+        rapidjson::Document display_doc;
+        display_doc.Parse("{}");
+        ret = ret && display_converter.toJson(data.display, display_doc);
+        json.AddMember(rapidjson::StringRef("display"), display_doc.Move(), *allocator);
     }
 
     // id
@@ -123,7 +123,7 @@ bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Do
     // state
     if (data.state.isSet())
     {
-    fill(json, "state", MessageStateEnumTypeHelper.toString(data.state));
+        fill(json, "state", MessageStateEnumTypeHelper.toString(data.state));
     }
 
     // startDateTime

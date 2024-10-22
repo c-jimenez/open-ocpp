@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a EnergyTransferModeEnumType enum to string */
 const EnumToStringFromString<EnergyTransferModeEnumType> EnergyTransferModeEnumTypeHelper = {
-    { EnergyTransferModeEnumType::DC, "DC" },
-    { EnergyTransferModeEnumType::AC_single_phase, "AC_single_phase" },
-    { EnergyTransferModeEnumType::AC_two_phase, "AC_two_phase" },
-    { EnergyTransferModeEnumType::AC_three_phase, "AC_three_phase" },
+    {EnergyTransferModeEnumType::DC, "DC"},
+    {EnergyTransferModeEnumType::AC_single_phase, "AC_single_phase"},
+    {EnergyTransferModeEnumType::AC_two_phase, "AC_two_phase"},
+    {EnergyTransferModeEnumType::AC_three_phase, "AC_three_phase"},
 };
 
 } // namespace ocpp20

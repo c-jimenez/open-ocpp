@@ -32,12 +32,12 @@ namespace ocpp20
 
 /** @brief Helper to convert a SetVariableStatusEnumType enum to string */
 const EnumToStringFromString<SetVariableStatusEnumType> SetVariableStatusEnumTypeHelper = {
-    { SetVariableStatusEnumType::Accepted, "Accepted" },
-    { SetVariableStatusEnumType::Rejected, "Rejected" },
-    { SetVariableStatusEnumType::UnknownComponent, "UnknownComponent" },
-    { SetVariableStatusEnumType::UnknownVariable, "UnknownVariable" },
-    { SetVariableStatusEnumType::NotSupportedAttributeType, "NotSupportedAttributeType" },
-    { SetVariableStatusEnumType::RebootRequired, "RebootRequired" },
+    {SetVariableStatusEnumType::Accepted, "Accepted"},
+    {SetVariableStatusEnumType::Rejected, "Rejected"},
+    {SetVariableStatusEnumType::UnknownComponent, "UnknownComponent"},
+    {SetVariableStatusEnumType::UnknownVariable, "UnknownVariable"},
+    {SetVariableStatusEnumType::NotSupportedAttributeType, "NotSupportedAttributeType"},
+    {SetVariableStatusEnumType::RebootRequired, "RebootRequired"},
 };
 
 } // namespace ocpp20

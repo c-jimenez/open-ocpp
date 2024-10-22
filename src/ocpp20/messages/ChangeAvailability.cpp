@@ -33,25 +33,25 @@ namespace ocpp20
 {
 
 /** @brief Convert a ChangeAvailabilityReq from a JSON representation */
-bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value&       json,
-                                     ChangeAvailabilityReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value& json,
+                                              ChangeAvailabilityReq&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evse
     if (json.HasMember("evse"))
     {
-    ocpp::types::ocpp20::EVSETypeConverter evse_converter;
-    ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
+        ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
     }
 
     // operationalStatus
@@ -66,30 +66,30 @@ bool ChangeAvailabilityReqConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a ChangeAvailabilityReq to a JSON representation */
-bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, rapidjson::Document& json) 
+bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // evse
     if (data.evse.isSet())
     {
-    ocpp::types::ocpp20::EVSETypeConverter evse_converter;
-    evse_converter.setAllocator(allocator);
-    rapidjson::Document evse_doc;
-    evse_doc.Parse("{}");
-    ret = ret && evse_converter.toJson(data.evse, evse_doc);
-    json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
+        evse_converter.setAllocator(allocator);
+        rapidjson::Document evse_doc;
+        evse_doc.Parse("{}");
+        ret = ret && evse_converter.toJson(data.evse, evse_doc);
+        json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
     }
 
     // operationalStatus
@@ -99,18 +99,18 @@ bool ChangeAvailabilityReqConverter::toJson(const ChangeAvailabilityReq& data, r
 }
 
 /** @brief Convert a ChangeAvailabilityConf from a JSON representation */
-bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value&       json,
-                                     ChangeAvailabilityConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value& json,
+                                               ChangeAvailabilityConf& data,
+                                               std::string&            error_code,
+                                               std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -119,8 +119,8 @@ bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value&       jso
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -132,19 +132,19 @@ bool ChangeAvailabilityConfConverter::fromJson(const rapidjson::Value&       jso
 }
 
 /** @brief Convert a ChangeAvailabilityConf to a JSON representation */
-bool ChangeAvailabilityConfConverter::toJson(const ChangeAvailabilityConf& data, rapidjson::Document& json) 
+bool ChangeAvailabilityConfConverter::toJson(const ChangeAvailabilityConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -153,12 +153,12 @@ bool ChangeAvailabilityConfConverter::toJson(const ChangeAvailabilityConf& data,
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

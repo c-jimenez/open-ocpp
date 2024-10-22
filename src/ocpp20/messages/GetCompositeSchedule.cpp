@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a GetCompositeScheduleReq from a JSON representation */
-bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&       json,
-                                     GetCompositeScheduleReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&  json,
+                                                GetCompositeScheduleReq& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // duration
@@ -53,7 +53,7 @@ bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&       js
     // chargingRateUnit
     if (json.HasMember("chargingRateUnit"))
     {
-    data.chargingRateUnit = ocpp::types::ocpp20::ChargingRateUnitEnumTypeHelper.fromString(json["chargingRateUnit"].GetString());
+        data.chargingRateUnit = ocpp::types::ocpp20::ChargingRateUnitEnumTypeHelper.fromString(json["chargingRateUnit"].GetString());
     }
 
     // evseId
@@ -68,19 +68,19 @@ bool GetCompositeScheduleReqConverter::fromJson(const rapidjson::Value&       js
 }
 
 /** @brief Convert a GetCompositeScheduleReq to a JSON representation */
-bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& data, rapidjson::Document& json) 
+bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // duration
@@ -89,7 +89,7 @@ bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& dat
     // chargingRateUnit
     if (data.chargingRateUnit.isSet())
     {
-    fill(json, "chargingRateUnit", ocpp::types::ocpp20::ChargingRateUnitEnumTypeHelper.toString(data.chargingRateUnit));
+        fill(json, "chargingRateUnit", ocpp::types::ocpp20::ChargingRateUnitEnumTypeHelper.toString(data.chargingRateUnit));
     }
 
     // evseId
@@ -99,18 +99,18 @@ bool GetCompositeScheduleReqConverter::toJson(const GetCompositeScheduleReq& dat
 }
 
 /** @brief Convert a GetCompositeScheduleConf from a JSON representation */
-bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&       json,
-                                     GetCompositeScheduleConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&   json,
+                                                 GetCompositeScheduleConf& data,
+                                                 std::string&              error_code,
+                                                 std::string&              error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -119,15 +119,15 @@ bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&       j
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     // schedule
     if (json.HasMember("schedule"))
     {
-    ocpp::types::ocpp20::CompositeScheduleTypeConverter schedule_converter;
-    ret = ret && schedule_converter.fromJson(json["schedule"], data.schedule, error_code, error_message);
+        ocpp::types::ocpp20::CompositeScheduleTypeConverter schedule_converter;
+        ret = ret && schedule_converter.fromJson(json["schedule"], data.schedule, error_code, error_message);
     }
 
     if (!ret)
@@ -139,19 +139,19 @@ bool GetCompositeScheduleConfConverter::fromJson(const rapidjson::Value&       j
 }
 
 /** @brief Convert a GetCompositeScheduleConf to a JSON representation */
-bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& data, rapidjson::Document& json) 
+bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -160,23 +160,23 @@ bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& d
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     // schedule
     if (data.schedule.isSet())
     {
-    ocpp::types::ocpp20::CompositeScheduleTypeConverter schedule_converter;
-    schedule_converter.setAllocator(allocator);
-    rapidjson::Document schedule_doc;
-    schedule_doc.Parse("{}");
-    ret = ret && schedule_converter.toJson(data.schedule, schedule_doc);
-    json.AddMember(rapidjson::StringRef("schedule"), schedule_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CompositeScheduleTypeConverter schedule_converter;
+        schedule_converter.setAllocator(allocator);
+        rapidjson::Document schedule_doc;
+        schedule_doc.Parse("{}");
+        ret = ret && schedule_converter.toJson(data.schedule, schedule_doc);
+        json.AddMember(rapidjson::StringRef("schedule"), schedule_doc.Move(), *allocator);
     }
 
     return ret;

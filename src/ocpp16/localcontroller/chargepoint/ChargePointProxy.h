@@ -505,8 +505,8 @@ class ChargePointProxy : public IChargePointProxy, public ocpp::rpc::IRpc::IList
     bool registerHandler(const std::string&                                                                 action,
                          std::function<bool(const RequestType&, ResponseType&, std::string&, std::string&)> handler)
     {
-        UserMessageHandler<RequestType, ResponseType>* msg_handler =
-            new UserMessageHandler<RequestType, ResponseType>(action, m_messages_converter, handler);
+        ocpp::messages::UserMessageHandler<RequestType, ResponseType>* msg_handler =
+            new ocpp::messages::UserMessageHandler<RequestType, ResponseType>(action, m_messages_converter, handler);
         m_user_handlers.push_back(std::shared_ptr<ocpp::messages::IMessageDispatcher::IMessageHandler>(msg_handler));
         return m_msg_dispatcher.registerHandler(action, *msg_handler, true);
     }

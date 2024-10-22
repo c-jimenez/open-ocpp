@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a ResetStatusEnumType enum to string */
 const EnumToStringFromString<ResetStatusEnumType> ResetStatusEnumTypeHelper = {
-    { ResetStatusEnumType::Accepted, "Accepted" },
-    { ResetStatusEnumType::Rejected, "Rejected" },
-    { ResetStatusEnumType::Scheduled, "Scheduled" },
+    {ResetStatusEnumType::Accepted, "Accepted"},
+    {ResetStatusEnumType::Rejected, "Rejected"},
+    {ResetStatusEnumType::Scheduled, "Scheduled"},
 };
 
 } // namespace ocpp20

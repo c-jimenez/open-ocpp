@@ -26,9 +26,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
 #include "ConnectorEnumType.h"
-#include "IdTokenType.h"
+#include "CustomDataType.h"
 #include "IdTokenType.h"
 #include "ReserveNowStatusEnumType.h"
 #include "StatusInfoType.h"

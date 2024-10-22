@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a PublishFirmwareReq from a JSON representation */
-bool PublishFirmwareReqConverter::fromJson(const rapidjson::Value&       json,
-                                     PublishFirmwareReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool PublishFirmwareReqConverter::fromJson(const rapidjson::Value& json,
+                                           PublishFirmwareReq&     data,
+                                           std::string&            error_code,
+                                           std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // location
@@ -71,19 +71,19 @@ bool PublishFirmwareReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a PublishFirmwareReq to a JSON representation */
-bool PublishFirmwareReqConverter::toJson(const PublishFirmwareReq& data, rapidjson::Document& json) 
+bool PublishFirmwareReqConverter::toJson(const PublishFirmwareReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // location
@@ -105,18 +105,18 @@ bool PublishFirmwareReqConverter::toJson(const PublishFirmwareReq& data, rapidjs
 }
 
 /** @brief Convert a PublishFirmwareConf from a JSON representation */
-bool PublishFirmwareConfConverter::fromJson(const rapidjson::Value&       json,
-                                     PublishFirmwareConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool PublishFirmwareConfConverter::fromJson(const rapidjson::Value& json,
+                                            PublishFirmwareConf&    data,
+                                            std::string&            error_code,
+                                            std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -125,8 +125,8 @@ bool PublishFirmwareConfConverter::fromJson(const rapidjson::Value&       json,
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -138,19 +138,19 @@ bool PublishFirmwareConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a PublishFirmwareConf to a JSON representation */
-bool PublishFirmwareConfConverter::toJson(const PublishFirmwareConf& data, rapidjson::Document& json) 
+bool PublishFirmwareConfConverter::toJson(const PublishFirmwareConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -159,12 +159,12 @@ bool PublishFirmwareConfConverter::toJson(const PublishFirmwareConf& data, rapid
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

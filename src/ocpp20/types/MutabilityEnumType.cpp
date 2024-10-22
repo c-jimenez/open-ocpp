@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a MutabilityEnumType enum to string */
 const EnumToStringFromString<MutabilityEnumType> MutabilityEnumTypeHelper = {
-    { MutabilityEnumType::ReadOnly, "ReadOnly" },
-    { MutabilityEnumType::WriteOnly, "WriteOnly" },
-    { MutabilityEnumType::ReadWrite, "ReadWrite" },
+    {MutabilityEnumType::ReadOnly, "ReadOnly"},
+    {MutabilityEnumType::WriteOnly, "WriteOnly"},
+    {MutabilityEnumType::ReadWrite, "ReadWrite"},
 };
 
 } // namespace ocpp20

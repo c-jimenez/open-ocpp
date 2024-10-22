@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a RegistrationStatusEnumType enum to string */
 const EnumToStringFromString<RegistrationStatusEnumType> RegistrationStatusEnumTypeHelper = {
-    { RegistrationStatusEnumType::Accepted, "Accepted" },
-    { RegistrationStatusEnumType::Pending, "Pending" },
-    { RegistrationStatusEnumType::Rejected, "Rejected" },
+    {RegistrationStatusEnumType::Accepted, "Accepted"},
+    {RegistrationStatusEnumType::Pending, "Pending"},
+    {RegistrationStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

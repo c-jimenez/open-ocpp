@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a UnpublishFirmwareReq from a JSON representation */
-bool UnpublishFirmwareReqConverter::fromJson(const rapidjson::Value&       json,
-                                     UnpublishFirmwareReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool UnpublishFirmwareReqConverter::fromJson(const rapidjson::Value& json,
+                                             UnpublishFirmwareReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // checksum
@@ -59,19 +59,19 @@ bool UnpublishFirmwareReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a UnpublishFirmwareReq to a JSON representation */
-bool UnpublishFirmwareReqConverter::toJson(const UnpublishFirmwareReq& data, rapidjson::Document& json) 
+bool UnpublishFirmwareReqConverter::toJson(const UnpublishFirmwareReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // checksum
@@ -81,18 +81,18 @@ bool UnpublishFirmwareReqConverter::toJson(const UnpublishFirmwareReq& data, rap
 }
 
 /** @brief Convert a UnpublishFirmwareConf from a JSON representation */
-bool UnpublishFirmwareConfConverter::fromJson(const rapidjson::Value&       json,
-                                     UnpublishFirmwareConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool UnpublishFirmwareConfConverter::fromJson(const rapidjson::Value& json,
+                                              UnpublishFirmwareConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -107,19 +107,19 @@ bool UnpublishFirmwareConfConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a UnpublishFirmwareConf to a JSON representation */
-bool UnpublishFirmwareConfConverter::toJson(const UnpublishFirmwareConf& data, rapidjson::Document& json) 
+bool UnpublishFirmwareConfConverter::toJson(const UnpublishFirmwareConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status

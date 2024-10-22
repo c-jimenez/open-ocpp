@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -58,7 +58,7 @@ class StatusInfoTypeConverter : public ocpp::messages::IMessageConverter<StatusI
 
     /** @brief Convert a StatusInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  StatusInfoType&                data,
+                  StatusInfoType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

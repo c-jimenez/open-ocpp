@@ -24,16 +24,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_EVENTDATATYPE_H
 #define OPENOCPP_EVENTDATATYPE_H
 
-#include "CustomDataType.h"
-#include "EventTriggerEnumType.h"
 #include "ComponentType.h"
+#include "CustomDataType.h"
 #include "EventNotificationEnumType.h"
+#include "EventTriggerEnumType.h"
 #include "VariableType.h"
 
-#include "Optional.h"
-#include "DateTime.h"
 #include "CiStringType.h"
+#include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {

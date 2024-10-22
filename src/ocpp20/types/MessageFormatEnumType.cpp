@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a MessageFormatEnumType enum to string */
 const EnumToStringFromString<MessageFormatEnumType> MessageFormatEnumTypeHelper = {
-    { MessageFormatEnumType::ASCII, "ASCII" },
-    { MessageFormatEnumType::HTML, "HTML" },
-    { MessageFormatEnumType::URI, "URI" },
-    { MessageFormatEnumType::UTF8, "UTF8" },
+    {MessageFormatEnumType::ASCII, "ASCII"},
+    {MessageFormatEnumType::HTML, "HTML"},
+    {MessageFormatEnumType::URI, "URI"},
+    {MessageFormatEnumType::UTF8, "UTF8"},
 };
 
 } // namespace ocpp20

@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a SendLocalListStatusEnumType enum to string */
 const EnumToStringFromString<SendLocalListStatusEnumType> SendLocalListStatusEnumTypeHelper = {
-    { SendLocalListStatusEnumType::Accepted, "Accepted" },
-    { SendLocalListStatusEnumType::Failed, "Failed" },
-    { SendLocalListStatusEnumType::VersionMismatch, "VersionMismatch" },
+    {SendLocalListStatusEnumType::Accepted, "Accepted"},
+    {SendLocalListStatusEnumType::Failed, "Failed"},
+    {SendLocalListStatusEnumType::VersionMismatch, "VersionMismatch"},
 };
 
 } // namespace ocpp20

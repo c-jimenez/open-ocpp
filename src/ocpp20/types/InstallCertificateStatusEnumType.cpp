@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a InstallCertificateStatusEnumType enum to string */
 const EnumToStringFromString<InstallCertificateStatusEnumType> InstallCertificateStatusEnumTypeHelper = {
-    { InstallCertificateStatusEnumType::Accepted, "Accepted" },
-    { InstallCertificateStatusEnumType::Rejected, "Rejected" },
-    { InstallCertificateStatusEnumType::Failed, "Failed" },
+    {InstallCertificateStatusEnumType::Accepted, "Accepted"},
+    {InstallCertificateStatusEnumType::Rejected, "Rejected"},
+    {InstallCertificateStatusEnumType::Failed, "Failed"},
 };
 
 } // namespace ocpp20

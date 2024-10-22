@@ -26,8 +26,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -89,7 +89,7 @@ class DCChargingParametersTypeConverter : public ocpp::messages::IMessageConvert
 
     /** @brief Convert a DCChargingParametersType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  DCChargingParametersType&                data,
+                  DCChargingParametersType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

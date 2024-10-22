@@ -27,10 +27,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "SampledValueType.h"
 
-#include "Optional.h"
-#include <vector>
 #include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -64,7 +64,7 @@ class MeterValueTypeConverter : public ocpp::messages::IMessageConverter<MeterVa
 
     /** @brief Convert a MeterValueType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MeterValueType&                data,
+                  MeterValueType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

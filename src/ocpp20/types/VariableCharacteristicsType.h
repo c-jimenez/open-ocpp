@@ -27,9 +27,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "DataEnumType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -73,11 +73,14 @@ class VariableCharacteristicsTypeConverter : public ocpp::messages::IMessageConv
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VariableCharacteristicsType>* clone() const override { return new VariableCharacteristicsTypeConverter(); }
+    ocpp::messages::IMessageConverter<VariableCharacteristicsType>* clone() const override
+    {
+        return new VariableCharacteristicsTypeConverter();
+    }
 
     /** @brief Convert a VariableCharacteristicsType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VariableCharacteristicsType&                data,
+                  VariableCharacteristicsType&  data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

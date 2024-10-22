@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a ConnectorStatusEnumType enum to string */
 const EnumToStringFromString<ConnectorStatusEnumType> ConnectorStatusEnumTypeHelper = {
-    { ConnectorStatusEnumType::Available, "Available" },
-    { ConnectorStatusEnumType::Occupied, "Occupied" },
-    { ConnectorStatusEnumType::Reserved, "Reserved" },
-    { ConnectorStatusEnumType::Unavailable, "Unavailable" },
-    { ConnectorStatusEnumType::Faulted, "Faulted" },
+    {ConnectorStatusEnumType::Available, "Available"},
+    {ConnectorStatusEnumType::Occupied, "Occupied"},
+    {ConnectorStatusEnumType::Reserved, "Reserved"},
+    {ConnectorStatusEnumType::Unavailable, "Unavailable"},
+    {ConnectorStatusEnumType::Faulted, "Faulted"},
 };
 
 } // namespace ocpp20

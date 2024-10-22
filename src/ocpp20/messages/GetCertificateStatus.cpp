@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a GetCertificateStatusReq from a JSON representation */
-bool GetCertificateStatusReqConverter::fromJson(const rapidjson::Value&       json,
-                                     GetCertificateStatusReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetCertificateStatusReqConverter::fromJson(const rapidjson::Value&  json,
+                                                GetCertificateStatusReq& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // ocspRequestData
@@ -60,19 +60,19 @@ bool GetCertificateStatusReqConverter::fromJson(const rapidjson::Value&       js
 }
 
 /** @brief Convert a GetCertificateStatusReq to a JSON representation */
-bool GetCertificateStatusReqConverter::toJson(const GetCertificateStatusReq& data, rapidjson::Document& json) 
+bool GetCertificateStatusReqConverter::toJson(const GetCertificateStatusReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // ocspRequestData
@@ -87,18 +87,18 @@ bool GetCertificateStatusReqConverter::toJson(const GetCertificateStatusReq& dat
 }
 
 /** @brief Convert a GetCertificateStatusConf from a JSON representation */
-bool GetCertificateStatusConfConverter::fromJson(const rapidjson::Value&       json,
-                                     GetCertificateStatusConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetCertificateStatusConfConverter::fromJson(const rapidjson::Value&   json,
+                                                 GetCertificateStatusConf& data,
+                                                 std::string&              error_code,
+                                                 std::string&              error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -107,8 +107,8 @@ bool GetCertificateStatusConfConverter::fromJson(const rapidjson::Value&       j
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     // ocspResult
@@ -123,19 +123,19 @@ bool GetCertificateStatusConfConverter::fromJson(const rapidjson::Value&       j
 }
 
 /** @brief Convert a GetCertificateStatusConf to a JSON representation */
-bool GetCertificateStatusConfConverter::toJson(const GetCertificateStatusConf& data, rapidjson::Document& json) 
+bool GetCertificateStatusConfConverter::toJson(const GetCertificateStatusConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -144,12 +144,12 @@ bool GetCertificateStatusConfConverter::toJson(const GetCertificateStatusConf& d
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     // ocspResult

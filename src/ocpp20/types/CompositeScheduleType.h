@@ -24,14 +24,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_COMPOSITESCHEDULETYPE_H
 #define OPENOCPP_COMPOSITESCHEDULETYPE_H
 
-#include "CustomDataType.h"
-#include "ChargingSchedulePeriodType.h"
 #include "ChargingRateUnitEnumType.h"
+#include "ChargingSchedulePeriodType.h"
+#include "CustomDataType.h"
 
-#include "Optional.h"
-#include <vector>
 #include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -73,7 +73,7 @@ class CompositeScheduleTypeConverter : public ocpp::messages::IMessageConverter<
 
     /** @brief Convert a CompositeScheduleType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CompositeScheduleType&                data,
+                  CompositeScheduleType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

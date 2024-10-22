@@ -24,16 +24,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_MESSAGEINFOTYPE_H
 #define OPENOCPP_MESSAGEINFOTYPE_H
 
-#include "CustomDataType.h"
 #include "ComponentType.h"
+#include "CustomDataType.h"
+#include "MessageContentType.h"
 #include "MessagePriorityEnumType.h"
 #include "MessageStateEnumType.h"
-#include "MessageContentType.h"
 
-#include "Optional.h"
-#include "DateTime.h"
 #include "CiStringType.h"
+#include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -85,7 +85,7 @@ class MessageInfoTypeConverter : public ocpp::messages::IMessageConverter<Messag
 
     /** @brief Convert a MessageInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MessageInfoType&                data,
+                  MessageInfoType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

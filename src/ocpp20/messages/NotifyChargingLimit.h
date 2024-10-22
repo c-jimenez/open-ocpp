@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
-#include "ChargingScheduleType.h"
 #include "ChargingLimitType.h"
+#include "ChargingScheduleType.h"
+#include "CustomDataType.h"
 
 namespace ocpp
 {

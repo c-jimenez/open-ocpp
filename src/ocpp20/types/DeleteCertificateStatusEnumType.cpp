@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a DeleteCertificateStatusEnumType enum to string */
 const EnumToStringFromString<DeleteCertificateStatusEnumType> DeleteCertificateStatusEnumTypeHelper = {
-    { DeleteCertificateStatusEnumType::Accepted, "Accepted" },
-    { DeleteCertificateStatusEnumType::Failed, "Failed" },
-    { DeleteCertificateStatusEnumType::NotFound, "NotFound" },
+    {DeleteCertificateStatusEnumType::Accepted, "Accepted"},
+    {DeleteCertificateStatusEnumType::Failed, "Failed"},
+    {DeleteCertificateStatusEnumType::NotFound, "NotFound"},
 };
 
 } // namespace ocpp20

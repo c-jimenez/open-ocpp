@@ -24,13 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CHARGINGPROFILECRITERIONTYPE_H
 #define OPENOCPP_CHARGINGPROFILECRITERIONTYPE_H
 
-#include "CustomDataType.h"
-#include "ChargingProfilePurposeEnumType.h"
 #include "ChargingLimitSourceEnumType.h"
+#include "ChargingProfilePurposeEnumType.h"
+#include "CustomDataType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -64,11 +64,14 @@ class ChargingProfileCriterionTypeConverter : public ocpp::messages::IMessageCon
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingProfileCriterionType>* clone() const override { return new ChargingProfileCriterionTypeConverter(); }
+    ocpp::messages::IMessageConverter<ChargingProfileCriterionType>* clone() const override
+    {
+        return new ChargingProfileCriterionTypeConverter();
+    }
 
     /** @brief Convert a ChargingProfileCriterionType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingProfileCriterionType&                data,
+                  ChargingProfileCriterionType& data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

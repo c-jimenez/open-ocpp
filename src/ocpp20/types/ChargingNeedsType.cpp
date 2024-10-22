@@ -34,31 +34,33 @@ namespace ocpp20
 
 /** @brief Convert a ChargingNeedsType from a JSON representation */
 bool ChargingNeedsTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ChargingNeedsType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                          ChargingNeedsType&            data,
+                                          std::string&                  error_code,
+                                          [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // acChargingParameters
     if (json.HasMember("acChargingParameters"))
     {
-    ACChargingParametersTypeConverter acChargingParameters_converter;
-    ret = ret && acChargingParameters_converter.fromJson(json["acChargingParameters"], data.acChargingParameters, error_code, error_message);
+        ACChargingParametersTypeConverter acChargingParameters_converter;
+        ret = ret &&
+              acChargingParameters_converter.fromJson(json["acChargingParameters"], data.acChargingParameters, error_code, error_message);
     }
 
     // dcChargingParameters
     if (json.HasMember("dcChargingParameters"))
     {
-    DCChargingParametersTypeConverter dcChargingParameters_converter;
-    ret = ret && dcChargingParameters_converter.fromJson(json["dcChargingParameters"], data.dcChargingParameters, error_code, error_message);
+        DCChargingParametersTypeConverter dcChargingParameters_converter;
+        ret = ret &&
+              dcChargingParameters_converter.fromJson(json["dcChargingParameters"], data.dcChargingParameters, error_code, error_message);
     }
 
     // requestedEnergyTransfer
@@ -76,41 +78,41 @@ bool ChargingNeedsTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ChargingNeedsType to a JSON representation */
-bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson::Document& json) 
+bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // acChargingParameters
     if (data.acChargingParameters.isSet())
     {
-    ACChargingParametersTypeConverter acChargingParameters_converter;
-    acChargingParameters_converter.setAllocator(allocator);
-    rapidjson::Document acChargingParameters_doc;
-    acChargingParameters_doc.Parse("{}");
-    ret = ret && acChargingParameters_converter.toJson(data.acChargingParameters, acChargingParameters_doc);
-    json.AddMember(rapidjson::StringRef("acChargingParameters"), acChargingParameters_doc.Move(), *allocator);
+        ACChargingParametersTypeConverter acChargingParameters_converter;
+        acChargingParameters_converter.setAllocator(allocator);
+        rapidjson::Document acChargingParameters_doc;
+        acChargingParameters_doc.Parse("{}");
+        ret = ret && acChargingParameters_converter.toJson(data.acChargingParameters, acChargingParameters_doc);
+        json.AddMember(rapidjson::StringRef("acChargingParameters"), acChargingParameters_doc.Move(), *allocator);
     }
 
     // dcChargingParameters
     if (data.dcChargingParameters.isSet())
     {
-    DCChargingParametersTypeConverter dcChargingParameters_converter;
-    dcChargingParameters_converter.setAllocator(allocator);
-    rapidjson::Document dcChargingParameters_doc;
-    dcChargingParameters_doc.Parse("{}");
-    ret = ret && dcChargingParameters_converter.toJson(data.dcChargingParameters, dcChargingParameters_doc);
-    json.AddMember(rapidjson::StringRef("dcChargingParameters"), dcChargingParameters_doc.Move(), *allocator);
+        DCChargingParametersTypeConverter dcChargingParameters_converter;
+        dcChargingParameters_converter.setAllocator(allocator);
+        rapidjson::Document dcChargingParameters_doc;
+        dcChargingParameters_doc.Parse("{}");
+        ret = ret && dcChargingParameters_converter.toJson(data.dcChargingParameters, dcChargingParameters_doc);
+        json.AddMember(rapidjson::StringRef("dcChargingParameters"), dcChargingParameters_doc.Move(), *allocator);
     }
 
     // requestedEnergyTransfer

@@ -26,8 +26,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
 #include "CertificateActionEnumType.h"
+#include "CustomDataType.h"
 #include "Iso15118EVCertificateStatusEnumType.h"
 #include "StatusInfoType.h"
 

@@ -26,10 +26,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
 #include "ComponentVariableType.h"
-#include "MonitoringCriterionEnumType.h"
+#include "CustomDataType.h"
 #include "GenericDeviceModelStatusEnumType.h"
+#include "MonitoringCriterionEnumType.h"
 #include "StatusInfoType.h"
 
 namespace ocpp

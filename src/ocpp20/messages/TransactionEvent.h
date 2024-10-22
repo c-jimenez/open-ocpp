@@ -27,14 +27,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 
 #include "CustomDataType.h"
-#include "TransactionEventEnumType.h"
-#include "MeterValueType.h"
-#include "TriggerReasonEnumType.h"
-#include "TransactionType.h"
 #include "EVSEType.h"
-#include "IdTokenType.h"
 #include "IdTokenInfoType.h"
+#include "IdTokenType.h"
 #include "MessageContentType.h"
+#include "MeterValueType.h"
+#include "TransactionEventEnumType.h"
+#include "TransactionType.h"
+#include "TriggerReasonEnumType.h"
 
 namespace ocpp
 {

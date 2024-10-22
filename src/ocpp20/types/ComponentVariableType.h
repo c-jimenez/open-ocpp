@@ -24,12 +24,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_COMPONENTVARIABLETYPE_H
 #define OPENOCPP_COMPONENTVARIABLETYPE_H
 
-#include "CustomDataType.h"
 #include "ComponentType.h"
+#include "CustomDataType.h"
 #include "VariableType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -59,7 +59,7 @@ class ComponentVariableTypeConverter : public ocpp::messages::IMessageConverter<
 
     /** @brief Convert a ComponentVariableType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ComponentVariableType&                data,
+                  ComponentVariableType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

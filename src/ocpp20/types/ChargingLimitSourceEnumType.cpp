@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingLimitSourceEnumType enum to string */
 const EnumToStringFromString<ChargingLimitSourceEnumType> ChargingLimitSourceEnumTypeHelper = {
-    { ChargingLimitSourceEnumType::EMS, "EMS" },
-    { ChargingLimitSourceEnumType::Other, "Other" },
-    { ChargingLimitSourceEnumType::SO, "SO" },
-    { ChargingLimitSourceEnumType::CSO, "CSO" },
+    {ChargingLimitSourceEnumType::EMS, "EMS"},
+    {ChargingLimitSourceEnumType::Other, "Other"},
+    {ChargingLimitSourceEnumType::SO, "SO"},
+    {ChargingLimitSourceEnumType::CSO, "CSO"},
 };
 
 } // namespace ocpp20

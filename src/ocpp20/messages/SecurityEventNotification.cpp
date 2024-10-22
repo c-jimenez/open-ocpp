@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a SecurityEventNotificationReq from a JSON representation */
 bool SecurityEventNotificationReqConverter::fromJson(const rapidjson::Value&       json,
-                                     SecurityEventNotificationReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+                                                     SecurityEventNotificationReq& data,
+                                                     std::string&                  error_code,
+                                                     std::string&                  error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // type
@@ -65,19 +65,19 @@ bool SecurityEventNotificationReqConverter::fromJson(const rapidjson::Value&    
 }
 
 /** @brief Convert a SecurityEventNotificationReq to a JSON representation */
-bool SecurityEventNotificationReqConverter::toJson(const SecurityEventNotificationReq& data, rapidjson::Document& json) 
+bool SecurityEventNotificationReqConverter::toJson(const SecurityEventNotificationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // type
@@ -93,18 +93,18 @@ bool SecurityEventNotificationReqConverter::toJson(const SecurityEventNotificati
 }
 
 /** @brief Convert a SecurityEventNotificationConf from a JSON representation */
-bool SecurityEventNotificationConfConverter::fromJson(const rapidjson::Value&       json,
-                                     SecurityEventNotificationConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool SecurityEventNotificationConfConverter::fromJson(const rapidjson::Value&        json,
+                                                      SecurityEventNotificationConf& data,
+                                                      std::string&                   error_code,
+                                                      std::string&                   error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -116,19 +116,19 @@ bool SecurityEventNotificationConfConverter::fromJson(const rapidjson::Value&   
 }
 
 /** @brief Convert a SecurityEventNotificationConf to a JSON representation */
-bool SecurityEventNotificationConfConverter::toJson(const SecurityEventNotificationConf& data, rapidjson::Document& json) 
+bool SecurityEventNotificationConfConverter::toJson(const SecurityEventNotificationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

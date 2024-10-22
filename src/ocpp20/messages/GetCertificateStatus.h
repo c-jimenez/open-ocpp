@@ -27,8 +27,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 
 #include "CustomDataType.h"
-#include "OCSPRequestDataType.h"
 #include "GetCertificateStatusEnumType.h"
+#include "OCSPRequestDataType.h"
 #include "StatusInfoType.h"
 
 namespace ocpp

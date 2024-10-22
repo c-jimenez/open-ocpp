@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a MonitoringCriterionEnumType enum to string */
 const EnumToStringFromString<MonitoringCriterionEnumType> MonitoringCriterionEnumTypeHelper = {
-    { MonitoringCriterionEnumType::ThresholdMonitoring, "ThresholdMonitoring" },
-    { MonitoringCriterionEnumType::DeltaMonitoring, "DeltaMonitoring" },
-    { MonitoringCriterionEnumType::PeriodicMonitoring, "PeriodicMonitoring" },
+    {MonitoringCriterionEnumType::ThresholdMonitoring, "ThresholdMonitoring"},
+    {MonitoringCriterionEnumType::DeltaMonitoring, "DeltaMonitoring"},
+    {MonitoringCriterionEnumType::PeriodicMonitoring, "PeriodicMonitoring"},
 };
 
 } // namespace ocpp20

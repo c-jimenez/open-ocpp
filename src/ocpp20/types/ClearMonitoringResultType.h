@@ -24,12 +24,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CLEARMONITORINGRESULTTYPE_H
 #define OPENOCPP_CLEARMONITORINGRESULTTYPE_H
 
-#include "CustomDataType.h"
 #include "ClearMonitoringStatusEnumType.h"
+#include "CustomDataType.h"
 #include "StatusInfoType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -56,11 +56,14 @@ class ClearMonitoringResultTypeConverter : public ocpp::messages::IMessageConver
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ClearMonitoringResultType>* clone() const override { return new ClearMonitoringResultTypeConverter(); }
+    ocpp::messages::IMessageConverter<ClearMonitoringResultType>* clone() const override
+    {
+        return new ClearMonitoringResultTypeConverter();
+    }
 
     /** @brief Convert a ClearMonitoringResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ClearMonitoringResultType&                data,
+                  ClearMonitoringResultType&    data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

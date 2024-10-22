@@ -24,16 +24,16 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_NETWORKCONNECTIONPROFILETYPE_H
 #define OPENOCPP_NETWORKCONNECTIONPROFILETYPE_H
 
-#include "CustomDataType.h"
 #include "APNType.h"
-#include "OCPPVersionEnumType.h"
-#include "OCPPTransportEnumType.h"
+#include "CustomDataType.h"
 #include "OCPPInterfaceEnumType.h"
+#include "OCPPTransportEnumType.h"
+#include "OCPPVersionEnumType.h"
 #include "VPNType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -77,11 +77,14 @@ class NetworkConnectionProfileTypeConverter : public ocpp::messages::IMessageCon
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<NetworkConnectionProfileType>* clone() const override { return new NetworkConnectionProfileTypeConverter(); }
+    ocpp::messages::IMessageConverter<NetworkConnectionProfileType>* clone() const override
+    {
+        return new NetworkConnectionProfileTypeConverter();
+    }
 
     /** @brief Convert a NetworkConnectionProfileType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  NetworkConnectionProfileType&                data,
+                  NetworkConnectionProfileType& data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

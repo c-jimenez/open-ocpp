@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a ClearCacheStatusEnumType enum to string */
 const EnumToStringFromString<ClearCacheStatusEnumType> ClearCacheStatusEnumTypeHelper = {
-    { ClearCacheStatusEnumType::Accepted, "Accepted" },
-    { ClearCacheStatusEnumType::Rejected, "Rejected" },
+    {ClearCacheStatusEnumType::Accepted, "Accepted"},
+    {ClearCacheStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

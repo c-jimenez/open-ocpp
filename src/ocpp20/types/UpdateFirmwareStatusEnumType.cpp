@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
 const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusEnumTypeHelper = {
-    { UpdateFirmwareStatusEnumType::Accepted, "Accepted" },
-    { UpdateFirmwareStatusEnumType::Rejected, "Rejected" },
-    { UpdateFirmwareStatusEnumType::AcceptedCanceled, "AcceptedCanceled" },
-    { UpdateFirmwareStatusEnumType::InvalidCertificate, "InvalidCertificate" },
-    { UpdateFirmwareStatusEnumType::RevokedCertificate, "RevokedCertificate" },
+    {UpdateFirmwareStatusEnumType::Accepted, "Accepted"},
+    {UpdateFirmwareStatusEnumType::Rejected, "Rejected"},
+    {UpdateFirmwareStatusEnumType::AcceptedCanceled, "AcceptedCanceled"},
+    {UpdateFirmwareStatusEnumType::InvalidCertificate, "InvalidCertificate"},
+    {UpdateFirmwareStatusEnumType::RevokedCertificate, "RevokedCertificate"},
 };
 
 } // namespace ocpp20

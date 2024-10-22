@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ChargingProfileType from a JSON representation */
 bool ChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ChargingProfileType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                            ChargingProfileType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // id
@@ -62,7 +62,7 @@ bool ChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
     // recurrencyKind
     if (json.HasMember("recurrencyKind"))
     {
-    data.recurrencyKind = RecurrencyKindEnumTypeHelper.fromString(json["recurrencyKind"].GetString());
+        data.recurrencyKind = RecurrencyKindEnumTypeHelper.fromString(json["recurrencyKind"].GetString());
     }
 
     // validFrom
@@ -72,12 +72,12 @@ bool ChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
     ret = ret && extract(json, "validTo", data.validTo, error_message);
 
     // chargingSchedule
-    const rapidjson::Value& chargingSchedule_json = json["chargingSchedule"];
+    const rapidjson::Value&       chargingSchedule_json = json["chargingSchedule"];
     ChargingScheduleTypeConverter chargingSchedule_converter;
     for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
     {
         ChargingScheduleType& item = data.chargingSchedule.emplace_back();
-        ret = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+        ret                        = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
     }
 
     // transactionId
@@ -92,19 +92,19 @@ bool ChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ChargingProfileType to a JSON representation */
-bool ChargingProfileTypeConverter::toJson(const ChargingProfileType& data, rapidjson::Document& json) 
+bool ChargingProfileTypeConverter::toJson(const ChargingProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // id
@@ -122,7 +122,7 @@ bool ChargingProfileTypeConverter::toJson(const ChargingProfileType& data, rapid
     // recurrencyKind
     if (data.recurrencyKind.isSet())
     {
-    fill(json, "recurrencyKind", RecurrencyKindEnumTypeHelper.toString(data.recurrencyKind));
+        fill(json, "recurrencyKind", RecurrencyKindEnumTypeHelper.toString(data.recurrencyKind));
     }
 
     // validFrom
@@ -134,7 +134,7 @@ bool ChargingProfileTypeConverter::toJson(const ChargingProfileType& data, rapid
     // chargingSchedule
     if (!data.chargingSchedule.empty())
     {
-        rapidjson::Value chargingSchedule_json(rapidjson::kArrayType);
+        rapidjson::Value              chargingSchedule_json(rapidjson::kArrayType);
         ChargingScheduleTypeConverter chargingSchedule_converter;
         chargingSchedule_converter.setAllocator(allocator);
         for (const ChargingScheduleType& item : data.chargingSchedule)
