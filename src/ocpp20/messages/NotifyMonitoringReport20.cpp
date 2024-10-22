@@ -48,12 +48,15 @@ bool NotifyMonitoringReport20ReqConverter::fromJson(const rapidjson::Value&     
     }
 
     // monitor
-    const rapidjson::Value&                            monitor_json = json["monitor"];
-    ocpp::types::ocpp20::MonitoringDataType20Converter monitor_converter;
-    for (auto it = monitor_json.Begin(); ret && (it != monitor_json.End()); ++it)
+    if (json.HasMember("monitor"))
     {
-        ocpp::types::ocpp20::MonitoringDataType20& item = data.monitor.emplace_back();
-        ret                                             = ret && monitor_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                            monitor_json = json["monitor"];
+        ocpp::types::ocpp20::MonitoringDataType20Converter monitor_converter;
+        for (auto it = monitor_json.Begin(); ret && (it != monitor_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::MonitoringDataType20& item = data.monitor.emplace_back();
+            ret                                             = ret && monitor_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // requestId
@@ -95,6 +98,7 @@ bool NotifyMonitoringReport20ReqConverter::toJson(const NotifyMonitoringReport20
     // monitor
     if (!data.monitor.empty())
     {
+
         rapidjson::Value                                   monitor_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::MonitoringDataType20Converter monitor_converter;
         monitor_converter.setAllocator(allocator);

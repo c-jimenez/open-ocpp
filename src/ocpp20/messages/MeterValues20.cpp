@@ -51,12 +51,15 @@ bool MeterValues20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "evseId", data.evseId);
 
     // meterValue
-    const rapidjson::Value&                        meterValue_json = json["meterValue"];
-    ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
-    for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
+    if (json.HasMember("meterValue"))
     {
-        ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
-        ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                        meterValue_json = json["meterValue"];
+        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+        for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
+            ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -87,20 +90,18 @@ bool MeterValues20ReqConverter::toJson(const MeterValues20Req& data, rapidjson::
     fill(json, "evseId", data.evseId);
 
     // meterValue
-    if (!data.meterValue.empty())
+
+    rapidjson::Value                               meterValue_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+    meterValue_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::MeterValueType20& item : data.meterValue)
     {
-        rapidjson::Value                               meterValue_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
-        meterValue_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::MeterValueType20& item : data.meterValue)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && meterValue_converter.toJson(item, item_doc);
-            meterValue_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("meterValue"), meterValue_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && meterValue_converter.toJson(item, item_doc);
+        meterValue_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("meterValue"), meterValue_json.Move(), *allocator);
 
     return ret;
 }

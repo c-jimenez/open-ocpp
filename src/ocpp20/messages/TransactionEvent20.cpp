@@ -51,12 +51,15 @@ bool TransactionEvent20ReqConverter::fromJson(const rapidjson::Value& json,
     data.eventType = ocpp::types::ocpp20::TransactionEventEnumType20Helper.fromString(json["eventType"].GetString());
 
     // meterValue
-    const rapidjson::Value&                        meterValue_json = json["meterValue"];
-    ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
-    for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
+    if (json.HasMember("meterValue"))
     {
-        ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
-        ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                        meterValue_json = json["meterValue"];
+        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+        for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
+            ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // timestamp
@@ -128,6 +131,7 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     // meterValue
     if (!data.meterValue.empty())
     {
+
         rapidjson::Value                               meterValue_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
         meterValue_converter.setAllocator(allocator);

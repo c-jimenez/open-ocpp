@@ -48,12 +48,15 @@ bool IdTokenType20Converter::fromJson(const rapidjson::Value&       json,
     }
 
     // additionalInfo
-    const rapidjson::Value&       additionalInfo_json = json["additionalInfo"];
-    AdditionalInfoType20Converter additionalInfo_converter;
-    for (auto it = additionalInfo_json.Begin(); ret && (it != additionalInfo_json.End()); ++it)
+    if (json.HasMember("additionalInfo"))
     {
-        AdditionalInfoType20& item = data.additionalInfo.emplace_back();
-        ret                        = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&       additionalInfo_json = json["additionalInfo"];
+        AdditionalInfoType20Converter additionalInfo_converter;
+        for (auto it = additionalInfo_json.Begin(); ret && (it != additionalInfo_json.End()); ++it)
+        {
+            AdditionalInfoType20& item = data.additionalInfo.emplace_back();
+            ret                        = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // idToken
@@ -89,6 +92,7 @@ bool IdTokenType20Converter::toJson(const IdTokenType20& data, rapidjson::Docume
     // additionalInfo
     if (!data.additionalInfo.empty())
     {
+
         rapidjson::Value              additionalInfo_json(rapidjson::kArrayType);
         AdditionalInfoType20Converter additionalInfo_converter;
         additionalInfo_converter.setAllocator(allocator);

@@ -57,19 +57,25 @@ bool ChargingProfileCriterionType20Converter::fromJson(const rapidjson::Value&  
     extract(json, "stackLevel", data.stackLevel);
 
     // chargingProfileId
-    const rapidjson::Value& chargingProfileId_json = json["chargingProfileId"];
-    for (auto it = chargingProfileId_json.Begin(); ret && (it != chargingProfileId_json.End()); ++it)
+    if (json.HasMember("chargingProfileId"))
     {
-        int& item = data.chargingProfileId.emplace_back();
-        item      = it->GetInt();
+        const rapidjson::Value& chargingProfileId_json = json["chargingProfileId"];
+        for (auto it = chargingProfileId_json.Begin(); ret && (it != chargingProfileId_json.End()); ++it)
+        {
+            int& item = data.chargingProfileId.emplace_back();
+            item      = it->GetInt();
+        }
     }
 
     // chargingLimitSource
-    const rapidjson::Value& chargingLimitSource_json = json["chargingLimitSource"];
-    for (auto it = chargingLimitSource_json.Begin(); ret && (it != chargingLimitSource_json.End()); ++it)
+    if (json.HasMember("chargingLimitSource"))
     {
-        ChargingLimitSourceEnumType20& item = data.chargingLimitSource.emplace_back();
-        item                                = ChargingLimitSourceEnumType20Helper.fromString(it->GetString());
+        const rapidjson::Value& chargingLimitSource_json = json["chargingLimitSource"];
+        for (auto it = chargingLimitSource_json.Begin(); ret && (it != chargingLimitSource_json.End()); ++it)
+        {
+            ChargingLimitSourceEnumType20& item = data.chargingLimitSource.emplace_back();
+            item                                = ChargingLimitSourceEnumType20Helper.fromString(it->GetString());
+        }
     }
 
     if (!ret)
@@ -108,6 +114,7 @@ bool ChargingProfileCriterionType20Converter::toJson(const ChargingProfileCriter
     // chargingProfileId
     if (!data.chargingProfileId.empty())
     {
+
         rapidjson::Value chargingProfileId_json(rapidjson::kArrayType);
         for (const int& item : data.chargingProfileId)
         {
@@ -119,6 +126,7 @@ bool ChargingProfileCriterionType20Converter::toJson(const ChargingProfileCriter
     // chargingLimitSource
     if (!data.chargingLimitSource.empty())
     {
+
         rapidjson::Value chargingLimitSource_json(rapidjson::kArrayType);
         for (const ChargingLimitSourceEnumType20& item : data.chargingLimitSource)
         {

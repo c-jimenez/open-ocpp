@@ -55,12 +55,15 @@ bool Authorize20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "certificate", data.certificate);
 
     // iso15118CertificateHashData
-    const rapidjson::Value&                             iso15118CertificateHashData_json = json["iso15118CertificateHashData"];
-    ocpp::types::ocpp20::OCSPRequestDataType20Converter iso15118CertificateHashData_converter;
-    for (auto it = iso15118CertificateHashData_json.Begin(); ret && (it != iso15118CertificateHashData_json.End()); ++it)
+    if (json.HasMember("iso15118CertificateHashData"))
     {
-        ocpp::types::ocpp20::OCSPRequestDataType20& item = data.iso15118CertificateHashData.emplace_back();
-        ret = ret && iso15118CertificateHashData_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                             iso15118CertificateHashData_json = json["iso15118CertificateHashData"];
+        ocpp::types::ocpp20::OCSPRequestDataType20Converter iso15118CertificateHashData_converter;
+        for (auto it = iso15118CertificateHashData_json.Begin(); ret && (it != iso15118CertificateHashData_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::OCSPRequestDataType20& item = data.iso15118CertificateHashData.emplace_back();
+            ret = ret && iso15118CertificateHashData_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -101,6 +104,7 @@ bool Authorize20ReqConverter::toJson(const Authorize20Req& data, rapidjson::Docu
     // iso15118CertificateHashData
     if (!data.iso15118CertificateHashData.empty())
     {
+
         rapidjson::Value                                    iso15118CertificateHashData_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::OCSPRequestDataType20Converter iso15118CertificateHashData_converter;
         iso15118CertificateHashData_converter.setAllocator(allocator);

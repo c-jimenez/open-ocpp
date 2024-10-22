@@ -48,11 +48,14 @@ bool ClearVariableMonitoring20ReqConverter::fromJson(const rapidjson::Value&    
     }
 
     // id
-    const rapidjson::Value& id_json = json["id"];
-    for (auto it = id_json.Begin(); ret && (it != id_json.End()); ++it)
+    if (json.HasMember("id"))
     {
-        int& item = data.id.emplace_back();
-        item      = it->GetInt();
+        const rapidjson::Value& id_json = json["id"];
+        for (auto it = id_json.Begin(); ret && (it != id_json.End()); ++it)
+        {
+            int& item = data.id.emplace_back();
+            item      = it->GetInt();
+        }
     }
 
     if (!ret)
@@ -80,15 +83,13 @@ bool ClearVariableMonitoring20ReqConverter::toJson(const ClearVariableMonitoring
     }
 
     // id
-    if (!data.id.empty())
+
+    rapidjson::Value id_json(rapidjson::kArrayType);
+    for (const int& item : data.id)
     {
-        rapidjson::Value id_json(rapidjson::kArrayType);
-        for (const int& item : data.id)
-        {
-            id_json.PushBack(rapidjson::Value(item), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("id"), id_json.Move(), *allocator);
+        id_json.PushBack(rapidjson::Value(item), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("id"), id_json.Move(), *allocator);
 
     return ret;
 }
@@ -109,12 +110,15 @@ bool ClearVariableMonitoring20ConfConverter::fromJson(const rapidjson::Value&   
     }
 
     // clearMonitoringResult
-    const rapidjson::Value&                                   clearMonitoringResult_json = json["clearMonitoringResult"];
-    ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
-    for (auto it = clearMonitoringResult_json.Begin(); ret && (it != clearMonitoringResult_json.End()); ++it)
+    if (json.HasMember("clearMonitoringResult"))
     {
-        ocpp::types::ocpp20::ClearMonitoringResultType20& item = data.clearMonitoringResult.emplace_back();
-        ret = ret && clearMonitoringResult_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                                   clearMonitoringResult_json = json["clearMonitoringResult"];
+        ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
+        for (auto it = clearMonitoringResult_json.Begin(); ret && (it != clearMonitoringResult_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ClearMonitoringResultType20& item = data.clearMonitoringResult.emplace_back();
+            ret = ret && clearMonitoringResult_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -142,20 +146,18 @@ bool ClearVariableMonitoring20ConfConverter::toJson(const ClearVariableMonitorin
     }
 
     // clearMonitoringResult
-    if (!data.clearMonitoringResult.empty())
+
+    rapidjson::Value                                          clearMonitoringResult_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
+    clearMonitoringResult_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::ClearMonitoringResultType20& item : data.clearMonitoringResult)
     {
-        rapidjson::Value                                          clearMonitoringResult_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
-        clearMonitoringResult_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::ClearMonitoringResultType20& item : data.clearMonitoringResult)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && clearMonitoringResult_converter.toJson(item, item_doc);
-            clearMonitoringResult_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("clearMonitoringResult"), clearMonitoringResult_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && clearMonitoringResult_converter.toJson(item, item_doc);
+        clearMonitoringResult_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("clearMonitoringResult"), clearMonitoringResult_json.Move(), *allocator);
 
     return ret;
 }

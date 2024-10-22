@@ -48,11 +48,14 @@ bool GetDisplayMessages20ReqConverter::fromJson(const rapidjson::Value&  json,
     }
 
     // id
-    const rapidjson::Value& id_json = json["id"];
-    for (auto it = id_json.Begin(); ret && (it != id_json.End()); ++it)
+    if (json.HasMember("id"))
     {
-        int& item = data.id.emplace_back();
-        item      = it->GetInt();
+        const rapidjson::Value& id_json = json["id"];
+        for (auto it = id_json.Begin(); ret && (it != id_json.End()); ++it)
+        {
+            int& item = data.id.emplace_back();
+            item      = it->GetInt();
+        }
     }
 
     // requestId
@@ -97,6 +100,7 @@ bool GetDisplayMessages20ReqConverter::toJson(const GetDisplayMessages20Req& dat
     // id
     if (!data.id.empty())
     {
+
         rapidjson::Value id_json(rapidjson::kArrayType);
         for (const int& item : data.id)
         {

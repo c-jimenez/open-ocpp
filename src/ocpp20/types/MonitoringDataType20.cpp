@@ -56,12 +56,15 @@ bool MonitoringDataType20Converter::fromJson(const rapidjson::Value&       json,
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     // variableMonitoring
-    const rapidjson::Value&           variableMonitoring_json = json["variableMonitoring"];
-    VariableMonitoringType20Converter variableMonitoring_converter;
-    for (auto it = variableMonitoring_json.Begin(); ret && (it != variableMonitoring_json.End()); ++it)
+    if (json.HasMember("variableMonitoring"))
     {
-        VariableMonitoringType20& item = data.variableMonitoring.emplace_back();
-        ret                            = ret && variableMonitoring_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&           variableMonitoring_json = json["variableMonitoring"];
+        VariableMonitoringType20Converter variableMonitoring_converter;
+        for (auto it = variableMonitoring_json.Begin(); ret && (it != variableMonitoring_json.End()); ++it)
+        {
+            VariableMonitoringType20& item = data.variableMonitoring.emplace_back();
+            ret                            = ret && variableMonitoring_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -105,20 +108,18 @@ bool MonitoringDataType20Converter::toJson(const MonitoringDataType20& data, rap
     json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
 
     // variableMonitoring
-    if (!data.variableMonitoring.empty())
+
+    rapidjson::Value                  variableMonitoring_json(rapidjson::kArrayType);
+    VariableMonitoringType20Converter variableMonitoring_converter;
+    variableMonitoring_converter.setAllocator(allocator);
+    for (const VariableMonitoringType20& item : data.variableMonitoring)
     {
-        rapidjson::Value                  variableMonitoring_json(rapidjson::kArrayType);
-        VariableMonitoringType20Converter variableMonitoring_converter;
-        variableMonitoring_converter.setAllocator(allocator);
-        for (const VariableMonitoringType20& item : data.variableMonitoring)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && variableMonitoring_converter.toJson(item, item_doc);
-            variableMonitoring_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("variableMonitoring"), variableMonitoring_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && variableMonitoring_converter.toJson(item, item_doc);
+        variableMonitoring_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("variableMonitoring"), variableMonitoring_json.Move(), *allocator);
 
     return ret;
 }

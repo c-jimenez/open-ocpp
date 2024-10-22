@@ -48,12 +48,15 @@ bool SendLocalList20ReqConverter::fromJson(const rapidjson::Value& json,
     }
 
     // localAuthorizationList
-    const rapidjson::Value&                           localAuthorizationList_json = json["localAuthorizationList"];
-    ocpp::types::ocpp20::AuthorizationData20Converter localAuthorizationList_converter;
-    for (auto it = localAuthorizationList_json.Begin(); ret && (it != localAuthorizationList_json.End()); ++it)
+    if (json.HasMember("localAuthorizationList"))
     {
-        ocpp::types::ocpp20::AuthorizationData20& item = data.localAuthorizationList.emplace_back();
-        ret = ret && localAuthorizationList_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                           localAuthorizationList_json = json["localAuthorizationList"];
+        ocpp::types::ocpp20::AuthorizationData20Converter localAuthorizationList_converter;
+        for (auto it = localAuthorizationList_json.Begin(); ret && (it != localAuthorizationList_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::AuthorizationData20& item = data.localAuthorizationList.emplace_back();
+            ret = ret && localAuthorizationList_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // versionNumber
@@ -89,6 +92,7 @@ bool SendLocalList20ReqConverter::toJson(const SendLocalList20Req& data, rapidjs
     // localAuthorizationList
     if (!data.localAuthorizationList.empty())
     {
+
         rapidjson::Value                                  localAuthorizationList_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::AuthorizationData20Converter localAuthorizationList_converter;
         localAuthorizationList_converter.setAllocator(allocator);

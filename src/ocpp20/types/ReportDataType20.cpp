@@ -56,12 +56,15 @@ bool ReportDataType20Converter::fromJson(const rapidjson::Value&       json,
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     // variableAttribute
-    const rapidjson::Value&          variableAttribute_json = json["variableAttribute"];
-    VariableAttributeType20Converter variableAttribute_converter;
-    for (auto it = variableAttribute_json.Begin(); ret && (it != variableAttribute_json.End()); ++it)
+    if (json.HasMember("variableAttribute"))
     {
-        VariableAttributeType20& item = data.variableAttribute.emplace_back();
-        ret                           = ret && variableAttribute_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&          variableAttribute_json = json["variableAttribute"];
+        VariableAttributeType20Converter variableAttribute_converter;
+        for (auto it = variableAttribute_json.Begin(); ret && (it != variableAttribute_json.End()); ++it)
+        {
+            VariableAttributeType20& item = data.variableAttribute.emplace_back();
+            ret                           = ret && variableAttribute_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // variableCharacteristics
@@ -113,20 +116,18 @@ bool ReportDataType20Converter::toJson(const ReportDataType20& data, rapidjson::
     json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
 
     // variableAttribute
-    if (!data.variableAttribute.empty())
+
+    rapidjson::Value                 variableAttribute_json(rapidjson::kArrayType);
+    VariableAttributeType20Converter variableAttribute_converter;
+    variableAttribute_converter.setAllocator(allocator);
+    for (const VariableAttributeType20& item : data.variableAttribute)
     {
-        rapidjson::Value                 variableAttribute_json(rapidjson::kArrayType);
-        VariableAttributeType20Converter variableAttribute_converter;
-        variableAttribute_converter.setAllocator(allocator);
-        for (const VariableAttributeType20& item : data.variableAttribute)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && variableAttribute_converter.toJson(item, item_doc);
-            variableAttribute_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("variableAttribute"), variableAttribute_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && variableAttribute_converter.toJson(item, item_doc);
+        variableAttribute_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("variableAttribute"), variableAttribute_json.Move(), *allocator);
 
     // variableCharacteristics
     if (data.variableCharacteristics.isSet())

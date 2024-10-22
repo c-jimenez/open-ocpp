@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_OCPP20_CHARGEPOINT20_H
 #define OPENOCPP_OCPP20_CHARGEPOINT20_H
 
+#include "GenericMessageHandler.h"
 #include "GenericMessageSender.h"
 #include "IChargePoint20.h"
 #include "InternalConfigManager.h"
@@ -49,17 +50,93 @@ namespace ocpp20
 {
 
 /** @brief Charge point implementation */
-class ChargePoint20 : public IChargePoint20,
-                      public ocpp::rpc::IRpc::IListener,
-                      public ocpp::rpc::IRpc::ISpy,
-                      public ocpp::rpc::RpcClient::IListener
+class ChargePoint20
+    : public IChargePoint20,
+      public ocpp::rpc::IRpc::IListener,
+      public ocpp::rpc::IRpc::ISpy,
+      public ocpp::rpc::RpcClient::IListener,
+
+      // Central System messages
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::CancelReservation20Req,
+                                                   ocpp::messages::ocpp20::CancelReservation20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::CertificateSigned20Req,
+                                                   ocpp::messages::ocpp20::CertificateSigned20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ChangeAvailability20Req,
+                                                   ocpp::messages::ocpp20::ChangeAvailability20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ClearCache20Req, ocpp::messages::ocpp20::ClearCache20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ClearChargingProfile20Req,
+                                                   ocpp::messages::ocpp20::ClearChargingProfile20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ClearDisplayMessage20Req,
+                                                   ocpp::messages::ocpp20::ClearDisplayMessage20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ClearVariableMonitoring20Req,
+                                                   ocpp::messages::ocpp20::ClearVariableMonitoring20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::CustomerInformation20Req,
+                                                   ocpp::messages::ocpp20::CustomerInformation20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::DataTransfer20Req, ocpp::messages::ocpp20::DataTransfer20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::DeleteCertificate20Req,
+                                                   ocpp::messages::ocpp20::DeleteCertificate20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::Get15118EVCertificate20Req,
+                                                   ocpp::messages::ocpp20::Get15118EVCertificate20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetBaseReport20Req, ocpp::messages::ocpp20::GetBaseReport20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetCertificateStatus20Req,
+                                                   ocpp::messages::ocpp20::GetCertificateStatus20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetChargingProfiles20Req,
+                                                   ocpp::messages::ocpp20::GetChargingProfiles20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetCompositeSchedule20Req,
+                                                   ocpp::messages::ocpp20::GetCompositeSchedule20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetDisplayMessages20Req,
+                                                   ocpp::messages::ocpp20::GetDisplayMessages20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetInstalledCertificateIds20Req,
+                                                   ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetLocalListVersion20Req,
+                                                   ocpp::messages::ocpp20::GetLocalListVersion20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetLog20Req, ocpp::messages::ocpp20::GetLog20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetMonitoringReport20Req,
+                                                   ocpp::messages::ocpp20::GetMonitoringReport20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetReport20Req, ocpp::messages::ocpp20::GetReport20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetTransactionStatus20Req,
+                                                   ocpp::messages::ocpp20::GetTransactionStatus20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::GetVariables20Req, ocpp::messages::ocpp20::GetVariables20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::InstallCertificate20Req,
+                                                   ocpp::messages::ocpp20::InstallCertificate20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::PublishFirmware20Req,
+                                                   ocpp::messages::ocpp20::PublishFirmware20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::RequestStartTransaction20Req,
+                                                   ocpp::messages::ocpp20::RequestStartTransaction20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::RequestStopTransaction20Req,
+                                                   ocpp::messages::ocpp20::RequestStopTransaction20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::ReserveNow20Req, ocpp::messages::ocpp20::ReserveNow20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::Reset20Req, ocpp::messages::ocpp20::Reset20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SendLocalList20Req, ocpp::messages::ocpp20::SendLocalList20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetChargingProfile20Req,
+                                                   ocpp::messages::ocpp20::SetChargingProfile20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetDisplayMessage20Req,
+                                                   ocpp::messages::ocpp20::SetDisplayMessage20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetMonitoringBase20Req,
+                                                   ocpp::messages::ocpp20::SetMonitoringBase20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetMonitoringLevel20Req,
+                                                   ocpp::messages::ocpp20::SetMonitoringLevel20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetNetworkProfile20Req,
+                                                   ocpp::messages::ocpp20::SetNetworkProfile20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetVariableMonitoring20Req,
+                                                   ocpp::messages::ocpp20::SetVariableMonitoring20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::SetVariables20Req, ocpp::messages::ocpp20::SetVariables20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::TriggerMessage20Req,
+                                                   ocpp::messages::ocpp20::TriggerMessage20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::UnlockConnector20Req,
+                                                   ocpp::messages::ocpp20::UnlockConnector20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::UnpublishFirmware20Req,
+                                                   ocpp::messages::ocpp20::UnpublishFirmware20Conf>,
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::ocpp20::UpdateFirmware20Req,
+                                                   ocpp::messages::ocpp20::UpdateFirmware20Conf>
 {
   public:
     /** @brief Constructor */
-    ChargePoint20(const ocpp::config::IChargePointConfig20&        stack_config,
-                  IChargePointEventsHandler20&                     events_handler,
-                  std::shared_ptr<ocpp::helpers::ITimerPool>       timer_pool,
-                  std::shared_ptr<ocpp::helpers::WorkerThreadPool> worker_pool);
+    ChargePoint20(const ocpp::config::IChargePointConfig20&                      stack_config,
+                  IChargePointEventsHandler20&                                   events_handler,
+                  std::shared_ptr<ocpp::helpers::ITimerPool>                     timer_pool,
+                  std::shared_ptr<ocpp::helpers::WorkerThreadPool>               worker_pool,
+                  std::unique_ptr<ocpp::messages::ocpp20::MessagesConverter20>&& messages_converter);
 
     /** @brief Destructor */
     virtual ~ChargePoint20();
@@ -337,6 +414,418 @@ class ChargePoint20 : public IChargePoint20,
               std::string&                                         error,
               std::string&                                         message) override;
 
+    // OCPP handlers
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::CancelReservation20Req& request,
+                       ocpp::messages::ocpp20::CancelReservation20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
+                       ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
+                       ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ClearCache20Req& request,
+                       ocpp::messages::ocpp20::ClearCache20Conf&      response,
+                       std::string&                                   error_code,
+                       std::string&                                   error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
+                       ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
+                       ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
+                       ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
+                       std::string&                                                error_code,
+                       std::string&                                                error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
+                       ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::DataTransfer20Req& request,
+                       ocpp::messages::ocpp20::DataTransfer20Conf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
+                       ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
+                       ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
+                       std::string&                                              error_code,
+                       std::string&                                              error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
+                       ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
+                       std::string&                                      error_code,
+                       std::string&                                      error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
+                       ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
+                       ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
+                       ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
+                       ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
+                       ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&      response,
+                       std::string&                                                   error_code,
+                       std::string&                                                   error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
+                       ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetLog20Req& request,
+                       ocpp::messages::ocpp20::GetLog20Conf&      response,
+                       std::string&                               error_code,
+                       std::string&                               error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
+                       ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
+                       std::string&                                            error_code,
+                       std::string&                                            error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetReport20Req& request,
+                       ocpp::messages::ocpp20::GetReport20Conf&      response,
+                       std::string&                                  error_code,
+                       std::string&                                  error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
+                       ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
+                       std::string&                                             error_code,
+                       std::string&                                             error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::GetVariables20Req& request,
+                       ocpp::messages::ocpp20::GetVariables20Conf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
+                       ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
+                       ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
+                       ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
+                       std::string&                                                error_code,
+                       std::string&                                                error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
+                       ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
+                       std::string&                                               error_code,
+                       std::string&                                               error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::ReserveNow20Req& request,
+                       ocpp::messages::ocpp20::ReserveNow20Conf&      response,
+                       std::string&                                   error_code,
+                       std::string&                                   error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::Reset20Req& request,
+                       ocpp::messages::ocpp20::Reset20Conf&      response,
+                       std::string&                              error_code,
+                       std::string&                              error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SendLocalList20Req& request,
+                       ocpp::messages::ocpp20::SendLocalList20Conf&      response,
+                       std::string&                                      error_code,
+                       std::string&                                      error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
+                       ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
+                       ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
+                       ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
+                       ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
+                       std::string&                                           error_code,
+                       std::string&                                           error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
+                       ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
+                       ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
+                       std::string&                                              error_code,
+                       std::string&                                              error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::SetVariables20Req& request,
+                       ocpp::messages::ocpp20::SetVariables20Conf&      response,
+                       std::string&                                     error_code,
+                       std::string&                                     error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
+                       ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
+                       std::string&                                       error_code,
+                       std::string&                                       error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
+                       ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
+                       ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
+                       std::string&                                          error_code,
+                       std::string&                                          error_message) override;
+
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
+                       ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
+                       std::string&                                       error_code,
+                       std::string&                                       error_message) override;
+
   private:
     /** @brief Stack configuration */
     const ocpp::config::IChargePointConfig20& m_stack_config;
@@ -354,7 +843,7 @@ class ChargePoint20 : public IChargePoint20,
     ocpp::config::InternalConfigManager m_internal_config;
 
     /** @brief Messages converter */
-    ocpp::messages::ocpp20::MessagesConverter20 m_messages_converter;
+    std::unique_ptr<ocpp::messages::ocpp20::MessagesConverter20> m_messages_converter;
     /** @brief Messaes validator */
     ocpp::messages::ocpp20::MessagesValidator20 m_messages_validator;
     /** @brief Indicate that a stop process is in progress */
@@ -418,7 +907,10 @@ class ChargePoint20 : public IChargePoint20,
             {
                 LOG_ERROR << "[" << identifier << "] - " << action << " => "
                           << (res == ocpp::messages::CallResult::Failed ? "Timeout" : "Error");
-                ret = false;
+            }
+            else
+            {
+                ret = true;
             }
         }
 

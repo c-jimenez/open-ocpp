@@ -48,12 +48,15 @@ bool NotifyDisplayMessages20ReqConverter::fromJson(const rapidjson::Value&     j
     }
 
     // messageInfo
-    const rapidjson::Value&                         messageInfo_json = json["messageInfo"];
-    ocpp::types::ocpp20::MessageInfoType20Converter messageInfo_converter;
-    for (auto it = messageInfo_json.Begin(); ret && (it != messageInfo_json.End()); ++it)
+    if (json.HasMember("messageInfo"))
     {
-        ocpp::types::ocpp20::MessageInfoType20& item = data.messageInfo.emplace_back();
-        ret                                          = ret && messageInfo_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                         messageInfo_json = json["messageInfo"];
+        ocpp::types::ocpp20::MessageInfoType20Converter messageInfo_converter;
+        for (auto it = messageInfo_json.Begin(); ret && (it != messageInfo_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::MessageInfoType20& item = data.messageInfo.emplace_back();
+            ret                                          = ret && messageInfo_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // requestId
@@ -89,6 +92,7 @@ bool NotifyDisplayMessages20ReqConverter::toJson(const NotifyDisplayMessages20Re
     // messageInfo
     if (!data.messageInfo.empty())
     {
+
         rapidjson::Value                                messageInfo_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::MessageInfoType20Converter messageInfo_converter;
         messageInfo_converter.setAllocator(allocator);

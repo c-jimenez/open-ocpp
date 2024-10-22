@@ -48,23 +48,29 @@ bool GetReport20ReqConverter::fromJson(const rapidjson::Value& json,
     }
 
     // componentVariable
-    const rapidjson::Value&                               componentVariable_json = json["componentVariable"];
-    ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
-    for (auto it = componentVariable_json.Begin(); ret && (it != componentVariable_json.End()); ++it)
+    if (json.HasMember("componentVariable"))
     {
-        ocpp::types::ocpp20::ComponentVariableType20& item = data.componentVariable.emplace_back();
-        ret = ret && componentVariable_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                               componentVariable_json = json["componentVariable"];
+        ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
+        for (auto it = componentVariable_json.Begin(); ret && (it != componentVariable_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ComponentVariableType20& item = data.componentVariable.emplace_back();
+            ret = ret && componentVariable_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // requestId
     extract(json, "requestId", data.requestId);
 
     // componentCriteria
-    const rapidjson::Value& componentCriteria_json = json["componentCriteria"];
-    for (auto it = componentCriteria_json.Begin(); ret && (it != componentCriteria_json.End()); ++it)
+    if (json.HasMember("componentCriteria"))
     {
-        ocpp::types::ocpp20::ComponentCriterionEnumType20& item = data.componentCriteria.emplace_back();
-        item = ocpp::types::ocpp20::ComponentCriterionEnumType20Helper.fromString(it->GetString());
+        const rapidjson::Value& componentCriteria_json = json["componentCriteria"];
+        for (auto it = componentCriteria_json.Begin(); ret && (it != componentCriteria_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ComponentCriterionEnumType20& item = data.componentCriteria.emplace_back();
+            item = ocpp::types::ocpp20::ComponentCriterionEnumType20Helper.fromString(it->GetString());
+        }
     }
 
     if (!ret)
@@ -94,6 +100,7 @@ bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Docu
     // componentVariable
     if (!data.componentVariable.empty())
     {
+
         rapidjson::Value                                      componentVariable_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
         componentVariable_converter.setAllocator(allocator);
@@ -113,6 +120,7 @@ bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Docu
     // componentCriteria
     if (!data.componentCriteria.empty())
     {
+
         rapidjson::Value componentCriteria_json(rapidjson::kArrayType);
         for (const ocpp::types::ocpp20::ComponentCriterionEnumType20& item : data.componentCriteria)
         {

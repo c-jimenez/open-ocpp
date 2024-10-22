@@ -63,30 +63,33 @@ bool {{type.name}}Converter::fromJson(const rapidjson::Value&       json,
     {%- endif %}
     
     {%- elif field.type == "array" %}
-    const rapidjson::Value& {{field.name}}_json = json["{{field.name}}"];
-    
-    {%- if field.array_type in other_types %}
-    {%- if other_types[field.array_type].basic_type == "enum" %}
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+    if (json.HasMember("{{field.name}}"))
     {
-        {{field.array_type}}& item = data.{{field.name}}.emplace_back();
-        item = {{field.array_type}}Helper.fromString(it->GetString());
+        const rapidjson::Value& {{field.name}}_json = json["{{field.name}}"];
+        
+        {%- if field.array_type in other_types %}
+        {%- if other_types[field.array_type].basic_type == "enum" %}
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            {{field.array_type}}& item = data.{{field.name}}.emplace_back();
+            item = {{field.array_type}}Helper.fromString(it->GetString());
+        }
+        {%- else %}
+        {{field.array_type}}Converter {{field.name}}_converter;
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            {{field.array_type}}& item = data.{{field.name}}.emplace_back();
+            ret = ret && {{field.name}}_converter.fromJson(*it, item, error_code, error_message);
+        }
+        {%- endif %}
+        {%- else %}
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            {{field.get_cpp_type(field.array_type, "")}}& item = data.{{field.name}}.emplace_back();
+            item = it->GetInt();
+        }
+        {%- endif %}
     }
-    {%- else %}
-    {{field.array_type}}Converter {{field.name}}_converter;
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
-    {
-        {{field.array_type}}& item = data.{{field.name}}.emplace_back();
-        ret = ret && {{field.name}}_converter.fromJson(*it, item, error_code, error_message);
-    }
-    {%- endif %}
-    {%- else %}
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
-    {
-        {{field.get_cpp_type(field.array_type, "")}}& item = data.{{field.name}}.emplace_back();
-        item = it->GetInt();
-    }
-    {%- endif %}
 
 
     {%- elif field.type == "date-time" %}
@@ -138,8 +141,12 @@ bool {{type.name}}Converter::toJson(const {{type.name}}& data, rapidjson::Docume
     {%- endif %}
     
     {%- elif field.type == "array" %}
+
+    {%- if not field.is_required %}
     if (!data.{{field.name}}.empty())
     {
+    {%- endif %}
+
         rapidjson::Value {{field.name}}_json(rapidjson::kArrayType);
         {%- if field.array_type in other_types %}
         {%- if other_types[field.array_type].basic_type == "enum" %}
@@ -165,7 +172,10 @@ bool {{type.name}}Converter::toJson(const {{type.name}}& data, rapidjson::Docume
         }
         {%- endif %}
         json.AddMember(rapidjson::StringRef("{{field.name}}"), {{field.name}}_json.Move(), *allocator);
+
+    {%- if not field.is_required %}
     }
+    {%- endif %}
 
     {%- else %}
     fill(json, "{{field.name}}", data.{{field.name}});

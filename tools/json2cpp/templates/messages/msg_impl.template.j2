@@ -66,34 +66,37 @@ bool {{msg_name}}Converter::fromJson(const rapidjson::Value&       json,
     {%- endif %}
     
     {%- elif field.type == "array" %}
-    const rapidjson::Value& {{field.name}}_json = json["{{field.name}}"];
-    
-    {%- if field.array_type in other_types %}
-    {%- if other_types[field.array_type].basic_type == "enum" %}
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+    if (json.HasMember("{{field.name}}"))
     {
-        ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}& item = data.{{field.name}}.emplace_back();
-        item = ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}Helper.fromString(it->GetString());
-    }
-    {%- else %}
-    ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}Converter {{field.name}}_converter;
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
-    {
-        ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}& item = data.{{field.name}}.emplace_back();
-        ret = ret && {{field.name}}_converter.fromJson(*it, item, error_code, error_message);
-    }
-    {%- endif %}
-    {%- else %}
-    for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
-    {
-        {{field.get_cpp_type(field.array_type, ocpp_version_namespace)}}& item = data.{{field.name}}.emplace_back();
-        {%- if field.get_cpp_type(field.array_type, ocpp_version_namespace) == "std::string" %}
-        item = it->GetString();
+        const rapidjson::Value& {{field.name}}_json = json["{{field.name}}"];
+        
+        {%- if field.array_type in other_types %}
+        {%- if other_types[field.array_type].basic_type == "enum" %}
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}& item = data.{{field.name}}.emplace_back();
+            item = ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}Helper.fromString(it->GetString());
+        }
         {%- else %}
-        item = it->GetInt();
+        ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}Converter {{field.name}}_converter;
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            ocpp::types::{{ocpp_version_namespace}}::{{field.array_type}}& item = data.{{field.name}}.emplace_back();
+            ret = ret && {{field.name}}_converter.fromJson(*it, item, error_code, error_message);
+        }
+        {%- endif %}
+        {%- else %}
+        for (auto it = {{field.name}}_json.Begin(); ret && (it != {{field.name}}_json.End()); ++it)
+        {
+            {{field.get_cpp_type(field.array_type, ocpp_version_namespace)}}& item = data.{{field.name}}.emplace_back();
+            {%- if field.get_cpp_type(field.array_type, ocpp_version_namespace) == "std::string" %}
+            item = it->GetString();
+            {%- else %}
+            item = it->GetInt();
+            {%- endif %}
+        }
         {%- endif %}
     }
-    {%- endif %}
 
 
     {%- elif field.type == "date-time" %}
@@ -145,8 +148,12 @@ bool {{msg_name}}Converter::toJson(const {{msg_name}}& data, rapidjson::Document
     {%- endif %}
     
     {%- elif field.type == "array" %}
+
+    {%- if not field.is_required %}
     if (!data.{{field.name}}.empty())
     {
+    {%- endif %}
+
         rapidjson::Value {{field.name}}_json(rapidjson::kArrayType);
         {%- if field.array_type in other_types %}
         {%- if other_types[field.array_type].basic_type == "enum" %}
@@ -176,7 +183,10 @@ bool {{msg_name}}Converter::toJson(const {{msg_name}}& data, rapidjson::Document
         }
         {%- endif %}
         json.AddMember(rapidjson::StringRef("{{field.name}}"), {{field.name}}_json.Move(), *allocator);
+
+    {%- if not field.is_required %}
     }
+    {%- endif %}
 
     {%- else %}
     fill(json, "{{field.name}}", data.{{field.name}});

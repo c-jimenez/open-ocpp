@@ -48,12 +48,15 @@ bool CompositeScheduleType20Converter::fromJson(const rapidjson::Value&       js
     }
 
     // chargingSchedulePeriod
-    const rapidjson::Value&               chargingSchedulePeriod_json = json["chargingSchedulePeriod"];
-    ChargingSchedulePeriodType20Converter chargingSchedulePeriod_converter;
-    for (auto it = chargingSchedulePeriod_json.Begin(); ret && (it != chargingSchedulePeriod_json.End()); ++it)
+    if (json.HasMember("chargingSchedulePeriod"))
     {
-        ChargingSchedulePeriodType20& item = data.chargingSchedulePeriod.emplace_back();
-        ret                                = ret && chargingSchedulePeriod_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&               chargingSchedulePeriod_json = json["chargingSchedulePeriod"];
+        ChargingSchedulePeriodType20Converter chargingSchedulePeriod_converter;
+        for (auto it = chargingSchedulePeriod_json.Begin(); ret && (it != chargingSchedulePeriod_json.End()); ++it)
+        {
+            ChargingSchedulePeriodType20& item = data.chargingSchedulePeriod.emplace_back();
+            ret                                = ret && chargingSchedulePeriod_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // evseId
@@ -93,20 +96,18 @@ bool CompositeScheduleType20Converter::toJson(const CompositeScheduleType20& dat
     }
 
     // chargingSchedulePeriod
-    if (!data.chargingSchedulePeriod.empty())
+
+    rapidjson::Value                      chargingSchedulePeriod_json(rapidjson::kArrayType);
+    ChargingSchedulePeriodType20Converter chargingSchedulePeriod_converter;
+    chargingSchedulePeriod_converter.setAllocator(allocator);
+    for (const ChargingSchedulePeriodType20& item : data.chargingSchedulePeriod)
     {
-        rapidjson::Value                      chargingSchedulePeriod_json(rapidjson::kArrayType);
-        ChargingSchedulePeriodType20Converter chargingSchedulePeriod_converter;
-        chargingSchedulePeriod_converter.setAllocator(allocator);
-        for (const ChargingSchedulePeriodType20& item : data.chargingSchedulePeriod)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && chargingSchedulePeriod_converter.toJson(item, item_doc);
-            chargingSchedulePeriod_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("chargingSchedulePeriod"), chargingSchedulePeriod_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && chargingSchedulePeriod_converter.toJson(item, item_doc);
+        chargingSchedulePeriod_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("chargingSchedulePeriod"), chargingSchedulePeriod_json.Move(), *allocator);
 
     // evseId
     fill(json, "evseId", data.evseId);
