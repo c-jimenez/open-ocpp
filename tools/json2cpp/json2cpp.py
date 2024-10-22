@@ -210,6 +210,9 @@ class Message(Type):
         self.name = ""
         ''' Name of the message '''
 
+        self.raw_name = ""
+        ''' Name of the message without OCPP suffix '''
+
         self.id = ""
         ''' Id of the message definition '''
 
@@ -411,7 +414,7 @@ def read_code_templates(params) -> dict:
 
     return templates
 
-def parse_type_contents(name, contents) -> Type:
+def parse_type_contents(name, contents, ocpp_version_suffix) -> Type:
     '''
         Parse the contents of an OCPP type message
 
@@ -421,13 +424,16 @@ def parse_type_contents(name, contents) -> Type:
         @param contents: JSON definition of the OCPP type
         @type contents: json
 
+        @param ocpp_version_suffix: Suffix of the OCPP version
+        @type ocpp_version_suffix: string
+
         @return message: OCPP message type
         @rtype message: Message
     '''
 
     # Generic type data
     type = Type()
-    type.name = name
+    type.name = f"{name}{ocpp_version_suffix}"
     type.basic_type = contents["type"]
     if "description" in contents:
         type.comment = contents["description"]    
@@ -443,7 +449,7 @@ def parse_type_contents(name, contents) -> Type:
                 field.comment = property_definition["description"]
             if "$ref" in property_definition:
                 external_type = property_definition["$ref"]
-                field.type = external_type[external_type.rfind("/") + 1:]
+                field.type = external_type[external_type.rfind("/") + 1:] + ocpp_version_suffix
                 type.requires.append(field.type)
             else:
                 if "type" in property_definition:
@@ -459,7 +465,7 @@ def parse_type_contents(name, contents) -> Type:
                 elif field.type == "array":
                     if "$ref" in property_definition["items"]:
                         external_type = property_definition["items"]["$ref"]
-                        field.array_type = external_type[external_type.rfind("/") + 1:]
+                        field.array_type = external_type[external_type.rfind("/") + 1:] + ocpp_version_suffix
                         type.requires.append(field.array_type)
                     else:
                         field.array_type = property_definition["items"]["type"]
@@ -485,7 +491,7 @@ def parse_type_contents(name, contents) -> Type:
 
 
 
-def parse_message_contents(message, contents) -> None:
+def parse_message_contents(message, contents, ocpp_version_suffix) -> None:
     '''
         Parse the contents of an OCPP message
 
@@ -494,16 +500,19 @@ def parse_message_contents(message, contents) -> None:
 
         @param contents: JSON definition of the OCPP message
         @type contents: json
+
+        @param ocpp_version_suffix: Suffix of the OCPP version
+        @type ocpp_version_suffix: string
     '''
 
     # Types definition
     for type_name in contents["definitions"]:
         type_definition = contents["definitions"][type_name]
-        type = parse_type_contents(type_name, type_definition)
+        type = parse_type_contents(type_name, type_definition, ocpp_version_suffix)
         message.associated_types.append(type)
     
     # Message
-    message_type = parse_type_contents("", contents)
+    message_type = parse_type_contents("", contents, ocpp_version_suffix)
     message.fields = message_type.fields
     message.requires = message_type.requires
 
@@ -605,18 +614,21 @@ def gen_ocpp_message(message, templates, params) -> None:
     '''
 
     # Message object
+    ocpp_version_suffix = params.ocpp_version[4:]
+
     msg = Message()
-    msg.name = message
+    msg.name = f"{message}{ocpp_version_suffix}"
+    msg.raw_name = message
     
     # Parse input files
     request = json.load(open(os.path.join(params.input_dir, f"{ocpp_message}Request.json")))
-    parse_message_contents(msg.request, request)
+    parse_message_contents(msg.request, request, ocpp_version_suffix)
     response = json.load(open(os.path.join(params.input_dir, f"{ocpp_message}Response.json")))
-    parse_message_contents(msg.response, response)
+    parse_message_contents(msg.response, response, ocpp_version_suffix)
 
     msg.id = request["$id"]
     msg.comment = request["comment"]
-    msg.types = {f"{ocpp_message}Req": msg.request, f"{ocpp_message}Conf": msg.response}
+    msg.types = {f"{ocpp_message}{ocpp_version_suffix}Req": msg.request, f"{ocpp_message}{ocpp_version_suffix}Conf": msg.response}
 
     # Required types
     msg.requires = msg.request.requires
@@ -637,23 +649,23 @@ def gen_ocpp_message(message, templates, params) -> None:
             gen_ocpp_type(msg, associated_type, associated_types, templates, params)
 
     # Generate message header file
-    msg_header_path = os.path.join(params.messages_dir, ocpp_message + ".h")
+    msg_header_path = os.path.join(params.messages_dir, ocpp_message + ocpp_version_suffix + ".h")
     msg_header = open(msg_header_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["msg_header"])
-    rendered_template = template.render(msg = msg, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(msg = msg, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     msg_header.write(rendered_template)
     msg_header.close()
 
     # Generate implementation file
-    msg_impl_path = os.path.join(params.messages_dir, ocpp_message + ".cpp")
+    msg_impl_path = os.path.join(params.messages_dir, ocpp_message + ocpp_version_suffix + ".cpp")
     msg_impl = open(msg_impl_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["msg_impl"])
-    rendered_template = template.render(msg = msg, other_types = associated_types, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(msg = msg, other_types = associated_types, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     msg_impl.write(rendered_template)
     msg_impl.close()
@@ -910,9 +922,18 @@ if __name__ == '__main__':
         print(f"Generating files from {params.input_dir}")
 
         # Read messages list
+        ocpp_version_suffix = params.ocpp_version[4:]
         msg_list_file_path = os.path.join(params.input_dir, "list.json")
         try:
             msg_list = json.load(open(msg_list_file_path, "rt"))
+            renamed_msgs = []
+            for msg in msg_list["from_csms"]:
+                renamed_msgs.append(f"{msg}{ocpp_version_suffix}")
+            msg_list["from_csms"] = renamed_msgs
+            renamed_msgs = []
+            for msg in msg_list["from_cs"]:
+                renamed_msgs.append(f"{msg}{ocpp_version_suffix}")
+            msg_list["from_cs"] = renamed_msgs
         except:
             print(f"Unable to load messages list file : {msg_list_file_path}")
 
@@ -926,9 +947,9 @@ if __name__ == '__main__':
 
             # Generate messages
             gen_converters(templates, params, msg_list)
-            # for ocpp_message in ocpp_messages:
-            #     print(f"Generating {ocpp_message} message...")
-            #     gen_ocpp_message(ocpp_message,templates, params)
+            for ocpp_message in ocpp_messages:
+                print(f"Generating {ocpp_message} message...")
+                gen_ocpp_message(ocpp_message,templates, params)
 
             # Generate central system interfaces and classes
             gen_centralsystem(templates, params, msg_list)

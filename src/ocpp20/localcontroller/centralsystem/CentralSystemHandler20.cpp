@@ -39,125 +39,134 @@ namespace ocpp20
 CentralSystemHandler20::CentralSystemHandler20(const std::string&                                 identifier,
                                                const ocpp::messages::ocpp20::MessagesConverter20& messages_converter,
                                                ocpp::messages::MessageDispatcher&                 msg_dispatcher)
-    : GenericMessageHandler<CancelReservationReq, CancelReservationConf>(CANCELRESERVATION_ACTION, messages_converter),
-      GenericMessageHandler<CertificateSignedReq, CertificateSignedConf>(CERTIFICATESIGNED_ACTION, messages_converter),
-      GenericMessageHandler<ChangeAvailabilityReq, ChangeAvailabilityConf>(CHANGEAVAILABILITY_ACTION, messages_converter),
-      GenericMessageHandler<ClearCacheReq, ClearCacheConf>(CLEARCACHE_ACTION, messages_converter),
-      GenericMessageHandler<ClearChargingProfileReq, ClearChargingProfileConf>(CLEARCHARGINGPROFILE_ACTION, messages_converter),
-      GenericMessageHandler<ClearDisplayMessageReq, ClearDisplayMessageConf>(CLEARDISPLAYMESSAGE_ACTION, messages_converter),
-      GenericMessageHandler<ClearVariableMonitoringReq, ClearVariableMonitoringConf>(CLEARVARIABLEMONITORING_ACTION, messages_converter),
-      GenericMessageHandler<CustomerInformationReq, CustomerInformationConf>(CUSTOMERINFORMATION_ACTION, messages_converter),
-      GenericMessageHandler<DataTransferReq, DataTransferConf>(DATATRANSFER_ACTION, messages_converter),
-      GenericMessageHandler<DeleteCertificateReq, DeleteCertificateConf>(DELETECERTIFICATE_ACTION, messages_converter),
-      GenericMessageHandler<Get15118EVCertificateReq, Get15118EVCertificateConf>(GET15118EVCERTIFICATE_ACTION, messages_converter),
-      GenericMessageHandler<GetBaseReportReq, GetBaseReportConf>(GETBASEREPORT_ACTION, messages_converter),
-      GenericMessageHandler<GetCertificateStatusReq, GetCertificateStatusConf>(GETCERTIFICATESTATUS_ACTION, messages_converter),
-      GenericMessageHandler<GetChargingProfilesReq, GetChargingProfilesConf>(GETCHARGINGPROFILES_ACTION, messages_converter),
-      GenericMessageHandler<GetCompositeScheduleReq, GetCompositeScheduleConf>(GETCOMPOSITESCHEDULE_ACTION, messages_converter),
-      GenericMessageHandler<GetDisplayMessagesReq, GetDisplayMessagesConf>(GETDISPLAYMESSAGES_ACTION, messages_converter),
-      GenericMessageHandler<GetInstalledCertificateIdsReq, GetInstalledCertificateIdsConf>(GETINSTALLEDCERTIFICATEIDS_ACTION,
-                                                                                           messages_converter),
-      GenericMessageHandler<GetLocalListVersionReq, GetLocalListVersionConf>(GETLOCALLISTVERSION_ACTION, messages_converter),
-      GenericMessageHandler<GetLogReq, GetLogConf>(GETLOG_ACTION, messages_converter),
-      GenericMessageHandler<GetMonitoringReportReq, GetMonitoringReportConf>(GETMONITORINGREPORT_ACTION, messages_converter),
-      GenericMessageHandler<GetReportReq, GetReportConf>(GETREPORT_ACTION, messages_converter),
-      GenericMessageHandler<GetTransactionStatusReq, GetTransactionStatusConf>(GETTRANSACTIONSTATUS_ACTION, messages_converter),
-      GenericMessageHandler<GetVariablesReq, GetVariablesConf>(GETVARIABLES_ACTION, messages_converter),
-      GenericMessageHandler<InstallCertificateReq, InstallCertificateConf>(INSTALLCERTIFICATE_ACTION, messages_converter),
-      GenericMessageHandler<PublishFirmwareReq, PublishFirmwareConf>(PUBLISHFIRMWARE_ACTION, messages_converter),
-      GenericMessageHandler<RequestStartTransactionReq, RequestStartTransactionConf>(REQUESTSTARTTRANSACTION_ACTION, messages_converter),
-      GenericMessageHandler<RequestStopTransactionReq, RequestStopTransactionConf>(REQUESTSTOPTRANSACTION_ACTION, messages_converter),
-      GenericMessageHandler<ReserveNowReq, ReserveNowConf>(RESERVENOW_ACTION, messages_converter),
-      GenericMessageHandler<ResetReq, ResetConf>(RESET_ACTION, messages_converter),
-      GenericMessageHandler<SendLocalListReq, SendLocalListConf>(SENDLOCALLIST_ACTION, messages_converter),
-      GenericMessageHandler<SetChargingProfileReq, SetChargingProfileConf>(SETCHARGINGPROFILE_ACTION, messages_converter),
-      GenericMessageHandler<SetDisplayMessageReq, SetDisplayMessageConf>(SETDISPLAYMESSAGE_ACTION, messages_converter),
-      GenericMessageHandler<SetMonitoringBaseReq, SetMonitoringBaseConf>(SETMONITORINGBASE_ACTION, messages_converter),
-      GenericMessageHandler<SetMonitoringLevelReq, SetMonitoringLevelConf>(SETMONITORINGLEVEL_ACTION, messages_converter),
-      GenericMessageHandler<SetNetworkProfileReq, SetNetworkProfileConf>(SETNETWORKPROFILE_ACTION, messages_converter),
-      GenericMessageHandler<SetVariableMonitoringReq, SetVariableMonitoringConf>(SETVARIABLEMONITORING_ACTION, messages_converter),
-      GenericMessageHandler<SetVariablesReq, SetVariablesConf>(SETVARIABLES_ACTION, messages_converter),
-      GenericMessageHandler<TriggerMessageReq, TriggerMessageConf>(TRIGGERMESSAGE_ACTION, messages_converter),
-      GenericMessageHandler<UnlockConnectorReq, UnlockConnectorConf>(UNLOCKCONNECTOR_ACTION, messages_converter),
-      GenericMessageHandler<UnpublishFirmwareReq, UnpublishFirmwareConf>(UNPUBLISHFIRMWARE_ACTION, messages_converter),
-      GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>(UPDATEFIRMWARE_ACTION, messages_converter),
+    : GenericMessageHandler<CancelReservation20Req, CancelReservation20Conf>(CANCELRESERVATION20_ACTION, messages_converter),
+      GenericMessageHandler<CertificateSigned20Req, CertificateSigned20Conf>(CERTIFICATESIGNED20_ACTION, messages_converter),
+      GenericMessageHandler<ChangeAvailability20Req, ChangeAvailability20Conf>(CHANGEAVAILABILITY20_ACTION, messages_converter),
+      GenericMessageHandler<ClearCache20Req, ClearCache20Conf>(CLEARCACHE20_ACTION, messages_converter),
+      GenericMessageHandler<ClearChargingProfile20Req, ClearChargingProfile20Conf>(CLEARCHARGINGPROFILE20_ACTION, messages_converter),
+      GenericMessageHandler<ClearDisplayMessage20Req, ClearDisplayMessage20Conf>(CLEARDISPLAYMESSAGE20_ACTION, messages_converter),
+      GenericMessageHandler<ClearVariableMonitoring20Req, ClearVariableMonitoring20Conf>(CLEARVARIABLEMONITORING20_ACTION,
+                                                                                         messages_converter),
+      GenericMessageHandler<CustomerInformation20Req, CustomerInformation20Conf>(CUSTOMERINFORMATION20_ACTION, messages_converter),
+      GenericMessageHandler<DataTransfer20Req, DataTransfer20Conf>(DATATRANSFER20_ACTION, messages_converter),
+      GenericMessageHandler<DeleteCertificate20Req, DeleteCertificate20Conf>(DELETECERTIFICATE20_ACTION, messages_converter),
+      GenericMessageHandler<Get15118EVCertificate20Req, Get15118EVCertificate20Conf>(GET15118EVCERTIFICATE20_ACTION, messages_converter),
+      GenericMessageHandler<GetBaseReport20Req, GetBaseReport20Conf>(GETBASEREPORT20_ACTION, messages_converter),
+      GenericMessageHandler<GetCertificateStatus20Req, GetCertificateStatus20Conf>(GETCERTIFICATESTATUS20_ACTION, messages_converter),
+      GenericMessageHandler<GetChargingProfiles20Req, GetChargingProfiles20Conf>(GETCHARGINGPROFILES20_ACTION, messages_converter),
+      GenericMessageHandler<GetCompositeSchedule20Req, GetCompositeSchedule20Conf>(GETCOMPOSITESCHEDULE20_ACTION, messages_converter),
+      GenericMessageHandler<GetDisplayMessages20Req, GetDisplayMessages20Conf>(GETDISPLAYMESSAGES20_ACTION, messages_converter),
+      GenericMessageHandler<GetInstalledCertificateIds20Req, GetInstalledCertificateIds20Conf>(GETINSTALLEDCERTIFICATEIDS20_ACTION,
+                                                                                               messages_converter),
+      GenericMessageHandler<GetLocalListVersion20Req, GetLocalListVersion20Conf>(GETLOCALLISTVERSION20_ACTION, messages_converter),
+      GenericMessageHandler<GetLog20Req, GetLog20Conf>(GETLOG20_ACTION, messages_converter),
+      GenericMessageHandler<GetMonitoringReport20Req, GetMonitoringReport20Conf>(GETMONITORINGREPORT20_ACTION, messages_converter),
+      GenericMessageHandler<GetReport20Req, GetReport20Conf>(GETREPORT20_ACTION, messages_converter),
+      GenericMessageHandler<GetTransactionStatus20Req, GetTransactionStatus20Conf>(GETTRANSACTIONSTATUS20_ACTION, messages_converter),
+      GenericMessageHandler<GetVariables20Req, GetVariables20Conf>(GETVARIABLES20_ACTION, messages_converter),
+      GenericMessageHandler<InstallCertificate20Req, InstallCertificate20Conf>(INSTALLCERTIFICATE20_ACTION, messages_converter),
+      GenericMessageHandler<PublishFirmware20Req, PublishFirmware20Conf>(PUBLISHFIRMWARE20_ACTION, messages_converter),
+      GenericMessageHandler<RequestStartTransaction20Req, RequestStartTransaction20Conf>(REQUESTSTARTTRANSACTION20_ACTION,
+                                                                                         messages_converter),
+      GenericMessageHandler<RequestStopTransaction20Req, RequestStopTransaction20Conf>(REQUESTSTOPTRANSACTION20_ACTION, messages_converter),
+      GenericMessageHandler<ReserveNow20Req, ReserveNow20Conf>(RESERVENOW20_ACTION, messages_converter),
+      GenericMessageHandler<Reset20Req, Reset20Conf>(RESET20_ACTION, messages_converter),
+      GenericMessageHandler<SendLocalList20Req, SendLocalList20Conf>(SENDLOCALLIST20_ACTION, messages_converter),
+      GenericMessageHandler<SetChargingProfile20Req, SetChargingProfile20Conf>(SETCHARGINGPROFILE20_ACTION, messages_converter),
+      GenericMessageHandler<SetDisplayMessage20Req, SetDisplayMessage20Conf>(SETDISPLAYMESSAGE20_ACTION, messages_converter),
+      GenericMessageHandler<SetMonitoringBase20Req, SetMonitoringBase20Conf>(SETMONITORINGBASE20_ACTION, messages_converter),
+      GenericMessageHandler<SetMonitoringLevel20Req, SetMonitoringLevel20Conf>(SETMONITORINGLEVEL20_ACTION, messages_converter),
+      GenericMessageHandler<SetNetworkProfile20Req, SetNetworkProfile20Conf>(SETNETWORKPROFILE20_ACTION, messages_converter),
+      GenericMessageHandler<SetVariableMonitoring20Req, SetVariableMonitoring20Conf>(SETVARIABLEMONITORING20_ACTION, messages_converter),
+      GenericMessageHandler<SetVariables20Req, SetVariables20Conf>(SETVARIABLES20_ACTION, messages_converter),
+      GenericMessageHandler<TriggerMessage20Req, TriggerMessage20Conf>(TRIGGERMESSAGE20_ACTION, messages_converter),
+      GenericMessageHandler<UnlockConnector20Req, UnlockConnector20Conf>(UNLOCKCONNECTOR20_ACTION, messages_converter),
+      GenericMessageHandler<UnpublishFirmware20Req, UnpublishFirmware20Conf>(UNPUBLISHFIRMWARE20_ACTION, messages_converter),
+      GenericMessageHandler<UpdateFirmware20Req, UpdateFirmware20Conf>(UPDATEFIRMWARE20_ACTION, messages_converter),
 
       m_identifier(identifier),
       m_charge_point()
 {
-    msg_dispatcher.registerHandler(CANCELRESERVATION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<CancelReservationReq, CancelReservationConf>*>(this));
-    msg_dispatcher.registerHandler(CERTIFICATESIGNED_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<CertificateSignedReq, CertificateSignedConf>*>(this));
-    msg_dispatcher.registerHandler(CHANGEAVAILABILITY_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ChangeAvailabilityReq, ChangeAvailabilityConf>*>(this));
-    msg_dispatcher.registerHandler(CLEARCACHE_ACTION, *dynamic_cast<GenericMessageHandler<ClearCacheReq, ClearCacheConf>*>(this));
-    msg_dispatcher.registerHandler(CLEARCHARGINGPROFILE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ClearChargingProfileReq, ClearChargingProfileConf>*>(this));
-    msg_dispatcher.registerHandler(CLEARDISPLAYMESSAGE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ClearDisplayMessageReq, ClearDisplayMessageConf>*>(this));
-    msg_dispatcher.registerHandler(CLEARVARIABLEMONITORING_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ClearVariableMonitoringReq, ClearVariableMonitoringConf>*>(this));
-    msg_dispatcher.registerHandler(CUSTOMERINFORMATION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<CustomerInformationReq, CustomerInformationConf>*>(this));
-    msg_dispatcher.registerHandler(DATATRANSFER_ACTION, *dynamic_cast<GenericMessageHandler<DataTransferReq, DataTransferConf>*>(this));
-    msg_dispatcher.registerHandler(DELETECERTIFICATE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<DeleteCertificateReq, DeleteCertificateConf>*>(this));
-    msg_dispatcher.registerHandler(GET15118EVCERTIFICATE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<Get15118EVCertificateReq, Get15118EVCertificateConf>*>(this));
-    msg_dispatcher.registerHandler(GETBASEREPORT_ACTION, *dynamic_cast<GenericMessageHandler<GetBaseReportReq, GetBaseReportConf>*>(this));
-    msg_dispatcher.registerHandler(GETCERTIFICATESTATUS_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetCertificateStatusReq, GetCertificateStatusConf>*>(this));
-    msg_dispatcher.registerHandler(GETCHARGINGPROFILES_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetChargingProfilesReq, GetChargingProfilesConf>*>(this));
-    msg_dispatcher.registerHandler(GETCOMPOSITESCHEDULE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetCompositeScheduleReq, GetCompositeScheduleConf>*>(this));
-    msg_dispatcher.registerHandler(GETDISPLAYMESSAGES_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetDisplayMessagesReq, GetDisplayMessagesConf>*>(this));
+    msg_dispatcher.registerHandler(CANCELRESERVATION20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<CancelReservation20Req, CancelReservation20Conf>*>(this));
+    msg_dispatcher.registerHandler(CERTIFICATESIGNED20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<CertificateSigned20Req, CertificateSigned20Conf>*>(this));
+    msg_dispatcher.registerHandler(CHANGEAVAILABILITY20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ChangeAvailability20Req, ChangeAvailability20Conf>*>(this));
+    msg_dispatcher.registerHandler(CLEARCACHE20_ACTION, *dynamic_cast<GenericMessageHandler<ClearCache20Req, ClearCache20Conf>*>(this));
+    msg_dispatcher.registerHandler(CLEARCHARGINGPROFILE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ClearChargingProfile20Req, ClearChargingProfile20Conf>*>(this));
+    msg_dispatcher.registerHandler(CLEARDISPLAYMESSAGE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ClearDisplayMessage20Req, ClearDisplayMessage20Conf>*>(this));
     msg_dispatcher.registerHandler(
-        GETINSTALLEDCERTIFICATEIDS_ACTION,
-        *dynamic_cast<GenericMessageHandler<GetInstalledCertificateIdsReq, GetInstalledCertificateIdsConf>*>(this));
-    msg_dispatcher.registerHandler(GETLOCALLISTVERSION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetLocalListVersionReq, GetLocalListVersionConf>*>(this));
-    msg_dispatcher.registerHandler(GETLOG_ACTION, *dynamic_cast<GenericMessageHandler<GetLogReq, GetLogConf>*>(this));
-    msg_dispatcher.registerHandler(GETMONITORINGREPORT_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetMonitoringReportReq, GetMonitoringReportConf>*>(this));
-    msg_dispatcher.registerHandler(GETREPORT_ACTION, *dynamic_cast<GenericMessageHandler<GetReportReq, GetReportConf>*>(this));
-    msg_dispatcher.registerHandler(GETTRANSACTIONSTATUS_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<GetTransactionStatusReq, GetTransactionStatusConf>*>(this));
-    msg_dispatcher.registerHandler(GETVARIABLES_ACTION, *dynamic_cast<GenericMessageHandler<GetVariablesReq, GetVariablesConf>*>(this));
-    msg_dispatcher.registerHandler(INSTALLCERTIFICATE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<InstallCertificateReq, InstallCertificateConf>*>(this));
-    msg_dispatcher.registerHandler(PUBLISHFIRMWARE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<PublishFirmwareReq, PublishFirmwareConf>*>(this));
-    msg_dispatcher.registerHandler(REQUESTSTARTTRANSACTION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<RequestStartTransactionReq, RequestStartTransactionConf>*>(this));
-    msg_dispatcher.registerHandler(REQUESTSTOPTRANSACTION_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<RequestStopTransactionReq, RequestStopTransactionConf>*>(this));
-    msg_dispatcher.registerHandler(RESERVENOW_ACTION, *dynamic_cast<GenericMessageHandler<ReserveNowReq, ReserveNowConf>*>(this));
-    msg_dispatcher.registerHandler(RESET_ACTION, *dynamic_cast<GenericMessageHandler<ResetReq, ResetConf>*>(this));
-    msg_dispatcher.registerHandler(SENDLOCALLIST_ACTION, *dynamic_cast<GenericMessageHandler<SendLocalListReq, SendLocalListConf>*>(this));
-    msg_dispatcher.registerHandler(SETCHARGINGPROFILE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetChargingProfileReq, SetChargingProfileConf>*>(this));
-    msg_dispatcher.registerHandler(SETDISPLAYMESSAGE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetDisplayMessageReq, SetDisplayMessageConf>*>(this));
-    msg_dispatcher.registerHandler(SETMONITORINGBASE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetMonitoringBaseReq, SetMonitoringBaseConf>*>(this));
-    msg_dispatcher.registerHandler(SETMONITORINGLEVEL_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetMonitoringLevelReq, SetMonitoringLevelConf>*>(this));
-    msg_dispatcher.registerHandler(SETNETWORKPROFILE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetNetworkProfileReq, SetNetworkProfileConf>*>(this));
-    msg_dispatcher.registerHandler(SETVARIABLEMONITORING_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SetVariableMonitoringReq, SetVariableMonitoringConf>*>(this));
-    msg_dispatcher.registerHandler(SETVARIABLES_ACTION, *dynamic_cast<GenericMessageHandler<SetVariablesReq, SetVariablesConf>*>(this));
-    msg_dispatcher.registerHandler(TRIGGERMESSAGE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<TriggerMessageReq, TriggerMessageConf>*>(this));
-    msg_dispatcher.registerHandler(UNLOCKCONNECTOR_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<UnlockConnectorReq, UnlockConnectorConf>*>(this));
-    msg_dispatcher.registerHandler(UNPUBLISHFIRMWARE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<UnpublishFirmwareReq, UnpublishFirmwareConf>*>(this));
-    msg_dispatcher.registerHandler(UPDATEFIRMWARE_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<UpdateFirmwareReq, UpdateFirmwareConf>*>(this));
+        CLEARVARIABLEMONITORING20_ACTION,
+        *dynamic_cast<GenericMessageHandler<ClearVariableMonitoring20Req, ClearVariableMonitoring20Conf>*>(this));
+    msg_dispatcher.registerHandler(CUSTOMERINFORMATION20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<CustomerInformation20Req, CustomerInformation20Conf>*>(this));
+    msg_dispatcher.registerHandler(DATATRANSFER20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<DataTransfer20Req, DataTransfer20Conf>*>(this));
+    msg_dispatcher.registerHandler(DELETECERTIFICATE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<DeleteCertificate20Req, DeleteCertificate20Conf>*>(this));
+    msg_dispatcher.registerHandler(GET15118EVCERTIFICATE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<Get15118EVCertificate20Req, Get15118EVCertificate20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETBASEREPORT20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetBaseReport20Req, GetBaseReport20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETCERTIFICATESTATUS20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetCertificateStatus20Req, GetCertificateStatus20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETCHARGINGPROFILES20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetChargingProfiles20Req, GetChargingProfiles20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETCOMPOSITESCHEDULE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetCompositeSchedule20Req, GetCompositeSchedule20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETDISPLAYMESSAGES20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetDisplayMessages20Req, GetDisplayMessages20Conf>*>(this));
+    msg_dispatcher.registerHandler(
+        GETINSTALLEDCERTIFICATEIDS20_ACTION,
+        *dynamic_cast<GenericMessageHandler<GetInstalledCertificateIds20Req, GetInstalledCertificateIds20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETLOCALLISTVERSION20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetLocalListVersion20Req, GetLocalListVersion20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETLOG20_ACTION, *dynamic_cast<GenericMessageHandler<GetLog20Req, GetLog20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETMONITORINGREPORT20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetMonitoringReport20Req, GetMonitoringReport20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETREPORT20_ACTION, *dynamic_cast<GenericMessageHandler<GetReport20Req, GetReport20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETTRANSACTIONSTATUS20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetTransactionStatus20Req, GetTransactionStatus20Conf>*>(this));
+    msg_dispatcher.registerHandler(GETVARIABLES20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<GetVariables20Req, GetVariables20Conf>*>(this));
+    msg_dispatcher.registerHandler(INSTALLCERTIFICATE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<InstallCertificate20Req, InstallCertificate20Conf>*>(this));
+    msg_dispatcher.registerHandler(PUBLISHFIRMWARE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<PublishFirmware20Req, PublishFirmware20Conf>*>(this));
+    msg_dispatcher.registerHandler(
+        REQUESTSTARTTRANSACTION20_ACTION,
+        *dynamic_cast<GenericMessageHandler<RequestStartTransaction20Req, RequestStartTransaction20Conf>*>(this));
+    msg_dispatcher.registerHandler(REQUESTSTOPTRANSACTION20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<RequestStopTransaction20Req, RequestStopTransaction20Conf>*>(this));
+    msg_dispatcher.registerHandler(RESERVENOW20_ACTION, *dynamic_cast<GenericMessageHandler<ReserveNow20Req, ReserveNow20Conf>*>(this));
+    msg_dispatcher.registerHandler(RESET20_ACTION, *dynamic_cast<GenericMessageHandler<Reset20Req, Reset20Conf>*>(this));
+    msg_dispatcher.registerHandler(SENDLOCALLIST20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SendLocalList20Req, SendLocalList20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETCHARGINGPROFILE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetChargingProfile20Req, SetChargingProfile20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETDISPLAYMESSAGE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetDisplayMessage20Req, SetDisplayMessage20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETMONITORINGBASE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetMonitoringBase20Req, SetMonitoringBase20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETMONITORINGLEVEL20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetMonitoringLevel20Req, SetMonitoringLevel20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETNETWORKPROFILE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetNetworkProfile20Req, SetNetworkProfile20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETVARIABLEMONITORING20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetVariableMonitoring20Req, SetVariableMonitoring20Conf>*>(this));
+    msg_dispatcher.registerHandler(SETVARIABLES20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SetVariables20Req, SetVariables20Conf>*>(this));
+    msg_dispatcher.registerHandler(TRIGGERMESSAGE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<TriggerMessage20Req, TriggerMessage20Conf>*>(this));
+    msg_dispatcher.registerHandler(UNLOCKCONNECTOR20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<UnlockConnector20Req, UnlockConnector20Conf>*>(this));
+    msg_dispatcher.registerHandler(UNPUBLISHFIRMWARE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<UnpublishFirmware20Req, UnpublishFirmware20Conf>*>(this));
+    msg_dispatcher.registerHandler(UPDATEFIRMWARE20_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<UpdateFirmware20Req, UpdateFirmware20Conf>*>(this));
 }
 
 /** @brief Destructor */
@@ -169,492 +178,492 @@ CentralSystemHandler20::~CentralSystemHandler20() { }
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CancelReservationReq& request,
-                                           ocpp::messages::ocpp20::CancelReservationConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CancelReservation20Req& request,
+                                           ocpp::messages::ocpp20::CancelReservation20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
 {
-    return forward(CANCELRESERVATION_ACTION, request, response, error_code, error_message);
+    return forward(CANCELRESERVATION20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CertificateSignedReq& request,
-                                           ocpp::messages::ocpp20::CertificateSignedConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
+                                           ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
 {
-    return forward(CERTIFICATESIGNED_ACTION, request, response, error_code, error_message);
+    return forward(CERTIFICATESIGNED20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ChangeAvailabilityReq& request,
-                                           ocpp::messages::ocpp20::ChangeAvailabilityConf&      response,
-                                           std::string&                                         error_code,
-                                           std::string&                                         error_message)
-{
-    return forward(CHANGEAVAILABILITY_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearCacheReq& request,
-                                           ocpp::messages::ocpp20::ClearCacheConf&      response,
-                                           std::string&                                 error_code,
-                                           std::string&                                 error_message)
-{
-    return forward(CLEARCACHE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearChargingProfileReq& request,
-                                           ocpp::messages::ocpp20::ClearChargingProfileConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
+                                           ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
                                            std::string&                                           error_code,
                                            std::string&                                           error_message)
 {
-    return forward(CLEARCHARGINGPROFILE_ACTION, request, response, error_code, error_message);
+    return forward(CHANGEAVAILABILITY20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearDisplayMessageReq& request,
-                                           ocpp::messages::ocpp20::ClearDisplayMessageConf&      response,
-                                           std::string&                                          error_code,
-                                           std::string&                                          error_message)
-{
-    return forward(CLEARDISPLAYMESSAGE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearVariableMonitoringReq& request,
-                                           ocpp::messages::ocpp20::ClearVariableMonitoringConf&      response,
-                                           std::string&                                              error_code,
-                                           std::string&                                              error_message)
-{
-    return forward(CLEARVARIABLEMONITORING_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CustomerInformationReq& request,
-                                           ocpp::messages::ocpp20::CustomerInformationConf&      response,
-                                           std::string&                                          error_code,
-                                           std::string&                                          error_message)
-{
-    return forward(CUSTOMERINFORMATION_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::DataTransferReq& request,
-                                           ocpp::messages::ocpp20::DataTransferConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearCache20Req& request,
+                                           ocpp::messages::ocpp20::ClearCache20Conf&      response,
                                            std::string&                                   error_code,
                                            std::string&                                   error_message)
 {
-    return forward(DATATRANSFER_ACTION, request, response, error_code, error_message);
+    return forward(CLEARCACHE20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::DeleteCertificateReq& request,
-                                           ocpp::messages::ocpp20::DeleteCertificateConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
-{
-    return forward(DELETECERTIFICATE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::Get15118EVCertificateReq& request,
-                                           ocpp::messages::ocpp20::Get15118EVCertificateConf&      response,
-                                           std::string&                                            error_code,
-                                           std::string&                                            error_message)
-{
-    return forward(GET15118EVCERTIFICATE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetBaseReportReq& request,
-                                           ocpp::messages::ocpp20::GetBaseReportConf&      response,
-                                           std::string&                                    error_code,
-                                           std::string&                                    error_message)
-{
-    return forward(GETBASEREPORT_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetCertificateStatusReq& request,
-                                           ocpp::messages::ocpp20::GetCertificateStatusConf&      response,
-                                           std::string&                                           error_code,
-                                           std::string&                                           error_message)
-{
-    return forward(GETCERTIFICATESTATUS_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetChargingProfilesReq& request,
-                                           ocpp::messages::ocpp20::GetChargingProfilesConf&      response,
-                                           std::string&                                          error_code,
-                                           std::string&                                          error_message)
-{
-    return forward(GETCHARGINGPROFILES_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetCompositeScheduleReq& request,
-                                           ocpp::messages::ocpp20::GetCompositeScheduleConf&      response,
-                                           std::string&                                           error_code,
-                                           std::string&                                           error_message)
-{
-    return forward(GETCOMPOSITESCHEDULE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetDisplayMessagesReq& request,
-                                           ocpp::messages::ocpp20::GetDisplayMessagesConf&      response,
-                                           std::string&                                         error_code,
-                                           std::string&                                         error_message)
-{
-    return forward(GETDISPLAYMESSAGES_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq& request,
-                                           ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&      response,
-                                           std::string&                                                 error_code,
-                                           std::string&                                                 error_message)
-{
-    return forward(GETINSTALLEDCERTIFICATEIDS_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetLocalListVersionReq& request,
-                                           ocpp::messages::ocpp20::GetLocalListVersionConf&      response,
-                                           std::string&                                          error_code,
-                                           std::string&                                          error_message)
-{
-    return forward(GETLOCALLISTVERSION_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetLogReq& request,
-                                           ocpp::messages::ocpp20::GetLogConf&      response,
-                                           std::string&                             error_code,
-                                           std::string&                             error_message)
-{
-    return forward(GETLOG_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetMonitoringReportReq& request,
-                                           ocpp::messages::ocpp20::GetMonitoringReportConf&      response,
-                                           std::string&                                          error_code,
-                                           std::string&                                          error_message)
-{
-    return forward(GETMONITORINGREPORT_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetReportReq& request,
-                                           ocpp::messages::ocpp20::GetReportConf&      response,
-                                           std::string&                                error_code,
-                                           std::string&                                error_message)
-{
-    return forward(GETREPORT_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetTransactionStatusReq& request,
-                                           ocpp::messages::ocpp20::GetTransactionStatusConf&      response,
-                                           std::string&                                           error_code,
-                                           std::string&                                           error_message)
-{
-    return forward(GETTRANSACTIONSTATUS_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetVariablesReq& request,
-                                           ocpp::messages::ocpp20::GetVariablesConf&      response,
-                                           std::string&                                   error_code,
-                                           std::string&                                   error_message)
-{
-    return forward(GETVARIABLES_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::InstallCertificateReq& request,
-                                           ocpp::messages::ocpp20::InstallCertificateConf&      response,
-                                           std::string&                                         error_code,
-                                           std::string&                                         error_message)
-{
-    return forward(INSTALLCERTIFICATE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::PublishFirmwareReq& request,
-                                           ocpp::messages::ocpp20::PublishFirmwareConf&      response,
-                                           std::string&                                      error_code,
-                                           std::string&                                      error_message)
-{
-    return forward(PUBLISHFIRMWARE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::RequestStartTransactionReq& request,
-                                           ocpp::messages::ocpp20::RequestStartTransactionConf&      response,
-                                           std::string&                                              error_code,
-                                           std::string&                                              error_message)
-{
-    return forward(REQUESTSTARTTRANSACTION_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::RequestStopTransactionReq& request,
-                                           ocpp::messages::ocpp20::RequestStopTransactionConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
+                                           ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
                                            std::string&                                             error_code,
                                            std::string&                                             error_message)
 {
-    return forward(REQUESTSTOPTRANSACTION_ACTION, request, response, error_code, error_message);
+    return forward(CLEARCHARGINGPROFILE20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ReserveNowReq& request,
-                                           ocpp::messages::ocpp20::ReserveNowConf&      response,
-                                           std::string&                                 error_code,
-                                           std::string&                                 error_message)
-{
-    return forward(RESERVENOW_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ResetReq& request,
-                                           ocpp::messages::ocpp20::ResetConf&      response,
-                                           std::string&                            error_code,
-                                           std::string&                            error_message)
-{
-    return forward(RESET_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SendLocalListReq& request,
-                                           ocpp::messages::ocpp20::SendLocalListConf&      response,
-                                           std::string&                                    error_code,
-                                           std::string&                                    error_message)
-{
-    return forward(SENDLOCALLIST_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetChargingProfileReq& request,
-                                           ocpp::messages::ocpp20::SetChargingProfileConf&      response,
-                                           std::string&                                         error_code,
-                                           std::string&                                         error_message)
-{
-    return forward(SETCHARGINGPROFILE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetDisplayMessageReq& request,
-                                           ocpp::messages::ocpp20::SetDisplayMessageConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
-{
-    return forward(SETDISPLAYMESSAGE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetMonitoringBaseReq& request,
-                                           ocpp::messages::ocpp20::SetMonitoringBaseConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
-{
-    return forward(SETMONITORINGBASE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetMonitoringLevelReq& request,
-                                           ocpp::messages::ocpp20::SetMonitoringLevelConf&      response,
-                                           std::string&                                         error_code,
-                                           std::string&                                         error_message)
-{
-    return forward(SETMONITORINGLEVEL_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetNetworkProfileReq& request,
-                                           ocpp::messages::ocpp20::SetNetworkProfileConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
-{
-    return forward(SETNETWORKPROFILE_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetVariableMonitoringReq& request,
-                                           ocpp::messages::ocpp20::SetVariableMonitoringConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
+                                           ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
                                            std::string&                                            error_code,
                                            std::string&                                            error_message)
 {
-    return forward(SETVARIABLEMONITORING_ACTION, request, response, error_code, error_message);
+    return forward(CLEARDISPLAYMESSAGE20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetVariablesReq& request,
-                                           ocpp::messages::ocpp20::SetVariablesConf&      response,
-                                           std::string&                                   error_code,
-                                           std::string&                                   error_message)
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
+                                           ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
+                                           std::string&                                                error_code,
+                                           std::string&                                                error_message)
 {
-    return forward(SETVARIABLES_ACTION, request, response, error_code, error_message);
+    return forward(CLEARVARIABLEMONITORING20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::TriggerMessageReq& request,
-                                           ocpp::messages::ocpp20::TriggerMessageConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
+                                           ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
+                                           std::string&                                            error_code,
+                                           std::string&                                            error_message)
+{
+    return forward(CUSTOMERINFORMATION20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::DataTransfer20Req& request,
+                                           ocpp::messages::ocpp20::DataTransfer20Conf&      response,
                                            std::string&                                     error_code,
                                            std::string&                                     error_message)
 {
-    return forward(TRIGGERMESSAGE_ACTION, request, response, error_code, error_message);
+    return forward(DATATRANSFER20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UnlockConnectorReq& request,
-                                           ocpp::messages::ocpp20::UnlockConnectorConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
+                                           ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
+{
+    return forward(DELETECERTIFICATE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
+                                           ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
+                                           std::string&                                              error_code,
+                                           std::string&                                              error_message)
+{
+    return forward(GET15118EVCERTIFICATE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
+                                           ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
                                            std::string&                                      error_code,
                                            std::string&                                      error_message)
 {
-    return forward(UNLOCKCONNECTOR_ACTION, request, response, error_code, error_message);
+    return forward(GETBASEREPORT20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UnpublishFirmwareReq& request,
-                                           ocpp::messages::ocpp20::UnpublishFirmwareConf&      response,
-                                           std::string&                                        error_code,
-                                           std::string&                                        error_message)
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
+                                           ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
+                                           std::string&                                             error_code,
+                                           std::string&                                             error_message)
 {
-    return forward(UNPUBLISHFIRMWARE_ACTION, request, response, error_code, error_message);
+    return forward(GETCERTIFICATESTATUS20_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UpdateFirmwareReq& request,
-                                           ocpp::messages::ocpp20::UpdateFirmwareConf&      response,
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
+                                           ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
+                                           std::string&                                            error_code,
+                                           std::string&                                            error_message)
+{
+    return forward(GETCHARGINGPROFILES20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
+                                           ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
+                                           std::string&                                             error_code,
+                                           std::string&                                             error_message)
+{
+    return forward(GETCOMPOSITESCHEDULE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
+                                           ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
+                                           std::string&                                           error_code,
+                                           std::string&                                           error_message)
+{
+    return forward(GETDISPLAYMESSAGES20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
+                                           ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&      response,
+                                           std::string&                                                   error_code,
+                                           std::string&                                                   error_message)
+{
+    return forward(GETINSTALLEDCERTIFICATEIDS20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
+                                           ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
+                                           std::string&                                            error_code,
+                                           std::string&                                            error_message)
+{
+    return forward(GETLOCALLISTVERSION20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetLog20Req& request,
+                                           ocpp::messages::ocpp20::GetLog20Conf&      response,
+                                           std::string&                               error_code,
+                                           std::string&                               error_message)
+{
+    return forward(GETLOG20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
+                                           ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
+                                           std::string&                                            error_code,
+                                           std::string&                                            error_message)
+{
+    return forward(GETMONITORINGREPORT20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetReport20Req& request,
+                                           ocpp::messages::ocpp20::GetReport20Conf&      response,
+                                           std::string&                                  error_code,
+                                           std::string&                                  error_message)
+{
+    return forward(GETREPORT20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
+                                           ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
+                                           std::string&                                             error_code,
+                                           std::string&                                             error_message)
+{
+    return forward(GETTRANSACTIONSTATUS20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::GetVariables20Req& request,
+                                           ocpp::messages::ocpp20::GetVariables20Conf&      response,
                                            std::string&                                     error_code,
                                            std::string&                                     error_message)
 {
-    return forward(UPDATEFIRMWARE_ACTION, request, response, error_code, error_message);
+    return forward(GETVARIABLES20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
+                                           ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
+                                           std::string&                                           error_code,
+                                           std::string&                                           error_message)
+{
+    return forward(INSTALLCERTIFICATE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
+                                           ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
+                                           std::string&                                        error_code,
+                                           std::string&                                        error_message)
+{
+    return forward(PUBLISHFIRMWARE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
+                                           ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
+                                           std::string&                                                error_code,
+                                           std::string&                                                error_message)
+{
+    return forward(REQUESTSTARTTRANSACTION20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
+                                           ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
+                                           std::string&                                               error_code,
+                                           std::string&                                               error_message)
+{
+    return forward(REQUESTSTOPTRANSACTION20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::ReserveNow20Req& request,
+                                           ocpp::messages::ocpp20::ReserveNow20Conf&      response,
+                                           std::string&                                   error_code,
+                                           std::string&                                   error_message)
+{
+    return forward(RESERVENOW20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::Reset20Req& request,
+                                           ocpp::messages::ocpp20::Reset20Conf&      response,
+                                           std::string&                              error_code,
+                                           std::string&                              error_message)
+{
+    return forward(RESET20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SendLocalList20Req& request,
+                                           ocpp::messages::ocpp20::SendLocalList20Conf&      response,
+                                           std::string&                                      error_code,
+                                           std::string&                                      error_message)
+{
+    return forward(SENDLOCALLIST20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
+                                           ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
+                                           std::string&                                           error_code,
+                                           std::string&                                           error_message)
+{
+    return forward(SETCHARGINGPROFILE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
+                                           ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
+{
+    return forward(SETDISPLAYMESSAGE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
+                                           ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
+{
+    return forward(SETMONITORINGBASE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
+                                           ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
+                                           std::string&                                           error_code,
+                                           std::string&                                           error_message)
+{
+    return forward(SETMONITORINGLEVEL20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
+                                           ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
+{
+    return forward(SETNETWORKPROFILE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
+                                           ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
+                                           std::string&                                              error_code,
+                                           std::string&                                              error_message)
+{
+    return forward(SETVARIABLEMONITORING20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::SetVariables20Req& request,
+                                           ocpp::messages::ocpp20::SetVariables20Conf&      response,
+                                           std::string&                                     error_code,
+                                           std::string&                                     error_message)
+{
+    return forward(SETVARIABLES20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
+                                           ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
+                                           std::string&                                       error_code,
+                                           std::string&                                       error_message)
+{
+    return forward(TRIGGERMESSAGE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
+                                           ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
+                                           std::string&                                        error_code,
+                                           std::string&                                        error_message)
+{
+    return forward(UNLOCKCONNECTOR20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
+                                           ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
+                                           std::string&                                          error_code,
+                                           std::string&                                          error_message)
+{
+    return forward(UNPUBLISHFIRMWARE20_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool CentralSystemHandler20::handleMessage(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
+                                           ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
+                                           std::string&                                       error_code,
+                                           std::string&                                       error_message)
+{
+    return forward(UPDATEFIRMWARE20_ACTION, request, response, error_code, error_message);
 }
 
 } // namespace ocpp20

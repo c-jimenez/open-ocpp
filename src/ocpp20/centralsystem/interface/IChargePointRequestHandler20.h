@@ -20,30 +20,30 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef OPENOCPP_OCPP20_ICHARGEPOINTREQUESTHANDLER20_H
 #define OPENOCPP_OCPP20_ICHARGEPOINTREQUESTHANDLER20_H
-#include "Authorize.h"
-#include "BootNotification.h"
-#include "ClearedChargingLimit.h"
-#include "CostUpdated.h"
-#include "DataTransfer.h"
-#include "FirmwareStatusNotification.h"
-#include "Heartbeat.h"
-#include "LogStatusNotification.h"
-#include "MeterValues.h"
-#include "NotifyChargingLimit.h"
-#include "NotifyCustomerInformation.h"
-#include "NotifyDisplayMessages.h"
-#include "NotifyEVChargingNeeds.h"
-#include "NotifyEVChargingSchedule.h"
-#include "NotifyEvent.h"
-#include "NotifyMonitoringReport.h"
-#include "NotifyReport.h"
-#include "PublishFirmwareStatusNotification.h"
-#include "ReportChargingProfiles.h"
-#include "ReservationStatusUpdate.h"
-#include "SecurityEventNotification.h"
-#include "SignCertificate.h"
-#include "StatusNotification.h"
-#include "TransactionEvent.h"
+#include "Authorize20.h"
+#include "BootNotification20.h"
+#include "ClearedChargingLimit20.h"
+#include "CostUpdated20.h"
+#include "DataTransfer20.h"
+#include "FirmwareStatusNotification20.h"
+#include "Heartbeat20.h"
+#include "LogStatusNotification20.h"
+#include "MeterValues20.h"
+#include "NotifyChargingLimit20.h"
+#include "NotifyCustomerInformation20.h"
+#include "NotifyDisplayMessages20.h"
+#include "NotifyEVChargingNeeds20.h"
+#include "NotifyEVChargingSchedule20.h"
+#include "NotifyEvent20.h"
+#include "NotifyMonitoringReport20.h"
+#include "NotifyReport20.h"
+#include "PublishFirmwareStatusNotification20.h"
+#include "ReportChargingProfiles20.h"
+#include "ReservationStatusUpdate20.h"
+#include "SecurityEventNotification20.h"
+#include "SignCertificate20.h"
+#include "StatusNotification20.h"
+#include "TransactionEvent20.h"
 
 #include <vector>
 
@@ -64,293 +64,293 @@ class IChargePointRequestHandler20
     /** @brief Called to notify the disconnection of the charge point */
     virtual void disconnected() = 0;
     /**
-     * @brief Called on reception of a BootNotification request from the charge point
+     * @brief Called on reception of a BootNotification20 request from the charge point
      * @param request Request to received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been handled and a response must be sent, false otherwise
      */
-    virtual bool onBootNotification(const ocpp::messages::ocpp20::BootNotificationReq& request,
-                                    ocpp::messages::ocpp20::BootNotificationConf&      response,
-                                    std::string&                                       error,
-                                    std::string&                                       message) = 0;
-    /**
-     * @brief Called on reception of a Authorize request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onAuthorize(const ocpp::messages::ocpp20::AuthorizeReq& request,
-                             ocpp::messages::ocpp20::AuthorizeConf&      response,
-                             std::string&                                error,
-                             std::string&                                message) = 0;
-    /**
-     * @brief Called on reception of a ClearedChargingLimit request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onClearedChargingLimit(const ocpp::messages::ocpp20::ClearedChargingLimitReq& request,
-                                        ocpp::messages::ocpp20::ClearedChargingLimitConf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-     * @brief Called on reception of a CostUpdated request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onCostUpdated(const ocpp::messages::ocpp20::CostUpdatedReq& request,
-                               ocpp::messages::ocpp20::CostUpdatedConf&      response,
-                               std::string&                                  error,
-                               std::string&                                  message) = 0;
-    /**
-     * @brief Called on reception of a DataTransfer request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
-                                ocpp::messages::ocpp20::DataTransferConf&      response,
-                                std::string&                                   error,
-                                std::string&                                   message) = 0;
-    /**
-     * @brief Called on reception of a FirmwareStatusNotification request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onFirmwareStatusNotification(const ocpp::messages::ocpp20::FirmwareStatusNotificationReq& request,
-                                              ocpp::messages::ocpp20::FirmwareStatusNotificationConf&      response,
-                                              std::string&                                                 error,
-                                              std::string&                                                 message) = 0;
-    /**
-     * @brief Called on reception of a Heartbeat request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onHeartbeat(const ocpp::messages::ocpp20::HeartbeatReq& request,
-                             ocpp::messages::ocpp20::HeartbeatConf&      response,
-                             std::string&                                error,
-                             std::string&                                message) = 0;
-    /**
-     * @brief Called on reception of a LogStatusNotification request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onLogStatusNotification(const ocpp::messages::ocpp20::LogStatusNotificationReq& request,
-                                         ocpp::messages::ocpp20::LogStatusNotificationConf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-     * @brief Called on reception of a MeterValues request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onMeterValues(const ocpp::messages::ocpp20::MeterValuesReq& request,
-                               ocpp::messages::ocpp20::MeterValuesConf&      response,
-                               std::string&                                  error,
-                               std::string&                                  message) = 0;
-    /**
-     * @brief Called on reception of a NotifyChargingLimit request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyChargingLimit(const ocpp::messages::ocpp20::NotifyChargingLimitReq& request,
-                                       ocpp::messages::ocpp20::NotifyChargingLimitConf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-     * @brief Called on reception of a NotifyCustomerInformation request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyCustomerInformation(const ocpp::messages::ocpp20::NotifyCustomerInformationReq& request,
-                                             ocpp::messages::ocpp20::NotifyCustomerInformationConf&      response,
-                                             std::string&                                                error,
-                                             std::string&                                                message) = 0;
-    /**
-     * @brief Called on reception of a NotifyDisplayMessages request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyDisplayMessages(const ocpp::messages::ocpp20::NotifyDisplayMessagesReq& request,
-                                         ocpp::messages::ocpp20::NotifyDisplayMessagesConf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-     * @brief Called on reception of a NotifyEVChargingNeeds request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyEVChargingNeeds(const ocpp::messages::ocpp20::NotifyEVChargingNeedsReq& request,
-                                         ocpp::messages::ocpp20::NotifyEVChargingNeedsConf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-     * @brief Called on reception of a NotifyEVChargingSchedule request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyEVChargingSchedule(const ocpp::messages::ocpp20::NotifyEVChargingScheduleReq& request,
-                                            ocpp::messages::ocpp20::NotifyEVChargingScheduleConf&      response,
-                                            std::string&                                               error,
-                                            std::string&                                               message) = 0;
-    /**
-     * @brief Called on reception of a NotifyEvent request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyEvent(const ocpp::messages::ocpp20::NotifyEventReq& request,
-                               ocpp::messages::ocpp20::NotifyEventConf&      response,
-                               std::string&                                  error,
-                               std::string&                                  message) = 0;
-    /**
-     * @brief Called on reception of a NotifyMonitoringReport request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyMonitoringReport(const ocpp::messages::ocpp20::NotifyMonitoringReportReq& request,
-                                          ocpp::messages::ocpp20::NotifyMonitoringReportConf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-     * @brief Called on reception of a NotifyReport request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onNotifyReport(const ocpp::messages::ocpp20::NotifyReportReq& request,
-                                ocpp::messages::ocpp20::NotifyReportConf&      response,
-                                std::string&                                   error,
-                                std::string&                                   message) = 0;
-    /**
-     * @brief Called on reception of a PublishFirmwareStatusNotification request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onPublishFirmwareStatusNotification(const ocpp::messages::ocpp20::PublishFirmwareStatusNotificationReq& request,
-                                                     ocpp::messages::ocpp20::PublishFirmwareStatusNotificationConf&      response,
-                                                     std::string&                                                        error,
-                                                     std::string&                                                        message) = 0;
-    /**
-     * @brief Called on reception of a ReportChargingProfiles request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onReportChargingProfiles(const ocpp::messages::ocpp20::ReportChargingProfilesReq& request,
-                                          ocpp::messages::ocpp20::ReportChargingProfilesConf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-     * @brief Called on reception of a ReservationStatusUpdate request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onReservationStatusUpdate(const ocpp::messages::ocpp20::ReservationStatusUpdateReq& request,
-                                           ocpp::messages::ocpp20::ReservationStatusUpdateConf&      response,
-                                           std::string&                                              error,
-                                           std::string&                                              message) = 0;
-    /**
-     * @brief Called on reception of a SecurityEventNotification request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onSecurityEventNotification(const ocpp::messages::ocpp20::SecurityEventNotificationReq& request,
-                                             ocpp::messages::ocpp20::SecurityEventNotificationConf&      response,
-                                             std::string&                                                error,
-                                             std::string&                                                message) = 0;
-    /**
-     * @brief Called on reception of a SignCertificate request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onSignCertificate(const ocpp::messages::ocpp20::SignCertificateReq& request,
-                                   ocpp::messages::ocpp20::SignCertificateConf&      response,
-                                   std::string&                                      error,
-                                   std::string&                                      message) = 0;
-    /**
-     * @brief Called on reception of a StatusNotification request from the charge point
-     * @param request Request to received
-     * @param response Response to send
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been handled and a response must be sent, false otherwise
-     */
-    virtual bool onStatusNotification(const ocpp::messages::ocpp20::StatusNotificationReq& request,
-                                      ocpp::messages::ocpp20::StatusNotificationConf&      response,
+    virtual bool onBootNotification20(const ocpp::messages::ocpp20::BootNotification20Req& request,
+                                      ocpp::messages::ocpp20::BootNotification20Conf&      response,
                                       std::string&                                         error,
                                       std::string&                                         message) = 0;
     /**
-     * @brief Called on reception of a TransactionEvent request from the charge point
+     * @brief Called on reception of a Authorize20 request from the charge point
      * @param request Request to received
      * @param response Response to send
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been handled and a response must be sent, false otherwise
      */
-    virtual bool onTransactionEvent(const ocpp::messages::ocpp20::TransactionEventReq& request,
-                                    ocpp::messages::ocpp20::TransactionEventConf&      response,
-                                    std::string&                                       error,
-                                    std::string&                                       message) = 0;
+    virtual bool onAuthorize20(const ocpp::messages::ocpp20::Authorize20Req& request,
+                               ocpp::messages::ocpp20::Authorize20Conf&      response,
+                               std::string&                                  error,
+                               std::string&                                  message) = 0;
+    /**
+     * @brief Called on reception of a ClearedChargingLimit20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onClearedChargingLimit20(const ocpp::messages::ocpp20::ClearedChargingLimit20Req& request,
+                                          ocpp::messages::ocpp20::ClearedChargingLimit20Conf&      response,
+                                          std::string&                                             error,
+                                          std::string&                                             message) = 0;
+    /**
+     * @brief Called on reception of a CostUpdated20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onCostUpdated20(const ocpp::messages::ocpp20::CostUpdated20Req& request,
+                                 ocpp::messages::ocpp20::CostUpdated20Conf&      response,
+                                 std::string&                                    error,
+                                 std::string&                                    message) = 0;
+    /**
+     * @brief Called on reception of a DataTransfer20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onDataTransfer20(const ocpp::messages::ocpp20::DataTransfer20Req& request,
+                                  ocpp::messages::ocpp20::DataTransfer20Conf&      response,
+                                  std::string&                                     error,
+                                  std::string&                                     message) = 0;
+    /**
+     * @brief Called on reception of a FirmwareStatusNotification20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onFirmwareStatusNotification20(const ocpp::messages::ocpp20::FirmwareStatusNotification20Req& request,
+                                                ocpp::messages::ocpp20::FirmwareStatusNotification20Conf&      response,
+                                                std::string&                                                   error,
+                                                std::string&                                                   message) = 0;
+    /**
+     * @brief Called on reception of a Heartbeat20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onHeartbeat20(const ocpp::messages::ocpp20::Heartbeat20Req& request,
+                               ocpp::messages::ocpp20::Heartbeat20Conf&      response,
+                               std::string&                                  error,
+                               std::string&                                  message) = 0;
+    /**
+     * @brief Called on reception of a LogStatusNotification20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onLogStatusNotification20(const ocpp::messages::ocpp20::LogStatusNotification20Req& request,
+                                           ocpp::messages::ocpp20::LogStatusNotification20Conf&      response,
+                                           std::string&                                              error,
+                                           std::string&                                              message) = 0;
+    /**
+     * @brief Called on reception of a MeterValues20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onMeterValues20(const ocpp::messages::ocpp20::MeterValues20Req& request,
+                                 ocpp::messages::ocpp20::MeterValues20Conf&      response,
+                                 std::string&                                    error,
+                                 std::string&                                    message) = 0;
+    /**
+     * @brief Called on reception of a NotifyChargingLimit20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyChargingLimit20(const ocpp::messages::ocpp20::NotifyChargingLimit20Req& request,
+                                         ocpp::messages::ocpp20::NotifyChargingLimit20Conf&      response,
+                                         std::string&                                            error,
+                                         std::string&                                            message) = 0;
+    /**
+     * @brief Called on reception of a NotifyCustomerInformation20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyCustomerInformation20(const ocpp::messages::ocpp20::NotifyCustomerInformation20Req& request,
+                                               ocpp::messages::ocpp20::NotifyCustomerInformation20Conf&      response,
+                                               std::string&                                                  error,
+                                               std::string&                                                  message) = 0;
+    /**
+     * @brief Called on reception of a NotifyDisplayMessages20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyDisplayMessages20(const ocpp::messages::ocpp20::NotifyDisplayMessages20Req& request,
+                                           ocpp::messages::ocpp20::NotifyDisplayMessages20Conf&      response,
+                                           std::string&                                              error,
+                                           std::string&                                              message) = 0;
+    /**
+     * @brief Called on reception of a NotifyEVChargingNeeds20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyEVChargingNeeds20(const ocpp::messages::ocpp20::NotifyEVChargingNeeds20Req& request,
+                                           ocpp::messages::ocpp20::NotifyEVChargingNeeds20Conf&      response,
+                                           std::string&                                              error,
+                                           std::string&                                              message) = 0;
+    /**
+     * @brief Called on reception of a NotifyEVChargingSchedule20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyEVChargingSchedule20(const ocpp::messages::ocpp20::NotifyEVChargingSchedule20Req& request,
+                                              ocpp::messages::ocpp20::NotifyEVChargingSchedule20Conf&      response,
+                                              std::string&                                                 error,
+                                              std::string&                                                 message) = 0;
+    /**
+     * @brief Called on reception of a NotifyEvent20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyEvent20(const ocpp::messages::ocpp20::NotifyEvent20Req& request,
+                                 ocpp::messages::ocpp20::NotifyEvent20Conf&      response,
+                                 std::string&                                    error,
+                                 std::string&                                    message) = 0;
+    /**
+     * @brief Called on reception of a NotifyMonitoringReport20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyMonitoringReport20(const ocpp::messages::ocpp20::NotifyMonitoringReport20Req& request,
+                                            ocpp::messages::ocpp20::NotifyMonitoringReport20Conf&      response,
+                                            std::string&                                               error,
+                                            std::string&                                               message) = 0;
+    /**
+     * @brief Called on reception of a NotifyReport20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onNotifyReport20(const ocpp::messages::ocpp20::NotifyReport20Req& request,
+                                  ocpp::messages::ocpp20::NotifyReport20Conf&      response,
+                                  std::string&                                     error,
+                                  std::string&                                     message) = 0;
+    /**
+     * @brief Called on reception of a PublishFirmwareStatusNotification20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onPublishFirmwareStatusNotification20(const ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Req& request,
+                                                       ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Conf&      response,
+                                                       std::string&                                                          error,
+                                                       std::string&                                                          message) = 0;
+    /**
+     * @brief Called on reception of a ReportChargingProfiles20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onReportChargingProfiles20(const ocpp::messages::ocpp20::ReportChargingProfiles20Req& request,
+                                            ocpp::messages::ocpp20::ReportChargingProfiles20Conf&      response,
+                                            std::string&                                               error,
+                                            std::string&                                               message) = 0;
+    /**
+     * @brief Called on reception of a ReservationStatusUpdate20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onReservationStatusUpdate20(const ocpp::messages::ocpp20::ReservationStatusUpdate20Req& request,
+                                             ocpp::messages::ocpp20::ReservationStatusUpdate20Conf&      response,
+                                             std::string&                                                error,
+                                             std::string&                                                message) = 0;
+    /**
+     * @brief Called on reception of a SecurityEventNotification20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onSecurityEventNotification20(const ocpp::messages::ocpp20::SecurityEventNotification20Req& request,
+                                               ocpp::messages::ocpp20::SecurityEventNotification20Conf&      response,
+                                               std::string&                                                  error,
+                                               std::string&                                                  message) = 0;
+    /**
+     * @brief Called on reception of a SignCertificate20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onSignCertificate20(const ocpp::messages::ocpp20::SignCertificate20Req& request,
+                                     ocpp::messages::ocpp20::SignCertificate20Conf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+     * @brief Called on reception of a StatusNotification20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onStatusNotification20(const ocpp::messages::ocpp20::StatusNotification20Req& request,
+                                        ocpp::messages::ocpp20::StatusNotification20Conf&      response,
+                                        std::string&                                           error,
+                                        std::string&                                           message) = 0;
+    /**
+     * @brief Called on reception of a TransactionEvent20 request from the charge point
+     * @param request Request to received
+     * @param response Response to send
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been handled and a response must be sent, false otherwise
+     */
+    virtual bool onTransactionEvent20(const ocpp::messages::ocpp20::TransactionEvent20Req& request,
+                                      ocpp::messages::ocpp20::TransactionEvent20Conf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
 };
 
 } // namespace ocpp20
