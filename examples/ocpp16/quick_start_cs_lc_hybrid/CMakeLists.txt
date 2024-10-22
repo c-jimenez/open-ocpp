@@ -13,7 +13,7 @@ target_link_directories(quick_start_cs_lc_hybrid PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(quick_start_cs_lc_hybrid
-    examples_common
+    examples_common16
     localcontroller
 )
 

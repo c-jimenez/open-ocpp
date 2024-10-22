@@ -12,7 +12,7 @@ target_link_directories(quick_start_centralsystem PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(quick_start_centralsystem
-    examples_common
+    examples_common16
     centralsystem
 )
 

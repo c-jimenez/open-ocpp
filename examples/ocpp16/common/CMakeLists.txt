@@ -1,25 +1,13 @@
 
 # Common utility class for examples library
-add_library(examples_common OBJECT
+add_library(examples_common16 OBJECT
     DefaultCentralSystemEventsHandler.cpp
     DefaultChargePointEventsHandler.cpp
     DefaultLocalControllerEventsHandler.cpp
 
     config/OcppConfig.cpp
-
-    simulators/MainMeterSimulator.cpp
-    simulators/MeterSimulator.cpp
 )
-target_include_directories(examples_common PUBLIC . config simulators)
+target_include_directories(examples_common16 PUBLIC . config)
 
 # Dependencies
-if (NOT MSVC)
-target_link_libraries(examples_common
-    open-ocpp-dynamic
-    pthread
-)
-else()
-target_link_libraries(examples_common
-    open-ocpp-static
-)
-endif()
+target_link_libraries(examples_common16 examples_common)

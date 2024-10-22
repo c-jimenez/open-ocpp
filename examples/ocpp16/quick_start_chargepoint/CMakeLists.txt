@@ -12,7 +12,7 @@ target_link_directories(quick_start_chargepoint PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(quick_start_chargepoint
-    examples_common
+    examples_common16
 )
 
 

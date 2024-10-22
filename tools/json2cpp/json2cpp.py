@@ -810,6 +810,12 @@ def gen_localcontroller(templates, params, msg_list):
     # Generate interfaces
     lc_interface_dir = lc_dirs[3]
     ocpp_version_suffix = params.ocpp_version[4:]
+    if params.ocpp_version == "ocpp20":
+        ocpp_ws_protocol = "ocpp2.0.1"
+    elif params.ocpp_version == "ocpp21":
+        ocpp_ws_protocol = "ocpp2.0.1"
+    else:
+        ocpp_ws_protocol = "ocpp1.6"
 
     gen_file_path = os.path.join(lc_interface_dir, f"IChargePointProxy{ocpp_version_suffix}.h")
     gen_file = open(gen_file_path, "wt")
@@ -841,7 +847,7 @@ def gen_localcontroller(templates, params, msg_list):
     gen_file = open(gen_file_path, "wt")
     env = jinja2.Environment()
     template = env.from_string(templates["lc_centralsystemproxy_impl"])
-    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
+    rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix, ocpp_ws_protocol = ocpp_ws_protocol)
     gen_file.write(rendered_template)
     gen_file.close()
 
