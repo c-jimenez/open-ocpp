@@ -37,7 +37,7 @@ namespace {{ocpp_version_namespace}}
 {
 
 /** @brief Action corresponding to the {{msg.name}} messages */
-static const std::string {{msg.name.upper()}}_ACTION = "{{msg.name}}";
+static const std::string {{msg.name.upper()}}_ACTION = "{{msg.raw_name}}";
 
 {%- for msg_name in msg.types %}
 {%- set type = msg.types[msg_name] %}

@@ -93,24 +93,24 @@ void ChargePointProxy20::registerHandler(IChargePointRequestHandler20& handler)
 
 // OCPP operations
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::CancelReservationReq&,
-                ocpp::messages::ocpp20::CancelReservationConf&,
+                const ocpp::messages::ocpp20::CancelReservation20Req&,
+                ocpp::messages::ocpp20::CancelReservation20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CancelReservationReq& request,
-                              ocpp::messages::ocpp20::CancelReservationConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CancelReservation20Req& request,
+                              ocpp::messages::ocpp20::CancelReservation20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - CancelReservation";
+    LOG_INFO << "[" << m_identifier << "] - CancelReservation20";
 
     // Send request
-    CallResult res = m_msg_sender.call(CANCELRESERVATION_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CANCELRESERVATION20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : CancelReservation";
+        LOG_INFO << "[" << m_identifier << "] - Call done : CancelReservation20";
         ret = true;
     }
     else
@@ -121,24 +121,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CancelReservationReq
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::CertificateSignedReq&,
-                ocpp::messages::ocpp20::CertificateSignedConf&,
+                const ocpp::messages::ocpp20::CertificateSigned20Req&,
+                ocpp::messages::ocpp20::CertificateSigned20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CertificateSignedReq& request,
-                              ocpp::messages::ocpp20::CertificateSignedConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
+                              ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - CertificateSigned";
+    LOG_INFO << "[" << m_identifier << "] - CertificateSigned20";
 
     // Send request
-    CallResult res = m_msg_sender.call(CERTIFICATESIGNED_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CERTIFICATESIGNED20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : CertificateSigned";
+        LOG_INFO << "[" << m_identifier << "] - Call done : CertificateSigned20";
         ret = true;
     }
     else
@@ -149,80 +149,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CertificateSignedReq
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ChangeAvailabilityReq&,
-                ocpp::messages::ocpp20::ChangeAvailabilityConf&,
+                const ocpp::messages::ocpp20::ChangeAvailability20Req&,
+                ocpp::messages::ocpp20::ChangeAvailability20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ChangeAvailabilityReq& request,
-                              ocpp::messages::ocpp20::ChangeAvailabilityConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - ChangeAvailability";
-
-    // Send request
-    CallResult res = m_msg_sender.call(CHANGEAVAILABILITY_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ChangeAvailability";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ClearCacheReq&,
-                ocpp::messages::ocpp20::ClearCacheConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearCacheReq& request,
-                              ocpp::messages::ocpp20::ClearCacheConf&      response,
-                              std::string&                                 error,
-                              std::string&                                 message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - ClearCache";
-
-    // Send request
-    CallResult res = m_msg_sender.call(CLEARCACHE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ClearCache";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ClearChargingProfileReq&,
-                ocpp::messages::ocpp20::ClearChargingProfileConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearChargingProfileReq& request,
-                              ocpp::messages::ocpp20::ClearChargingProfileConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
+                              ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
                               std::string&                                           error,
                               std::string&                                           message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - ClearChargingProfile";
+    LOG_INFO << "[" << m_identifier << "] - ChangeAvailability20";
 
     // Send request
-    CallResult res = m_msg_sender.call(CLEARCHARGINGPROFILE_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CHANGEAVAILABILITY20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ClearChargingProfile";
+        LOG_INFO << "[" << m_identifier << "] - Call done : ChangeAvailability20";
         ret = true;
     }
     else
@@ -233,108 +177,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearChargingProfile
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ClearDisplayMessageReq&,
-                ocpp::messages::ocpp20::ClearDisplayMessageConf&,
+                const ocpp::messages::ocpp20::ClearCache20Req&,
+                ocpp::messages::ocpp20::ClearCache20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearDisplayMessageReq& request,
-                              ocpp::messages::ocpp20::ClearDisplayMessageConf&      response,
-                              std::string&                                          error,
-                              std::string&                                          message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - ClearDisplayMessage";
-
-    // Send request
-    CallResult res = m_msg_sender.call(CLEARDISPLAYMESSAGE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ClearDisplayMessage";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ClearVariableMonitoringReq&,
-                ocpp::messages::ocpp20::ClearVariableMonitoringConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearVariableMonitoringReq& request,
-                              ocpp::messages::ocpp20::ClearVariableMonitoringConf&      response,
-                              std::string&                                              error,
-                              std::string&                                              message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - ClearVariableMonitoring";
-
-    // Send request
-    CallResult res = m_msg_sender.call(CLEARVARIABLEMONITORING_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ClearVariableMonitoring";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::CustomerInformationReq&,
-                ocpp::messages::ocpp20::CustomerInformationConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CustomerInformationReq& request,
-                              ocpp::messages::ocpp20::CustomerInformationConf&      response,
-                              std::string&                                          error,
-                              std::string&                                          message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - CustomerInformation";
-
-    // Send request
-    CallResult res = m_msg_sender.call(CUSTOMERINFORMATION_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : CustomerInformation";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::DataTransferReq&,
-                ocpp::messages::ocpp20::DataTransferConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::DataTransferReq& request,
-                              ocpp::messages::ocpp20::DataTransferConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearCache20Req& request,
+                              ocpp::messages::ocpp20::ClearCache20Conf&      response,
                               std::string&                                   error,
                               std::string&                                   message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - DataTransfer";
+    LOG_INFO << "[" << m_identifier << "] - ClearCache20";
 
     // Send request
-    CallResult res = m_msg_sender.call(DATATRANSFER_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CLEARCACHE20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : DataTransfer";
+        LOG_INFO << "[" << m_identifier << "] - Call done : ClearCache20";
         ret = true;
     }
     else
@@ -345,500 +205,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::DataTransferReq& req
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::DeleteCertificateReq&,
-                ocpp::messages::ocpp20::DeleteCertificateConf&,
+                const ocpp::messages::ocpp20::ClearChargingProfile20Req&,
+                ocpp::messages::ocpp20::ClearChargingProfile20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::DeleteCertificateReq& request,
-                              ocpp::messages::ocpp20::DeleteCertificateConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - DeleteCertificate";
-
-    // Send request
-    CallResult res = m_msg_sender.call(DELETECERTIFICATE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : DeleteCertificate";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::Get15118EVCertificateReq&,
-                ocpp::messages::ocpp20::Get15118EVCertificateConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::Get15118EVCertificateReq& request,
-                              ocpp::messages::ocpp20::Get15118EVCertificateConf&      response,
-                              std::string&                                            error,
-                              std::string&                                            message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - Get15118EVCertificate";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GET15118EVCERTIFICATE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : Get15118EVCertificate";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetBaseReportReq&,
-                ocpp::messages::ocpp20::GetBaseReportConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetBaseReportReq& request,
-                              ocpp::messages::ocpp20::GetBaseReportConf&      response,
-                              std::string&                                    error,
-                              std::string&                                    message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetBaseReport";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETBASEREPORT_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetBaseReport";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetCertificateStatusReq&,
-                ocpp::messages::ocpp20::GetCertificateStatusConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetCertificateStatusReq& request,
-                              ocpp::messages::ocpp20::GetCertificateStatusConf&      response,
-                              std::string&                                           error,
-                              std::string&                                           message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetCertificateStatus";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETCERTIFICATESTATUS_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetCertificateStatus";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetChargingProfilesReq&,
-                ocpp::messages::ocpp20::GetChargingProfilesConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetChargingProfilesReq& request,
-                              ocpp::messages::ocpp20::GetChargingProfilesConf&      response,
-                              std::string&                                          error,
-                              std::string&                                          message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetChargingProfiles";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETCHARGINGPROFILES_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetChargingProfiles";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetCompositeScheduleReq&,
-                ocpp::messages::ocpp20::GetCompositeScheduleConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetCompositeScheduleReq& request,
-                              ocpp::messages::ocpp20::GetCompositeScheduleConf&      response,
-                              std::string&                                           error,
-                              std::string&                                           message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetCompositeSchedule";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETCOMPOSITESCHEDULE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetCompositeSchedule";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetDisplayMessagesReq&,
-                ocpp::messages::ocpp20::GetDisplayMessagesConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetDisplayMessagesReq& request,
-                              ocpp::messages::ocpp20::GetDisplayMessagesConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetDisplayMessages";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETDISPLAYMESSAGES_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetDisplayMessages";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq&,
-                ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq& request,
-                              ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&      response,
-                              std::string&                                                 error,
-                              std::string&                                                 message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetInstalledCertificateIds";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETINSTALLEDCERTIFICATEIDS_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetInstalledCertificateIds";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetLocalListVersionReq&,
-                ocpp::messages::ocpp20::GetLocalListVersionConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetLocalListVersionReq& request,
-                              ocpp::messages::ocpp20::GetLocalListVersionConf&      response,
-                              std::string&                                          error,
-                              std::string&                                          message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetLocalListVersion";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETLOCALLISTVERSION_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetLocalListVersion";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetLogReq&,
-                ocpp::messages::ocpp20::GetLogConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetLogReq& request,
-                              ocpp::messages::ocpp20::GetLogConf&      response,
-                              std::string&                             error,
-                              std::string&                             message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetLog";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETLOG_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetLog";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetMonitoringReportReq&,
-                ocpp::messages::ocpp20::GetMonitoringReportConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetMonitoringReportReq& request,
-                              ocpp::messages::ocpp20::GetMonitoringReportConf&      response,
-                              std::string&                                          error,
-                              std::string&                                          message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetMonitoringReport";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETMONITORINGREPORT_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetMonitoringReport";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetReportReq&,
-                ocpp::messages::ocpp20::GetReportConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetReportReq& request,
-                              ocpp::messages::ocpp20::GetReportConf&      response,
-                              std::string&                                error,
-                              std::string&                                message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetReport";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETREPORT_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetReport";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetTransactionStatusReq&,
-                ocpp::messages::ocpp20::GetTransactionStatusConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetTransactionStatusReq& request,
-                              ocpp::messages::ocpp20::GetTransactionStatusConf&      response,
-                              std::string&                                           error,
-                              std::string&                                           message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetTransactionStatus";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETTRANSACTIONSTATUS_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetTransactionStatus";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::GetVariablesReq&,
-                ocpp::messages::ocpp20::GetVariablesConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetVariablesReq& request,
-                              ocpp::messages::ocpp20::GetVariablesConf&      response,
-                              std::string&                                   error,
-                              std::string&                                   message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - GetVariables";
-
-    // Send request
-    CallResult res = m_msg_sender.call(GETVARIABLES_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : GetVariables";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::InstallCertificateReq&,
-                ocpp::messages::ocpp20::InstallCertificateConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::InstallCertificateReq& request,
-                              ocpp::messages::ocpp20::InstallCertificateConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - InstallCertificate";
-
-    // Send request
-    CallResult res = m_msg_sender.call(INSTALLCERTIFICATE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : InstallCertificate";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::PublishFirmwareReq&,
-                ocpp::messages::ocpp20::PublishFirmwareConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::PublishFirmwareReq& request,
-                              ocpp::messages::ocpp20::PublishFirmwareConf&      response,
-                              std::string&                                      error,
-                              std::string&                                      message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - PublishFirmware";
-
-    // Send request
-    CallResult res = m_msg_sender.call(PUBLISHFIRMWARE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : PublishFirmware";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::RequestStartTransactionReq&,
-                ocpp::messages::ocpp20::RequestStartTransactionConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::RequestStartTransactionReq& request,
-                              ocpp::messages::ocpp20::RequestStartTransactionConf&      response,
-                              std::string&                                              error,
-                              std::string&                                              message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - RequestStartTransaction";
-
-    // Send request
-    CallResult res = m_msg_sender.call(REQUESTSTARTTRANSACTION_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : RequestStartTransaction";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::RequestStopTransactionReq&,
-                ocpp::messages::ocpp20::RequestStopTransactionConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::RequestStopTransactionReq& request,
-                              ocpp::messages::ocpp20::RequestStopTransactionConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
+                              ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
                               std::string&                                             error,
                               std::string&                                             message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - RequestStopTransaction";
+    LOG_INFO << "[" << m_identifier << "] - ClearChargingProfile20";
 
     // Send request
-    CallResult res = m_msg_sender.call(REQUESTSTOPTRANSACTION_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CLEARCHARGINGPROFILE20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : RequestStopTransaction";
+        LOG_INFO << "[" << m_identifier << "] - Call done : ClearChargingProfile20";
         ret = true;
     }
     else
@@ -849,248 +233,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::RequestStopTransacti
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ReserveNowReq&,
-                ocpp::messages::ocpp20::ReserveNowConf&,
+                const ocpp::messages::ocpp20::ClearDisplayMessage20Req&,
+                ocpp::messages::ocpp20::ClearDisplayMessage20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ReserveNowReq& request,
-                              ocpp::messages::ocpp20::ReserveNowConf&      response,
-                              std::string&                                 error,
-                              std::string&                                 message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - ReserveNow";
-
-    // Send request
-    CallResult res = m_msg_sender.call(RESERVENOW_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : ReserveNow";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::ResetReq&,
-                ocpp::messages::ocpp20::ResetConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ResetReq& request,
-                              ocpp::messages::ocpp20::ResetConf&      response,
-                              std::string&                            error,
-                              std::string&                            message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - Reset";
-
-    // Send request
-    CallResult res = m_msg_sender.call(RESET_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : Reset";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SendLocalListReq&,
-                ocpp::messages::ocpp20::SendLocalListConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SendLocalListReq& request,
-                              ocpp::messages::ocpp20::SendLocalListConf&      response,
-                              std::string&                                    error,
-                              std::string&                                    message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SendLocalList";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SENDLOCALLIST_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SendLocalList";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetChargingProfileReq&,
-                ocpp::messages::ocpp20::SetChargingProfileConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetChargingProfileReq& request,
-                              ocpp::messages::ocpp20::SetChargingProfileConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SetChargingProfile";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SETCHARGINGPROFILE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetChargingProfile";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetDisplayMessageReq&,
-                ocpp::messages::ocpp20::SetDisplayMessageConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetDisplayMessageReq& request,
-                              ocpp::messages::ocpp20::SetDisplayMessageConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SetDisplayMessage";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SETDISPLAYMESSAGE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetDisplayMessage";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetMonitoringBaseReq&,
-                ocpp::messages::ocpp20::SetMonitoringBaseConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetMonitoringBaseReq& request,
-                              ocpp::messages::ocpp20::SetMonitoringBaseConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SetMonitoringBase";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SETMONITORINGBASE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetMonitoringBase";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetMonitoringLevelReq&,
-                ocpp::messages::ocpp20::SetMonitoringLevelConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetMonitoringLevelReq& request,
-                              ocpp::messages::ocpp20::SetMonitoringLevelConf&      response,
-                              std::string&                                         error,
-                              std::string&                                         message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SetMonitoringLevel";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SETMONITORINGLEVEL_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetMonitoringLevel";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetNetworkProfileReq&,
-                ocpp::messages::ocpp20::SetNetworkProfileConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetNetworkProfileReq& request,
-                              ocpp::messages::ocpp20::SetNetworkProfileConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
-{
-    bool ret = false;
-
-    LOG_INFO << "[" << m_identifier << "] - SetNetworkProfile";
-
-    // Send request
-    CallResult res = m_msg_sender.call(SETNETWORKPROFILE_ACTION, request, response, error, message);
-    if (res == CallResult::Ok)
-    {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetNetworkProfile";
-        ret = true;
-    }
-    else
-    {
-        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
-    }
-
-    return ret;
-}
-/** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetVariableMonitoringReq&,
-                ocpp::messages::ocpp20::SetVariableMonitoringConf&,
-                std::string&,
-                std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariableMonitoringReq& request,
-                              ocpp::messages::ocpp20::SetVariableMonitoringConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
+                              ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
                               std::string&                                            error,
                               std::string&                                            message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - SetVariableMonitoring";
+    LOG_INFO << "[" << m_identifier << "] - ClearDisplayMessage20";
 
     // Send request
-    CallResult res = m_msg_sender.call(SETVARIABLEMONITORING_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CLEARDISPLAYMESSAGE20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetVariableMonitoring";
+        LOG_INFO << "[" << m_identifier << "] - Call done : ClearDisplayMessage20";
         ret = true;
     }
     else
@@ -1101,24 +261,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariableMonitorin
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::SetVariablesReq&,
-                ocpp::messages::ocpp20::SetVariablesConf&,
+                const ocpp::messages::ocpp20::ClearVariableMonitoring20Req&,
+                ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariablesReq& request,
-                              ocpp::messages::ocpp20::SetVariablesConf&      response,
-                              std::string&                                   error,
-                              std::string&                                   message)
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
+                              ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
+                              std::string&                                                error,
+                              std::string&                                                message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - SetVariables";
+    LOG_INFO << "[" << m_identifier << "] - ClearVariableMonitoring20";
 
     // Send request
-    CallResult res = m_msg_sender.call(SETVARIABLES_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(CLEARVARIABLEMONITORING20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : SetVariables";
+        LOG_INFO << "[" << m_identifier << "] - Call done : ClearVariableMonitoring20";
         ret = true;
     }
     else
@@ -1129,24 +289,52 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariablesReq& req
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::TriggerMessageReq&,
-                ocpp::messages::ocpp20::TriggerMessageConf&,
+                const ocpp::messages::ocpp20::CustomerInformation20Req&,
+                ocpp::messages::ocpp20::CustomerInformation20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::TriggerMessageReq& request,
-                              ocpp::messages::ocpp20::TriggerMessageConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
+                              ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
+                              std::string&                                            error,
+                              std::string&                                            message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - CustomerInformation20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(CUSTOMERINFORMATION20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : CustomerInformation20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::DataTransfer20Req&,
+                ocpp::messages::ocpp20::DataTransfer20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::DataTransfer20Req& request,
+                              ocpp::messages::ocpp20::DataTransfer20Conf&      response,
                               std::string&                                     error,
                               std::string&                                     message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - TriggerMessage";
+    LOG_INFO << "[" << m_identifier << "] - DataTransfer20";
 
     // Send request
-    CallResult res = m_msg_sender.call(TRIGGERMESSAGE_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(DATATRANSFER20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : TriggerMessage";
+        LOG_INFO << "[" << m_identifier << "] - Call done : DataTransfer20";
         ret = true;
     }
     else
@@ -1157,24 +345,80 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::TriggerMessageReq& r
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::UnlockConnectorReq&,
-                ocpp::messages::ocpp20::UnlockConnectorConf&,
+                const ocpp::messages::ocpp20::DeleteCertificate20Req&,
+                ocpp::messages::ocpp20::DeleteCertificate20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnlockConnectorReq& request,
-                              ocpp::messages::ocpp20::UnlockConnectorConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
+                              ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - DeleteCertificate20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(DELETECERTIFICATE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : DeleteCertificate20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::Get15118EVCertificate20Req&,
+                ocpp::messages::ocpp20::Get15118EVCertificate20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
+                              ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
+                              std::string&                                              error,
+                              std::string&                                              message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Get15118EVCertificate20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GET15118EVCERTIFICATE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : Get15118EVCertificate20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetBaseReport20Req&,
+                ocpp::messages::ocpp20::GetBaseReport20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
+                              ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
                               std::string&                                      error,
                               std::string&                                      message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - UnlockConnector";
+    LOG_INFO << "[" << m_identifier << "] - GetBaseReport20";
 
     // Send request
-    CallResult res = m_msg_sender.call(UNLOCKCONNECTOR_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(GETBASEREPORT20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : UnlockConnector";
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetBaseReport20";
         ret = true;
     }
     else
@@ -1185,24 +429,24 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnlockConnectorReq& 
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::UnpublishFirmwareReq&,
-                ocpp::messages::ocpp20::UnpublishFirmwareConf&,
+                const ocpp::messages::ocpp20::GetCertificateStatus20Req&,
+                ocpp::messages::ocpp20::GetCertificateStatus20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnpublishFirmwareReq& request,
-                              ocpp::messages::ocpp20::UnpublishFirmwareConf&      response,
-                              std::string&                                        error,
-                              std::string&                                        message)
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
+                              ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
+                              std::string&                                             error,
+                              std::string&                                             message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - UnpublishFirmware";
+    LOG_INFO << "[" << m_identifier << "] - GetCertificateStatus20";
 
     // Send request
-    CallResult res = m_msg_sender.call(UNPUBLISHFIRMWARE_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(GETCERTIFICATESTATUS20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : UnpublishFirmware";
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetCertificateStatus20";
         ret = true;
     }
     else
@@ -1213,24 +457,780 @@ bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnpublishFirmwareReq
     return ret;
 }
 /** @copydoc bool ICentralSystem20::IChargePoint20::call(
-                const ocpp::messages::ocpp20::UpdateFirmwareReq&,
-                ocpp::messages::ocpp20::UpdateFirmwareConf&,
+                const ocpp::messages::ocpp20::GetChargingProfiles20Req&,
+                ocpp::messages::ocpp20::GetChargingProfiles20Conf&,
                 std::string&,
                 std::string&) */
-bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UpdateFirmwareReq& request,
-                              ocpp::messages::ocpp20::UpdateFirmwareConf&      response,
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
+                              ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
+                              std::string&                                            error,
+                              std::string&                                            message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetChargingProfiles20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETCHARGINGPROFILES20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetChargingProfiles20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetCompositeSchedule20Req&,
+                ocpp::messages::ocpp20::GetCompositeSchedule20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
+                              ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
+                              std::string&                                             error,
+                              std::string&                                             message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetCompositeSchedule20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETCOMPOSITESCHEDULE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetCompositeSchedule20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetDisplayMessages20Req&,
+                ocpp::messages::ocpp20::GetDisplayMessages20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
+                              ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
+                              std::string&                                           error,
+                              std::string&                                           message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetDisplayMessages20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETDISPLAYMESSAGES20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetDisplayMessages20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req&,
+                ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
+                              ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&      response,
+                              std::string&                                                   error,
+                              std::string&                                                   message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetInstalledCertificateIds20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETINSTALLEDCERTIFICATEIDS20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetInstalledCertificateIds20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetLocalListVersion20Req&,
+                ocpp::messages::ocpp20::GetLocalListVersion20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
+                              ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
+                              std::string&                                            error,
+                              std::string&                                            message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetLocalListVersion20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETLOCALLISTVERSION20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetLocalListVersion20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetLog20Req&,
+                ocpp::messages::ocpp20::GetLog20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetLog20Req& request,
+                              ocpp::messages::ocpp20::GetLog20Conf&      response,
+                              std::string&                               error,
+                              std::string&                               message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetLog20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETLOG20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetLog20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetMonitoringReport20Req&,
+                ocpp::messages::ocpp20::GetMonitoringReport20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
+                              ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
+                              std::string&                                            error,
+                              std::string&                                            message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetMonitoringReport20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETMONITORINGREPORT20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetMonitoringReport20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetReport20Req&,
+                ocpp::messages::ocpp20::GetReport20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetReport20Req& request,
+                              ocpp::messages::ocpp20::GetReport20Conf&      response,
+                              std::string&                                  error,
+                              std::string&                                  message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetReport20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETREPORT20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetReport20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetTransactionStatus20Req&,
+                ocpp::messages::ocpp20::GetTransactionStatus20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
+                              ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
+                              std::string&                                             error,
+                              std::string&                                             message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - GetTransactionStatus20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(GETTRANSACTIONSTATUS20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetTransactionStatus20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::GetVariables20Req&,
+                ocpp::messages::ocpp20::GetVariables20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::GetVariables20Req& request,
+                              ocpp::messages::ocpp20::GetVariables20Conf&      response,
                               std::string&                                     error,
                               std::string&                                     message)
 {
     bool ret = false;
 
-    LOG_INFO << "[" << m_identifier << "] - UpdateFirmware";
+    LOG_INFO << "[" << m_identifier << "] - GetVariables20";
 
     // Send request
-    CallResult res = m_msg_sender.call(UPDATEFIRMWARE_ACTION, request, response, error, message);
+    CallResult res = m_msg_sender.call(GETVARIABLES20_ACTION, request, response, error, message);
     if (res == CallResult::Ok)
     {
-        LOG_INFO << "[" << m_identifier << "] - Call done : UpdateFirmware";
+        LOG_INFO << "[" << m_identifier << "] - Call done : GetVariables20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::InstallCertificate20Req&,
+                ocpp::messages::ocpp20::InstallCertificate20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
+                              ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
+                              std::string&                                           error,
+                              std::string&                                           message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - InstallCertificate20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(INSTALLCERTIFICATE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : InstallCertificate20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::PublishFirmware20Req&,
+                ocpp::messages::ocpp20::PublishFirmware20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
+                              ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
+                              std::string&                                        error,
+                              std::string&                                        message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - PublishFirmware20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(PUBLISHFIRMWARE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : PublishFirmware20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::RequestStartTransaction20Req&,
+                ocpp::messages::ocpp20::RequestStartTransaction20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
+                              ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
+                              std::string&                                                error,
+                              std::string&                                                message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - RequestStartTransaction20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(REQUESTSTARTTRANSACTION20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : RequestStartTransaction20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::RequestStopTransaction20Req&,
+                ocpp::messages::ocpp20::RequestStopTransaction20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
+                              ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
+                              std::string&                                               error,
+                              std::string&                                               message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - RequestStopTransaction20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(REQUESTSTOPTRANSACTION20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : RequestStopTransaction20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::ReserveNow20Req&,
+                ocpp::messages::ocpp20::ReserveNow20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::ReserveNow20Req& request,
+                              ocpp::messages::ocpp20::ReserveNow20Conf&      response,
+                              std::string&                                   error,
+                              std::string&                                   message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - ReserveNow20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(RESERVENOW20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : ReserveNow20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::Reset20Req&,
+                ocpp::messages::ocpp20::Reset20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::Reset20Req& request,
+                              ocpp::messages::ocpp20::Reset20Conf&      response,
+                              std::string&                              error,
+                              std::string&                              message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - Reset20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(RESET20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : Reset20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SendLocalList20Req&,
+                ocpp::messages::ocpp20::SendLocalList20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SendLocalList20Req& request,
+                              ocpp::messages::ocpp20::SendLocalList20Conf&      response,
+                              std::string&                                      error,
+                              std::string&                                      message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SendLocalList20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SENDLOCALLIST20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SendLocalList20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetChargingProfile20Req&,
+                ocpp::messages::ocpp20::SetChargingProfile20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
+                              ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
+                              std::string&                                           error,
+                              std::string&                                           message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetChargingProfile20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETCHARGINGPROFILE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetChargingProfile20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetDisplayMessage20Req&,
+                ocpp::messages::ocpp20::SetDisplayMessage20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
+                              ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetDisplayMessage20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETDISPLAYMESSAGE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetDisplayMessage20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetMonitoringBase20Req&,
+                ocpp::messages::ocpp20::SetMonitoringBase20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
+                              ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetMonitoringBase20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETMONITORINGBASE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetMonitoringBase20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetMonitoringLevel20Req&,
+                ocpp::messages::ocpp20::SetMonitoringLevel20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
+                              ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
+                              std::string&                                           error,
+                              std::string&                                           message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetMonitoringLevel20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETMONITORINGLEVEL20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetMonitoringLevel20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetNetworkProfile20Req&,
+                ocpp::messages::ocpp20::SetNetworkProfile20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
+                              ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetNetworkProfile20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETNETWORKPROFILE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetNetworkProfile20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetVariableMonitoring20Req&,
+                ocpp::messages::ocpp20::SetVariableMonitoring20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
+                              ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
+                              std::string&                                              error,
+                              std::string&                                              message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetVariableMonitoring20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETVARIABLEMONITORING20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetVariableMonitoring20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::SetVariables20Req&,
+                ocpp::messages::ocpp20::SetVariables20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::SetVariables20Req& request,
+                              ocpp::messages::ocpp20::SetVariables20Conf&      response,
+                              std::string&                                     error,
+                              std::string&                                     message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - SetVariables20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(SETVARIABLES20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : SetVariables20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::TriggerMessage20Req&,
+                ocpp::messages::ocpp20::TriggerMessage20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
+                              ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
+                              std::string&                                       error,
+                              std::string&                                       message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - TriggerMessage20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(TRIGGERMESSAGE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : TriggerMessage20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::UnlockConnector20Req&,
+                ocpp::messages::ocpp20::UnlockConnector20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
+                              ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
+                              std::string&                                        error,
+                              std::string&                                        message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - UnlockConnector20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(UNLOCKCONNECTOR20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : UnlockConnector20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::UnpublishFirmware20Req&,
+                ocpp::messages::ocpp20::UnpublishFirmware20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
+                              ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
+                              std::string&                                          error,
+                              std::string&                                          message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - UnpublishFirmware20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(UNPUBLISHFIRMWARE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : UnpublishFirmware20";
+        ret = true;
+    }
+    else
+    {
+        LOG_ERROR << "[" << m_identifier << "] - Call failed : " << CallResultHelper.toString(res);
+    }
+
+    return ret;
+}
+/** @copydoc bool ICentralSystem20::IChargePoint20::call(
+                const ocpp::messages::ocpp20::UpdateFirmware20Req&,
+                ocpp::messages::ocpp20::UpdateFirmware20Conf&,
+                std::string&,
+                std::string&) */
+bool ChargePointProxy20::call(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
+                              ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
+                              std::string&                                       error,
+                              std::string&                                       message)
+{
+    bool ret = false;
+
+    LOG_INFO << "[" << m_identifier << "] - UpdateFirmware20";
+
+    // Send request
+    CallResult res = m_msg_sender.call(UPDATEFIRMWARE20_ACTION, request, response, error, message);
+    if (res == CallResult::Ok)
+    {
+        LOG_INFO << "[" << m_identifier << "] - Call done : UpdateFirmware20";
         ret = true;
     }
     else
