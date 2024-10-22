@@ -26,8 +26,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -65,11 +65,14 @@ class ChargingSchedulePeriodTypeConverter : public ocpp::messages::IMessageConve
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingSchedulePeriodType>* clone() const override { return new ChargingSchedulePeriodTypeConverter(); }
+    ocpp::messages::IMessageConverter<ChargingSchedulePeriodType>* clone() const override
+    {
+        return new ChargingSchedulePeriodTypeConverter();
+    }
 
     /** @brief Convert a ChargingSchedulePeriodType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingSchedulePeriodType&                data,
+                  ChargingSchedulePeriodType&   data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a DataTransferStatusEnumType enum to string */
 const EnumToStringFromString<DataTransferStatusEnumType> DataTransferStatusEnumTypeHelper = {
-    { DataTransferStatusEnumType::Accepted, "Accepted" },
-    { DataTransferStatusEnumType::Rejected, "Rejected" },
-    { DataTransferStatusEnumType::UnknownMessageId, "UnknownMessageId" },
-    { DataTransferStatusEnumType::UnknownVendorId, "UnknownVendorId" },
+    {DataTransferStatusEnumType::Accepted, "Accepted"},
+    {DataTransferStatusEnumType::Rejected, "Rejected"},
+    {DataTransferStatusEnumType::UnknownMessageId, "UnknownMessageId"},
+    {DataTransferStatusEnumType::UnknownVendorId, "UnknownVendorId"},
 };
 
 } // namespace ocpp20

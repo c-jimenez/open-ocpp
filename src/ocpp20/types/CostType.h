@@ -24,11 +24,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_COSTTYPE_H
 #define OPENOCPP_COSTTYPE_H
 
-#include "CustomDataType.h"
 #include "CostKindEnumType.h"
+#include "CustomDataType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -65,7 +65,7 @@ class CostTypeConverter : public ocpp::messages::IMessageConverter<CostType>
 
     /** @brief Convert a CostType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CostType&                data,
+                  CostType&                     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

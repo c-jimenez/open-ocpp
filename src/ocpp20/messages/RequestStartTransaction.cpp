@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a RequestStartTransactionReq from a JSON representation */
-bool RequestStartTransactionReqConverter::fromJson(const rapidjson::Value&       json,
-                                     RequestStartTransactionReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool RequestStartTransactionReqConverter::fromJson(const rapidjson::Value&     json,
+                                                   RequestStartTransactionReq& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evseId
@@ -53,8 +53,8 @@ bool RequestStartTransactionReqConverter::fromJson(const rapidjson::Value&      
     // groupIdToken
     if (json.HasMember("groupIdToken"))
     {
-    ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
-    ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
+        ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
+        ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
     }
 
     // idToken
@@ -67,8 +67,8 @@ bool RequestStartTransactionReqConverter::fromJson(const rapidjson::Value&      
     // chargingProfile
     if (json.HasMember("chargingProfile"))
     {
-    ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
-    ret = ret && chargingProfile_converter.fromJson(json["chargingProfile"], data.chargingProfile, error_code, error_message);
+        ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
+        ret = ret && chargingProfile_converter.fromJson(json["chargingProfile"], data.chargingProfile, error_code, error_message);
     }
 
     if (!ret)
@@ -80,19 +80,19 @@ bool RequestStartTransactionReqConverter::fromJson(const rapidjson::Value&      
 }
 
 /** @brief Convert a RequestStartTransactionReq to a JSON representation */
-bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionReq& data, rapidjson::Document& json) 
+bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // evseId
@@ -101,12 +101,12 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     // groupIdToken
     if (data.groupIdToken.isSet())
     {
-    ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
-    groupIdToken_converter.setAllocator(allocator);
-    rapidjson::Document groupIdToken_doc;
-    groupIdToken_doc.Parse("{}");
-    ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
-    json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
+        ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
+        groupIdToken_converter.setAllocator(allocator);
+        rapidjson::Document groupIdToken_doc;
+        groupIdToken_doc.Parse("{}");
+        ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
+        json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
     }
 
     // idToken
@@ -123,30 +123,30 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     // chargingProfile
     if (data.chargingProfile.isSet())
     {
-    ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
-    chargingProfile_converter.setAllocator(allocator);
-    rapidjson::Document chargingProfile_doc;
-    chargingProfile_doc.Parse("{}");
-    ret = ret && chargingProfile_converter.toJson(data.chargingProfile, chargingProfile_doc);
-    json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile_doc.Move(), *allocator);
+        ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
+        chargingProfile_converter.setAllocator(allocator);
+        rapidjson::Document chargingProfile_doc;
+        chargingProfile_doc.Parse("{}");
+        ret = ret && chargingProfile_converter.toJson(data.chargingProfile, chargingProfile_doc);
+        json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile_doc.Move(), *allocator);
     }
 
     return ret;
 }
 
 /** @brief Convert a RequestStartTransactionConf from a JSON representation */
-bool RequestStartTransactionConfConverter::fromJson(const rapidjson::Value&       json,
-                                     RequestStartTransactionConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool RequestStartTransactionConfConverter::fromJson(const rapidjson::Value&      json,
+                                                    RequestStartTransactionConf& data,
+                                                    std::string&                 error_code,
+                                                    std::string&                 error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -155,8 +155,8 @@ bool RequestStartTransactionConfConverter::fromJson(const rapidjson::Value&     
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     // transactionId
@@ -171,19 +171,19 @@ bool RequestStartTransactionConfConverter::fromJson(const rapidjson::Value&     
 }
 
 /** @brief Convert a RequestStartTransactionConf to a JSON representation */
-bool RequestStartTransactionConfConverter::toJson(const RequestStartTransactionConf& data, rapidjson::Document& json) 
+bool RequestStartTransactionConfConverter::toJson(const RequestStartTransactionConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -192,12 +192,12 @@ bool RequestStartTransactionConfConverter::toJson(const RequestStartTransactionC
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     // transactionId

@@ -28,8 +28,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 #include "FirmwareType.h"
-#include "UpdateFirmwareStatusEnumType.h"
 #include "StatusInfoType.h"
+#include "UpdateFirmwareStatusEnumType.h"
 
 namespace ocpp
 {

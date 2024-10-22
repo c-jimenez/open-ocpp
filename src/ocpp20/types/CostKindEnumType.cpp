@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a CostKindEnumType enum to string */
 const EnumToStringFromString<CostKindEnumType> CostKindEnumTypeHelper = {
-    { CostKindEnumType::CarbonDioxideEmission, "CarbonDioxideEmission" },
-    { CostKindEnumType::RelativePricePercentage, "RelativePricePercentage" },
-    { CostKindEnumType::RenewableGenerationPercentage, "RenewableGenerationPercentage" },
+    {CostKindEnumType::CarbonDioxideEmission, "CarbonDioxideEmission"},
+    {CostKindEnumType::RelativePricePercentage, "RelativePricePercentage"},
+    {CostKindEnumType::RenewableGenerationPercentage, "RenewableGenerationPercentage"},
 };
 
 } // namespace ocpp20

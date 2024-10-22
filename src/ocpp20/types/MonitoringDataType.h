@@ -24,14 +24,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_MONITORINGDATATYPE_H
 #define OPENOCPP_MONITORINGDATATYPE_H
 
-#include "CustomDataType.h"
 #include "ComponentType.h"
-#include "VariableType.h"
+#include "CustomDataType.h"
 #include "VariableMonitoringType.h"
+#include "VariableType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -63,7 +63,7 @@ class MonitoringDataTypeConverter : public ocpp::messages::IMessageConverter<Mon
 
     /** @brief Convert a MonitoringDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MonitoringDataType&                data,
+                  MonitoringDataType&           data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

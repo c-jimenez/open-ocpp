@@ -6,6 +6,7 @@
 # Library target
 add_library(messages OBJECT
     MessageDispatcher.cpp
+    GenericMessageSender.cpp
 )
 
 # Exported includes

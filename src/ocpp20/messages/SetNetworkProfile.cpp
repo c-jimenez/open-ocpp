@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a SetNetworkProfileReq from a JSON representation */
-bool SetNetworkProfileReqConverter::fromJson(const rapidjson::Value&       json,
-                                     SetNetworkProfileReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool SetNetworkProfileReqConverter::fromJson(const rapidjson::Value& json,
+                                             SetNetworkProfileReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // configurationSlot
@@ -63,19 +63,19 @@ bool SetNetworkProfileReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a SetNetworkProfileReq to a JSON representation */
-bool SetNetworkProfileReqConverter::toJson(const SetNetworkProfileReq& data, rapidjson::Document& json) 
+bool SetNetworkProfileReqConverter::toJson(const SetNetworkProfileReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // configurationSlot
@@ -93,18 +93,18 @@ bool SetNetworkProfileReqConverter::toJson(const SetNetworkProfileReq& data, rap
 }
 
 /** @brief Convert a SetNetworkProfileConf from a JSON representation */
-bool SetNetworkProfileConfConverter::fromJson(const rapidjson::Value&       json,
-                                     SetNetworkProfileConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool SetNetworkProfileConfConverter::fromJson(const rapidjson::Value& json,
+                                              SetNetworkProfileConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -113,8 +113,8 @@ bool SetNetworkProfileConfConverter::fromJson(const rapidjson::Value&       json
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -126,19 +126,19 @@ bool SetNetworkProfileConfConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a SetNetworkProfileConf to a JSON representation */
-bool SetNetworkProfileConfConverter::toJson(const SetNetworkProfileConf& data, rapidjson::Document& json) 
+bool SetNetworkProfileConfConverter::toJson(const SetNetworkProfileConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -147,12 +147,12 @@ bool SetNetworkProfileConfConverter::toJson(const SetNetworkProfileConf& data, r
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

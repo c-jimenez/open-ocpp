@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
-#include "ComponentVariableType.h"
 #include "ComponentCriterionEnumType.h"
+#include "ComponentVariableType.h"
+#include "CustomDataType.h"
 #include "GenericDeviceModelStatusEnumType.h"
 #include "StatusInfoType.h"
 

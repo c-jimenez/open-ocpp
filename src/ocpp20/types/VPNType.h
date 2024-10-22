@@ -27,9 +27,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "VPNEnumType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -79,7 +79,7 @@ class VPNTypeConverter : public ocpp::messages::IMessageConverter<VPNType>
 
     /** @brief Convert a VPNType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VPNType&                data,
+                  VPNType&                      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

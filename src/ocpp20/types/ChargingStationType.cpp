@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ChargingStationType from a JSON representation */
 bool ChargingStationTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ChargingStationType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                            ChargingStationType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // serialNumber
@@ -56,8 +56,8 @@ bool ChargingStationTypeConverter::fromJson(const rapidjson::Value&       json,
     // modem
     if (json.HasMember("modem"))
     {
-    ModemTypeConverter modem_converter;
-    ret = ret && modem_converter.fromJson(json["modem"], data.modem, error_code, error_message);
+        ModemTypeConverter modem_converter;
+        ret = ret && modem_converter.fromJson(json["modem"], data.modem, error_code, error_message);
     }
 
     // vendorName
@@ -75,19 +75,19 @@ bool ChargingStationTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ChargingStationType to a JSON representation */
-bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapidjson::Document& json) 
+bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // serialNumber
@@ -99,12 +99,12 @@ bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapid
     // modem
     if (data.modem.isSet())
     {
-    ModemTypeConverter modem_converter;
-    modem_converter.setAllocator(allocator);
-    rapidjson::Document modem_doc;
-    modem_doc.Parse("{}");
-    ret = ret && modem_converter.toJson(data.modem, modem_doc);
-    json.AddMember(rapidjson::StringRef("modem"), modem_doc.Move(), *allocator);
+        ModemTypeConverter modem_converter;
+        modem_converter.setAllocator(allocator);
+        rapidjson::Document modem_doc;
+        modem_doc.Parse("{}");
+        ret = ret && modem_converter.toJson(data.modem, modem_doc);
+        json.AddMember(rapidjson::StringRef("modem"), modem_doc.Move(), *allocator);
     }
 
     // vendorName

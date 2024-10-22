@@ -24,14 +24,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CHARGINGNEEDSTYPE_H
 #define OPENOCPP_CHARGINGNEEDSTYPE_H
 
-#include "CustomDataType.h"
 #include "ACChargingParametersType.h"
+#include "CustomDataType.h"
 #include "DCChargingParametersType.h"
 #include "EnergyTransferModeEnumType.h"
 
-#include "Optional.h"
 #include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -68,7 +68,7 @@ class ChargingNeedsTypeConverter : public ocpp::messages::IMessageConverter<Char
 
     /** @brief Convert a ChargingNeedsType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingNeedsType&                data,
+                  ChargingNeedsType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

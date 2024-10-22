@@ -33,18 +33,15 @@ namespace ocpp20
 {
 
 /** @brief Convert a HeartbeatReq from a JSON representation */
-bool HeartbeatReqConverter::fromJson(const rapidjson::Value&       json,
-                                     HeartbeatReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool HeartbeatReqConverter::fromJson(const rapidjson::Value& json, HeartbeatReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -56,37 +53,37 @@ bool HeartbeatReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a HeartbeatReq to a JSON representation */
-bool HeartbeatReqConverter::toJson(const HeartbeatReq& data, rapidjson::Document& json) 
+bool HeartbeatReqConverter::toJson(const HeartbeatReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;
 }
 
 /** @brief Convert a HeartbeatConf from a JSON representation */
-bool HeartbeatConfConverter::fromJson(const rapidjson::Value&       json,
-                                     HeartbeatConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool HeartbeatConfConverter::fromJson(const rapidjson::Value& json,
+                                      HeartbeatConf&          data,
+                                      std::string&            error_code,
+                                      std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // currentTime
@@ -101,19 +98,19 @@ bool HeartbeatConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a HeartbeatConf to a JSON representation */
-bool HeartbeatConfConverter::toJson(const HeartbeatConf& data, rapidjson::Document& json) 
+bool HeartbeatConfConverter::toJson(const HeartbeatConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // currentTime

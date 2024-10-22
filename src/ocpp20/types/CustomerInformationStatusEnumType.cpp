@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a CustomerInformationStatusEnumType enum to string */
 const EnumToStringFromString<CustomerInformationStatusEnumType> CustomerInformationStatusEnumTypeHelper = {
-    { CustomerInformationStatusEnumType::Accepted, "Accepted" },
-    { CustomerInformationStatusEnumType::Rejected, "Rejected" },
-    { CustomerInformationStatusEnumType::Invalid, "Invalid" },
+    {CustomerInformationStatusEnumType::Accepted, "Accepted"},
+    {CustomerInformationStatusEnumType::Rejected, "Rejected"},
+    {CustomerInformationStatusEnumType::Invalid, "Invalid"},
 };
 
 } // namespace ocpp20

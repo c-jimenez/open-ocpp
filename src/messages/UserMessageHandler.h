@@ -25,22 +25,20 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 namespace ocpp
 {
-namespace localcontroller
+namespace messages
 {
 
 /** @brief User message handler */
 template <typename RequestType, typename ResponseType>
-class UserMessageHandler : public ocpp::messages::GenericMessageHandler<RequestType, ResponseType>
+class UserMessageHandler : public GenericMessageHandler<RequestType, ResponseType>
 {
   public:
     /** @brief Message handler function*/
     typedef std::function<bool(const RequestType&, ResponseType&, std::string&, std::string&)> HandlerFunc;
 
     /** @brief Constructor */
-    UserMessageHandler(const std::string&                              action,
-                       const ocpp::messages::GenericMessagesConverter& messages_converter,
-                       HandlerFunc                                     user_handler)
-        : ocpp::messages::GenericMessageHandler<RequestType, ResponseType>(action, messages_converter), m_user_handler(user_handler)
+    UserMessageHandler(const std::string& action, const GenericMessagesConverter& messages_converter, HandlerFunc user_handler)
+        : GenericMessageHandler<RequestType, ResponseType>(action, messages_converter), m_user_handler(user_handler)
     {
     }
 
@@ -65,7 +63,7 @@ class UserMessageHandler : public ocpp::messages::GenericMessageHandler<RequestT
     HandlerFunc m_user_handler;
 };
 
-} // namespace localcontroller
+} // namespace messages
 } // namespace ocpp
 
 #endif // OPENOCPP_USERMESSAGEHANDLER_H

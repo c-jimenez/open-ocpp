@@ -33,27 +33,27 @@ namespace ocpp20
 {
 
 /** @brief Convert a GetVariablesReq from a JSON representation */
-bool GetVariablesReqConverter::fromJson(const rapidjson::Value&       json,
-                                     GetVariablesReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetVariablesReqConverter::fromJson(const rapidjson::Value& json,
+                                        GetVariablesReq&        data,
+                                        std::string&            error_code,
+                                        std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // getVariableData
-    const rapidjson::Value& getVariableData_json = json["getVariableData"];
+    const rapidjson::Value&                           getVariableData_json = json["getVariableData"];
     ocpp::types::ocpp20::GetVariableDataTypeConverter getVariableData_converter;
     for (auto it = getVariableData_json.Begin(); ret && (it != getVariableData_json.End()); ++it)
     {
         ocpp::types::ocpp20::GetVariableDataType& item = data.getVariableData.emplace_back();
-        ret = ret && getVariableData_converter.fromJson(*it, item, error_code, error_message);
+        ret                                            = ret && getVariableData_converter.fromJson(*it, item, error_code, error_message);
     }
 
     if (!ret)
@@ -65,25 +65,25 @@ bool GetVariablesReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a GetVariablesReq to a JSON representation */
-bool GetVariablesReqConverter::toJson(const GetVariablesReq& data, rapidjson::Document& json) 
+bool GetVariablesReqConverter::toJson(const GetVariablesReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // getVariableData
     if (!data.getVariableData.empty())
     {
-        rapidjson::Value getVariableData_json(rapidjson::kArrayType);
+        rapidjson::Value                                  getVariableData_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::GetVariableDataTypeConverter getVariableData_converter;
         getVariableData_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::GetVariableDataType& item : data.getVariableData)
@@ -100,22 +100,22 @@ bool GetVariablesReqConverter::toJson(const GetVariablesReq& data, rapidjson::Do
 }
 
 /** @brief Convert a GetVariablesConf from a JSON representation */
-bool GetVariablesConfConverter::fromJson(const rapidjson::Value&       json,
-                                     GetVariablesConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool GetVariablesConfConverter::fromJson(const rapidjson::Value& json,
+                                         GetVariablesConf&       data,
+                                         std::string&            error_code,
+                                         std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // getVariableResult
-    const rapidjson::Value& getVariableResult_json = json["getVariableResult"];
+    const rapidjson::Value&                             getVariableResult_json = json["getVariableResult"];
     ocpp::types::ocpp20::GetVariableResultTypeConverter getVariableResult_converter;
     for (auto it = getVariableResult_json.Begin(); ret && (it != getVariableResult_json.End()); ++it)
     {
@@ -132,25 +132,25 @@ bool GetVariablesConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a GetVariablesConf to a JSON representation */
-bool GetVariablesConfConverter::toJson(const GetVariablesConf& data, rapidjson::Document& json) 
+bool GetVariablesConfConverter::toJson(const GetVariablesConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // getVariableResult
     if (!data.getVariableResult.empty())
     {
-        rapidjson::Value getVariableResult_json(rapidjson::kArrayType);
+        rapidjson::Value                                    getVariableResult_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::GetVariableResultTypeConverter getVariableResult_converter;
         getVariableResult_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::GetVariableResultType& item : data.getVariableResult)

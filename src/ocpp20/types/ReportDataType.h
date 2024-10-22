@@ -24,15 +24,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_REPORTDATATYPE_H
 #define OPENOCPP_REPORTDATATYPE_H
 
-#include "CustomDataType.h"
 #include "ComponentType.h"
-#include "VariableType.h"
+#include "CustomDataType.h"
 #include "VariableAttributeType.h"
 #include "VariableCharacteristicsType.h"
+#include "VariableType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -66,7 +66,7 @@ class ReportDataTypeConverter : public ocpp::messages::IMessageConverter<ReportD
 
     /** @brief Convert a ReportDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ReportDataType&                data,
+                  ReportDataType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

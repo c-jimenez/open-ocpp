@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a LocationEnumType enum to string */
 const EnumToStringFromString<LocationEnumType> LocationEnumTypeHelper = {
-    { LocationEnumType::Body, "Body" },
-    { LocationEnumType::Cable, "Cable" },
-    { LocationEnumType::EV, "EV" },
-    { LocationEnumType::Inlet, "Inlet" },
-    { LocationEnumType::Outlet, "Outlet" },
+    {LocationEnumType::Body, "Body"},
+    {LocationEnumType::Cable, "Cable"},
+    {LocationEnumType::EV, "EV"},
+    {LocationEnumType::Inlet, "Inlet"},
+    {LocationEnumType::Outlet, "Outlet"},
 };
 
 } // namespace ocpp20

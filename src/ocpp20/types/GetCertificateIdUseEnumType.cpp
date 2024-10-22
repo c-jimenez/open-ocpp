@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a GetCertificateIdUseEnumType enum to string */
 const EnumToStringFromString<GetCertificateIdUseEnumType> GetCertificateIdUseEnumTypeHelper = {
-    { GetCertificateIdUseEnumType::V2GRootCertificate, "V2GRootCertificate" },
-    { GetCertificateIdUseEnumType::MORootCertificate, "MORootCertificate" },
-    { GetCertificateIdUseEnumType::CSMSRootCertificate, "CSMSRootCertificate" },
-    { GetCertificateIdUseEnumType::V2GCertificateChain, "V2GCertificateChain" },
-    { GetCertificateIdUseEnumType::ManufacturerRootCertificate, "ManufacturerRootCertificate" },
+    {GetCertificateIdUseEnumType::V2GRootCertificate, "V2GRootCertificate"},
+    {GetCertificateIdUseEnumType::MORootCertificate, "MORootCertificate"},
+    {GetCertificateIdUseEnumType::CSMSRootCertificate, "CSMSRootCertificate"},
+    {GetCertificateIdUseEnumType::V2GCertificateChain, "V2GCertificateChain"},
+    {GetCertificateIdUseEnumType::ManufacturerRootCertificate, "ManufacturerRootCertificate"},
 };
 
 } // namespace ocpp20

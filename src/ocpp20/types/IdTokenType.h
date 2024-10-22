@@ -24,14 +24,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_IDTOKENTYPE_H
 #define OPENOCPP_IDTOKENTYPE_H
 
-#include "CustomDataType.h"
 #include "AdditionalInfoType.h"
+#include "CustomDataType.h"
 #include "IdTokenEnumType.h"
 
-#include "Optional.h"
-#include <vector>
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -63,7 +63,7 @@ class IdTokenTypeConverter : public ocpp::messages::IMessageConverter<IdTokenTyp
 
     /** @brief Convert a IdTokenType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  IdTokenType&                data,
+                  IdTokenType&                  data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

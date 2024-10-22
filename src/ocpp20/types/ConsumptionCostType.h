@@ -24,12 +24,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CONSUMPTIONCOSTTYPE_H
 #define OPENOCPP_CONSUMPTIONCOSTTYPE_H
 
-#include "CustomDataType.h"
 #include "CostType.h"
+#include "CustomDataType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -62,7 +62,7 @@ class ConsumptionCostTypeConverter : public ocpp::messages::IMessageConverter<Co
 
     /** @brief Convert a ConsumptionCostType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ConsumptionCostType&                data,
+                  ConsumptionCostType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

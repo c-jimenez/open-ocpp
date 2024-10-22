@@ -34,23 +34,23 @@ namespace ocpp20
 
 /** @brief Convert a ChargingProfileCriterionType from a JSON representation */
 bool ChargingProfileCriterionTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ChargingProfileCriterionType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                                     ChargingProfileCriterionType& data,
+                                                     std::string&                  error_code,
+                                                     [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // chargingProfilePurpose
     if (json.HasMember("chargingProfilePurpose"))
     {
-    data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
+        data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
     }
 
     // stackLevel
@@ -61,7 +61,7 @@ bool ChargingProfileCriterionTypeConverter::fromJson(const rapidjson::Value&    
     for (auto it = chargingProfileId_json.Begin(); ret && (it != chargingProfileId_json.End()); ++it)
     {
         int& item = data.chargingProfileId.emplace_back();
-        item = it->GetInt();
+        item      = it->GetInt();
     }
 
     // chargingLimitSource
@@ -69,7 +69,7 @@ bool ChargingProfileCriterionTypeConverter::fromJson(const rapidjson::Value&    
     for (auto it = chargingLimitSource_json.Begin(); ret && (it != chargingLimitSource_json.End()); ++it)
     {
         ChargingLimitSourceEnumType& item = data.chargingLimitSource.emplace_back();
-        item = ChargingLimitSourceEnumTypeHelper.fromString(it->GetString());
+        item                              = ChargingLimitSourceEnumTypeHelper.fromString(it->GetString());
     }
 
     if (!ret)
@@ -81,25 +81,25 @@ bool ChargingProfileCriterionTypeConverter::fromJson(const rapidjson::Value&    
 }
 
 /** @brief Convert a ChargingProfileCriterionType to a JSON representation */
-bool ChargingProfileCriterionTypeConverter::toJson(const ChargingProfileCriterionType& data, rapidjson::Document& json) 
+bool ChargingProfileCriterionTypeConverter::toJson(const ChargingProfileCriterionType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // chargingProfilePurpose
     if (data.chargingProfilePurpose.isSet())
     {
-    fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
+        fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
     }
 
     // stackLevel
@@ -122,7 +122,8 @@ bool ChargingProfileCriterionTypeConverter::toJson(const ChargingProfileCriterio
         rapidjson::Value chargingLimitSource_json(rapidjson::kArrayType);
         for (const ChargingLimitSourceEnumType& item : data.chargingLimitSource)
         {
-            chargingLimitSource_json.PushBack(rapidjson::Value(ChargingLimitSourceEnumTypeHelper.toString(item).c_str(), *allocator).Move(), *allocator);
+            chargingLimitSource_json.PushBack(rapidjson::Value(ChargingLimitSourceEnumTypeHelper.toString(item).c_str(), *allocator).Move(),
+                                              *allocator);
         }
         json.AddMember(rapidjson::StringRef("chargingLimitSource"), chargingLimitSource_json.Move(), *allocator);
     }

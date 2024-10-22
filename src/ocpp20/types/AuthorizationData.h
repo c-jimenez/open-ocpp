@@ -25,11 +25,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_AUTHORIZATIONDATA_H
 
 #include "CustomDataType.h"
-#include "IdTokenType.h"
 #include "IdTokenInfoType.h"
+#include "IdTokenType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -59,7 +59,7 @@ class AuthorizationDataConverter : public ocpp::messages::IMessageConverter<Auth
 
     /** @brief Convert a AuthorizationData from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  AuthorizationData&                data,
+                  AuthorizationData&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

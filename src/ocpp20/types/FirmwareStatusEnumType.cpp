@@ -32,20 +32,20 @@ namespace ocpp20
 
 /** @brief Helper to convert a FirmwareStatusEnumType enum to string */
 const EnumToStringFromString<FirmwareStatusEnumType> FirmwareStatusEnumTypeHelper = {
-    { FirmwareStatusEnumType::Downloaded, "Downloaded" },
-    { FirmwareStatusEnumType::DownloadFailed, "DownloadFailed" },
-    { FirmwareStatusEnumType::Downloading, "Downloading" },
-    { FirmwareStatusEnumType::DownloadScheduled, "DownloadScheduled" },
-    { FirmwareStatusEnumType::DownloadPaused, "DownloadPaused" },
-    { FirmwareStatusEnumType::Idle, "Idle" },
-    { FirmwareStatusEnumType::InstallationFailed, "InstallationFailed" },
-    { FirmwareStatusEnumType::Installing, "Installing" },
-    { FirmwareStatusEnumType::Installed, "Installed" },
-    { FirmwareStatusEnumType::InstallRebooting, "InstallRebooting" },
-    { FirmwareStatusEnumType::InstallScheduled, "InstallScheduled" },
-    { FirmwareStatusEnumType::InstallVerificationFailed, "InstallVerificationFailed" },
-    { FirmwareStatusEnumType::InvalidSignature, "InvalidSignature" },
-    { FirmwareStatusEnumType::SignatureVerified, "SignatureVerified" },
+    {FirmwareStatusEnumType::Downloaded, "Downloaded"},
+    {FirmwareStatusEnumType::DownloadFailed, "DownloadFailed"},
+    {FirmwareStatusEnumType::Downloading, "Downloading"},
+    {FirmwareStatusEnumType::DownloadScheduled, "DownloadScheduled"},
+    {FirmwareStatusEnumType::DownloadPaused, "DownloadPaused"},
+    {FirmwareStatusEnumType::Idle, "Idle"},
+    {FirmwareStatusEnumType::InstallationFailed, "InstallationFailed"},
+    {FirmwareStatusEnumType::Installing, "Installing"},
+    {FirmwareStatusEnumType::Installed, "Installed"},
+    {FirmwareStatusEnumType::InstallRebooting, "InstallRebooting"},
+    {FirmwareStatusEnumType::InstallScheduled, "InstallScheduled"},
+    {FirmwareStatusEnumType::InstallVerificationFailed, "InstallVerificationFailed"},
+    {FirmwareStatusEnumType::InvalidSignature, "InvalidSignature"},
+    {FirmwareStatusEnumType::SignatureVerified, "SignatureVerified"},
 };
 
 } // namespace ocpp20

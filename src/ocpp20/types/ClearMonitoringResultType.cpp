@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ClearMonitoringResultType from a JSON representation */
 bool ClearMonitoringResultTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ClearMonitoringResultType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                                  ClearMonitoringResultType&    data,
+                                                  std::string&                  error_code,
+                                                  [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -56,8 +56,8 @@ bool ClearMonitoringResultTypeConverter::fromJson(const rapidjson::Value&       
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -69,19 +69,19 @@ bool ClearMonitoringResultTypeConverter::fromJson(const rapidjson::Value&       
 }
 
 /** @brief Convert a ClearMonitoringResultType to a JSON representation */
-bool ClearMonitoringResultTypeConverter::toJson(const ClearMonitoringResultType& data, rapidjson::Document& json) 
+bool ClearMonitoringResultTypeConverter::toJson(const ClearMonitoringResultType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -93,12 +93,12 @@ bool ClearMonitoringResultTypeConverter::toJson(const ClearMonitoringResultType&
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

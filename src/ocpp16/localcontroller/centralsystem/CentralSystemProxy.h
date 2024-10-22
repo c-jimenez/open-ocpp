@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessageSender.h"
 #include "ICentralSystemProxy.h"
 #include "MessageDispatcher.h"
+#include "MessagesConverter.h"
 #include "MessagesValidator.h"
 #include "RpcClient.h"
 #include "UserMessageHandler.h"
@@ -505,8 +506,8 @@ class CentralSystemProxy : public ICentralSystemProxy,
     bool registerHandler(const std::string&                                                                 action,
                          std::function<bool(const RequestType&, ResponseType&, std::string&, std::string&)> handler)
     {
-        UserMessageHandler<RequestType, ResponseType>* msg_handler =
-            new UserMessageHandler<RequestType, ResponseType>(action, m_messages_converter, handler);
+        ocpp::messages::UserMessageHandler<RequestType, ResponseType>* msg_handler =
+            new ocpp::messages::UserMessageHandler<RequestType, ResponseType>(action, m_messages_converter, handler);
         m_user_handlers.push_back(std::shared_ptr<ocpp::messages::IMessageDispatcher::IMessageHandler>(msg_handler));
         return m_msg_dispatcher.registerHandler(action, *msg_handler, true);
     }

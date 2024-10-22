@@ -24,15 +24,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_SETVARIABLERESULTTYPE_H
 #define OPENOCPP_SETVARIABLERESULTTYPE_H
 
-#include "CustomDataType.h"
 #include "AttributeEnumType.h"
+#include "ComponentType.h"
+#include "CustomDataType.h"
 #include "SetVariableStatusEnumType.h"
 #include "StatusInfoType.h"
-#include "ComponentType.h"
 #include "VariableType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -67,7 +67,7 @@ class SetVariableResultTypeConverter : public ocpp::messages::IMessageConverter<
 
     /** @brief Convert a SetVariableResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SetVariableResultType&                data,
+                  SetVariableResultType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

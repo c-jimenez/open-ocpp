@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a GenericDeviceModelStatusEnumType enum to string */
 const EnumToStringFromString<GenericDeviceModelStatusEnumType> GenericDeviceModelStatusEnumTypeHelper = {
-    { GenericDeviceModelStatusEnumType::Accepted, "Accepted" },
-    { GenericDeviceModelStatusEnumType::Rejected, "Rejected" },
-    { GenericDeviceModelStatusEnumType::NotSupported, "NotSupported" },
-    { GenericDeviceModelStatusEnumType::EmptyResultSet, "EmptyResultSet" },
+    {GenericDeviceModelStatusEnumType::Accepted, "Accepted"},
+    {GenericDeviceModelStatusEnumType::Rejected, "Rejected"},
+    {GenericDeviceModelStatusEnumType::NotSupported, "NotSupported"},
+    {GenericDeviceModelStatusEnumType::EmptyResultSet, "EmptyResultSet"},
 };
 
 } // namespace ocpp20

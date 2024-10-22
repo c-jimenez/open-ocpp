@@ -24,11 +24,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CLEARCHARGINGPROFILETYPE_H
 #define OPENOCPP_CLEARCHARGINGPROFILETYPE_H
 
-#include "CustomDataType.h"
 #include "ChargingProfilePurposeEnumType.h"
+#include "CustomDataType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -66,7 +66,7 @@ class ClearChargingProfileTypeConverter : public ocpp::messages::IMessageConvert
 
     /** @brief Convert a ClearChargingProfileType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ClearChargingProfileType&                data,
+                  ClearChargingProfileType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

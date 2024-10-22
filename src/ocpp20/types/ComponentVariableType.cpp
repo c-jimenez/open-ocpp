@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ComponentVariableType from a JSON representation */
 bool ComponentVariableTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ComponentVariableType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                              ComponentVariableType&        data,
+                                              std::string&                  error_code,
+                                              [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // component
@@ -54,8 +54,8 @@ bool ComponentVariableTypeConverter::fromJson(const rapidjson::Value&       json
     // variable
     if (json.HasMember("variable"))
     {
-    VariableTypeConverter variable_converter;
-    ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
+        VariableTypeConverter variable_converter;
+        ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
     }
 
     if (!ret)
@@ -67,19 +67,19 @@ bool ComponentVariableTypeConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a ComponentVariableType to a JSON representation */
-bool ComponentVariableTypeConverter::toJson(const ComponentVariableType& data, rapidjson::Document& json) 
+bool ComponentVariableTypeConverter::toJson(const ComponentVariableType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // component
@@ -93,12 +93,12 @@ bool ComponentVariableTypeConverter::toJson(const ComponentVariableType& data, r
     // variable
     if (data.variable.isSet())
     {
-    VariableTypeConverter variable_converter;
-    variable_converter.setAllocator(allocator);
-    rapidjson::Document variable_doc;
-    variable_doc.Parse("{}");
-    ret = ret && variable_converter.toJson(data.variable, variable_doc);
-    json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
+        VariableTypeConverter variable_converter;
+        variable_converter.setAllocator(allocator);
+        rapidjson::Document variable_doc;
+        variable_doc.Parse("{}");
+        ret = ret && variable_converter.toJson(data.variable, variable_doc);
+        json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
     }
 
     return ret;

@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a GenericStatusEnumType enum to string */
 const EnumToStringFromString<GenericStatusEnumType> GenericStatusEnumTypeHelper = {
-    { GenericStatusEnumType::Accepted, "Accepted" },
-    { GenericStatusEnumType::Rejected, "Rejected" },
+    {GenericStatusEnumType::Accepted, "Accepted"},
+    {GenericStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

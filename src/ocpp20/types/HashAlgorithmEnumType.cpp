@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a HashAlgorithmEnumType enum to string */
 const EnumToStringFromString<HashAlgorithmEnumType> HashAlgorithmEnumTypeHelper = {
-    { HashAlgorithmEnumType::SHA256, "SHA256" },
-    { HashAlgorithmEnumType::SHA384, "SHA384" },
-    { HashAlgorithmEnumType::SHA512, "SHA512" },
+    {HashAlgorithmEnumType::SHA256, "SHA256"},
+    {HashAlgorithmEnumType::SHA384, "SHA384"},
+    {HashAlgorithmEnumType::SHA512, "SHA512"},
 };
 
 } // namespace ocpp20

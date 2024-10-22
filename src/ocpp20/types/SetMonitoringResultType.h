@@ -24,15 +24,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_SETMONITORINGRESULTTYPE_H
 #define OPENOCPP_SETMONITORINGRESULTTYPE_H
 
-#include "CustomDataType.h"
-#include "StatusInfoType.h"
-#include "SetMonitoringStatusEnumType.h"
-#include "MonitorEnumType.h"
 #include "ComponentType.h"
+#include "CustomDataType.h"
+#include "MonitorEnumType.h"
+#include "SetMonitoringStatusEnumType.h"
+#include "StatusInfoType.h"
 #include "VariableType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -94,7 +94,7 @@ class SetMonitoringResultTypeConverter : public ocpp::messages::IMessageConverte
 
     /** @brief Convert a SetMonitoringResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SetMonitoringResultType&                data,
+                  SetMonitoringResultType&      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

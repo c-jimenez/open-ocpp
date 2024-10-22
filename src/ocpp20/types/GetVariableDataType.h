@@ -24,13 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_GETVARIABLEDATATYPE_H
 #define OPENOCPP_GETVARIABLEDATATYPE_H
 
-#include "CustomDataType.h"
 #include "AttributeEnumType.h"
 #include "ComponentType.h"
+#include "CustomDataType.h"
 #include "VariableType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -62,7 +62,7 @@ class GetVariableDataTypeConverter : public ocpp::messages::IMessageConverter<Ge
 
     /** @brief Convert a GetVariableDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  GetVariableDataType&                data,
+                  GetVariableDataType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

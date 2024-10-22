@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingProfileKindEnumType enum to string */
 const EnumToStringFromString<ChargingProfileKindEnumType> ChargingProfileKindEnumTypeHelper = {
-    { ChargingProfileKindEnumType::Absolute, "Absolute" },
-    { ChargingProfileKindEnumType::Recurring, "Recurring" },
-    { ChargingProfileKindEnumType::Relative, "Relative" },
+    {ChargingProfileKindEnumType::Absolute, "Absolute"},
+    {ChargingProfileKindEnumType::Recurring, "Recurring"},
+    {ChargingProfileKindEnumType::Relative, "Relative"},
 };
 
 } // namespace ocpp20

@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a RequestStartStopStatusEnumType enum to string */
 const EnumToStringFromString<RequestStartStopStatusEnumType> RequestStartStopStatusEnumTypeHelper = {
-    { RequestStartStopStatusEnumType::Accepted, "Accepted" },
-    { RequestStartStopStatusEnumType::Rejected, "Rejected" },
+    {RequestStartStopStatusEnumType::Accepted, "Accepted"},
+    {RequestStartStopStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

@@ -26,11 +26,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
+#include "AuthorizeCertificateStatusEnumType.h"
 #include "CustomDataType.h"
+#include "IdTokenInfoType.h"
 #include "IdTokenType.h"
 #include "OCSPRequestDataType.h"
-#include "IdTokenInfoType.h"
-#include "AuthorizeCertificateStatusEnumType.h"
 
 namespace ocpp
 {

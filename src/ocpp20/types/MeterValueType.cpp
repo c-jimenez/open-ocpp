@@ -34,26 +34,26 @@ namespace ocpp20
 
 /** @brief Convert a MeterValueType from a JSON representation */
 bool MeterValueTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      MeterValueType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                       MeterValueType&               data,
+                                       std::string&                  error_code,
+                                       [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // sampledValue
-    const rapidjson::Value& sampledValue_json = json["sampledValue"];
+    const rapidjson::Value&   sampledValue_json = json["sampledValue"];
     SampledValueTypeConverter sampledValue_converter;
     for (auto it = sampledValue_json.Begin(); ret && (it != sampledValue_json.End()); ++it)
     {
         SampledValueType& item = data.sampledValue.emplace_back();
-        ret = ret && sampledValue_converter.fromJson(*it, item, error_code, error_message);
+        ret                    = ret && sampledValue_converter.fromJson(*it, item, error_code, error_message);
     }
 
     // timestamp
@@ -68,25 +68,25 @@ bool MeterValueTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a MeterValueType to a JSON representation */
-bool MeterValueTypeConverter::toJson(const MeterValueType& data, rapidjson::Document& json) 
+bool MeterValueTypeConverter::toJson(const MeterValueType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // sampledValue
     if (!data.sampledValue.empty())
     {
-        rapidjson::Value sampledValue_json(rapidjson::kArrayType);
+        rapidjson::Value          sampledValue_json(rapidjson::kArrayType);
         SampledValueTypeConverter sampledValue_converter;
         sampledValue_converter.setAllocator(allocator);
         for (const SampledValueType& item : data.sampledValue)

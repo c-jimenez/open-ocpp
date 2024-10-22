@@ -34,23 +34,23 @@ namespace ocpp20
 
 /** @brief Convert a SetVariableDataType from a JSON representation */
 bool SetVariableDataTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      SetVariableDataType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                            SetVariableDataType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // attributeType
     if (json.HasMember("attributeType"))
     {
-    data.attributeType = AttributeEnumTypeHelper.fromString(json["attributeType"].GetString());
+        data.attributeType = AttributeEnumTypeHelper.fromString(json["attributeType"].GetString());
     }
 
     // attributeValue
@@ -73,25 +73,25 @@ bool SetVariableDataTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a SetVariableDataType to a JSON representation */
-bool SetVariableDataTypeConverter::toJson(const SetVariableDataType& data, rapidjson::Document& json) 
+bool SetVariableDataTypeConverter::toJson(const SetVariableDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // attributeType
     if (data.attributeType.isSet())
     {
-    fill(json, "attributeType", AttributeEnumTypeHelper.toString(data.attributeType));
+        fill(json, "attributeType", AttributeEnumTypeHelper.toString(data.attributeType));
     }
 
     // attributeValue

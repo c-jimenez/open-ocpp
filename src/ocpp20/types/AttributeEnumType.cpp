@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a AttributeEnumType enum to string */
 const EnumToStringFromString<AttributeEnumType> AttributeEnumTypeHelper = {
-    { AttributeEnumType::Actual, "Actual" },
-    { AttributeEnumType::Target, "Target" },
-    { AttributeEnumType::MinSet, "MinSet" },
-    { AttributeEnumType::MaxSet, "MaxSet" },
+    {AttributeEnumType::Actual, "Actual"},
+    {AttributeEnumType::Target, "Target"},
+    {AttributeEnumType::MinSet, "MinSet"},
+    {AttributeEnumType::MaxSet, "MaxSet"},
 };
 
 } // namespace ocpp20

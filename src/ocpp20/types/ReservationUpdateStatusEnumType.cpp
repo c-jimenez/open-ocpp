@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a ReservationUpdateStatusEnumType enum to string */
 const EnumToStringFromString<ReservationUpdateStatusEnumType> ReservationUpdateStatusEnumTypeHelper = {
-    { ReservationUpdateStatusEnumType::Expired, "Expired" },
-    { ReservationUpdateStatusEnumType::Removed, "Removed" },
+    {ReservationUpdateStatusEnumType::Expired, "Expired"},
+    {ReservationUpdateStatusEnumType::Removed, "Removed"},
 };
 
 } // namespace ocpp20

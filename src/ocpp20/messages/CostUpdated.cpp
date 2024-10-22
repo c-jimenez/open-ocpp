@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a CostUpdatedReq from a JSON representation */
-bool CostUpdatedReqConverter::fromJson(const rapidjson::Value&       json,
-                                     CostUpdatedReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool CostUpdatedReqConverter::fromJson(const rapidjson::Value& json,
+                                       CostUpdatedReq&         data,
+                                       std::string&            error_code,
+                                       std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // totalCost
@@ -62,19 +62,19 @@ bool CostUpdatedReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a CostUpdatedReq to a JSON representation */
-bool CostUpdatedReqConverter::toJson(const CostUpdatedReq& data, rapidjson::Document& json) 
+bool CostUpdatedReqConverter::toJson(const CostUpdatedReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // totalCost
@@ -87,18 +87,18 @@ bool CostUpdatedReqConverter::toJson(const CostUpdatedReq& data, rapidjson::Docu
 }
 
 /** @brief Convert a CostUpdatedConf from a JSON representation */
-bool CostUpdatedConfConverter::fromJson(const rapidjson::Value&       json,
-                                     CostUpdatedConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool CostUpdatedConfConverter::fromJson(const rapidjson::Value& json,
+                                        CostUpdatedConf&        data,
+                                        std::string&            error_code,
+                                        std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -110,19 +110,19 @@ bool CostUpdatedConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a CostUpdatedConf to a JSON representation */
-bool CostUpdatedConfConverter::toJson(const CostUpdatedConf& data, rapidjson::Document& json) 
+bool CostUpdatedConfConverter::toJson(const CostUpdatedConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

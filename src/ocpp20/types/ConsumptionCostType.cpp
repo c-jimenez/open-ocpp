@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ConsumptionCostType from a JSON representation */
 bool ConsumptionCostTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ConsumptionCostType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                            ConsumptionCostType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // startValue
@@ -52,11 +52,11 @@ bool ConsumptionCostTypeConverter::fromJson(const rapidjson::Value&       json,
 
     // cost
     const rapidjson::Value& cost_json = json["cost"];
-    CostTypeConverter cost_converter;
+    CostTypeConverter       cost_converter;
     for (auto it = cost_json.Begin(); ret && (it != cost_json.End()); ++it)
     {
         CostType& item = data.cost.emplace_back();
-        ret = ret && cost_converter.fromJson(*it, item, error_code, error_message);
+        ret            = ret && cost_converter.fromJson(*it, item, error_code, error_message);
     }
 
     if (!ret)
@@ -68,19 +68,19 @@ bool ConsumptionCostTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ConsumptionCostType to a JSON representation */
-bool ConsumptionCostTypeConverter::toJson(const ConsumptionCostType& data, rapidjson::Document& json) 
+bool ConsumptionCostTypeConverter::toJson(const ConsumptionCostType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // startValue
@@ -89,7 +89,7 @@ bool ConsumptionCostTypeConverter::toJson(const ConsumptionCostType& data, rapid
     // cost
     if (!data.cost.empty())
     {
-        rapidjson::Value cost_json(rapidjson::kArrayType);
+        rapidjson::Value  cost_json(rapidjson::kArrayType);
         CostTypeConverter cost_converter;
         cost_converter.setAllocator(allocator);
         for (const CostType& item : data.cost)

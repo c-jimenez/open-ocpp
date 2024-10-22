@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -60,7 +60,7 @@ class UnitOfMeasureTypeConverter : public ocpp::messages::IMessageConverter<Unit
 
     /** @brief Convert a UnitOfMeasureType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  UnitOfMeasureType&                data,
+                  UnitOfMeasureType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

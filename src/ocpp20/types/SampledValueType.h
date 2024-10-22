@@ -25,15 +25,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_SAMPLEDVALUETYPE_H
 
 #include "CustomDataType.h"
-#include "ReadingContextEnumType.h"
+#include "LocationEnumType.h"
 #include "MeasurandEnumType.h"
 #include "PhaseEnumType.h"
-#include "LocationEnumType.h"
+#include "ReadingContextEnumType.h"
 #include "SignedMeterValueType.h"
 #include "UnitOfMeasureType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -79,7 +79,7 @@ class SampledValueTypeConverter : public ocpp::messages::IMessageConverter<Sampl
 
     /** @brief Convert a SampledValueType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SampledValueType&                data,
+                  SampledValueType&             data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

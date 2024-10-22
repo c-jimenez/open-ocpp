@@ -24,14 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CERTIFICATEHASHDATACHAINTYPE_H
 #define OPENOCPP_CERTIFICATEHASHDATACHAINTYPE_H
 
+#include "CertificateHashDataType.h"
 #include "CustomDataType.h"
-#include "CertificateHashDataType.h"
 #include "GetCertificateIdUseEnumType.h"
-#include "CertificateHashDataType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -58,11 +57,14 @@ class CertificateHashDataChainTypeConverter : public ocpp::messages::IMessageCon
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<CertificateHashDataChainType>* clone() const override { return new CertificateHashDataChainTypeConverter(); }
+    ocpp::messages::IMessageConverter<CertificateHashDataChainType>* clone() const override
+    {
+        return new CertificateHashDataChainTypeConverter();
+    }
 
     /** @brief Convert a CertificateHashDataChainType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CertificateHashDataChainType&                data,
+                  CertificateHashDataChainType& data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

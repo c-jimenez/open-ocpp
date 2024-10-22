@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a APNAuthenticationEnumType enum to string */
 const EnumToStringFromString<APNAuthenticationEnumType> APNAuthenticationEnumTypeHelper = {
-    { APNAuthenticationEnumType::CHAP, "CHAP" },
-    { APNAuthenticationEnumType::NONE, "NONE" },
-    { APNAuthenticationEnumType::PAP, "PAP" },
-    { APNAuthenticationEnumType::AUTO, "AUTO" },
+    {APNAuthenticationEnumType::CHAP, "CHAP"},
+    {APNAuthenticationEnumType::NONE, "NONE"},
+    {APNAuthenticationEnumType::PAP, "PAP"},
+    {APNAuthenticationEnumType::AUTO, "AUTO"},
 };
 
 } // namespace ocpp20

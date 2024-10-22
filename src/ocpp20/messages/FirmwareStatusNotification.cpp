@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a FirmwareStatusNotificationReq from a JSON representation */
-bool FirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&       json,
-                                     FirmwareStatusNotificationReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool FirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&        json,
+                                                      FirmwareStatusNotificationReq& data,
+                                                      std::string&                   error_code,
+                                                      std::string&                   error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -62,19 +62,19 @@ bool FirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&   
 }
 
 /** @brief Convert a FirmwareStatusNotificationReq to a JSON representation */
-bool FirmwareStatusNotificationReqConverter::toJson(const FirmwareStatusNotificationReq& data, rapidjson::Document& json) 
+bool FirmwareStatusNotificationReqConverter::toJson(const FirmwareStatusNotificationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -87,18 +87,18 @@ bool FirmwareStatusNotificationReqConverter::toJson(const FirmwareStatusNotifica
 }
 
 /** @brief Convert a FirmwareStatusNotificationConf from a JSON representation */
-bool FirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&       json,
-                                     FirmwareStatusNotificationConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool FirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&         json,
+                                                       FirmwareStatusNotificationConf& data,
+                                                       std::string&                    error_code,
+                                                       std::string&                    error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -110,19 +110,19 @@ bool FirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&  
 }
 
 /** @brief Convert a FirmwareStatusNotificationConf to a JSON representation */
-bool FirmwareStatusNotificationConfConverter::toJson(const FirmwareStatusNotificationConf& data, rapidjson::Document& json) 
+bool FirmwareStatusNotificationConfConverter::toJson(const FirmwareStatusNotificationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

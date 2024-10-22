@@ -26,10 +26,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "DateTime.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -76,7 +76,7 @@ class FirmwareTypeConverter : public ocpp::messages::IMessageConverter<FirmwareT
 
     /** @brief Convert a FirmwareType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  FirmwareType&                data,
+                  FirmwareType&                 data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

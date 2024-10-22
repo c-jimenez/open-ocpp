@@ -26,11 +26,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
+#include "CertificateHashDataChainType.h"
 #include "CustomDataType.h"
 #include "GetCertificateIdUseEnumType.h"
 #include "GetInstalledCertificateStatusEnumType.h"
 #include "StatusInfoType.h"
-#include "CertificateHashDataChainType.h"
 
 namespace ocpp
 {

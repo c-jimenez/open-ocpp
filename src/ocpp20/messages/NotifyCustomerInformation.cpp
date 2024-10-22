@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a NotifyCustomerInformationReq from a JSON representation */
 bool NotifyCustomerInformationReqConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyCustomerInformationReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+                                                     NotifyCustomerInformationReq& data,
+                                                     std::string&                  error_code,
+                                                     std::string&                  error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // data
@@ -71,19 +71,19 @@ bool NotifyCustomerInformationReqConverter::fromJson(const rapidjson::Value&    
 }
 
 /** @brief Convert a NotifyCustomerInformationReq to a JSON representation */
-bool NotifyCustomerInformationReqConverter::toJson(const NotifyCustomerInformationReq& data, rapidjson::Document& json) 
+bool NotifyCustomerInformationReqConverter::toJson(const NotifyCustomerInformationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // data
@@ -105,18 +105,18 @@ bool NotifyCustomerInformationReqConverter::toJson(const NotifyCustomerInformati
 }
 
 /** @brief Convert a NotifyCustomerInformationConf from a JSON representation */
-bool NotifyCustomerInformationConfConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyCustomerInformationConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool NotifyCustomerInformationConfConverter::fromJson(const rapidjson::Value&        json,
+                                                      NotifyCustomerInformationConf& data,
+                                                      std::string&                   error_code,
+                                                      std::string&                   error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -128,19 +128,19 @@ bool NotifyCustomerInformationConfConverter::fromJson(const rapidjson::Value&   
 }
 
 /** @brief Convert a NotifyCustomerInformationConf to a JSON representation */
-bool NotifyCustomerInformationConfConverter::toJson(const NotifyCustomerInformationConf& data, rapidjson::Document& json) 
+bool NotifyCustomerInformationConfConverter::toJson(const NotifyCustomerInformationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

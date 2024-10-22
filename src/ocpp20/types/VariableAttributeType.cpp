@@ -34,23 +34,23 @@ namespace ocpp20
 
 /** @brief Convert a VariableAttributeType from a JSON representation */
 bool VariableAttributeTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      VariableAttributeType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                              VariableAttributeType&        data,
+                                              std::string&                  error_code,
+                                              [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // type
     if (json.HasMember("type"))
     {
-    data.type = AttributeEnumTypeHelper.fromString(json["type"].GetString());
+        data.type = AttributeEnumTypeHelper.fromString(json["type"].GetString());
     }
 
     // value
@@ -59,7 +59,7 @@ bool VariableAttributeTypeConverter::fromJson(const rapidjson::Value&       json
     // mutability
     if (json.HasMember("mutability"))
     {
-    data.mutability = MutabilityEnumTypeHelper.fromString(json["mutability"].GetString());
+        data.mutability = MutabilityEnumTypeHelper.fromString(json["mutability"].GetString());
     }
 
     // persistent
@@ -77,25 +77,25 @@ bool VariableAttributeTypeConverter::fromJson(const rapidjson::Value&       json
 }
 
 /** @brief Convert a VariableAttributeType to a JSON representation */
-bool VariableAttributeTypeConverter::toJson(const VariableAttributeType& data, rapidjson::Document& json) 
+bool VariableAttributeTypeConverter::toJson(const VariableAttributeType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // type
     if (data.type.isSet())
     {
-    fill(json, "type", AttributeEnumTypeHelper.toString(data.type));
+        fill(json, "type", AttributeEnumTypeHelper.toString(data.type));
     }
 
     // value
@@ -104,7 +104,7 @@ bool VariableAttributeTypeConverter::toJson(const VariableAttributeType& data, r
     // mutability
     if (data.mutability.isSet())
     {
-    fill(json, "mutability", MutabilityEnumTypeHelper.toString(data.mutability));
+        fill(json, "mutability", MutabilityEnumTypeHelper.toString(data.mutability));
     }
 
     // persistent

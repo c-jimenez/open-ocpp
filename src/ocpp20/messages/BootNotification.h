@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
-#include "ChargingStationType.h"
 #include "BootReasonEnumType.h"
+#include "ChargingStationType.h"
+#include "CustomDataType.h"
 #include "RegistrationStatusEnumType.h"
 #include "StatusInfoType.h"
 

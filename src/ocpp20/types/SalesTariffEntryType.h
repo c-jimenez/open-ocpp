@@ -24,13 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_SALESTARIFFENTRYTYPE_H
 #define OPENOCPP_SALESTARIFFENTRYTYPE_H
 
+#include "ConsumptionCostType.h"
 #include "CustomDataType.h"
 #include "RelativeTimeIntervalType.h"
-#include "ConsumptionCostType.h"
 
+#include "IMessageConverter.h"
 #include "Optional.h"
 #include <vector>
-#include "IMessageConverter.h"
 
 namespace ocpp
 {
@@ -65,7 +65,7 @@ class SalesTariffEntryTypeConverter : public ocpp::messages::IMessageConverter<S
 
     /** @brief Convert a SalesTariffEntryType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SalesTariffEntryType&                data,
+                  SalesTariffEntryType&         data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

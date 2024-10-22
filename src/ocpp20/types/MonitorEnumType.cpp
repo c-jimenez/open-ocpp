@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a MonitorEnumType enum to string */
 const EnumToStringFromString<MonitorEnumType> MonitorEnumTypeHelper = {
-    { MonitorEnumType::UpperThreshold, "UpperThreshold" },
-    { MonitorEnumType::LowerThreshold, "LowerThreshold" },
-    { MonitorEnumType::Delta, "Delta" },
-    { MonitorEnumType::Periodic, "Periodic" },
-    { MonitorEnumType::PeriodicClockAligned, "PeriodicClockAligned" },
+    {MonitorEnumType::UpperThreshold, "UpperThreshold"},
+    {MonitorEnumType::LowerThreshold, "LowerThreshold"},
+    {MonitorEnumType::Delta, "Delta"},
+    {MonitorEnumType::Periodic, "Periodic"},
+    {MonitorEnumType::PeriodicClockAligned, "PeriodicClockAligned"},
 };
 
 } // namespace ocpp20

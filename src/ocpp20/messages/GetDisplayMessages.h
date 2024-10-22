@@ -27,9 +27,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 
 #include "CustomDataType.h"
+#include "GetDisplayMessagesStatusEnumType.h"
 #include "MessagePriorityEnumType.h"
 #include "MessageStateEnumType.h"
-#include "GetDisplayMessagesStatusEnumType.h"
 #include "StatusInfoType.h"
 
 namespace ocpp

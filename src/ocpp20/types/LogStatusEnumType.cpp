@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a LogStatusEnumType enum to string */
 const EnumToStringFromString<LogStatusEnumType> LogStatusEnumTypeHelper = {
-    { LogStatusEnumType::Accepted, "Accepted" },
-    { LogStatusEnumType::Rejected, "Rejected" },
-    { LogStatusEnumType::AcceptedCanceled, "AcceptedCanceled" },
+    {LogStatusEnumType::Accepted, "Accepted"},
+    {LogStatusEnumType::Rejected, "Rejected"},
+    {LogStatusEnumType::AcceptedCanceled, "AcceptedCanceled"},
 };
 
 } // namespace ocpp20

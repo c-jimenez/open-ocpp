@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -64,7 +64,7 @@ class ModemTypeConverter : public ocpp::messages::IMessageConverter<ModemType>
 
     /** @brief Convert a ModemType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ModemType&                data,
+                  ModemType&                    data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

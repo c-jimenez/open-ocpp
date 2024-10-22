@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a ClearMonitoringStatusEnumType enum to string */
 const EnumToStringFromString<ClearMonitoringStatusEnumType> ClearMonitoringStatusEnumTypeHelper = {
-    { ClearMonitoringStatusEnumType::Accepted, "Accepted" },
-    { ClearMonitoringStatusEnumType::Rejected, "Rejected" },
-    { ClearMonitoringStatusEnumType::NotFound, "NotFound" },
+    {ClearMonitoringStatusEnumType::Accepted, "Accepted"},
+    {ClearMonitoringStatusEnumType::Rejected, "Rejected"},
+    {ClearMonitoringStatusEnumType::NotFound, "NotFound"},
 };
 
 } // namespace ocpp20

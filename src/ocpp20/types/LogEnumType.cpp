@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a LogEnumType enum to string */
 const EnumToStringFromString<LogEnumType> LogEnumTypeHelper = {
-    { LogEnumType::DiagnosticsLog, "DiagnosticsLog" },
-    { LogEnumType::SecurityLog, "SecurityLog" },
+    {LogEnumType::DiagnosticsLog, "DiagnosticsLog"},
+    {LogEnumType::SecurityLog, "SecurityLog"},
 };
 
 } // namespace ocpp20

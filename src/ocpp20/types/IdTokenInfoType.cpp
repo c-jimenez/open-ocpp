@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a IdTokenInfoType from a JSON representation */
 bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      IdTokenInfoType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                        IdTokenInfoType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -64,14 +64,14 @@ bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
     for (auto it = evseId_json.Begin(); ret && (it != evseId_json.End()); ++it)
     {
         int& item = data.evseId.emplace_back();
-        item = it->GetInt();
+        item      = it->GetInt();
     }
 
     // groupIdToken
     if (json.HasMember("groupIdToken"))
     {
-    IdTokenTypeConverter groupIdToken_converter;
-    ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
+        IdTokenTypeConverter groupIdToken_converter;
+        ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
     }
 
     // language2
@@ -80,8 +80,8 @@ bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
     // personalMessage
     if (json.HasMember("personalMessage"))
     {
-    MessageContentTypeConverter personalMessage_converter;
-    ret = ret && personalMessage_converter.fromJson(json["personalMessage"], data.personalMessage, error_code, error_message);
+        MessageContentTypeConverter personalMessage_converter;
+        ret = ret && personalMessage_converter.fromJson(json["personalMessage"], data.personalMessage, error_code, error_message);
     }
 
     if (!ret)
@@ -93,19 +93,19 @@ bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a IdTokenInfoType to a JSON representation */
-bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Document& json) 
+bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -134,12 +134,12 @@ bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Do
     // groupIdToken
     if (data.groupIdToken.isSet())
     {
-    IdTokenTypeConverter groupIdToken_converter;
-    groupIdToken_converter.setAllocator(allocator);
-    rapidjson::Document groupIdToken_doc;
-    groupIdToken_doc.Parse("{}");
-    ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
-    json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
+        IdTokenTypeConverter groupIdToken_converter;
+        groupIdToken_converter.setAllocator(allocator);
+        rapidjson::Document groupIdToken_doc;
+        groupIdToken_doc.Parse("{}");
+        ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
+        json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
     }
 
     // language2
@@ -148,12 +148,12 @@ bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Do
     // personalMessage
     if (data.personalMessage.isSet())
     {
-    MessageContentTypeConverter personalMessage_converter;
-    personalMessage_converter.setAllocator(allocator);
-    rapidjson::Document personalMessage_doc;
-    personalMessage_doc.Parse("{}");
-    ret = ret && personalMessage_converter.toJson(data.personalMessage, personalMessage_doc);
-    json.AddMember(rapidjson::StringRef("personalMessage"), personalMessage_doc.Move(), *allocator);
+        MessageContentTypeConverter personalMessage_converter;
+        personalMessage_converter.setAllocator(allocator);
+        rapidjson::Document personalMessage_doc;
+        personalMessage_doc.Parse("{}");
+        ret = ret && personalMessage_converter.toJson(data.personalMessage, personalMessage_doc);
+        json.AddMember(rapidjson::StringRef("personalMessage"), personalMessage_doc.Move(), *allocator);
     }
 
     return ret;

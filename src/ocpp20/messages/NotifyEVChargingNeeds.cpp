@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a NotifyEVChargingNeedsReq from a JSON representation */
-bool NotifyEVChargingNeedsReqConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyEVChargingNeedsReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool NotifyEVChargingNeedsReqConverter::fromJson(const rapidjson::Value&   json,
+                                                 NotifyEVChargingNeedsReq& data,
+                                                 std::string&              error_code,
+                                                 std::string&              error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // maxScheduleTuples
@@ -66,19 +66,19 @@ bool NotifyEVChargingNeedsReqConverter::fromJson(const rapidjson::Value&       j
 }
 
 /** @brief Convert a NotifyEVChargingNeedsReq to a JSON representation */
-bool NotifyEVChargingNeedsReqConverter::toJson(const NotifyEVChargingNeedsReq& data, rapidjson::Document& json) 
+bool NotifyEVChargingNeedsReqConverter::toJson(const NotifyEVChargingNeedsReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // maxScheduleTuples
@@ -99,18 +99,18 @@ bool NotifyEVChargingNeedsReqConverter::toJson(const NotifyEVChargingNeedsReq& d
 }
 
 /** @brief Convert a NotifyEVChargingNeedsConf from a JSON representation */
-bool NotifyEVChargingNeedsConfConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyEVChargingNeedsConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool NotifyEVChargingNeedsConfConverter::fromJson(const rapidjson::Value&    json,
+                                                  NotifyEVChargingNeedsConf& data,
+                                                  std::string&               error_code,
+                                                  std::string&               error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
@@ -119,8 +119,8 @@ bool NotifyEVChargingNeedsConfConverter::fromJson(const rapidjson::Value&       
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -132,19 +132,19 @@ bool NotifyEVChargingNeedsConfConverter::fromJson(const rapidjson::Value&       
 }
 
 /** @brief Convert a NotifyEVChargingNeedsConf to a JSON representation */
-bool NotifyEVChargingNeedsConfConverter::toJson(const NotifyEVChargingNeedsConf& data, rapidjson::Document& json) 
+bool NotifyEVChargingNeedsConfConverter::toJson(const NotifyEVChargingNeedsConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // status
@@ -153,12 +153,12 @@ bool NotifyEVChargingNeedsConfConverter::toJson(const NotifyEVChargingNeedsConf&
     // statusInfo
     if (data.statusInfo.isSet())
     {
-    ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
-    statusInfo_converter.setAllocator(allocator);
-    rapidjson::Document statusInfo_doc;
-    statusInfo_doc.Parse("{}");
-    ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
-    json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
+        statusInfo_converter.setAllocator(allocator);
+        rapidjson::Document statusInfo_doc;
+        statusInfo_doc.Parse("{}");
+        ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
+        json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
 
     return ret;

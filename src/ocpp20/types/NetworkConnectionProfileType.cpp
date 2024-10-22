@@ -34,24 +34,24 @@ namespace ocpp20
 
 /** @brief Convert a NetworkConnectionProfileType from a JSON representation */
 bool NetworkConnectionProfileTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      NetworkConnectionProfileType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                                     NetworkConnectionProfileType& data,
+                                                     std::string&                  error_code,
+                                                     [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // apn
     if (json.HasMember("apn"))
     {
-    APNTypeConverter apn_converter;
-    ret = ret && apn_converter.fromJson(json["apn"], data.apn, error_code, error_message);
+        APNTypeConverter apn_converter;
+        ret = ret && apn_converter.fromJson(json["apn"], data.apn, error_code, error_message);
     }
 
     // ocppVersion
@@ -75,8 +75,8 @@ bool NetworkConnectionProfileTypeConverter::fromJson(const rapidjson::Value&    
     // vpn
     if (json.HasMember("vpn"))
     {
-    VPNTypeConverter vpn_converter;
-    ret = ret && vpn_converter.fromJson(json["vpn"], data.vpn, error_code, error_message);
+        VPNTypeConverter vpn_converter;
+        ret = ret && vpn_converter.fromJson(json["vpn"], data.vpn, error_code, error_message);
     }
 
     if (!ret)
@@ -88,30 +88,30 @@ bool NetworkConnectionProfileTypeConverter::fromJson(const rapidjson::Value&    
 }
 
 /** @brief Convert a NetworkConnectionProfileType to a JSON representation */
-bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfileType& data, rapidjson::Document& json) 
+bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // apn
     if (data.apn.isSet())
     {
-    APNTypeConverter apn_converter;
-    apn_converter.setAllocator(allocator);
-    rapidjson::Document apn_doc;
-    apn_doc.Parse("{}");
-    ret = ret && apn_converter.toJson(data.apn, apn_doc);
-    json.AddMember(rapidjson::StringRef("apn"), apn_doc.Move(), *allocator);
+        APNTypeConverter apn_converter;
+        apn_converter.setAllocator(allocator);
+        rapidjson::Document apn_doc;
+        apn_doc.Parse("{}");
+        ret = ret && apn_converter.toJson(data.apn, apn_doc);
+        json.AddMember(rapidjson::StringRef("apn"), apn_doc.Move(), *allocator);
     }
 
     // ocppVersion
@@ -135,12 +135,12 @@ bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfil
     // vpn
     if (data.vpn.isSet())
     {
-    VPNTypeConverter vpn_converter;
-    vpn_converter.setAllocator(allocator);
-    rapidjson::Document vpn_doc;
-    vpn_doc.Parse("{}");
-    ret = ret && vpn_converter.toJson(data.vpn, vpn_doc);
-    json.AddMember(rapidjson::StringRef("vpn"), vpn_doc.Move(), *allocator);
+        VPNTypeConverter vpn_converter;
+        vpn_converter.setAllocator(allocator);
+        rapidjson::Document vpn_doc;
+        vpn_doc.Parse("{}");
+        ret = ret && vpn_converter.toJson(data.vpn, vpn_doc);
+        json.AddMember(rapidjson::StringRef("vpn"), vpn_doc.Move(), *allocator);
     }
 
     return ret;

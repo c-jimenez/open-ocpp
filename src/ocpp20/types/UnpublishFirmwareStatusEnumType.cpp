@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a UnpublishFirmwareStatusEnumType enum to string */
 const EnumToStringFromString<UnpublishFirmwareStatusEnumType> UnpublishFirmwareStatusEnumTypeHelper = {
-    { UnpublishFirmwareStatusEnumType::DownloadOngoing, "DownloadOngoing" },
-    { UnpublishFirmwareStatusEnumType::NoFirmware, "NoFirmware" },
-    { UnpublishFirmwareStatusEnumType::Unpublished, "Unpublished" },
+    {UnpublishFirmwareStatusEnumType::DownloadOngoing, "DownloadOngoing"},
+    {UnpublishFirmwareStatusEnumType::NoFirmware, "NoFirmware"},
+    {UnpublishFirmwareStatusEnumType::Unpublished, "Unpublished"},
 };
 
 } // namespace ocpp20

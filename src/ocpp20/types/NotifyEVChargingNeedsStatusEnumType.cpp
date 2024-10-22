@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a NotifyEVChargingNeedsStatusEnumType enum to string */
 const EnumToStringFromString<NotifyEVChargingNeedsStatusEnumType> NotifyEVChargingNeedsStatusEnumTypeHelper = {
-    { NotifyEVChargingNeedsStatusEnumType::Accepted, "Accepted" },
-    { NotifyEVChargingNeedsStatusEnumType::Rejected, "Rejected" },
-    { NotifyEVChargingNeedsStatusEnumType::Processing, "Processing" },
+    {NotifyEVChargingNeedsStatusEnumType::Accepted, "Accepted"},
+    {NotifyEVChargingNeedsStatusEnumType::Rejected, "Rejected"},
+    {NotifyEVChargingNeedsStatusEnumType::Processing, "Processing"},
 };
 
 } // namespace ocpp20

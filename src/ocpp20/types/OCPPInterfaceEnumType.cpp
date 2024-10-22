@@ -32,14 +32,14 @@ namespace ocpp20
 
 /** @brief Helper to convert a OCPPInterfaceEnumType enum to string */
 const EnumToStringFromString<OCPPInterfaceEnumType> OCPPInterfaceEnumTypeHelper = {
-    { OCPPInterfaceEnumType::Wired0, "Wired0" },
-    { OCPPInterfaceEnumType::Wired1, "Wired1" },
-    { OCPPInterfaceEnumType::Wired2, "Wired2" },
-    { OCPPInterfaceEnumType::Wired3, "Wired3" },
-    { OCPPInterfaceEnumType::Wireless0, "Wireless0" },
-    { OCPPInterfaceEnumType::Wireless1, "Wireless1" },
-    { OCPPInterfaceEnumType::Wireless2, "Wireless2" },
-    { OCPPInterfaceEnumType::Wireless3, "Wireless3" },
+    {OCPPInterfaceEnumType::Wired0, "Wired0"},
+    {OCPPInterfaceEnumType::Wired1, "Wired1"},
+    {OCPPInterfaceEnumType::Wired2, "Wired2"},
+    {OCPPInterfaceEnumType::Wired3, "Wired3"},
+    {OCPPInterfaceEnumType::Wireless0, "Wireless0"},
+    {OCPPInterfaceEnumType::Wireless1, "Wireless1"},
+    {OCPPInterfaceEnumType::Wireless2, "Wireless2"},
+    {OCPPInterfaceEnumType::Wireless3, "Wireless3"},
 };
 
 } // namespace ocpp20

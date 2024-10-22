@@ -24,13 +24,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_TRANSACTIONTYPE_H
 #define OPENOCPP_TRANSACTIONTYPE_H
 
-#include "CustomDataType.h"
 #include "ChargingStateEnumType.h"
+#include "CustomDataType.h"
 #include "ReasonEnumType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -69,7 +69,7 @@ class TransactionTypeConverter : public ocpp::messages::IMessageConverter<Transa
 
     /** @brief Convert a TransactionType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  TransactionType&                data,
+                  TransactionType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

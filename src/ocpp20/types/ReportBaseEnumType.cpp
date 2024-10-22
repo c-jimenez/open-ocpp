@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a ReportBaseEnumType enum to string */
 const EnumToStringFromString<ReportBaseEnumType> ReportBaseEnumTypeHelper = {
-    { ReportBaseEnumType::ConfigurationInventory, "ConfigurationInventory" },
-    { ReportBaseEnumType::FullInventory, "FullInventory" },
-    { ReportBaseEnumType::SummaryInventory, "SummaryInventory" },
+    {ReportBaseEnumType::ConfigurationInventory, "ConfigurationInventory"},
+    {ReportBaseEnumType::FullInventory, "FullInventory"},
+    {ReportBaseEnumType::SummaryInventory, "SummaryInventory"},
 };
 
 } // namespace ocpp20

@@ -26,9 +26,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMessageConverter.h"
 
-#include "CustomDataType.h"
-#include "ClearChargingProfileType.h"
 #include "ClearChargingProfileStatusEnumType.h"
+#include "ClearChargingProfileType.h"
+#include "CustomDataType.h"
 #include "StatusInfoType.h"
 
 namespace ocpp

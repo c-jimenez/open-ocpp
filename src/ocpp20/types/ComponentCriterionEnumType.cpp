@@ -32,10 +32,10 @@ namespace ocpp20
 
 /** @brief Helper to convert a ComponentCriterionEnumType enum to string */
 const EnumToStringFromString<ComponentCriterionEnumType> ComponentCriterionEnumTypeHelper = {
-    { ComponentCriterionEnumType::Active, "Active" },
-    { ComponentCriterionEnumType::Available, "Available" },
-    { ComponentCriterionEnumType::Enabled, "Enabled" },
-    { ComponentCriterionEnumType::Problem, "Problem" },
+    {ComponentCriterionEnumType::Active, "Active"},
+    {ComponentCriterionEnumType::Available, "Available"},
+    {ComponentCriterionEnumType::Enabled, "Enabled"},
+    {ComponentCriterionEnumType::Problem, "Problem"},
 };
 
 } // namespace ocpp20

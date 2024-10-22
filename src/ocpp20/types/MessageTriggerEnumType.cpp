@@ -32,17 +32,17 @@ namespace ocpp20
 
 /** @brief Helper to convert a MessageTriggerEnumType enum to string */
 const EnumToStringFromString<MessageTriggerEnumType> MessageTriggerEnumTypeHelper = {
-    { MessageTriggerEnumType::BootNotification, "BootNotification" },
-    { MessageTriggerEnumType::LogStatusNotification, "LogStatusNotification" },
-    { MessageTriggerEnumType::FirmwareStatusNotification, "FirmwareStatusNotification" },
-    { MessageTriggerEnumType::Heartbeat, "Heartbeat" },
-    { MessageTriggerEnumType::MeterValues, "MeterValues" },
-    { MessageTriggerEnumType::SignChargingStationCertificate, "SignChargingStationCertificate" },
-    { MessageTriggerEnumType::SignV2GCertificate, "SignV2GCertificate" },
-    { MessageTriggerEnumType::StatusNotification, "StatusNotification" },
-    { MessageTriggerEnumType::TransactionEvent, "TransactionEvent" },
-    { MessageTriggerEnumType::SignCombinedCertificate, "SignCombinedCertificate" },
-    { MessageTriggerEnumType::PublishFirmwareStatusNotification, "PublishFirmwareStatusNotification" },
+    {MessageTriggerEnumType::BootNotification, "BootNotification"},
+    {MessageTriggerEnumType::LogStatusNotification, "LogStatusNotification"},
+    {MessageTriggerEnumType::FirmwareStatusNotification, "FirmwareStatusNotification"},
+    {MessageTriggerEnumType::Heartbeat, "Heartbeat"},
+    {MessageTriggerEnumType::MeterValues, "MeterValues"},
+    {MessageTriggerEnumType::SignChargingStationCertificate, "SignChargingStationCertificate"},
+    {MessageTriggerEnumType::SignV2GCertificate, "SignV2GCertificate"},
+    {MessageTriggerEnumType::StatusNotification, "StatusNotification"},
+    {MessageTriggerEnumType::TransactionEvent, "TransactionEvent"},
+    {MessageTriggerEnumType::SignCombinedCertificate, "SignCombinedCertificate"},
+    {MessageTriggerEnumType::PublishFirmwareStatusNotification, "PublishFirmwareStatusNotification"},
 };
 
 } // namespace ocpp20

@@ -24,15 +24,15 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CHARGINGSCHEDULETYPE_H
 #define OPENOCPP_CHARGINGSCHEDULETYPE_H
 
-#include "CustomDataType.h"
 #include "ChargingRateUnitEnumType.h"
 #include "ChargingSchedulePeriodType.h"
+#include "CustomDataType.h"
 #include "SalesTariffType.h"
 
-#include "Optional.h"
 #include "DateTime.h"
-#include <vector>
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -80,7 +80,7 @@ class ChargingScheduleTypeConverter : public ocpp::messages::IMessageConverter<C
 
     /** @brief Convert a ChargingScheduleType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingScheduleType&                data,
+                  ChargingScheduleType&         data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

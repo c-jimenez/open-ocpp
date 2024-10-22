@@ -32,14 +32,14 @@ namespace ocpp20
 
 /** @brief Helper to convert a DataEnumType enum to string */
 const EnumToStringFromString<DataEnumType> DataEnumTypeHelper = {
-    { DataEnumType::string, "string" },
-    { DataEnumType::decimal, "decimal" },
-    { DataEnumType::integer, "integer" },
-    { DataEnumType::dateTime, "dateTime" },
-    { DataEnumType::boolean, "boolean" },
-    { DataEnumType::OptionList, "OptionList" },
-    { DataEnumType::SequenceList, "SequenceList" },
-    { DataEnumType::MemberList, "MemberList" },
+    {DataEnumType::string, "string"},
+    {DataEnumType::decimal, "decimal"},
+    {DataEnumType::integer, "integer"},
+    {DataEnumType::dateTime, "dateTime"},
+    {DataEnumType::boolean, "boolean"},
+    {DataEnumType::OptionList, "OptionList"},
+    {DataEnumType::SequenceList, "SequenceList"},
+    {DataEnumType::MemberList, "MemberList"},
 };
 
 } // namespace ocpp20

@@ -43,15 +43,15 @@ bool ComponentTypeConverter::fromJson(const rapidjson::Value&       json,
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evse
     if (json.HasMember("evse"))
     {
-    EVSETypeConverter evse_converter;
-    ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
+        EVSETypeConverter evse_converter;
+        ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
     }
 
     // name
@@ -69,30 +69,30 @@ bool ComponentTypeConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a ComponentType to a JSON representation */
-bool ComponentTypeConverter::toJson(const ComponentType& data, rapidjson::Document& json) 
+bool ComponentTypeConverter::toJson(const ComponentType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // evse
     if (data.evse.isSet())
     {
-    EVSETypeConverter evse_converter;
-    evse_converter.setAllocator(allocator);
-    rapidjson::Document evse_doc;
-    evse_doc.Parse("{}");
-    ret = ret && evse_converter.toJson(data.evse, evse_doc);
-    json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
+        EVSETypeConverter evse_converter;
+        evse_converter.setAllocator(allocator);
+        rapidjson::Document evse_doc;
+        evse_doc.Parse("{}");
+        ret = ret && evse_converter.toJson(data.evse, evse_doc);
+        json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
     }
 
     // name

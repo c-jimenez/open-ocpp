@@ -27,10 +27,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "SalesTariffEntryType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
-#include <vector>
 #include "IMessageConverter.h"
+#include "Optional.h"
+#include <vector>
 
 namespace ocpp
 {
@@ -72,7 +72,7 @@ class SalesTariffTypeConverter : public ocpp::messages::IMessageConverter<SalesT
 
     /** @brief Convert a SalesTariffType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SalesTariffType&                data,
+                  SalesTariffType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

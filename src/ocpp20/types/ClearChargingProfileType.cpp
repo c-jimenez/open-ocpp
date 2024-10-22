@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a ClearChargingProfileType from a JSON representation */
 bool ClearChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
-                                      ClearChargingProfileType&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                                 ClearChargingProfileType&     data,
+                                                 std::string&                  error_code,
+                                                 [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evseId
@@ -53,7 +53,7 @@ bool ClearChargingProfileTypeConverter::fromJson(const rapidjson::Value&       j
     // chargingProfilePurpose
     if (json.HasMember("chargingProfilePurpose"))
     {
-    data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
+        data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
     }
 
     // stackLevel
@@ -68,19 +68,19 @@ bool ClearChargingProfileTypeConverter::fromJson(const rapidjson::Value&       j
 }
 
 /** @brief Convert a ClearChargingProfileType to a JSON representation */
-bool ClearChargingProfileTypeConverter::toJson(const ClearChargingProfileType& data, rapidjson::Document& json) 
+bool ClearChargingProfileTypeConverter::toJson(const ClearChargingProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // evseId
@@ -89,7 +89,7 @@ bool ClearChargingProfileTypeConverter::toJson(const ClearChargingProfileType& d
     // chargingProfilePurpose
     if (data.chargingProfilePurpose.isSet())
     {
-    fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
+        fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
     }
 
     // stackLevel

@@ -27,9 +27,9 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "ModemType.h"
 
-#include "Optional.h"
 #include "CiStringType.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -71,7 +71,7 @@ class ChargingStationTypeConverter : public ocpp::messages::IMessageConverter<Ch
 
     /** @brief Convert a ChargingStationType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingStationType&                data,
+                  ChargingStationType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

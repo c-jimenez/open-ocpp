@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a EventTriggerEnumType enum to string */
 const EnumToStringFromString<EventTriggerEnumType> EventTriggerEnumTypeHelper = {
-    { EventTriggerEnumType::Alerting, "Alerting" },
-    { EventTriggerEnumType::Delta, "Delta" },
-    { EventTriggerEnumType::Periodic, "Periodic" },
+    {EventTriggerEnumType::Alerting, "Alerting"},
+    {EventTriggerEnumType::Delta, "Delta"},
+    {EventTriggerEnumType::Periodic, "Periodic"},
 };
 
 } // namespace ocpp20

@@ -32,11 +32,11 @@ namespace ocpp20
 
 /** @brief Helper to convert a ReserveNowStatusEnumType enum to string */
 const EnumToStringFromString<ReserveNowStatusEnumType> ReserveNowStatusEnumTypeHelper = {
-    { ReserveNowStatusEnumType::Accepted, "Accepted" },
-    { ReserveNowStatusEnumType::Faulted, "Faulted" },
-    { ReserveNowStatusEnumType::Occupied, "Occupied" },
-    { ReserveNowStatusEnumType::Rejected, "Rejected" },
-    { ReserveNowStatusEnumType::Unavailable, "Unavailable" },
+    {ReserveNowStatusEnumType::Accepted, "Accepted"},
+    {ReserveNowStatusEnumType::Faulted, "Faulted"},
+    {ReserveNowStatusEnumType::Occupied, "Occupied"},
+    {ReserveNowStatusEnumType::Rejected, "Rejected"},
+    {ReserveNowStatusEnumType::Unavailable, "Unavailable"},
 };
 
 } // namespace ocpp20

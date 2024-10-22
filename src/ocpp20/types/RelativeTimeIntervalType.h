@@ -26,8 +26,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CustomDataType.h"
 
-#include "Optional.h"
 #include "IMessageConverter.h"
+#include "Optional.h"
 
 namespace ocpp
 {
@@ -62,7 +62,7 @@ class RelativeTimeIntervalTypeConverter : public ocpp::messages::IMessageConvert
 
     /** @brief Convert a RelativeTimeIntervalType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  RelativeTimeIntervalType&                data,
+                  RelativeTimeIntervalType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

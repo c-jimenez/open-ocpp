@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChangeAvailabilityStatusEnumType enum to string */
 const EnumToStringFromString<ChangeAvailabilityStatusEnumType> ChangeAvailabilityStatusEnumTypeHelper = {
-    { ChangeAvailabilityStatusEnumType::Accepted, "Accepted" },
-    { ChangeAvailabilityStatusEnumType::Rejected, "Rejected" },
-    { ChangeAvailabilityStatusEnumType::Scheduled, "Scheduled" },
+    {ChangeAvailabilityStatusEnumType::Accepted, "Accepted"},
+    {ChangeAvailabilityStatusEnumType::Rejected, "Rejected"},
+    {ChangeAvailabilityStatusEnumType::Scheduled, "Scheduled"},
 };
 
 } // namespace ocpp20

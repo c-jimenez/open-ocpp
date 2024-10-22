@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a MessagePriorityEnumType enum to string */
 const EnumToStringFromString<MessagePriorityEnumType> MessagePriorityEnumTypeHelper = {
-    { MessagePriorityEnumType::AlwaysFront, "AlwaysFront" },
-    { MessagePriorityEnumType::InFront, "InFront" },
-    { MessagePriorityEnumType::NormalCycle, "NormalCycle" },
+    {MessagePriorityEnumType::AlwaysFront, "AlwaysFront"},
+    {MessagePriorityEnumType::InFront, "InFront"},
+    {MessagePriorityEnumType::NormalCycle, "NormalCycle"},
 };
 
 } // namespace ocpp20

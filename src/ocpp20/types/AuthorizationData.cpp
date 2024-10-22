@@ -34,17 +34,17 @@ namespace ocpp20
 
 /** @brief Convert a AuthorizationData from a JSON representation */
 bool AuthorizationDataConverter::fromJson(const rapidjson::Value&       json,
-                                      AuthorizationData&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+                                          AuthorizationData&            data,
+                                          std::string&                  error_code,
+                                          [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // idToken
@@ -54,8 +54,8 @@ bool AuthorizationDataConverter::fromJson(const rapidjson::Value&       json,
     // idTokenInfo
     if (json.HasMember("idTokenInfo"))
     {
-    IdTokenInfoTypeConverter idTokenInfo_converter;
-    ret = ret && idTokenInfo_converter.fromJson(json["idTokenInfo"], data.idTokenInfo, error_code, error_message);
+        IdTokenInfoTypeConverter idTokenInfo_converter;
+        ret = ret && idTokenInfo_converter.fromJson(json["idTokenInfo"], data.idTokenInfo, error_code, error_message);
     }
 
     if (!ret)
@@ -67,19 +67,19 @@ bool AuthorizationDataConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a AuthorizationData to a JSON representation */
-bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson::Document& json) 
+bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // idToken
@@ -93,12 +93,12 @@ bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson
     // idTokenInfo
     if (data.idTokenInfo.isSet())
     {
-    IdTokenInfoTypeConverter idTokenInfo_converter;
-    idTokenInfo_converter.setAllocator(allocator);
-    rapidjson::Document idTokenInfo_doc;
-    idTokenInfo_doc.Parse("{}");
-    ret = ret && idTokenInfo_converter.toJson(data.idTokenInfo, idTokenInfo_doc);
-    json.AddMember(rapidjson::StringRef("idTokenInfo"), idTokenInfo_doc.Move(), *allocator);
+        IdTokenInfoTypeConverter idTokenInfo_converter;
+        idTokenInfo_converter.setAllocator(allocator);
+        rapidjson::Document idTokenInfo_doc;
+        idTokenInfo_doc.Parse("{}");
+        ret = ret && idTokenInfo_converter.toJson(data.idTokenInfo, idTokenInfo_doc);
+        json.AddMember(rapidjson::StringRef("idTokenInfo"), idTokenInfo_doc.Move(), *allocator);
     }
 
     return ret;

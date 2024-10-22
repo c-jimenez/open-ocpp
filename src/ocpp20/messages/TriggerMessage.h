@@ -29,8 +29,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "CustomDataType.h"
 #include "EVSEType.h"
 #include "MessageTriggerEnumType.h"
-#include "TriggerMessageStatusEnumType.h"
 #include "StatusInfoType.h"
+#include "TriggerMessageStatusEnumType.h"
 
 namespace ocpp
 {

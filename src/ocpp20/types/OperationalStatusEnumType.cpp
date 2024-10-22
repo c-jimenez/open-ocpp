@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a OperationalStatusEnumType enum to string */
 const EnumToStringFromString<OperationalStatusEnumType> OperationalStatusEnumTypeHelper = {
-    { OperationalStatusEnumType::Inoperative, "Inoperative" },
-    { OperationalStatusEnumType::Operative, "Operative" },
+    {OperationalStatusEnumType::Inoperative, "Inoperative"},
+    {OperationalStatusEnumType::Operative, "Operative"},
 };
 
 } // namespace ocpp20

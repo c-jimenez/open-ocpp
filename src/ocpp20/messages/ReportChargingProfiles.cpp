@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a ReportChargingProfilesReq from a JSON representation */
-bool ReportChargingProfilesReqConverter::fromJson(const rapidjson::Value&       json,
-                                     ReportChargingProfilesReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ReportChargingProfilesReqConverter::fromJson(const rapidjson::Value&    json,
+                                                  ReportChargingProfilesReq& data,
+                                                  std::string&               error_code,
+                                                  std::string&               error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // requestId
@@ -54,12 +54,12 @@ bool ReportChargingProfilesReqConverter::fromJson(const rapidjson::Value&       
     data.chargingLimitSource = ocpp::types::ocpp20::ChargingLimitSourceEnumTypeHelper.fromString(json["chargingLimitSource"].GetString());
 
     // chargingProfile
-    const rapidjson::Value& chargingProfile_json = json["chargingProfile"];
+    const rapidjson::Value&                           chargingProfile_json = json["chargingProfile"];
     ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
     for (auto it = chargingProfile_json.Begin(); ret && (it != chargingProfile_json.End()); ++it)
     {
         ocpp::types::ocpp20::ChargingProfileType& item = data.chargingProfile.emplace_back();
-        ret = ret && chargingProfile_converter.fromJson(*it, item, error_code, error_message);
+        ret                                            = ret && chargingProfile_converter.fromJson(*it, item, error_code, error_message);
     }
 
     // tbc
@@ -77,19 +77,19 @@ bool ReportChargingProfilesReqConverter::fromJson(const rapidjson::Value&       
 }
 
 /** @brief Convert a ReportChargingProfilesReq to a JSON representation */
-bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq& data, rapidjson::Document& json) 
+bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // requestId
@@ -101,7 +101,7 @@ bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq&
     // chargingProfile
     if (!data.chargingProfile.empty())
     {
-        rapidjson::Value chargingProfile_json(rapidjson::kArrayType);
+        rapidjson::Value                                  chargingProfile_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
         chargingProfile_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::ChargingProfileType& item : data.chargingProfile)
@@ -124,18 +124,18 @@ bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq&
 }
 
 /** @brief Convert a ReportChargingProfilesConf from a JSON representation */
-bool ReportChargingProfilesConfConverter::fromJson(const rapidjson::Value&       json,
-                                     ReportChargingProfilesConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool ReportChargingProfilesConfConverter::fromJson(const rapidjson::Value&     json,
+                                                   ReportChargingProfilesConf& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -147,19 +147,19 @@ bool ReportChargingProfilesConfConverter::fromJson(const rapidjson::Value&      
 }
 
 /** @brief Convert a ReportChargingProfilesConf to a JSON representation */
-bool ReportChargingProfilesConfConverter::toJson(const ReportChargingProfilesConf& data, rapidjson::Document& json) 
+bool ReportChargingProfilesConfConverter::toJson(const ReportChargingProfilesConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;

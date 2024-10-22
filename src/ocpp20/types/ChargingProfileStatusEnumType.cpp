@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a ChargingProfileStatusEnumType enum to string */
 const EnumToStringFromString<ChargingProfileStatusEnumType> ChargingProfileStatusEnumTypeHelper = {
-    { ChargingProfileStatusEnumType::Accepted, "Accepted" },
-    { ChargingProfileStatusEnumType::Rejected, "Rejected" },
+    {ChargingProfileStatusEnumType::Accepted, "Accepted"},
+    {ChargingProfileStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

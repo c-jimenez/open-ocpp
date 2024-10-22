@@ -32,8 +32,8 @@ namespace ocpp20
 
 /** @brief Helper to convert a CertificateSigningUseEnumType enum to string */
 const EnumToStringFromString<CertificateSigningUseEnumType> CertificateSigningUseEnumTypeHelper = {
-    { CertificateSigningUseEnumType::ChargingStationCertificate, "ChargingStationCertificate" },
-    { CertificateSigningUseEnumType::V2GCertificate, "V2GCertificate" },
+    {CertificateSigningUseEnumType::ChargingStationCertificate, "ChargingStationCertificate"},
+    {CertificateSigningUseEnumType::V2GCertificate, "V2GCertificate"},
 };
 
 } // namespace ocpp20

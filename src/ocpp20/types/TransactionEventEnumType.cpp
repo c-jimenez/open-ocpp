@@ -32,9 +32,9 @@ namespace ocpp20
 
 /** @brief Helper to convert a TransactionEventEnumType enum to string */
 const EnumToStringFromString<TransactionEventEnumType> TransactionEventEnumTypeHelper = {
-    { TransactionEventEnumType::Ended, "Ended" },
-    { TransactionEventEnumType::Started, "Started" },
-    { TransactionEventEnumType::Updated, "Updated" },
+    {TransactionEventEnumType::Ended, "Ended"},
+    {TransactionEventEnumType::Started, "Started"},
+    {TransactionEventEnumType::Updated, "Updated"},
 };
 
 } // namespace ocpp20

@@ -24,7 +24,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_CUSTOMDATATYPE_H
 #define OPENOCPP_CUSTOMDATATYPE_H
 
-
 #include "CiStringType.h"
 #include "IMessageConverter.h"
 
@@ -51,7 +50,7 @@ class CustomDataTypeConverter : public ocpp::messages::IMessageConverter<CustomD
 
     /** @brief Convert a CustomDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CustomDataType&                data,
+                  CustomDataType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 

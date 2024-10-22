@@ -33,18 +33,18 @@ namespace ocpp20
 {
 
 /** @brief Convert a NotifyEventReq from a JSON representation */
-bool NotifyEventReqConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyEventReq&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool NotifyEventReqConverter::fromJson(const rapidjson::Value& json,
+                                       NotifyEventReq&         data,
+                                       std::string&            error_code,
+                                       std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // generatedAt
@@ -57,12 +57,12 @@ bool NotifyEventReqConverter::fromJson(const rapidjson::Value&       json,
     extract(json, "seqNo", data.seqNo);
 
     // eventData
-    const rapidjson::Value& eventData_json = json["eventData"];
+    const rapidjson::Value&                     eventData_json = json["eventData"];
     ocpp::types::ocpp20::EventDataTypeConverter eventData_converter;
     for (auto it = eventData_json.Begin(); ret && (it != eventData_json.End()); ++it)
     {
         ocpp::types::ocpp20::EventDataType& item = data.eventData.emplace_back();
-        ret = ret && eventData_converter.fromJson(*it, item, error_code, error_message);
+        ret                                      = ret && eventData_converter.fromJson(*it, item, error_code, error_message);
     }
 
     if (!ret)
@@ -74,19 +74,19 @@ bool NotifyEventReqConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a NotifyEventReq to a JSON representation */
-bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Document& json) 
+bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     // generatedAt
@@ -101,7 +101,7 @@ bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Docu
     // eventData
     if (!data.eventData.empty())
     {
-        rapidjson::Value eventData_json(rapidjson::kArrayType);
+        rapidjson::Value                            eventData_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::EventDataTypeConverter eventData_converter;
         eventData_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::EventDataType& item : data.eventData)
@@ -118,18 +118,18 @@ bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Docu
 }
 
 /** @brief Convert a NotifyEventConf from a JSON representation */
-bool NotifyEventConfConverter::fromJson(const rapidjson::Value&       json,
-                                     NotifyEventConf&                 data,
-                                     std::string&                  error_code,
-                                     std::string&                  error_message)
+bool NotifyEventConfConverter::fromJson(const rapidjson::Value& json,
+                                        NotifyEventConf&        data,
+                                        std::string&            error_code,
+                                        std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     if (!ret)
@@ -141,19 +141,19 @@ bool NotifyEventConfConverter::fromJson(const rapidjson::Value&       json,
 }
 
 /** @brief Convert a NotifyEventConf to a JSON representation */
-bool NotifyEventConfConverter::toJson(const NotifyEventConf& data, rapidjson::Document& json) 
+bool NotifyEventConfConverter::toJson(const NotifyEventConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-    ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
-    customData_converter.setAllocator(allocator);
-    rapidjson::Document customData_doc;
-    customData_doc.Parse("{}");
-    ret = ret && customData_converter.toJson(data.customData, customData_doc);
-    json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
+        customData_converter.setAllocator(allocator);
+        rapidjson::Document customData_doc;
+        customData_doc.Parse("{}");
+        ret = ret && customData_converter.toJson(data.customData, customData_doc);
+        json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
 
     return ret;
