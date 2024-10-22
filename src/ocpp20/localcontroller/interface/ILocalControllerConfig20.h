@@ -39,13 +39,6 @@ class ILocalControllerConfig20 : public ICentralSystemConfig20
     virtual unsigned int incomingRequestsFromCsThreadPoolSize() const = 0;
     /** @brief Disconnect from Charge Point on Central System disconnection */
     virtual bool disconnectFromCpWhenCsDisconnected() const = 0;
-
-    // Unused from Central System configuration interface
-
-    /** @brief Boot notification retry interval */
-    std::chrono::seconds bootNotificationRetryInterval() const override { return std::chrono::seconds(0); }
-    /** @brief Heartbeat interval */
-    std::chrono::seconds heartbeatInterval() const override { return std::chrono::seconds(0); }
 };
 
 } // namespace config

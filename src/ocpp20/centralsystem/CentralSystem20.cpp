@@ -194,7 +194,7 @@ bool CentralSystem20::start()
 
             // Allocate resources
             m_ws_server  = std::unique_ptr<ocpp::websockets::IWebsocketServer>(ocpp::websockets::WebsocketFactory::newServer());
-            m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp1.6");
+            m_rpc_server = std::make_unique<ocpp::rpc::RpcServer>(*m_ws_server, "ocpp2.0.1");
             m_rpc_server->registerServerListener(*this);
 
             // Configure websocket link

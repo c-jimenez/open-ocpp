@@ -14,7 +14,7 @@ target_link_directories(remote_chargepoint PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(remote_chargepoint
-    examples_common
+    examples_common16
 )
 
 

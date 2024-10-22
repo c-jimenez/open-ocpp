@@ -12,7 +12,7 @@ target_link_directories(security_chargepoint PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(security_chargepoint
-    examples_common
+    examples_common16
 )
 
 

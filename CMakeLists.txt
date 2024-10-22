@@ -72,10 +72,14 @@ if(${BUILD_STATIC_LIBRARY})
         centralsystem
         chargepoint
         localcontroller
+        centralsystem20
+        localcontroller20
         config
         database
         messages
         messages16
+        messages20
+        types20
         rpc
         helpers
         log
@@ -97,10 +101,14 @@ if (${BUILD_SHARED_LIBRARY})
         centralsystem
         chargepoint
         localcontroller
+        centralsystem20
+        localcontroller20
         config
         database
         messages
         messages16
+        messages20
+        types20
         rpc
         helpers
         log

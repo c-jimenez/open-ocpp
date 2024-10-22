@@ -12,7 +12,7 @@ target_link_directories(iso15118_centralsystem PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(iso15118_centralsystem
-    examples_common
+    examples_common16
     centralsystem
 )
 

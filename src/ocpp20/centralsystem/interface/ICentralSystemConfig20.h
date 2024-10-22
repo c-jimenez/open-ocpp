@@ -49,10 +49,6 @@ class ICentralSystemConfig20
     virtual std::chrono::milliseconds callRequestTimeout() const = 0;
     /** @brief Websocket PING interval */
     virtual std::chrono::seconds webSocketPingInterval() const = 0;
-    /** @brief Boot notification retry interval */
-    virtual std::chrono::seconds bootNotificationRetryInterval() const = 0;
-    /** @brief Heartbeat interval */
-    virtual std::chrono::seconds heartbeatInterval() const = 0;
     /** @brief Enable HTTP basic authentication */
     virtual bool httpBasicAuthent() const = 0;
     /** @brief Cipher list to use for TLSv1.2 connections */

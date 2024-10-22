@@ -15,7 +15,7 @@ target_link_directories(security_centralsystem PRIVATE ${BIN_DIR})
 
 # Dependencies
 target_link_libraries(security_centralsystem
-    examples_common
+    examples_common16
     centralsystem
 )
 
