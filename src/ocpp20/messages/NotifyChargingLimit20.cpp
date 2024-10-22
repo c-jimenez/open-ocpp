@@ -48,12 +48,15 @@ bool NotifyChargingLimit20ReqConverter::fromJson(const rapidjson::Value&   json,
     }
 
     // chargingSchedule
-    const rapidjson::Value&                              chargingSchedule_json = json["chargingSchedule"];
-    ocpp::types::ocpp20::ChargingScheduleType20Converter chargingSchedule_converter;
-    for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
+    if (json.HasMember("chargingSchedule"))
     {
-        ocpp::types::ocpp20::ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
-        ret = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                              chargingSchedule_json = json["chargingSchedule"];
+        ocpp::types::ocpp20::ChargingScheduleType20Converter chargingSchedule_converter;
+        for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
+            ret = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // evseId
@@ -90,6 +93,7 @@ bool NotifyChargingLimit20ReqConverter::toJson(const NotifyChargingLimit20Req& d
     // chargingSchedule
     if (!data.chargingSchedule.empty())
     {
+
         rapidjson::Value                                     chargingSchedule_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::ChargingScheduleType20Converter chargingSchedule_converter;
         chargingSchedule_converter.setAllocator(allocator);

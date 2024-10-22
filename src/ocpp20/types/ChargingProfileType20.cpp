@@ -72,12 +72,15 @@ bool ChargingProfileType20Converter::fromJson(const rapidjson::Value&       json
     ret = ret && extract(json, "validTo", data.validTo, error_message);
 
     // chargingSchedule
-    const rapidjson::Value&         chargingSchedule_json = json["chargingSchedule"];
-    ChargingScheduleType20Converter chargingSchedule_converter;
-    for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
+    if (json.HasMember("chargingSchedule"))
     {
-        ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
-        ret                          = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&         chargingSchedule_json = json["chargingSchedule"];
+        ChargingScheduleType20Converter chargingSchedule_converter;
+        for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
+        {
+            ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
+            ret                          = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // transactionId
@@ -132,20 +135,18 @@ bool ChargingProfileType20Converter::toJson(const ChargingProfileType20& data, r
     fill(json, "validTo", data.validTo);
 
     // chargingSchedule
-    if (!data.chargingSchedule.empty())
+
+    rapidjson::Value                chargingSchedule_json(rapidjson::kArrayType);
+    ChargingScheduleType20Converter chargingSchedule_converter;
+    chargingSchedule_converter.setAllocator(allocator);
+    for (const ChargingScheduleType20& item : data.chargingSchedule)
     {
-        rapidjson::Value                chargingSchedule_json(rapidjson::kArrayType);
-        ChargingScheduleType20Converter chargingSchedule_converter;
-        chargingSchedule_converter.setAllocator(allocator);
-        for (const ChargingScheduleType20& item : data.chargingSchedule)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && chargingSchedule_converter.toJson(item, item_doc);
-            chargingSchedule_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("chargingSchedule"), chargingSchedule_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && chargingSchedule_converter.toJson(item, item_doc);
+        chargingSchedule_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("chargingSchedule"), chargingSchedule_json.Move(), *allocator);
 
     // transactionId
     fill(json, "transactionId", data.transactionId);

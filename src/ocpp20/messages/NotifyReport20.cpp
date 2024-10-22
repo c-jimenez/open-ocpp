@@ -54,12 +54,15 @@ bool NotifyReport20ReqConverter::fromJson(const rapidjson::Value& json,
     ret = ret && extract(json, "generatedAt", data.generatedAt, error_message);
 
     // reportData
-    const rapidjson::Value&                        reportData_json = json["reportData"];
-    ocpp::types::ocpp20::ReportDataType20Converter reportData_converter;
-    for (auto it = reportData_json.Begin(); ret && (it != reportData_json.End()); ++it)
+    if (json.HasMember("reportData"))
     {
-        ocpp::types::ocpp20::ReportDataType20& item = data.reportData.emplace_back();
-        ret                                         = ret && reportData_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                        reportData_json = json["reportData"];
+        ocpp::types::ocpp20::ReportDataType20Converter reportData_converter;
+        for (auto it = reportData_json.Begin(); ret && (it != reportData_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ReportDataType20& item = data.reportData.emplace_back();
+            ret                                         = ret && reportData_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // tbc
@@ -101,6 +104,7 @@ bool NotifyReport20ReqConverter::toJson(const NotifyReport20Req& data, rapidjson
     // reportData
     if (!data.reportData.empty())
     {
+
         rapidjson::Value                               reportData_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::ReportDataType20Converter reportData_converter;
         reportData_converter.setAllocator(allocator);

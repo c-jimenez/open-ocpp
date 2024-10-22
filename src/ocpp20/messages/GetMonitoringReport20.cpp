@@ -48,23 +48,29 @@ bool GetMonitoringReport20ReqConverter::fromJson(const rapidjson::Value&   json,
     }
 
     // componentVariable
-    const rapidjson::Value&                               componentVariable_json = json["componentVariable"];
-    ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
-    for (auto it = componentVariable_json.Begin(); ret && (it != componentVariable_json.End()); ++it)
+    if (json.HasMember("componentVariable"))
     {
-        ocpp::types::ocpp20::ComponentVariableType20& item = data.componentVariable.emplace_back();
-        ret = ret && componentVariable_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                               componentVariable_json = json["componentVariable"];
+        ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
+        for (auto it = componentVariable_json.Begin(); ret && (it != componentVariable_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ComponentVariableType20& item = data.componentVariable.emplace_back();
+            ret = ret && componentVariable_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // requestId
     extract(json, "requestId", data.requestId);
 
     // monitoringCriteria
-    const rapidjson::Value& monitoringCriteria_json = json["monitoringCriteria"];
-    for (auto it = monitoringCriteria_json.Begin(); ret && (it != monitoringCriteria_json.End()); ++it)
+    if (json.HasMember("monitoringCriteria"))
     {
-        ocpp::types::ocpp20::MonitoringCriterionEnumType20& item = data.monitoringCriteria.emplace_back();
-        item = ocpp::types::ocpp20::MonitoringCriterionEnumType20Helper.fromString(it->GetString());
+        const rapidjson::Value& monitoringCriteria_json = json["monitoringCriteria"];
+        for (auto it = monitoringCriteria_json.Begin(); ret && (it != monitoringCriteria_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::MonitoringCriterionEnumType20& item = data.monitoringCriteria.emplace_back();
+            item = ocpp::types::ocpp20::MonitoringCriterionEnumType20Helper.fromString(it->GetString());
+        }
     }
 
     if (!ret)
@@ -94,6 +100,7 @@ bool GetMonitoringReport20ReqConverter::toJson(const GetMonitoringReport20Req& d
     // componentVariable
     if (!data.componentVariable.empty())
     {
+
         rapidjson::Value                                      componentVariable_json(rapidjson::kArrayType);
         ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
         componentVariable_converter.setAllocator(allocator);
@@ -113,6 +120,7 @@ bool GetMonitoringReport20ReqConverter::toJson(const GetMonitoringReport20Req& d
     // monitoringCriteria
     if (!data.monitoringCriteria.empty())
     {
+
         rapidjson::Value monitoringCriteria_json(rapidjson::kArrayType);
         for (const ocpp::types::ocpp20::MonitoringCriterionEnumType20& item : data.monitoringCriteria)
         {

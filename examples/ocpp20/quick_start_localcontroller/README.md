@@ -14,7 +14,7 @@ There is a 10s break between 2 charge points communication.
 
 ## Command line
 
-quick_start_localcontroller [-w working_dir] [-r]
+quick_start_localcontroller20 [-w working_dir] [-r]
 
 * -w : Working directory where to store the configuration file (Default = current directory)
 * -r : Reset all the OCPP persistent data

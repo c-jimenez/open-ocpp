@@ -27,13 +27,13 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 /** @brief Macro to register a message converter for an OCPP action */
 #define REGISTER_CONVERTER(action)                                               \
-    registerRequestConverter<action##Req>(#action, *new action##ReqConverter()); \
-    registerResponseConverter<action##Conf>(#action, *new action##ConfConverter())
+    registerRequestConverter<action##{{ocpp_version_suffix}}Req>(#action, *new action##{{ocpp_version_suffix}}ReqConverter()); \
+    registerResponseConverter<action##{{ocpp_version_suffix}}Conf>(#action, *new action##{{ocpp_version_suffix}}ConfConverter())
 
 /** @brief Macro to delete a message converter for an OCPP action */
 #define DELETE_CONVERTER(action)                  \
-    deleteRequestConverter<action##Req>(#action); \
-    deleteResponseConverter<action##Conf>(#action)
+    deleteRequestConverter<action##{{ocpp_version_suffix}}Req>(#action); \
+    deleteResponseConverter<action##{{ocpp_version_suffix}}Conf>(#action)
 
 namespace ocpp
 {
@@ -47,10 +47,10 @@ MessagesConverter20::MessagesConverter20()
 {
     // Register converters
     {%- for msg_name in csms_msgs %}
-    REGISTER_CONVERTER({{msg_name}});
+    REGISTER_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
     {%- endfor %}
     {%- for msg_name in cs_msgs %}
-    REGISTER_CONVERTER({{msg_name}});
+    REGISTER_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
     {%- endfor %}
 }
 /** @brief Destructor */
@@ -58,10 +58,10 @@ MessagesConverter20::~MessagesConverter20()
 {
     // Free memory
     {%- for msg_name in csms_msgs %}
-    DELETE_CONVERTER({{msg_name}});
+    DELETE_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
     {%- endfor %}
     {%- for msg_name in cs_msgs %}
-    DELETE_CONVERTER({{msg_name}});
+    DELETE_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
     {%- endfor %}
 }
 

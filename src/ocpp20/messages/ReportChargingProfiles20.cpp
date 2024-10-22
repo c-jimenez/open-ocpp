@@ -54,12 +54,15 @@ bool ReportChargingProfiles20ReqConverter::fromJson(const rapidjson::Value&     
     data.chargingLimitSource = ocpp::types::ocpp20::ChargingLimitSourceEnumType20Helper.fromString(json["chargingLimitSource"].GetString());
 
     // chargingProfile
-    const rapidjson::Value&                             chargingProfile_json = json["chargingProfile"];
-    ocpp::types::ocpp20::ChargingProfileType20Converter chargingProfile_converter;
-    for (auto it = chargingProfile_json.Begin(); ret && (it != chargingProfile_json.End()); ++it)
+    if (json.HasMember("chargingProfile"))
     {
-        ocpp::types::ocpp20::ChargingProfileType20& item = data.chargingProfile.emplace_back();
-        ret                                              = ret && chargingProfile_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                             chargingProfile_json = json["chargingProfile"];
+        ocpp::types::ocpp20::ChargingProfileType20Converter chargingProfile_converter;
+        for (auto it = chargingProfile_json.Begin(); ret && (it != chargingProfile_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::ChargingProfileType20& item = data.chargingProfile.emplace_back();
+            ret = ret && chargingProfile_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // tbc
@@ -99,20 +102,18 @@ bool ReportChargingProfiles20ReqConverter::toJson(const ReportChargingProfiles20
     fill(json, "chargingLimitSource", ocpp::types::ocpp20::ChargingLimitSourceEnumType20Helper.toString(data.chargingLimitSource));
 
     // chargingProfile
-    if (!data.chargingProfile.empty())
+
+    rapidjson::Value                                    chargingProfile_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::ChargingProfileType20Converter chargingProfile_converter;
+    chargingProfile_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::ChargingProfileType20& item : data.chargingProfile)
     {
-        rapidjson::Value                                    chargingProfile_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::ChargingProfileType20Converter chargingProfile_converter;
-        chargingProfile_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::ChargingProfileType20& item : data.chargingProfile)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && chargingProfile_converter.toJson(item, item_doc);
-            chargingProfile_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && chargingProfile_converter.toJson(item, item_doc);
+        chargingProfile_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile_json.Move(), *allocator);
 
     // tbc
     fill(json, "tbc", data.tbc);

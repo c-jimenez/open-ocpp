@@ -48,12 +48,15 @@ bool SetVariableMonitoring20ReqConverter::fromJson(const rapidjson::Value&     j
     }
 
     // setMonitoringData
-    const rapidjson::Value&                               setMonitoringData_json = json["setMonitoringData"];
-    ocpp::types::ocpp20::SetMonitoringDataType20Converter setMonitoringData_converter;
-    for (auto it = setMonitoringData_json.Begin(); ret && (it != setMonitoringData_json.End()); ++it)
+    if (json.HasMember("setMonitoringData"))
     {
-        ocpp::types::ocpp20::SetMonitoringDataType20& item = data.setMonitoringData.emplace_back();
-        ret = ret && setMonitoringData_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                               setMonitoringData_json = json["setMonitoringData"];
+        ocpp::types::ocpp20::SetMonitoringDataType20Converter setMonitoringData_converter;
+        for (auto it = setMonitoringData_json.Begin(); ret && (it != setMonitoringData_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::SetMonitoringDataType20& item = data.setMonitoringData.emplace_back();
+            ret = ret && setMonitoringData_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -81,20 +84,18 @@ bool SetVariableMonitoring20ReqConverter::toJson(const SetVariableMonitoring20Re
     }
 
     // setMonitoringData
-    if (!data.setMonitoringData.empty())
+
+    rapidjson::Value                                      setMonitoringData_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::SetMonitoringDataType20Converter setMonitoringData_converter;
+    setMonitoringData_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::SetMonitoringDataType20& item : data.setMonitoringData)
     {
-        rapidjson::Value                                      setMonitoringData_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::SetMonitoringDataType20Converter setMonitoringData_converter;
-        setMonitoringData_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::SetMonitoringDataType20& item : data.setMonitoringData)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && setMonitoringData_converter.toJson(item, item_doc);
-            setMonitoringData_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("setMonitoringData"), setMonitoringData_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && setMonitoringData_converter.toJson(item, item_doc);
+        setMonitoringData_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("setMonitoringData"), setMonitoringData_json.Move(), *allocator);
 
     return ret;
 }
@@ -115,12 +116,15 @@ bool SetVariableMonitoring20ConfConverter::fromJson(const rapidjson::Value&     
     }
 
     // setMonitoringResult
-    const rapidjson::Value&                                 setMonitoringResult_json = json["setMonitoringResult"];
-    ocpp::types::ocpp20::SetMonitoringResultType20Converter setMonitoringResult_converter;
-    for (auto it = setMonitoringResult_json.Begin(); ret && (it != setMonitoringResult_json.End()); ++it)
+    if (json.HasMember("setMonitoringResult"))
     {
-        ocpp::types::ocpp20::SetMonitoringResultType20& item = data.setMonitoringResult.emplace_back();
-        ret = ret && setMonitoringResult_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                                 setMonitoringResult_json = json["setMonitoringResult"];
+        ocpp::types::ocpp20::SetMonitoringResultType20Converter setMonitoringResult_converter;
+        for (auto it = setMonitoringResult_json.Begin(); ret && (it != setMonitoringResult_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::SetMonitoringResultType20& item = data.setMonitoringResult.emplace_back();
+            ret = ret && setMonitoringResult_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -148,20 +152,18 @@ bool SetVariableMonitoring20ConfConverter::toJson(const SetVariableMonitoring20C
     }
 
     // setMonitoringResult
-    if (!data.setMonitoringResult.empty())
+
+    rapidjson::Value                                        setMonitoringResult_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::SetMonitoringResultType20Converter setMonitoringResult_converter;
+    setMonitoringResult_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::SetMonitoringResultType20& item : data.setMonitoringResult)
     {
-        rapidjson::Value                                        setMonitoringResult_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::SetMonitoringResultType20Converter setMonitoringResult_converter;
-        setMonitoringResult_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::SetMonitoringResultType20& item : data.setMonitoringResult)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && setMonitoringResult_converter.toJson(item, item_doc);
-            setMonitoringResult_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("setMonitoringResult"), setMonitoringResult_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && setMonitoringResult_converter.toJson(item, item_doc);
+        setMonitoringResult_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("setMonitoringResult"), setMonitoringResult_json.Move(), *allocator);
 
     return ret;
 }

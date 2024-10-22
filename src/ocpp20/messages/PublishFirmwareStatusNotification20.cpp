@@ -51,11 +51,14 @@ bool PublishFirmwareStatusNotification20ReqConverter::fromJson(const rapidjson::
     data.status = ocpp::types::ocpp20::PublishFirmwareStatusEnumType20Helper.fromString(json["status"].GetString());
 
     // location
-    const rapidjson::Value& location_json = json["location"];
-    for (auto it = location_json.Begin(); ret && (it != location_json.End()); ++it)
+    if (json.HasMember("location"))
     {
-        std::string& item = data.location.emplace_back();
-        item              = it->GetString();
+        const rapidjson::Value& location_json = json["location"];
+        for (auto it = location_json.Begin(); ret && (it != location_json.End()); ++it)
+        {
+            std::string& item = data.location.emplace_back();
+            item              = it->GetString();
+        }
     }
 
     // requestId
@@ -91,6 +94,7 @@ bool PublishFirmwareStatusNotification20ReqConverter::toJson(const PublishFirmwa
     // location
     if (!data.location.empty())
     {
+
         rapidjson::Value location_json(rapidjson::kArrayType);
         for (const std::string& item : data.location)
         {

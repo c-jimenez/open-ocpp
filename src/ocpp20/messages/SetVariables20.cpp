@@ -48,12 +48,15 @@ bool SetVariables20ReqConverter::fromJson(const rapidjson::Value& json,
     }
 
     // setVariableData
-    const rapidjson::Value&                             setVariableData_json = json["setVariableData"];
-    ocpp::types::ocpp20::SetVariableDataType20Converter setVariableData_converter;
-    for (auto it = setVariableData_json.Begin(); ret && (it != setVariableData_json.End()); ++it)
+    if (json.HasMember("setVariableData"))
     {
-        ocpp::types::ocpp20::SetVariableDataType20& item = data.setVariableData.emplace_back();
-        ret                                              = ret && setVariableData_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                             setVariableData_json = json["setVariableData"];
+        ocpp::types::ocpp20::SetVariableDataType20Converter setVariableData_converter;
+        for (auto it = setVariableData_json.Begin(); ret && (it != setVariableData_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::SetVariableDataType20& item = data.setVariableData.emplace_back();
+            ret = ret && setVariableData_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -81,20 +84,18 @@ bool SetVariables20ReqConverter::toJson(const SetVariables20Req& data, rapidjson
     }
 
     // setVariableData
-    if (!data.setVariableData.empty())
+
+    rapidjson::Value                                    setVariableData_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::SetVariableDataType20Converter setVariableData_converter;
+    setVariableData_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::SetVariableDataType20& item : data.setVariableData)
     {
-        rapidjson::Value                                    setVariableData_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::SetVariableDataType20Converter setVariableData_converter;
-        setVariableData_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::SetVariableDataType20& item : data.setVariableData)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && setVariableData_converter.toJson(item, item_doc);
-            setVariableData_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("setVariableData"), setVariableData_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && setVariableData_converter.toJson(item, item_doc);
+        setVariableData_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("setVariableData"), setVariableData_json.Move(), *allocator);
 
     return ret;
 }
@@ -115,12 +116,15 @@ bool SetVariables20ConfConverter::fromJson(const rapidjson::Value& json,
     }
 
     // setVariableResult
-    const rapidjson::Value&                               setVariableResult_json = json["setVariableResult"];
-    ocpp::types::ocpp20::SetVariableResultType20Converter setVariableResult_converter;
-    for (auto it = setVariableResult_json.Begin(); ret && (it != setVariableResult_json.End()); ++it)
+    if (json.HasMember("setVariableResult"))
     {
-        ocpp::types::ocpp20::SetVariableResultType20& item = data.setVariableResult.emplace_back();
-        ret = ret && setVariableResult_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                               setVariableResult_json = json["setVariableResult"];
+        ocpp::types::ocpp20::SetVariableResultType20Converter setVariableResult_converter;
+        for (auto it = setVariableResult_json.Begin(); ret && (it != setVariableResult_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::SetVariableResultType20& item = data.setVariableResult.emplace_back();
+            ret = ret && setVariableResult_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -148,20 +152,18 @@ bool SetVariables20ConfConverter::toJson(const SetVariables20Conf& data, rapidjs
     }
 
     // setVariableResult
-    if (!data.setVariableResult.empty())
+
+    rapidjson::Value                                      setVariableResult_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::SetVariableResultType20Converter setVariableResult_converter;
+    setVariableResult_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::SetVariableResultType20& item : data.setVariableResult)
     {
-        rapidjson::Value                                      setVariableResult_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::SetVariableResultType20Converter setVariableResult_converter;
-        setVariableResult_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::SetVariableResultType20& item : data.setVariableResult)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && setVariableResult_converter.toJson(item, item_doc);
-            setVariableResult_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("setVariableResult"), setVariableResult_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && setVariableResult_converter.toJson(item, item_doc);
+        setVariableResult_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("setVariableResult"), setVariableResult_json.Move(), *allocator);
 
     return ret;
 }

@@ -1005,9 +1005,9 @@ if __name__ == '__main__':
 
             # Generate messages
             gen_converters(templates, params, msg_list)
-            # for ocpp_message in ocpp_messages:
-            #     print(f"Generating {ocpp_message} message...")
-            #     gen_ocpp_message(ocpp_message,templates, params)
+            for ocpp_message in ocpp_messages:
+                print(f"Generating {ocpp_message} message...")
+                gen_ocpp_message(ocpp_message,templates, params)
 
             # Generate charge point interfaces and classes
             gen_chargepoint(templates, params, msg_list)

@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
             {
                 std::cout << "Invalid parameter : " << param << std::endl;
             }
-            std::cout << "Usage : quick_start_localcontroller [-w working_dir] [-r]" << std::endl;
+            std::cout << "Usage : quick_start_localcontroller20 [-w working_dir] [-r]" << std::endl;
             std::cout << "    -w : Working directory where to store the configuration file (Default = current directory)" << std::endl;
             std::cout << "    -r : Reset all the OCPP persistent data" << std::endl;
             return 1;
@@ -138,19 +138,11 @@ int main(int argc, char* argv[])
                 std::cout << "---------------------------------------------" << std::endl;
 
                 std::cout << "Read whole charge point configuration..." << std::endl;
-                GetVariables20Req  get_vars_req;
-                GetVariables20Conf get_vars_conf;
-                if (chargepoint->call(get_vars_req, get_vars_conf, error, error_msg))
-                {
-                    std::cout << "Configuration keys :" << std::endl;
-                    for (const GetVariableResultType20& var : get_vars_conf.getVariableResult)
-                    {
-                        std::cout << " - " << var.variable.name.str() << " : "
-                                  << "component = " << var.component.name.str()
-                                  << " value = " << (var.attributeValue.isSet() ? var.attributeValue.value().str() : "");
-                    }
-                }
-                else
+                GetBaseReport20Req  get_base_report_req;
+                GetBaseReport20Conf get_base_report_conf;
+                get_base_report_req.requestId  = std::chrono::system_clock::now().time_since_epoch().count();
+                get_base_report_req.reportBase = ReportBaseEnumType20::ConfigurationInventory;
+                if (!chargepoint->call(get_base_report_req, get_base_report_conf, error, error_msg))
                 {
                     std::cout << "Failed : error = " << error << " error_msg = " << error_msg << std::endl;
                 }

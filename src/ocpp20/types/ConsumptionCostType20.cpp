@@ -51,12 +51,15 @@ bool ConsumptionCostType20Converter::fromJson(const rapidjson::Value&       json
     extract(json, "startValue", data.startValue);
 
     // cost
-    const rapidjson::Value& cost_json = json["cost"];
-    CostType20Converter     cost_converter;
-    for (auto it = cost_json.Begin(); ret && (it != cost_json.End()); ++it)
+    if (json.HasMember("cost"))
     {
-        CostType20& item = data.cost.emplace_back();
-        ret              = ret && cost_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value& cost_json = json["cost"];
+        CostType20Converter     cost_converter;
+        for (auto it = cost_json.Begin(); ret && (it != cost_json.End()); ++it)
+        {
+            CostType20& item = data.cost.emplace_back();
+            ret              = ret && cost_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -87,20 +90,18 @@ bool ConsumptionCostType20Converter::toJson(const ConsumptionCostType20& data, r
     fill(json, "startValue", data.startValue);
 
     // cost
-    if (!data.cost.empty())
+
+    rapidjson::Value    cost_json(rapidjson::kArrayType);
+    CostType20Converter cost_converter;
+    cost_converter.setAllocator(allocator);
+    for (const CostType20& item : data.cost)
     {
-        rapidjson::Value    cost_json(rapidjson::kArrayType);
-        CostType20Converter cost_converter;
-        cost_converter.setAllocator(allocator);
-        for (const CostType20& item : data.cost)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && cost_converter.toJson(item, item_doc);
-            cost_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("cost"), cost_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && cost_converter.toJson(item, item_doc);
+        cost_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("cost"), cost_json.Move(), *allocator);
 
     return ret;
 }

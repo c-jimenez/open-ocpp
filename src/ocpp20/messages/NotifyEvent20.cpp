@@ -57,12 +57,15 @@ bool NotifyEvent20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "seqNo", data.seqNo);
 
     // eventData
-    const rapidjson::Value&                       eventData_json = json["eventData"];
-    ocpp::types::ocpp20::EventDataType20Converter eventData_converter;
-    for (auto it = eventData_json.Begin(); ret && (it != eventData_json.End()); ++it)
+    if (json.HasMember("eventData"))
     {
-        ocpp::types::ocpp20::EventDataType20& item = data.eventData.emplace_back();
-        ret                                        = ret && eventData_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&                       eventData_json = json["eventData"];
+        ocpp::types::ocpp20::EventDataType20Converter eventData_converter;
+        for (auto it = eventData_json.Begin(); ret && (it != eventData_json.End()); ++it)
+        {
+            ocpp::types::ocpp20::EventDataType20& item = data.eventData.emplace_back();
+            ret                                        = ret && eventData_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -99,20 +102,18 @@ bool NotifyEvent20ReqConverter::toJson(const NotifyEvent20Req& data, rapidjson::
     fill(json, "seqNo", data.seqNo);
 
     // eventData
-    if (!data.eventData.empty())
+
+    rapidjson::Value                              eventData_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::EventDataType20Converter eventData_converter;
+    eventData_converter.setAllocator(allocator);
+    for (const ocpp::types::ocpp20::EventDataType20& item : data.eventData)
     {
-        rapidjson::Value                              eventData_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::EventDataType20Converter eventData_converter;
-        eventData_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::EventDataType20& item : data.eventData)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && eventData_converter.toJson(item, item_doc);
-            eventData_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("eventData"), eventData_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && eventData_converter.toJson(item, item_doc);
+        eventData_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("eventData"), eventData_json.Move(), *allocator);
 
     return ret;
 }

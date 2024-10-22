@@ -73,6 +73,7 @@ if(${BUILD_STATIC_LIBRARY})
         chargepoint
         localcontroller
         centralsystem20
+        chargepoint20
         localcontroller20
         config
         database
@@ -102,6 +103,7 @@ if (${BUILD_SHARED_LIBRARY})
         chargepoint
         localcontroller
         centralsystem20
+        chargepoint20
         localcontroller20
         config
         database

@@ -48,12 +48,15 @@ bool MeterValueType20Converter::fromJson(const rapidjson::Value&       json,
     }
 
     // sampledValue
-    const rapidjson::Value&     sampledValue_json = json["sampledValue"];
-    SampledValueType20Converter sampledValue_converter;
-    for (auto it = sampledValue_json.Begin(); ret && (it != sampledValue_json.End()); ++it)
+    if (json.HasMember("sampledValue"))
     {
-        SampledValueType20& item = data.sampledValue.emplace_back();
-        ret                      = ret && sampledValue_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&     sampledValue_json = json["sampledValue"];
+        SampledValueType20Converter sampledValue_converter;
+        for (auto it = sampledValue_json.Begin(); ret && (it != sampledValue_json.End()); ++it)
+        {
+            SampledValueType20& item = data.sampledValue.emplace_back();
+            ret                      = ret && sampledValue_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     // timestamp
@@ -84,20 +87,18 @@ bool MeterValueType20Converter::toJson(const MeterValueType20& data, rapidjson::
     }
 
     // sampledValue
-    if (!data.sampledValue.empty())
+
+    rapidjson::Value            sampledValue_json(rapidjson::kArrayType);
+    SampledValueType20Converter sampledValue_converter;
+    sampledValue_converter.setAllocator(allocator);
+    for (const SampledValueType20& item : data.sampledValue)
     {
-        rapidjson::Value            sampledValue_json(rapidjson::kArrayType);
-        SampledValueType20Converter sampledValue_converter;
-        sampledValue_converter.setAllocator(allocator);
-        for (const SampledValueType20& item : data.sampledValue)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && sampledValue_converter.toJson(item, item_doc);
-            sampledValue_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("sampledValue"), sampledValue_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && sampledValue_converter.toJson(item, item_doc);
+        sampledValue_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("sampledValue"), sampledValue_json.Move(), *allocator);
 
     // timestamp
     fill(json, "timestamp", data.timestamp);

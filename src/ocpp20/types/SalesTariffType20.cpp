@@ -57,12 +57,15 @@ bool SalesTariffType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "numEPriceLevels", data.numEPriceLevels);
 
     // salesTariffEntry
-    const rapidjson::Value&         salesTariffEntry_json = json["salesTariffEntry"];
-    SalesTariffEntryType20Converter salesTariffEntry_converter;
-    for (auto it = salesTariffEntry_json.Begin(); ret && (it != salesTariffEntry_json.End()); ++it)
+    if (json.HasMember("salesTariffEntry"))
     {
-        SalesTariffEntryType20& item = data.salesTariffEntry.emplace_back();
-        ret                          = ret && salesTariffEntry_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&         salesTariffEntry_json = json["salesTariffEntry"];
+        SalesTariffEntryType20Converter salesTariffEntry_converter;
+        for (auto it = salesTariffEntry_json.Begin(); ret && (it != salesTariffEntry_json.End()); ++it)
+        {
+            SalesTariffEntryType20& item = data.salesTariffEntry.emplace_back();
+            ret                          = ret && salesTariffEntry_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -99,20 +102,18 @@ bool SalesTariffType20Converter::toJson(const SalesTariffType20& data, rapidjson
     fill(json, "numEPriceLevels", data.numEPriceLevels);
 
     // salesTariffEntry
-    if (!data.salesTariffEntry.empty())
+
+    rapidjson::Value                salesTariffEntry_json(rapidjson::kArrayType);
+    SalesTariffEntryType20Converter salesTariffEntry_converter;
+    salesTariffEntry_converter.setAllocator(allocator);
+    for (const SalesTariffEntryType20& item : data.salesTariffEntry)
     {
-        rapidjson::Value                salesTariffEntry_json(rapidjson::kArrayType);
-        SalesTariffEntryType20Converter salesTariffEntry_converter;
-        salesTariffEntry_converter.setAllocator(allocator);
-        for (const SalesTariffEntryType20& item : data.salesTariffEntry)
-        {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
-            ret = ret && salesTariffEntry_converter.toJson(item, item_doc);
-            salesTariffEntry_json.PushBack(item_doc.Move(), *allocator);
-        }
-        json.AddMember(rapidjson::StringRef("salesTariffEntry"), salesTariffEntry_json.Move(), *allocator);
+        rapidjson::Document item_doc;
+        item_doc.Parse("{}");
+        ret = ret && salesTariffEntry_converter.toJson(item, item_doc);
+        salesTariffEntry_json.PushBack(item_doc.Move(), *allocator);
     }
+    json.AddMember(rapidjson::StringRef("salesTariffEntry"), salesTariffEntry_json.Move(), *allocator);
 
     return ret;
 }

@@ -60,11 +60,14 @@ bool IdTokenInfoType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "language1", data.language1);
 
     // evseId
-    const rapidjson::Value& evseId_json = json["evseId"];
-    for (auto it = evseId_json.Begin(); ret && (it != evseId_json.End()); ++it)
+    if (json.HasMember("evseId"))
     {
-        int& item = data.evseId.emplace_back();
-        item      = it->GetInt();
+        const rapidjson::Value& evseId_json = json["evseId"];
+        for (auto it = evseId_json.Begin(); ret && (it != evseId_json.End()); ++it)
+        {
+            int& item = data.evseId.emplace_back();
+            item      = it->GetInt();
+        }
     }
 
     // groupIdToken
@@ -123,6 +126,7 @@ bool IdTokenInfoType20Converter::toJson(const IdTokenInfoType20& data, rapidjson
     // evseId
     if (!data.evseId.empty())
     {
+
         rapidjson::Value evseId_json(rapidjson::kArrayType);
         for (const int& item : data.evseId)
         {

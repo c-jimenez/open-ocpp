@@ -56,12 +56,15 @@ bool SalesTariffEntryType20Converter::fromJson(const rapidjson::Value&       jso
     extract(json, "ePriceLevel", data.ePriceLevel);
 
     // consumptionCost
-    const rapidjson::Value&        consumptionCost_json = json["consumptionCost"];
-    ConsumptionCostType20Converter consumptionCost_converter;
-    for (auto it = consumptionCost_json.Begin(); ret && (it != consumptionCost_json.End()); ++it)
+    if (json.HasMember("consumptionCost"))
     {
-        ConsumptionCostType20& item = data.consumptionCost.emplace_back();
-        ret                         = ret && consumptionCost_converter.fromJson(*it, item, error_code, error_message);
+        const rapidjson::Value&        consumptionCost_json = json["consumptionCost"];
+        ConsumptionCostType20Converter consumptionCost_converter;
+        for (auto it = consumptionCost_json.Begin(); ret && (it != consumptionCost_json.End()); ++it)
+        {
+            ConsumptionCostType20& item = data.consumptionCost.emplace_back();
+            ret                         = ret && consumptionCost_converter.fromJson(*it, item, error_code, error_message);
+        }
     }
 
     if (!ret)
@@ -102,6 +105,7 @@ bool SalesTariffEntryType20Converter::toJson(const SalesTariffEntryType20& data,
     // consumptionCost
     if (!data.consumptionCost.empty())
     {
+
         rapidjson::Value               consumptionCost_json(rapidjson::kArrayType);
         ConsumptionCostType20Converter consumptionCost_converter;
         consumptionCost_converter.setAllocator(allocator);

@@ -83,14 +83,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "UpdateFirmware20.h"
 
 /** @brief Macro to register a message converter for an OCPP action */
-#define REGISTER_CONVERTER(action)                                               \
-    registerRequestConverter<action##Req>(#action, *new action##ReqConverter()); \
-    registerResponseConverter<action##Conf>(#action, *new action##ConfConverter())
+#define REGISTER_CONVERTER(action)                                                   \
+    registerRequestConverter<action##20Req>(#action, *new action##20ReqConverter()); \
+    registerResponseConverter<action##20Conf>(#action, *new action##20ConfConverter())
 
 /** @brief Macro to delete a message converter for an OCPP action */
-#define DELETE_CONVERTER(action)                  \
-    deleteRequestConverter<action##Req>(#action); \
-    deleteResponseConverter<action##Conf>(#action)
+#define DELETE_CONVERTER(action)                    \
+    deleteRequestConverter<action##20Req>(#action); \
+    deleteResponseConverter<action##20Conf>(#action)
 
 namespace ocpp
 {
@@ -103,141 +103,141 @@ namespace ocpp20
 MessagesConverter20::MessagesConverter20()
 {
     // Register converters
-    REGISTER_CONVERTER(CancelReservation20);
-    REGISTER_CONVERTER(CertificateSigned20);
-    REGISTER_CONVERTER(ChangeAvailability20);
-    REGISTER_CONVERTER(ClearCache20);
-    REGISTER_CONVERTER(ClearChargingProfile20);
-    REGISTER_CONVERTER(ClearDisplayMessage20);
-    REGISTER_CONVERTER(ClearVariableMonitoring20);
-    REGISTER_CONVERTER(CustomerInformation20);
-    REGISTER_CONVERTER(DataTransfer20);
-    REGISTER_CONVERTER(DeleteCertificate20);
-    REGISTER_CONVERTER(Get15118EVCertificate20);
-    REGISTER_CONVERTER(GetBaseReport20);
-    REGISTER_CONVERTER(GetCertificateStatus20);
-    REGISTER_CONVERTER(GetChargingProfiles20);
-    REGISTER_CONVERTER(GetCompositeSchedule20);
-    REGISTER_CONVERTER(GetDisplayMessages20);
-    REGISTER_CONVERTER(GetInstalledCertificateIds20);
-    REGISTER_CONVERTER(GetLocalListVersion20);
-    REGISTER_CONVERTER(GetLog20);
-    REGISTER_CONVERTER(GetMonitoringReport20);
-    REGISTER_CONVERTER(GetReport20);
-    REGISTER_CONVERTER(GetTransactionStatus20);
-    REGISTER_CONVERTER(GetVariables20);
-    REGISTER_CONVERTER(InstallCertificate20);
-    REGISTER_CONVERTER(PublishFirmware20);
-    REGISTER_CONVERTER(RequestStartTransaction20);
-    REGISTER_CONVERTER(RequestStopTransaction20);
-    REGISTER_CONVERTER(ReserveNow20);
-    REGISTER_CONVERTER(Reset20);
-    REGISTER_CONVERTER(SendLocalList20);
-    REGISTER_CONVERTER(SetChargingProfile20);
-    REGISTER_CONVERTER(SetDisplayMessage20);
-    REGISTER_CONVERTER(SetMonitoringBase20);
-    REGISTER_CONVERTER(SetMonitoringLevel20);
-    REGISTER_CONVERTER(SetNetworkProfile20);
-    REGISTER_CONVERTER(SetVariableMonitoring20);
-    REGISTER_CONVERTER(SetVariables20);
-    REGISTER_CONVERTER(TriggerMessage20);
-    REGISTER_CONVERTER(UnlockConnector20);
-    REGISTER_CONVERTER(UnpublishFirmware20);
-    REGISTER_CONVERTER(UpdateFirmware20);
-    REGISTER_CONVERTER(BootNotification20);
-    REGISTER_CONVERTER(Authorize20);
-    REGISTER_CONVERTER(ClearedChargingLimit20);
-    REGISTER_CONVERTER(CostUpdated20);
-    REGISTER_CONVERTER(DataTransfer20);
-    REGISTER_CONVERTER(FirmwareStatusNotification20);
-    REGISTER_CONVERTER(Heartbeat20);
-    REGISTER_CONVERTER(LogStatusNotification20);
-    REGISTER_CONVERTER(MeterValues20);
-    REGISTER_CONVERTER(NotifyChargingLimit20);
-    REGISTER_CONVERTER(NotifyCustomerInformation20);
-    REGISTER_CONVERTER(NotifyDisplayMessages20);
-    REGISTER_CONVERTER(NotifyEVChargingNeeds20);
-    REGISTER_CONVERTER(NotifyEVChargingSchedule20);
-    REGISTER_CONVERTER(NotifyEvent20);
-    REGISTER_CONVERTER(NotifyMonitoringReport20);
-    REGISTER_CONVERTER(NotifyReport20);
-    REGISTER_CONVERTER(PublishFirmwareStatusNotification20);
-    REGISTER_CONVERTER(ReportChargingProfiles20);
-    REGISTER_CONVERTER(ReservationStatusUpdate20);
-    REGISTER_CONVERTER(SecurityEventNotification20);
-    REGISTER_CONVERTER(SignCertificate20);
-    REGISTER_CONVERTER(StatusNotification20);
-    REGISTER_CONVERTER(TransactionEvent20);
+    REGISTER_CONVERTER(CancelReservation);
+    REGISTER_CONVERTER(CertificateSigned);
+    REGISTER_CONVERTER(ChangeAvailability);
+    REGISTER_CONVERTER(ClearCache);
+    REGISTER_CONVERTER(ClearChargingProfile);
+    REGISTER_CONVERTER(ClearDisplayMessage);
+    REGISTER_CONVERTER(ClearVariableMonitoring);
+    REGISTER_CONVERTER(CustomerInformation);
+    REGISTER_CONVERTER(DataTransfer);
+    REGISTER_CONVERTER(DeleteCertificate);
+    REGISTER_CONVERTER(Get15118EVCertificate);
+    REGISTER_CONVERTER(GetBaseReport);
+    REGISTER_CONVERTER(GetCertificateStatus);
+    REGISTER_CONVERTER(GetChargingProfiles);
+    REGISTER_CONVERTER(GetCompositeSchedule);
+    REGISTER_CONVERTER(GetDisplayMessages);
+    REGISTER_CONVERTER(GetInstalledCertificateIds);
+    REGISTER_CONVERTER(GetLocalListVersion);
+    REGISTER_CONVERTER(GetLog);
+    REGISTER_CONVERTER(GetMonitoringReport);
+    REGISTER_CONVERTER(GetReport);
+    REGISTER_CONVERTER(GetTransactionStatus);
+    REGISTER_CONVERTER(GetVariables);
+    REGISTER_CONVERTER(InstallCertificate);
+    REGISTER_CONVERTER(PublishFirmware);
+    REGISTER_CONVERTER(RequestStartTransaction);
+    REGISTER_CONVERTER(RequestStopTransaction);
+    REGISTER_CONVERTER(ReserveNow);
+    REGISTER_CONVERTER(Reset);
+    REGISTER_CONVERTER(SendLocalList);
+    REGISTER_CONVERTER(SetChargingProfile);
+    REGISTER_CONVERTER(SetDisplayMessage);
+    REGISTER_CONVERTER(SetMonitoringBase);
+    REGISTER_CONVERTER(SetMonitoringLevel);
+    REGISTER_CONVERTER(SetNetworkProfile);
+    REGISTER_CONVERTER(SetVariableMonitoring);
+    REGISTER_CONVERTER(SetVariables);
+    REGISTER_CONVERTER(TriggerMessage);
+    REGISTER_CONVERTER(UnlockConnector);
+    REGISTER_CONVERTER(UnpublishFirmware);
+    REGISTER_CONVERTER(UpdateFirmware);
+    REGISTER_CONVERTER(BootNotification);
+    REGISTER_CONVERTER(Authorize);
+    REGISTER_CONVERTER(ClearedChargingLimit);
+    REGISTER_CONVERTER(CostUpdated);
+    REGISTER_CONVERTER(DataTransfer);
+    REGISTER_CONVERTER(FirmwareStatusNotification);
+    REGISTER_CONVERTER(Heartbeat);
+    REGISTER_CONVERTER(LogStatusNotification);
+    REGISTER_CONVERTER(MeterValues);
+    REGISTER_CONVERTER(NotifyChargingLimit);
+    REGISTER_CONVERTER(NotifyCustomerInformation);
+    REGISTER_CONVERTER(NotifyDisplayMessages);
+    REGISTER_CONVERTER(NotifyEVChargingNeeds);
+    REGISTER_CONVERTER(NotifyEVChargingSchedule);
+    REGISTER_CONVERTER(NotifyEvent);
+    REGISTER_CONVERTER(NotifyMonitoringReport);
+    REGISTER_CONVERTER(NotifyReport);
+    REGISTER_CONVERTER(PublishFirmwareStatusNotification);
+    REGISTER_CONVERTER(ReportChargingProfiles);
+    REGISTER_CONVERTER(ReservationStatusUpdate);
+    REGISTER_CONVERTER(SecurityEventNotification);
+    REGISTER_CONVERTER(SignCertificate);
+    REGISTER_CONVERTER(StatusNotification);
+    REGISTER_CONVERTER(TransactionEvent);
 }
 /** @brief Destructor */
 MessagesConverter20::~MessagesConverter20()
 {
     // Free memory
-    DELETE_CONVERTER(CancelReservation20);
-    DELETE_CONVERTER(CertificateSigned20);
-    DELETE_CONVERTER(ChangeAvailability20);
-    DELETE_CONVERTER(ClearCache20);
-    DELETE_CONVERTER(ClearChargingProfile20);
-    DELETE_CONVERTER(ClearDisplayMessage20);
-    DELETE_CONVERTER(ClearVariableMonitoring20);
-    DELETE_CONVERTER(CustomerInformation20);
-    DELETE_CONVERTER(DataTransfer20);
-    DELETE_CONVERTER(DeleteCertificate20);
-    DELETE_CONVERTER(Get15118EVCertificate20);
-    DELETE_CONVERTER(GetBaseReport20);
-    DELETE_CONVERTER(GetCertificateStatus20);
-    DELETE_CONVERTER(GetChargingProfiles20);
-    DELETE_CONVERTER(GetCompositeSchedule20);
-    DELETE_CONVERTER(GetDisplayMessages20);
-    DELETE_CONVERTER(GetInstalledCertificateIds20);
-    DELETE_CONVERTER(GetLocalListVersion20);
-    DELETE_CONVERTER(GetLog20);
-    DELETE_CONVERTER(GetMonitoringReport20);
-    DELETE_CONVERTER(GetReport20);
-    DELETE_CONVERTER(GetTransactionStatus20);
-    DELETE_CONVERTER(GetVariables20);
-    DELETE_CONVERTER(InstallCertificate20);
-    DELETE_CONVERTER(PublishFirmware20);
-    DELETE_CONVERTER(RequestStartTransaction20);
-    DELETE_CONVERTER(RequestStopTransaction20);
-    DELETE_CONVERTER(ReserveNow20);
-    DELETE_CONVERTER(Reset20);
-    DELETE_CONVERTER(SendLocalList20);
-    DELETE_CONVERTER(SetChargingProfile20);
-    DELETE_CONVERTER(SetDisplayMessage20);
-    DELETE_CONVERTER(SetMonitoringBase20);
-    DELETE_CONVERTER(SetMonitoringLevel20);
-    DELETE_CONVERTER(SetNetworkProfile20);
-    DELETE_CONVERTER(SetVariableMonitoring20);
-    DELETE_CONVERTER(SetVariables20);
-    DELETE_CONVERTER(TriggerMessage20);
-    DELETE_CONVERTER(UnlockConnector20);
-    DELETE_CONVERTER(UnpublishFirmware20);
-    DELETE_CONVERTER(UpdateFirmware20);
-    DELETE_CONVERTER(BootNotification20);
-    DELETE_CONVERTER(Authorize20);
-    DELETE_CONVERTER(ClearedChargingLimit20);
-    DELETE_CONVERTER(CostUpdated20);
-    DELETE_CONVERTER(DataTransfer20);
-    DELETE_CONVERTER(FirmwareStatusNotification20);
-    DELETE_CONVERTER(Heartbeat20);
-    DELETE_CONVERTER(LogStatusNotification20);
-    DELETE_CONVERTER(MeterValues20);
-    DELETE_CONVERTER(NotifyChargingLimit20);
-    DELETE_CONVERTER(NotifyCustomerInformation20);
-    DELETE_CONVERTER(NotifyDisplayMessages20);
-    DELETE_CONVERTER(NotifyEVChargingNeeds20);
-    DELETE_CONVERTER(NotifyEVChargingSchedule20);
-    DELETE_CONVERTER(NotifyEvent20);
-    DELETE_CONVERTER(NotifyMonitoringReport20);
-    DELETE_CONVERTER(NotifyReport20);
-    DELETE_CONVERTER(PublishFirmwareStatusNotification20);
-    DELETE_CONVERTER(ReportChargingProfiles20);
-    DELETE_CONVERTER(ReservationStatusUpdate20);
-    DELETE_CONVERTER(SecurityEventNotification20);
-    DELETE_CONVERTER(SignCertificate20);
-    DELETE_CONVERTER(StatusNotification20);
-    DELETE_CONVERTER(TransactionEvent20);
+    DELETE_CONVERTER(CancelReservation);
+    DELETE_CONVERTER(CertificateSigned);
+    DELETE_CONVERTER(ChangeAvailability);
+    DELETE_CONVERTER(ClearCache);
+    DELETE_CONVERTER(ClearChargingProfile);
+    DELETE_CONVERTER(ClearDisplayMessage);
+    DELETE_CONVERTER(ClearVariableMonitoring);
+    DELETE_CONVERTER(CustomerInformation);
+    DELETE_CONVERTER(DataTransfer);
+    DELETE_CONVERTER(DeleteCertificate);
+    DELETE_CONVERTER(Get15118EVCertificate);
+    DELETE_CONVERTER(GetBaseReport);
+    DELETE_CONVERTER(GetCertificateStatus);
+    DELETE_CONVERTER(GetChargingProfiles);
+    DELETE_CONVERTER(GetCompositeSchedule);
+    DELETE_CONVERTER(GetDisplayMessages);
+    DELETE_CONVERTER(GetInstalledCertificateIds);
+    DELETE_CONVERTER(GetLocalListVersion);
+    DELETE_CONVERTER(GetLog);
+    DELETE_CONVERTER(GetMonitoringReport);
+    DELETE_CONVERTER(GetReport);
+    DELETE_CONVERTER(GetTransactionStatus);
+    DELETE_CONVERTER(GetVariables);
+    DELETE_CONVERTER(InstallCertificate);
+    DELETE_CONVERTER(PublishFirmware);
+    DELETE_CONVERTER(RequestStartTransaction);
+    DELETE_CONVERTER(RequestStopTransaction);
+    DELETE_CONVERTER(ReserveNow);
+    DELETE_CONVERTER(Reset);
+    DELETE_CONVERTER(SendLocalList);
+    DELETE_CONVERTER(SetChargingProfile);
+    DELETE_CONVERTER(SetDisplayMessage);
+    DELETE_CONVERTER(SetMonitoringBase);
+    DELETE_CONVERTER(SetMonitoringLevel);
+    DELETE_CONVERTER(SetNetworkProfile);
+    DELETE_CONVERTER(SetVariableMonitoring);
+    DELETE_CONVERTER(SetVariables);
+    DELETE_CONVERTER(TriggerMessage);
+    DELETE_CONVERTER(UnlockConnector);
+    DELETE_CONVERTER(UnpublishFirmware);
+    DELETE_CONVERTER(UpdateFirmware);
+    DELETE_CONVERTER(BootNotification);
+    DELETE_CONVERTER(Authorize);
+    DELETE_CONVERTER(ClearedChargingLimit);
+    DELETE_CONVERTER(CostUpdated);
+    DELETE_CONVERTER(DataTransfer);
+    DELETE_CONVERTER(FirmwareStatusNotification);
+    DELETE_CONVERTER(Heartbeat);
+    DELETE_CONVERTER(LogStatusNotification);
+    DELETE_CONVERTER(MeterValues);
+    DELETE_CONVERTER(NotifyChargingLimit);
+    DELETE_CONVERTER(NotifyCustomerInformation);
+    DELETE_CONVERTER(NotifyDisplayMessages);
+    DELETE_CONVERTER(NotifyEVChargingNeeds);
+    DELETE_CONVERTER(NotifyEVChargingSchedule);
+    DELETE_CONVERTER(NotifyEvent);
+    DELETE_CONVERTER(NotifyMonitoringReport);
+    DELETE_CONVERTER(NotifyReport);
+    DELETE_CONVERTER(PublishFirmwareStatusNotification);
+    DELETE_CONVERTER(ReportChargingProfiles);
+    DELETE_CONVERTER(ReservationStatusUpdate);
+    DELETE_CONVERTER(SecurityEventNotification);
+    DELETE_CONVERTER(SignCertificate);
+    DELETE_CONVERTER(StatusNotification);
+    DELETE_CONVERTER(TransactionEvent);
 }
 
 } // namespace ocpp20
