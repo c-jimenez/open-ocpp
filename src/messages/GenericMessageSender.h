@@ -19,10 +19,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_GENERICMESSAGESENDER_H
 #define OPENOCPP_GENERICMESSAGESENDER_H
 
+#include "EnumToStringFromString.h"
+#include "GenericMessagesConverter.h"
+#include "IMessagesValidator.h"
 #include "IRequestFifo.h"
 #include "IRpc.h"
-#include "MessagesConverter.h"
-#include "MessagesValidator.h"
 
 namespace ocpp
 {
@@ -42,14 +43,17 @@ enum class CallResult
     Error
 };
 
+/** @brief Helper to convert a CallResult enum to string */
+extern const ocpp::types::EnumToStringFromString<CallResult> CallResultHelper;
+
 /** @brief Generic message sender with C++ data type to JSON conversion */
 class GenericMessageSender
 {
   public:
     /** @brief Constructor */
     GenericMessageSender(ocpp::rpc::IRpc&          rpc,
-                         MessagesConverter&        messages_converter,
-                         const MessagesValidator&  messages_validator,
+                         GenericMessagesConverter& messages_converter,
+                         const IMessagesValidator& messages_validator,
                          std::chrono::milliseconds timeout)
         : m_rpc(rpc), m_messages_converter(messages_converter), m_messages_validator(messages_validator), m_timeout(timeout)
     {
@@ -245,9 +249,9 @@ class GenericMessageSender
     /** @brief RPC */
     ocpp::rpc::IRpc& m_rpc;
     /** @brief Messages converter */
-    MessagesConverter& m_messages_converter;
+    GenericMessagesConverter& m_messages_converter;
     /** @brief Messages validator */
-    const MessagesValidator& m_messages_validator;
+    const IMessagesValidator& m_messages_validator;
     /** @brief Request timeout */
     std::chrono::milliseconds m_timeout;
 };

@@ -4,8 +4,8 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 protocol"
-                 VERSION 1.5.6
+project(OpenOCPP DESCRIPTION "Open Source C++ implementation of the OCPP 1.6 and 2.0.1 protocols"
+                 VERSION 2.0.0
 )
 
 # Definitions for Version.h file
@@ -72,9 +72,15 @@ if(${BUILD_STATIC_LIBRARY})
         centralsystem
         chargepoint
         localcontroller
+        centralsystem20
+        chargepoint20
+        localcontroller20
         config
         database
         messages
+        messages16
+        messages20
+        types20
         rpc
         helpers
         log
@@ -96,9 +102,15 @@ if (${BUILD_SHARED_LIBRARY})
         centralsystem
         chargepoint
         localcontroller
+        centralsystem20
+        chargepoint20
+        localcontroller20
         config
         database
         messages
+        messages16
+        messages20
+        types20
         rpc
         helpers
         log
@@ -121,8 +133,10 @@ include(GNUInstallDirs)
 
 file(GLOB_RECURSE PUBLIC_HEADERS
      LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/src/*.h")
-file(GLOB OCPP_SCHEMAS
-     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/schemas/*.json")
+file(GLOB OCPP16_SCHEMAS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/schemas/ocpp16/*.json")
+file(GLOB OCPP20_SCHEMAS
+     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/schemas/ocpp20/*.json")
 
 install(TARGETS ${OPEN_OCPP_SHARED_TARGET} ${OPEN_OCPP_STATIC_TARGET}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -130,7 +144,8 @@ install(TARGETS ${OPEN_OCPP_SHARED_TARGET} ${OPEN_OCPP_STATIC_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp)
-install(FILES ${OCPP_SCHEMAS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/schemas)
+install(FILES ${OCPP16_SCHEMAS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/schemas/ocpp16)
+install(FILES ${OCPP20_SCHEMAS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/schemas/ocpp20)
 
 file(GLOB RAPIDJSON_HEADERS
      LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/*.h")

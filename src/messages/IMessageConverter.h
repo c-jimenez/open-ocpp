@@ -287,28 +287,22 @@ class IMessageConverter
  *  @param MessageType Message type name
  */
 #define MESSAGE_CONVERTERS(MessageType)                                                                                                    \
-    class MessageType##ReqConverter : public IMessageConverter<MessageType##Req>                                                           \
+    class MessageType##ReqConverter : public ocpp::messages::IMessageConverter<MessageType##Req>                                           \
     {                                                                                                                                      \
       public:                                                                                                                              \
-        IMessageConverter<MessageType##Req>* clone() const override                                                                        \
-        {                                                                                                                                  \
-            return new MessageType##ReqConverter();                                                                                        \
-        }                                                                                                                                  \
+        IMessageConverter<MessageType##Req>* clone() const override { return new MessageType##ReqConverter(); }                            \
         bool fromJson(const rapidjson::Value& json, MessageType##Req& data, std::string& error_code, std::string& error_message) override; \
         bool toJson(const MessageType##Req& data, rapidjson::Document& json) override;                                                     \
     };                                                                                                                                     \
-    class MessageType##ConfConverter : public IMessageConverter<MessageType##Conf>                                                         \
+    class MessageType##ConfConverter : public ocpp::messages::IMessageConverter<MessageType##Conf>                                         \
     {                                                                                                                                      \
       public:                                                                                                                              \
-        IMessageConverter<MessageType##Conf>* clone() const override                                                                       \
-        {                                                                                                                                  \
-            return new MessageType##ConfConverter();                                                                                       \
-        }                                                                                                                                  \
-        bool fromJson(const rapidjson::Value& json,                                                                                        \
-                      MessageType##Conf&      data,                                                                                        \
-                      std::string&            error_code,                                                                                  \
-                      std::string&            error_message) override;                                                                                \
-        bool toJson(const MessageType##Conf& data, rapidjson::Document& json) override;                                                    \
+        IMessageConverter<MessageType##Conf>* clone() const override { return new MessageType##ConfConverter(); }                          \
+        bool                                  fromJson(const rapidjson::Value& json,                                                       \
+                                                       MessageType##Conf&      data,                                                       \
+                                                       std::string&            error_code,                                                 \
+                                                       std::string&            error_message) override;                                               \
+        bool                                  toJson(const MessageType##Conf& data, rapidjson::Document& json) override;                   \
     };
 
 } // namespace messages

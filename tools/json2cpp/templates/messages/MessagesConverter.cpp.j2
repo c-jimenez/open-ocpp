@@ -1,0 +1,70 @@
+/*
+Copyright (c) 2020 Cedric Jimenez
+This file is part of OpenOCPP.
+
+OpenOCPP is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 2.1 of the License, or
+(at your option) any later version.
+
+OpenOCPP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "MessagesConverter20.h"
+
+{%- for msg_name in csms_msgs %}
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
+{%- endfor %}
+{%- for msg_name in cs_msgs %}
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
+{%- endfor %}
+
+/** @brief Macro to register a message converter for an OCPP action */
+#define REGISTER_CONVERTER(action)                                               \
+    registerRequestConverter<action##Req>(#action, *new action##ReqConverter()); \
+    registerResponseConverter<action##Conf>(#action, *new action##ConfConverter())
+
+/** @brief Macro to delete a message converter for an OCPP action */
+#define DELETE_CONVERTER(action)                  \
+    deleteRequestConverter<action##Req>(#action); \
+    deleteResponseConverter<action##Conf>(#action)
+
+namespace ocpp
+{
+namespace messages
+{
+namespace ocpp20
+{
+
+/** @brief Constructor */
+MessagesConverter20::MessagesConverter20()
+{
+    // Register converters
+    {%- for msg_name in csms_msgs %}
+    REGISTER_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
+    {%- endfor %}
+    {%- for msg_name in cs_msgs %}
+    REGISTER_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
+    {%- endfor %}
+}
+/** @brief Destructor */
+MessagesConverter20::~MessagesConverter20()
+{
+    // Free memory
+    {%- for msg_name in csms_msgs %}
+    DELETE_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
+    {%- endfor %}
+    {%- for msg_name in cs_msgs %}
+    DELETE_CONVERTER({{msg_name.replace(ocpp_version_suffix, "")}});
+    {%- endfor %}
+}
+
+} // namespace ocpp20
+} // namespace messages
+} // namespace ocpp
