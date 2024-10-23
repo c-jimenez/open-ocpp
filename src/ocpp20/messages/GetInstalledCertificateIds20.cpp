@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a GetInstalledCertificateIds20Req from a JSON representation */
-bool GetInstalledCertificateIds20ReqConverter::fromJson(const rapidjson::Value&          json,
-                                                        GetInstalledCertificateIds20Req& data,
-                                                        std::string&                     error_code,
-                                                        std::string&                     error_message)
+/** @brief Convert a GetInstalledCertificateIdsReq from a JSON representation */
+bool GetInstalledCertificateIdsReqConverter::fromJson(const rapidjson::Value&        json,
+                                                      GetInstalledCertificateIdsReq& data,
+                                                      std::string&                   error_code,
+                                                      std::string&                   error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,8 +53,8 @@ bool GetInstalledCertificateIds20ReqConverter::fromJson(const rapidjson::Value& 
         const rapidjson::Value& certificateType_json = json["certificateType"];
         for (auto it = certificateType_json.Begin(); ret && (it != certificateType_json.End()); ++it)
         {
-            ocpp::types::ocpp20::GetCertificateIdUseEnumType20& item = data.certificateType.emplace_back();
-            item = ocpp::types::ocpp20::GetCertificateIdUseEnumType20Helper.fromString(it->GetString());
+            ocpp::types::ocpp20::GetCertificateIdUseEnumType& item = data.certificateType.emplace_back();
+            item = ocpp::types::ocpp20::GetCertificateIdUseEnumTypeHelper.fromString(it->GetString());
         }
     }
 
@@ -66,15 +66,15 @@ bool GetInstalledCertificateIds20ReqConverter::fromJson(const rapidjson::Value& 
     return ret;
 }
 
-/** @brief Convert a GetInstalledCertificateIds20Req to a JSON representation */
-bool GetInstalledCertificateIds20ReqConverter::toJson(const GetInstalledCertificateIds20Req& data, rapidjson::Document& json)
+/** @brief Convert a GetInstalledCertificateIdsReq to a JSON representation */
+bool GetInstalledCertificateIdsReqConverter::toJson(const GetInstalledCertificateIdsReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -87,10 +87,10 @@ bool GetInstalledCertificateIds20ReqConverter::toJson(const GetInstalledCertific
     {
 
         rapidjson::Value certificateType_json(rapidjson::kArrayType);
-        for (const ocpp::types::ocpp20::GetCertificateIdUseEnumType20& item : data.certificateType)
+        for (const ocpp::types::ocpp20::GetCertificateIdUseEnumType& item : data.certificateType)
         {
             certificateType_json.PushBack(
-                rapidjson::Value(ocpp::types::ocpp20::GetCertificateIdUseEnumType20Helper.toString(item).c_str(), *allocator).Move(),
+                rapidjson::Value(ocpp::types::ocpp20::GetCertificateIdUseEnumTypeHelper.toString(item).c_str(), *allocator).Move(),
                 *allocator);
         }
         json.AddMember(rapidjson::StringRef("certificateType"), certificateType_json.Move(), *allocator);
@@ -99,39 +99,39 @@ bool GetInstalledCertificateIds20ReqConverter::toJson(const GetInstalledCertific
     return ret;
 }
 
-/** @brief Convert a GetInstalledCertificateIds20Conf from a JSON representation */
-bool GetInstalledCertificateIds20ConfConverter::fromJson(const rapidjson::Value&           json,
-                                                         GetInstalledCertificateIds20Conf& data,
-                                                         std::string&                      error_code,
-                                                         std::string&                      error_message)
+/** @brief Convert a GetInstalledCertificateIdsConf from a JSON representation */
+bool GetInstalledCertificateIdsConfConverter::fromJson(const rapidjson::Value&         json,
+                                                       GetInstalledCertificateIdsConf& data,
+                                                       std::string&                    error_code,
+                                                       std::string&                    error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::GetInstalledCertificateStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::GetInstalledCertificateStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
     // certificateHashDataChain
     if (json.HasMember("certificateHashDataChain"))
     {
-        const rapidjson::Value&                                      certificateHashDataChain_json = json["certificateHashDataChain"];
-        ocpp::types::ocpp20::CertificateHashDataChainType20Converter certificateHashDataChain_converter;
+        const rapidjson::Value&                                    certificateHashDataChain_json = json["certificateHashDataChain"];
+        ocpp::types::ocpp20::CertificateHashDataChainTypeConverter certificateHashDataChain_converter;
         for (auto it = certificateHashDataChain_json.Begin(); ret && (it != certificateHashDataChain_json.End()); ++it)
         {
-            ocpp::types::ocpp20::CertificateHashDataChainType20& item = data.certificateHashDataChain.emplace_back();
+            ocpp::types::ocpp20::CertificateHashDataChainType& item = data.certificateHashDataChain.emplace_back();
             ret = ret && certificateHashDataChain_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -144,15 +144,15 @@ bool GetInstalledCertificateIds20ConfConverter::fromJson(const rapidjson::Value&
     return ret;
 }
 
-/** @brief Convert a GetInstalledCertificateIds20Conf to a JSON representation */
-bool GetInstalledCertificateIds20ConfConverter::toJson(const GetInstalledCertificateIds20Conf& data, rapidjson::Document& json)
+/** @brief Convert a GetInstalledCertificateIdsConf to a JSON representation */
+bool GetInstalledCertificateIdsConfConverter::toJson(const GetInstalledCertificateIdsConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -161,12 +161,12 @@ bool GetInstalledCertificateIds20ConfConverter::toJson(const GetInstalledCertifi
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::GetInstalledCertificateStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::GetInstalledCertificateStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");
@@ -178,10 +178,10 @@ bool GetInstalledCertificateIds20ConfConverter::toJson(const GetInstalledCertifi
     if (!data.certificateHashDataChain.empty())
     {
 
-        rapidjson::Value                                             certificateHashDataChain_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::CertificateHashDataChainType20Converter certificateHashDataChain_converter;
+        rapidjson::Value                                           certificateHashDataChain_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::CertificateHashDataChainTypeConverter certificateHashDataChain_converter;
         certificateHashDataChain_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::CertificateHashDataChainType20& item : data.certificateHashDataChain)
+        for (const ocpp::types::ocpp20::CertificateHashDataChainType& item : data.certificateHashDataChain)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_OCSPREQUESTDATATYPE20_H
-#define OPENOCPP_OCSPREQUESTDATATYPE20_H
+#ifndef OPENOCPP_OCPP20_OCSPREQUESTDATATYPE_H
+#define OPENOCPP_OCPP20_OCSPREQUESTDATATYPE_H
 
 #include "CustomDataType20.h"
 #include "HashAlgorithmEnumType20.h"
@@ -39,12 +39,12 @@ namespace ocpp20
 {
 
 /** @brief  */
-struct OCSPRequestDataType20
+struct OCSPRequestDataType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    HashAlgorithmEnumType20 hashAlgorithm;
+    HashAlgorithmEnumType hashAlgorithm;
     /** @brief Hashed value of the Issuer DN (Distinguished Name). */
     ocpp::types::CiStringType<128u> issuerNameHash;
     /** @brief Hashed value of the issuers public key */
@@ -55,25 +55,25 @@ struct OCSPRequestDataType20
     ocpp::types::CiStringType<512u> responderURL;
 };
 
-/** @brief Converter class for OCSPRequestDataType20 type */
-class OCSPRequestDataType20Converter : public ocpp::messages::IMessageConverter<OCSPRequestDataType20>
+/** @brief Converter class for OCSPRequestDataType type */
+class OCSPRequestDataTypeConverter : public ocpp::messages::IMessageConverter<OCSPRequestDataType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<OCSPRequestDataType20>* clone() const override { return new OCSPRequestDataType20Converter(); }
+    ocpp::messages::IMessageConverter<OCSPRequestDataType>* clone() const override { return new OCSPRequestDataTypeConverter(); }
 
-    /** @brief Convert a OCSPRequestDataType20 from a JSON representation */
+    /** @brief Convert a OCSPRequestDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  OCSPRequestDataType20&        data,
+                  OCSPRequestDataType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a OCSPRequestDataType20 to a JSON representation */
-    bool toJson(const OCSPRequestDataType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a OCSPRequestDataType to a JSON representation */
+    bool toJson(const OCSPRequestDataType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_OCSPREQUESTDATATYPE20_H
+#endif // OPENOCPP_OCPP20_OCSPREQUESTDATATYPE_H

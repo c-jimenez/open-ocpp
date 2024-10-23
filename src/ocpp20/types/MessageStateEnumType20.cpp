@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MessageStateEnumType20 enum to string */
-const EnumToStringFromString<MessageStateEnumType20> MessageStateEnumType20Helper = {
-    {MessageStateEnumType20::Charging, "Charging"},
-    {MessageStateEnumType20::Faulted, "Faulted"},
-    {MessageStateEnumType20::Idle, "Idle"},
-    {MessageStateEnumType20::Unavailable, "Unavailable"},
+/** @brief Helper to convert a MessageStateEnumType enum to string */
+const EnumToStringFromString<MessageStateEnumType> MessageStateEnumTypeHelper = {
+    {MessageStateEnumType::Charging, "Charging"},
+    {MessageStateEnumType::Faulted, "Faulted"},
+    {MessageStateEnumType::Idle, "Idle"},
+    {MessageStateEnumType::Unavailable, "Unavailable"},
 };
 
 } // namespace ocpp20

@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a DataTransferStatusEnumType20 enum to string */
-const EnumToStringFromString<DataTransferStatusEnumType20> DataTransferStatusEnumType20Helper = {
-    {DataTransferStatusEnumType20::Accepted, "Accepted"},
-    {DataTransferStatusEnumType20::Rejected, "Rejected"},
-    {DataTransferStatusEnumType20::UnknownMessageId, "UnknownMessageId"},
-    {DataTransferStatusEnumType20::UnknownVendorId, "UnknownVendorId"},
+/** @brief Helper to convert a DataTransferStatusEnumType enum to string */
+const EnumToStringFromString<DataTransferStatusEnumType> DataTransferStatusEnumTypeHelper = {
+    {DataTransferStatusEnumType::Accepted, "Accepted"},
+    {DataTransferStatusEnumType::Rejected, "Rejected"},
+    {DataTransferStatusEnumType::UnknownMessageId, "UnknownMessageId"},
+    {DataTransferStatusEnumType::UnknownVendorId, "UnknownVendorId"},
 };
 
 } // namespace ocpp20

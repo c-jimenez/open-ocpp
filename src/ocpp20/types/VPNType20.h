@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VPNTYPE20_H
-#define OPENOCPP_VPNTYPE20_H
+#ifndef OPENOCPP_OCPP20_VPNTYPE_H
+#define OPENOCPP_OCPP20_VPNTYPE_H
 
 #include "CustomDataType20.h"
 #include "VPNEnumType20.h"
@@ -42,10 +42,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233268
 VPN Configuration settings
  */
-struct VPNType20
+struct VPNType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief VPN. Server. URI
 urn:x-oca:ocpp:uid:1:569272
 VPN Server Address */
@@ -67,28 +67,28 @@ urn:x-oca:ocpp:uid:1:569276
 VPN shared secret. */
     ocpp::types::CiStringType<255u> key;
     /** @brief  */
-    VPNEnumType20 type;
+    VPNEnumType type;
 };
 
-/** @brief Converter class for VPNType20 type */
-class VPNType20Converter : public ocpp::messages::IMessageConverter<VPNType20>
+/** @brief Converter class for VPNType type */
+class VPNTypeConverter : public ocpp::messages::IMessageConverter<VPNType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VPNType20>* clone() const override { return new VPNType20Converter(); }
+    ocpp::messages::IMessageConverter<VPNType>* clone() const override { return new VPNTypeConverter(); }
 
-    /** @brief Convert a VPNType20 from a JSON representation */
+    /** @brief Convert a VPNType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VPNType20&                    data,
+                  VPNType&                      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a VPNType20 to a JSON representation */
-    bool toJson(const VPNType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a VPNType to a JSON representation */
+    bool toJson(const VPNType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VPNTYPE20_H
+#endif // OPENOCPP_OCPP20_VPNTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_AUTHORIZATIONDATA20_H
-#define OPENOCPP_AUTHORIZATIONDATA20_H
+#ifndef OPENOCPP_OCPP20_AUTHORIZATIONDATA_H
+#define OPENOCPP_OCPP20_AUTHORIZATIONDATA_H
 
 #include "CustomDataType20.h"
 #include "IdTokenInfoType20.h"
@@ -40,35 +40,35 @@ namespace ocpp20
 
 /** @brief Contains the identifier to use for authorization.
  */
-struct AuthorizationData20
+struct AuthorizationData
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    IdTokenType20 idToken;
+    IdTokenType idToken;
     /** @brief  */
-    ocpp::types::Optional<IdTokenInfoType20> idTokenInfo;
+    ocpp::types::Optional<IdTokenInfoType> idTokenInfo;
 };
 
-/** @brief Converter class for AuthorizationData20 type */
-class AuthorizationData20Converter : public ocpp::messages::IMessageConverter<AuthorizationData20>
+/** @brief Converter class for AuthorizationData type */
+class AuthorizationDataConverter : public ocpp::messages::IMessageConverter<AuthorizationData>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<AuthorizationData20>* clone() const override { return new AuthorizationData20Converter(); }
+    ocpp::messages::IMessageConverter<AuthorizationData>* clone() const override { return new AuthorizationDataConverter(); }
 
-    /** @brief Convert a AuthorizationData20 from a JSON representation */
+    /** @brief Convert a AuthorizationData from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  AuthorizationData20&          data,
+                  AuthorizationData&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a AuthorizationData20 to a JSON representation */
-    bool toJson(const AuthorizationData20& data, rapidjson::Document& json) override;
+    /** @brief Convert a AuthorizationData to a JSON representation */
+    bool toJson(const AuthorizationData& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_AUTHORIZATIONDATA20_H
+#endif // OPENOCPP_OCPP20_AUTHORIZATIONDATA_H

@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a ClearChargingProfile20Req from a JSON representation */
-bool ClearChargingProfile20ReqConverter::fromJson(const rapidjson::Value&    json,
-                                                  ClearChargingProfile20Req& data,
-                                                  std::string&               error_code,
-                                                  std::string&               error_message)
+/** @brief Convert a ClearChargingProfileReq from a JSON representation */
+bool ClearChargingProfileReqConverter::fromJson(const rapidjson::Value&  json,
+                                                ClearChargingProfileReq& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,7 +53,7 @@ bool ClearChargingProfile20ReqConverter::fromJson(const rapidjson::Value&    jso
     // chargingProfileCriteria
     if (json.HasMember("chargingProfileCriteria"))
     {
-        ocpp::types::ocpp20::ClearChargingProfileType20Converter chargingProfileCriteria_converter;
+        ocpp::types::ocpp20::ClearChargingProfileTypeConverter chargingProfileCriteria_converter;
         ret = ret && chargingProfileCriteria_converter.fromJson(
                          json["chargingProfileCriteria"], data.chargingProfileCriteria, error_code, error_message);
     }
@@ -66,15 +66,15 @@ bool ClearChargingProfile20ReqConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @brief Convert a ClearChargingProfile20Req to a JSON representation */
-bool ClearChargingProfile20ReqConverter::toJson(const ClearChargingProfile20Req& data, rapidjson::Document& json)
+/** @brief Convert a ClearChargingProfileReq to a JSON representation */
+bool ClearChargingProfileReqConverter::toJson(const ClearChargingProfileReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -88,7 +88,7 @@ bool ClearChargingProfile20ReqConverter::toJson(const ClearChargingProfile20Req&
     // chargingProfileCriteria
     if (data.chargingProfileCriteria.isSet())
     {
-        ocpp::types::ocpp20::ClearChargingProfileType20Converter chargingProfileCriteria_converter;
+        ocpp::types::ocpp20::ClearChargingProfileTypeConverter chargingProfileCriteria_converter;
         chargingProfileCriteria_converter.setAllocator(allocator);
         rapidjson::Document chargingProfileCriteria_doc;
         chargingProfileCriteria_doc.Parse("{}");
@@ -99,28 +99,28 @@ bool ClearChargingProfile20ReqConverter::toJson(const ClearChargingProfile20Req&
     return ret;
 }
 
-/** @brief Convert a ClearChargingProfile20Conf from a JSON representation */
-bool ClearChargingProfile20ConfConverter::fromJson(const rapidjson::Value&     json,
-                                                   ClearChargingProfile20Conf& data,
-                                                   std::string&                error_code,
-                                                   std::string&                error_message)
+/** @brief Convert a ClearChargingProfileConf from a JSON representation */
+bool ClearChargingProfileConfConverter::fromJson(const rapidjson::Value&   json,
+                                                 ClearChargingProfileConf& data,
+                                                 std::string&              error_code,
+                                                 std::string&              error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::ClearChargingProfileStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::ClearChargingProfileStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -132,15 +132,15 @@ bool ClearChargingProfile20ConfConverter::fromJson(const rapidjson::Value&     j
     return ret;
 }
 
-/** @brief Convert a ClearChargingProfile20Conf to a JSON representation */
-bool ClearChargingProfile20ConfConverter::toJson(const ClearChargingProfile20Conf& data, rapidjson::Document& json)
+/** @brief Convert a ClearChargingProfileConf to a JSON representation */
+bool ClearChargingProfileConfConverter::toJson(const ClearChargingProfileConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -149,12 +149,12 @@ bool ClearChargingProfile20ConfConverter::toJson(const ClearChargingProfile20Con
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::ClearChargingProfileStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::ClearChargingProfileStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

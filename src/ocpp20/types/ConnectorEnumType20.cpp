@@ -30,30 +30,30 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ConnectorEnumType20 enum to string */
-const EnumToStringFromString<ConnectorEnumType20> ConnectorEnumType20Helper = {
-    {ConnectorEnumType20::cCCS1, "cCCS1"},
-    {ConnectorEnumType20::cCCS2, "cCCS2"},
-    {ConnectorEnumType20::cG105, "cG105"},
-    {ConnectorEnumType20::cTesla, "cTesla"},
-    {ConnectorEnumType20::cType1, "cType1"},
-    {ConnectorEnumType20::cType2, "cType2"},
-    {ConnectorEnumType20::s309_1P_16A, "s309-1P-16A"},
-    {ConnectorEnumType20::s309_1P_32A, "s309-1P-32A"},
-    {ConnectorEnumType20::s309_3P_16A, "s309-3P-16A"},
-    {ConnectorEnumType20::s309_3P_32A, "s309-3P-32A"},
-    {ConnectorEnumType20::sBS1361, "sBS1361"},
-    {ConnectorEnumType20::sCEE_7_7, "sCEE-7-7"},
-    {ConnectorEnumType20::sType2, "sType2"},
-    {ConnectorEnumType20::sType3, "sType3"},
-    {ConnectorEnumType20::Other1PhMax16A, "Other1PhMax16A"},
-    {ConnectorEnumType20::Other1PhOver16A, "Other1PhOver16A"},
-    {ConnectorEnumType20::Other3Ph, "Other3Ph"},
-    {ConnectorEnumType20::Pan, "Pan"},
-    {ConnectorEnumType20::wInductive, "wInductive"},
-    {ConnectorEnumType20::wResonant, "wResonant"},
-    {ConnectorEnumType20::Undetermined, "Undetermined"},
-    {ConnectorEnumType20::Unknown, "Unknown"},
+/** @brief Helper to convert a ConnectorEnumType enum to string */
+const EnumToStringFromString<ConnectorEnumType> ConnectorEnumTypeHelper = {
+    {ConnectorEnumType::cCCS1, "cCCS1"},
+    {ConnectorEnumType::cCCS2, "cCCS2"},
+    {ConnectorEnumType::cG105, "cG105"},
+    {ConnectorEnumType::cTesla, "cTesla"},
+    {ConnectorEnumType::cType1, "cType1"},
+    {ConnectorEnumType::cType2, "cType2"},
+    {ConnectorEnumType::s309_1P_16A, "s309-1P-16A"},
+    {ConnectorEnumType::s309_1P_32A, "s309-1P-32A"},
+    {ConnectorEnumType::s309_3P_16A, "s309-3P-16A"},
+    {ConnectorEnumType::s309_3P_32A, "s309-3P-32A"},
+    {ConnectorEnumType::sBS1361, "sBS1361"},
+    {ConnectorEnumType::sCEE_7_7, "sCEE-7-7"},
+    {ConnectorEnumType::sType2, "sType2"},
+    {ConnectorEnumType::sType3, "sType3"},
+    {ConnectorEnumType::Other1PhMax16A, "Other1PhMax16A"},
+    {ConnectorEnumType::Other1PhOver16A, "Other1PhOver16A"},
+    {ConnectorEnumType::Other3Ph, "Other3Ph"},
+    {ConnectorEnumType::Pan, "Pan"},
+    {ConnectorEnumType::wInductive, "wInductive"},
+    {ConnectorEnumType::wResonant, "wResonant"},
+    {ConnectorEnumType::Undetermined, "Undetermined"},
+    {ConnectorEnumType::Unknown, "Unknown"},
 };
 
 } // namespace ocpp20

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_EVENTDATATYPE20_H
-#define OPENOCPP_EVENTDATATYPE20_H
+#ifndef OPENOCPP_OCPP20_EVENTDATATYPE_H
+#define OPENOCPP_OCPP20_EVENTDATATYPE_H
 
 #include "ComponentType20.h"
 #include "CustomDataType20.h"
@@ -44,16 +44,16 @@ namespace ocpp20
 
 /** @brief Class to report an event notification for a component-variable.
  */
-struct EventDataType20
+struct EventDataType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identifies the event. This field can be referred to as a cause by other events. */
     int eventId;
     /** @brief Timestamp of the moment the report was generated. */
     ocpp::types::DateTime timestamp;
     /** @brief  */
-    EventTriggerEnumType20 trigger;
+    EventTriggerEnumType trigger;
     /** @brief Refers to the Id of an event that is considered to be the cause for this event. */
     ocpp::types::Optional<int> cause;
     /** @brief Actual value (_attributeType_ Actual) of the variable.
@@ -69,34 +69,34 @@ The Configuration Variable &lt;&lt;configkey-reporting-value-size,ReportingValue
     /** @brief If an event notification is linked to a specific transaction, this field can be used to specify its transactionId. */
     ocpp::types::Optional<ocpp::types::CiStringType<36u>> transactionId;
     /** @brief  */
-    ComponentType20 component;
+    ComponentType component;
     /** @brief Identifies the VariableMonitoring which triggered the event. */
     ocpp::types::Optional<int> variableMonitoringId;
     /** @brief  */
-    EventNotificationEnumType20 eventNotificationType;
+    EventNotificationEnumType eventNotificationType;
     /** @brief  */
-    VariableType20 variable;
+    VariableType variable;
 };
 
-/** @brief Converter class for EventDataType20 type */
-class EventDataType20Converter : public ocpp::messages::IMessageConverter<EventDataType20>
+/** @brief Converter class for EventDataType type */
+class EventDataTypeConverter : public ocpp::messages::IMessageConverter<EventDataType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<EventDataType20>* clone() const override { return new EventDataType20Converter(); }
+    ocpp::messages::IMessageConverter<EventDataType>* clone() const override { return new EventDataTypeConverter(); }
 
-    /** @brief Convert a EventDataType20 from a JSON representation */
+    /** @brief Convert a EventDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  EventDataType20&              data,
+                  EventDataType&                data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a EventDataType20 to a JSON representation */
-    bool toJson(const EventDataType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a EventDataType to a JSON representation */
+    bool toJson(const EventDataType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_EVENTDATATYPE20_H
+#endif // OPENOCPP_OCPP20_EVENTDATATYPE_H

@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ChargingStateEnumType20 enum to string */
-const EnumToStringFromString<ChargingStateEnumType20> ChargingStateEnumType20Helper = {
-    {ChargingStateEnumType20::Charging, "Charging"},
-    {ChargingStateEnumType20::EVConnected, "EVConnected"},
-    {ChargingStateEnumType20::SuspendedEV, "SuspendedEV"},
-    {ChargingStateEnumType20::SuspendedEVSE, "SuspendedEVSE"},
-    {ChargingStateEnumType20::Idle, "Idle"},
+/** @brief Helper to convert a ChargingStateEnumType enum to string */
+const EnumToStringFromString<ChargingStateEnumType> ChargingStateEnumTypeHelper = {
+    {ChargingStateEnumType::Charging, "Charging"},
+    {ChargingStateEnumType::EVConnected, "EVConnected"},
+    {ChargingStateEnumType::SuspendedEV, "SuspendedEV"},
+    {ChargingStateEnumType::SuspendedEVSE, "SuspendedEVSE"},
+    {ChargingStateEnumType::Idle, "Idle"},
 };
 
 } // namespace ocpp20

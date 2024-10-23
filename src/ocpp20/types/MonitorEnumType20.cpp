@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MonitorEnumType20 enum to string */
-const EnumToStringFromString<MonitorEnumType20> MonitorEnumType20Helper = {
-    {MonitorEnumType20::UpperThreshold, "UpperThreshold"},
-    {MonitorEnumType20::LowerThreshold, "LowerThreshold"},
-    {MonitorEnumType20::Delta, "Delta"},
-    {MonitorEnumType20::Periodic, "Periodic"},
-    {MonitorEnumType20::PeriodicClockAligned, "PeriodicClockAligned"},
+/** @brief Helper to convert a MonitorEnumType enum to string */
+const EnumToStringFromString<MonitorEnumType> MonitorEnumTypeHelper = {
+    {MonitorEnumType::UpperThreshold, "UpperThreshold"},
+    {MonitorEnumType::LowerThreshold, "LowerThreshold"},
+    {MonitorEnumType::Delta, "Delta"},
+    {MonitorEnumType::Periodic, "Periodic"},
+    {MonitorEnumType::PeriodicClockAligned, "PeriodicClockAligned"},
 };
 
 } // namespace ocpp20

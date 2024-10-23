@@ -32,30 +32,30 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a IdTokenType20 from a JSON representation */
-bool IdTokenType20Converter::fromJson(const rapidjson::Value&       json,
-                                      IdTokenType20&                data,
-                                      std::string&                  error_code,
-                                      [[maybe_unused]] std::string& error_message)
+/** @brief Convert a IdTokenType from a JSON representation */
+bool IdTokenTypeConverter::fromJson(const rapidjson::Value&       json,
+                                    IdTokenType&                  data,
+                                    std::string&                  error_code,
+                                    [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // additionalInfo
     if (json.HasMember("additionalInfo"))
     {
-        const rapidjson::Value&       additionalInfo_json = json["additionalInfo"];
-        AdditionalInfoType20Converter additionalInfo_converter;
+        const rapidjson::Value&     additionalInfo_json = json["additionalInfo"];
+        AdditionalInfoTypeConverter additionalInfo_converter;
         for (auto it = additionalInfo_json.Begin(); ret && (it != additionalInfo_json.End()); ++it)
         {
-            AdditionalInfoType20& item = data.additionalInfo.emplace_back();
-            ret                        = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
+            AdditionalInfoType& item = data.additionalInfo.emplace_back();
+            ret                      = ret && additionalInfo_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -63,7 +63,7 @@ bool IdTokenType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "idToken", data.idToken);
 
     // type
-    data.type = IdTokenEnumType20Helper.fromString(json["type"].GetString());
+    data.type = IdTokenEnumTypeHelper.fromString(json["type"].GetString());
 
     if (!ret)
     {
@@ -73,15 +73,15 @@ bool IdTokenType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a IdTokenType20 to a JSON representation */
-bool IdTokenType20Converter::toJson(const IdTokenType20& data, rapidjson::Document& json)
+/** @brief Convert a IdTokenType to a JSON representation */
+bool IdTokenTypeConverter::toJson(const IdTokenType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -93,10 +93,10 @@ bool IdTokenType20Converter::toJson(const IdTokenType20& data, rapidjson::Docume
     if (!data.additionalInfo.empty())
     {
 
-        rapidjson::Value              additionalInfo_json(rapidjson::kArrayType);
-        AdditionalInfoType20Converter additionalInfo_converter;
+        rapidjson::Value            additionalInfo_json(rapidjson::kArrayType);
+        AdditionalInfoTypeConverter additionalInfo_converter;
         additionalInfo_converter.setAllocator(allocator);
-        for (const AdditionalInfoType20& item : data.additionalInfo)
+        for (const AdditionalInfoType& item : data.additionalInfo)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -110,7 +110,7 @@ bool IdTokenType20Converter::toJson(const IdTokenType20& data, rapidjson::Docume
     fill(json, "idToken", data.idToken);
 
     // type
-    fill(json, "type", IdTokenEnumType20Helper.toString(data.type));
+    fill(json, "type", IdTokenEnumTypeHelper.toString(data.type));
 
     return ret;
 }

@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a GenericDeviceModelStatusEnumType20 enum to string */
-const EnumToStringFromString<GenericDeviceModelStatusEnumType20> GenericDeviceModelStatusEnumType20Helper = {
-    {GenericDeviceModelStatusEnumType20::Accepted, "Accepted"},
-    {GenericDeviceModelStatusEnumType20::Rejected, "Rejected"},
-    {GenericDeviceModelStatusEnumType20::NotSupported, "NotSupported"},
-    {GenericDeviceModelStatusEnumType20::EmptyResultSet, "EmptyResultSet"},
+/** @brief Helper to convert a GenericDeviceModelStatusEnumType enum to string */
+const EnumToStringFromString<GenericDeviceModelStatusEnumType> GenericDeviceModelStatusEnumTypeHelper = {
+    {GenericDeviceModelStatusEnumType::Accepted, "Accepted"},
+    {GenericDeviceModelStatusEnumType::Rejected, "Rejected"},
+    {GenericDeviceModelStatusEnumType::NotSupported, "NotSupported"},
+    {GenericDeviceModelStatusEnumType::EmptyResultSet, "EmptyResultSet"},
 };
 
 } // namespace ocpp20

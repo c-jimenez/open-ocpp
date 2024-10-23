@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a EventTriggerEnumType20 enum to string */
-const EnumToStringFromString<EventTriggerEnumType20> EventTriggerEnumType20Helper = {
-    {EventTriggerEnumType20::Alerting, "Alerting"},
-    {EventTriggerEnumType20::Delta, "Delta"},
-    {EventTriggerEnumType20::Periodic, "Periodic"},
+/** @brief Helper to convert a EventTriggerEnumType enum to string */
+const EnumToStringFromString<EventTriggerEnumType> EventTriggerEnumTypeHelper = {
+    {EventTriggerEnumType::Alerting, "Alerting"},
+    {EventTriggerEnumType::Delta, "Delta"},
+    {EventTriggerEnumType::Periodic, "Periodic"},
 };
 
 } // namespace ocpp20

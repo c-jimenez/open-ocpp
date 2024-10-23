@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGSTATEENUMTYPE20_H
-#define OPENOCPP_CHARGINGSTATEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGSTATEENUMTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGSTATEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -37,7 +37,7 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:1:569419
 Current charging state, is required when state
 has changed. */
-enum class ChargingStateEnumType20
+enum class ChargingStateEnumType
 {
     Charging,
     EVConnected,
@@ -46,11 +46,11 @@ enum class ChargingStateEnumType20
     Idle,
 };
 
-/** @brief Helper to convert a ChargingStateEnumType20 enum to string */
-extern const EnumToStringFromString<ChargingStateEnumType20> ChargingStateEnumType20Helper;
+/** @brief Helper to convert a ChargingStateEnumType enum to string */
+extern const EnumToStringFromString<ChargingStateEnumType> ChargingStateEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGSTATEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGSTATEENUMTYPE_H

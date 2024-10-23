@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a EnergyTransferModeEnumType20 enum to string */
-const EnumToStringFromString<EnergyTransferModeEnumType20> EnergyTransferModeEnumType20Helper = {
-    {EnergyTransferModeEnumType20::DC, "DC"},
-    {EnergyTransferModeEnumType20::AC_single_phase, "AC_single_phase"},
-    {EnergyTransferModeEnumType20::AC_two_phase, "AC_two_phase"},
-    {EnergyTransferModeEnumType20::AC_three_phase, "AC_three_phase"},
+/** @brief Helper to convert a EnergyTransferModeEnumType enum to string */
+const EnumToStringFromString<EnergyTransferModeEnumType> EnergyTransferModeEnumTypeHelper = {
+    {EnergyTransferModeEnumType::DC, "DC"},
+    {EnergyTransferModeEnumType::AC_single_phase, "AC_single_phase"},
+    {EnergyTransferModeEnumType::AC_two_phase, "AC_two_phase"},
+    {EnergyTransferModeEnumType::AC_three_phase, "AC_three_phase"},
 };
 
 } // namespace ocpp20

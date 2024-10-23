@@ -32,38 +32,38 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a MonitoringDataType20 from a JSON representation */
-bool MonitoringDataType20Converter::fromJson(const rapidjson::Value&       json,
-                                             MonitoringDataType20&         data,
-                                             std::string&                  error_code,
-                                             [[maybe_unused]] std::string& error_message)
+/** @brief Convert a MonitoringDataType from a JSON representation */
+bool MonitoringDataTypeConverter::fromJson(const rapidjson::Value&       json,
+                                           MonitoringDataType&           data,
+                                           std::string&                  error_code,
+                                           [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     ret = ret && component_converter.fromJson(json["component"], data.component, error_code, error_message);
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     // variableMonitoring
     if (json.HasMember("variableMonitoring"))
     {
-        const rapidjson::Value&           variableMonitoring_json = json["variableMonitoring"];
-        VariableMonitoringType20Converter variableMonitoring_converter;
+        const rapidjson::Value&         variableMonitoring_json = json["variableMonitoring"];
+        VariableMonitoringTypeConverter variableMonitoring_converter;
         for (auto it = variableMonitoring_json.Begin(); ret && (it != variableMonitoring_json.End()); ++it)
         {
-            VariableMonitoringType20& item = data.variableMonitoring.emplace_back();
-            ret                            = ret && variableMonitoring_converter.fromJson(*it, item, error_code, error_message);
+            VariableMonitoringType& item = data.variableMonitoring.emplace_back();
+            ret                          = ret && variableMonitoring_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -75,15 +75,15 @@ bool MonitoringDataType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a MonitoringDataType20 to a JSON representation */
-bool MonitoringDataType20Converter::toJson(const MonitoringDataType20& data, rapidjson::Document& json)
+/** @brief Convert a MonitoringDataType to a JSON representation */
+bool MonitoringDataTypeConverter::toJson(const MonitoringDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -92,7 +92,7 @@ bool MonitoringDataType20Converter::toJson(const MonitoringDataType20& data, rap
     }
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
     rapidjson::Document component_doc;
     component_doc.Parse("{}");
@@ -100,7 +100,7 @@ bool MonitoringDataType20Converter::toJson(const MonitoringDataType20& data, rap
     json.AddMember(rapidjson::StringRef("component"), component_doc.Move(), *allocator);
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
     rapidjson::Document variable_doc;
     variable_doc.Parse("{}");
@@ -109,10 +109,10 @@ bool MonitoringDataType20Converter::toJson(const MonitoringDataType20& data, rap
 
     // variableMonitoring
 
-    rapidjson::Value                  variableMonitoring_json(rapidjson::kArrayType);
-    VariableMonitoringType20Converter variableMonitoring_converter;
+    rapidjson::Value                variableMonitoring_json(rapidjson::kArrayType);
+    VariableMonitoringTypeConverter variableMonitoring_converter;
     variableMonitoring_converter.setAllocator(allocator);
-    for (const VariableMonitoringType20& item : data.variableMonitoring)
+    for (const VariableMonitoringType& item : data.variableMonitoring)
     {
         rapidjson::Document item_doc;
         item_doc.Parse("{}");

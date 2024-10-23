@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CERTIFICATEHASHDATACHAINTYPE20_H
-#define OPENOCPP_CERTIFICATEHASHDATACHAINTYPE20_H
+#ifndef OPENOCPP_OCPP20_CERTIFICATEHASHDATACHAINTYPE_H
+#define OPENOCPP_OCPP20_CERTIFICATEHASHDATACHAINTYPE_H
 
 #include "CertificateHashDataType20.h"
 #include "CustomDataType20.h"
@@ -40,40 +40,40 @@ namespace ocpp20
 {
 
 /** @brief  */
-struct CertificateHashDataChainType20
+struct CertificateHashDataChainType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    CertificateHashDataType20 certificateHashData;
+    CertificateHashDataType certificateHashData;
     /** @brief  */
-    GetCertificateIdUseEnumType20 certificateType;
+    GetCertificateIdUseEnumType certificateType;
     /** @brief  */
-    std::vector<CertificateHashDataType20> childCertificateHashData;
+    std::vector<CertificateHashDataType> childCertificateHashData;
 };
 
-/** @brief Converter class for CertificateHashDataChainType20 type */
-class CertificateHashDataChainType20Converter : public ocpp::messages::IMessageConverter<CertificateHashDataChainType20>
+/** @brief Converter class for CertificateHashDataChainType type */
+class CertificateHashDataChainTypeConverter : public ocpp::messages::IMessageConverter<CertificateHashDataChainType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<CertificateHashDataChainType20>* clone() const override
+    ocpp::messages::IMessageConverter<CertificateHashDataChainType>* clone() const override
     {
-        return new CertificateHashDataChainType20Converter();
+        return new CertificateHashDataChainTypeConverter();
     }
 
-    /** @brief Convert a CertificateHashDataChainType20 from a JSON representation */
-    bool fromJson(const rapidjson::Value&         json,
-                  CertificateHashDataChainType20& data,
-                  std::string&                    error_code,
-                  [[maybe_unused]] std::string&   error_message) override;
+    /** @brief Convert a CertificateHashDataChainType from a JSON representation */
+    bool fromJson(const rapidjson::Value&       json,
+                  CertificateHashDataChainType& data,
+                  std::string&                  error_code,
+                  [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a CertificateHashDataChainType20 to a JSON representation */
-    bool toJson(const CertificateHashDataChainType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a CertificateHashDataChainType to a JSON representation */
+    bool toJson(const CertificateHashDataChainType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CERTIFICATEHASHDATACHAINTYPE20_H
+#endif // OPENOCPP_OCPP20_CERTIFICATEHASHDATACHAINTYPE_H

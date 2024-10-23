@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a SignCertificate20Req from a JSON representation */
-bool SignCertificate20ReqConverter::fromJson(const rapidjson::Value& json,
-                                             SignCertificate20Req&   data,
-                                             std::string&            error_code,
-                                             std::string&            error_message)
+/** @brief Convert a SignCertificateReq from a JSON representation */
+bool SignCertificateReqConverter::fromJson(const rapidjson::Value& json,
+                                           SignCertificateReq&     data,
+                                           std::string&            error_code,
+                                           std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,7 +53,7 @@ bool SignCertificate20ReqConverter::fromJson(const rapidjson::Value& json,
     // certificateType
     if (json.HasMember("certificateType"))
     {
-        data.certificateType = ocpp::types::ocpp20::CertificateSigningUseEnumType20Helper.fromString(json["certificateType"].GetString());
+        data.certificateType = ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.fromString(json["certificateType"].GetString());
     }
 
     if (!ret)
@@ -64,15 +64,15 @@ bool SignCertificate20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SignCertificate20Req to a JSON representation */
-bool SignCertificate20ReqConverter::toJson(const SignCertificate20Req& data, rapidjson::Document& json)
+/** @brief Convert a SignCertificateReq to a JSON representation */
+bool SignCertificateReqConverter::toJson(const SignCertificateReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -86,34 +86,34 @@ bool SignCertificate20ReqConverter::toJson(const SignCertificate20Req& data, rap
     // certificateType
     if (data.certificateType.isSet())
     {
-        fill(json, "certificateType", ocpp::types::ocpp20::CertificateSigningUseEnumType20Helper.toString(data.certificateType));
+        fill(json, "certificateType", ocpp::types::ocpp20::CertificateSigningUseEnumTypeHelper.toString(data.certificateType));
     }
 
     return ret;
 }
 
-/** @brief Convert a SignCertificate20Conf from a JSON representation */
-bool SignCertificate20ConfConverter::fromJson(const rapidjson::Value& json,
-                                              SignCertificate20Conf&  data,
-                                              std::string&            error_code,
-                                              std::string&            error_message)
+/** @brief Convert a SignCertificateConf from a JSON representation */
+bool SignCertificateConfConverter::fromJson(const rapidjson::Value& json,
+                                            SignCertificateConf&    data,
+                                            std::string&            error_code,
+                                            std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::GenericStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::GenericStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -125,15 +125,15 @@ bool SignCertificate20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SignCertificate20Conf to a JSON representation */
-bool SignCertificate20ConfConverter::toJson(const SignCertificate20Conf& data, rapidjson::Document& json)
+/** @brief Convert a SignCertificateConf to a JSON representation */
+bool SignCertificateConfConverter::toJson(const SignCertificateConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -142,12 +142,12 @@ bool SignCertificate20ConfConverter::toJson(const SignCertificate20Conf& data, r
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::GenericStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::GenericStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

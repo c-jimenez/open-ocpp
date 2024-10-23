@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SECURITYEVENTNOTIFICATION20_H
-#define OPENOCPP_SECURITYEVENTNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_SECURITYEVENTNOTIFICATION_H
+#define OPENOCPP_OCPP20_SECURITYEVENTNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -35,14 +35,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SecurityEventNotification20 messages */
-static const std::string SECURITYEVENTNOTIFICATION20_ACTION = "SecurityEventNotification";
+/** @brief Action corresponding to the SecurityEventNotification messages */
+static const std::string SECURITYEVENTNOTIFICATION_ACTION = "SecurityEventNotification";
 
-/** @brief SecurityEventNotification20Req message */
-struct SecurityEventNotification20Req
+/** @brief SecurityEventNotificationReq message */
+struct SecurityEventNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Type of the security event. This value should be taken from the Security events list. */
     ocpp::types::CiStringType<50u> type;
     /** @brief Date and time at which the event occurred. */
@@ -51,18 +51,18 @@ struct SecurityEventNotification20Req
     ocpp::types::Optional<ocpp::types::CiStringType<255u>> techInfo;
 };
 
-/** @brief SecurityEventNotification20Conf message */
-struct SecurityEventNotification20Conf
+/** @brief SecurityEventNotificationConf message */
+struct SecurityEventNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SecurityEventNotification20)
+MESSAGE_CONVERTERS(SecurityEventNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SECURITYEVENTNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_SECURITYEVENTNOTIFICATION_H

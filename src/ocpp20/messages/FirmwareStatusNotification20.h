@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_FIRMWARESTATUSNOTIFICATION20_H
-#define OPENOCPP_FIRMWARESTATUSNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_FIRMWARESTATUSNOTIFICATION_H
+#define OPENOCPP_OCPP20_FIRMWARESTATUSNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -36,34 +36,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the FirmwareStatusNotification20 messages */
-static const std::string FIRMWARESTATUSNOTIFICATION20_ACTION = "FirmwareStatusNotification";
+/** @brief Action corresponding to the FirmwareStatusNotification messages */
+static const std::string FIRMWARESTATUSNOTIFICATION_ACTION = "FirmwareStatusNotification";
 
-/** @brief FirmwareStatusNotification20Req message */
-struct FirmwareStatusNotification20Req
+/** @brief FirmwareStatusNotificationReq message */
+struct FirmwareStatusNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::FirmwareStatusEnumType20 status;
+    ocpp::types::ocpp20::FirmwareStatusEnumType status;
     /** @brief The request id that was provided in the
 UpdateFirmwareRequest that started this firmware update.
 This field is mandatory, unless the message was triggered by a TriggerMessageRequest AND there is no firmware update ongoing. */
     ocpp::types::Optional<int> requestId;
 };
 
-/** @brief FirmwareStatusNotification20Conf message */
-struct FirmwareStatusNotification20Conf
+/** @brief FirmwareStatusNotificationConf message */
+struct FirmwareStatusNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(FirmwareStatusNotification20)
+MESSAGE_CONVERTERS(FirmwareStatusNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_FIRMWARESTATUSNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_FIRMWARESTATUSNOTIFICATION_H

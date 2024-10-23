@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CANCELRESERVATION20_H
-#define OPENOCPP_CANCELRESERVATION20_H
+#ifndef OPENOCPP_OCPP20_CANCELRESERVATION_H
+#define OPENOCPP_OCPP20_CANCELRESERVATION_H
 
 #include "IMessageConverter.h"
 
@@ -37,34 +37,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the CancelReservation20 messages */
-static const std::string CANCELRESERVATION20_ACTION = "CancelReservation";
+/** @brief Action corresponding to the CancelReservation messages */
+static const std::string CANCELRESERVATION_ACTION = "CancelReservation";
 
-/** @brief CancelReservation20Req message */
-struct CancelReservation20Req
+/** @brief CancelReservationReq message */
+struct CancelReservationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Id of the reservation to cancel. */
     int reservationId;
 };
 
-/** @brief CancelReservation20Conf message */
-struct CancelReservation20Conf
+/** @brief CancelReservationConf message */
+struct CancelReservationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::CancelReservationStatusEnumType20 status;
+    ocpp::types::ocpp20::CancelReservationStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(CancelReservation20)
+MESSAGE_CONVERTERS(CancelReservation)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CANCELRESERVATION20_H
+#endif // OPENOCPP_OCPP20_CANCELRESERVATION_H

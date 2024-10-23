@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MessagePriorityEnumType20 enum to string */
-const EnumToStringFromString<MessagePriorityEnumType20> MessagePriorityEnumType20Helper = {
-    {MessagePriorityEnumType20::AlwaysFront, "AlwaysFront"},
-    {MessagePriorityEnumType20::InFront, "InFront"},
-    {MessagePriorityEnumType20::NormalCycle, "NormalCycle"},
+/** @brief Helper to convert a MessagePriorityEnumType enum to string */
+const EnumToStringFromString<MessagePriorityEnumType> MessagePriorityEnumTypeHelper = {
+    {MessagePriorityEnumType::AlwaysFront, "AlwaysFront"},
+    {MessagePriorityEnumType::InFront, "InFront"},
+    {MessagePriorityEnumType::NormalCycle, "NormalCycle"},
 };
 
 } // namespace ocpp20

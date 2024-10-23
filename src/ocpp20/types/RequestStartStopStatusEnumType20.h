@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REQUESTSTARTSTOPSTATUSENUMTYPE20_H
-#define OPENOCPP_REQUESTSTARTSTOPSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_REQUESTSTARTSTOPSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_REQUESTSTARTSTOPSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Status indicating whether the Charging Station accepts the request to start a transaction. */
-enum class RequestStartStopStatusEnumType20
+enum class RequestStartStopStatusEnumType
 {
     Accepted,
     Rejected,
 };
 
-/** @brief Helper to convert a RequestStartStopStatusEnumType20 enum to string */
-extern const EnumToStringFromString<RequestStartStopStatusEnumType20> RequestStartStopStatusEnumType20Helper;
+/** @brief Helper to convert a RequestStartStopStatusEnumType enum to string */
+extern const EnumToStringFromString<RequestStartStopStatusEnumType> RequestStartStopStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_REQUESTSTARTSTOPSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_REQUESTSTARTSTOPSTATUSENUMTYPE_H

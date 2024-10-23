@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_OCPPVERSIONENUMTYPE20_H
-#define OPENOCPP_OCPPVERSIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_OCPPVERSIONENUMTYPE_H
+#define OPENOCPP_OCPP20_OCPPVERSIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Communication_ Function. OCPP_ Version. OCPP_ Version_ Code
 urn:x-oca:ocpp:uid:1:569355
 Defines the OCPP version used for this communication function. */
-enum class OCPPVersionEnumType20
+enum class OCPPVersionEnumType
 {
     OCPP12,
     OCPP15,
@@ -44,11 +44,11 @@ enum class OCPPVersionEnumType20
     OCPP20,
 };
 
-/** @brief Helper to convert a OCPPVersionEnumType20 enum to string */
-extern const EnumToStringFromString<OCPPVersionEnumType20> OCPPVersionEnumType20Helper;
+/** @brief Helper to convert a OCPPVersionEnumType enum to string */
+extern const EnumToStringFromString<OCPPVersionEnumType> OCPPVersionEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_OCPPVERSIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_OCPPVERSIONENUMTYPE_H

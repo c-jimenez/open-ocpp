@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_ADDITIONALINFOTYPE20_H
-#define OPENOCPP_ADDITIONALINFOTYPE20_H
+#ifndef OPENOCPP_OCPP20_ADDITIONALINFOTYPE_H
+#define OPENOCPP_OCPP20_ADDITIONALINFOTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -39,35 +39,35 @@ namespace ocpp20
 
 /** @brief Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
  */
-struct AdditionalInfoType20
+struct AdditionalInfoType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief This field specifies the additional IdToken. */
     ocpp::types::CiStringType<36u> additionalIdToken;
     /** @brief This defines the type of the additionalIdToken. This is a custom type, so the implementation needs to be agreed upon by all involved parties. */
     ocpp::types::CiStringType<50u> type;
 };
 
-/** @brief Converter class for AdditionalInfoType20 type */
-class AdditionalInfoType20Converter : public ocpp::messages::IMessageConverter<AdditionalInfoType20>
+/** @brief Converter class for AdditionalInfoType type */
+class AdditionalInfoTypeConverter : public ocpp::messages::IMessageConverter<AdditionalInfoType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<AdditionalInfoType20>* clone() const override { return new AdditionalInfoType20Converter(); }
+    ocpp::messages::IMessageConverter<AdditionalInfoType>* clone() const override { return new AdditionalInfoTypeConverter(); }
 
-    /** @brief Convert a AdditionalInfoType20 from a JSON representation */
+    /** @brief Convert a AdditionalInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  AdditionalInfoType20&         data,
+                  AdditionalInfoType&           data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a AdditionalInfoType20 to a JSON representation */
-    bool toJson(const AdditionalInfoType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a AdditionalInfoType to a JSON representation */
+    bool toJson(const AdditionalInfoType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_ADDITIONALINFOTYPE20_H
+#endif // OPENOCPP_OCPP20_ADDITIONALINFOTYPE_H

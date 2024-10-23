@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARCACHESTATUSENUMTYPE20_H
-#define OPENOCPP_CLEARCACHESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CLEARCACHESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CLEARCACHESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Accepted if the Charging Station has executed the request, otherwise rejected. */
-enum class ClearCacheStatusEnumType20
+enum class ClearCacheStatusEnumType
 {
     Accepted,
     Rejected,
 };
 
-/** @brief Helper to convert a ClearCacheStatusEnumType20 enum to string */
-extern const EnumToStringFromString<ClearCacheStatusEnumType20> ClearCacheStatusEnumType20Helper;
+/** @brief Helper to convert a ClearCacheStatusEnumType enum to string */
+extern const EnumToStringFromString<ClearCacheStatusEnumType> ClearCacheStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARCACHESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CLEARCACHESTATUSENUMTYPE_H

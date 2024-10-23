@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a NotifyEVChargingNeedsStatusEnumType20 enum to string */
-const EnumToStringFromString<NotifyEVChargingNeedsStatusEnumType20> NotifyEVChargingNeedsStatusEnumType20Helper = {
-    {NotifyEVChargingNeedsStatusEnumType20::Accepted, "Accepted"},
-    {NotifyEVChargingNeedsStatusEnumType20::Rejected, "Rejected"},
-    {NotifyEVChargingNeedsStatusEnumType20::Processing, "Processing"},
+/** @brief Helper to convert a NotifyEVChargingNeedsStatusEnumType enum to string */
+const EnumToStringFromString<NotifyEVChargingNeedsStatusEnumType> NotifyEVChargingNeedsStatusEnumTypeHelper = {
+    {NotifyEVChargingNeedsStatusEnumType::Accepted, "Accepted"},
+    {NotifyEVChargingNeedsStatusEnumType::Rejected, "Rejected"},
+    {NotifyEVChargingNeedsStatusEnumType::Processing, "Processing"},
 };
 
 } // namespace ocpp20

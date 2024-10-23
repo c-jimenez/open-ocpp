@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETCERTIFICATESTATUS20_H
-#define OPENOCPP_GETCERTIFICATESTATUS20_H
+#ifndef OPENOCPP_OCPP20_GETCERTIFICATESTATUS_H
+#define OPENOCPP_OCPP20_GETCERTIFICATESTATUS_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetCertificateStatus20 messages */
-static const std::string GETCERTIFICATESTATUS20_ACTION = "GetCertificateStatus";
+/** @brief Action corresponding to the GetCertificateStatus messages */
+static const std::string GETCERTIFICATESTATUS_ACTION = "GetCertificateStatus";
 
-/** @brief GetCertificateStatus20Req message */
-struct GetCertificateStatus20Req
+/** @brief GetCertificateStatusReq message */
+struct GetCertificateStatusReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::OCSPRequestDataType20 ocspRequestData;
+    ocpp::types::ocpp20::OCSPRequestDataType ocspRequestData;
 };
 
-/** @brief GetCertificateStatus20Conf message */
-struct GetCertificateStatus20Conf
+/** @brief GetCertificateStatusConf message */
+struct GetCertificateStatusConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GetCertificateStatusEnumType20 status;
+    ocpp::types::ocpp20::GetCertificateStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief OCSPResponse class as defined in &lt;&lt;ref-ocpp_security_24, IETF RFC 6960&gt;&gt;. DER encoded (as defined in &lt;&lt;ref-ocpp_security_24, IETF RFC 6960&gt;&gt;), and then base64 encoded. MAY only be omitted when status is not Accepted. */
     ocpp::types::Optional<ocpp::types::CiStringType<5500u>> ocspResult;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetCertificateStatus20)
+MESSAGE_CONVERTERS(GetCertificateStatus)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETCERTIFICATESTATUS20_H
+#endif // OPENOCPP_OCPP20_GETCERTIFICATESTATUS_H

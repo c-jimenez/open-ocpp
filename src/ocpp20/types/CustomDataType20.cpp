@@ -32,11 +32,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a CustomDataType20 from a JSON representation */
-bool CustomDataType20Converter::fromJson(const rapidjson::Value&       json,
-                                         CustomDataType20&             data,
-                                         std::string&                  error_code,
-                                         [[maybe_unused]] std::string& error_message)
+/** @brief Convert a CustomDataType from a JSON representation */
+bool CustomDataTypeConverter::fromJson(const rapidjson::Value&       json,
+                                       CustomDataType&               data,
+                                       std::string&                  error_code,
+                                       [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
@@ -51,8 +51,8 @@ bool CustomDataType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a CustomDataType20 to a JSON representation */
-bool CustomDataType20Converter::toJson(const CustomDataType20& data, rapidjson::Document& json)
+/** @brief Convert a CustomDataType to a JSON representation */
+bool CustomDataTypeConverter::toJson(const CustomDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 

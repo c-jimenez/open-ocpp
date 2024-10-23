@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ReservationUpdateStatusEnumType20 enum to string */
-const EnumToStringFromString<ReservationUpdateStatusEnumType20> ReservationUpdateStatusEnumType20Helper = {
-    {ReservationUpdateStatusEnumType20::Expired, "Expired"},
-    {ReservationUpdateStatusEnumType20::Removed, "Removed"},
+/** @brief Helper to convert a ReservationUpdateStatusEnumType enum to string */
+const EnumToStringFromString<ReservationUpdateStatusEnumType> ReservationUpdateStatusEnumTypeHelper = {
+    {ReservationUpdateStatusEnumType::Expired, "Expired"},
+    {ReservationUpdateStatusEnumType::Removed, "Removed"},
 };
 
 } // namespace ocpp20

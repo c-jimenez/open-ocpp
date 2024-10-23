@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UNLOCKSTATUSENUMTYPE20_H
-#define OPENOCPP_UNLOCKSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_UNLOCKSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_UNLOCKSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This indicates whether the Charging Station has unlocked the connector. */
-enum class UnlockStatusEnumType20
+enum class UnlockStatusEnumType
 {
     Unlocked,
     UnlockFailed,
@@ -42,11 +42,11 @@ enum class UnlockStatusEnumType20
     UnknownConnector,
 };
 
-/** @brief Helper to convert a UnlockStatusEnumType20 enum to string */
-extern const EnumToStringFromString<UnlockStatusEnumType20> UnlockStatusEnumType20Helper;
+/** @brief Helper to convert a UnlockStatusEnumType enum to string */
+extern const EnumToStringFromString<UnlockStatusEnumType> UnlockStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_UNLOCKSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_UNLOCKSTATUSENUMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_DELETECERTIFICATESTATUSENUMTYPE20_H
-#define OPENOCPP_DELETECERTIFICATESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_DELETECERTIFICATESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_DELETECERTIFICATESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Charging Station indicates if it can process the request. */
-enum class DeleteCertificateStatusEnumType20
+enum class DeleteCertificateStatusEnumType
 {
     Accepted,
     Failed,
     NotFound,
 };
 
-/** @brief Helper to convert a DeleteCertificateStatusEnumType20 enum to string */
-extern const EnumToStringFromString<DeleteCertificateStatusEnumType20> DeleteCertificateStatusEnumType20Helper;
+/** @brief Helper to convert a DeleteCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<DeleteCertificateStatusEnumType> DeleteCertificateStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_DELETECERTIFICATESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_DELETECERTIFICATESTATUSENUMTYPE_H

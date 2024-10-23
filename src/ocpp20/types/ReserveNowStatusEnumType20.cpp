@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ReserveNowStatusEnumType20 enum to string */
-const EnumToStringFromString<ReserveNowStatusEnumType20> ReserveNowStatusEnumType20Helper = {
-    {ReserveNowStatusEnumType20::Accepted, "Accepted"},
-    {ReserveNowStatusEnumType20::Faulted, "Faulted"},
-    {ReserveNowStatusEnumType20::Occupied, "Occupied"},
-    {ReserveNowStatusEnumType20::Rejected, "Rejected"},
-    {ReserveNowStatusEnumType20::Unavailable, "Unavailable"},
+/** @brief Helper to convert a ReserveNowStatusEnumType enum to string */
+const EnumToStringFromString<ReserveNowStatusEnumType> ReserveNowStatusEnumTypeHelper = {
+    {ReserveNowStatusEnumType::Accepted, "Accepted"},
+    {ReserveNowStatusEnumType::Faulted, "Faulted"},
+    {ReserveNowStatusEnumType::Occupied, "Occupied"},
+    {ReserveNowStatusEnumType::Rejected, "Rejected"},
+    {ReserveNowStatusEnumType::Unavailable, "Unavailable"},
 };
 
 } // namespace ocpp20

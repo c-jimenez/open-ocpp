@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CERTIFICATESIGNED20_H
-#define OPENOCPP_CERTIFICATESIGNED20_H
+#ifndef OPENOCPP_OCPP20_CERTIFICATESIGNED_H
+#define OPENOCPP_OCPP20_CERTIFICATESIGNED_H
 
 #include "IMessageConverter.h"
 
@@ -38,38 +38,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the CertificateSigned20 messages */
-static const std::string CERTIFICATESIGNED20_ACTION = "CertificateSigned";
+/** @brief Action corresponding to the CertificateSigned messages */
+static const std::string CERTIFICATESIGNED_ACTION = "CertificateSigned";
 
-/** @brief CertificateSigned20Req message */
-struct CertificateSigned20Req
+/** @brief CertificateSignedReq message */
+struct CertificateSignedReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The signed PEM encoded X.509 certificate. This can also contain the necessary sub CA certificates. In that case, the order of the bundle should follow the certificate chain, starting from the leaf certificate.
 
 The Configuration Variable &lt;&lt;configkey-max-certificate-chain-size,MaxCertificateChainSize&gt;&gt; can be used to limit the maximum size of this field. */
     ocpp::types::CiStringType<10000u> certificateChain;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CertificateSigningUseEnumType20> certificateType;
+    ocpp::types::Optional<ocpp::types::ocpp20::CertificateSigningUseEnumType> certificateType;
 };
 
-/** @brief CertificateSigned20Conf message */
-struct CertificateSigned20Conf
+/** @brief CertificateSignedConf message */
+struct CertificateSignedConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::CertificateSignedStatusEnumType20 status;
+    ocpp::types::ocpp20::CertificateSignedStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(CertificateSigned20)
+MESSAGE_CONVERTERS(CertificateSigned)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CERTIFICATESIGNED20_H
+#endif // OPENOCPP_OCPP20_CERTIFICATESIGNED_H

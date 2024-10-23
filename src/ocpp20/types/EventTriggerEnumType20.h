@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_EVENTTRIGGERENUMTYPE20_H
-#define OPENOCPP_EVENTTRIGGERENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_EVENTTRIGGERENUMTYPE_H
+#define OPENOCPP_OCPP20_EVENTTRIGGERENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Type of monitor that triggered this event, e.g. exceeding a threshold value. */
-enum class EventTriggerEnumType20
+enum class EventTriggerEnumType
 {
     Alerting,
     Delta,
     Periodic,
 };
 
-/** @brief Helper to convert a EventTriggerEnumType20 enum to string */
-extern const EnumToStringFromString<EventTriggerEnumType20> EventTriggerEnumType20Helper;
+/** @brief Helper to convert a EventTriggerEnumType enum to string */
+extern const EnumToStringFromString<EventTriggerEnumType> EventTriggerEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_EVENTTRIGGERENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_EVENTTRIGGERENUMTYPE_H

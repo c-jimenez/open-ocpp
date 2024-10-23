@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_ACCHARGINGPARAMETERSTYPE20_H
-#define OPENOCPP_ACCHARGINGPARAMETERSTYPE20_H
+#ifndef OPENOCPP_OCPP20_ACCHARGINGPARAMETERSTYPE_H
+#define OPENOCPP_OCPP20_ACCHARGINGPARAMETERSTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -41,10 +41,10 @@ urn:x-oca:ocpp:uid:2:233250
 EV AC charging parameters.
 
  */
-struct ACChargingParametersType20
+struct ACChargingParametersType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief AC_ Charging_ Parameters. Energy_ Amount. Energy_ Amount
 urn:x-oca:ocpp:uid:1:569211
 Amount of energy requested (in Wh). This includes energy required for preconditioning. */
@@ -63,28 +63,25 @@ Maximum voltage supported by the electric vehicle */
     int evMaxVoltage;
 };
 
-/** @brief Converter class for ACChargingParametersType20 type */
-class ACChargingParametersType20Converter : public ocpp::messages::IMessageConverter<ACChargingParametersType20>
+/** @brief Converter class for ACChargingParametersType type */
+class ACChargingParametersTypeConverter : public ocpp::messages::IMessageConverter<ACChargingParametersType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ACChargingParametersType20>* clone() const override
-    {
-        return new ACChargingParametersType20Converter();
-    }
+    ocpp::messages::IMessageConverter<ACChargingParametersType>* clone() const override { return new ACChargingParametersTypeConverter(); }
 
-    /** @brief Convert a ACChargingParametersType20 from a JSON representation */
+    /** @brief Convert a ACChargingParametersType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ACChargingParametersType20&   data,
+                  ACChargingParametersType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ACChargingParametersType20 to a JSON representation */
-    bool toJson(const ACChargingParametersType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ACChargingParametersType to a JSON representation */
+    bool toJson(const ACChargingParametersType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_ACCHARGINGPARAMETERSTYPE20_H
+#endif // OPENOCPP_OCPP20_ACCHARGINGPARAMETERSTYPE_H

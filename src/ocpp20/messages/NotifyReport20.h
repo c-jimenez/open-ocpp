@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYREPORT20_H
-#define OPENOCPP_NOTIFYREPORT20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYREPORT_H
+#define OPENOCPP_OCPP20_NOTIFYREPORT_H
 
 #include "IMessageConverter.h"
 
@@ -36,38 +36,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyReport20 messages */
-static const std::string NOTIFYREPORT20_ACTION = "NotifyReport";
+/** @brief Action corresponding to the NotifyReport messages */
+static const std::string NOTIFYREPORT_ACTION = "NotifyReport";
 
-/** @brief NotifyReport20Req message */
-struct NotifyReport20Req
+/** @brief NotifyReportReq message */
+struct NotifyReportReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The id of the GetReportRequest  or GetBaseReportRequest that requested this report */
     int requestId;
     /** @brief Timestamp of the moment this message was generated at the Charging Station. */
     ocpp::types::DateTime generatedAt;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ReportDataType20> reportData;
+    std::vector<ocpp::types::ocpp20::ReportDataType> reportData;
     /** @brief “to be continued” indicator. Indicates whether another part of the report follows in an upcoming notifyReportRequest message. Default value when omitted is false. */
     ocpp::types::Optional<bool> tbc;
     /** @brief Sequence number of this message. First message starts at 0. */
     int seqNo;
 };
 
-/** @brief NotifyReport20Conf message */
-struct NotifyReport20Conf
+/** @brief NotifyReportConf message */
+struct NotifyReportConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyReport20)
+MESSAGE_CONVERTERS(NotifyReport)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYREPORT20_H
+#endif // OPENOCPP_OCPP20_NOTIFYREPORT_H

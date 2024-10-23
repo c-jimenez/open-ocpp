@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a InstallCertificateUseEnumType20 enum to string */
-const EnumToStringFromString<InstallCertificateUseEnumType20> InstallCertificateUseEnumType20Helper = {
-    {InstallCertificateUseEnumType20::V2GRootCertificate, "V2GRootCertificate"},
-    {InstallCertificateUseEnumType20::MORootCertificate, "MORootCertificate"},
-    {InstallCertificateUseEnumType20::CSMSRootCertificate, "CSMSRootCertificate"},
-    {InstallCertificateUseEnumType20::ManufacturerRootCertificate, "ManufacturerRootCertificate"},
+/** @brief Helper to convert a InstallCertificateUseEnumType enum to string */
+const EnumToStringFromString<InstallCertificateUseEnumType> InstallCertificateUseEnumTypeHelper = {
+    {InstallCertificateUseEnumType::V2GRootCertificate, "V2GRootCertificate"},
+    {InstallCertificateUseEnumType::MORootCertificate, "MORootCertificate"},
+    {InstallCertificateUseEnumType::CSMSRootCertificate, "CSMSRootCertificate"},
+    {InstallCertificateUseEnumType::ManufacturerRootCertificate, "ManufacturerRootCertificate"},
 };
 
 } // namespace ocpp20

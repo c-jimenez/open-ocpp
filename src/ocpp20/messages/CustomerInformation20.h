@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CUSTOMERINFORMATION20_H
-#define OPENOCPP_CUSTOMERINFORMATION20_H
+#ifndef OPENOCPP_OCPP20_CUSTOMERINFORMATION_H
+#define OPENOCPP_OCPP20_CUSTOMERINFORMATION_H
 
 #include "IMessageConverter.h"
 
@@ -39,18 +39,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the CustomerInformation20 messages */
-static const std::string CUSTOMERINFORMATION20_ACTION = "CustomerInformation";
+/** @brief Action corresponding to the CustomerInformation messages */
+static const std::string CUSTOMERINFORMATION_ACTION = "CustomerInformation";
 
-/** @brief CustomerInformation20Req message */
-struct CustomerInformation20Req
+/** @brief CustomerInformationReq message */
+struct CustomerInformationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CertificateHashDataType20> customerCertificate;
+    ocpp::types::Optional<ocpp::types::ocpp20::CertificateHashDataType> customerCertificate;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType20> idToken;
+    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType> idToken;
     /** @brief The Id of the request. */
     int requestId;
     /** @brief Flag indicating whether the Charging Station should return NotifyCustomerInformationRequest messages containing information about the customer referred to. */
@@ -62,22 +62,22 @@ One of the possible identifiers (customerIdentifier, customerIdToken or customer
     ocpp::types::Optional<ocpp::types::CiStringType<64u>> customerIdentifier;
 };
 
-/** @brief CustomerInformation20Conf message */
-struct CustomerInformation20Conf
+/** @brief CustomerInformationConf message */
+struct CustomerInformationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::CustomerInformationStatusEnumType20 status;
+    ocpp::types::ocpp20::CustomerInformationStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(CustomerInformation20)
+MESSAGE_CONVERTERS(CustomerInformation)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CUSTOMERINFORMATION20_H
+#endif // OPENOCPP_OCPP20_CUSTOMERINFORMATION_H

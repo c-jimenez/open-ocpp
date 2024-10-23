@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARCHARGINGPROFILE20_H
-#define OPENOCPP_CLEARCHARGINGPROFILE20_H
+#ifndef OPENOCPP_OCPP20_CLEARCHARGINGPROFILE_H
+#define OPENOCPP_OCPP20_CLEARCHARGINGPROFILE_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ClearChargingProfile20 messages */
-static const std::string CLEARCHARGINGPROFILE20_ACTION = "ClearChargingProfile";
+/** @brief Action corresponding to the ClearChargingProfile messages */
+static const std::string CLEARCHARGINGPROFILE_ACTION = "ClearChargingProfile";
 
-/** @brief ClearChargingProfile20Req message */
-struct ClearChargingProfile20Req
+/** @brief ClearChargingProfileReq message */
+struct ClearChargingProfileReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The Id of the charging profile to clear. */
     ocpp::types::Optional<int> chargingProfileId;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::ClearChargingProfileType20> chargingProfileCriteria;
+    ocpp::types::Optional<ocpp::types::ocpp20::ClearChargingProfileType> chargingProfileCriteria;
 };
 
-/** @brief ClearChargingProfile20Conf message */
-struct ClearChargingProfile20Conf
+/** @brief ClearChargingProfileConf message */
+struct ClearChargingProfileConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ClearChargingProfileStatusEnumType20 status;
+    ocpp::types::ocpp20::ClearChargingProfileStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ClearChargingProfile20)
+MESSAGE_CONVERTERS(ClearChargingProfile)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARCHARGINGPROFILE20_H
+#endif // OPENOCPP_OCPP20_CLEARCHARGINGPROFILE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SAMPLEDVALUETYPE20_H
-#define OPENOCPP_SAMPLEDVALUETYPE20_H
+#ifndef OPENOCPP_OCPP20_SAMPLEDVALUETYPE_H
+#define OPENOCPP_OCPP20_SAMPLEDVALUETYPE_H
 
 #include "CustomDataType20.h"
 #include "LocationEnumType20.h"
@@ -48,47 +48,47 @@ Single sampled value in MeterValues. Each value can be accompanied by optional f
 
 To save on mobile data usage, default values of all of the optional fields are such that. The value without any additional fields will be interpreted, as a register reading of active import energy in Wh (Watt-hour) units.
  */
-struct SampledValueType20
+struct SampledValueType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Sampled_ Value. Value. Measure
 urn:x-oca:ocpp:uid:1:569260
 Indicates the measured value. */
     float value;
     /** @brief  */
-    ocpp::types::Optional<ReadingContextEnumType20> context;
+    ocpp::types::Optional<ReadingContextEnumType> context;
     /** @brief  */
-    ocpp::types::Optional<MeasurandEnumType20> measurand;
+    ocpp::types::Optional<MeasurandEnumType> measurand;
     /** @brief  */
-    ocpp::types::Optional<PhaseEnumType20> phase;
+    ocpp::types::Optional<PhaseEnumType> phase;
     /** @brief  */
-    ocpp::types::Optional<LocationEnumType20> location;
+    ocpp::types::Optional<LocationEnumType> location;
     /** @brief  */
-    ocpp::types::Optional<SignedMeterValueType20> signedMeterValue;
+    ocpp::types::Optional<SignedMeterValueType> signedMeterValue;
     /** @brief  */
-    ocpp::types::Optional<UnitOfMeasureType20> unitOfMeasure;
+    ocpp::types::Optional<UnitOfMeasureType> unitOfMeasure;
 };
 
-/** @brief Converter class for SampledValueType20 type */
-class SampledValueType20Converter : public ocpp::messages::IMessageConverter<SampledValueType20>
+/** @brief Converter class for SampledValueType type */
+class SampledValueTypeConverter : public ocpp::messages::IMessageConverter<SampledValueType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SampledValueType20>* clone() const override { return new SampledValueType20Converter(); }
+    ocpp::messages::IMessageConverter<SampledValueType>* clone() const override { return new SampledValueTypeConverter(); }
 
-    /** @brief Convert a SampledValueType20 from a JSON representation */
+    /** @brief Convert a SampledValueType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SampledValueType20&           data,
+                  SampledValueType&             data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SampledValueType20 to a JSON representation */
-    bool toJson(const SampledValueType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SampledValueType to a JSON representation */
+    bool toJson(const SampledValueType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SAMPLEDVALUETYPE20_H
+#endif // OPENOCPP_OCPP20_SAMPLEDVALUETYPE_H

@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a VariableMonitoringType20 from a JSON representation */
-bool VariableMonitoringType20Converter::fromJson(const rapidjson::Value&       json,
-                                                 VariableMonitoringType20&     data,
-                                                 std::string&                  error_code,
-                                                 [[maybe_unused]] std::string& error_message)
+/** @brief Convert a VariableMonitoringType from a JSON representation */
+bool VariableMonitoringTypeConverter::fromJson(const rapidjson::Value&       json,
+                                               VariableMonitoringType&       data,
+                                               std::string&                  error_code,
+                                               [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -57,7 +57,7 @@ bool VariableMonitoringType20Converter::fromJson(const rapidjson::Value&       j
     extract(json, "value", data.value);
 
     // type
-    data.type = MonitorEnumType20Helper.fromString(json["type"].GetString());
+    data.type = MonitorEnumTypeHelper.fromString(json["type"].GetString());
 
     // severity
     extract(json, "severity", data.severity);
@@ -70,15 +70,15 @@ bool VariableMonitoringType20Converter::fromJson(const rapidjson::Value&       j
     return ret;
 }
 
-/** @brief Convert a VariableMonitoringType20 to a JSON representation */
-bool VariableMonitoringType20Converter::toJson(const VariableMonitoringType20& data, rapidjson::Document& json)
+/** @brief Convert a VariableMonitoringType to a JSON representation */
+bool VariableMonitoringTypeConverter::toJson(const VariableMonitoringType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -96,7 +96,7 @@ bool VariableMonitoringType20Converter::toJson(const VariableMonitoringType20& d
     fill(json, "value", data.value);
 
     // type
-    fill(json, "type", MonitorEnumType20Helper.toString(data.type));
+    fill(json, "type", MonitorEnumTypeHelper.toString(data.type));
 
     // severity
     fill(json, "severity", data.severity);

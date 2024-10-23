@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a ReserveNow20Req from a JSON representation */
-bool ReserveNow20ReqConverter::fromJson(const rapidjson::Value& json,
-                                        ReserveNow20Req&        data,
-                                        std::string&            error_code,
-                                        std::string&            error_message)
+/** @brief Convert a ReserveNowReq from a JSON representation */
+bool ReserveNowReqConverter::fromJson(const rapidjson::Value& json,
+                                      ReserveNowReq&          data,
+                                      std::string&            error_code,
+                                      std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -56,11 +56,11 @@ bool ReserveNow20ReqConverter::fromJson(const rapidjson::Value& json,
     // connectorType
     if (json.HasMember("connectorType"))
     {
-        data.connectorType = ocpp::types::ocpp20::ConnectorEnumType20Helper.fromString(json["connectorType"].GetString());
+        data.connectorType = ocpp::types::ocpp20::ConnectorEnumTypeHelper.fromString(json["connectorType"].GetString());
     }
 
     // idToken
-    ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+    ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     ret = ret && idToken_converter.fromJson(json["idToken"], data.idToken, error_code, error_message);
 
     // evseId
@@ -69,7 +69,7 @@ bool ReserveNow20ReqConverter::fromJson(const rapidjson::Value& json,
     // groupIdToken
     if (json.HasMember("groupIdToken"))
     {
-        ocpp::types::ocpp20::IdTokenType20Converter groupIdToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
         ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
     }
 
@@ -81,15 +81,15 @@ bool ReserveNow20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a ReserveNow20Req to a JSON representation */
-bool ReserveNow20ReqConverter::toJson(const ReserveNow20Req& data, rapidjson::Document& json)
+/** @brief Convert a ReserveNowReq to a JSON representation */
+bool ReserveNowReqConverter::toJson(const ReserveNowReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -106,11 +106,11 @@ bool ReserveNow20ReqConverter::toJson(const ReserveNow20Req& data, rapidjson::Do
     // connectorType
     if (data.connectorType.isSet())
     {
-        fill(json, "connectorType", ocpp::types::ocpp20::ConnectorEnumType20Helper.toString(data.connectorType));
+        fill(json, "connectorType", ocpp::types::ocpp20::ConnectorEnumTypeHelper.toString(data.connectorType));
     }
 
     // idToken
-    ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+    ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     idToken_converter.setAllocator(allocator);
     rapidjson::Document idToken_doc;
     idToken_doc.Parse("{}");
@@ -123,7 +123,7 @@ bool ReserveNow20ReqConverter::toJson(const ReserveNow20Req& data, rapidjson::Do
     // groupIdToken
     if (data.groupIdToken.isSet())
     {
-        ocpp::types::ocpp20::IdTokenType20Converter groupIdToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
         groupIdToken_converter.setAllocator(allocator);
         rapidjson::Document groupIdToken_doc;
         groupIdToken_doc.Parse("{}");
@@ -134,28 +134,28 @@ bool ReserveNow20ReqConverter::toJson(const ReserveNow20Req& data, rapidjson::Do
     return ret;
 }
 
-/** @brief Convert a ReserveNow20Conf from a JSON representation */
-bool ReserveNow20ConfConverter::fromJson(const rapidjson::Value& json,
-                                         ReserveNow20Conf&       data,
-                                         std::string&            error_code,
-                                         std::string&            error_message)
+/** @brief Convert a ReserveNowConf from a JSON representation */
+bool ReserveNowConfConverter::fromJson(const rapidjson::Value& json,
+                                       ReserveNowConf&         data,
+                                       std::string&            error_code,
+                                       std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::ReserveNowStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::ReserveNowStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -167,15 +167,15 @@ bool ReserveNow20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a ReserveNow20Conf to a JSON representation */
-bool ReserveNow20ConfConverter::toJson(const ReserveNow20Conf& data, rapidjson::Document& json)
+/** @brief Convert a ReserveNowConf to a JSON representation */
+bool ReserveNowConfConverter::toJson(const ReserveNowConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -184,12 +184,12 @@ bool ReserveNow20ConfConverter::toJson(const ReserveNow20Conf& data, rapidjson::
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::ReserveNowStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::ReserveNowStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

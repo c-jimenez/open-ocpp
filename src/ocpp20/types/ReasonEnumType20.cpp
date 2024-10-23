@@ -30,27 +30,27 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ReasonEnumType20 enum to string */
-const EnumToStringFromString<ReasonEnumType20> ReasonEnumType20Helper = {
-    {ReasonEnumType20::DeAuthorized, "DeAuthorized"},
-    {ReasonEnumType20::EmergencyStop, "EmergencyStop"},
-    {ReasonEnumType20::EnergyLimitReached, "EnergyLimitReached"},
-    {ReasonEnumType20::EVDisconnected, "EVDisconnected"},
-    {ReasonEnumType20::GroundFault, "GroundFault"},
-    {ReasonEnumType20::ImmediateReset, "ImmediateReset"},
-    {ReasonEnumType20::Local, "Local"},
-    {ReasonEnumType20::LocalOutOfCredit, "LocalOutOfCredit"},
-    {ReasonEnumType20::MasterPass, "MasterPass"},
-    {ReasonEnumType20::Other, "Other"},
-    {ReasonEnumType20::OvercurrentFault, "OvercurrentFault"},
-    {ReasonEnumType20::PowerLoss, "PowerLoss"},
-    {ReasonEnumType20::PowerQuality, "PowerQuality"},
-    {ReasonEnumType20::Reboot, "Reboot"},
-    {ReasonEnumType20::Remote, "Remote"},
-    {ReasonEnumType20::SOCLimitReached, "SOCLimitReached"},
-    {ReasonEnumType20::StoppedByEV, "StoppedByEV"},
-    {ReasonEnumType20::TimeLimitReached, "TimeLimitReached"},
-    {ReasonEnumType20::Timeout, "Timeout"},
+/** @brief Helper to convert a ReasonEnumType enum to string */
+const EnumToStringFromString<ReasonEnumType> ReasonEnumTypeHelper = {
+    {ReasonEnumType::DeAuthorized, "DeAuthorized"},
+    {ReasonEnumType::EmergencyStop, "EmergencyStop"},
+    {ReasonEnumType::EnergyLimitReached, "EnergyLimitReached"},
+    {ReasonEnumType::EVDisconnected, "EVDisconnected"},
+    {ReasonEnumType::GroundFault, "GroundFault"},
+    {ReasonEnumType::ImmediateReset, "ImmediateReset"},
+    {ReasonEnumType::Local, "Local"},
+    {ReasonEnumType::LocalOutOfCredit, "LocalOutOfCredit"},
+    {ReasonEnumType::MasterPass, "MasterPass"},
+    {ReasonEnumType::Other, "Other"},
+    {ReasonEnumType::OvercurrentFault, "OvercurrentFault"},
+    {ReasonEnumType::PowerLoss, "PowerLoss"},
+    {ReasonEnumType::PowerQuality, "PowerQuality"},
+    {ReasonEnumType::Reboot, "Reboot"},
+    {ReasonEnumType::Remote, "Remote"},
+    {ReasonEnumType::SOCLimitReached, "SOCLimitReached"},
+    {ReasonEnumType::StoppedByEV, "StoppedByEV"},
+    {ReasonEnumType::TimeLimitReached, "TimeLimitReached"},
+    {ReasonEnumType::Timeout, "Timeout"},
 };
 
 } // namespace ocpp20

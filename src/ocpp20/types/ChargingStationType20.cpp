@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ChargingStationType20 from a JSON representation */
-bool ChargingStationType20Converter::fromJson(const rapidjson::Value&       json,
-                                              ChargingStationType20&        data,
-                                              std::string&                  error_code,
-                                              [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ChargingStationType from a JSON representation */
+bool ChargingStationTypeConverter::fromJson(const rapidjson::Value&       json,
+                                            ChargingStationType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -56,7 +56,7 @@ bool ChargingStationType20Converter::fromJson(const rapidjson::Value&       json
     // modem
     if (json.HasMember("modem"))
     {
-        ModemType20Converter modem_converter;
+        ModemTypeConverter modem_converter;
         ret = ret && modem_converter.fromJson(json["modem"], data.modem, error_code, error_message);
     }
 
@@ -74,15 +74,15 @@ bool ChargingStationType20Converter::fromJson(const rapidjson::Value&       json
     return ret;
 }
 
-/** @brief Convert a ChargingStationType20 to a JSON representation */
-bool ChargingStationType20Converter::toJson(const ChargingStationType20& data, rapidjson::Document& json)
+/** @brief Convert a ChargingStationType to a JSON representation */
+bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -99,7 +99,7 @@ bool ChargingStationType20Converter::toJson(const ChargingStationType20& data, r
     // modem
     if (data.modem.isSet())
     {
-        ModemType20Converter modem_converter;
+        ModemTypeConverter modem_converter;
         modem_converter.setAllocator(allocator);
         rapidjson::Document modem_doc;
         modem_doc.Parse("{}");

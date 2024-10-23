@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ClearChargingProfileType20 from a JSON representation */
-bool ClearChargingProfileType20Converter::fromJson(const rapidjson::Value&       json,
-                                                   ClearChargingProfileType20&   data,
-                                                   std::string&                  error_code,
-                                                   [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ClearChargingProfileType from a JSON representation */
+bool ClearChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                 ClearChargingProfileType&     data,
+                                                 std::string&                  error_code,
+                                                 [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,7 +53,7 @@ bool ClearChargingProfileType20Converter::fromJson(const rapidjson::Value&      
     // chargingProfilePurpose
     if (json.HasMember("chargingProfilePurpose"))
     {
-        data.chargingProfilePurpose = ChargingProfilePurposeEnumType20Helper.fromString(json["chargingProfilePurpose"].GetString());
+        data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
     }
 
     // stackLevel
@@ -67,15 +67,15 @@ bool ClearChargingProfileType20Converter::fromJson(const rapidjson::Value&      
     return ret;
 }
 
-/** @brief Convert a ClearChargingProfileType20 to a JSON representation */
-bool ClearChargingProfileType20Converter::toJson(const ClearChargingProfileType20& data, rapidjson::Document& json)
+/** @brief Convert a ClearChargingProfileType to a JSON representation */
+bool ClearChargingProfileTypeConverter::toJson(const ClearChargingProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -89,7 +89,7 @@ bool ClearChargingProfileType20Converter::toJson(const ClearChargingProfileType2
     // chargingProfilePurpose
     if (data.chargingProfilePurpose.isSet())
     {
-        fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumType20Helper.toString(data.chargingProfilePurpose));
+        fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
     }
 
     // stackLevel

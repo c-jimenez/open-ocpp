@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_AUTHORIZATIONSTATUSENUMTYPE20_H
-#define OPENOCPP_AUTHORIZATIONSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_AUTHORIZATIONSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_AUTHORIZATIONSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief ID_ Token. Status. Authorization_ Status
 urn:x-oca:ocpp:uid:1:569372
 Current status of the ID Token. */
-enum class AuthorizationStatusEnumType20
+enum class AuthorizationStatusEnumType
 {
     Accepted,
     Blocked,
@@ -50,11 +50,11 @@ enum class AuthorizationStatusEnumType20
     Unknown,
 };
 
-/** @brief Helper to convert a AuthorizationStatusEnumType20 enum to string */
-extern const EnumToStringFromString<AuthorizationStatusEnumType20> AuthorizationStatusEnumType20Helper;
+/** @brief Helper to convert a AuthorizationStatusEnumType enum to string */
+extern const EnumToStringFromString<AuthorizationStatusEnumType> AuthorizationStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_AUTHORIZATIONSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_AUTHORIZATIONSTATUSENUMTYPE_H

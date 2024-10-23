@@ -30,29 +30,29 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a TriggerReasonEnumType20 enum to string */
-const EnumToStringFromString<TriggerReasonEnumType20> TriggerReasonEnumType20Helper = {
-    {TriggerReasonEnumType20::Authorized, "Authorized"},
-    {TriggerReasonEnumType20::CablePluggedIn, "CablePluggedIn"},
-    {TriggerReasonEnumType20::ChargingRateChanged, "ChargingRateChanged"},
-    {TriggerReasonEnumType20::ChargingStateChanged, "ChargingStateChanged"},
-    {TriggerReasonEnumType20::Deauthorized, "Deauthorized"},
-    {TriggerReasonEnumType20::EnergyLimitReached, "EnergyLimitReached"},
-    {TriggerReasonEnumType20::EVCommunicationLost, "EVCommunicationLost"},
-    {TriggerReasonEnumType20::EVConnectTimeout, "EVConnectTimeout"},
-    {TriggerReasonEnumType20::MeterValueClock, "MeterValueClock"},
-    {TriggerReasonEnumType20::MeterValuePeriodic, "MeterValuePeriodic"},
-    {TriggerReasonEnumType20::TimeLimitReached, "TimeLimitReached"},
-    {TriggerReasonEnumType20::Trigger, "Trigger"},
-    {TriggerReasonEnumType20::UnlockCommand, "UnlockCommand"},
-    {TriggerReasonEnumType20::StopAuthorized, "StopAuthorized"},
-    {TriggerReasonEnumType20::EVDeparted, "EVDeparted"},
-    {TriggerReasonEnumType20::EVDetected, "EVDetected"},
-    {TriggerReasonEnumType20::RemoteStop, "RemoteStop"},
-    {TriggerReasonEnumType20::RemoteStart, "RemoteStart"},
-    {TriggerReasonEnumType20::AbnormalCondition, "AbnormalCondition"},
-    {TriggerReasonEnumType20::SignedDataReceived, "SignedDataReceived"},
-    {TriggerReasonEnumType20::ResetCommand, "ResetCommand"},
+/** @brief Helper to convert a TriggerReasonEnumType enum to string */
+const EnumToStringFromString<TriggerReasonEnumType> TriggerReasonEnumTypeHelper = {
+    {TriggerReasonEnumType::Authorized, "Authorized"},
+    {TriggerReasonEnumType::CablePluggedIn, "CablePluggedIn"},
+    {TriggerReasonEnumType::ChargingRateChanged, "ChargingRateChanged"},
+    {TriggerReasonEnumType::ChargingStateChanged, "ChargingStateChanged"},
+    {TriggerReasonEnumType::Deauthorized, "Deauthorized"},
+    {TriggerReasonEnumType::EnergyLimitReached, "EnergyLimitReached"},
+    {TriggerReasonEnumType::EVCommunicationLost, "EVCommunicationLost"},
+    {TriggerReasonEnumType::EVConnectTimeout, "EVConnectTimeout"},
+    {TriggerReasonEnumType::MeterValueClock, "MeterValueClock"},
+    {TriggerReasonEnumType::MeterValuePeriodic, "MeterValuePeriodic"},
+    {TriggerReasonEnumType::TimeLimitReached, "TimeLimitReached"},
+    {TriggerReasonEnumType::Trigger, "Trigger"},
+    {TriggerReasonEnumType::UnlockCommand, "UnlockCommand"},
+    {TriggerReasonEnumType::StopAuthorized, "StopAuthorized"},
+    {TriggerReasonEnumType::EVDeparted, "EVDeparted"},
+    {TriggerReasonEnumType::EVDetected, "EVDetected"},
+    {TriggerReasonEnumType::RemoteStop, "RemoteStop"},
+    {TriggerReasonEnumType::RemoteStart, "RemoteStart"},
+    {TriggerReasonEnumType::AbnormalCondition, "AbnormalCondition"},
+    {TriggerReasonEnumType::SignedDataReceived, "SignedDataReceived"},
+    {TriggerReasonEnumType::ResetCommand, "ResetCommand"},
 };
 
 } // namespace ocpp20

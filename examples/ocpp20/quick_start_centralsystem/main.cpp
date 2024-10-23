@@ -134,19 +134,19 @@ int main(int argc, char* argv[])
                 std::cout << "---------------------------------------------" << std::endl;
 
                 std::cout << "Read whole charge point configuration..." << std::endl;
-                GetBaseReport20Req  get_base_report_req;
-                GetBaseReport20Conf get_base_report_conf;
+                GetBaseReportReq  get_base_report_req;
+                GetBaseReportConf get_base_report_conf;
                 get_base_report_req.requestId  = std::chrono::system_clock::now().time_since_epoch().count();
-                get_base_report_req.reportBase = ReportBaseEnumType20::ConfigurationInventory;
+                get_base_report_req.reportBase = ReportBaseEnumType::ConfigurationInventory;
                 if (!chargepoint->call(get_base_report_req, get_base_report_conf, error, error_msg))
                 {
                     std::cout << "Failed : error = " << error << " error_msg = " << error_msg << std::endl;
                 }
 
                 std::cout << "Configure heartbeat interval..." << std::endl;
-                SetVariables20Req     set_vars_req;
-                SetVariables20Conf    set_vars_conf;
-                SetVariableDataType20 var;
+                SetVariablesReq     set_vars_req;
+                SetVariablesConf    set_vars_conf;
+                SetVariableDataType var;
                 var.variable.name.assign("HeartbeatInterval");
                 var.component.name.assign("OCPPCommCtrlr");
                 var.attributeValue.assign("10");
@@ -161,9 +161,9 @@ int main(int argc, char* argv[])
                 }
 
                 std::cout << "Trigger status notification..." << std::endl;
-                TriggerMessage20Req  trigger_msg_req;
-                TriggerMessage20Conf trigger_msg_conf;
-                trigger_msg_req.requestedMessage = MessageTriggerEnumType20::StatusNotification;
+                TriggerMessageReq  trigger_msg_req;
+                TriggerMessageConf trigger_msg_conf;
+                trigger_msg_req.requestedMessage = MessageTriggerEnumType::StatusNotification;
                 if (chargepoint->call(trigger_msg_req, trigger_msg_conf, error, error_msg))
                 {
                     std::cout << "Done!" << std::endl;
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
                 std::cout << "Trigger meter values on evse 1..." << std::endl;
                 trigger_msg_req.evse.value().id  = 1;
-                trigger_msg_req.requestedMessage = MessageTriggerEnumType20::MeterValues;
+                trigger_msg_req.requestedMessage = MessageTriggerEnumType::MeterValues;
                 if (chargepoint->call(trigger_msg_req, trigger_msg_conf, error, error_msg))
                 {
                     std::cout << "Done!" << std::endl;
@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
 
                 std::cout << "Trigger heartbeat..." << std::endl;
                 trigger_msg_req.evse.clear();
-                trigger_msg_req.requestedMessage = MessageTriggerEnumType20::Heartbeat;
+                trigger_msg_req.requestedMessage = MessageTriggerEnumType::Heartbeat;
                 if (chargepoint->call(trigger_msg_req, trigger_msg_conf, error, error_msg))
                 {
                     std::cout << "Done!" << std::endl;

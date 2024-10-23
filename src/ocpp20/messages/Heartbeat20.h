@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_HEARTBEAT20_H
-#define OPENOCPP_HEARTBEAT20_H
+#ifndef OPENOCPP_OCPP20_HEARTBEAT_H
+#define OPENOCPP_OCPP20_HEARTBEAT_H
 
 #include "IMessageConverter.h"
 
@@ -35,30 +35,30 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the Heartbeat20 messages */
-static const std::string HEARTBEAT20_ACTION = "Heartbeat";
+/** @brief Action corresponding to the Heartbeat messages */
+static const std::string HEARTBEAT_ACTION = "Heartbeat";
 
-/** @brief Heartbeat20Req message */
-struct Heartbeat20Req
+/** @brief HeartbeatReq message */
+struct HeartbeatReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
-/** @brief Heartbeat20Conf message */
-struct Heartbeat20Conf
+/** @brief HeartbeatConf message */
+struct HeartbeatConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Contains the current time of the CSMS. */
     ocpp::types::DateTime currentTime;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(Heartbeat20)
+MESSAGE_CONVERTERS(Heartbeat)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_HEARTBEAT20_H
+#endif // OPENOCPP_OCPP20_HEARTBEAT_H

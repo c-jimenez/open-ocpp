@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MonitoringCriterionEnumType20 enum to string */
-const EnumToStringFromString<MonitoringCriterionEnumType20> MonitoringCriterionEnumType20Helper = {
-    {MonitoringCriterionEnumType20::ThresholdMonitoring, "ThresholdMonitoring"},
-    {MonitoringCriterionEnumType20::DeltaMonitoring, "DeltaMonitoring"},
-    {MonitoringCriterionEnumType20::PeriodicMonitoring, "PeriodicMonitoring"},
+/** @brief Helper to convert a MonitoringCriterionEnumType enum to string */
+const EnumToStringFromString<MonitoringCriterionEnumType> MonitoringCriterionEnumTypeHelper = {
+    {MonitoringCriterionEnumType::ThresholdMonitoring, "ThresholdMonitoring"},
+    {MonitoringCriterionEnumType::DeltaMonitoring, "DeltaMonitoring"},
+    {MonitoringCriterionEnumType::PeriodicMonitoring, "PeriodicMonitoring"},
 };
 
 } // namespace ocpp20

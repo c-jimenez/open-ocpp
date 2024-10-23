@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a HashAlgorithmEnumType20 enum to string */
-const EnumToStringFromString<HashAlgorithmEnumType20> HashAlgorithmEnumType20Helper = {
-    {HashAlgorithmEnumType20::SHA256, "SHA256"},
-    {HashAlgorithmEnumType20::SHA384, "SHA384"},
-    {HashAlgorithmEnumType20::SHA512, "SHA512"},
+/** @brief Helper to convert a HashAlgorithmEnumType enum to string */
+const EnumToStringFromString<HashAlgorithmEnumType> HashAlgorithmEnumTypeHelper = {
+    {HashAlgorithmEnumType::SHA256, "SHA256"},
+    {HashAlgorithmEnumType::SHA384, "SHA384"},
+    {HashAlgorithmEnumType::SHA512, "SHA512"},
 };
 
 } // namespace ocpp20

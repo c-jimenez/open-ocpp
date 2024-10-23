@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_LOGPARAMETERSTYPE20_H
-#define OPENOCPP_LOGPARAMETERSTYPE20_H
+#ifndef OPENOCPP_OCPP20_LOGPARAMETERSTYPE_H
+#define OPENOCPP_OCPP20_LOGPARAMETERSTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -42,10 +42,10 @@ namespace ocpp20
 urn:x-enexis:ecdm:uid:2:233373
 Generic class for the configuration of logging entries.
  */
-struct LogParametersType20
+struct LogParametersType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Log. Remote_ Location. URI
 urn:x-enexis:ecdm:uid:1:569484
 The URL of the location at the remote system where the log should be stored. */
@@ -60,25 +60,25 @@ This contains the date and time of the latest logging information to include in 
     ocpp::types::Optional<ocpp::types::DateTime> latestTimestamp;
 };
 
-/** @brief Converter class for LogParametersType20 type */
-class LogParametersType20Converter : public ocpp::messages::IMessageConverter<LogParametersType20>
+/** @brief Converter class for LogParametersType type */
+class LogParametersTypeConverter : public ocpp::messages::IMessageConverter<LogParametersType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<LogParametersType20>* clone() const override { return new LogParametersType20Converter(); }
+    ocpp::messages::IMessageConverter<LogParametersType>* clone() const override { return new LogParametersTypeConverter(); }
 
-    /** @brief Convert a LogParametersType20 from a JSON representation */
+    /** @brief Convert a LogParametersType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  LogParametersType20&          data,
+                  LogParametersType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a LogParametersType20 to a JSON representation */
-    bool toJson(const LogParametersType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a LogParametersType to a JSON representation */
+    bool toJson(const LogParametersType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_LOGPARAMETERSTYPE20_H
+#endif // OPENOCPP_OCPP20_LOGPARAMETERSTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_FIRMWARESTATUSENUMTYPE20_H
-#define OPENOCPP_FIRMWARESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_FIRMWARESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_FIRMWARESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This contains the progress status of the firmware installation. */
-enum class FirmwareStatusEnumType20
+enum class FirmwareStatusEnumType
 {
     Downloaded,
     DownloadFailed,
@@ -52,11 +52,11 @@ enum class FirmwareStatusEnumType20
     SignatureVerified,
 };
 
-/** @brief Helper to convert a FirmwareStatusEnumType20 enum to string */
-extern const EnumToStringFromString<FirmwareStatusEnumType20> FirmwareStatusEnumType20Helper;
+/** @brief Helper to convert a FirmwareStatusEnumType enum to string */
+extern const EnumToStringFromString<FirmwareStatusEnumType> FirmwareStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_FIRMWARESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_FIRMWARESTATUSENUMTYPE_H

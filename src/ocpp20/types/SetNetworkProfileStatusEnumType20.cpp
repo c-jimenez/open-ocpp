@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a SetNetworkProfileStatusEnumType20 enum to string */
-const EnumToStringFromString<SetNetworkProfileStatusEnumType20> SetNetworkProfileStatusEnumType20Helper = {
-    {SetNetworkProfileStatusEnumType20::Accepted, "Accepted"},
-    {SetNetworkProfileStatusEnumType20::Rejected, "Rejected"},
-    {SetNetworkProfileStatusEnumType20::Failed, "Failed"},
+/** @brief Helper to convert a SetNetworkProfileStatusEnumType enum to string */
+const EnumToStringFromString<SetNetworkProfileStatusEnumType> SetNetworkProfileStatusEnumTypeHelper = {
+    {SetNetworkProfileStatusEnumType::Accepted, "Accepted"},
+    {SetNetworkProfileStatusEnumType::Rejected, "Rejected"},
+    {SetNetworkProfileStatusEnumType::Failed, "Failed"},
 };
 
 } // namespace ocpp20

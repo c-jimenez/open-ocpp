@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_LOGSTATUSNOTIFICATION20_H
-#define OPENOCPP_LOGSTATUSNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_LOGSTATUSNOTIFICATION_H
+#define OPENOCPP_OCPP20_LOGSTATUSNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -36,33 +36,33 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the LogStatusNotification20 messages */
-static const std::string LOGSTATUSNOTIFICATION20_ACTION = "LogStatusNotification";
+/** @brief Action corresponding to the LogStatusNotification messages */
+static const std::string LOGSTATUSNOTIFICATION_ACTION = "LogStatusNotification";
 
-/** @brief LogStatusNotification20Req message */
-struct LogStatusNotification20Req
+/** @brief LogStatusNotificationReq message */
+struct LogStatusNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::UploadLogStatusEnumType20 status;
+    ocpp::types::ocpp20::UploadLogStatusEnumType status;
     /** @brief The request id that was provided in GetLogRequest that started this log upload. This field is mandatory,
 unless the message was triggered by a TriggerMessageRequest AND there is no log upload ongoing. */
     ocpp::types::Optional<int> requestId;
 };
 
-/** @brief LogStatusNotification20Conf message */
-struct LogStatusNotification20Conf
+/** @brief LogStatusNotificationConf message */
+struct LogStatusNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(LogStatusNotification20)
+MESSAGE_CONVERTERS(LogStatusNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_LOGSTATUSNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_LOGSTATUSNOTIFICATION_H

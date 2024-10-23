@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a OperationalStatusEnumType20 enum to string */
-const EnumToStringFromString<OperationalStatusEnumType20> OperationalStatusEnumType20Helper = {
-    {OperationalStatusEnumType20::Inoperative, "Inoperative"},
-    {OperationalStatusEnumType20::Operative, "Operative"},
+/** @brief Helper to convert a OperationalStatusEnumType enum to string */
+const EnumToStringFromString<OperationalStatusEnumType> OperationalStatusEnumTypeHelper = {
+    {OperationalStatusEnumType::Inoperative, "Inoperative"},
+    {OperationalStatusEnumType::Operative, "Operative"},
 };
 
 } // namespace ocpp20

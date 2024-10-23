@@ -32,23 +32,23 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a PublishFirmwareStatusNotification20Req from a JSON representation */
-bool PublishFirmwareStatusNotification20ReqConverter::fromJson(const rapidjson::Value&                 json,
-                                                               PublishFirmwareStatusNotification20Req& data,
-                                                               std::string&                            error_code,
-                                                               std::string&                            error_message)
+/** @brief Convert a PublishFirmwareStatusNotificationReq from a JSON representation */
+bool PublishFirmwareStatusNotificationReqConverter::fromJson(const rapidjson::Value&               json,
+                                                             PublishFirmwareStatusNotificationReq& data,
+                                                             std::string&                          error_code,
+                                                             std::string&                          error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::PublishFirmwareStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::PublishFirmwareStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // location
     if (json.HasMember("location"))
@@ -72,15 +72,15 @@ bool PublishFirmwareStatusNotification20ReqConverter::fromJson(const rapidjson::
     return ret;
 }
 
-/** @brief Convert a PublishFirmwareStatusNotification20Req to a JSON representation */
-bool PublishFirmwareStatusNotification20ReqConverter::toJson(const PublishFirmwareStatusNotification20Req& data, rapidjson::Document& json)
+/** @brief Convert a PublishFirmwareStatusNotificationReq to a JSON representation */
+bool PublishFirmwareStatusNotificationReqConverter::toJson(const PublishFirmwareStatusNotificationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -89,7 +89,7 @@ bool PublishFirmwareStatusNotification20ReqConverter::toJson(const PublishFirmwa
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::PublishFirmwareStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::PublishFirmwareStatusEnumTypeHelper.toString(data.status));
 
     // location
     if (!data.location.empty())
@@ -109,18 +109,18 @@ bool PublishFirmwareStatusNotification20ReqConverter::toJson(const PublishFirmwa
     return ret;
 }
 
-/** @brief Convert a PublishFirmwareStatusNotification20Conf from a JSON representation */
-bool PublishFirmwareStatusNotification20ConfConverter::fromJson(const rapidjson::Value&                  json,
-                                                                PublishFirmwareStatusNotification20Conf& data,
-                                                                std::string&                             error_code,
-                                                                std::string&                             error_message)
+/** @brief Convert a PublishFirmwareStatusNotificationConf from a JSON representation */
+bool PublishFirmwareStatusNotificationConfConverter::fromJson(const rapidjson::Value&                json,
+                                                              PublishFirmwareStatusNotificationConf& data,
+                                                              std::string&                           error_code,
+                                                              std::string&                           error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -132,16 +132,15 @@ bool PublishFirmwareStatusNotification20ConfConverter::fromJson(const rapidjson:
     return ret;
 }
 
-/** @brief Convert a PublishFirmwareStatusNotification20Conf to a JSON representation */
-bool PublishFirmwareStatusNotification20ConfConverter::toJson(const PublishFirmwareStatusNotification20Conf& data,
-                                                              rapidjson::Document&                           json)
+/** @brief Convert a PublishFirmwareStatusNotificationConf to a JSON representation */
+bool PublishFirmwareStatusNotificationConfConverter::toJson(const PublishFirmwareStatusNotificationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

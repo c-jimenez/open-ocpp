@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGPROFILECRITERIONTYPE20_H
-#define OPENOCPP_CHARGINGPROFILECRITERIONTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGPROFILECRITERIONTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGPROFILECRITERIONTYPE_H
 
 #include "ChargingLimitSourceEnumType20.h"
 #include "ChargingProfilePurposeEnumType20.h"
@@ -43,12 +43,12 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233255
 A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
  */
-struct ChargingProfileCriterionType20
+struct ChargingProfileCriterionType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ChargingProfilePurposeEnumType20> chargingProfilePurpose;
+    ocpp::types::Optional<ChargingProfilePurposeEnumType> chargingProfilePurpose;
     /** @brief Charging_ Profile. Stack_ Level. Counter
 urn:x-oca:ocpp:uid:1:569230
 Value determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0. */
@@ -56,31 +56,31 @@ Value determining level in hierarchy stack of profiles. Higher values have prece
     /** @brief List of all the chargingProfileIds requested. Any ChargingProfile that matches one of these profiles will be reported. If omitted, the Charging Station SHALL not filter on chargingProfileId. This field SHALL NOT contain more ids than set in &lt;&lt;configkey-charging-profile-entries,ChargingProfileEntries.maxLimit&gt;&gt; */
     std::vector<int> chargingProfileId;
     /** @brief For which charging limit sources, charging profiles SHALL be reported. If omitted, the Charging Station SHALL not filter on chargingLimitSource. */
-    std::vector<ChargingLimitSourceEnumType20> chargingLimitSource;
+    std::vector<ChargingLimitSourceEnumType> chargingLimitSource;
 };
 
-/** @brief Converter class for ChargingProfileCriterionType20 type */
-class ChargingProfileCriterionType20Converter : public ocpp::messages::IMessageConverter<ChargingProfileCriterionType20>
+/** @brief Converter class for ChargingProfileCriterionType type */
+class ChargingProfileCriterionTypeConverter : public ocpp::messages::IMessageConverter<ChargingProfileCriterionType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingProfileCriterionType20>* clone() const override
+    ocpp::messages::IMessageConverter<ChargingProfileCriterionType>* clone() const override
     {
-        return new ChargingProfileCriterionType20Converter();
+        return new ChargingProfileCriterionTypeConverter();
     }
 
-    /** @brief Convert a ChargingProfileCriterionType20 from a JSON representation */
-    bool fromJson(const rapidjson::Value&         json,
-                  ChargingProfileCriterionType20& data,
-                  std::string&                    error_code,
-                  [[maybe_unused]] std::string&   error_message) override;
+    /** @brief Convert a ChargingProfileCriterionType from a JSON representation */
+    bool fromJson(const rapidjson::Value&       json,
+                  ChargingProfileCriterionType& data,
+                  std::string&                  error_code,
+                  [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingProfileCriterionType20 to a JSON representation */
-    bool toJson(const ChargingProfileCriterionType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingProfileCriterionType to a JSON representation */
+    bool toJson(const ChargingProfileCriterionType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGPROFILECRITERIONTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGPROFILECRITERIONTYPE_H

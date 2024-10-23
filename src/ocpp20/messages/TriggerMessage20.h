@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_TRIGGERMESSAGE20_H
-#define OPENOCPP_TRIGGERMESSAGE20_H
+#ifndef OPENOCPP_OCPP20_TRIGGERMESSAGE_H
+#define OPENOCPP_OCPP20_TRIGGERMESSAGE_H
 
 #include "IMessageConverter.h"
 
@@ -39,36 +39,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the TriggerMessage20 messages */
-static const std::string TRIGGERMESSAGE20_ACTION = "TriggerMessage";
+/** @brief Action corresponding to the TriggerMessage messages */
+static const std::string TRIGGERMESSAGE_ACTION = "TriggerMessage";
 
-/** @brief TriggerMessage20Req message */
-struct TriggerMessage20Req
+/** @brief TriggerMessageReq message */
+struct TriggerMessageReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType20> evse;
+    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType> evse;
     /** @brief  */
-    ocpp::types::ocpp20::MessageTriggerEnumType20 requestedMessage;
+    ocpp::types::ocpp20::MessageTriggerEnumType requestedMessage;
 };
 
-/** @brief TriggerMessage20Conf message */
-struct TriggerMessage20Conf
+/** @brief TriggerMessageConf message */
+struct TriggerMessageConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::TriggerMessageStatusEnumType20 status;
+    ocpp::types::ocpp20::TriggerMessageStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(TriggerMessage20)
+MESSAGE_CONVERTERS(TriggerMessage)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_TRIGGERMESSAGE20_H
+#endif // OPENOCPP_OCPP20_TRIGGERMESSAGE_H

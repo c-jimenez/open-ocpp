@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a DCChargingParametersType20 from a JSON representation */
-bool DCChargingParametersType20Converter::fromJson(const rapidjson::Value&       json,
-                                                   DCChargingParametersType20&   data,
-                                                   std::string&                  error_code,
-                                                   [[maybe_unused]] std::string& error_message)
+/** @brief Convert a DCChargingParametersType from a JSON representation */
+bool DCChargingParametersTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                 DCChargingParametersType&     data,
+                                                 std::string&                  error_code,
+                                                 [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -79,15 +79,15 @@ bool DCChargingParametersType20Converter::fromJson(const rapidjson::Value&      
     return ret;
 }
 
-/** @brief Convert a DCChargingParametersType20 to a JSON representation */
-bool DCChargingParametersType20Converter::toJson(const DCChargingParametersType20& data, rapidjson::Document& json)
+/** @brief Convert a DCChargingParametersType to a JSON representation */
+bool DCChargingParametersTypeConverter::toJson(const DCChargingParametersType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

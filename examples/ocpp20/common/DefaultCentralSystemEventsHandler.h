@@ -84,149 +84,149 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ocpp20::IC
         /** @brief Called to notify the disconnection of the charge point */
         void disconnected() override;
 
-        /** @brief Called on reception of a BootNotification20 request from the charge point */
-        bool onBootNotification20(const ocpp::messages::ocpp20::BootNotification20Req& request,
-                                  ocpp::messages::ocpp20::BootNotification20Conf&      response,
-                                  std::string&                                         error,
-                                  std::string&                                         message) override;
+        /** @brief Called on reception of a BootNotification request from the charge point */
+        bool onBootNotification(const ocpp::messages::ocpp20::BootNotificationReq& request,
+                                ocpp::messages::ocpp20::BootNotificationConf&      response,
+                                std::string&                                       error,
+                                std::string&                                       message) override;
 
-        /** @brief Called on reception of a Authorize20 request from the charge point */
-        bool onAuthorize20(const ocpp::messages::ocpp20::Authorize20Req& request,
-                           ocpp::messages::ocpp20::Authorize20Conf&      response,
-                           std::string&                                  error,
-                           std::string&                                  message) override;
+        /** @brief Called on reception of a Authorize request from the charge point */
+        bool onAuthorize(const ocpp::messages::ocpp20::AuthorizeReq& request,
+                         ocpp::messages::ocpp20::AuthorizeConf&      response,
+                         std::string&                                error,
+                         std::string&                                message) override;
 
-        /** @brief Called on reception of a ClearedChargingLimit20 request from the charge point */
-        bool onClearedChargingLimit20(const ocpp::messages::ocpp20::ClearedChargingLimit20Req& request,
-                                      ocpp::messages::ocpp20::ClearedChargingLimit20Conf&      response,
-                                      std::string&                                             error,
-                                      std::string&                                             message) override;
-
-        /** @brief Called on reception of a CostUpdated20 request from the charge point */
-        bool onCostUpdated20(const ocpp::messages::ocpp20::CostUpdated20Req& request,
-                             ocpp::messages::ocpp20::CostUpdated20Conf&      response,
-                             std::string&                                    error,
-                             std::string&                                    message) override;
-
-        /** @brief Called on reception of a DataTransfer20 request from the charge point */
-        bool onDataTransfer20(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                              ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                              std::string&                                     error,
-                              std::string&                                     message) override;
-
-        /** @brief Called on reception of a FirmwareStatusNotification20 request from the charge point */
-        bool onFirmwareStatusNotification20(const ocpp::messages::ocpp20::FirmwareStatusNotification20Req& request,
-                                            ocpp::messages::ocpp20::FirmwareStatusNotification20Conf&      response,
-                                            std::string&                                                   error,
-                                            std::string&                                                   message) override;
-
-        /** @brief Called on reception of a Heartbeat20 request from the charge point */
-        bool onHeartbeat20(const ocpp::messages::ocpp20::Heartbeat20Req& request,
-                           ocpp::messages::ocpp20::Heartbeat20Conf&      response,
-                           std::string&                                  error,
-                           std::string&                                  message) override;
-
-        /** @brief Called on reception of a LogStatusNotification20 request from the charge point */
-        bool onLogStatusNotification20(const ocpp::messages::ocpp20::LogStatusNotification20Req& request,
-                                       ocpp::messages::ocpp20::LogStatusNotification20Conf&      response,
-                                       std::string&                                              error,
-                                       std::string&                                              message) override;
-
-        /** @brief Called on reception of a MeterValues20 request from the charge point */
-        bool onMeterValues20(const ocpp::messages::ocpp20::MeterValues20Req& request,
-                             ocpp::messages::ocpp20::MeterValues20Conf&      response,
-                             std::string&                                    error,
-                             std::string&                                    message) override;
-
-        /** @brief Called on reception of a NotifyChargingLimit20 request from the charge point */
-        bool onNotifyChargingLimit20(const ocpp::messages::ocpp20::NotifyChargingLimit20Req& request,
-                                     ocpp::messages::ocpp20::NotifyChargingLimit20Conf&      response,
-                                     std::string&                                            error,
-                                     std::string&                                            message) override;
-
-        /** @brief Called on reception of a NotifyCustomerInformation20 request from the charge point */
-        bool onNotifyCustomerInformation20(const ocpp::messages::ocpp20::NotifyCustomerInformation20Req& request,
-                                           ocpp::messages::ocpp20::NotifyCustomerInformation20Conf&      response,
-                                           std::string&                                                  error,
-                                           std::string&                                                  message) override;
-
-        /** @brief Called on reception of a NotifyDisplayMessages20 request from the charge point */
-        bool onNotifyDisplayMessages20(const ocpp::messages::ocpp20::NotifyDisplayMessages20Req& request,
-                                       ocpp::messages::ocpp20::NotifyDisplayMessages20Conf&      response,
-                                       std::string&                                              error,
-                                       std::string&                                              message) override;
-
-        /** @brief Called on reception of a NotifyEVChargingNeeds20 request from the charge point */
-        bool onNotifyEVChargingNeeds20(const ocpp::messages::ocpp20::NotifyEVChargingNeeds20Req& request,
-                                       ocpp::messages::ocpp20::NotifyEVChargingNeeds20Conf&      response,
-                                       std::string&                                              error,
-                                       std::string&                                              message) override;
-
-        /** @brief Called on reception of a NotifyEVChargingSchedule20 request from the charge point */
-        bool onNotifyEVChargingSchedule20(const ocpp::messages::ocpp20::NotifyEVChargingSchedule20Req& request,
-                                          ocpp::messages::ocpp20::NotifyEVChargingSchedule20Conf&      response,
-                                          std::string&                                                 error,
-                                          std::string&                                                 message) override;
-
-        /** @brief Called on reception of a NotifyEvent20 request from the charge point */
-        bool onNotifyEvent20(const ocpp::messages::ocpp20::NotifyEvent20Req& request,
-                             ocpp::messages::ocpp20::NotifyEvent20Conf&      response,
-                             std::string&                                    error,
-                             std::string&                                    message) override;
-
-        /** @brief Called on reception of a NotifyMonitoringReport20 request from the charge point */
-        bool onNotifyMonitoringReport20(const ocpp::messages::ocpp20::NotifyMonitoringReport20Req& request,
-                                        ocpp::messages::ocpp20::NotifyMonitoringReport20Conf&      response,
-                                        std::string&                                               error,
-                                        std::string&                                               message) override;
-
-        /** @brief Called on reception of a NotifyReport20 request from the charge point */
-        bool onNotifyReport20(const ocpp::messages::ocpp20::NotifyReport20Req& request,
-                              ocpp::messages::ocpp20::NotifyReport20Conf&      response,
-                              std::string&                                     error,
-                              std::string&                                     message) override;
-
-        /** @brief Called on reception of a PublishFirmwareStatusNotification20 request from the charge point */
-        bool onPublishFirmwareStatusNotification20(const ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Req& request,
-                                                   ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Conf&      response,
-                                                   std::string&                                                          error,
-                                                   std::string&                                                          message) override;
-
-        /** @brief Called on reception of a ReportChargingProfiles20 request from the charge point */
-        bool onReportChargingProfiles20(const ocpp::messages::ocpp20::ReportChargingProfiles20Req& request,
-                                        ocpp::messages::ocpp20::ReportChargingProfiles20Conf&      response,
-                                        std::string&                                               error,
-                                        std::string&                                               message) override;
-
-        /** @brief Called on reception of a ReservationStatusUpdate20 request from the charge point */
-        bool onReservationStatusUpdate20(const ocpp::messages::ocpp20::ReservationStatusUpdate20Req& request,
-                                         ocpp::messages::ocpp20::ReservationStatusUpdate20Conf&      response,
-                                         std::string&                                                error,
-                                         std::string&                                                message) override;
-
-        /** @brief Called on reception of a SecurityEventNotification20 request from the charge point */
-        bool onSecurityEventNotification20(const ocpp::messages::ocpp20::SecurityEventNotification20Req& request,
-                                           ocpp::messages::ocpp20::SecurityEventNotification20Conf&      response,
-                                           std::string&                                                  error,
-                                           std::string&                                                  message) override;
-
-        /** @brief Called on reception of a SignCertificate20 request from the charge point */
-        bool onSignCertificate20(const ocpp::messages::ocpp20::SignCertificate20Req& request,
-                                 ocpp::messages::ocpp20::SignCertificate20Conf&      response,
-                                 std::string&                                        error,
-                                 std::string&                                        message) override;
-
-        /** @brief Called on reception of a StatusNotification20 request from the charge point */
-        bool onStatusNotification20(const ocpp::messages::ocpp20::StatusNotification20Req& request,
-                                    ocpp::messages::ocpp20::StatusNotification20Conf&      response,
+        /** @brief Called on reception of a ClearedChargingLimit request from the charge point */
+        bool onClearedChargingLimit(const ocpp::messages::ocpp20::ClearedChargingLimitReq& request,
+                                    ocpp::messages::ocpp20::ClearedChargingLimitConf&      response,
                                     std::string&                                           error,
                                     std::string&                                           message) override;
 
-        /** @brief Called on reception of a TransactionEvent20 request from the charge point */
-        bool onTransactionEvent20(const ocpp::messages::ocpp20::TransactionEvent20Req& request,
-                                  ocpp::messages::ocpp20::TransactionEvent20Conf&      response,
+        /** @brief Called on reception of a CostUpdated request from the charge point */
+        bool onCostUpdated(const ocpp::messages::ocpp20::CostUpdatedReq& request,
+                           ocpp::messages::ocpp20::CostUpdatedConf&      response,
+                           std::string&                                  error,
+                           std::string&                                  message) override;
+
+        /** @brief Called on reception of a DataTransfer request from the charge point */
+        bool onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
+                            ocpp::messages::ocpp20::DataTransferConf&      response,
+                            std::string&                                   error,
+                            std::string&                                   message) override;
+
+        /** @brief Called on reception of a FirmwareStatusNotification request from the charge point */
+        bool onFirmwareStatusNotification(const ocpp::messages::ocpp20::FirmwareStatusNotificationReq& request,
+                                          ocpp::messages::ocpp20::FirmwareStatusNotificationConf&      response,
+                                          std::string&                                                 error,
+                                          std::string&                                                 message) override;
+
+        /** @brief Called on reception of a Heartbeat request from the charge point */
+        bool onHeartbeat(const ocpp::messages::ocpp20::HeartbeatReq& request,
+                         ocpp::messages::ocpp20::HeartbeatConf&      response,
+                         std::string&                                error,
+                         std::string&                                message) override;
+
+        /** @brief Called on reception of a LogStatusNotification request from the charge point */
+        bool onLogStatusNotification(const ocpp::messages::ocpp20::LogStatusNotificationReq& request,
+                                     ocpp::messages::ocpp20::LogStatusNotificationConf&      response,
+                                     std::string&                                            error,
+                                     std::string&                                            message) override;
+
+        /** @brief Called on reception of a MeterValues request from the charge point */
+        bool onMeterValues(const ocpp::messages::ocpp20::MeterValuesReq& request,
+                           ocpp::messages::ocpp20::MeterValuesConf&      response,
+                           std::string&                                  error,
+                           std::string&                                  message) override;
+
+        /** @brief Called on reception of a NotifyChargingLimit request from the charge point */
+        bool onNotifyChargingLimit(const ocpp::messages::ocpp20::NotifyChargingLimitReq& request,
+                                   ocpp::messages::ocpp20::NotifyChargingLimitConf&      response,
+                                   std::string&                                          error,
+                                   std::string&                                          message) override;
+
+        /** @brief Called on reception of a NotifyCustomerInformation request from the charge point */
+        bool onNotifyCustomerInformation(const ocpp::messages::ocpp20::NotifyCustomerInformationReq& request,
+                                         ocpp::messages::ocpp20::NotifyCustomerInformationConf&      response,
+                                         std::string&                                                error,
+                                         std::string&                                                message) override;
+
+        /** @brief Called on reception of a NotifyDisplayMessages request from the charge point */
+        bool onNotifyDisplayMessages(const ocpp::messages::ocpp20::NotifyDisplayMessagesReq& request,
+                                     ocpp::messages::ocpp20::NotifyDisplayMessagesConf&      response,
+                                     std::string&                                            error,
+                                     std::string&                                            message) override;
+
+        /** @brief Called on reception of a NotifyEVChargingNeeds request from the charge point */
+        bool onNotifyEVChargingNeeds(const ocpp::messages::ocpp20::NotifyEVChargingNeedsReq& request,
+                                     ocpp::messages::ocpp20::NotifyEVChargingNeedsConf&      response,
+                                     std::string&                                            error,
+                                     std::string&                                            message) override;
+
+        /** @brief Called on reception of a NotifyEVChargingSchedule request from the charge point */
+        bool onNotifyEVChargingSchedule(const ocpp::messages::ocpp20::NotifyEVChargingScheduleReq& request,
+                                        ocpp::messages::ocpp20::NotifyEVChargingScheduleConf&      response,
+                                        std::string&                                               error,
+                                        std::string&                                               message) override;
+
+        /** @brief Called on reception of a NotifyEvent request from the charge point */
+        bool onNotifyEvent(const ocpp::messages::ocpp20::NotifyEventReq& request,
+                           ocpp::messages::ocpp20::NotifyEventConf&      response,
+                           std::string&                                  error,
+                           std::string&                                  message) override;
+
+        /** @brief Called on reception of a NotifyMonitoringReport request from the charge point */
+        bool onNotifyMonitoringReport(const ocpp::messages::ocpp20::NotifyMonitoringReportReq& request,
+                                      ocpp::messages::ocpp20::NotifyMonitoringReportConf&      response,
+                                      std::string&                                             error,
+                                      std::string&                                             message) override;
+
+        /** @brief Called on reception of a NotifyReport request from the charge point */
+        bool onNotifyReport(const ocpp::messages::ocpp20::NotifyReportReq& request,
+                            ocpp::messages::ocpp20::NotifyReportConf&      response,
+                            std::string&                                   error,
+                            std::string&                                   message) override;
+
+        /** @brief Called on reception of a PublishFirmwareStatusNotification request from the charge point */
+        bool onPublishFirmwareStatusNotification(const ocpp::messages::ocpp20::PublishFirmwareStatusNotificationReq& request,
+                                                 ocpp::messages::ocpp20::PublishFirmwareStatusNotificationConf&      response,
+                                                 std::string&                                                        error,
+                                                 std::string&                                                        message) override;
+
+        /** @brief Called on reception of a ReportChargingProfiles request from the charge point */
+        bool onReportChargingProfiles(const ocpp::messages::ocpp20::ReportChargingProfilesReq& request,
+                                      ocpp::messages::ocpp20::ReportChargingProfilesConf&      response,
+                                      std::string&                                             error,
+                                      std::string&                                             message) override;
+
+        /** @brief Called on reception of a ReservationStatusUpdate request from the charge point */
+        bool onReservationStatusUpdate(const ocpp::messages::ocpp20::ReservationStatusUpdateReq& request,
+                                       ocpp::messages::ocpp20::ReservationStatusUpdateConf&      response,
+                                       std::string&                                              error,
+                                       std::string&                                              message) override;
+
+        /** @brief Called on reception of a SecurityEventNotification request from the charge point */
+        bool onSecurityEventNotification(const ocpp::messages::ocpp20::SecurityEventNotificationReq& request,
+                                         ocpp::messages::ocpp20::SecurityEventNotificationConf&      response,
+                                         std::string&                                                error,
+                                         std::string&                                                message) override;
+
+        /** @brief Called on reception of a SignCertificate request from the charge point */
+        bool onSignCertificate(const ocpp::messages::ocpp20::SignCertificateReq& request,
+                               ocpp::messages::ocpp20::SignCertificateConf&      response,
+                               std::string&                                      error,
+                               std::string&                                      message) override;
+
+        /** @brief Called on reception of a StatusNotification request from the charge point */
+        bool onStatusNotification(const ocpp::messages::ocpp20::StatusNotificationReq& request,
+                                  ocpp::messages::ocpp20::StatusNotificationConf&      response,
                                   std::string&                                         error,
                                   std::string&                                         message) override;
+
+        /** @brief Called on reception of a TransactionEvent request from the charge point */
+        bool onTransactionEvent(const ocpp::messages::ocpp20::TransactionEventReq& request,
+                                ocpp::messages::ocpp20::TransactionEventConf&      response,
+                                std::string&                                       error,
+                                std::string&                                       message) override;
 
       protected:
         /** @brief Get the serial number of the charge point */

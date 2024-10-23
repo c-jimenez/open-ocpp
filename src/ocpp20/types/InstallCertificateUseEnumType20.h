@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_INSTALLCERTIFICATEUSEENUMTYPE20_H
-#define OPENOCPP_INSTALLCERTIFICATEUSEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_INSTALLCERTIFICATEUSEENUMTYPE_H
+#define OPENOCPP_OCPP20_INSTALLCERTIFICATEUSEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Indicates the certificate type that is sent. */
-enum class InstallCertificateUseEnumType20
+enum class InstallCertificateUseEnumType
 {
     V2GRootCertificate,
     MORootCertificate,
@@ -42,11 +42,11 @@ enum class InstallCertificateUseEnumType20
     ManufacturerRootCertificate,
 };
 
-/** @brief Helper to convert a InstallCertificateUseEnumType20 enum to string */
-extern const EnumToStringFromString<InstallCertificateUseEnumType20> InstallCertificateUseEnumType20Helper;
+/** @brief Helper to convert a InstallCertificateUseEnumType enum to string */
+extern const EnumToStringFromString<InstallCertificateUseEnumType> InstallCertificateUseEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_INSTALLCERTIFICATEUSEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_INSTALLCERTIFICATEUSEENUMTYPE_H

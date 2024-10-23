@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SALESTARIFFENTRYTYPE20_H
-#define OPENOCPP_SALESTARIFFENTRYTYPE20_H
+#ifndef OPENOCPP_OCPP20_SALESTARIFFENTRYTYPE_H
+#define OPENOCPP_OCPP20_SALESTARIFFENTRYTYPE_H
 
 #include "ConsumptionCostType20.h"
 #include "CustomDataType20.h"
@@ -42,39 +42,39 @@ namespace ocpp20
 /** @brief Sales_ Tariff_ Entry
 urn:x-oca:ocpp:uid:2:233271
  */
-struct SalesTariffEntryType20
+struct SalesTariffEntryType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    RelativeTimeIntervalType20 relativeTimeInterval;
+    RelativeTimeIntervalType relativeTimeInterval;
     /** @brief Sales_ Tariff_ Entry. E_ Price_ Level. Unsigned_ Integer
 urn:x-oca:ocpp:uid:1:569281
 Defines the price level of this SalesTariffEntry (referring to NumEPriceLevels). Small values for the EPriceLevel represent a cheaper TariffEntry. Large values for the EPriceLevel represent a more expensive TariffEntry. */
     ocpp::types::Optional<int> ePriceLevel;
     /** @brief  */
-    std::vector<ConsumptionCostType20> consumptionCost;
+    std::vector<ConsumptionCostType> consumptionCost;
 };
 
-/** @brief Converter class for SalesTariffEntryType20 type */
-class SalesTariffEntryType20Converter : public ocpp::messages::IMessageConverter<SalesTariffEntryType20>
+/** @brief Converter class for SalesTariffEntryType type */
+class SalesTariffEntryTypeConverter : public ocpp::messages::IMessageConverter<SalesTariffEntryType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SalesTariffEntryType20>* clone() const override { return new SalesTariffEntryType20Converter(); }
+    ocpp::messages::IMessageConverter<SalesTariffEntryType>* clone() const override { return new SalesTariffEntryTypeConverter(); }
 
-    /** @brief Convert a SalesTariffEntryType20 from a JSON representation */
+    /** @brief Convert a SalesTariffEntryType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SalesTariffEntryType20&       data,
+                  SalesTariffEntryType&         data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SalesTariffEntryType20 to a JSON representation */
-    bool toJson(const SalesTariffEntryType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SalesTariffEntryType to a JSON representation */
+    bool toJson(const SalesTariffEntryType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SALESTARIFFENTRYTYPE20_H
+#endif // OPENOCPP_OCPP20_SALESTARIFFENTRYTYPE_H

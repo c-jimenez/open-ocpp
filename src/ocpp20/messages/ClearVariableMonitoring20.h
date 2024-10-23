@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARVARIABLEMONITORING20_H
-#define OPENOCPP_CLEARVARIABLEMONITORING20_H
+#ifndef OPENOCPP_OCPP20_CLEARVARIABLEMONITORING_H
+#define OPENOCPP_OCPP20_CLEARVARIABLEMONITORING_H
 
 #include "IMessageConverter.h"
 
@@ -36,32 +36,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ClearVariableMonitoring20 messages */
-static const std::string CLEARVARIABLEMONITORING20_ACTION = "ClearVariableMonitoring";
+/** @brief Action corresponding to the ClearVariableMonitoring messages */
+static const std::string CLEARVARIABLEMONITORING_ACTION = "ClearVariableMonitoring";
 
-/** @brief ClearVariableMonitoring20Req message */
-struct ClearVariableMonitoring20Req
+/** @brief ClearVariableMonitoringReq message */
+struct ClearVariableMonitoringReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief List of the monitors to be cleared, identified by there Id. */
     std::vector<int> id;
 };
 
-/** @brief ClearVariableMonitoring20Conf message */
-struct ClearVariableMonitoring20Conf
+/** @brief ClearVariableMonitoringConf message */
+struct ClearVariableMonitoringConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ClearMonitoringResultType20> clearMonitoringResult;
+    std::vector<ocpp::types::ocpp20::ClearMonitoringResultType> clearMonitoringResult;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ClearVariableMonitoring20)
+MESSAGE_CONVERTERS(ClearVariableMonitoring)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARVARIABLEMONITORING20_H
+#endif // OPENOCPP_OCPP20_CLEARVARIABLEMONITORING_H

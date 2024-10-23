@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGESTATEENUMTYPE20_H
-#define OPENOCPP_MESSAGESTATEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGESTATEENUMTYPE_H
+#define OPENOCPP_OCPP20_MESSAGESTATEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Message_ Info. State. Message_ State_ Code
 urn:x-enexis:ecdm:uid:1:569254
 During what state should this message be shown. When omitted this message should be shown in any state of the Charging Station. */
-enum class MessageStateEnumType20
+enum class MessageStateEnumType
 {
     Charging,
     Faulted,
@@ -44,11 +44,11 @@ enum class MessageStateEnumType20
     Unavailable,
 };
 
-/** @brief Helper to convert a MessageStateEnumType20 enum to string */
-extern const EnumToStringFromString<MessageStateEnumType20> MessageStateEnumType20Helper;
+/** @brief Helper to convert a MessageStateEnumType enum to string */
+extern const EnumToStringFromString<MessageStateEnumType> MessageStateEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGESTATEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGESTATEENUMTYPE_H

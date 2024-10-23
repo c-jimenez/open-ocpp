@@ -32,23 +32,23 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a SetDisplayMessage20Req from a JSON representation */
-bool SetDisplayMessage20ReqConverter::fromJson(const rapidjson::Value& json,
-                                               SetDisplayMessage20Req& data,
-                                               std::string&            error_code,
-                                               std::string&            error_message)
+/** @brief Convert a SetDisplayMessageReq from a JSON representation */
+bool SetDisplayMessageReqConverter::fromJson(const rapidjson::Value& json,
+                                             SetDisplayMessageReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // message
-    ocpp::types::ocpp20::MessageInfoType20Converter message_converter;
+    ocpp::types::ocpp20::MessageInfoTypeConverter message_converter;
     ret = ret && message_converter.fromJson(json["message"], data.message, error_code, error_message);
 
     if (!ret)
@@ -59,15 +59,15 @@ bool SetDisplayMessage20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SetDisplayMessage20Req to a JSON representation */
-bool SetDisplayMessage20ReqConverter::toJson(const SetDisplayMessage20Req& data, rapidjson::Document& json)
+/** @brief Convert a SetDisplayMessageReq to a JSON representation */
+bool SetDisplayMessageReqConverter::toJson(const SetDisplayMessageReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -76,7 +76,7 @@ bool SetDisplayMessage20ReqConverter::toJson(const SetDisplayMessage20Req& data,
     }
 
     // message
-    ocpp::types::ocpp20::MessageInfoType20Converter message_converter;
+    ocpp::types::ocpp20::MessageInfoTypeConverter message_converter;
     message_converter.setAllocator(allocator);
     rapidjson::Document message_doc;
     message_doc.Parse("{}");
@@ -86,28 +86,28 @@ bool SetDisplayMessage20ReqConverter::toJson(const SetDisplayMessage20Req& data,
     return ret;
 }
 
-/** @brief Convert a SetDisplayMessage20Conf from a JSON representation */
-bool SetDisplayMessage20ConfConverter::fromJson(const rapidjson::Value&  json,
-                                                SetDisplayMessage20Conf& data,
-                                                std::string&             error_code,
-                                                std::string&             error_message)
+/** @brief Convert a SetDisplayMessageConf from a JSON representation */
+bool SetDisplayMessageConfConverter::fromJson(const rapidjson::Value& json,
+                                              SetDisplayMessageConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::DisplayMessageStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::DisplayMessageStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -119,15 +119,15 @@ bool SetDisplayMessage20ConfConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @brief Convert a SetDisplayMessage20Conf to a JSON representation */
-bool SetDisplayMessage20ConfConverter::toJson(const SetDisplayMessage20Conf& data, rapidjson::Document& json)
+/** @brief Convert a SetDisplayMessageConf to a JSON representation */
+bool SetDisplayMessageConfConverter::toJson(const SetDisplayMessageConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -136,12 +136,12 @@ bool SetDisplayMessage20ConfConverter::toJson(const SetDisplayMessage20Conf& dat
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::DisplayMessageStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::DisplayMessageStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

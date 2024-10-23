@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARDISPLAYMESSAGE20_H
-#define OPENOCPP_CLEARDISPLAYMESSAGE20_H
+#ifndef OPENOCPP_OCPP20_CLEARDISPLAYMESSAGE_H
+#define OPENOCPP_OCPP20_CLEARDISPLAYMESSAGE_H
 
 #include "IMessageConverter.h"
 
@@ -37,34 +37,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ClearDisplayMessage20 messages */
-static const std::string CLEARDISPLAYMESSAGE20_ACTION = "ClearDisplayMessage";
+/** @brief Action corresponding to the ClearDisplayMessage messages */
+static const std::string CLEARDISPLAYMESSAGE_ACTION = "ClearDisplayMessage";
 
-/** @brief ClearDisplayMessage20Req message */
-struct ClearDisplayMessage20Req
+/** @brief ClearDisplayMessageReq message */
+struct ClearDisplayMessageReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Id of the message that SHALL be removed from the Charging Station. */
     int id;
 };
 
-/** @brief ClearDisplayMessage20Conf message */
-struct ClearDisplayMessage20Conf
+/** @brief ClearDisplayMessageConf message */
+struct ClearDisplayMessageConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ClearMessageStatusEnumType20 status;
+    ocpp::types::ocpp20::ClearMessageStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ClearDisplayMessage20)
+MESSAGE_CONVERTERS(ClearDisplayMessage)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARDISPLAYMESSAGE20_H
+#endif // OPENOCPP_OCPP20_CLEARDISPLAYMESSAGE_H

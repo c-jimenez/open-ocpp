@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_INSTALLCERTIFICATESTATUSENUMTYPE20_H
-#define OPENOCPP_INSTALLCERTIFICATESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_INSTALLCERTIFICATESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_INSTALLCERTIFICATESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Charging Station indicates if installation was successful. */
-enum class InstallCertificateStatusEnumType20
+enum class InstallCertificateStatusEnumType
 {
     Accepted,
     Rejected,
     Failed,
 };
 
-/** @brief Helper to convert a InstallCertificateStatusEnumType20 enum to string */
-extern const EnumToStringFromString<InstallCertificateStatusEnumType20> InstallCertificateStatusEnumType20Helper;
+/** @brief Helper to convert a InstallCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<InstallCertificateStatusEnumType> InstallCertificateStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_INSTALLCERTIFICATESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_INSTALLCERTIFICATESTATUSENUMTYPE_H

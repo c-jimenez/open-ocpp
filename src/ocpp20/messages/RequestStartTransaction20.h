@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REQUESTSTARTTRANSACTION20_H
-#define OPENOCPP_REQUESTSTARTTRANSACTION20_H
+#ifndef OPENOCPP_OCPP20_REQUESTSTARTTRANSACTION_H
+#define OPENOCPP_OCPP20_REQUESTSTARTTRANSACTION_H
 
 #include "IMessageConverter.h"
 
@@ -39,44 +39,44 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the RequestStartTransaction20 messages */
-static const std::string REQUESTSTARTTRANSACTION20_ACTION = "RequestStartTransaction";
+/** @brief Action corresponding to the RequestStartTransaction messages */
+static const std::string REQUESTSTARTTRANSACTION_ACTION = "RequestStartTransaction";
 
-/** @brief RequestStartTransaction20Req message */
-struct RequestStartTransaction20Req
+/** @brief RequestStartTransactionReq message */
+struct RequestStartTransactionReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0 */
     ocpp::types::Optional<int> evseId;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType20> groupIdToken;
+    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType> groupIdToken;
     /** @brief  */
-    ocpp::types::ocpp20::IdTokenType20 idToken;
+    ocpp::types::ocpp20::IdTokenType idToken;
     /** @brief Id given by the server to this start request. The Charging Station might return this in the &lt;&lt;transactioneventrequest, TransactionEventRequest&gt;&gt;, letting the server know which transaction was started for this request. Use to start a transaction. */
     int remoteStartId;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::ChargingProfileType20> chargingProfile;
+    ocpp::types::Optional<ocpp::types::ocpp20::ChargingProfileType> chargingProfile;
 };
 
-/** @brief RequestStartTransaction20Conf message */
-struct RequestStartTransaction20Conf
+/** @brief RequestStartTransactionConf message */
+struct RequestStartTransactionConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::RequestStartStopStatusEnumType20 status;
+    ocpp::types::ocpp20::RequestStartStopStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief When the transaction was already started by the Charging Station before the RequestStartTransactionRequest was received, for example: cable plugged in first. This contains the transactionId of the already started transaction. */
     ocpp::types::Optional<ocpp::types::CiStringType<36u>> transactionId;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(RequestStartTransaction20)
+MESSAGE_CONVERTERS(RequestStartTransaction)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_REQUESTSTARTTRANSACTION20_H
+#endif // OPENOCPP_OCPP20_REQUESTSTARTTRANSACTION_H

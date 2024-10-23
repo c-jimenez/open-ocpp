@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ChargingRateUnitEnumType20 enum to string */
-const EnumToStringFromString<ChargingRateUnitEnumType20> ChargingRateUnitEnumType20Helper = {
-    {ChargingRateUnitEnumType20::W, "W"},
-    {ChargingRateUnitEnumType20::A, "A"},
+/** @brief Helper to convert a ChargingRateUnitEnumType enum to string */
+const EnumToStringFromString<ChargingRateUnitEnumType> ChargingRateUnitEnumTypeHelper = {
+    {ChargingRateUnitEnumType::W, "W"},
+    {ChargingRateUnitEnumType::A, "A"},
 };
 
 } // namespace ocpp20

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHANGEAVAILABILITY20_H
-#define OPENOCPP_CHANGEAVAILABILITY20_H
+#ifndef OPENOCPP_OCPP20_CHANGEAVAILABILITY_H
+#define OPENOCPP_OCPP20_CHANGEAVAILABILITY_H
 
 #include "IMessageConverter.h"
 
@@ -39,36 +39,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ChangeAvailability20 messages */
-static const std::string CHANGEAVAILABILITY20_ACTION = "ChangeAvailability";
+/** @brief Action corresponding to the ChangeAvailability messages */
+static const std::string CHANGEAVAILABILITY_ACTION = "ChangeAvailability";
 
-/** @brief ChangeAvailability20Req message */
-struct ChangeAvailability20Req
+/** @brief ChangeAvailabilityReq message */
+struct ChangeAvailabilityReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType20> evse;
+    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType> evse;
     /** @brief  */
-    ocpp::types::ocpp20::OperationalStatusEnumType20 operationalStatus;
+    ocpp::types::ocpp20::OperationalStatusEnumType operationalStatus;
 };
 
-/** @brief ChangeAvailability20Conf message */
-struct ChangeAvailability20Conf
+/** @brief ChangeAvailabilityConf message */
+struct ChangeAvailabilityConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ChangeAvailabilityStatusEnumType20 status;
+    ocpp::types::ocpp20::ChangeAvailabilityStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ChangeAvailability20)
+MESSAGE_CONVERTERS(ChangeAvailability)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CHANGEAVAILABILITY20_H
+#endif // OPENOCPP_OCPP20_CHANGEAVAILABILITY_H

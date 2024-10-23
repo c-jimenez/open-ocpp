@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ComponentCriterionEnumType20 enum to string */
-const EnumToStringFromString<ComponentCriterionEnumType20> ComponentCriterionEnumType20Helper = {
-    {ComponentCriterionEnumType20::Active, "Active"},
-    {ComponentCriterionEnumType20::Available, "Available"},
-    {ComponentCriterionEnumType20::Enabled, "Enabled"},
-    {ComponentCriterionEnumType20::Problem, "Problem"},
+/** @brief Helper to convert a ComponentCriterionEnumType enum to string */
+const EnumToStringFromString<ComponentCriterionEnumType> ComponentCriterionEnumTypeHelper = {
+    {ComponentCriterionEnumType::Active, "Active"},
+    {ComponentCriterionEnumType::Available, "Available"},
+    {ComponentCriterionEnumType::Enabled, "Enabled"},
+    {ComponentCriterionEnumType::Problem, "Problem"},
 };
 
 } // namespace ocpp20

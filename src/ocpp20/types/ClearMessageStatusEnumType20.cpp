@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ClearMessageStatusEnumType20 enum to string */
-const EnumToStringFromString<ClearMessageStatusEnumType20> ClearMessageStatusEnumType20Helper = {
-    {ClearMessageStatusEnumType20::Accepted, "Accepted"},
-    {ClearMessageStatusEnumType20::Unknown, "Unknown"},
+/** @brief Helper to convert a ClearMessageStatusEnumType enum to string */
+const EnumToStringFromString<ClearMessageStatusEnumType> ClearMessageStatusEnumTypeHelper = {
+    {ClearMessageStatusEnumType::Accepted, "Accepted"},
+    {ClearMessageStatusEnumType::Unknown, "Unknown"},
 };
 
 } // namespace ocpp20

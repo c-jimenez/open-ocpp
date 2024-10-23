@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a GetLocalListVersion20Req from a JSON representation */
-bool GetLocalListVersion20ReqConverter::fromJson(const rapidjson::Value&   json,
-                                                 GetLocalListVersion20Req& data,
-                                                 std::string&              error_code,
-                                                 std::string&              error_message)
+/** @brief Convert a GetLocalListVersionReq from a JSON representation */
+bool GetLocalListVersionReqConverter::fromJson(const rapidjson::Value& json,
+                                               GetLocalListVersionReq& data,
+                                               std::string&            error_code,
+                                               std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -55,15 +55,15 @@ bool GetLocalListVersion20ReqConverter::fromJson(const rapidjson::Value&   json,
     return ret;
 }
 
-/** @brief Convert a GetLocalListVersion20Req to a JSON representation */
-bool GetLocalListVersion20ReqConverter::toJson(const GetLocalListVersion20Req& data, rapidjson::Document& json)
+/** @brief Convert a GetLocalListVersionReq to a JSON representation */
+bool GetLocalListVersionReqConverter::toJson(const GetLocalListVersionReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -74,18 +74,18 @@ bool GetLocalListVersion20ReqConverter::toJson(const GetLocalListVersion20Req& d
     return ret;
 }
 
-/** @brief Convert a GetLocalListVersion20Conf from a JSON representation */
-bool GetLocalListVersion20ConfConverter::fromJson(const rapidjson::Value&    json,
-                                                  GetLocalListVersion20Conf& data,
-                                                  std::string&               error_code,
-                                                  std::string&               error_message)
+/** @brief Convert a GetLocalListVersionConf from a JSON representation */
+bool GetLocalListVersionConfConverter::fromJson(const rapidjson::Value&  json,
+                                                GetLocalListVersionConf& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -100,15 +100,15 @@ bool GetLocalListVersion20ConfConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @brief Convert a GetLocalListVersion20Conf to a JSON representation */
-bool GetLocalListVersion20ConfConverter::toJson(const GetLocalListVersion20Conf& data, rapidjson::Document& json)
+/** @brief Convert a GetLocalListVersionConf to a JSON representation */
+bool GetLocalListVersionConfConverter::toJson(const GetLocalListVersionConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

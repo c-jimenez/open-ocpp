@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETLOG20_H
-#define OPENOCPP_GETLOG20_H
+#ifndef OPENOCPP_OCPP20_GETLOG_H
+#define OPENOCPP_OCPP20_GETLOG_H
 
 #include "IMessageConverter.h"
 
@@ -39,18 +39,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetLog20 messages */
-static const std::string GETLOG20_ACTION = "GetLog";
+/** @brief Action corresponding to the GetLog messages */
+static const std::string GETLOG_ACTION = "GetLog";
 
-/** @brief GetLog20Req message */
-struct GetLog20Req
+/** @brief GetLogReq message */
+struct GetLogReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::LogParametersType20 log;
+    ocpp::types::ocpp20::LogParametersType log;
     /** @brief  */
-    ocpp::types::ocpp20::LogEnumType20 logType;
+    ocpp::types::ocpp20::LogEnumType logType;
     /** @brief The Id of this request */
     int requestId;
     /** @brief This specifies how many times the Charging Station must try to upload the log before giving up. If this field is not present, it is left to Charging Station to decide how many times it wants to retry. */
@@ -59,24 +59,24 @@ struct GetLog20Req
     ocpp::types::Optional<int> retryInterval;
 };
 
-/** @brief GetLog20Conf message */
-struct GetLog20Conf
+/** @brief GetLogConf message */
+struct GetLogConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::LogStatusEnumType20 status;
+    ocpp::types::ocpp20::LogStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief This contains the name of the log file that will be uploaded. This field is not present when no logging information is available. */
     ocpp::types::Optional<ocpp::types::CiStringType<255u>> filename;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetLog20)
+MESSAGE_CONVERTERS(GetLog)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETLOG20_H
+#endif // OPENOCPP_OCPP20_GETLOG_H

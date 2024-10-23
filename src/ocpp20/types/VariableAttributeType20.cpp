@@ -32,25 +32,25 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a VariableAttributeType20 from a JSON representation */
-bool VariableAttributeType20Converter::fromJson(const rapidjson::Value&       json,
-                                                VariableAttributeType20&      data,
-                                                std::string&                  error_code,
-                                                [[maybe_unused]] std::string& error_message)
+/** @brief Convert a VariableAttributeType from a JSON representation */
+bool VariableAttributeTypeConverter::fromJson(const rapidjson::Value&       json,
+                                              VariableAttributeType&        data,
+                                              std::string&                  error_code,
+                                              [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // type
     if (json.HasMember("type"))
     {
-        data.type = AttributeEnumType20Helper.fromString(json["type"].GetString());
+        data.type = AttributeEnumTypeHelper.fromString(json["type"].GetString());
     }
 
     // value
@@ -59,7 +59,7 @@ bool VariableAttributeType20Converter::fromJson(const rapidjson::Value&       js
     // mutability
     if (json.HasMember("mutability"))
     {
-        data.mutability = MutabilityEnumType20Helper.fromString(json["mutability"].GetString());
+        data.mutability = MutabilityEnumTypeHelper.fromString(json["mutability"].GetString());
     }
 
     // persistent
@@ -76,15 +76,15 @@ bool VariableAttributeType20Converter::fromJson(const rapidjson::Value&       js
     return ret;
 }
 
-/** @brief Convert a VariableAttributeType20 to a JSON representation */
-bool VariableAttributeType20Converter::toJson(const VariableAttributeType20& data, rapidjson::Document& json)
+/** @brief Convert a VariableAttributeType to a JSON representation */
+bool VariableAttributeTypeConverter::toJson(const VariableAttributeType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -95,7 +95,7 @@ bool VariableAttributeType20Converter::toJson(const VariableAttributeType20& dat
     // type
     if (data.type.isSet())
     {
-        fill(json, "type", AttributeEnumType20Helper.toString(data.type));
+        fill(json, "type", AttributeEnumTypeHelper.toString(data.type));
     }
 
     // value
@@ -104,7 +104,7 @@ bool VariableAttributeType20Converter::toJson(const VariableAttributeType20& dat
     // mutability
     if (data.mutability.isSet())
     {
-        fill(json, "mutability", MutabilityEnumType20Helper.toString(data.mutability));
+        fill(json, "mutability", MutabilityEnumTypeHelper.toString(data.mutability));
     }
 
     // persistent

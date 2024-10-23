@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_TRANSACTIONTYPE20_H
-#define OPENOCPP_TRANSACTIONTYPE20_H
+#ifndef OPENOCPP_OCPP20_TRANSACTIONTYPE_H
+#define OPENOCPP_OCPP20_TRANSACTIONTYPE_H
 
 #include "ChargingStateEnumType20.h"
 #include "CustomDataType20.h"
@@ -42,43 +42,43 @@ namespace ocpp20
 /** @brief Transaction
 urn:x-oca:ocpp:uid:2:233318
  */
-struct TransactionType20
+struct TransactionType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief This contains the Id of the transaction. */
     ocpp::types::CiStringType<36u> transactionId;
     /** @brief  */
-    ocpp::types::Optional<ChargingStateEnumType20> chargingState;
+    ocpp::types::Optional<ChargingStateEnumType> chargingState;
     /** @brief Transaction. Time_ Spent_ Charging. Elapsed_ Time
 urn:x-oca:ocpp:uid:1:569415
 Contains the total time that energy flowed from EVSE to EV during the transaction (in seconds). Note that timeSpentCharging is smaller or equal to the duration of the transaction. */
     ocpp::types::Optional<int> timeSpentCharging;
     /** @brief  */
-    ocpp::types::Optional<ReasonEnumType20> stoppedReason;
+    ocpp::types::Optional<ReasonEnumType> stoppedReason;
     /** @brief The ID given to remote start request (&lt;&lt;requeststarttransactionrequest, RequestStartTransactionRequest&gt;&gt;. This enables to CSMS to match the started transaction to the given start request. */
     ocpp::types::Optional<int> remoteStartId;
 };
 
-/** @brief Converter class for TransactionType20 type */
-class TransactionType20Converter : public ocpp::messages::IMessageConverter<TransactionType20>
+/** @brief Converter class for TransactionType type */
+class TransactionTypeConverter : public ocpp::messages::IMessageConverter<TransactionType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<TransactionType20>* clone() const override { return new TransactionType20Converter(); }
+    ocpp::messages::IMessageConverter<TransactionType>* clone() const override { return new TransactionTypeConverter(); }
 
-    /** @brief Convert a TransactionType20 from a JSON representation */
+    /** @brief Convert a TransactionType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  TransactionType20&            data,
+                  TransactionType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a TransactionType20 to a JSON representation */
-    bool toJson(const TransactionType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a TransactionType to a JSON representation */
+    bool toJson(const TransactionType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_TRANSACTIONTYPE20_H
+#endif // OPENOCPP_OCPP20_TRANSACTIONTYPE_H

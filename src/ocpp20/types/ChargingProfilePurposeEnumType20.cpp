@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ChargingProfilePurposeEnumType20 enum to string */
-const EnumToStringFromString<ChargingProfilePurposeEnumType20> ChargingProfilePurposeEnumType20Helper = {
-    {ChargingProfilePurposeEnumType20::ChargingStationExternalConstraints, "ChargingStationExternalConstraints"},
-    {ChargingProfilePurposeEnumType20::ChargingStationMaxProfile, "ChargingStationMaxProfile"},
-    {ChargingProfilePurposeEnumType20::TxDefaultProfile, "TxDefaultProfile"},
-    {ChargingProfilePurposeEnumType20::TxProfile, "TxProfile"},
+/** @brief Helper to convert a ChargingProfilePurposeEnumType enum to string */
+const EnumToStringFromString<ChargingProfilePurposeEnumType> ChargingProfilePurposeEnumTypeHelper = {
+    {ChargingProfilePurposeEnumType::ChargingStationExternalConstraints, "ChargingStationExternalConstraints"},
+    {ChargingProfilePurposeEnumType::ChargingStationMaxProfile, "ChargingStationMaxProfile"},
+    {ChargingProfilePurposeEnumType::TxDefaultProfile, "TxDefaultProfile"},
+    {ChargingProfilePurposeEnumType::TxProfile, "TxProfile"},
 };
 
 } // namespace ocpp20

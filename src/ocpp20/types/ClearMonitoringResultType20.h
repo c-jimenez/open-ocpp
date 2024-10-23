@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARMONITORINGRESULTTYPE20_H
-#define OPENOCPP_CLEARMONITORINGRESULTTYPE20_H
+#ifndef OPENOCPP_OCPP20_CLEARMONITORINGRESULTTYPE_H
+#define OPENOCPP_OCPP20_CLEARMONITORINGRESULTTYPE_H
 
 #include "ClearMonitoringStatusEnumType20.h"
 #include "CustomDataType20.h"
@@ -39,40 +39,40 @@ namespace ocpp20
 {
 
 /** @brief  */
-struct ClearMonitoringResultType20
+struct ClearMonitoringResultType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ClearMonitoringStatusEnumType20 status;
+    ClearMonitoringStatusEnumType status;
     /** @brief Id of the monitor of which a clear was requested. */
     int id;
     /** @brief  */
-    ocpp::types::Optional<StatusInfoType20> statusInfo;
+    ocpp::types::Optional<StatusInfoType> statusInfo;
 };
 
-/** @brief Converter class for ClearMonitoringResultType20 type */
-class ClearMonitoringResultType20Converter : public ocpp::messages::IMessageConverter<ClearMonitoringResultType20>
+/** @brief Converter class for ClearMonitoringResultType type */
+class ClearMonitoringResultTypeConverter : public ocpp::messages::IMessageConverter<ClearMonitoringResultType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ClearMonitoringResultType20>* clone() const override
+    ocpp::messages::IMessageConverter<ClearMonitoringResultType>* clone() const override
     {
-        return new ClearMonitoringResultType20Converter();
+        return new ClearMonitoringResultTypeConverter();
     }
 
-    /** @brief Convert a ClearMonitoringResultType20 from a JSON representation */
+    /** @brief Convert a ClearMonitoringResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ClearMonitoringResultType20&  data,
+                  ClearMonitoringResultType&    data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ClearMonitoringResultType20 to a JSON representation */
-    bool toJson(const ClearMonitoringResultType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ClearMonitoringResultType to a JSON representation */
+    bool toJson(const ClearMonitoringResultType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARMONITORINGRESULTTYPE20_H
+#endif // OPENOCPP_OCPP20_CLEARMONITORINGRESULTTYPE_H

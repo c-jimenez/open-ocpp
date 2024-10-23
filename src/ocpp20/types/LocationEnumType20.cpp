@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a LocationEnumType20 enum to string */
-const EnumToStringFromString<LocationEnumType20> LocationEnumType20Helper = {
-    {LocationEnumType20::Body, "Body"},
-    {LocationEnumType20::Cable, "Cable"},
-    {LocationEnumType20::EV, "EV"},
-    {LocationEnumType20::Inlet, "Inlet"},
-    {LocationEnumType20::Outlet, "Outlet"},
+/** @brief Helper to convert a LocationEnumType enum to string */
+const EnumToStringFromString<LocationEnumType> LocationEnumTypeHelper = {
+    {LocationEnumType::Body, "Body"},
+    {LocationEnumType::Cable, "Cable"},
+    {LocationEnumType::EV, "EV"},
+    {LocationEnumType::Inlet, "Inlet"},
+    {LocationEnumType::Outlet, "Outlet"},
 };
 
 } // namespace ocpp20

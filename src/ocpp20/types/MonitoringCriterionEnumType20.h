@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MONITORINGCRITERIONENUMTYPE20_H
-#define OPENOCPP_MONITORINGCRITERIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MONITORINGCRITERIONENUMTYPE_H
+#define OPENOCPP_OCPP20_MONITORINGCRITERIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief  */
-enum class MonitoringCriterionEnumType20
+enum class MonitoringCriterionEnumType
 {
     ThresholdMonitoring,
     DeltaMonitoring,
     PeriodicMonitoring,
 };
 
-/** @brief Helper to convert a MonitoringCriterionEnumType20 enum to string */
-extern const EnumToStringFromString<MonitoringCriterionEnumType20> MonitoringCriterionEnumType20Helper;
+/** @brief Helper to convert a MonitoringCriterionEnumType enum to string */
+extern const EnumToStringFromString<MonitoringCriterionEnumType> MonitoringCriterionEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MONITORINGCRITERIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MONITORINGCRITERIONENUMTYPE_H

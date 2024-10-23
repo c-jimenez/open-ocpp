@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETCHARGINGPROFILESTATUSENUMTYPE20_H
-#define OPENOCPP_GETCHARGINGPROFILESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GETCHARGINGPROFILESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GETCHARGINGPROFILESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief This indicates whether the Charging Station is able to process this request and will send &lt;&lt;reportchargingprofilesrequest, ReportChargingProfilesRequest&gt;&gt; messages. */
-enum class GetChargingProfileStatusEnumType20
+enum class GetChargingProfileStatusEnumType
 {
     Accepted,
     NoProfiles,
 };
 
-/** @brief Helper to convert a GetChargingProfileStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GetChargingProfileStatusEnumType20> GetChargingProfileStatusEnumType20Helper;
+/** @brief Helper to convert a GetChargingProfileStatusEnumType enum to string */
+extern const EnumToStringFromString<GetChargingProfileStatusEnumType> GetChargingProfileStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GETCHARGINGPROFILESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GETCHARGINGPROFILESTATUSENUMTYPE_H

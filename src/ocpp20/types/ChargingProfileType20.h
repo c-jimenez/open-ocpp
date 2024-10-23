@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGPROFILETYPE20_H
-#define OPENOCPP_CHARGINGPROFILETYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGPROFILETYPE_H
+#define OPENOCPP_OCPP20_CHARGINGPROFILETYPE_H
 
 #include "ChargingProfileKindEnumType20.h"
 #include "ChargingProfilePurposeEnumType20.h"
@@ -47,10 +47,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233255
 A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
  */
-struct ChargingProfileType20
+struct ChargingProfileType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identified_ Object. MRID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:569198
 Id of ChargingProfile. */
@@ -60,11 +60,11 @@ urn:x-oca:ocpp:uid:1:569230
 Value determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0. */
     int stackLevel;
     /** @brief  */
-    ChargingProfilePurposeEnumType20 chargingProfilePurpose;
+    ChargingProfilePurposeEnumType chargingProfilePurpose;
     /** @brief  */
-    ChargingProfileKindEnumType20 chargingProfileKind;
+    ChargingProfileKindEnumType chargingProfileKind;
     /** @brief  */
-    ocpp::types::Optional<RecurrencyKindEnumType20> recurrencyKind;
+    ocpp::types::Optional<RecurrencyKindEnumType> recurrencyKind;
     /** @brief Charging_ Profile. Valid_ From. Date_ Time
 urn:x-oca:ocpp:uid:1:569234
 Point in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charging Station. */
@@ -74,30 +74,30 @@ urn:x-oca:ocpp:uid:1:569235
 Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile. */
     ocpp::types::Optional<ocpp::types::DateTime> validTo;
     /** @brief  */
-    std::vector<ChargingScheduleType20> chargingSchedule;
+    std::vector<ChargingScheduleType> chargingSchedule;
     /** @brief SHALL only be included if ChargingProfilePurpose is set to TxProfile. The transactionId is used to match the profile to a specific transaction. */
     ocpp::types::Optional<ocpp::types::CiStringType<36u>> transactionId;
 };
 
-/** @brief Converter class for ChargingProfileType20 type */
-class ChargingProfileType20Converter : public ocpp::messages::IMessageConverter<ChargingProfileType20>
+/** @brief Converter class for ChargingProfileType type */
+class ChargingProfileTypeConverter : public ocpp::messages::IMessageConverter<ChargingProfileType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingProfileType20>* clone() const override { return new ChargingProfileType20Converter(); }
+    ocpp::messages::IMessageConverter<ChargingProfileType>* clone() const override { return new ChargingProfileTypeConverter(); }
 
-    /** @brief Convert a ChargingProfileType20 from a JSON representation */
+    /** @brief Convert a ChargingProfileType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingProfileType20&        data,
+                  ChargingProfileType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingProfileType20 to a JSON representation */
-    bool toJson(const ChargingProfileType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingProfileType to a JSON representation */
+    bool toJson(const ChargingProfileType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGPROFILETYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGPROFILETYPE_H

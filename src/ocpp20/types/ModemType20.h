@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MODEMTYPE20_H
-#define OPENOCPP_MODEMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MODEMTYPE_H
+#define OPENOCPP_OCPP20_MODEMTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -41,10 +41,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233306
 Defines parameters required for initiating and maintaining wireless communication with other devices.
  */
-struct ModemType20
+struct ModemType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Wireless_ Communication_ Module. ICCID. CI20_ Text
 urn:x-oca:ocpp:uid:1:569327
 This contains the ICCID of the modem’s SIM card. */
@@ -55,25 +55,25 @@ This contains the IMSI of the modem’s SIM card. */
     ocpp::types::Optional<ocpp::types::CiStringType<20u>> imsi;
 };
 
-/** @brief Converter class for ModemType20 type */
-class ModemType20Converter : public ocpp::messages::IMessageConverter<ModemType20>
+/** @brief Converter class for ModemType type */
+class ModemTypeConverter : public ocpp::messages::IMessageConverter<ModemType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ModemType20>* clone() const override { return new ModemType20Converter(); }
+    ocpp::messages::IMessageConverter<ModemType>* clone() const override { return new ModemTypeConverter(); }
 
-    /** @brief Convert a ModemType20 from a JSON representation */
+    /** @brief Convert a ModemType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ModemType20&                  data,
+                  ModemType&                    data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ModemType20 to a JSON representation */
-    bool toJson(const ModemType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ModemType to a JSON representation */
+    bool toJson(const ModemType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MODEMTYPE20_H
+#endif // OPENOCPP_OCPP20_MODEMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MEASURANDENUMTYPE20_H
-#define OPENOCPP_MEASURANDENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MEASURANDENUMTYPE_H
+#define OPENOCPP_OCPP20_MEASURANDENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Sampled_ Value. Measurand. Measurand_ Code
 urn:x-oca:ocpp:uid:1:569263
 Type of measurement. Default = "Energy.Active.Import.Register" */
-enum class MeasurandEnumType20
+enum class MeasurandEnumType
 {
     Current_Export,
     Current_Import,
@@ -65,11 +65,11 @@ enum class MeasurandEnumType20
     Voltage,
 };
 
-/** @brief Helper to convert a MeasurandEnumType20 enum to string */
-extern const EnumToStringFromString<MeasurandEnumType20> MeasurandEnumType20Helper;
+/** @brief Helper to convert a MeasurandEnumType enum to string */
+extern const EnumToStringFromString<MeasurandEnumType> MeasurandEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MEASURANDENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MEASURANDENUMTYPE_H

@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
 
     auto                         last_boot_notif        = std::chrono::steady_clock::time_point();
     std::chrono::seconds         hb_boot_notif_interval = std::chrono::seconds(10);
-    RegistrationStatusEnumType20 registration_status    = RegistrationStatusEnumType20::Rejected;
+    RegistrationStatusEnumType registration_status    = RegistrationStatusEnumType::Rejected;
 
     unsigned int transaction_id = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
         std::cout << "Connected to Central System!" << std::endl;
 
         // Wait to be accepted by Central System
-        while (registration_status != RegistrationStatusEnumType20::Accepted)
+        while (registration_status != RegistrationStatusEnumType::Accepted)
         {
             // Send boot notification message periodically
             auto now = std::chrono::steady_clock::now();
@@ -150,9 +150,9 @@ int main(int argc, char* argv[])
             {
                 std::cout << "Sending BootNotification request..." << std::endl;
 
-                BootNotification20Req  boot_notif_req;
-                BootNotification20Conf boot_notif_conf;
-                boot_notif_req.reason = BootReasonEnumType20::PowerUp;
+                BootNotificationReq  boot_notif_req;
+                BootNotificationConf boot_notif_conf;
+                boot_notif_req.reason = BootReasonEnumType::PowerUp;
                 boot_notif_req.chargingStation.vendorName.assign("Open OCPP");
                 boot_notif_req.chargingStation.model.assign("Quick Start CS OCPP 2.0.1");
                 boot_notif_req.chargingStation.firmwareVersion.value().assign("1.2.3.4");
@@ -184,21 +184,21 @@ int main(int argc, char* argv[])
                 {
                     // Ask for authorization on a tag
                     std::cout << "Checking for id tag " << id_tag << " authorization..." << std::endl;
-                    Authorize20Req  authorize_req;
-                    Authorize20Conf authorize_conf;
+                    AuthorizeReq  authorize_req;
+                    AuthorizeConf authorize_conf;
                     authorize_req.idToken.idToken.assign(id_tag);
-                    authorize_req.idToken.type = IdTokenEnumType20::ISO14443;
+                    authorize_req.idToken.type = IdTokenEnumType::ISO14443;
                     if (charge_point->call(authorize_req, authorize_conf, error, error_msg))
                     {
-                        if (authorize_conf.idTokenInfo.status == AuthorizationStatusEnumType20::Accepted)
+                        if (authorize_conf.idTokenInfo.status == AuthorizationStatusEnumType::Accepted)
                         {
                             std::cout << "Id tag authorized" << std::endl;
 
                             // Occupied state
-                            StatusNotification20Req  status_req;
-                            StatusNotification20Conf status_conf;
+                            StatusNotificationReq  status_req;
+                            StatusNotificationConf status_conf;
                             status_req.timestamp       = DateTime::now();
-                            status_req.connectorStatus = ConnectorStatusEnumType20::Occupied;
+                            status_req.connectorStatus = ConnectorStatusEnumType::Occupied;
                             status_req.evseId          = evse_id;
                             status_req.connectorId     = connector_id;
                             charge_point->call(status_req, status_conf, error, error_msg);
@@ -207,41 +207,41 @@ int main(int argc, char* argv[])
                             // Try to start charging session
                             transaction_id++;
 
-                            TransactionEvent20Req  tx_event_req;
-                            TransactionEvent20Conf tx_event_conf;
+                            TransactionEventReq  tx_event_req;
+                            TransactionEventConf tx_event_conf;
                             tx_event_req.seqNo                    = 1;
-                            tx_event_req.eventType                = TransactionEventEnumType20::Started;
+                            tx_event_req.eventType                = TransactionEventEnumType::Started;
                             tx_event_req.timestamp                = DateTime::now();
-                            tx_event_req.triggerReason            = TriggerReasonEnumType20::Authorized;
+                            tx_event_req.triggerReason            = TriggerReasonEnumType::Authorized;
                             tx_event_req.evse.value().id          = evse_id;
                             tx_event_req.evse.value().connectorId = connector_id;
                             tx_event_req.transactionInfo.transactionId.assign(std::to_string(transaction_id));
-                            tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType20::EVConnected;
+                            tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType::EVConnected;
                             tx_event_req.idToken.value().idToken.assign(id_tag);
-                            tx_event_req.idToken.value().type = IdTokenEnumType20::ISO14443;
+                            tx_event_req.idToken.value().type = IdTokenEnumType::ISO14443;
                             if (charge_point->call(tx_event_req, tx_event_conf, error, error_msg))
                             {
                                 if (!tx_event_conf.idTokenInfo.isSet() ||
-                                    (tx_event_conf.idTokenInfo.value().status == AuthorizationStatusEnumType20::Accepted))
+                                    (tx_event_conf.idTokenInfo.value().status == AuthorizationStatusEnumType::Accepted))
                                 {
                                     std::cout << "Transaction authorized, start charging" << std::endl;
 
                                     // Charging state
                                     tx_event_req.seqNo++;
-                                    tx_event_req.eventType                             = TransactionEventEnumType20::Updated;
+                                    tx_event_req.eventType                             = TransactionEventEnumType::Updated;
                                     tx_event_req.timestamp                             = DateTime::now();
-                                    tx_event_req.triggerReason                         = TriggerReasonEnumType20::CablePluggedIn;
-                                    tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType20::Charging;
+                                    tx_event_req.triggerReason                         = TriggerReasonEnumType::CablePluggedIn;
+                                    tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType::Charging;
                                     tx_event_req.idToken.clear();
                                     charge_point->call(tx_event_req, tx_event_conf, error, error_msg);
                                     std::this_thread::sleep_for(std::chrono::seconds(30u));
 
                                     // End transaction
                                     tx_event_req.seqNo++;
-                                    tx_event_req.eventType                             = TransactionEventEnumType20::Ended;
+                                    tx_event_req.eventType                             = TransactionEventEnumType::Ended;
                                     tx_event_req.timestamp                             = DateTime::now();
-                                    tx_event_req.triggerReason                         = TriggerReasonEnumType20::EnergyLimitReached;
-                                    tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType20::Idle;
+                                    tx_event_req.triggerReason                         = TriggerReasonEnumType::EnergyLimitReached;
+                                    tx_event_req.transactionInfo.chargingState.value() = ChargingStateEnumType::Idle;
                                     charge_point->call(tx_event_req, tx_event_conf, error, error_msg);
 
                                     std::this_thread::sleep_for(std::chrono::seconds(1u));
@@ -249,7 +249,7 @@ int main(int argc, char* argv[])
                                 else
                                 {
                                     std::cout << "Transaction not authorized by Central System : "
-                                              << AuthorizationStatusEnumType20Helper.toString(tx_event_conf.idTokenInfo.value().status)
+                                              << AuthorizationStatusEnumTypeHelper.toString(tx_event_conf.idTokenInfo.value().status)
                                               << std::endl;
                                 }
                             }
@@ -260,13 +260,13 @@ int main(int argc, char* argv[])
 
                             // Available state
                             status_req.timestamp       = DateTime::now();
-                            status_req.connectorStatus = ConnectorStatusEnumType20::Available;
+                            status_req.connectorStatus = ConnectorStatusEnumType::Available;
                             charge_point->call(status_req, status_conf, error, error_msg);
                         }
                         else
                         {
                             std::cout << "Id tag not authorized by Central System : "
-                                      << AuthorizationStatusEnumType20Helper.toString(authorize_conf.idTokenInfo.status) << std::endl;
+                                      << AuthorizationStatusEnumTypeHelper.toString(authorize_conf.idTokenInfo.status) << std::endl;
                         }
                     }
                     else

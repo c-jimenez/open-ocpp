@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MonitoringBaseEnumType20 enum to string */
-const EnumToStringFromString<MonitoringBaseEnumType20> MonitoringBaseEnumType20Helper = {
-    {MonitoringBaseEnumType20::All, "All"},
-    {MonitoringBaseEnumType20::FactoryDefault, "FactoryDefault"},
-    {MonitoringBaseEnumType20::HardWiredOnly, "HardWiredOnly"},
+/** @brief Helper to convert a MonitoringBaseEnumType enum to string */
+const EnumToStringFromString<MonitoringBaseEnumType> MonitoringBaseEnumTypeHelper = {
+    {MonitoringBaseEnumType::All, "All"},
+    {MonitoringBaseEnumType::FactoryDefault, "FactoryDefault"},
+    {MonitoringBaseEnumType::HardWiredOnly, "HardWiredOnly"},
 };
 
 } // namespace ocpp20

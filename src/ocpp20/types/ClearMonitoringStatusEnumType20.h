@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARMONITORINGSTATUSENUMTYPE20_H
-#define OPENOCPP_CLEARMONITORINGSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CLEARMONITORINGSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CLEARMONITORINGSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Result of the clear request for this monitor, identified by its Id. */
-enum class ClearMonitoringStatusEnumType20
+enum class ClearMonitoringStatusEnumType
 {
     Accepted,
     Rejected,
     NotFound,
 };
 
-/** @brief Helper to convert a ClearMonitoringStatusEnumType20 enum to string */
-extern const EnumToStringFromString<ClearMonitoringStatusEnumType20> ClearMonitoringStatusEnumType20Helper;
+/** @brief Helper to convert a ClearMonitoringStatusEnumType enum to string */
+extern const EnumToStringFromString<ClearMonitoringStatusEnumType> ClearMonitoringStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARMONITORINGSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CLEARMONITORINGSTATUSENUMTYPE_H

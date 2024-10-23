@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYMONITORINGREPORT20_H
-#define OPENOCPP_NOTIFYMONITORINGREPORT20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYMONITORINGREPORT_H
+#define OPENOCPP_OCPP20_NOTIFYMONITORINGREPORT_H
 
 #include "IMessageConverter.h"
 
@@ -36,16 +36,16 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyMonitoringReport20 messages */
-static const std::string NOTIFYMONITORINGREPORT20_ACTION = "NotifyMonitoringReport";
+/** @brief Action corresponding to the NotifyMonitoringReport messages */
+static const std::string NOTIFYMONITORINGREPORT_ACTION = "NotifyMonitoringReport";
 
-/** @brief NotifyMonitoringReport20Req message */
-struct NotifyMonitoringReport20Req
+/** @brief NotifyMonitoringReportReq message */
+struct NotifyMonitoringReportReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::MonitoringDataType20> monitor;
+    std::vector<ocpp::types::ocpp20::MonitoringDataType> monitor;
     /** @brief The id of the GetMonitoringRequest that requested this report. */
     int requestId;
     /** @brief “to be continued” indicator. Indicates whether another part of the monitoringData follows in an upcoming notifyMonitoringReportRequest message. Default value when omitted is false. */
@@ -56,18 +56,18 @@ struct NotifyMonitoringReport20Req
     ocpp::types::DateTime generatedAt;
 };
 
-/** @brief NotifyMonitoringReport20Conf message */
-struct NotifyMonitoringReport20Conf
+/** @brief NotifyMonitoringReportConf message */
+struct NotifyMonitoringReportConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyMonitoringReport20)
+MESSAGE_CONVERTERS(NotifyMonitoringReport)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYMONITORINGREPORT20_H
+#endif // OPENOCPP_OCPP20_NOTIFYMONITORINGREPORT_H

@@ -30,16 +30,16 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a OCPPInterfaceEnumType20 enum to string */
-const EnumToStringFromString<OCPPInterfaceEnumType20> OCPPInterfaceEnumType20Helper = {
-    {OCPPInterfaceEnumType20::Wired0, "Wired0"},
-    {OCPPInterfaceEnumType20::Wired1, "Wired1"},
-    {OCPPInterfaceEnumType20::Wired2, "Wired2"},
-    {OCPPInterfaceEnumType20::Wired3, "Wired3"},
-    {OCPPInterfaceEnumType20::Wireless0, "Wireless0"},
-    {OCPPInterfaceEnumType20::Wireless1, "Wireless1"},
-    {OCPPInterfaceEnumType20::Wireless2, "Wireless2"},
-    {OCPPInterfaceEnumType20::Wireless3, "Wireless3"},
+/** @brief Helper to convert a OCPPInterfaceEnumType enum to string */
+const EnumToStringFromString<OCPPInterfaceEnumType> OCPPInterfaceEnumTypeHelper = {
+    {OCPPInterfaceEnumType::Wired0, "Wired0"},
+    {OCPPInterfaceEnumType::Wired1, "Wired1"},
+    {OCPPInterfaceEnumType::Wired2, "Wired2"},
+    {OCPPInterfaceEnumType::Wired3, "Wired3"},
+    {OCPPInterfaceEnumType::Wireless0, "Wireless0"},
+    {OCPPInterfaceEnumType::Wireless1, "Wireless1"},
+    {OCPPInterfaceEnumType::Wireless2, "Wireless2"},
+    {OCPPInterfaceEnumType::Wireless3, "Wireless3"},
 };
 
 } // namespace ocpp20

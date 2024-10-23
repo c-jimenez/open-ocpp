@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ChargingProfileKindEnumType20 enum to string */
-const EnumToStringFromString<ChargingProfileKindEnumType20> ChargingProfileKindEnumType20Helper = {
-    {ChargingProfileKindEnumType20::Absolute, "Absolute"},
-    {ChargingProfileKindEnumType20::Recurring, "Recurring"},
-    {ChargingProfileKindEnumType20::Relative, "Relative"},
+/** @brief Helper to convert a ChargingProfileKindEnumType enum to string */
+const EnumToStringFromString<ChargingProfileKindEnumType> ChargingProfileKindEnumTypeHelper = {
+    {ChargingProfileKindEnumType::Absolute, "Absolute"},
+    {ChargingProfileKindEnumType::Recurring, "Recurring"},
+    {ChargingProfileKindEnumType::Relative, "Relative"},
 };
 
 } // namespace ocpp20

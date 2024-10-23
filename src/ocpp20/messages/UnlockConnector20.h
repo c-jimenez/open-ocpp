@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UNLOCKCONNECTOR20_H
-#define OPENOCPP_UNLOCKCONNECTOR20_H
+#ifndef OPENOCPP_OCPP20_UNLOCKCONNECTOR_H
+#define OPENOCPP_OCPP20_UNLOCKCONNECTOR_H
 
 #include "IMessageConverter.h"
 
@@ -37,36 +37,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the UnlockConnector20 messages */
-static const std::string UNLOCKCONNECTOR20_ACTION = "UnlockConnector";
+/** @brief Action corresponding to the UnlockConnector messages */
+static const std::string UNLOCKCONNECTOR_ACTION = "UnlockConnector";
 
-/** @brief UnlockConnector20Req message */
-struct UnlockConnector20Req
+/** @brief UnlockConnectorReq message */
+struct UnlockConnectorReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief This contains the identifier of the EVSE for which a connector needs to be unlocked. */
     int evseId;
     /** @brief This contains the identifier of the connector that needs to be unlocked. */
     int connectorId;
 };
 
-/** @brief UnlockConnector20Conf message */
-struct UnlockConnector20Conf
+/** @brief UnlockConnectorConf message */
+struct UnlockConnectorConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::UnlockStatusEnumType20 status;
+    ocpp::types::ocpp20::UnlockStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(UnlockConnector20)
+MESSAGE_CONVERTERS(UnlockConnector)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_UNLOCKCONNECTOR20_H
+#endif // OPENOCPP_OCPP20_UNLOCKCONNECTOR_H

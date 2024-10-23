@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEAREDCHARGINGLIMIT20_H
-#define OPENOCPP_CLEAREDCHARGINGLIMIT20_H
+#ifndef OPENOCPP_OCPP20_CLEAREDCHARGINGLIMIT_H
+#define OPENOCPP_OCPP20_CLEAREDCHARGINGLIMIT_H
 
 #include "IMessageConverter.h"
 
@@ -36,32 +36,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ClearedChargingLimit20 messages */
-static const std::string CLEAREDCHARGINGLIMIT20_ACTION = "ClearedChargingLimit";
+/** @brief Action corresponding to the ClearedChargingLimit messages */
+static const std::string CLEAREDCHARGINGLIMIT_ACTION = "ClearedChargingLimit";
 
-/** @brief ClearedChargingLimit20Req message */
-struct ClearedChargingLimit20Req
+/** @brief ClearedChargingLimitReq message */
+struct ClearedChargingLimitReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingLimitSourceEnumType20 chargingLimitSource;
+    ocpp::types::ocpp20::ChargingLimitSourceEnumType chargingLimitSource;
     /** @brief EVSE Identifier. */
     ocpp::types::Optional<int> evseId;
 };
 
-/** @brief ClearedChargingLimit20Conf message */
-struct ClearedChargingLimit20Conf
+/** @brief ClearedChargingLimitConf message */
+struct ClearedChargingLimitConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ClearedChargingLimit20)
+MESSAGE_CONVERTERS(ClearedChargingLimit)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEAREDCHARGINGLIMIT20_H
+#endif // OPENOCPP_OCPP20_CLEAREDCHARGINGLIMIT_H

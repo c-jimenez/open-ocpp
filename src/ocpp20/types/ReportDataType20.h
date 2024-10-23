@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REPORTDATATYPE20_H
-#define OPENOCPP_REPORTDATATYPE20_H
+#ifndef OPENOCPP_OCPP20_REPORTDATATYPE_H
+#define OPENOCPP_OCPP20_REPORTDATATYPE_H
 
 #include "ComponentType20.h"
 #include "CustomDataType20.h"
@@ -43,39 +43,39 @@ namespace ocpp20
 
 /** @brief Class to report components, variables and variable attributes and characteristics.
  */
-struct ReportDataType20
+struct ReportDataType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ComponentType20 component;
+    ComponentType component;
     /** @brief  */
-    VariableType20 variable;
+    VariableType variable;
     /** @brief  */
-    std::vector<VariableAttributeType20> variableAttribute;
+    std::vector<VariableAttributeType> variableAttribute;
     /** @brief  */
-    ocpp::types::Optional<VariableCharacteristicsType20> variableCharacteristics;
+    ocpp::types::Optional<VariableCharacteristicsType> variableCharacteristics;
 };
 
-/** @brief Converter class for ReportDataType20 type */
-class ReportDataType20Converter : public ocpp::messages::IMessageConverter<ReportDataType20>
+/** @brief Converter class for ReportDataType type */
+class ReportDataTypeConverter : public ocpp::messages::IMessageConverter<ReportDataType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ReportDataType20>* clone() const override { return new ReportDataType20Converter(); }
+    ocpp::messages::IMessageConverter<ReportDataType>* clone() const override { return new ReportDataTypeConverter(); }
 
-    /** @brief Convert a ReportDataType20 from a JSON representation */
+    /** @brief Convert a ReportDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ReportDataType20&             data,
+                  ReportDataType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ReportDataType20 to a JSON representation */
-    bool toJson(const ReportDataType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ReportDataType to a JSON representation */
+    bool toJson(const ReportDataType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_REPORTDATATYPE20_H
+#endif // OPENOCPP_OCPP20_REPORTDATATYPE_H

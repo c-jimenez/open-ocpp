@@ -30,15 +30,15 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a AuthorizeCertificateStatusEnumType20 enum to string */
-const EnumToStringFromString<AuthorizeCertificateStatusEnumType20> AuthorizeCertificateStatusEnumType20Helper = {
-    {AuthorizeCertificateStatusEnumType20::Accepted, "Accepted"},
-    {AuthorizeCertificateStatusEnumType20::SignatureError, "SignatureError"},
-    {AuthorizeCertificateStatusEnumType20::CertificateExpired, "CertificateExpired"},
-    {AuthorizeCertificateStatusEnumType20::CertificateRevoked, "CertificateRevoked"},
-    {AuthorizeCertificateStatusEnumType20::NoCertificateAvailable, "NoCertificateAvailable"},
-    {AuthorizeCertificateStatusEnumType20::CertChainError, "CertChainError"},
-    {AuthorizeCertificateStatusEnumType20::ContractCancelled, "ContractCancelled"},
+/** @brief Helper to convert a AuthorizeCertificateStatusEnumType enum to string */
+const EnumToStringFromString<AuthorizeCertificateStatusEnumType> AuthorizeCertificateStatusEnumTypeHelper = {
+    {AuthorizeCertificateStatusEnumType::Accepted, "Accepted"},
+    {AuthorizeCertificateStatusEnumType::SignatureError, "SignatureError"},
+    {AuthorizeCertificateStatusEnumType::CertificateExpired, "CertificateExpired"},
+    {AuthorizeCertificateStatusEnumType::CertificateRevoked, "CertificateRevoked"},
+    {AuthorizeCertificateStatusEnumType::NoCertificateAvailable, "NoCertificateAvailable"},
+    {AuthorizeCertificateStatusEnumType::CertChainError, "CertChainError"},
+    {AuthorizeCertificateStatusEnumType::ContractCancelled, "ContractCancelled"},
 };
 
 } // namespace ocpp20

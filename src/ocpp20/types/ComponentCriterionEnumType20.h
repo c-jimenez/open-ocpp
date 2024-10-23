@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COMPONENTCRITERIONENUMTYPE20_H
-#define OPENOCPP_COMPONENTCRITERIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_COMPONENTCRITERIONENUMTYPE_H
+#define OPENOCPP_OCPP20_COMPONENTCRITERIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief  */
-enum class ComponentCriterionEnumType20
+enum class ComponentCriterionEnumType
 {
     Active,
     Available,
@@ -42,11 +42,11 @@ enum class ComponentCriterionEnumType20
     Problem,
 };
 
-/** @brief Helper to convert a ComponentCriterionEnumType20 enum to string */
-extern const EnumToStringFromString<ComponentCriterionEnumType20> ComponentCriterionEnumType20Helper;
+/** @brief Helper to convert a ComponentCriterionEnumType enum to string */
+extern const EnumToStringFromString<ComponentCriterionEnumType> ComponentCriterionEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_COMPONENTCRITERIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_COMPONENTCRITERIONENUMTYPE_H

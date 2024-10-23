@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGRATEUNITENUMTYPE20_H
-#define OPENOCPP_CHARGINGRATEUNITENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGRATEUNITENUMTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGRATEUNITENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,17 +36,17 @@ namespace ocpp20
 /** @brief Charging_ Schedule. Charging_ Rate_ Unit. Charging_ Rate_ Unit_ Code
 urn:x-oca:ocpp:uid:1:569238
 The unit of measure Limit is expressed in. */
-enum class ChargingRateUnitEnumType20
+enum class ChargingRateUnitEnumType
 {
     W,
     A,
 };
 
-/** @brief Helper to convert a ChargingRateUnitEnumType20 enum to string */
-extern const EnumToStringFromString<ChargingRateUnitEnumType20> ChargingRateUnitEnumType20Helper;
+/** @brief Helper to convert a ChargingRateUnitEnumType enum to string */
+extern const EnumToStringFromString<ChargingRateUnitEnumType> ChargingRateUnitEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGRATEUNITENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGRATEUNITENUMTYPE_H

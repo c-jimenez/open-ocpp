@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GENERICSTATUSENUMTYPE20_H
-#define OPENOCPP_GENERICSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GENERICSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GENERICSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Specifies whether the CSMS can process the request. */
-enum class GenericStatusEnumType20
+enum class GenericStatusEnumType
 {
     Accepted,
     Rejected,
 };
 
-/** @brief Helper to convert a GenericStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GenericStatusEnumType20> GenericStatusEnumType20Helper;
+/** @brief Helper to convert a GenericStatusEnumType enum to string */
+extern const EnumToStringFromString<GenericStatusEnumType> GenericStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GENERICSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GENERICSTATUSENUMTYPE_H

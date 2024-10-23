@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MUTABILITYENUMTYPE20_H
-#define OPENOCPP_MUTABILITYENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MUTABILITYENUMTYPE_H
+#define OPENOCPP_OCPP20_MUTABILITYENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Defines the mutability of this attribute. Default is ReadWrite when omitted. */
-enum class MutabilityEnumType20
+enum class MutabilityEnumType
 {
     ReadOnly,
     WriteOnly,
     ReadWrite,
 };
 
-/** @brief Helper to convert a MutabilityEnumType20 enum to string */
-extern const EnumToStringFromString<MutabilityEnumType20> MutabilityEnumType20Helper;
+/** @brief Helper to convert a MutabilityEnumType enum to string */
+extern const EnumToStringFromString<MutabilityEnumType> MutabilityEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MUTABILITYENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MUTABILITYENUMTYPE_H

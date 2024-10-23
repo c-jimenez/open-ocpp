@@ -32,23 +32,23 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ClearMonitoringResultType20 from a JSON representation */
-bool ClearMonitoringResultType20Converter::fromJson(const rapidjson::Value&       json,
-                                                    ClearMonitoringResultType20&  data,
-                                                    std::string&                  error_code,
-                                                    [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ClearMonitoringResultType from a JSON representation */
+bool ClearMonitoringResultTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                  ClearMonitoringResultType&    data,
+                                                  std::string&                  error_code,
+                                                  [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ClearMonitoringStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ClearMonitoringStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // id
     extract(json, "id", data.id);
@@ -56,7 +56,7 @@ bool ClearMonitoringResultType20Converter::fromJson(const rapidjson::Value&     
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        StatusInfoType20Converter statusInfo_converter;
+        StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -68,15 +68,15 @@ bool ClearMonitoringResultType20Converter::fromJson(const rapidjson::Value&     
     return ret;
 }
 
-/** @brief Convert a ClearMonitoringResultType20 to a JSON representation */
-bool ClearMonitoringResultType20Converter::toJson(const ClearMonitoringResultType20& data, rapidjson::Document& json)
+/** @brief Convert a ClearMonitoringResultType to a JSON representation */
+bool ClearMonitoringResultTypeConverter::toJson(const ClearMonitoringResultType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -85,7 +85,7 @@ bool ClearMonitoringResultType20Converter::toJson(const ClearMonitoringResultTyp
     }
 
     // status
-    fill(json, "status", ClearMonitoringStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ClearMonitoringStatusEnumTypeHelper.toString(data.status));
 
     // id
     fill(json, "id", data.id);
@@ -93,7 +93,7 @@ bool ClearMonitoringResultType20Converter::toJson(const ClearMonitoringResultTyp
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        StatusInfoType20Converter statusInfo_converter;
+        StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

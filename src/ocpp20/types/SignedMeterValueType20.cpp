@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a SignedMeterValueType20 from a JSON representation */
-bool SignedMeterValueType20Converter::fromJson(const rapidjson::Value&       json,
-                                               SignedMeterValueType20&       data,
-                                               std::string&                  error_code,
-                                               [[maybe_unused]] std::string& error_message)
+/** @brief Convert a SignedMeterValueType from a JSON representation */
+bool SignedMeterValueTypeConverter::fromJson(const rapidjson::Value&       json,
+                                             SignedMeterValueType&         data,
+                                             std::string&                  error_code,
+                                             [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -67,15 +67,15 @@ bool SignedMeterValueType20Converter::fromJson(const rapidjson::Value&       jso
     return ret;
 }
 
-/** @brief Convert a SignedMeterValueType20 to a JSON representation */
-bool SignedMeterValueType20Converter::toJson(const SignedMeterValueType20& data, rapidjson::Document& json)
+/** @brief Convert a SignedMeterValueType to a JSON representation */
+bool SignedMeterValueTypeConverter::toJson(const SignedMeterValueType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

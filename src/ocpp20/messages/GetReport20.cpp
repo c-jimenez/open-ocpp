@@ -32,29 +32,26 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a GetReport20Req from a JSON representation */
-bool GetReport20ReqConverter::fromJson(const rapidjson::Value& json,
-                                       GetReport20Req&         data,
-                                       std::string&            error_code,
-                                       std::string&            error_message)
+/** @brief Convert a GetReportReq from a JSON representation */
+bool GetReportReqConverter::fromJson(const rapidjson::Value& json, GetReportReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // componentVariable
     if (json.HasMember("componentVariable"))
     {
-        const rapidjson::Value&                               componentVariable_json = json["componentVariable"];
-        ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
+        const rapidjson::Value&                             componentVariable_json = json["componentVariable"];
+        ocpp::types::ocpp20::ComponentVariableTypeConverter componentVariable_converter;
         for (auto it = componentVariable_json.Begin(); ret && (it != componentVariable_json.End()); ++it)
         {
-            ocpp::types::ocpp20::ComponentVariableType20& item = data.componentVariable.emplace_back();
+            ocpp::types::ocpp20::ComponentVariableType& item = data.componentVariable.emplace_back();
             ret = ret && componentVariable_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -68,8 +65,8 @@ bool GetReport20ReqConverter::fromJson(const rapidjson::Value& json,
         const rapidjson::Value& componentCriteria_json = json["componentCriteria"];
         for (auto it = componentCriteria_json.Begin(); ret && (it != componentCriteria_json.End()); ++it)
         {
-            ocpp::types::ocpp20::ComponentCriterionEnumType20& item = data.componentCriteria.emplace_back();
-            item = ocpp::types::ocpp20::ComponentCriterionEnumType20Helper.fromString(it->GetString());
+            ocpp::types::ocpp20::ComponentCriterionEnumType& item = data.componentCriteria.emplace_back();
+            item = ocpp::types::ocpp20::ComponentCriterionEnumTypeHelper.fromString(it->GetString());
         }
     }
 
@@ -81,15 +78,15 @@ bool GetReport20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a GetReport20Req to a JSON representation */
-bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Document& json)
+/** @brief Convert a GetReportReq to a JSON representation */
+bool GetReportReqConverter::toJson(const GetReportReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -101,10 +98,10 @@ bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Docu
     if (!data.componentVariable.empty())
     {
 
-        rapidjson::Value                                      componentVariable_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::ComponentVariableType20Converter componentVariable_converter;
+        rapidjson::Value                                    componentVariable_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::ComponentVariableTypeConverter componentVariable_converter;
         componentVariable_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::ComponentVariableType20& item : data.componentVariable)
+        for (const ocpp::types::ocpp20::ComponentVariableType& item : data.componentVariable)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -122,10 +119,10 @@ bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Docu
     {
 
         rapidjson::Value componentCriteria_json(rapidjson::kArrayType);
-        for (const ocpp::types::ocpp20::ComponentCriterionEnumType20& item : data.componentCriteria)
+        for (const ocpp::types::ocpp20::ComponentCriterionEnumType& item : data.componentCriteria)
         {
             componentCriteria_json.PushBack(
-                rapidjson::Value(ocpp::types::ocpp20::ComponentCriterionEnumType20Helper.toString(item).c_str(), *allocator).Move(),
+                rapidjson::Value(ocpp::types::ocpp20::ComponentCriterionEnumTypeHelper.toString(item).c_str(), *allocator).Move(),
                 *allocator);
         }
         json.AddMember(rapidjson::StringRef("componentCriteria"), componentCriteria_json.Move(), *allocator);
@@ -134,28 +131,28 @@ bool GetReport20ReqConverter::toJson(const GetReport20Req& data, rapidjson::Docu
     return ret;
 }
 
-/** @brief Convert a GetReport20Conf from a JSON representation */
-bool GetReport20ConfConverter::fromJson(const rapidjson::Value& json,
-                                        GetReport20Conf&        data,
-                                        std::string&            error_code,
-                                        std::string&            error_message)
+/** @brief Convert a GetReportConf from a JSON representation */
+bool GetReportConfConverter::fromJson(const rapidjson::Value& json,
+                                      GetReportConf&          data,
+                                      std::string&            error_code,
+                                      std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::GenericDeviceModelStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -167,15 +164,15 @@ bool GetReport20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a GetReport20Conf to a JSON representation */
-bool GetReport20ConfConverter::toJson(const GetReport20Conf& data, rapidjson::Document& json)
+/** @brief Convert a GetReportConf to a JSON representation */
+bool GetReportConfConverter::toJson(const GetReportConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -184,12 +181,12 @@ bool GetReport20ConfConverter::toJson(const GetReport20Conf& data, rapidjson::Do
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::GenericDeviceModelStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

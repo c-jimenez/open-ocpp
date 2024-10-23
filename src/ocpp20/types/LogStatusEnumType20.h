@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_LOGSTATUSENUMTYPE20_H
-#define OPENOCPP_LOGSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_LOGSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_LOGSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief This field indicates whether the Charging Station was able to accept the request. */
-enum class LogStatusEnumType20
+enum class LogStatusEnumType
 {
     Accepted,
     Rejected,
     AcceptedCanceled,
 };
 
-/** @brief Helper to convert a LogStatusEnumType20 enum to string */
-extern const EnumToStringFromString<LogStatusEnumType20> LogStatusEnumType20Helper;
+/** @brief Helper to convert a LogStatusEnumType enum to string */
+extern const EnumToStringFromString<LogStatusEnumType> LogStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_LOGSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_LOGSTATUSENUMTYPE_H

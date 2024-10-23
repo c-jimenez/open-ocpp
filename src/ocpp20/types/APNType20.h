@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_APNTYPE20_H
-#define OPENOCPP_APNTYPE20_H
+#ifndef OPENOCPP_OCPP20_APNTYPE_H
+#define OPENOCPP_OCPP20_APNTYPE_H
 
 #include "APNAuthenticationEnumType20.h"
 #include "CustomDataType20.h"
@@ -44,10 +44,10 @@ Collection of configuration data needed to make a data-connection over a cellula
 
 NOTE: When asking a GSM modem to dial in, it is possible to specify which mobile operator should be used. This can be done with the mobile country code (MCC) in combination with a mobile network code (MNC). Example: If your preferred network is Vodafone Netherlands, the MCC=204 and the MNC=04 which means the key PreferredNetwork = 20404 Some modems allows to specify a preferred network, which means, if this network is not available, a different network is used. If you specify UseOnlyPreferredNetwork and this network is not available, the modem will not dial in.
  */
-struct APNType20
+struct APNType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief APN. APN. URI
 urn:x-oca:ocpp:uid:1:568814
 The Access Point Name as an URL. */
@@ -74,28 +74,28 @@ Default: false. Use only the preferred Network, do
 not dial in when not available. See Note. */
     ocpp::types::Optional<bool> useOnlyPreferredNetwork;
     /** @brief  */
-    APNAuthenticationEnumType20 apnAuthentication;
+    APNAuthenticationEnumType apnAuthentication;
 };
 
-/** @brief Converter class for APNType20 type */
-class APNType20Converter : public ocpp::messages::IMessageConverter<APNType20>
+/** @brief Converter class for APNType type */
+class APNTypeConverter : public ocpp::messages::IMessageConverter<APNType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<APNType20>* clone() const override { return new APNType20Converter(); }
+    ocpp::messages::IMessageConverter<APNType>* clone() const override { return new APNTypeConverter(); }
 
-    /** @brief Convert a APNType20 from a JSON representation */
+    /** @brief Convert a APNType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  APNType20&                    data,
+                  APNType&                      data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a APNType20 to a JSON representation */
-    bool toJson(const APNType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a APNType to a JSON representation */
+    bool toJson(const APNType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_APNTYPE20_H
+#endif // OPENOCPP_OCPP20_APNTYPE_H

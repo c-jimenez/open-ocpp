@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHANGEAVAILABILITYSTATUSENUMTYPE20_H
-#define OPENOCPP_CHANGEAVAILABILITYSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHANGEAVAILABILITYSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CHANGEAVAILABILITYSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief This indicates whether the Charging Station is able to perform the availability change. */
-enum class ChangeAvailabilityStatusEnumType20
+enum class ChangeAvailabilityStatusEnumType
 {
     Accepted,
     Rejected,
     Scheduled,
 };
 
-/** @brief Helper to convert a ChangeAvailabilityStatusEnumType20 enum to string */
-extern const EnumToStringFromString<ChangeAvailabilityStatusEnumType20> ChangeAvailabilityStatusEnumType20Helper;
+/** @brief Helper to convert a ChangeAvailabilityStatusEnumType enum to string */
+extern const EnumToStringFromString<ChangeAvailabilityStatusEnumType> ChangeAvailabilityStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHANGEAVAILABILITYSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CHANGEAVAILABILITYSTATUSENUMTYPE_H

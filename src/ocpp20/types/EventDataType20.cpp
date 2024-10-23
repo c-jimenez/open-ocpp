@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a EventDataType20 from a JSON representation */
-bool EventDataType20Converter::fromJson(const rapidjson::Value&       json,
-                                        EventDataType20&              data,
-                                        std::string&                  error_code,
-                                        [[maybe_unused]] std::string& error_message)
+/** @brief Convert a EventDataType from a JSON representation */
+bool EventDataTypeConverter::fromJson(const rapidjson::Value&       json,
+                                      EventDataType&                data,
+                                      std::string&                  error_code,
+                                      [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -54,7 +54,7 @@ bool EventDataType20Converter::fromJson(const rapidjson::Value&       json,
     ret = ret && extract(json, "timestamp", data.timestamp, error_message);
 
     // trigger
-    data.trigger = EventTriggerEnumType20Helper.fromString(json["trigger"].GetString());
+    data.trigger = EventTriggerEnumTypeHelper.fromString(json["trigger"].GetString());
 
     // cause
     extract(json, "cause", data.cause);
@@ -75,17 +75,17 @@ bool EventDataType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "transactionId", data.transactionId);
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     ret = ret && component_converter.fromJson(json["component"], data.component, error_code, error_message);
 
     // variableMonitoringId
     extract(json, "variableMonitoringId", data.variableMonitoringId);
 
     // eventNotificationType
-    data.eventNotificationType = EventNotificationEnumType20Helper.fromString(json["eventNotificationType"].GetString());
+    data.eventNotificationType = EventNotificationEnumTypeHelper.fromString(json["eventNotificationType"].GetString());
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     if (!ret)
@@ -96,15 +96,15 @@ bool EventDataType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a EventDataType20 to a JSON representation */
-bool EventDataType20Converter::toJson(const EventDataType20& data, rapidjson::Document& json)
+/** @brief Convert a EventDataType to a JSON representation */
+bool EventDataTypeConverter::toJson(const EventDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -119,7 +119,7 @@ bool EventDataType20Converter::toJson(const EventDataType20& data, rapidjson::Do
     fill(json, "timestamp", data.timestamp);
 
     // trigger
-    fill(json, "trigger", EventTriggerEnumType20Helper.toString(data.trigger));
+    fill(json, "trigger", EventTriggerEnumTypeHelper.toString(data.trigger));
 
     // cause
     fill(json, "cause", data.cause);
@@ -140,7 +140,7 @@ bool EventDataType20Converter::toJson(const EventDataType20& data, rapidjson::Do
     fill(json, "transactionId", data.transactionId);
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
     rapidjson::Document component_doc;
     component_doc.Parse("{}");
@@ -151,10 +151,10 @@ bool EventDataType20Converter::toJson(const EventDataType20& data, rapidjson::Do
     fill(json, "variableMonitoringId", data.variableMonitoringId);
 
     // eventNotificationType
-    fill(json, "eventNotificationType", EventNotificationEnumType20Helper.toString(data.eventNotificationType));
+    fill(json, "eventNotificationType", EventNotificationEnumTypeHelper.toString(data.eventNotificationType));
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
     rapidjson::Document variable_doc;
     variable_doc.Parse("{}");

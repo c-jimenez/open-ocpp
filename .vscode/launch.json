@@ -5,7 +5,7 @@
             "type": "gdb",
             "request": "launch",
             "name": "x86 CP debug",
-            "target": "${workspaceRoot}/bin/gcc_native/quick_start_chargepoint",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_chargepoint20",
             "cwd": "${workspaceRoot}/bin/gcc_native/",
             "arguments": "-r",
             "valuesFormatting": "parseText"
@@ -14,7 +14,7 @@
             "type": "gdb",
             "request": "launch",
             "name": "x86 CS debug",
-            "target": "${workspaceRoot}/bin/gcc_native/quick_start_centralsystem",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_centralsystem20",
             "cwd": "${workspaceRoot}/bin/gcc_native/",
             "arguments": "-r",
             "valuesFormatting": "parseText"
@@ -23,7 +23,7 @@
             "type": "gdb",
             "request": "launch",
             "name": "x86 LC debug",
-            "target": "${workspaceRoot}/bin/gcc_native/quick_start_localcontroller",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_localcontroller20",
             "cwd": "${workspaceRoot}/bin/gcc_native/",
             "arguments": "-r",
             "valuesFormatting": "parseText"

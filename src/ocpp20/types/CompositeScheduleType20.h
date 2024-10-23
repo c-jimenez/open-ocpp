@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COMPOSITESCHEDULETYPE20_H
-#define OPENOCPP_COMPOSITESCHEDULETYPE20_H
+#ifndef OPENOCPP_OCPP20_COMPOSITESCHEDULETYPE_H
+#define OPENOCPP_OCPP20_COMPOSITESCHEDULETYPE_H
 
 #include "ChargingRateUnitEnumType20.h"
 #include "ChargingSchedulePeriodType20.h"
@@ -43,12 +43,12 @@ namespace ocpp20
 /** @brief Composite_ Schedule
 urn:x-oca:ocpp:uid:2:233362
  */
-struct CompositeScheduleType20
+struct CompositeScheduleType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    std::vector<ChargingSchedulePeriodType20> chargingSchedulePeriod;
+    std::vector<ChargingSchedulePeriodType> chargingSchedulePeriod;
     /** @brief The ID of the EVSE for which the
 schedule is requested. When evseid=0, the
 Charging Station calculated the expected
@@ -61,28 +61,28 @@ urn:x-oca:ocpp:uid:1:569456
 Date and time at which the schedule becomes active. All time measurements within the schedule are relative to this timestamp. */
     ocpp::types::DateTime scheduleStart;
     /** @brief  */
-    ChargingRateUnitEnumType20 chargingRateUnit;
+    ChargingRateUnitEnumType chargingRateUnit;
 };
 
-/** @brief Converter class for CompositeScheduleType20 type */
-class CompositeScheduleType20Converter : public ocpp::messages::IMessageConverter<CompositeScheduleType20>
+/** @brief Converter class for CompositeScheduleType type */
+class CompositeScheduleTypeConverter : public ocpp::messages::IMessageConverter<CompositeScheduleType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<CompositeScheduleType20>* clone() const override { return new CompositeScheduleType20Converter(); }
+    ocpp::messages::IMessageConverter<CompositeScheduleType>* clone() const override { return new CompositeScheduleTypeConverter(); }
 
-    /** @brief Convert a CompositeScheduleType20 from a JSON representation */
+    /** @brief Convert a CompositeScheduleType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CompositeScheduleType20&      data,
+                  CompositeScheduleType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a CompositeScheduleType20 to a JSON representation */
-    bool toJson(const CompositeScheduleType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a CompositeScheduleType to a JSON representation */
+    bool toJson(const CompositeScheduleType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_COMPOSITESCHEDULETYPE20_H
+#endif // OPENOCPP_OCPP20_COMPOSITESCHEDULETYPE_H

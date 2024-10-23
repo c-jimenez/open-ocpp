@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_FIRMWARETYPE20_H
-#define OPENOCPP_FIRMWARETYPE20_H
+#ifndef OPENOCPP_OCPP20_FIRMWARETYPE_H
+#define OPENOCPP_OCPP20_FIRMWARETYPE_H
 
 #include "CustomDataType20.h"
 
@@ -42,10 +42,10 @@ namespace ocpp20
 urn:x-enexis:ecdm:uid:2:233291
 Represents a copy of the firmware that can be loaded/updated on the Charging Station.
  */
-struct FirmwareType20
+struct FirmwareType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Firmware. Location. URI
 urn:x-enexis:ecdm:uid:1:569460
 URI defining the origin of the firmware. */
@@ -67,25 +67,25 @@ Base64 encoded firmware signature. */
     ocpp::types::Optional<ocpp::types::CiStringType<800u>> signature;
 };
 
-/** @brief Converter class for FirmwareType20 type */
-class FirmwareType20Converter : public ocpp::messages::IMessageConverter<FirmwareType20>
+/** @brief Converter class for FirmwareType type */
+class FirmwareTypeConverter : public ocpp::messages::IMessageConverter<FirmwareType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<FirmwareType20>* clone() const override { return new FirmwareType20Converter(); }
+    ocpp::messages::IMessageConverter<FirmwareType>* clone() const override { return new FirmwareTypeConverter(); }
 
-    /** @brief Convert a FirmwareType20 from a JSON representation */
+    /** @brief Convert a FirmwareType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  FirmwareType20&               data,
+                  FirmwareType&                 data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a FirmwareType20 to a JSON representation */
-    bool toJson(const FirmwareType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a FirmwareType to a JSON representation */
+    bool toJson(const FirmwareType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_FIRMWARETYPE20_H
+#endif // OPENOCPP_OCPP20_FIRMWARETYPE_H

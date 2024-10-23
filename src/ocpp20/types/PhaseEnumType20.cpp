@@ -30,18 +30,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a PhaseEnumType20 enum to string */
-const EnumToStringFromString<PhaseEnumType20> PhaseEnumType20Helper = {
-    {PhaseEnumType20::L1, "L1"},
-    {PhaseEnumType20::L2, "L2"},
-    {PhaseEnumType20::L3, "L3"},
-    {PhaseEnumType20::N, "N"},
-    {PhaseEnumType20::L1_N, "L1-N"},
-    {PhaseEnumType20::L2_N, "L2-N"},
-    {PhaseEnumType20::L3_N, "L3-N"},
-    {PhaseEnumType20::L1_L2, "L1-L2"},
-    {PhaseEnumType20::L2_L3, "L2-L3"},
-    {PhaseEnumType20::L3_L1, "L3-L1"},
+/** @brief Helper to convert a PhaseEnumType enum to string */
+const EnumToStringFromString<PhaseEnumType> PhaseEnumTypeHelper = {
+    {PhaseEnumType::L1, "L1"},
+    {PhaseEnumType::L2, "L2"},
+    {PhaseEnumType::L3, "L3"},
+    {PhaseEnumType::N, "N"},
+    {PhaseEnumType::L1_N, "L1-N"},
+    {PhaseEnumType::L2_N, "L2-N"},
+    {PhaseEnumType::L3_N, "L3-N"},
+    {PhaseEnumType::L1_L2, "L1-L2"},
+    {PhaseEnumType::L2_L3, "L2-L3"},
+    {PhaseEnumType::L3_L1, "L3-L1"},
 };
 
 } // namespace ocpp20

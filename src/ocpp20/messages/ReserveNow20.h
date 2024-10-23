@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RESERVENOW20_H
-#define OPENOCPP_RESERVENOW20_H
+#ifndef OPENOCPP_OCPP20_RESERVENOW_H
+#define OPENOCPP_OCPP20_RESERVENOW_H
 
 #include "IMessageConverter.h"
 
@@ -39,44 +39,44 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ReserveNow20 messages */
-static const std::string RESERVENOW20_ACTION = "ReserveNow";
+/** @brief Action corresponding to the ReserveNow messages */
+static const std::string RESERVENOW_ACTION = "ReserveNow";
 
-/** @brief ReserveNow20Req message */
-struct ReserveNow20Req
+/** @brief ReserveNowReq message */
+struct ReserveNowReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Id of reservation. */
     int id;
     /** @brief Date and time at which the reservation expires. */
     ocpp::types::DateTime expiryDateTime;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::ConnectorEnumType20> connectorType;
+    ocpp::types::Optional<ocpp::types::ocpp20::ConnectorEnumType> connectorType;
     /** @brief  */
-    ocpp::types::ocpp20::IdTokenType20 idToken;
+    ocpp::types::ocpp20::IdTokenType idToken;
     /** @brief This contains ID of the evse to be reserved. */
     ocpp::types::Optional<int> evseId;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType20> groupIdToken;
+    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType> groupIdToken;
 };
 
-/** @brief ReserveNow20Conf message */
-struct ReserveNow20Conf
+/** @brief ReserveNowConf message */
+struct ReserveNowConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ReserveNowStatusEnumType20 status;
+    ocpp::types::ocpp20::ReserveNowStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ReserveNow20)
+MESSAGE_CONVERTERS(ReserveNow)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_RESERVENOW20_H
+#endif // OPENOCPP_OCPP20_RESERVENOW_H

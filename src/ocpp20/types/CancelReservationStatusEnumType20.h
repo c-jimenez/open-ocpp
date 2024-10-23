@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CANCELRESERVATIONSTATUSENUMTYPE20_H
-#define OPENOCPP_CANCELRESERVATIONSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CANCELRESERVATIONSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CANCELRESERVATIONSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief This indicates the success or failure of the canceling of a reservation by CSMS. */
-enum class CancelReservationStatusEnumType20
+enum class CancelReservationStatusEnumType
 {
     Accepted,
     Rejected,
 };
 
-/** @brief Helper to convert a CancelReservationStatusEnumType20 enum to string */
-extern const EnumToStringFromString<CancelReservationStatusEnumType20> CancelReservationStatusEnumType20Helper;
+/** @brief Helper to convert a CancelReservationStatusEnumType enum to string */
+extern const EnumToStringFromString<CancelReservationStatusEnumType> CancelReservationStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CANCELRESERVATIONSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CANCELRESERVATIONSTATUSENUMTYPE_H

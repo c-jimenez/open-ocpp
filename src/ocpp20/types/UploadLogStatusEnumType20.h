@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UPLOADLOGSTATUSENUMTYPE20_H
-#define OPENOCPP_UPLOADLOGSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_UPLOADLOGSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_UPLOADLOGSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This contains the status of the log upload. */
-enum class UploadLogStatusEnumType20
+enum class UploadLogStatusEnumType
 {
     BadMessage,
     Idle,
@@ -46,11 +46,11 @@ enum class UploadLogStatusEnumType20
     AcceptedCanceled,
 };
 
-/** @brief Helper to convert a UploadLogStatusEnumType20 enum to string */
-extern const EnumToStringFromString<UploadLogStatusEnumType20> UploadLogStatusEnumType20Helper;
+/** @brief Helper to convert a UploadLogStatusEnumType enum to string */
+extern const EnumToStringFromString<UploadLogStatusEnumType> UploadLogStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_UPLOADLOGSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_UPLOADLOGSTATUSENUMTYPE_H

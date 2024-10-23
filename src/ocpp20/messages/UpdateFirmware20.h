@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UPDATEFIRMWARE20_H
-#define OPENOCPP_UPDATEFIRMWARE20_H
+#ifndef OPENOCPP_OCPP20_UPDATEFIRMWARE_H
+#define OPENOCPP_OCPP20_UPDATEFIRMWARE_H
 
 #include "IMessageConverter.h"
 
@@ -38,14 +38,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the UpdateFirmware20 messages */
-static const std::string UPDATEFIRMWARE20_ACTION = "UpdateFirmware";
+/** @brief Action corresponding to the UpdateFirmware messages */
+static const std::string UPDATEFIRMWARE_ACTION = "UpdateFirmware";
 
-/** @brief UpdateFirmware20Req message */
-struct UpdateFirmware20Req
+/** @brief UpdateFirmwareReq message */
+struct UpdateFirmwareReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief This specifies how many times Charging Station must try to download the firmware before giving up. If this field is not present, it is left to Charging Station to decide how many times it wants to retry. */
     ocpp::types::Optional<int> retries;
     /** @brief The interval in seconds after which a retry may be attempted. If this field is not present, it is left to Charging Station to decide how long to wait between attempts. */
@@ -53,25 +53,25 @@ struct UpdateFirmware20Req
     /** @brief The Id of this request */
     int requestId;
     /** @brief  */
-    ocpp::types::ocpp20::FirmwareType20 firmware;
+    ocpp::types::ocpp20::FirmwareType firmware;
 };
 
-/** @brief UpdateFirmware20Conf message */
-struct UpdateFirmware20Conf
+/** @brief UpdateFirmwareConf message */
+struct UpdateFirmwareConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::UpdateFirmwareStatusEnumType20 status;
+    ocpp::types::ocpp20::UpdateFirmwareStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(UpdateFirmware20)
+MESSAGE_CONVERTERS(UpdateFirmware)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_UPDATEFIRMWARE20_H
+#endif // OPENOCPP_OCPP20_UPDATEFIRMWARE_H

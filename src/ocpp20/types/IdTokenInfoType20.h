@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_IDTOKENINFOTYPE20_H
-#define OPENOCPP_IDTOKENINFOTYPE20_H
+#ifndef OPENOCPP_OCPP20_IDTOKENINFOTYPE_H
+#define OPENOCPP_OCPP20_IDTOKENINFOTYPE_H
 
 #include "AuthorizationStatusEnumType20.h"
 #include "CustomDataType20.h"
@@ -47,12 +47,12 @@ urn:x-oca:ocpp:uid:2:233247
 Contains status information about an identifier.
 It is advised to not stop charging for a token that expires during charging, as ExpiryDate is only used for caching purposes. If ExpiryDate is not given, the status has no end date.
  */
-struct IdTokenInfoType20
+struct IdTokenInfoType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    AuthorizationStatusEnumType20 status;
+    AuthorizationStatusEnumType status;
     /** @brief ID_ Token. Expiry. Date_ Time
 urn:x-oca:ocpp:uid:1:569373
 Date and Time after which the token must be considered invalid. */
@@ -66,34 +66,34 @@ Preferred user interface language of identifier user. Contains a language code a
     /** @brief Only used when the IdToken is only valid for one or more specific EVSEs, not for the entire Charging Station. */
     std::vector<int> evseId;
     /** @brief  */
-    ocpp::types::Optional<IdTokenType20> groupIdToken;
+    ocpp::types::Optional<IdTokenType> groupIdToken;
     /** @brief ID_ Token. Language2. Language_ Code
 urn:x-oca:ocpp:uid:1:569375
 Second preferred user interface language of identifier user. Don’t use when language1 is omitted, has to be different from language1. Contains a language code as defined in &lt;&lt;ref-RFC5646,[RFC5646]&gt;&gt;. */
     ocpp::types::Optional<ocpp::types::CiStringType<8u>> language2;
     /** @brief  */
-    ocpp::types::Optional<MessageContentType20> personalMessage;
+    ocpp::types::Optional<MessageContentType> personalMessage;
 };
 
-/** @brief Converter class for IdTokenInfoType20 type */
-class IdTokenInfoType20Converter : public ocpp::messages::IMessageConverter<IdTokenInfoType20>
+/** @brief Converter class for IdTokenInfoType type */
+class IdTokenInfoTypeConverter : public ocpp::messages::IMessageConverter<IdTokenInfoType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<IdTokenInfoType20>* clone() const override { return new IdTokenInfoType20Converter(); }
+    ocpp::messages::IMessageConverter<IdTokenInfoType>* clone() const override { return new IdTokenInfoTypeConverter(); }
 
-    /** @brief Convert a IdTokenInfoType20 from a JSON representation */
+    /** @brief Convert a IdTokenInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  IdTokenInfoType20&            data,
+                  IdTokenInfoType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a IdTokenInfoType20 to a JSON representation */
-    bool toJson(const IdTokenInfoType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a IdTokenInfoType to a JSON representation */
+    bool toJson(const IdTokenInfoType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_IDTOKENINFOTYPE20_H
+#endif // OPENOCPP_OCPP20_IDTOKENINFOTYPE_H

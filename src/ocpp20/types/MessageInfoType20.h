@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGEINFOTYPE20_H
-#define OPENOCPP_MESSAGEINFOTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGEINFOTYPE_H
+#define OPENOCPP_OCPP20_MESSAGEINFOTYPE_H
 
 #include "ComponentType20.h"
 #include "CustomDataType20.h"
@@ -46,20 +46,20 @@ namespace ocpp20
 urn:x-enexis:ecdm:uid:2:233264
 Contains message details, for a message to be displayed on a Charging Station.
  */
-struct MessageInfoType20
+struct MessageInfoType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ComponentType20> display;
+    ocpp::types::Optional<ComponentType> display;
     /** @brief Identified_ Object. MRID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:569198
 Master resource identifier, unique within an exchange context. It is defined within the OCPP context as a positive Integer value (greater or equal to zero). */
     int id;
     /** @brief  */
-    MessagePriorityEnumType20 priority;
+    MessagePriorityEnumType priority;
     /** @brief  */
-    ocpp::types::Optional<MessageStateEnumType20> state;
+    ocpp::types::Optional<MessageStateEnumType> state;
     /** @brief Message_ Info. Start. Date_ Time
 urn:x-enexis:ecdm:uid:1:569256
 From what date-time should this message be shown. If omitted: directly. */
@@ -73,28 +73,28 @@ Message SHALL be removed by the Charging Station after transaction has
 ended. */
     ocpp::types::Optional<ocpp::types::CiStringType<36u>> transactionId;
     /** @brief  */
-    MessageContentType20 message;
+    MessageContentType message;
 };
 
-/** @brief Converter class for MessageInfoType20 type */
-class MessageInfoType20Converter : public ocpp::messages::IMessageConverter<MessageInfoType20>
+/** @brief Converter class for MessageInfoType type */
+class MessageInfoTypeConverter : public ocpp::messages::IMessageConverter<MessageInfoType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<MessageInfoType20>* clone() const override { return new MessageInfoType20Converter(); }
+    ocpp::messages::IMessageConverter<MessageInfoType>* clone() const override { return new MessageInfoTypeConverter(); }
 
-    /** @brief Convert a MessageInfoType20 from a JSON representation */
+    /** @brief Convert a MessageInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MessageInfoType20&            data,
+                  MessageInfoType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a MessageInfoType20 to a JSON representation */
-    bool toJson(const MessageInfoType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a MessageInfoType to a JSON representation */
+    bool toJson(const MessageInfoType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGEINFOTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGEINFOTYPE_H

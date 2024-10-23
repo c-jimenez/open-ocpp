@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE20_H
-#define OPENOCPP_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Returns whether the CSMS has been able to process the message successfully. It does not imply that the evChargingNeeds can be met with the current charging profile. */
-enum class NotifyEVChargingNeedsStatusEnumType20
+enum class NotifyEVChargingNeedsStatusEnumType
 {
     Accepted,
     Rejected,
     Processing,
 };
 
-/** @brief Helper to convert a NotifyEVChargingNeedsStatusEnumType20 enum to string */
-extern const EnumToStringFromString<NotifyEVChargingNeedsStatusEnumType20> NotifyEVChargingNeedsStatusEnumType20Helper;
+/** @brief Helper to convert a NotifyEVChargingNeedsStatusEnumType enum to string */
+extern const EnumToStringFromString<NotifyEVChargingNeedsStatusEnumType> NotifyEVChargingNeedsStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_NOTIFYEVCHARGINGNEEDSSTATUSENUMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARCACHE20_H
-#define OPENOCPP_CLEARCACHE20_H
+#ifndef OPENOCPP_OCPP20_CLEARCACHE_H
+#define OPENOCPP_OCPP20_CLEARCACHE_H
 
 #include "IMessageConverter.h"
 
@@ -37,32 +37,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ClearCache20 messages */
-static const std::string CLEARCACHE20_ACTION = "ClearCache";
+/** @brief Action corresponding to the ClearCache messages */
+static const std::string CLEARCACHE_ACTION = "ClearCache";
 
-/** @brief ClearCache20Req message */
-struct ClearCache20Req
+/** @brief ClearCacheReq message */
+struct ClearCacheReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
-/** @brief ClearCache20Conf message */
-struct ClearCache20Conf
+/** @brief ClearCacheConf message */
+struct ClearCacheConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ClearCacheStatusEnumType20 status;
+    ocpp::types::ocpp20::ClearCacheStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ClearCache20)
+MESSAGE_CONVERTERS(ClearCache)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARCACHE20_H
+#endif // OPENOCPP_OCPP20_CLEARCACHE_H

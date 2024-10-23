@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a UpdateEnumType20 enum to string */
-const EnumToStringFromString<UpdateEnumType20> UpdateEnumType20Helper = {
-    {UpdateEnumType20::Differential, "Differential"},
-    {UpdateEnumType20::Full, "Full"},
+/** @brief Helper to convert a UpdateEnumType enum to string */
+const EnumToStringFromString<UpdateEnumType> UpdateEnumTypeHelper = {
+    {UpdateEnumType::Differential, "Differential"},
+    {UpdateEnumType::Full, "Full"},
 };
 
 } // namespace ocpp20

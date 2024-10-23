@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETMONITORINGBASE20_H
-#define OPENOCPP_SETMONITORINGBASE20_H
+#ifndef OPENOCPP_OCPP20_SETMONITORINGBASE_H
+#define OPENOCPP_OCPP20_SETMONITORINGBASE_H
 
 #include "IMessageConverter.h"
 
@@ -38,34 +38,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetMonitoringBase20 messages */
-static const std::string SETMONITORINGBASE20_ACTION = "SetMonitoringBase";
+/** @brief Action corresponding to the SetMonitoringBase messages */
+static const std::string SETMONITORINGBASE_ACTION = "SetMonitoringBase";
 
-/** @brief SetMonitoringBase20Req message */
-struct SetMonitoringBase20Req
+/** @brief SetMonitoringBaseReq message */
+struct SetMonitoringBaseReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::MonitoringBaseEnumType20 monitoringBase;
+    ocpp::types::ocpp20::MonitoringBaseEnumType monitoringBase;
 };
 
-/** @brief SetMonitoringBase20Conf message */
-struct SetMonitoringBase20Conf
+/** @brief SetMonitoringBaseConf message */
+struct SetMonitoringBaseConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetMonitoringBase20)
+MESSAGE_CONVERTERS(SetMonitoringBase)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETMONITORINGBASE20_H
+#endif // OPENOCPP_OCPP20_SETMONITORINGBASE_H

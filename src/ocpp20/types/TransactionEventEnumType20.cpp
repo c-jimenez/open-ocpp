@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a TransactionEventEnumType20 enum to string */
-const EnumToStringFromString<TransactionEventEnumType20> TransactionEventEnumType20Helper = {
-    {TransactionEventEnumType20::Ended, "Ended"},
-    {TransactionEventEnumType20::Started, "Started"},
-    {TransactionEventEnumType20::Updated, "Updated"},
+/** @brief Helper to convert a TransactionEventEnumType enum to string */
+const EnumToStringFromString<TransactionEventEnumType> TransactionEventEnumTypeHelper = {
+    {TransactionEventEnumType::Ended, "Ended"},
+    {TransactionEventEnumType::Started, "Started"},
+    {TransactionEventEnumType::Updated, "Updated"},
 };
 
 } // namespace ocpp20

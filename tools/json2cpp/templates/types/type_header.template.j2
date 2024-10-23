@@ -21,10 +21,11 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  {{message.comment}}
 */
 
-#ifndef OPENOCPP_{{type.name.upper()}}_H
-#define OPENOCPP_{{type.name.upper()}}_H
+#ifndef OPENOCPP_{{ocpp_version_namespace.upper()}}_{{type.name.upper()}}_H
+#define OPENOCPP_{{ocpp_version_namespace.upper()}}_{{type.name.upper()}}_H
+
 {%for dependency in type.requires %}
-#include "{{dependency}}.h"
+#include "{{dependency}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 {%for dependency in type.cpp_dependencies() %}
 #include {{dependency}}
@@ -68,4 +69,4 @@ class {{type.name}}Converter : public ocpp::messages::IMessageConverter<{{type.n
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_{{type.name.upper()}}_H
+#endif // OPENOCPP_{{ocpp_version_namespace.upper()}}_{{type.name.upper()}}_H

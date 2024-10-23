@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGEFORMATENUMTYPE20_H
-#define OPENOCPP_MESSAGEFORMATENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGEFORMATENUMTYPE_H
+#define OPENOCPP_OCPP20_MESSAGEFORMATENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Message_ Content. Format. Message_ Format_ Code
 urn:x-enexis:ecdm:uid:1:570848
 Format of the message. */
-enum class MessageFormatEnumType20
+enum class MessageFormatEnumType
 {
     ASCII,
     HTML,
@@ -44,11 +44,11 @@ enum class MessageFormatEnumType20
     UTF8,
 };
 
-/** @brief Helper to convert a MessageFormatEnumType20 enum to string */
-extern const EnumToStringFromString<MessageFormatEnumType20> MessageFormatEnumType20Helper;
+/** @brief Helper to convert a MessageFormatEnumType enum to string */
+extern const EnumToStringFromString<MessageFormatEnumType> MessageFormatEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGEFORMATENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGEFORMATENUMTYPE_H

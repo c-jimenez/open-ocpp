@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COMPONENTTYPE20_H
-#define OPENOCPP_COMPONENTTYPE20_H
+#ifndef OPENOCPP_OCPP20_COMPONENTTYPE_H
+#define OPENOCPP_OCPP20_COMPONENTTYPE_H
 
 #include "CustomDataType20.h"
 #include "EVSEType20.h"
@@ -40,37 +40,37 @@ namespace ocpp20
 
 /** @brief A physical or logical component
  */
-struct ComponentType20
+struct ComponentType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<EVSEType20> evse;
+    ocpp::types::Optional<EVSEType> evse;
     /** @brief Name of the component. Name should be taken from the list of standardized component names whenever possible. Case Insensitive. strongly advised to use Camel Case. */
     ocpp::types::CiStringType<50u> name;
     /** @brief Name of instance in case the component exists as multiple instances. Case Insensitive. strongly advised to use Camel Case. */
     ocpp::types::Optional<ocpp::types::CiStringType<50u>> instance;
 };
 
-/** @brief Converter class for ComponentType20 type */
-class ComponentType20Converter : public ocpp::messages::IMessageConverter<ComponentType20>
+/** @brief Converter class for ComponentType type */
+class ComponentTypeConverter : public ocpp::messages::IMessageConverter<ComponentType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ComponentType20>* clone() const override { return new ComponentType20Converter(); }
+    ocpp::messages::IMessageConverter<ComponentType>* clone() const override { return new ComponentTypeConverter(); }
 
-    /** @brief Convert a ComponentType20 from a JSON representation */
+    /** @brief Convert a ComponentType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ComponentType20&              data,
+                  ComponentType&                data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ComponentType20 to a JSON representation */
-    bool toJson(const ComponentType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ComponentType to a JSON representation */
+    bool toJson(const ComponentType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_COMPONENTTYPE20_H
+#endif // OPENOCPP_OCPP20_COMPONENTTYPE_H

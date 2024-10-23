@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a VariableCharacteristicsType20 from a JSON representation */
-bool VariableCharacteristicsType20Converter::fromJson(const rapidjson::Value&        json,
-                                                      VariableCharacteristicsType20& data,
-                                                      std::string&                   error_code,
-                                                      [[maybe_unused]] std::string&  error_message)
+/** @brief Convert a VariableCharacteristicsType from a JSON representation */
+bool VariableCharacteristicsTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                    VariableCharacteristicsType&  data,
+                                                    std::string&                  error_code,
+                                                    [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -51,7 +51,7 @@ bool VariableCharacteristicsType20Converter::fromJson(const rapidjson::Value&   
     extract(json, "unit", data.unit);
 
     // dataType
-    data.dataType = DataEnumType20Helper.fromString(json["dataType"].GetString());
+    data.dataType = DataEnumTypeHelper.fromString(json["dataType"].GetString());
 
     // minLimit
     extract(json, "minLimit", data.minLimit);
@@ -73,15 +73,15 @@ bool VariableCharacteristicsType20Converter::fromJson(const rapidjson::Value&   
     return ret;
 }
 
-/** @brief Convert a VariableCharacteristicsType20 to a JSON representation */
-bool VariableCharacteristicsType20Converter::toJson(const VariableCharacteristicsType20& data, rapidjson::Document& json)
+/** @brief Convert a VariableCharacteristicsType to a JSON representation */
+bool VariableCharacteristicsTypeConverter::toJson(const VariableCharacteristicsType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -93,7 +93,7 @@ bool VariableCharacteristicsType20Converter::toJson(const VariableCharacteristic
     fill(json, "unit", data.unit);
 
     // dataType
-    fill(json, "dataType", DataEnumType20Helper.toString(data.dataType));
+    fill(json, "dataType", DataEnumTypeHelper.toString(data.dataType));
 
     // minLimit
     fill(json, "minLimit", data.minLimit);

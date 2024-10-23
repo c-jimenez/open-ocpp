@@ -30,17 +30,17 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a BootReasonEnumType20 enum to string */
-const EnumToStringFromString<BootReasonEnumType20> BootReasonEnumType20Helper = {
-    {BootReasonEnumType20::ApplicationReset, "ApplicationReset"},
-    {BootReasonEnumType20::FirmwareUpdate, "FirmwareUpdate"},
-    {BootReasonEnumType20::LocalReset, "LocalReset"},
-    {BootReasonEnumType20::PowerUp, "PowerUp"},
-    {BootReasonEnumType20::RemoteReset, "RemoteReset"},
-    {BootReasonEnumType20::ScheduledReset, "ScheduledReset"},
-    {BootReasonEnumType20::Triggered, "Triggered"},
-    {BootReasonEnumType20::Unknown, "Unknown"},
-    {BootReasonEnumType20::Watchdog, "Watchdog"},
+/** @brief Helper to convert a BootReasonEnumType enum to string */
+const EnumToStringFromString<BootReasonEnumType> BootReasonEnumTypeHelper = {
+    {BootReasonEnumType::ApplicationReset, "ApplicationReset"},
+    {BootReasonEnumType::FirmwareUpdate, "FirmwareUpdate"},
+    {BootReasonEnumType::LocalReset, "LocalReset"},
+    {BootReasonEnumType::PowerUp, "PowerUp"},
+    {BootReasonEnumType::RemoteReset, "RemoteReset"},
+    {BootReasonEnumType::ScheduledReset, "ScheduledReset"},
+    {BootReasonEnumType::Triggered, "Triggered"},
+    {BootReasonEnumType::Unknown, "Unknown"},
+    {BootReasonEnumType::Watchdog, "Watchdog"},
 };
 
 } // namespace ocpp20

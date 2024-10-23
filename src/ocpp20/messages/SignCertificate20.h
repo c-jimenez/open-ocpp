@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SIGNCERTIFICATE20_H
-#define OPENOCPP_SIGNCERTIFICATE20_H
+#ifndef OPENOCPP_OCPP20_SIGNCERTIFICATE_H
+#define OPENOCPP_OCPP20_SIGNCERTIFICATE_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SignCertificate20 messages */
-static const std::string SIGNCERTIFICATE20_ACTION = "SignCertificate";
+/** @brief Action corresponding to the SignCertificate messages */
+static const std::string SIGNCERTIFICATE_ACTION = "SignCertificate";
 
-/** @brief SignCertificate20Req message */
-struct SignCertificate20Req
+/** @brief SignCertificateReq message */
+struct SignCertificateReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The Charging Station SHALL send the public key in form of a Certificate Signing Request (CSR) as described in RFC 2986 [22] and then PEM encoded, using the &lt;&lt;signcertificaterequest,SignCertificateRequest&gt;&gt; message. */
     ocpp::types::CiStringType<5500u> csr;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CertificateSigningUseEnumType20> certificateType;
+    ocpp::types::Optional<ocpp::types::ocpp20::CertificateSigningUseEnumType> certificateType;
 };
 
-/** @brief SignCertificate20Conf message */
-struct SignCertificate20Conf
+/** @brief SignCertificateConf message */
+struct SignCertificateConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SignCertificate20)
+MESSAGE_CONVERTERS(SignCertificate)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SIGNCERTIFICATE20_H
+#endif // OPENOCPP_OCPP20_SIGNCERTIFICATE_H

@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a ClearVariableMonitoring20Req from a JSON representation */
-bool ClearVariableMonitoring20ReqConverter::fromJson(const rapidjson::Value&       json,
-                                                     ClearVariableMonitoring20Req& data,
-                                                     std::string&                  error_code,
-                                                     std::string&                  error_message)
+/** @brief Convert a ClearVariableMonitoringReq from a JSON representation */
+bool ClearVariableMonitoringReqConverter::fromJson(const rapidjson::Value&     json,
+                                                   ClearVariableMonitoringReq& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -66,15 +66,15 @@ bool ClearVariableMonitoring20ReqConverter::fromJson(const rapidjson::Value&    
     return ret;
 }
 
-/** @brief Convert a ClearVariableMonitoring20Req to a JSON representation */
-bool ClearVariableMonitoring20ReqConverter::toJson(const ClearVariableMonitoring20Req& data, rapidjson::Document& json)
+/** @brief Convert a ClearVariableMonitoringReq to a JSON representation */
+bool ClearVariableMonitoringReqConverter::toJson(const ClearVariableMonitoringReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -94,29 +94,29 @@ bool ClearVariableMonitoring20ReqConverter::toJson(const ClearVariableMonitoring
     return ret;
 }
 
-/** @brief Convert a ClearVariableMonitoring20Conf from a JSON representation */
-bool ClearVariableMonitoring20ConfConverter::fromJson(const rapidjson::Value&        json,
-                                                      ClearVariableMonitoring20Conf& data,
-                                                      std::string&                   error_code,
-                                                      std::string&                   error_message)
+/** @brief Convert a ClearVariableMonitoringConf from a JSON representation */
+bool ClearVariableMonitoringConfConverter::fromJson(const rapidjson::Value&      json,
+                                                    ClearVariableMonitoringConf& data,
+                                                    std::string&                 error_code,
+                                                    std::string&                 error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // clearMonitoringResult
     if (json.HasMember("clearMonitoringResult"))
     {
-        const rapidjson::Value&                                   clearMonitoringResult_json = json["clearMonitoringResult"];
-        ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
+        const rapidjson::Value&                                 clearMonitoringResult_json = json["clearMonitoringResult"];
+        ocpp::types::ocpp20::ClearMonitoringResultTypeConverter clearMonitoringResult_converter;
         for (auto it = clearMonitoringResult_json.Begin(); ret && (it != clearMonitoringResult_json.End()); ++it)
         {
-            ocpp::types::ocpp20::ClearMonitoringResultType20& item = data.clearMonitoringResult.emplace_back();
+            ocpp::types::ocpp20::ClearMonitoringResultType& item = data.clearMonitoringResult.emplace_back();
             ret = ret && clearMonitoringResult_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -129,15 +129,15 @@ bool ClearVariableMonitoring20ConfConverter::fromJson(const rapidjson::Value&   
     return ret;
 }
 
-/** @brief Convert a ClearVariableMonitoring20Conf to a JSON representation */
-bool ClearVariableMonitoring20ConfConverter::toJson(const ClearVariableMonitoring20Conf& data, rapidjson::Document& json)
+/** @brief Convert a ClearVariableMonitoringConf to a JSON representation */
+bool ClearVariableMonitoringConfConverter::toJson(const ClearVariableMonitoringConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -147,10 +147,10 @@ bool ClearVariableMonitoring20ConfConverter::toJson(const ClearVariableMonitorin
 
     // clearMonitoringResult
 
-    rapidjson::Value                                          clearMonitoringResult_json(rapidjson::kArrayType);
-    ocpp::types::ocpp20::ClearMonitoringResultType20Converter clearMonitoringResult_converter;
+    rapidjson::Value                                        clearMonitoringResult_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::ClearMonitoringResultTypeConverter clearMonitoringResult_converter;
     clearMonitoringResult_converter.setAllocator(allocator);
-    for (const ocpp::types::ocpp20::ClearMonitoringResultType20& item : data.clearMonitoringResult)
+    for (const ocpp::types::ocpp20::ClearMonitoringResultType& item : data.clearMonitoringResult)
     {
         rapidjson::Document item_doc;
         item_doc.Parse("{}");

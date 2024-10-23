@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYDISPLAYMESSAGES20_H
-#define OPENOCPP_NOTIFYDISPLAYMESSAGES20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYDISPLAYMESSAGES_H
+#define OPENOCPP_OCPP20_NOTIFYDISPLAYMESSAGES_H
 
 #include "IMessageConverter.h"
 
@@ -36,34 +36,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyDisplayMessages20 messages */
-static const std::string NOTIFYDISPLAYMESSAGES20_ACTION = "NotifyDisplayMessages";
+/** @brief Action corresponding to the NotifyDisplayMessages messages */
+static const std::string NOTIFYDISPLAYMESSAGES_ACTION = "NotifyDisplayMessages";
 
-/** @brief NotifyDisplayMessages20Req message */
-struct NotifyDisplayMessages20Req
+/** @brief NotifyDisplayMessagesReq message */
+struct NotifyDisplayMessagesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::MessageInfoType20> messageInfo;
+    std::vector<ocpp::types::ocpp20::MessageInfoType> messageInfo;
     /** @brief The id of the &lt;&lt;getdisplaymessagesrequest,GetDisplayMessagesRequest&gt;&gt; that requested this message. */
     int requestId;
     /** @brief "to be continued" indicator. Indicates whether another part of the report follows in an upcoming NotifyDisplayMessagesRequest message. Default value when omitted is false. */
     ocpp::types::Optional<bool> tbc;
 };
 
-/** @brief NotifyDisplayMessages20Conf message */
-struct NotifyDisplayMessages20Conf
+/** @brief NotifyDisplayMessagesConf message */
+struct NotifyDisplayMessagesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyDisplayMessages20)
+MESSAGE_CONVERTERS(NotifyDisplayMessages)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYDISPLAYMESSAGES20_H
+#endif // OPENOCPP_OCPP20_NOTIFYDISPLAYMESSAGES_H

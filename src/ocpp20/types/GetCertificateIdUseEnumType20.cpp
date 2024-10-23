@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a GetCertificateIdUseEnumType20 enum to string */
-const EnumToStringFromString<GetCertificateIdUseEnumType20> GetCertificateIdUseEnumType20Helper = {
-    {GetCertificateIdUseEnumType20::V2GRootCertificate, "V2GRootCertificate"},
-    {GetCertificateIdUseEnumType20::MORootCertificate, "MORootCertificate"},
-    {GetCertificateIdUseEnumType20::CSMSRootCertificate, "CSMSRootCertificate"},
-    {GetCertificateIdUseEnumType20::V2GCertificateChain, "V2GCertificateChain"},
-    {GetCertificateIdUseEnumType20::ManufacturerRootCertificate, "ManufacturerRootCertificate"},
+/** @brief Helper to convert a GetCertificateIdUseEnumType enum to string */
+const EnumToStringFromString<GetCertificateIdUseEnumType> GetCertificateIdUseEnumTypeHelper = {
+    {GetCertificateIdUseEnumType::V2GRootCertificate, "V2GRootCertificate"},
+    {GetCertificateIdUseEnumType::MORootCertificate, "MORootCertificate"},
+    {GetCertificateIdUseEnumType::CSMSRootCertificate, "CSMSRootCertificate"},
+    {GetCertificateIdUseEnumType::V2GCertificateChain, "V2GCertificateChain"},
+    {GetCertificateIdUseEnumType::ManufacturerRootCertificate, "ManufacturerRootCertificate"},
 };
 
 } // namespace ocpp20

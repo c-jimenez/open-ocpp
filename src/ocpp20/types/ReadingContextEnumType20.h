@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_READINGCONTEXTENUMTYPE20_H
-#define OPENOCPP_READINGCONTEXTENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_READINGCONTEXTENUMTYPE_H
+#define OPENOCPP_OCPP20_READINGCONTEXTENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Sampled_ Value. Context. Reading_ Context_ Code
 urn:x-oca:ocpp:uid:1:569261
 Type of detail value: start, end or sample. Default = "Sample.Periodic" */
-enum class ReadingContextEnumType20
+enum class ReadingContextEnumType
 {
     Interruption_Begin,
     Interruption_End,
@@ -48,11 +48,11 @@ enum class ReadingContextEnumType20
     Trigger,
 };
 
-/** @brief Helper to convert a ReadingContextEnumType20 enum to string */
-extern const EnumToStringFromString<ReadingContextEnumType20> ReadingContextEnumType20Helper;
+/** @brief Helper to convert a ReadingContextEnumType enum to string */
+extern const EnumToStringFromString<ReadingContextEnumType> ReadingContextEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_READINGCONTEXTENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_READINGCONTEXTENUMTYPE_H

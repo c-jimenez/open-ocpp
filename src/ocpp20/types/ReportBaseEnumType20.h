@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REPORTBASEENUMTYPE20_H
-#define OPENOCPP_REPORTBASEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_REPORTBASEENUMTYPE_H
+#define OPENOCPP_OCPP20_REPORTBASEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief This field specifies the report base. */
-enum class ReportBaseEnumType20
+enum class ReportBaseEnumType
 {
     ConfigurationInventory,
     FullInventory,
     SummaryInventory,
 };
 
-/** @brief Helper to convert a ReportBaseEnumType20 enum to string */
-extern const EnumToStringFromString<ReportBaseEnumType20> ReportBaseEnumType20Helper;
+/** @brief Helper to convert a ReportBaseEnumType enum to string */
+extern const EnumToStringFromString<ReportBaseEnumType> ReportBaseEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_REPORTBASEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_REPORTBASEENUMTYPE_H

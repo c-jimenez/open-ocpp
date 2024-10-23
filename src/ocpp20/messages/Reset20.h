@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RESET20_H
-#define OPENOCPP_RESET20_H
+#ifndef OPENOCPP_OCPP20_RESET_H
+#define OPENOCPP_OCPP20_RESET_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the Reset20 messages */
-static const std::string RESET20_ACTION = "Reset";
+/** @brief Action corresponding to the Reset messages */
+static const std::string RESET_ACTION = "Reset";
 
-/** @brief Reset20Req message */
-struct Reset20Req
+/** @brief ResetReq message */
+struct ResetReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ResetEnumType20 type;
+    ocpp::types::ocpp20::ResetEnumType type;
     /** @brief This contains the ID of a specific EVSE that needs to be reset, instead of the entire Charging Station. */
     ocpp::types::Optional<int> evseId;
 };
 
-/** @brief Reset20Conf message */
-struct Reset20Conf
+/** @brief ResetConf message */
+struct ResetConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ResetStatusEnumType20 status;
+    ocpp::types::ocpp20::ResetStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(Reset20)
+MESSAGE_CONVERTERS(Reset)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_RESET20_H
+#endif // OPENOCPP_OCPP20_RESET_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETCHARGINGPROFILE20_H
-#define OPENOCPP_SETCHARGINGPROFILE20_H
+#ifndef OPENOCPP_OCPP20_SETCHARGINGPROFILE_H
+#define OPENOCPP_OCPP20_SETCHARGINGPROFILE_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetChargingProfile20 messages */
-static const std::string SETCHARGINGPROFILE20_ACTION = "SetChargingProfile";
+/** @brief Action corresponding to the SetChargingProfile messages */
+static const std::string SETCHARGINGPROFILE_ACTION = "SetChargingProfile";
 
-/** @brief SetChargingProfile20Req message */
-struct SetChargingProfile20Req
+/** @brief SetChargingProfileReq message */
+struct SetChargingProfileReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief For TxDefaultProfile an evseId=0 applies the profile to each individual evse. For ChargingStationMaxProfile and ChargingStationExternalConstraints an evseId=0 contains an overal limit for the whole Charging Station. */
     int evseId;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingProfileType20 chargingProfile;
+    ocpp::types::ocpp20::ChargingProfileType chargingProfile;
 };
 
-/** @brief SetChargingProfile20Conf message */
-struct SetChargingProfile20Conf
+/** @brief SetChargingProfileConf message */
+struct SetChargingProfileConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingProfileStatusEnumType20 status;
+    ocpp::types::ocpp20::ChargingProfileStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetChargingProfile20)
+MESSAGE_CONVERTERS(SetChargingProfile)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETCHARGINGPROFILE20_H
+#endif // OPENOCPP_OCPP20_SETCHARGINGPROFILE_H

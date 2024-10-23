@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a MeterValues20Req from a JSON representation */
-bool MeterValues20ReqConverter::fromJson(const rapidjson::Value& json,
-                                         MeterValues20Req&       data,
-                                         std::string&            error_code,
-                                         std::string&            error_message)
+/** @brief Convert a MeterValuesReq from a JSON representation */
+bool MeterValuesReqConverter::fromJson(const rapidjson::Value& json,
+                                       MeterValuesReq&         data,
+                                       std::string&            error_code,
+                                       std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,12 +53,12 @@ bool MeterValues20ReqConverter::fromJson(const rapidjson::Value& json,
     // meterValue
     if (json.HasMember("meterValue"))
     {
-        const rapidjson::Value&                        meterValue_json = json["meterValue"];
-        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+        const rapidjson::Value&                      meterValue_json = json["meterValue"];
+        ocpp::types::ocpp20::MeterValueTypeConverter meterValue_converter;
         for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
         {
-            ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
-            ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+            ocpp::types::ocpp20::MeterValueType& item = data.meterValue.emplace_back();
+            ret                                       = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -70,15 +70,15 @@ bool MeterValues20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a MeterValues20Req to a JSON representation */
-bool MeterValues20ReqConverter::toJson(const MeterValues20Req& data, rapidjson::Document& json)
+/** @brief Convert a MeterValuesReq to a JSON representation */
+bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -91,10 +91,10 @@ bool MeterValues20ReqConverter::toJson(const MeterValues20Req& data, rapidjson::
 
     // meterValue
 
-    rapidjson::Value                               meterValue_json(rapidjson::kArrayType);
-    ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+    rapidjson::Value                             meterValue_json(rapidjson::kArrayType);
+    ocpp::types::ocpp20::MeterValueTypeConverter meterValue_converter;
     meterValue_converter.setAllocator(allocator);
-    for (const ocpp::types::ocpp20::MeterValueType20& item : data.meterValue)
+    for (const ocpp::types::ocpp20::MeterValueType& item : data.meterValue)
     {
         rapidjson::Document item_doc;
         item_doc.Parse("{}");
@@ -106,18 +106,18 @@ bool MeterValues20ReqConverter::toJson(const MeterValues20Req& data, rapidjson::
     return ret;
 }
 
-/** @brief Convert a MeterValues20Conf from a JSON representation */
-bool MeterValues20ConfConverter::fromJson(const rapidjson::Value& json,
-                                          MeterValues20Conf&      data,
-                                          std::string&            error_code,
-                                          std::string&            error_message)
+/** @brief Convert a MeterValuesConf from a JSON representation */
+bool MeterValuesConfConverter::fromJson(const rapidjson::Value& json,
+                                        MeterValuesConf&        data,
+                                        std::string&            error_code,
+                                        std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -129,15 +129,15 @@ bool MeterValues20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a MeterValues20Conf to a JSON representation */
-bool MeterValues20ConfConverter::toJson(const MeterValues20Conf& data, rapidjson::Document& json)
+/** @brief Convert a MeterValuesConf to a JSON representation */
+bool MeterValuesConfConverter::toJson(const MeterValuesConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_DCCHARGINGPARAMETERSTYPE20_H
-#define OPENOCPP_DCCHARGINGPARAMETERSTYPE20_H
+#ifndef OPENOCPP_OCPP20_DCCHARGINGPARAMETERSTYPE_H
+#define OPENOCPP_OCPP20_DCCHARGINGPARAMETERSTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -42,10 +42,10 @@ EV DC charging parameters
 
 
  */
-struct DCChargingParametersType20
+struct DCChargingParametersType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief DC_ Charging_ Parameters. EV_ Max. Current
 urn:x-oca:ocpp:uid:1:569215
 Maximum current (amps) supported by the electric vehicle. Includes cable capacity. */
@@ -80,28 +80,25 @@ Percentage of SoC at which the EV considers a fast charging process to end. (pos
     ocpp::types::Optional<int> bulkSoC;
 };
 
-/** @brief Converter class for DCChargingParametersType20 type */
-class DCChargingParametersType20Converter : public ocpp::messages::IMessageConverter<DCChargingParametersType20>
+/** @brief Converter class for DCChargingParametersType type */
+class DCChargingParametersTypeConverter : public ocpp::messages::IMessageConverter<DCChargingParametersType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<DCChargingParametersType20>* clone() const override
-    {
-        return new DCChargingParametersType20Converter();
-    }
+    ocpp::messages::IMessageConverter<DCChargingParametersType>* clone() const override { return new DCChargingParametersTypeConverter(); }
 
-    /** @brief Convert a DCChargingParametersType20 from a JSON representation */
+    /** @brief Convert a DCChargingParametersType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  DCChargingParametersType20&   data,
+                  DCChargingParametersType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a DCChargingParametersType20 to a JSON representation */
-    bool toJson(const DCChargingParametersType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a DCChargingParametersType to a JSON representation */
+    bool toJson(const DCChargingParametersType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_DCCHARGINGPARAMETERSTYPE20_H
+#endif // OPENOCPP_OCPP20_DCCHARGINGPARAMETERSTYPE_H

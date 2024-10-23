@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NETWORKCONNECTIONPROFILETYPE20_H
-#define OPENOCPP_NETWORKCONNECTIONPROFILETYPE20_H
+#ifndef OPENOCPP_OCPP20_NETWORKCONNECTIONPROFILETYPE_H
+#define OPENOCPP_OCPP20_NETWORKCONNECTIONPROFILETYPE_H
 
 #include "APNType20.h"
 #include "CustomDataType20.h"
@@ -46,16 +46,16 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233304
 The NetworkConnectionProfile defines the functional and technical parameters of a communication link.
  */
-struct NetworkConnectionProfileType20
+struct NetworkConnectionProfileType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<APNType20> apn;
+    ocpp::types::Optional<APNType> apn;
     /** @brief  */
-    OCPPVersionEnumType20 ocppVersion;
+    OCPPVersionEnumType ocppVersion;
     /** @brief  */
-    OCPPTransportEnumType20 ocppTransport;
+    OCPPTransportEnumType ocppTransport;
     /** @brief Communication_ Function. OCPP_ Central_ System_ URL. URI
 urn:x-oca:ocpp:uid:1:569357
 URL of the CSMS(s) that this Charging Station  communicates with. */
@@ -67,33 +67,33 @@ If you are looking for a some guideline: use 30 seconds as a starting point. */
     /** @brief This field specifies the security profile used when connecting to the CSMS with this NetworkConnectionProfile. */
     int securityProfile;
     /** @brief  */
-    OCPPInterfaceEnumType20 ocppInterface;
+    OCPPInterfaceEnumType ocppInterface;
     /** @brief  */
-    ocpp::types::Optional<VPNType20> vpn;
+    ocpp::types::Optional<VPNType> vpn;
 };
 
-/** @brief Converter class for NetworkConnectionProfileType20 type */
-class NetworkConnectionProfileType20Converter : public ocpp::messages::IMessageConverter<NetworkConnectionProfileType20>
+/** @brief Converter class for NetworkConnectionProfileType type */
+class NetworkConnectionProfileTypeConverter : public ocpp::messages::IMessageConverter<NetworkConnectionProfileType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<NetworkConnectionProfileType20>* clone() const override
+    ocpp::messages::IMessageConverter<NetworkConnectionProfileType>* clone() const override
     {
-        return new NetworkConnectionProfileType20Converter();
+        return new NetworkConnectionProfileTypeConverter();
     }
 
-    /** @brief Convert a NetworkConnectionProfileType20 from a JSON representation */
-    bool fromJson(const rapidjson::Value&         json,
-                  NetworkConnectionProfileType20& data,
-                  std::string&                    error_code,
-                  [[maybe_unused]] std::string&   error_message) override;
+    /** @brief Convert a NetworkConnectionProfileType from a JSON representation */
+    bool fromJson(const rapidjson::Value&       json,
+                  NetworkConnectionProfileType& data,
+                  std::string&                  error_code,
+                  [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a NetworkConnectionProfileType20 to a JSON representation */
-    bool toJson(const NetworkConnectionProfileType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a NetworkConnectionProfileType to a JSON representation */
+    bool toJson(const NetworkConnectionProfileType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_NETWORKCONNECTIONPROFILETYPE20_H
+#endif // OPENOCPP_OCPP20_NETWORKCONNECTIONPROFILETYPE_H

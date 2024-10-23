@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETBASEREPORT20_H
-#define OPENOCPP_GETBASEREPORT20_H
+#ifndef OPENOCPP_OCPP20_GETBASEREPORT_H
+#define OPENOCPP_OCPP20_GETBASEREPORT_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetBaseReport20 messages */
-static const std::string GETBASEREPORT20_ACTION = "GetBaseReport";
+/** @brief Action corresponding to the GetBaseReport messages */
+static const std::string GETBASEREPORT_ACTION = "GetBaseReport";
 
-/** @brief GetBaseReport20Req message */
-struct GetBaseReport20Req
+/** @brief GetBaseReportReq message */
+struct GetBaseReportReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The Id of the request. */
     int requestId;
     /** @brief  */
-    ocpp::types::ocpp20::ReportBaseEnumType20 reportBase;
+    ocpp::types::ocpp20::ReportBaseEnumType reportBase;
 };
 
-/** @brief GetBaseReport20Conf message */
-struct GetBaseReport20Conf
+/** @brief GetBaseReportConf message */
+struct GetBaseReportConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetBaseReport20)
+MESSAGE_CONVERTERS(GetBaseReport)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETBASEREPORT20_H
+#endif // OPENOCPP_OCPP20_GETBASEREPORT_H

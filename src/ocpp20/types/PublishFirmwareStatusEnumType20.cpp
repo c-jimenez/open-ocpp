@@ -30,18 +30,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a PublishFirmwareStatusEnumType20 enum to string */
-const EnumToStringFromString<PublishFirmwareStatusEnumType20> PublishFirmwareStatusEnumType20Helper = {
-    {PublishFirmwareStatusEnumType20::Idle, "Idle"},
-    {PublishFirmwareStatusEnumType20::DownloadScheduled, "DownloadScheduled"},
-    {PublishFirmwareStatusEnumType20::Downloading, "Downloading"},
-    {PublishFirmwareStatusEnumType20::Downloaded, "Downloaded"},
-    {PublishFirmwareStatusEnumType20::Published, "Published"},
-    {PublishFirmwareStatusEnumType20::DownloadFailed, "DownloadFailed"},
-    {PublishFirmwareStatusEnumType20::DownloadPaused, "DownloadPaused"},
-    {PublishFirmwareStatusEnumType20::InvalidChecksum, "InvalidChecksum"},
-    {PublishFirmwareStatusEnumType20::ChecksumVerified, "ChecksumVerified"},
-    {PublishFirmwareStatusEnumType20::PublishFailed, "PublishFailed"},
+/** @brief Helper to convert a PublishFirmwareStatusEnumType enum to string */
+const EnumToStringFromString<PublishFirmwareStatusEnumType> PublishFirmwareStatusEnumTypeHelper = {
+    {PublishFirmwareStatusEnumType::Idle, "Idle"},
+    {PublishFirmwareStatusEnumType::DownloadScheduled, "DownloadScheduled"},
+    {PublishFirmwareStatusEnumType::Downloading, "Downloading"},
+    {PublishFirmwareStatusEnumType::Downloaded, "Downloaded"},
+    {PublishFirmwareStatusEnumType::Published, "Published"},
+    {PublishFirmwareStatusEnumType::DownloadFailed, "DownloadFailed"},
+    {PublishFirmwareStatusEnumType::DownloadPaused, "DownloadPaused"},
+    {PublishFirmwareStatusEnumType::InvalidChecksum, "InvalidChecksum"},
+    {PublishFirmwareStatusEnumType::ChecksumVerified, "ChecksumVerified"},
+    {PublishFirmwareStatusEnumType::PublishFailed, "PublishFailed"},
 };
 
 } // namespace ocpp20

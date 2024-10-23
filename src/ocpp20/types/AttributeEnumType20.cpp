@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a AttributeEnumType20 enum to string */
-const EnumToStringFromString<AttributeEnumType20> AttributeEnumType20Helper = {
-    {AttributeEnumType20::Actual, "Actual"},
-    {AttributeEnumType20::Target, "Target"},
-    {AttributeEnumType20::MinSet, "MinSet"},
-    {AttributeEnumType20::MaxSet, "MaxSet"},
+/** @brief Helper to convert a AttributeEnumType enum to string */
+const EnumToStringFromString<AttributeEnumType> AttributeEnumTypeHelper = {
+    {AttributeEnumType::Actual, "Actual"},
+    {AttributeEnumType::Target, "Target"},
+    {AttributeEnumType::MinSet, "MinSet"},
+    {AttributeEnumType::MaxSet, "MaxSet"},
 };
 
 } // namespace ocpp20

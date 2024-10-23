@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETVARIABLERESULTTYPE20_H
-#define OPENOCPP_GETVARIABLERESULTTYPE20_H
+#ifndef OPENOCPP_OCPP20_GETVARIABLERESULTTYPE_H
+#define OPENOCPP_OCPP20_GETVARIABLERESULTTYPE_H
 
 #include "AttributeEnumType20.h"
 #include "ComponentType20.h"
@@ -44,45 +44,45 @@ namespace ocpp20
 
 /** @brief Class to hold results of GetVariables request.
  */
-struct GetVariableResultType20
+struct GetVariableResultType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<StatusInfoType20> attributeStatusInfo;
+    ocpp::types::Optional<StatusInfoType> attributeStatusInfo;
     /** @brief  */
-    GetVariableStatusEnumType20 attributeStatus;
+    GetVariableStatusEnumType attributeStatus;
     /** @brief  */
-    ocpp::types::Optional<AttributeEnumType20> attributeType;
+    ocpp::types::Optional<AttributeEnumType> attributeType;
     /** @brief Value of requested attribute type of component-variable. This field can only be empty when the given status is NOT accepted.
 
 The Configuration Variable &lt;&lt;configkey-reporting-value-size,ReportingValueSize&gt;&gt; can be used to limit GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal. */
     ocpp::types::Optional<ocpp::types::CiStringType<2500u>> attributeValue;
     /** @brief  */
-    ComponentType20 component;
+    ComponentType component;
     /** @brief  */
-    VariableType20 variable;
+    VariableType variable;
 };
 
-/** @brief Converter class for GetVariableResultType20 type */
-class GetVariableResultType20Converter : public ocpp::messages::IMessageConverter<GetVariableResultType20>
+/** @brief Converter class for GetVariableResultType type */
+class GetVariableResultTypeConverter : public ocpp::messages::IMessageConverter<GetVariableResultType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<GetVariableResultType20>* clone() const override { return new GetVariableResultType20Converter(); }
+    ocpp::messages::IMessageConverter<GetVariableResultType>* clone() const override { return new GetVariableResultTypeConverter(); }
 
-    /** @brief Convert a GetVariableResultType20 from a JSON representation */
+    /** @brief Convert a GetVariableResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  GetVariableResultType20&      data,
+                  GetVariableResultType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a GetVariableResultType20 to a JSON representation */
-    bool toJson(const GetVariableResultType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a GetVariableResultType to a JSON representation */
+    bool toJson(const GetVariableResultType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GETVARIABLERESULTTYPE20_H
+#endif // OPENOCPP_OCPP20_GETVARIABLERESULTTYPE_H

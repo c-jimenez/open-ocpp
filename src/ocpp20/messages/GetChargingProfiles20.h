@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETCHARGINGPROFILES20_H
-#define OPENOCPP_GETCHARGINGPROFILES20_H
+#ifndef OPENOCPP_OCPP20_GETCHARGINGPROFILES_H
+#define OPENOCPP_OCPP20_GETCHARGINGPROFILES_H
 
 #include "IMessageConverter.h"
 
@@ -38,38 +38,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetChargingProfiles20 messages */
-static const std::string GETCHARGINGPROFILES20_ACTION = "GetChargingProfiles";
+/** @brief Action corresponding to the GetChargingProfiles messages */
+static const std::string GETCHARGINGPROFILES_ACTION = "GetChargingProfiles";
 
-/** @brief GetChargingProfiles20Req message */
-struct GetChargingProfiles20Req
+/** @brief GetChargingProfilesReq message */
+struct GetChargingProfilesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Reference identification that is to be used by the Charging Station in the &lt;&lt;reportchargingprofilesrequest, ReportChargingProfilesRequest&gt;&gt; when provided. */
     int requestId;
     /** @brief For which EVSE installed charging profiles SHALL be reported. If 0, only charging profiles installed on the Charging Station itself (the grid connection) SHALL be reported. If omitted, all installed charging profiles SHALL be reported. */
     ocpp::types::Optional<int> evseId;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingProfileCriterionType20 chargingProfile;
+    ocpp::types::ocpp20::ChargingProfileCriterionType chargingProfile;
 };
 
-/** @brief GetChargingProfiles20Conf message */
-struct GetChargingProfiles20Conf
+/** @brief GetChargingProfilesConf message */
+struct GetChargingProfilesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GetChargingProfileStatusEnumType20 status;
+    ocpp::types::ocpp20::GetChargingProfileStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetChargingProfiles20)
+MESSAGE_CONVERTERS(GetChargingProfiles)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETCHARGINGPROFILES20_H
+#endif // OPENOCPP_OCPP20_GETCHARGINGPROFILES_H

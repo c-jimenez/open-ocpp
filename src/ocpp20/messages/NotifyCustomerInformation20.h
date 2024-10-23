@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYCUSTOMERINFORMATION20_H
-#define OPENOCPP_NOTIFYCUSTOMERINFORMATION20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYCUSTOMERINFORMATION_H
+#define OPENOCPP_OCPP20_NOTIFYCUSTOMERINFORMATION_H
 
 #include "IMessageConverter.h"
 
@@ -35,14 +35,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyCustomerInformation20 messages */
-static const std::string NOTIFYCUSTOMERINFORMATION20_ACTION = "NotifyCustomerInformation";
+/** @brief Action corresponding to the NotifyCustomerInformation messages */
+static const std::string NOTIFYCUSTOMERINFORMATION_ACTION = "NotifyCustomerInformation";
 
-/** @brief NotifyCustomerInformation20Req message */
-struct NotifyCustomerInformation20Req
+/** @brief NotifyCustomerInformationReq message */
+struct NotifyCustomerInformationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief (Part of) the requested data. No format specified in which the data is returned. Should be human readable. */
     ocpp::types::CiStringType<512u> data;
     /** @brief “to be continued” indicator. Indicates whether another part of the monitoringData follows in an upcoming notifyMonitoringReportRequest message. Default value when omitted is false. */
@@ -55,18 +55,18 @@ struct NotifyCustomerInformation20Req
     int requestId;
 };
 
-/** @brief NotifyCustomerInformation20Conf message */
-struct NotifyCustomerInformation20Conf
+/** @brief NotifyCustomerInformationConf message */
+struct NotifyCustomerInformationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyCustomerInformation20)
+MESSAGE_CONVERTERS(NotifyCustomerInformation)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYCUSTOMERINFORMATION20_H
+#endif // OPENOCPP_OCPP20_NOTIFYCUSTOMERINFORMATION_H
