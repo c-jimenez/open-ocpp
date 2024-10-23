@@ -119,12 +119,10 @@ class ChargePointHandler20
      * @param identifier Charge point's identifier
      * @param messages_converter Converter from/to OCPP to/from JSON messages
      * @param msg_dispatcher Message dispatcher
-     * @param stack_config Stack configuration
      */
     ChargePointHandler20(const std::string&                                 identifier,
                          const ocpp::messages::ocpp20::MessagesConverter20& messages_converter,
-                         ocpp::messages::MessageDispatcher&                 msg_dispatcher,
-                         const ocpp::config::ICentralSystemConfig20&        stack_config);
+                         ocpp::messages::MessageDispatcher&                 msg_dispatcher);
     /** @brief Destructor */
     virtual ~ChargePointHandler20();
 
@@ -352,10 +350,6 @@ class ChargePointHandler20
   private:
     /** @brief Charge point's identifier */
     const std::string m_identifier;
-    /** @brief Stack configuration */
-    const ocpp::config::ICentralSystemConfig20& m_stack_config;
-    /** @brief Messages converters */
-    const ocpp::messages::GenericMessagesConverter& m_messages_converter;
     /** @brief Request handler */
     IChargePointRequestHandler20* m_handler;
 };

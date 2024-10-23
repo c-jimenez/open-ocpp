@@ -39,8 +39,7 @@ namespace ocpp20
 /** @brief Constructor */
 ChargePointHandler20::ChargePointHandler20(const std::string&                                 identifier,
                                            const ocpp::messages::ocpp20::MessagesConverter20& messages_converter,
-                                           ocpp::messages::MessageDispatcher&                 msg_dispatcher,
-                                           const ocpp::config::ICentralSystemConfig20&        stack_config)
+                                           ocpp::messages::MessageDispatcher&                 msg_dispatcher)
     : GenericMessageHandler<BootNotificationReq, BootNotificationConf>(BOOTNOTIFICATION_ACTION, messages_converter),
       GenericMessageHandler<AuthorizeReq, AuthorizeConf>(AUTHORIZE_ACTION, messages_converter),
       GenericMessageHandler<ClearedChargingLimitReq, ClearedChargingLimitConf>(CLEAREDCHARGINGLIMIT_ACTION, messages_converter),
@@ -71,8 +70,6 @@ ChargePointHandler20::ChargePointHandler20(const std::string&                   
       GenericMessageHandler<TransactionEventReq, TransactionEventConf>(TRANSACTIONEVENT_ACTION, messages_converter),
 
       m_identifier(identifier),
-      m_stack_config(stack_config),
-      m_messages_converter(messages_converter),
       m_handler(nullptr)
 {
     msg_dispatcher.registerHandler(BOOTNOTIFICATION_ACTION,
