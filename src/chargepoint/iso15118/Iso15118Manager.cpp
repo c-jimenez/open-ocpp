@@ -339,12 +339,14 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
     bool v2g_root_certificate  = false;
     bool mo_root_certificate   = false;
     bool v2g_certificate_chain = false;
+    bool oem_root_certificate  = false;
     if (request.certificateType.empty())
     {
         // All types requested
         v2g_root_certificate  = true;
         mo_root_certificate   = true;
         v2g_certificate_chain = true;
+        oem_root_certificate  = true;
     }
     else
     {
@@ -359,6 +361,9 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
                 case GetCertificateIdUseEnumType::MORootCertificate:
                     mo_root_certificate = true;
                     break;
+                case GetCertificateIdUseEnumType::OEMRootCertificate:
+                    oem_root_certificate = true;
+                    break;
                 case GetCertificateIdUseEnumType::V2GCertificateChain:
                 // Intended fallthrough
                 default:
@@ -370,7 +375,7 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
 
     // Notify handler to get the list of installed certificates
     std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>> certificates;
-    m_events_handler.iso15118GetInstalledCertificates(v2g_root_certificate, mo_root_certificate, v2g_certificate_chain, certificates);
+    m_events_handler.iso15118GetInstalledCertificates(v2g_root_certificate, mo_root_certificate, v2g_certificate_chain, oem_root_certificate, certificates);
     if (!certificates.empty())
     {
         // Compute hashes for each certificate
