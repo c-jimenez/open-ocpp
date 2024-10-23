@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COSTUPDATED20_H
-#define OPENOCPP_COSTUPDATED20_H
+#ifndef OPENOCPP_OCPP20_COSTUPDATED_H
+#define OPENOCPP_OCPP20_COSTUPDATED_H
 
 #include "IMessageConverter.h"
 
@@ -35,32 +35,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the CostUpdated20 messages */
-static const std::string COSTUPDATED20_ACTION = "CostUpdated";
+/** @brief Action corresponding to the CostUpdated messages */
+static const std::string COSTUPDATED_ACTION = "CostUpdated";
 
-/** @brief CostUpdated20Req message */
-struct CostUpdated20Req
+/** @brief CostUpdatedReq message */
+struct CostUpdatedReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Current total cost, based on the information known by the CSMS, of the transaction including taxes. In the currency configured with the configuration Variable: [&lt;&lt;configkey-currency, Currency&gt;&gt;] */
     float totalCost;
     /** @brief Transaction Id of the transaction the current cost are asked for. */
     ocpp::types::CiStringType<36u> transactionId;
 };
 
-/** @brief CostUpdated20Conf message */
-struct CostUpdated20Conf
+/** @brief CostUpdatedConf message */
+struct CostUpdatedConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(CostUpdated20)
+MESSAGE_CONVERTERS(CostUpdated)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_COSTUPDATED20_H
+#endif // OPENOCPP_OCPP20_COSTUPDATED_H

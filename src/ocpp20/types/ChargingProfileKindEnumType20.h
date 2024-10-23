@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGPROFILEKINDENUMTYPE20_H
-#define OPENOCPP_CHARGINGPROFILEKINDENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGPROFILEKINDENUMTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGPROFILEKINDENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,18 +36,18 @@ namespace ocpp20
 /** @brief Charging_ Profile. Charging_ Profile_ Kind. Charging_ Profile_ Kind_ Code
 urn:x-oca:ocpp:uid:1:569232
 Indicates the kind of schedule. */
-enum class ChargingProfileKindEnumType20
+enum class ChargingProfileKindEnumType
 {
     Absolute,
     Recurring,
     Relative,
 };
 
-/** @brief Helper to convert a ChargingProfileKindEnumType20 enum to string */
-extern const EnumToStringFromString<ChargingProfileKindEnumType20> ChargingProfileKindEnumType20Helper;
+/** @brief Helper to convert a ChargingProfileKindEnumType enum to string */
+extern const EnumToStringFromString<ChargingProfileKindEnumType> ChargingProfileKindEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGPROFILEKINDENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGPROFILEKINDENUMTYPE_H

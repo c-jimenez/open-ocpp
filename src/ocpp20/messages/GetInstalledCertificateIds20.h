@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETINSTALLEDCERTIFICATEIDS20_H
-#define OPENOCPP_GETINSTALLEDCERTIFICATEIDS20_H
+#ifndef OPENOCPP_OCPP20_GETINSTALLEDCERTIFICATEIDS_H
+#define OPENOCPP_OCPP20_GETINSTALLEDCERTIFICATEIDS_H
 
 #include "IMessageConverter.h"
 
@@ -39,36 +39,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetInstalledCertificateIds20 messages */
-static const std::string GETINSTALLEDCERTIFICATEIDS20_ACTION = "GetInstalledCertificateIds";
+/** @brief Action corresponding to the GetInstalledCertificateIds messages */
+static const std::string GETINSTALLEDCERTIFICATEIDS_ACTION = "GetInstalledCertificateIds";
 
-/** @brief GetInstalledCertificateIds20Req message */
-struct GetInstalledCertificateIds20Req
+/** @brief GetInstalledCertificateIdsReq message */
+struct GetInstalledCertificateIdsReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Indicates the type of certificates requested. When omitted, all certificate types are requested. */
-    std::vector<ocpp::types::ocpp20::GetCertificateIdUseEnumType20> certificateType;
+    std::vector<ocpp::types::ocpp20::GetCertificateIdUseEnumType> certificateType;
 };
 
-/** @brief GetInstalledCertificateIds20Conf message */
-struct GetInstalledCertificateIds20Conf
+/** @brief GetInstalledCertificateIdsConf message */
+struct GetInstalledCertificateIdsConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GetInstalledCertificateStatusEnumType20 status;
+    ocpp::types::ocpp20::GetInstalledCertificateStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::CertificateHashDataChainType20> certificateHashDataChain;
+    std::vector<ocpp::types::ocpp20::CertificateHashDataChainType> certificateHashDataChain;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetInstalledCertificateIds20)
+MESSAGE_CONVERTERS(GetInstalledCertificateIds)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETINSTALLEDCERTIFICATEIDS20_H
+#endif // OPENOCPP_OCPP20_GETINSTALLEDCERTIFICATEIDS_H

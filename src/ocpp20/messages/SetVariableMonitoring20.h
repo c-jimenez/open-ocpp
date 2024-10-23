@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETVARIABLEMONITORING20_H
-#define OPENOCPP_SETVARIABLEMONITORING20_H
+#ifndef OPENOCPP_OCPP20_SETVARIABLEMONITORING_H
+#define OPENOCPP_OCPP20_SETVARIABLEMONITORING_H
 
 #include "IMessageConverter.h"
 
@@ -37,32 +37,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetVariableMonitoring20 messages */
-static const std::string SETVARIABLEMONITORING20_ACTION = "SetVariableMonitoring";
+/** @brief Action corresponding to the SetVariableMonitoring messages */
+static const std::string SETVARIABLEMONITORING_ACTION = "SetVariableMonitoring";
 
-/** @brief SetVariableMonitoring20Req message */
-struct SetVariableMonitoring20Req
+/** @brief SetVariableMonitoringReq message */
+struct SetVariableMonitoringReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::SetMonitoringDataType20> setMonitoringData;
+    std::vector<ocpp::types::ocpp20::SetMonitoringDataType> setMonitoringData;
 };
 
-/** @brief SetVariableMonitoring20Conf message */
-struct SetVariableMonitoring20Conf
+/** @brief SetVariableMonitoringConf message */
+struct SetVariableMonitoringConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::SetMonitoringResultType20> setMonitoringResult;
+    std::vector<ocpp::types::ocpp20::SetMonitoringResultType> setMonitoringResult;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetVariableMonitoring20)
+MESSAGE_CONVERTERS(SetVariableMonitoring)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETVARIABLEMONITORING20_H
+#endif // OPENOCPP_OCPP20_SETVARIABLEMONITORING_H

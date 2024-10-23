@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CONNECTORENUMTYPE20_H
-#define OPENOCPP_CONNECTORENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CONNECTORENUMTYPE_H
+#define OPENOCPP_OCPP20_CONNECTORENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This field specifies the connector type. */
-enum class ConnectorEnumType20
+enum class ConnectorEnumType
 {
     cCCS1,
     cCCS2,
@@ -60,11 +60,11 @@ enum class ConnectorEnumType20
     Unknown,
 };
 
-/** @brief Helper to convert a ConnectorEnumType20 enum to string */
-extern const EnumToStringFromString<ConnectorEnumType20> ConnectorEnumType20Helper;
+/** @brief Helper to convert a ConnectorEnumType enum to string */
+extern const EnumToStringFromString<ConnectorEnumType> ConnectorEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CONNECTORENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CONNECTORENUMTYPE_H

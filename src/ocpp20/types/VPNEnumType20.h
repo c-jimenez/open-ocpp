@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VPNENUMTYPE20_H
-#define OPENOCPP_VPNENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_VPNENUMTYPE_H
+#define OPENOCPP_OCPP20_VPNENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief VPN. Type. VPN_ Code
 urn:x-oca:ocpp:uid:1:569277
 Type of VPN */
-enum class VPNEnumType20
+enum class VPNEnumType
 {
     IKEv2,
     IPSec,
@@ -44,11 +44,11 @@ enum class VPNEnumType20
     PPTP,
 };
 
-/** @brief Helper to convert a VPNEnumType20 enum to string */
-extern const EnumToStringFromString<VPNEnumType20> VPNEnumType20Helper;
+/** @brief Helper to convert a VPNEnumType enum to string */
+extern const EnumToStringFromString<VPNEnumType> VPNEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VPNENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_VPNENUMTYPE_H

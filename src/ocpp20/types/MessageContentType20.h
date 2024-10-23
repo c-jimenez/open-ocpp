@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGECONTENTTYPE20_H
-#define OPENOCPP_MESSAGECONTENTTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGECONTENTTYPE_H
+#define OPENOCPP_OCPP20_MESSAGECONTENTTYPE_H
 
 #include "CustomDataType20.h"
 #include "MessageFormatEnumType20.h"
@@ -43,12 +43,12 @@ urn:x-enexis:ecdm:uid:2:234490
 Contains message details, for a message to be displayed on a Charging Station.
 
  */
-struct MessageContentType20
+struct MessageContentType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    MessageFormatEnumType20 format;
+    MessageFormatEnumType format;
     /** @brief Message_ Content. Language. Language_ Code
 urn:x-enexis:ecdm:uid:1:570849
 Message language identifier. Contains a language code as defined in &lt;&lt;ref-RFC5646,[RFC5646]&gt;&gt;. */
@@ -59,25 +59,25 @@ Message contents. */
     ocpp::types::CiStringType<512u> content;
 };
 
-/** @brief Converter class for MessageContentType20 type */
-class MessageContentType20Converter : public ocpp::messages::IMessageConverter<MessageContentType20>
+/** @brief Converter class for MessageContentType type */
+class MessageContentTypeConverter : public ocpp::messages::IMessageConverter<MessageContentType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<MessageContentType20>* clone() const override { return new MessageContentType20Converter(); }
+    ocpp::messages::IMessageConverter<MessageContentType>* clone() const override { return new MessageContentTypeConverter(); }
 
-    /** @brief Convert a MessageContentType20 from a JSON representation */
+    /** @brief Convert a MessageContentType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MessageContentType20&         data,
+                  MessageContentType&           data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a MessageContentType20 to a JSON representation */
-    bool toJson(const MessageContentType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a MessageContentType to a JSON representation */
+    bool toJson(const MessageContentType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGECONTENTTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGECONTENTTYPE_H

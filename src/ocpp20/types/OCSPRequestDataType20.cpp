@@ -32,23 +32,23 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a OCSPRequestDataType20 from a JSON representation */
-bool OCSPRequestDataType20Converter::fromJson(const rapidjson::Value&       json,
-                                              OCSPRequestDataType20&        data,
-                                              std::string&                  error_code,
-                                              [[maybe_unused]] std::string& error_message)
+/** @brief Convert a OCSPRequestDataType from a JSON representation */
+bool OCSPRequestDataTypeConverter::fromJson(const rapidjson::Value&       json,
+                                            OCSPRequestDataType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // hashAlgorithm
-    data.hashAlgorithm = HashAlgorithmEnumType20Helper.fromString(json["hashAlgorithm"].GetString());
+    data.hashAlgorithm = HashAlgorithmEnumTypeHelper.fromString(json["hashAlgorithm"].GetString());
 
     // issuerNameHash
     extract(json, "issuerNameHash", data.issuerNameHash);
@@ -70,15 +70,15 @@ bool OCSPRequestDataType20Converter::fromJson(const rapidjson::Value&       json
     return ret;
 }
 
-/** @brief Convert a OCSPRequestDataType20 to a JSON representation */
-bool OCSPRequestDataType20Converter::toJson(const OCSPRequestDataType20& data, rapidjson::Document& json)
+/** @brief Convert a OCSPRequestDataType to a JSON representation */
+bool OCSPRequestDataTypeConverter::toJson(const OCSPRequestDataType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -87,7 +87,7 @@ bool OCSPRequestDataType20Converter::toJson(const OCSPRequestDataType20& data, r
     }
 
     // hashAlgorithm
-    fill(json, "hashAlgorithm", HashAlgorithmEnumType20Helper.toString(data.hashAlgorithm));
+    fill(json, "hashAlgorithm", HashAlgorithmEnumTypeHelper.toString(data.hashAlgorithm));
 
     // issuerNameHash
     fill(json, "issuerNameHash", data.issuerNameHash);

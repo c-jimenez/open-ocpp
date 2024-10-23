@@ -32,23 +32,23 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ChargingLimitType20 from a JSON representation */
-bool ChargingLimitType20Converter::fromJson(const rapidjson::Value&       json,
-                                            ChargingLimitType20&          data,
-                                            std::string&                  error_code,
-                                            [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ChargingLimitType from a JSON representation */
+bool ChargingLimitTypeConverter::fromJson(const rapidjson::Value&       json,
+                                          ChargingLimitType&            data,
+                                          std::string&                  error_code,
+                                          [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // chargingLimitSource
-    data.chargingLimitSource = ChargingLimitSourceEnumType20Helper.fromString(json["chargingLimitSource"].GetString());
+    data.chargingLimitSource = ChargingLimitSourceEnumTypeHelper.fromString(json["chargingLimitSource"].GetString());
 
     // isGridCritical
     extract(json, "isGridCritical", data.isGridCritical);
@@ -61,15 +61,15 @@ bool ChargingLimitType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a ChargingLimitType20 to a JSON representation */
-bool ChargingLimitType20Converter::toJson(const ChargingLimitType20& data, rapidjson::Document& json)
+/** @brief Convert a ChargingLimitType to a JSON representation */
+bool ChargingLimitTypeConverter::toJson(const ChargingLimitType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -78,7 +78,7 @@ bool ChargingLimitType20Converter::toJson(const ChargingLimitType20& data, rapid
     }
 
     // chargingLimitSource
-    fill(json, "chargingLimitSource", ChargingLimitSourceEnumType20Helper.toString(data.chargingLimitSource));
+    fill(json, "chargingLimitSource", ChargingLimitSourceEnumTypeHelper.toString(data.chargingLimitSource));
 
     // isGridCritical
     fill(json, "isGridCritical", data.isGridCritical);

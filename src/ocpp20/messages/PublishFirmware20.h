@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_PUBLISHFIRMWARE20_H
-#define OPENOCPP_PUBLISHFIRMWARE20_H
+#ifndef OPENOCPP_OCPP20_PUBLISHFIRMWARE_H
+#define OPENOCPP_OCPP20_PUBLISHFIRMWARE_H
 
 #include "IMessageConverter.h"
 
@@ -37,14 +37,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the PublishFirmware20 messages */
-static const std::string PUBLISHFIRMWARE20_ACTION = "PublishFirmware";
+/** @brief Action corresponding to the PublishFirmware messages */
+static const std::string PUBLISHFIRMWARE_ACTION = "PublishFirmware";
 
-/** @brief PublishFirmware20Req message */
-struct PublishFirmware20Req
+/** @brief PublishFirmwareReq message */
+struct PublishFirmwareReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief This contains a string containing a URI pointing to a
 location from which to retrieve the firmware. */
     ocpp::types::CiStringType<512u> location;
@@ -65,22 +65,22 @@ between attempts. */
     ocpp::types::Optional<int> retryInterval;
 };
 
-/** @brief PublishFirmware20Conf message */
-struct PublishFirmware20Conf
+/** @brief PublishFirmwareConf message */
+struct PublishFirmwareConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(PublishFirmware20)
+MESSAGE_CONVERTERS(PublishFirmware)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_PUBLISHFIRMWARE20_H
+#endif // OPENOCPP_OCPP20_PUBLISHFIRMWARE_H

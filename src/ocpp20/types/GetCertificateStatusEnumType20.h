@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETCERTIFICATESTATUSENUMTYPE20_H
-#define OPENOCPP_GETCERTIFICATESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GETCERTIFICATESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GETCERTIFICATESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief This indicates whether the charging station was able to retrieve the OCSP certificate status. */
-enum class GetCertificateStatusEnumType20
+enum class GetCertificateStatusEnumType
 {
     Accepted,
     Failed,
 };
 
-/** @brief Helper to convert a GetCertificateStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GetCertificateStatusEnumType20> GetCertificateStatusEnumType20Helper;
+/** @brief Helper to convert a GetCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<GetCertificateStatusEnumType> GetCertificateStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GETCERTIFICATESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GETCERTIFICATESTATUSENUMTYPE_H

@@ -32,23 +32,23 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a IdTokenInfoType20 from a JSON representation */
-bool IdTokenInfoType20Converter::fromJson(const rapidjson::Value&       json,
-                                          IdTokenInfoType20&            data,
-                                          std::string&                  error_code,
-                                          [[maybe_unused]] std::string& error_message)
+/** @brief Convert a IdTokenInfoType from a JSON representation */
+bool IdTokenInfoTypeConverter::fromJson(const rapidjson::Value&       json,
+                                        IdTokenInfoType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = AuthorizationStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = AuthorizationStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // cacheExpiryDateTime
     ret = ret && extract(json, "cacheExpiryDateTime", data.cacheExpiryDateTime, error_message);
@@ -73,7 +73,7 @@ bool IdTokenInfoType20Converter::fromJson(const rapidjson::Value&       json,
     // groupIdToken
     if (json.HasMember("groupIdToken"))
     {
-        IdTokenType20Converter groupIdToken_converter;
+        IdTokenTypeConverter groupIdToken_converter;
         ret = ret && groupIdToken_converter.fromJson(json["groupIdToken"], data.groupIdToken, error_code, error_message);
     }
 
@@ -83,7 +83,7 @@ bool IdTokenInfoType20Converter::fromJson(const rapidjson::Value&       json,
     // personalMessage
     if (json.HasMember("personalMessage"))
     {
-        MessageContentType20Converter personalMessage_converter;
+        MessageContentTypeConverter personalMessage_converter;
         ret = ret && personalMessage_converter.fromJson(json["personalMessage"], data.personalMessage, error_code, error_message);
     }
 
@@ -95,15 +95,15 @@ bool IdTokenInfoType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a IdTokenInfoType20 to a JSON representation */
-bool IdTokenInfoType20Converter::toJson(const IdTokenInfoType20& data, rapidjson::Document& json)
+/** @brief Convert a IdTokenInfoType to a JSON representation */
+bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -112,7 +112,7 @@ bool IdTokenInfoType20Converter::toJson(const IdTokenInfoType20& data, rapidjson
     }
 
     // status
-    fill(json, "status", AuthorizationStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", AuthorizationStatusEnumTypeHelper.toString(data.status));
 
     // cacheExpiryDateTime
     fill(json, "cacheExpiryDateTime", data.cacheExpiryDateTime);
@@ -138,7 +138,7 @@ bool IdTokenInfoType20Converter::toJson(const IdTokenInfoType20& data, rapidjson
     // groupIdToken
     if (data.groupIdToken.isSet())
     {
-        IdTokenType20Converter groupIdToken_converter;
+        IdTokenTypeConverter groupIdToken_converter;
         groupIdToken_converter.setAllocator(allocator);
         rapidjson::Document groupIdToken_doc;
         groupIdToken_doc.Parse("{}");
@@ -152,7 +152,7 @@ bool IdTokenInfoType20Converter::toJson(const IdTokenInfoType20& data, rapidjson
     // personalMessage
     if (data.personalMessage.isSet())
     {
-        MessageContentType20Converter personalMessage_converter;
+        MessageContentTypeConverter personalMessage_converter;
         personalMessage_converter.setAllocator(allocator);
         rapidjson::Document personalMessage_doc;
         personalMessage_doc.Parse("{}");

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_APNAUTHENTICATIONENUMTYPE20_H
-#define OPENOCPP_APNAUTHENTICATIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_APNAUTHENTICATIONENUMTYPE_H
+#define OPENOCPP_OCPP20_APNAUTHENTICATIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief APN. APN_ Authentication. APN_ Authentication_ Code
 urn:x-oca:ocpp:uid:1:568828
 Authentication method. */
-enum class APNAuthenticationEnumType20
+enum class APNAuthenticationEnumType
 {
     CHAP,
     NONE,
@@ -44,11 +44,11 @@ enum class APNAuthenticationEnumType20
     AUTO,
 };
 
-/** @brief Helper to convert a APNAuthenticationEnumType20 enum to string */
-extern const EnumToStringFromString<APNAuthenticationEnumType20> APNAuthenticationEnumType20Helper;
+/** @brief Helper to convert a APNAuthenticationEnumType enum to string */
+extern const EnumToStringFromString<APNAuthenticationEnumType> APNAuthenticationEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_APNAUTHENTICATIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_APNAUTHENTICATIONENUMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETVARIABLERESULTTYPE20_H
-#define OPENOCPP_SETVARIABLERESULTTYPE20_H
+#ifndef OPENOCPP_OCPP20_SETVARIABLERESULTTYPE_H
+#define OPENOCPP_OCPP20_SETVARIABLERESULTTYPE_H
 
 #include "AttributeEnumType20.h"
 #include "ComponentType20.h"
@@ -42,41 +42,41 @@ namespace ocpp20
 {
 
 /** @brief  */
-struct SetVariableResultType20
+struct SetVariableResultType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<AttributeEnumType20> attributeType;
+    ocpp::types::Optional<AttributeEnumType> attributeType;
     /** @brief  */
-    SetVariableStatusEnumType20 attributeStatus;
+    SetVariableStatusEnumType attributeStatus;
     /** @brief  */
-    ocpp::types::Optional<StatusInfoType20> attributeStatusInfo;
+    ocpp::types::Optional<StatusInfoType> attributeStatusInfo;
     /** @brief  */
-    ComponentType20 component;
+    ComponentType component;
     /** @brief  */
-    VariableType20 variable;
+    VariableType variable;
 };
 
-/** @brief Converter class for SetVariableResultType20 type */
-class SetVariableResultType20Converter : public ocpp::messages::IMessageConverter<SetVariableResultType20>
+/** @brief Converter class for SetVariableResultType type */
+class SetVariableResultTypeConverter : public ocpp::messages::IMessageConverter<SetVariableResultType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SetVariableResultType20>* clone() const override { return new SetVariableResultType20Converter(); }
+    ocpp::messages::IMessageConverter<SetVariableResultType>* clone() const override { return new SetVariableResultTypeConverter(); }
 
-    /** @brief Convert a SetVariableResultType20 from a JSON representation */
+    /** @brief Convert a SetVariableResultType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SetVariableResultType20&      data,
+                  SetVariableResultType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SetVariableResultType20 to a JSON representation */
-    bool toJson(const SetVariableResultType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SetVariableResultType to a JSON representation */
+    bool toJson(const SetVariableResultType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SETVARIABLERESULTTYPE20_H
+#endif // OPENOCPP_OCPP20_SETVARIABLERESULTTYPE_H

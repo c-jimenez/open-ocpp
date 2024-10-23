@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a SendLocalListStatusEnumType20 enum to string */
-const EnumToStringFromString<SendLocalListStatusEnumType20> SendLocalListStatusEnumType20Helper = {
-    {SendLocalListStatusEnumType20::Accepted, "Accepted"},
-    {SendLocalListStatusEnumType20::Failed, "Failed"},
-    {SendLocalListStatusEnumType20::VersionMismatch, "VersionMismatch"},
+/** @brief Helper to convert a SendLocalListStatusEnumType enum to string */
+const EnumToStringFromString<SendLocalListStatusEnumType> SendLocalListStatusEnumTypeHelper = {
+    {SendLocalListStatusEnumType::Accepted, "Accepted"},
+    {SendLocalListStatusEnumType::Failed, "Failed"},
+    {SendLocalListStatusEnumType::VersionMismatch, "VersionMismatch"},
 };
 
 } // namespace ocpp20

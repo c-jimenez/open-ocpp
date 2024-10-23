@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ResetEnumType20 enum to string */
-const EnumToStringFromString<ResetEnumType20> ResetEnumType20Helper = {
-    {ResetEnumType20::Immediate, "Immediate"},
-    {ResetEnumType20::OnIdle, "OnIdle"},
+/** @brief Helper to convert a ResetEnumType enum to string */
+const EnumToStringFromString<ResetEnumType> ResetEnumTypeHelper = {
+    {ResetEnumType::Immediate, "Immediate"},
+    {ResetEnumType::OnIdle, "OnIdle"},
 };
 
 } // namespace ocpp20

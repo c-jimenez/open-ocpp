@@ -32,29 +32,29 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a SendLocalList20Req from a JSON representation */
-bool SendLocalList20ReqConverter::fromJson(const rapidjson::Value& json,
-                                           SendLocalList20Req&     data,
-                                           std::string&            error_code,
-                                           std::string&            error_message)
+/** @brief Convert a SendLocalListReq from a JSON representation */
+bool SendLocalListReqConverter::fromJson(const rapidjson::Value& json,
+                                         SendLocalListReq&       data,
+                                         std::string&            error_code,
+                                         std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // localAuthorizationList
     if (json.HasMember("localAuthorizationList"))
     {
-        const rapidjson::Value&                           localAuthorizationList_json = json["localAuthorizationList"];
-        ocpp::types::ocpp20::AuthorizationData20Converter localAuthorizationList_converter;
+        const rapidjson::Value&                         localAuthorizationList_json = json["localAuthorizationList"];
+        ocpp::types::ocpp20::AuthorizationDataConverter localAuthorizationList_converter;
         for (auto it = localAuthorizationList_json.Begin(); ret && (it != localAuthorizationList_json.End()); ++it)
         {
-            ocpp::types::ocpp20::AuthorizationData20& item = data.localAuthorizationList.emplace_back();
+            ocpp::types::ocpp20::AuthorizationData& item = data.localAuthorizationList.emplace_back();
             ret = ret && localAuthorizationList_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -63,7 +63,7 @@ bool SendLocalList20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "versionNumber", data.versionNumber);
 
     // updateType
-    data.updateType = ocpp::types::ocpp20::UpdateEnumType20Helper.fromString(json["updateType"].GetString());
+    data.updateType = ocpp::types::ocpp20::UpdateEnumTypeHelper.fromString(json["updateType"].GetString());
 
     if (!ret)
     {
@@ -73,15 +73,15 @@ bool SendLocalList20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SendLocalList20Req to a JSON representation */
-bool SendLocalList20ReqConverter::toJson(const SendLocalList20Req& data, rapidjson::Document& json)
+/** @brief Convert a SendLocalListReq to a JSON representation */
+bool SendLocalListReqConverter::toJson(const SendLocalListReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -93,10 +93,10 @@ bool SendLocalList20ReqConverter::toJson(const SendLocalList20Req& data, rapidjs
     if (!data.localAuthorizationList.empty())
     {
 
-        rapidjson::Value                                  localAuthorizationList_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::AuthorizationData20Converter localAuthorizationList_converter;
+        rapidjson::Value                                localAuthorizationList_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::AuthorizationDataConverter localAuthorizationList_converter;
         localAuthorizationList_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::AuthorizationData20& item : data.localAuthorizationList)
+        for (const ocpp::types::ocpp20::AuthorizationData& item : data.localAuthorizationList)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -110,33 +110,33 @@ bool SendLocalList20ReqConverter::toJson(const SendLocalList20Req& data, rapidjs
     fill(json, "versionNumber", data.versionNumber);
 
     // updateType
-    fill(json, "updateType", ocpp::types::ocpp20::UpdateEnumType20Helper.toString(data.updateType));
+    fill(json, "updateType", ocpp::types::ocpp20::UpdateEnumTypeHelper.toString(data.updateType));
 
     return ret;
 }
 
-/** @brief Convert a SendLocalList20Conf from a JSON representation */
-bool SendLocalList20ConfConverter::fromJson(const rapidjson::Value& json,
-                                            SendLocalList20Conf&    data,
-                                            std::string&            error_code,
-                                            std::string&            error_message)
+/** @brief Convert a SendLocalListConf from a JSON representation */
+bool SendLocalListConfConverter::fromJson(const rapidjson::Value& json,
+                                          SendLocalListConf&      data,
+                                          std::string&            error_code,
+                                          std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::SendLocalListStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::SendLocalListStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -148,15 +148,15 @@ bool SendLocalList20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SendLocalList20Conf to a JSON representation */
-bool SendLocalList20ConfConverter::toJson(const SendLocalList20Conf& data, rapidjson::Document& json)
+/** @brief Convert a SendLocalListConf to a JSON representation */
+bool SendLocalListConfConverter::toJson(const SendLocalListConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -165,12 +165,12 @@ bool SendLocalList20ConfConverter::toJson(const SendLocalList20Conf& data, rapid
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::SendLocalListStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::SendLocalListStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

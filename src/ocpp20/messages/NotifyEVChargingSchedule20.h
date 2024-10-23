@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYEVCHARGINGSCHEDULE20_H
-#define OPENOCPP_NOTIFYEVCHARGINGSCHEDULE20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYEVCHARGINGSCHEDULE_H
+#define OPENOCPP_OCPP20_NOTIFYEVCHARGINGSCHEDULE_H
 
 #include "IMessageConverter.h"
 
@@ -38,38 +38,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyEVChargingSchedule20 messages */
-static const std::string NOTIFYEVCHARGINGSCHEDULE20_ACTION = "NotifyEVChargingSchedule";
+/** @brief Action corresponding to the NotifyEVChargingSchedule messages */
+static const std::string NOTIFYEVCHARGINGSCHEDULE_ACTION = "NotifyEVChargingSchedule";
 
-/** @brief NotifyEVChargingSchedule20Req message */
-struct NotifyEVChargingSchedule20Req
+/** @brief NotifyEVChargingScheduleReq message */
+struct NotifyEVChargingScheduleReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Periods contained in the charging profile are relative to this point in time. */
     ocpp::types::DateTime timeBase;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingScheduleType20 chargingSchedule;
+    ocpp::types::ocpp20::ChargingScheduleType chargingSchedule;
     /** @brief The charging schedule contained in this notification applies to an EVSE. EvseId must be &gt; 0. */
     int evseId;
 };
 
-/** @brief NotifyEVChargingSchedule20Conf message */
-struct NotifyEVChargingSchedule20Conf
+/** @brief NotifyEVChargingScheduleConf message */
+struct NotifyEVChargingScheduleConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyEVChargingSchedule20)
+MESSAGE_CONVERTERS(NotifyEVChargingSchedule)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYEVCHARGINGSCHEDULE20_H
+#endif // OPENOCPP_OCPP20_NOTIFYEVCHARGINGSCHEDULE_H

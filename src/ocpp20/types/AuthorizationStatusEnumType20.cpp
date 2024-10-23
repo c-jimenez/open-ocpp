@@ -30,18 +30,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a AuthorizationStatusEnumType20 enum to string */
-const EnumToStringFromString<AuthorizationStatusEnumType20> AuthorizationStatusEnumType20Helper = {
-    {AuthorizationStatusEnumType20::Accepted, "Accepted"},
-    {AuthorizationStatusEnumType20::Blocked, "Blocked"},
-    {AuthorizationStatusEnumType20::ConcurrentTx, "ConcurrentTx"},
-    {AuthorizationStatusEnumType20::Expired, "Expired"},
-    {AuthorizationStatusEnumType20::Invalid, "Invalid"},
-    {AuthorizationStatusEnumType20::NoCredit, "NoCredit"},
-    {AuthorizationStatusEnumType20::NotAllowedTypeEVSE, "NotAllowedTypeEVSE"},
-    {AuthorizationStatusEnumType20::NotAtThisLocation, "NotAtThisLocation"},
-    {AuthorizationStatusEnumType20::NotAtThisTime, "NotAtThisTime"},
-    {AuthorizationStatusEnumType20::Unknown, "Unknown"},
+/** @brief Helper to convert a AuthorizationStatusEnumType enum to string */
+const EnumToStringFromString<AuthorizationStatusEnumType> AuthorizationStatusEnumTypeHelper = {
+    {AuthorizationStatusEnumType::Accepted, "Accepted"},
+    {AuthorizationStatusEnumType::Blocked, "Blocked"},
+    {AuthorizationStatusEnumType::ConcurrentTx, "ConcurrentTx"},
+    {AuthorizationStatusEnumType::Expired, "Expired"},
+    {AuthorizationStatusEnumType::Invalid, "Invalid"},
+    {AuthorizationStatusEnumType::NoCredit, "NoCredit"},
+    {AuthorizationStatusEnumType::NotAllowedTypeEVSE, "NotAllowedTypeEVSE"},
+    {AuthorizationStatusEnumType::NotAtThisLocation, "NotAtThisLocation"},
+    {AuthorizationStatusEnumType::NotAtThisTime, "NotAtThisTime"},
+    {AuthorizationStatusEnumType::Unknown, "Unknown"},
 };
 
 } // namespace ocpp20

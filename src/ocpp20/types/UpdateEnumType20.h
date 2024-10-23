@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UPDATEENUMTYPE20_H
-#define OPENOCPP_UPDATEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_UPDATEENUMTYPE_H
+#define OPENOCPP_OCPP20_UPDATEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief This contains the type of update (full or differential) of this request. */
-enum class UpdateEnumType20
+enum class UpdateEnumType
 {
     Differential,
     Full,
 };
 
-/** @brief Helper to convert a UpdateEnumType20 enum to string */
-extern const EnumToStringFromString<UpdateEnumType20> UpdateEnumType20Helper;
+/** @brief Helper to convert a UpdateEnumType enum to string */
+extern const EnumToStringFromString<UpdateEnumType> UpdateEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_UPDATEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_UPDATEENUMTYPE_H

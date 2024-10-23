@@ -30,16 +30,16 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a DataEnumType20 enum to string */
-const EnumToStringFromString<DataEnumType20> DataEnumType20Helper = {
-    {DataEnumType20::string, "string"},
-    {DataEnumType20::decimal, "decimal"},
-    {DataEnumType20::integer, "integer"},
-    {DataEnumType20::dateTime, "dateTime"},
-    {DataEnumType20::boolean, "boolean"},
-    {DataEnumType20::OptionList, "OptionList"},
-    {DataEnumType20::SequenceList, "SequenceList"},
-    {DataEnumType20::MemberList, "MemberList"},
+/** @brief Helper to convert a DataEnumType enum to string */
+const EnumToStringFromString<DataEnumType> DataEnumTypeHelper = {
+    {DataEnumType::string, "string"},
+    {DataEnumType::decimal, "decimal"},
+    {DataEnumType::integer, "integer"},
+    {DataEnumType::dateTime, "dateTime"},
+    {DataEnumType::boolean, "boolean"},
+    {DataEnumType::OptionList, "OptionList"},
+    {DataEnumType::SequenceList, "SequenceList"},
+    {DataEnumType::MemberList, "MemberList"},
 };
 
 } // namespace ocpp20

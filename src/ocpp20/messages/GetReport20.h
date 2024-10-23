@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETREPORT20_H
-#define OPENOCPP_GETREPORT20_H
+#ifndef OPENOCPP_OCPP20_GETREPORT_H
+#define OPENOCPP_OCPP20_GETREPORT_H
 
 #include "IMessageConverter.h"
 
@@ -39,38 +39,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetReport20 messages */
-static const std::string GETREPORT20_ACTION = "GetReport";
+/** @brief Action corresponding to the GetReport messages */
+static const std::string GETREPORT_ACTION = "GetReport";
 
-/** @brief GetReport20Req message */
-struct GetReport20Req
+/** @brief GetReportReq message */
+struct GetReportReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ComponentVariableType20> componentVariable;
+    std::vector<ocpp::types::ocpp20::ComponentVariableType> componentVariable;
     /** @brief The Id of the request. */
     int requestId;
     /** @brief This field contains criteria for components for which a report is requested */
-    std::vector<ocpp::types::ocpp20::ComponentCriterionEnumType20> componentCriteria;
+    std::vector<ocpp::types::ocpp20::ComponentCriterionEnumType> componentCriteria;
 };
 
-/** @brief GetReport20Conf message */
-struct GetReport20Conf
+/** @brief GetReportConf message */
+struct GetReportConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetReport20)
+MESSAGE_CONVERTERS(GetReport)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETREPORT20_H
+#endif // OPENOCPP_OCPP20_GETREPORT_H

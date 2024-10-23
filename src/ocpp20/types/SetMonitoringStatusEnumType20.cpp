@@ -30,14 +30,14 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a SetMonitoringStatusEnumType20 enum to string */
-const EnumToStringFromString<SetMonitoringStatusEnumType20> SetMonitoringStatusEnumType20Helper = {
-    {SetMonitoringStatusEnumType20::Accepted, "Accepted"},
-    {SetMonitoringStatusEnumType20::UnknownComponent, "UnknownComponent"},
-    {SetMonitoringStatusEnumType20::UnknownVariable, "UnknownVariable"},
-    {SetMonitoringStatusEnumType20::UnsupportedMonitorType, "UnsupportedMonitorType"},
-    {SetMonitoringStatusEnumType20::Rejected, "Rejected"},
-    {SetMonitoringStatusEnumType20::Duplicate, "Duplicate"},
+/** @brief Helper to convert a SetMonitoringStatusEnumType enum to string */
+const EnumToStringFromString<SetMonitoringStatusEnumType> SetMonitoringStatusEnumTypeHelper = {
+    {SetMonitoringStatusEnumType::Accepted, "Accepted"},
+    {SetMonitoringStatusEnumType::UnknownComponent, "UnknownComponent"},
+    {SetMonitoringStatusEnumType::UnknownVariable, "UnknownVariable"},
+    {SetMonitoringStatusEnumType::UnsupportedMonitorType, "UnsupportedMonitorType"},
+    {SetMonitoringStatusEnumType::Rejected, "Rejected"},
+    {SetMonitoringStatusEnumType::Duplicate, "Duplicate"},
 };
 
 } // namespace ocpp20

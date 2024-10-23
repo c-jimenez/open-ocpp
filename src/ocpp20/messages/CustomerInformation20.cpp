@@ -32,25 +32,25 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a CustomerInformation20Req from a JSON representation */
-bool CustomerInformation20ReqConverter::fromJson(const rapidjson::Value&   json,
-                                                 CustomerInformation20Req& data,
-                                                 std::string&              error_code,
-                                                 std::string&              error_message)
+/** @brief Convert a CustomerInformationReq from a JSON representation */
+bool CustomerInformationReqConverter::fromJson(const rapidjson::Value& json,
+                                               CustomerInformationReq& data,
+                                               std::string&            error_code,
+                                               std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // customerCertificate
     if (json.HasMember("customerCertificate"))
     {
-        ocpp::types::ocpp20::CertificateHashDataType20Converter customerCertificate_converter;
+        ocpp::types::ocpp20::CertificateHashDataTypeConverter customerCertificate_converter;
         ret =
             ret && customerCertificate_converter.fromJson(json["customerCertificate"], data.customerCertificate, error_code, error_message);
     }
@@ -58,7 +58,7 @@ bool CustomerInformation20ReqConverter::fromJson(const rapidjson::Value&   json,
     // idToken
     if (json.HasMember("idToken"))
     {
-        ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         ret = ret && idToken_converter.fromJson(json["idToken"], data.idToken, error_code, error_message);
     }
 
@@ -82,15 +82,15 @@ bool CustomerInformation20ReqConverter::fromJson(const rapidjson::Value&   json,
     return ret;
 }
 
-/** @brief Convert a CustomerInformation20Req to a JSON representation */
-bool CustomerInformation20ReqConverter::toJson(const CustomerInformation20Req& data, rapidjson::Document& json)
+/** @brief Convert a CustomerInformationReq to a JSON representation */
+bool CustomerInformationReqConverter::toJson(const CustomerInformationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -101,7 +101,7 @@ bool CustomerInformation20ReqConverter::toJson(const CustomerInformation20Req& d
     // customerCertificate
     if (data.customerCertificate.isSet())
     {
-        ocpp::types::ocpp20::CertificateHashDataType20Converter customerCertificate_converter;
+        ocpp::types::ocpp20::CertificateHashDataTypeConverter customerCertificate_converter;
         customerCertificate_converter.setAllocator(allocator);
         rapidjson::Document customerCertificate_doc;
         customerCertificate_doc.Parse("{}");
@@ -112,7 +112,7 @@ bool CustomerInformation20ReqConverter::toJson(const CustomerInformation20Req& d
     // idToken
     if (data.idToken.isSet())
     {
-        ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         idToken_converter.setAllocator(allocator);
         rapidjson::Document idToken_doc;
         idToken_doc.Parse("{}");
@@ -135,28 +135,28 @@ bool CustomerInformation20ReqConverter::toJson(const CustomerInformation20Req& d
     return ret;
 }
 
-/** @brief Convert a CustomerInformation20Conf from a JSON representation */
-bool CustomerInformation20ConfConverter::fromJson(const rapidjson::Value&    json,
-                                                  CustomerInformation20Conf& data,
-                                                  std::string&               error_code,
-                                                  std::string&               error_message)
+/** @brief Convert a CustomerInformationConf from a JSON representation */
+bool CustomerInformationConfConverter::fromJson(const rapidjson::Value&  json,
+                                                CustomerInformationConf& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::CustomerInformationStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::CustomerInformationStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -168,15 +168,15 @@ bool CustomerInformation20ConfConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @brief Convert a CustomerInformation20Conf to a JSON representation */
-bool CustomerInformation20ConfConverter::toJson(const CustomerInformation20Conf& data, rapidjson::Document& json)
+/** @brief Convert a CustomerInformationConf to a JSON representation */
+bool CustomerInformationConfConverter::toJson(const CustomerInformationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -185,12 +185,12 @@ bool CustomerInformation20ConfConverter::toJson(const CustomerInformation20Conf&
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::CustomerInformationStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::CustomerInformationStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

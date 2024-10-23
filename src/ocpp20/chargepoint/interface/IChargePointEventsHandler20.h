@@ -87,497 +87,497 @@ class IChargePointEventsHandler20
 
     // OCPP operations
     /**
-      * @brief Called on reception of a CancelReservation20 message from the central system
+      * @brief Called on reception of a CancelReservation message from the central system
       * @param request Request received
       * @param response Response to send
       * @param error Error (Empty if not a CallError)
       * @param message Error message (Empty if not a CallError)
       * @return true if the request has been sent and a response has been received, false otherwise
       */
-    virtual bool onCancelReservation20(const ocpp::messages::ocpp20::CancelReservation20Req& request,
-                                       ocpp::messages::ocpp20::CancelReservation20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a CertificateSigned20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onCertificateSigned20(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
-                                       ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a ChangeAvailability20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onChangeAvailability20(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
-                                        ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-      * @brief Called on reception of a ClearCache20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onClearCache20(const ocpp::messages::ocpp20::ClearCache20Req& request,
-                                ocpp::messages::ocpp20::ClearCache20Conf&      response,
-                                std::string&                                   error,
-                                std::string&                                   message) = 0;
-    /**
-      * @brief Called on reception of a ClearChargingProfile20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onClearChargingProfile20(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
-                                          ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-      * @brief Called on reception of a ClearDisplayMessage20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onClearDisplayMessage20(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
-                                         ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-      * @brief Called on reception of a ClearVariableMonitoring20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onClearVariableMonitoring20(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
-                                             ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
-                                             std::string&                                                error,
-                                             std::string&                                                message) = 0;
-    /**
-      * @brief Called on reception of a CustomerInformation20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onCustomerInformation20(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
-                                         ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-      * @brief Called on reception of a DataTransfer20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onDataTransfer20(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                                  ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                                  std::string&                                     error,
-                                  std::string&                                     message) = 0;
-    /**
-      * @brief Called on reception of a DeleteCertificate20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onDeleteCertificate20(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
-                                       ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a Get15118EVCertificate20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGet15118EVCertificate20(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
-                                           ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
-                                           std::string&                                              error,
-                                           std::string&                                              message) = 0;
-    /**
-      * @brief Called on reception of a GetBaseReport20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetBaseReport20(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
-                                   ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
-                                   std::string&                                      error,
-                                   std::string&                                      message) = 0;
-    /**
-      * @brief Called on reception of a GetCertificateStatus20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetCertificateStatus20(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
-                                          ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-      * @brief Called on reception of a GetChargingProfiles20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetChargingProfiles20(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
-                                         ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-      * @brief Called on reception of a GetCompositeSchedule20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetCompositeSchedule20(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
-                                          ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-      * @brief Called on reception of a GetDisplayMessages20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetDisplayMessages20(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
-                                        ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-      * @brief Called on reception of a GetInstalledCertificateIds20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetInstalledCertificateIds20(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
-                                                ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&      response,
-                                                std::string&                                                   error,
-                                                std::string&                                                   message) = 0;
-    /**
-      * @brief Called on reception of a GetLocalListVersion20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetLocalListVersion20(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
-                                         ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-      * @brief Called on reception of a GetLog20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetLog20(const ocpp::messages::ocpp20::GetLog20Req& request,
-                            ocpp::messages::ocpp20::GetLog20Conf&      response,
-                            std::string&                               error,
-                            std::string&                               message) = 0;
-    /**
-      * @brief Called on reception of a GetMonitoringReport20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetMonitoringReport20(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
-                                         ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
-                                         std::string&                                            error,
-                                         std::string&                                            message) = 0;
-    /**
-      * @brief Called on reception of a GetReport20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetReport20(const ocpp::messages::ocpp20::GetReport20Req& request,
-                               ocpp::messages::ocpp20::GetReport20Conf&      response,
-                               std::string&                                  error,
-                               std::string&                                  message) = 0;
-    /**
-      * @brief Called on reception of a GetTransactionStatus20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetTransactionStatus20(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
-                                          ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
-                                          std::string&                                             error,
-                                          std::string&                                             message) = 0;
-    /**
-      * @brief Called on reception of a GetVariables20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onGetVariables20(const ocpp::messages::ocpp20::GetVariables20Req& request,
-                                  ocpp::messages::ocpp20::GetVariables20Conf&      response,
-                                  std::string&                                     error,
-                                  std::string&                                     message) = 0;
-    /**
-      * @brief Called on reception of a InstallCertificate20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onInstallCertificate20(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
-                                        ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-      * @brief Called on reception of a PublishFirmware20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onPublishFirmware20(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
-                                     ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
+    virtual bool onCancelReservation(const ocpp::messages::ocpp20::CancelReservationReq& request,
+                                     ocpp::messages::ocpp20::CancelReservationConf&      response,
                                      std::string&                                        error,
                                      std::string&                                        message) = 0;
     /**
-      * @brief Called on reception of a RequestStartTransaction20 message from the central system
+      * @brief Called on reception of a CertificateSigned message from the central system
       * @param request Request received
       * @param response Response to send
       * @param error Error (Empty if not a CallError)
       * @param message Error message (Empty if not a CallError)
       * @return true if the request has been sent and a response has been received, false otherwise
       */
-    virtual bool onRequestStartTransaction20(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
-                                             ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
-                                             std::string&                                                error,
-                                             std::string&                                                message) = 0;
-    /**
-      * @brief Called on reception of a RequestStopTransaction20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onRequestStopTransaction20(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
-                                            ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
-                                            std::string&                                               error,
-                                            std::string&                                               message) = 0;
-    /**
-      * @brief Called on reception of a ReserveNow20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onReserveNow20(const ocpp::messages::ocpp20::ReserveNow20Req& request,
-                                ocpp::messages::ocpp20::ReserveNow20Conf&      response,
-                                std::string&                                   error,
-                                std::string&                                   message) = 0;
-    /**
-      * @brief Called on reception of a Reset20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onReset20(const ocpp::messages::ocpp20::Reset20Req& request,
-                           ocpp::messages::ocpp20::Reset20Conf&      response,
-                           std::string&                              error,
-                           std::string&                              message) = 0;
-    /**
-      * @brief Called on reception of a SendLocalList20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSendLocalList20(const ocpp::messages::ocpp20::SendLocalList20Req& request,
-                                   ocpp::messages::ocpp20::SendLocalList20Conf&      response,
-                                   std::string&                                      error,
-                                   std::string&                                      message) = 0;
-    /**
-      * @brief Called on reception of a SetChargingProfile20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetChargingProfile20(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
-                                        ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-      * @brief Called on reception of a SetDisplayMessage20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetDisplayMessage20(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
-                                       ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a SetMonitoringBase20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetMonitoringBase20(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
-                                       ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a SetMonitoringLevel20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetMonitoringLevel20(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
-                                        ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
-                                        std::string&                                           error,
-                                        std::string&                                           message) = 0;
-    /**
-      * @brief Called on reception of a SetNetworkProfile20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetNetworkProfile20(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
-                                       ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
-                                       std::string&                                          error,
-                                       std::string&                                          message) = 0;
-    /**
-      * @brief Called on reception of a SetVariableMonitoring20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetVariableMonitoring20(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
-                                           ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
-                                           std::string&                                              error,
-                                           std::string&                                              message) = 0;
-    /**
-      * @brief Called on reception of a SetVariables20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onSetVariables20(const ocpp::messages::ocpp20::SetVariables20Req& request,
-                                  ocpp::messages::ocpp20::SetVariables20Conf&      response,
-                                  std::string&                                     error,
-                                  std::string&                                     message) = 0;
-    /**
-      * @brief Called on reception of a TriggerMessage20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onTriggerMessage20(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
-                                    ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
-                                    std::string&                                       error,
-                                    std::string&                                       message) = 0;
-    /**
-      * @brief Called on reception of a UnlockConnector20 message from the central system
-      * @param request Request received
-      * @param response Response to send
-      * @param error Error (Empty if not a CallError)
-      * @param message Error message (Empty if not a CallError)
-      * @return true if the request has been sent and a response has been received, false otherwise
-      */
-    virtual bool onUnlockConnector20(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
-                                     ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
+    virtual bool onCertificateSigned(const ocpp::messages::ocpp20::CertificateSignedReq& request,
+                                     ocpp::messages::ocpp20::CertificateSignedConf&      response,
                                      std::string&                                        error,
                                      std::string&                                        message) = 0;
     /**
-      * @brief Called on reception of a UnpublishFirmware20 message from the central system
+      * @brief Called on reception of a ChangeAvailability message from the central system
       * @param request Request received
       * @param response Response to send
       * @param error Error (Empty if not a CallError)
       * @param message Error message (Empty if not a CallError)
       * @return true if the request has been sent and a response has been received, false otherwise
       */
-    virtual bool onUnpublishFirmware20(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
-                                       ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
+    virtual bool onChangeAvailability(const ocpp::messages::ocpp20::ChangeAvailabilityReq& request,
+                                      ocpp::messages::ocpp20::ChangeAvailabilityConf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
+    /**
+      * @brief Called on reception of a ClearCache message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onClearCache(const ocpp::messages::ocpp20::ClearCacheReq& request,
+                              ocpp::messages::ocpp20::ClearCacheConf&      response,
+                              std::string&                                 error,
+                              std::string&                                 message) = 0;
+    /**
+      * @brief Called on reception of a ClearChargingProfile message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onClearChargingProfile(const ocpp::messages::ocpp20::ClearChargingProfileReq& request,
+                                        ocpp::messages::ocpp20::ClearChargingProfileConf&      response,
+                                        std::string&                                           error,
+                                        std::string&                                           message) = 0;
+    /**
+      * @brief Called on reception of a ClearDisplayMessage message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onClearDisplayMessage(const ocpp::messages::ocpp20::ClearDisplayMessageReq& request,
+                                       ocpp::messages::ocpp20::ClearDisplayMessageConf&      response,
                                        std::string&                                          error,
                                        std::string&                                          message) = 0;
     /**
-      * @brief Called on reception of a UpdateFirmware20 message from the central system
+      * @brief Called on reception of a ClearVariableMonitoring message from the central system
       * @param request Request received
       * @param response Response to send
       * @param error Error (Empty if not a CallError)
       * @param message Error message (Empty if not a CallError)
       * @return true if the request has been sent and a response has been received, false otherwise
       */
-    virtual bool onUpdateFirmware20(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
-                                    ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
-                                    std::string&                                       error,
-                                    std::string&                                       message) = 0;
+    virtual bool onClearVariableMonitoring(const ocpp::messages::ocpp20::ClearVariableMonitoringReq& request,
+                                           ocpp::messages::ocpp20::ClearVariableMonitoringConf&      response,
+                                           std::string&                                              error,
+                                           std::string&                                              message) = 0;
+    /**
+      * @brief Called on reception of a CustomerInformation message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onCustomerInformation(const ocpp::messages::ocpp20::CustomerInformationReq& request,
+                                       ocpp::messages::ocpp20::CustomerInformationConf&      response,
+                                       std::string&                                          error,
+                                       std::string&                                          message) = 0;
+    /**
+      * @brief Called on reception of a DataTransfer message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
+                                ocpp::messages::ocpp20::DataTransferConf&      response,
+                                std::string&                                   error,
+                                std::string&                                   message) = 0;
+    /**
+      * @brief Called on reception of a DeleteCertificate message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onDeleteCertificate(const ocpp::messages::ocpp20::DeleteCertificateReq& request,
+                                     ocpp::messages::ocpp20::DeleteCertificateConf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+      * @brief Called on reception of a Get15118EVCertificate message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGet15118EVCertificate(const ocpp::messages::ocpp20::Get15118EVCertificateReq& request,
+                                         ocpp::messages::ocpp20::Get15118EVCertificateConf&      response,
+                                         std::string&                                            error,
+                                         std::string&                                            message) = 0;
+    /**
+      * @brief Called on reception of a GetBaseReport message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetBaseReport(const ocpp::messages::ocpp20::GetBaseReportReq& request,
+                                 ocpp::messages::ocpp20::GetBaseReportConf&      response,
+                                 std::string&                                    error,
+                                 std::string&                                    message) = 0;
+    /**
+      * @brief Called on reception of a GetCertificateStatus message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetCertificateStatus(const ocpp::messages::ocpp20::GetCertificateStatusReq& request,
+                                        ocpp::messages::ocpp20::GetCertificateStatusConf&      response,
+                                        std::string&                                           error,
+                                        std::string&                                           message) = 0;
+    /**
+      * @brief Called on reception of a GetChargingProfiles message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetChargingProfiles(const ocpp::messages::ocpp20::GetChargingProfilesReq& request,
+                                       ocpp::messages::ocpp20::GetChargingProfilesConf&      response,
+                                       std::string&                                          error,
+                                       std::string&                                          message) = 0;
+    /**
+      * @brief Called on reception of a GetCompositeSchedule message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetCompositeSchedule(const ocpp::messages::ocpp20::GetCompositeScheduleReq& request,
+                                        ocpp::messages::ocpp20::GetCompositeScheduleConf&      response,
+                                        std::string&                                           error,
+                                        std::string&                                           message) = 0;
+    /**
+      * @brief Called on reception of a GetDisplayMessages message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetDisplayMessages(const ocpp::messages::ocpp20::GetDisplayMessagesReq& request,
+                                      ocpp::messages::ocpp20::GetDisplayMessagesConf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
+    /**
+      * @brief Called on reception of a GetInstalledCertificateIds message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetInstalledCertificateIds(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq& request,
+                                              ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&      response,
+                                              std::string&                                                 error,
+                                              std::string&                                                 message) = 0;
+    /**
+      * @brief Called on reception of a GetLocalListVersion message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetLocalListVersion(const ocpp::messages::ocpp20::GetLocalListVersionReq& request,
+                                       ocpp::messages::ocpp20::GetLocalListVersionConf&      response,
+                                       std::string&                                          error,
+                                       std::string&                                          message) = 0;
+    /**
+      * @brief Called on reception of a GetLog message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetLog(const ocpp::messages::ocpp20::GetLogReq& request,
+                          ocpp::messages::ocpp20::GetLogConf&      response,
+                          std::string&                             error,
+                          std::string&                             message) = 0;
+    /**
+      * @brief Called on reception of a GetMonitoringReport message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetMonitoringReport(const ocpp::messages::ocpp20::GetMonitoringReportReq& request,
+                                       ocpp::messages::ocpp20::GetMonitoringReportConf&      response,
+                                       std::string&                                          error,
+                                       std::string&                                          message) = 0;
+    /**
+      * @brief Called on reception of a GetReport message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetReport(const ocpp::messages::ocpp20::GetReportReq& request,
+                             ocpp::messages::ocpp20::GetReportConf&      response,
+                             std::string&                                error,
+                             std::string&                                message) = 0;
+    /**
+      * @brief Called on reception of a GetTransactionStatus message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetTransactionStatus(const ocpp::messages::ocpp20::GetTransactionStatusReq& request,
+                                        ocpp::messages::ocpp20::GetTransactionStatusConf&      response,
+                                        std::string&                                           error,
+                                        std::string&                                           message) = 0;
+    /**
+      * @brief Called on reception of a GetVariables message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onGetVariables(const ocpp::messages::ocpp20::GetVariablesReq& request,
+                                ocpp::messages::ocpp20::GetVariablesConf&      response,
+                                std::string&                                   error,
+                                std::string&                                   message) = 0;
+    /**
+      * @brief Called on reception of a InstallCertificate message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onInstallCertificate(const ocpp::messages::ocpp20::InstallCertificateReq& request,
+                                      ocpp::messages::ocpp20::InstallCertificateConf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
+    /**
+      * @brief Called on reception of a PublishFirmware message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onPublishFirmware(const ocpp::messages::ocpp20::PublishFirmwareReq& request,
+                                   ocpp::messages::ocpp20::PublishFirmwareConf&      response,
+                                   std::string&                                      error,
+                                   std::string&                                      message) = 0;
+    /**
+      * @brief Called on reception of a RequestStartTransaction message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onRequestStartTransaction(const ocpp::messages::ocpp20::RequestStartTransactionReq& request,
+                                           ocpp::messages::ocpp20::RequestStartTransactionConf&      response,
+                                           std::string&                                              error,
+                                           std::string&                                              message) = 0;
+    /**
+      * @brief Called on reception of a RequestStopTransaction message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onRequestStopTransaction(const ocpp::messages::ocpp20::RequestStopTransactionReq& request,
+                                          ocpp::messages::ocpp20::RequestStopTransactionConf&      response,
+                                          std::string&                                             error,
+                                          std::string&                                             message) = 0;
+    /**
+      * @brief Called on reception of a ReserveNow message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onReserveNow(const ocpp::messages::ocpp20::ReserveNowReq& request,
+                              ocpp::messages::ocpp20::ReserveNowConf&      response,
+                              std::string&                                 error,
+                              std::string&                                 message) = 0;
+    /**
+      * @brief Called on reception of a Reset message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onReset(const ocpp::messages::ocpp20::ResetReq& request,
+                         ocpp::messages::ocpp20::ResetConf&      response,
+                         std::string&                            error,
+                         std::string&                            message) = 0;
+    /**
+      * @brief Called on reception of a SendLocalList message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSendLocalList(const ocpp::messages::ocpp20::SendLocalListReq& request,
+                                 ocpp::messages::ocpp20::SendLocalListConf&      response,
+                                 std::string&                                    error,
+                                 std::string&                                    message) = 0;
+    /**
+      * @brief Called on reception of a SetChargingProfile message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetChargingProfile(const ocpp::messages::ocpp20::SetChargingProfileReq& request,
+                                      ocpp::messages::ocpp20::SetChargingProfileConf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
+    /**
+      * @brief Called on reception of a SetDisplayMessage message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetDisplayMessage(const ocpp::messages::ocpp20::SetDisplayMessageReq& request,
+                                     ocpp::messages::ocpp20::SetDisplayMessageConf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+      * @brief Called on reception of a SetMonitoringBase message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetMonitoringBase(const ocpp::messages::ocpp20::SetMonitoringBaseReq& request,
+                                     ocpp::messages::ocpp20::SetMonitoringBaseConf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+      * @brief Called on reception of a SetMonitoringLevel message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetMonitoringLevel(const ocpp::messages::ocpp20::SetMonitoringLevelReq& request,
+                                      ocpp::messages::ocpp20::SetMonitoringLevelConf&      response,
+                                      std::string&                                         error,
+                                      std::string&                                         message) = 0;
+    /**
+      * @brief Called on reception of a SetNetworkProfile message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetNetworkProfile(const ocpp::messages::ocpp20::SetNetworkProfileReq& request,
+                                     ocpp::messages::ocpp20::SetNetworkProfileConf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+      * @brief Called on reception of a SetVariableMonitoring message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetVariableMonitoring(const ocpp::messages::ocpp20::SetVariableMonitoringReq& request,
+                                         ocpp::messages::ocpp20::SetVariableMonitoringConf&      response,
+                                         std::string&                                            error,
+                                         std::string&                                            message) = 0;
+    /**
+      * @brief Called on reception of a SetVariables message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onSetVariables(const ocpp::messages::ocpp20::SetVariablesReq& request,
+                                ocpp::messages::ocpp20::SetVariablesConf&      response,
+                                std::string&                                   error,
+                                std::string&                                   message) = 0;
+    /**
+      * @brief Called on reception of a TriggerMessage message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onTriggerMessage(const ocpp::messages::ocpp20::TriggerMessageReq& request,
+                                  ocpp::messages::ocpp20::TriggerMessageConf&      response,
+                                  std::string&                                     error,
+                                  std::string&                                     message) = 0;
+    /**
+      * @brief Called on reception of a UnlockConnector message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onUnlockConnector(const ocpp::messages::ocpp20::UnlockConnectorReq& request,
+                                   ocpp::messages::ocpp20::UnlockConnectorConf&      response,
+                                   std::string&                                      error,
+                                   std::string&                                      message) = 0;
+    /**
+      * @brief Called on reception of a UnpublishFirmware message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onUnpublishFirmware(const ocpp::messages::ocpp20::UnpublishFirmwareReq& request,
+                                     ocpp::messages::ocpp20::UnpublishFirmwareConf&      response,
+                                     std::string&                                        error,
+                                     std::string&                                        message) = 0;
+    /**
+      * @brief Called on reception of a UpdateFirmware message from the central system
+      * @param request Request received
+      * @param response Response to send
+      * @param error Error (Empty if not a CallError)
+      * @param message Error message (Empty if not a CallError)
+      * @return true if the request has been sent and a response has been received, false otherwise
+      */
+    virtual bool onUpdateFirmware(const ocpp::messages::ocpp20::UpdateFirmwareReq& request,
+                                  ocpp::messages::ocpp20::UpdateFirmwareConf&      response,
+                                  std::string&                                     error,
+                                  std::string&                                     message) = 0;
 };
 
 } // namespace ocpp20

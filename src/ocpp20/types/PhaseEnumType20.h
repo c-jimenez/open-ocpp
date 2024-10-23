@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_PHASEENUMTYPE20_H
-#define OPENOCPP_PHASEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_PHASEENUMTYPE_H
+#define OPENOCPP_OCPP20_PHASEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Sampled_ Value. Phase. Phase_ Code
 urn:x-oca:ocpp:uid:1:569264
 Indicates how the measured value is to be interpreted. For instance between L1 and neutral (L1-N) Please note that not all values of phase are applicable to all Measurands. When phase is absent, the measured value is interpreted as an overall value. */
-enum class PhaseEnumType20
+enum class PhaseEnumType
 {
     L1,
     L2,
@@ -50,11 +50,11 @@ enum class PhaseEnumType20
     L3_L1,
 };
 
-/** @brief Helper to convert a PhaseEnumType20 enum to string */
-extern const EnumToStringFromString<PhaseEnumType20> PhaseEnumType20Helper;
+/** @brief Helper to convert a PhaseEnumType enum to string */
+extern const EnumToStringFromString<PhaseEnumType> PhaseEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_PHASEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_PHASEENUMTYPE_H

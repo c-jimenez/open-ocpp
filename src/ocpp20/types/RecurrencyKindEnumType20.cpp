@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a RecurrencyKindEnumType20 enum to string */
-const EnumToStringFromString<RecurrencyKindEnumType20> RecurrencyKindEnumType20Helper = {
-    {RecurrencyKindEnumType20::Daily, "Daily"},
-    {RecurrencyKindEnumType20::Weekly, "Weekly"},
+/** @brief Helper to convert a RecurrencyKindEnumType enum to string */
+const EnumToStringFromString<RecurrencyKindEnumType> RecurrencyKindEnumTypeHelper = {
+    {RecurrencyKindEnumType::Daily, "Daily"},
+    {RecurrencyKindEnumType::Weekly, "Weekly"},
 };
 
 } // namespace ocpp20

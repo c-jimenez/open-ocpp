@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETMONITORINGSTATUSENUMTYPE20_H
-#define OPENOCPP_SETMONITORINGSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_SETMONITORINGSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_SETMONITORINGSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Status is OK if a value could be returned. Otherwise this will indicate the reason why a value could not be returned. */
-enum class SetMonitoringStatusEnumType20
+enum class SetMonitoringStatusEnumType
 {
     Accepted,
     UnknownComponent,
@@ -44,11 +44,11 @@ enum class SetMonitoringStatusEnumType20
     Duplicate,
 };
 
-/** @brief Helper to convert a SetMonitoringStatusEnumType20 enum to string */
-extern const EnumToStringFromString<SetMonitoringStatusEnumType20> SetMonitoringStatusEnumType20Helper;
+/** @brief Helper to convert a SetMonitoringStatusEnumType enum to string */
+extern const EnumToStringFromString<SetMonitoringStatusEnumType> SetMonitoringStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SETMONITORINGSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_SETMONITORINGSTATUSENUMTYPE_H

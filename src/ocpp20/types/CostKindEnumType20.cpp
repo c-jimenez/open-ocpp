@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a CostKindEnumType20 enum to string */
-const EnumToStringFromString<CostKindEnumType20> CostKindEnumType20Helper = {
-    {CostKindEnumType20::CarbonDioxideEmission, "CarbonDioxideEmission"},
-    {CostKindEnumType20::RelativePricePercentage, "RelativePricePercentage"},
-    {CostKindEnumType20::RenewableGenerationPercentage, "RenewableGenerationPercentage"},
+/** @brief Helper to convert a CostKindEnumType enum to string */
+const EnumToStringFromString<CostKindEnumType> CostKindEnumTypeHelper = {
+    {CostKindEnumType::CarbonDioxideEmission, "CarbonDioxideEmission"},
+    {CostKindEnumType::RelativePricePercentage, "RelativePricePercentage"},
+    {CostKindEnumType::RenewableGenerationPercentage, "RenewableGenerationPercentage"},
 };
 
 } // namespace ocpp20

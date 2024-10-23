@@ -73,10 +73,10 @@ void DefaultLocalControllerEventsHandler::chargePointConnected(
         std::weak_ptr<ocpp::localcontroller::ocpp20::IChargePointProxy20> p_chargepoint = chargepoint;
 
         // Specific handling of heartbeat message
-        auto heartbeat_handler = [p_chargepoint](const ocpp::messages::ocpp20::Heartbeat20Req& request,
-                                                 ocpp::messages::ocpp20::Heartbeat20Conf&      response,
-                                                 std::string&                                  error_code,
-                                                 std::string&                                  error_message)
+        auto heartbeat_handler = [p_chargepoint](const ocpp::messages::ocpp20::HeartbeatReq& request,
+                                                 ocpp::messages::ocpp20::HeartbeatConf&      response,
+                                                 std::string&                                error_code,
+                                                 std::string&                                error_message)
         {
             bool ret         = true;
             auto chargepoint = p_chargepoint.lock();

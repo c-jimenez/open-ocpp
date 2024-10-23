@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RESERVATIONSTATUSUPDATE20_H
-#define OPENOCPP_RESERVATIONSTATUSUPDATE20_H
+#ifndef OPENOCPP_OCPP20_RESERVATIONSTATUSUPDATE_H
+#define OPENOCPP_OCPP20_RESERVATIONSTATUSUPDATE_H
 
 #include "IMessageConverter.h"
 
@@ -36,32 +36,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ReservationStatusUpdate20 messages */
-static const std::string RESERVATIONSTATUSUPDATE20_ACTION = "ReservationStatusUpdate";
+/** @brief Action corresponding to the ReservationStatusUpdate messages */
+static const std::string RESERVATIONSTATUSUPDATE_ACTION = "ReservationStatusUpdate";
 
-/** @brief ReservationStatusUpdate20Req message */
-struct ReservationStatusUpdate20Req
+/** @brief ReservationStatusUpdateReq message */
+struct ReservationStatusUpdateReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The ID of the reservation. */
     int reservationId;
     /** @brief  */
-    ocpp::types::ocpp20::ReservationUpdateStatusEnumType20 reservationUpdateStatus;
+    ocpp::types::ocpp20::ReservationUpdateStatusEnumType reservationUpdateStatus;
 };
 
-/** @brief ReservationStatusUpdate20Conf message */
-struct ReservationStatusUpdate20Conf
+/** @brief ReservationStatusUpdateConf message */
+struct ReservationStatusUpdateConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ReservationStatusUpdate20)
+MESSAGE_CONVERTERS(ReservationStatusUpdate)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_RESERVATIONSTATUSUPDATE20_H
+#endif // OPENOCPP_OCPP20_RESERVATIONSTATUSUPDATE_H

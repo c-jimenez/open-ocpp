@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a APNType20 from a JSON representation */
-bool APNType20Converter::fromJson(const rapidjson::Value&       json,
-                                  APNType20&                    data,
-                                  std::string&                  error_code,
-                                  [[maybe_unused]] std::string& error_message)
+/** @brief Convert a APNType from a JSON representation */
+bool APNTypeConverter::fromJson(const rapidjson::Value&       json,
+                                APNType&                      data,
+                                std::string&                  error_code,
+                                [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -66,7 +66,7 @@ bool APNType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "useOnlyPreferredNetwork", data.useOnlyPreferredNetwork);
 
     // apnAuthentication
-    data.apnAuthentication = APNAuthenticationEnumType20Helper.fromString(json["apnAuthentication"].GetString());
+    data.apnAuthentication = APNAuthenticationEnumTypeHelper.fromString(json["apnAuthentication"].GetString());
 
     if (!ret)
     {
@@ -76,15 +76,15 @@ bool APNType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a APNType20 to a JSON representation */
-bool APNType20Converter::toJson(const APNType20& data, rapidjson::Document& json)
+/** @brief Convert a APNType to a JSON representation */
+bool APNTypeConverter::toJson(const APNType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -111,7 +111,7 @@ bool APNType20Converter::toJson(const APNType20& data, rapidjson::Document& json
     fill(json, "useOnlyPreferredNetwork", data.useOnlyPreferredNetwork);
 
     // apnAuthentication
-    fill(json, "apnAuthentication", APNAuthenticationEnumType20Helper.toString(data.apnAuthentication));
+    fill(json, "apnAuthentication", APNAuthenticationEnumTypeHelper.toString(data.apnAuthentication));
 
     return ret;
 }

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REQUESTSTOPTRANSACTION20_H
-#define OPENOCPP_REQUESTSTOPTRANSACTION20_H
+#ifndef OPENOCPP_OCPP20_REQUESTSTOPTRANSACTION_H
+#define OPENOCPP_OCPP20_REQUESTSTOPTRANSACTION_H
 
 #include "IMessageConverter.h"
 
@@ -37,34 +37,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the RequestStopTransaction20 messages */
-static const std::string REQUESTSTOPTRANSACTION20_ACTION = "RequestStopTransaction";
+/** @brief Action corresponding to the RequestStopTransaction messages */
+static const std::string REQUESTSTOPTRANSACTION_ACTION = "RequestStopTransaction";
 
-/** @brief RequestStopTransaction20Req message */
-struct RequestStopTransaction20Req
+/** @brief RequestStopTransactionReq message */
+struct RequestStopTransactionReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The identifier of the transaction which the Charging Station is requested to stop. */
     ocpp::types::CiStringType<36u> transactionId;
 };
 
-/** @brief RequestStopTransaction20Conf message */
-struct RequestStopTransaction20Conf
+/** @brief RequestStopTransactionConf message */
+struct RequestStopTransactionConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::RequestStartStopStatusEnumType20 status;
+    ocpp::types::ocpp20::RequestStartStopStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(RequestStopTransaction20)
+MESSAGE_CONVERTERS(RequestStopTransaction)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_REQUESTSTOPTRANSACTION20_H
+#endif // OPENOCPP_OCPP20_REQUESTSTOPTRANSACTION_H

@@ -30,19 +30,19 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MessageTriggerEnumType20 enum to string */
-const EnumToStringFromString<MessageTriggerEnumType20> MessageTriggerEnumType20Helper = {
-    {MessageTriggerEnumType20::BootNotification, "BootNotification"},
-    {MessageTriggerEnumType20::LogStatusNotification, "LogStatusNotification"},
-    {MessageTriggerEnumType20::FirmwareStatusNotification, "FirmwareStatusNotification"},
-    {MessageTriggerEnumType20::Heartbeat, "Heartbeat"},
-    {MessageTriggerEnumType20::MeterValues, "MeterValues"},
-    {MessageTriggerEnumType20::SignChargingStationCertificate, "SignChargingStationCertificate"},
-    {MessageTriggerEnumType20::SignV2GCertificate, "SignV2GCertificate"},
-    {MessageTriggerEnumType20::StatusNotification, "StatusNotification"},
-    {MessageTriggerEnumType20::TransactionEvent, "TransactionEvent"},
-    {MessageTriggerEnumType20::SignCombinedCertificate, "SignCombinedCertificate"},
-    {MessageTriggerEnumType20::PublishFirmwareStatusNotification, "PublishFirmwareStatusNotification"},
+/** @brief Helper to convert a MessageTriggerEnumType enum to string */
+const EnumToStringFromString<MessageTriggerEnumType> MessageTriggerEnumTypeHelper = {
+    {MessageTriggerEnumType::BootNotification, "BootNotification"},
+    {MessageTriggerEnumType::LogStatusNotification, "LogStatusNotification"},
+    {MessageTriggerEnumType::FirmwareStatusNotification, "FirmwareStatusNotification"},
+    {MessageTriggerEnumType::Heartbeat, "Heartbeat"},
+    {MessageTriggerEnumType::MeterValues, "MeterValues"},
+    {MessageTriggerEnumType::SignChargingStationCertificate, "SignChargingStationCertificate"},
+    {MessageTriggerEnumType::SignV2GCertificate, "SignV2GCertificate"},
+    {MessageTriggerEnumType::StatusNotification, "StatusNotification"},
+    {MessageTriggerEnumType::TransactionEvent, "TransactionEvent"},
+    {MessageTriggerEnumType::SignCombinedCertificate, "SignCombinedCertificate"},
+    {MessageTriggerEnumType::PublishFirmwareStatusNotification, "PublishFirmwareStatusNotification"},
 };
 
 } // namespace ocpp20

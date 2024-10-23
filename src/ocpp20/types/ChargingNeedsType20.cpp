@@ -32,25 +32,25 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ChargingNeedsType20 from a JSON representation */
-bool ChargingNeedsType20Converter::fromJson(const rapidjson::Value&       json,
-                                            ChargingNeedsType20&          data,
-                                            std::string&                  error_code,
-                                            [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ChargingNeedsType from a JSON representation */
+bool ChargingNeedsTypeConverter::fromJson(const rapidjson::Value&       json,
+                                          ChargingNeedsType&            data,
+                                          std::string&                  error_code,
+                                          [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // acChargingParameters
     if (json.HasMember("acChargingParameters"))
     {
-        ACChargingParametersType20Converter acChargingParameters_converter;
+        ACChargingParametersTypeConverter acChargingParameters_converter;
         ret = ret &&
               acChargingParameters_converter.fromJson(json["acChargingParameters"], data.acChargingParameters, error_code, error_message);
     }
@@ -58,13 +58,13 @@ bool ChargingNeedsType20Converter::fromJson(const rapidjson::Value&       json,
     // dcChargingParameters
     if (json.HasMember("dcChargingParameters"))
     {
-        DCChargingParametersType20Converter dcChargingParameters_converter;
+        DCChargingParametersTypeConverter dcChargingParameters_converter;
         ret = ret &&
               dcChargingParameters_converter.fromJson(json["dcChargingParameters"], data.dcChargingParameters, error_code, error_message);
     }
 
     // requestedEnergyTransfer
-    data.requestedEnergyTransfer = EnergyTransferModeEnumType20Helper.fromString(json["requestedEnergyTransfer"].GetString());
+    data.requestedEnergyTransfer = EnergyTransferModeEnumTypeHelper.fromString(json["requestedEnergyTransfer"].GetString());
 
     // departureTime
     ret = ret && extract(json, "departureTime", data.departureTime, error_message);
@@ -77,15 +77,15 @@ bool ChargingNeedsType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a ChargingNeedsType20 to a JSON representation */
-bool ChargingNeedsType20Converter::toJson(const ChargingNeedsType20& data, rapidjson::Document& json)
+/** @brief Convert a ChargingNeedsType to a JSON representation */
+bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -96,7 +96,7 @@ bool ChargingNeedsType20Converter::toJson(const ChargingNeedsType20& data, rapid
     // acChargingParameters
     if (data.acChargingParameters.isSet())
     {
-        ACChargingParametersType20Converter acChargingParameters_converter;
+        ACChargingParametersTypeConverter acChargingParameters_converter;
         acChargingParameters_converter.setAllocator(allocator);
         rapidjson::Document acChargingParameters_doc;
         acChargingParameters_doc.Parse("{}");
@@ -107,7 +107,7 @@ bool ChargingNeedsType20Converter::toJson(const ChargingNeedsType20& data, rapid
     // dcChargingParameters
     if (data.dcChargingParameters.isSet())
     {
-        DCChargingParametersType20Converter dcChargingParameters_converter;
+        DCChargingParametersTypeConverter dcChargingParameters_converter;
         dcChargingParameters_converter.setAllocator(allocator);
         rapidjson::Document dcChargingParameters_doc;
         dcChargingParameters_doc.Parse("{}");
@@ -116,7 +116,7 @@ bool ChargingNeedsType20Converter::toJson(const ChargingNeedsType20& data, rapid
     }
 
     // requestedEnergyTransfer
-    fill(json, "requestedEnergyTransfer", EnergyTransferModeEnumType20Helper.toString(data.requestedEnergyTransfer));
+    fill(json, "requestedEnergyTransfer", EnergyTransferModeEnumTypeHelper.toString(data.requestedEnergyTransfer));
 
     // departureTime
     fill(json, "departureTime", data.departureTime);

@@ -32,23 +32,20 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a Authorize20Req from a JSON representation */
-bool Authorize20ReqConverter::fromJson(const rapidjson::Value& json,
-                                       Authorize20Req&         data,
-                                       std::string&            error_code,
-                                       std::string&            error_message)
+/** @brief Convert a AuthorizeReq from a JSON representation */
+bool AuthorizeReqConverter::fromJson(const rapidjson::Value& json, AuthorizeReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // idToken
-    ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+    ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     ret = ret && idToken_converter.fromJson(json["idToken"], data.idToken, error_code, error_message);
 
     // certificate
@@ -57,11 +54,11 @@ bool Authorize20ReqConverter::fromJson(const rapidjson::Value& json,
     // iso15118CertificateHashData
     if (json.HasMember("iso15118CertificateHashData"))
     {
-        const rapidjson::Value&                             iso15118CertificateHashData_json = json["iso15118CertificateHashData"];
-        ocpp::types::ocpp20::OCSPRequestDataType20Converter iso15118CertificateHashData_converter;
+        const rapidjson::Value&                           iso15118CertificateHashData_json = json["iso15118CertificateHashData"];
+        ocpp::types::ocpp20::OCSPRequestDataTypeConverter iso15118CertificateHashData_converter;
         for (auto it = iso15118CertificateHashData_json.Begin(); ret && (it != iso15118CertificateHashData_json.End()); ++it)
         {
-            ocpp::types::ocpp20::OCSPRequestDataType20& item = data.iso15118CertificateHashData.emplace_back();
+            ocpp::types::ocpp20::OCSPRequestDataType& item = data.iso15118CertificateHashData.emplace_back();
             ret = ret && iso15118CertificateHashData_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -74,15 +71,15 @@ bool Authorize20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a Authorize20Req to a JSON representation */
-bool Authorize20ReqConverter::toJson(const Authorize20Req& data, rapidjson::Document& json)
+/** @brief Convert a AuthorizeReq to a JSON representation */
+bool AuthorizeReqConverter::toJson(const AuthorizeReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -91,7 +88,7 @@ bool Authorize20ReqConverter::toJson(const Authorize20Req& data, rapidjson::Docu
     }
 
     // idToken
-    ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+    ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     idToken_converter.setAllocator(allocator);
     rapidjson::Document idToken_doc;
     idToken_doc.Parse("{}");
@@ -105,10 +102,10 @@ bool Authorize20ReqConverter::toJson(const Authorize20Req& data, rapidjson::Docu
     if (!data.iso15118CertificateHashData.empty())
     {
 
-        rapidjson::Value                                    iso15118CertificateHashData_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::OCSPRequestDataType20Converter iso15118CertificateHashData_converter;
+        rapidjson::Value                                  iso15118CertificateHashData_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::OCSPRequestDataTypeConverter iso15118CertificateHashData_converter;
         iso15118CertificateHashData_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::OCSPRequestDataType20& item : data.iso15118CertificateHashData)
+        for (const ocpp::types::ocpp20::OCSPRequestDataType& item : data.iso15118CertificateHashData)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -121,30 +118,30 @@ bool Authorize20ReqConverter::toJson(const Authorize20Req& data, rapidjson::Docu
     return ret;
 }
 
-/** @brief Convert a Authorize20Conf from a JSON representation */
-bool Authorize20ConfConverter::fromJson(const rapidjson::Value& json,
-                                        Authorize20Conf&        data,
-                                        std::string&            error_code,
-                                        std::string&            error_message)
+/** @brief Convert a AuthorizeConf from a JSON representation */
+bool AuthorizeConfConverter::fromJson(const rapidjson::Value& json,
+                                      AuthorizeConf&          data,
+                                      std::string&            error_code,
+                                      std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // idTokenInfo
-    ocpp::types::ocpp20::IdTokenInfoType20Converter idTokenInfo_converter;
+    ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
     ret = ret && idTokenInfo_converter.fromJson(json["idTokenInfo"], data.idTokenInfo, error_code, error_message);
 
     // certificateStatus
     if (json.HasMember("certificateStatus"))
     {
         data.certificateStatus =
-            ocpp::types::ocpp20::AuthorizeCertificateStatusEnumType20Helper.fromString(json["certificateStatus"].GetString());
+            ocpp::types::ocpp20::AuthorizeCertificateStatusEnumTypeHelper.fromString(json["certificateStatus"].GetString());
     }
 
     if (!ret)
@@ -155,15 +152,15 @@ bool Authorize20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a Authorize20Conf to a JSON representation */
-bool Authorize20ConfConverter::toJson(const Authorize20Conf& data, rapidjson::Document& json)
+/** @brief Convert a AuthorizeConf to a JSON representation */
+bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -172,7 +169,7 @@ bool Authorize20ConfConverter::toJson(const Authorize20Conf& data, rapidjson::Do
     }
 
     // idTokenInfo
-    ocpp::types::ocpp20::IdTokenInfoType20Converter idTokenInfo_converter;
+    ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
     idTokenInfo_converter.setAllocator(allocator);
     rapidjson::Document idTokenInfo_doc;
     idTokenInfo_doc.Parse("{}");
@@ -182,7 +179,7 @@ bool Authorize20ConfConverter::toJson(const Authorize20Conf& data, rapidjson::Do
     // certificateStatus
     if (data.certificateStatus.isSet())
     {
-        fill(json, "certificateStatus", ocpp::types::ocpp20::AuthorizeCertificateStatusEnumType20Helper.toString(data.certificateStatus));
+        fill(json, "certificateStatus", ocpp::types::ocpp20::AuthorizeCertificateStatusEnumTypeHelper.toString(data.certificateStatus));
     }
 
     return ret;

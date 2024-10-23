@@ -26,7 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointRequestHandler{{ocpp_version_suffix}}.h"
 
 {%- for msg_name in csms_msgs %}
-#include "{{msg_name}}.h"
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 
 #include <memory>

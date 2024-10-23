@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  {{message.comment}}
 */
 
-#ifndef OPENOCPP_{{enum.name.upper()}}_H
-#define OPENOCPP_{{enum.name.upper()}}_H
+#ifndef OPENOCPP_{{ocpp_version_namespace.upper()}}_{{enum.name.upper()}}_H
+#define OPENOCPP_{{ocpp_version_namespace.upper()}}_{{enum.name.upper()}}_H
 
 #include "EnumToStringFromString.h"
 
@@ -48,4 +48,4 @@ extern const EnumToStringFromString<{{enum.name}}> {{enum.name}}Helper;
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_{{enum.name.upper()}}_H
+#endif // OPENOCPP_{{ocpp_version_namespace.upper()}}_{{enum.name.upper()}}_H

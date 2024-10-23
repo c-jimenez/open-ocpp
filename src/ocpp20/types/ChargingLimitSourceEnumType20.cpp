@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ChargingLimitSourceEnumType20 enum to string */
-const EnumToStringFromString<ChargingLimitSourceEnumType20> ChargingLimitSourceEnumType20Helper = {
-    {ChargingLimitSourceEnumType20::EMS, "EMS"},
-    {ChargingLimitSourceEnumType20::Other, "Other"},
-    {ChargingLimitSourceEnumType20::SO, "SO"},
-    {ChargingLimitSourceEnumType20::CSO, "CSO"},
+/** @brief Helper to convert a ChargingLimitSourceEnumType enum to string */
+const EnumToStringFromString<ChargingLimitSourceEnumType> ChargingLimitSourceEnumTypeHelper = {
+    {ChargingLimitSourceEnumType::EMS, "EMS"},
+    {ChargingLimitSourceEnumType::Other, "Other"},
+    {ChargingLimitSourceEnumType::SO, "SO"},
+    {ChargingLimitSourceEnumType::CSO, "CSO"},
 };
 
 } // namespace ocpp20

@@ -32,25 +32,25 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ComponentType20 from a JSON representation */
-bool ComponentType20Converter::fromJson(const rapidjson::Value&       json,
-                                        ComponentType20&              data,
-                                        std::string&                  error_code,
-                                        [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ComponentType from a JSON representation */
+bool ComponentTypeConverter::fromJson(const rapidjson::Value&       json,
+                                      ComponentType&                data,
+                                      std::string&                  error_code,
+                                      [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evse
     if (json.HasMember("evse"))
     {
-        EVSEType20Converter evse_converter;
+        EVSETypeConverter evse_converter;
         ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
     }
 
@@ -68,15 +68,15 @@ bool ComponentType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a ComponentType20 to a JSON representation */
-bool ComponentType20Converter::toJson(const ComponentType20& data, rapidjson::Document& json)
+/** @brief Convert a ComponentType to a JSON representation */
+bool ComponentTypeConverter::toJson(const ComponentType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -87,7 +87,7 @@ bool ComponentType20Converter::toJson(const ComponentType20& data, rapidjson::Do
     // evse
     if (data.evse.isSet())
     {
-        EVSEType20Converter evse_converter;
+        EVSETypeConverter evse_converter;
         evse_converter.setAllocator(allocator);
         rapidjson::Document evse_doc;
         evse_doc.Parse("{}");

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_METERVALUETYPE20_H
-#define OPENOCPP_METERVALUETYPE20_H
+#ifndef OPENOCPP_OCPP20_METERVALUETYPE_H
+#define OPENOCPP_OCPP20_METERVALUETYPE_H
 
 #include "CustomDataType20.h"
 #include "SampledValueType20.h"
@@ -43,37 +43,37 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233265
 Collection of one or more sampled values in MeterValuesRequest and TransactionEvent. All sampled values in a MeterValue are sampled at the same point in time.
  */
-struct MeterValueType20
+struct MeterValueType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    std::vector<SampledValueType20> sampledValue;
+    std::vector<SampledValueType> sampledValue;
     /** @brief Meter_ Value. Timestamp. Date_ Time
 urn:x-oca:ocpp:uid:1:569259
 Timestamp for measured value(s). */
     ocpp::types::DateTime timestamp;
 };
 
-/** @brief Converter class for MeterValueType20 type */
-class MeterValueType20Converter : public ocpp::messages::IMessageConverter<MeterValueType20>
+/** @brief Converter class for MeterValueType type */
+class MeterValueTypeConverter : public ocpp::messages::IMessageConverter<MeterValueType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<MeterValueType20>* clone() const override { return new MeterValueType20Converter(); }
+    ocpp::messages::IMessageConverter<MeterValueType>* clone() const override { return new MeterValueTypeConverter(); }
 
-    /** @brief Convert a MeterValueType20 from a JSON representation */
+    /** @brief Convert a MeterValueType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  MeterValueType20&             data,
+                  MeterValueType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a MeterValueType20 to a JSON representation */
-    bool toJson(const MeterValueType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a MeterValueType to a JSON representation */
+    bool toJson(const MeterValueType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_METERVALUETYPE20_H
+#endif // OPENOCPP_OCPP20_METERVALUETYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARCHARGINGPROFILETYPE20_H
-#define OPENOCPP_CLEARCHARGINGPROFILETYPE20_H
+#ifndef OPENOCPP_OCPP20_CLEARCHARGINGPROFILETYPE_H
+#define OPENOCPP_OCPP20_CLEARCHARGINGPROFILETYPE_H
 
 #include "ChargingProfilePurposeEnumType20.h"
 #include "CustomDataType20.h"
@@ -41,44 +41,41 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233255
 A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
  */
-struct ClearChargingProfileType20
+struct ClearChargingProfileType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identified_ Object. MRID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:569198
 Specifies the id of the EVSE for which to clear charging profiles. An evseId of zero (0) specifies the charging profile for the overall Charging Station. Absence of this parameter means the clearing applies to all charging profiles that match the other criteria in the request. */
     ocpp::types::Optional<int> evseId;
     /** @brief  */
-    ocpp::types::Optional<ChargingProfilePurposeEnumType20> chargingProfilePurpose;
+    ocpp::types::Optional<ChargingProfilePurposeEnumType> chargingProfilePurpose;
     /** @brief Charging_ Profile. Stack_ Level. Counter
 urn:x-oca:ocpp:uid:1:569230
 Specifies the stackLevel for which charging profiles will be cleared, if they meet the other criteria in the request. */
     ocpp::types::Optional<int> stackLevel;
 };
 
-/** @brief Converter class for ClearChargingProfileType20 type */
-class ClearChargingProfileType20Converter : public ocpp::messages::IMessageConverter<ClearChargingProfileType20>
+/** @brief Converter class for ClearChargingProfileType type */
+class ClearChargingProfileTypeConverter : public ocpp::messages::IMessageConverter<ClearChargingProfileType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ClearChargingProfileType20>* clone() const override
-    {
-        return new ClearChargingProfileType20Converter();
-    }
+    ocpp::messages::IMessageConverter<ClearChargingProfileType>* clone() const override { return new ClearChargingProfileTypeConverter(); }
 
-    /** @brief Convert a ClearChargingProfileType20 from a JSON representation */
+    /** @brief Convert a ClearChargingProfileType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ClearChargingProfileType20&   data,
+                  ClearChargingProfileType&     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ClearChargingProfileType20 to a JSON representation */
-    bool toJson(const ClearChargingProfileType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ClearChargingProfileType to a JSON representation */
+    bool toJson(const ClearChargingProfileType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARCHARGINGPROFILETYPE20_H
+#endif // OPENOCPP_OCPP20_CLEARCHARGINGPROFILETYPE_H

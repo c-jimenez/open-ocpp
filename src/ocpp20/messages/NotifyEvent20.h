@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYEVENT20_H
-#define OPENOCPP_NOTIFYEVENT20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYEVENT_H
+#define OPENOCPP_OCPP20_NOTIFYEVENT_H
 
 #include "IMessageConverter.h"
 
@@ -36,14 +36,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyEvent20 messages */
-static const std::string NOTIFYEVENT20_ACTION = "NotifyEvent";
+/** @brief Action corresponding to the NotifyEvent messages */
+static const std::string NOTIFYEVENT_ACTION = "NotifyEvent";
 
-/** @brief NotifyEvent20Req message */
-struct NotifyEvent20Req
+/** @brief NotifyEventReq message */
+struct NotifyEventReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Timestamp of the moment this message was generated at the Charging Station. */
     ocpp::types::DateTime generatedAt;
     /** @brief “to be continued” indicator. Indicates whether another part of the report follows in an upcoming notifyEventRequest message. Default value when omitted is false. */
@@ -51,21 +51,21 @@ struct NotifyEvent20Req
     /** @brief Sequence number of this message. First message starts at 0. */
     int seqNo;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::EventDataType20> eventData;
+    std::vector<ocpp::types::ocpp20::EventDataType> eventData;
 };
 
-/** @brief NotifyEvent20Conf message */
-struct NotifyEvent20Conf
+/** @brief NotifyEventConf message */
+struct NotifyEventConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyEvent20)
+MESSAGE_CONVERTERS(NotifyEvent)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYEVENT20_H
+#endif // OPENOCPP_OCPP20_NOTIFYEVENT_H

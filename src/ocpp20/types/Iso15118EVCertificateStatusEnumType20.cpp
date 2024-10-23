@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a Iso15118EVCertificateStatusEnumType20 enum to string */
-const EnumToStringFromString<Iso15118EVCertificateStatusEnumType20> Iso15118EVCertificateStatusEnumType20Helper = {
-    {Iso15118EVCertificateStatusEnumType20::Accepted, "Accepted"},
-    {Iso15118EVCertificateStatusEnumType20::Failed, "Failed"},
+/** @brief Helper to convert a Iso15118EVCertificateStatusEnumType enum to string */
+const EnumToStringFromString<Iso15118EVCertificateStatusEnumType> Iso15118EVCertificateStatusEnumTypeHelper = {
+    {Iso15118EVCertificateStatusEnumType::Accepted, "Accepted"},
+    {Iso15118EVCertificateStatusEnumType::Failed, "Failed"},
 };
 
 } // namespace ocpp20

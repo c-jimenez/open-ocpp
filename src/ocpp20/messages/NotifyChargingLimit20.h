@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_NOTIFYCHARGINGLIMIT20_H
-#define OPENOCPP_NOTIFYCHARGINGLIMIT20_H
+#ifndef OPENOCPP_OCPP20_NOTIFYCHARGINGLIMIT_H
+#define OPENOCPP_OCPP20_NOTIFYCHARGINGLIMIT_H
 
 #include "IMessageConverter.h"
 
@@ -37,34 +37,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the NotifyChargingLimit20 messages */
-static const std::string NOTIFYCHARGINGLIMIT20_ACTION = "NotifyChargingLimit";
+/** @brief Action corresponding to the NotifyChargingLimit messages */
+static const std::string NOTIFYCHARGINGLIMIT_ACTION = "NotifyChargingLimit";
 
-/** @brief NotifyChargingLimit20Req message */
-struct NotifyChargingLimit20Req
+/** @brief NotifyChargingLimitReq message */
+struct NotifyChargingLimitReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ChargingScheduleType20> chargingSchedule;
+    std::vector<ocpp::types::ocpp20::ChargingScheduleType> chargingSchedule;
     /** @brief The charging schedule contained in this notification applies to an EVSE. evseId must be &gt; 0. */
     ocpp::types::Optional<int> evseId;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingLimitType20 chargingLimit;
+    ocpp::types::ocpp20::ChargingLimitType chargingLimit;
 };
 
-/** @brief NotifyChargingLimit20Conf message */
-struct NotifyChargingLimit20Conf
+/** @brief NotifyChargingLimitConf message */
+struct NotifyChargingLimitConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(NotifyChargingLimit20)
+MESSAGE_CONVERTERS(NotifyChargingLimit)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_NOTIFYCHARGINGLIMIT20_H
+#endif // OPENOCPP_OCPP20_NOTIFYCHARGINGLIMIT_H

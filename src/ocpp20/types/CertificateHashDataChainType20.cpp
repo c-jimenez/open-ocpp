@@ -32,37 +32,37 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a CertificateHashDataChainType20 from a JSON representation */
-bool CertificateHashDataChainType20Converter::fromJson(const rapidjson::Value&         json,
-                                                       CertificateHashDataChainType20& data,
-                                                       std::string&                    error_code,
-                                                       [[maybe_unused]] std::string&   error_message)
+/** @brief Convert a CertificateHashDataChainType from a JSON representation */
+bool CertificateHashDataChainTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                     CertificateHashDataChainType& data,
+                                                     std::string&                  error_code,
+                                                     [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // certificateHashData
-    CertificateHashDataType20Converter certificateHashData_converter;
+    CertificateHashDataTypeConverter certificateHashData_converter;
     ret = ret && certificateHashData_converter.fromJson(json["certificateHashData"], data.certificateHashData, error_code, error_message);
 
     // certificateType
-    data.certificateType = GetCertificateIdUseEnumType20Helper.fromString(json["certificateType"].GetString());
+    data.certificateType = GetCertificateIdUseEnumTypeHelper.fromString(json["certificateType"].GetString());
 
     // childCertificateHashData
     if (json.HasMember("childCertificateHashData"))
     {
-        const rapidjson::Value&            childCertificateHashData_json = json["childCertificateHashData"];
-        CertificateHashDataType20Converter childCertificateHashData_converter;
+        const rapidjson::Value&          childCertificateHashData_json = json["childCertificateHashData"];
+        CertificateHashDataTypeConverter childCertificateHashData_converter;
         for (auto it = childCertificateHashData_json.Begin(); ret && (it != childCertificateHashData_json.End()); ++it)
         {
-            CertificateHashDataType20& item = data.childCertificateHashData.emplace_back();
-            ret                             = ret && childCertificateHashData_converter.fromJson(*it, item, error_code, error_message);
+            CertificateHashDataType& item = data.childCertificateHashData.emplace_back();
+            ret                           = ret && childCertificateHashData_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -74,15 +74,15 @@ bool CertificateHashDataChainType20Converter::fromJson(const rapidjson::Value&  
     return ret;
 }
 
-/** @brief Convert a CertificateHashDataChainType20 to a JSON representation */
-bool CertificateHashDataChainType20Converter::toJson(const CertificateHashDataChainType20& data, rapidjson::Document& json)
+/** @brief Convert a CertificateHashDataChainType to a JSON representation */
+bool CertificateHashDataChainTypeConverter::toJson(const CertificateHashDataChainType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -91,7 +91,7 @@ bool CertificateHashDataChainType20Converter::toJson(const CertificateHashDataCh
     }
 
     // certificateHashData
-    CertificateHashDataType20Converter certificateHashData_converter;
+    CertificateHashDataTypeConverter certificateHashData_converter;
     certificateHashData_converter.setAllocator(allocator);
     rapidjson::Document certificateHashData_doc;
     certificateHashData_doc.Parse("{}");
@@ -99,16 +99,16 @@ bool CertificateHashDataChainType20Converter::toJson(const CertificateHashDataCh
     json.AddMember(rapidjson::StringRef("certificateHashData"), certificateHashData_doc.Move(), *allocator);
 
     // certificateType
-    fill(json, "certificateType", GetCertificateIdUseEnumType20Helper.toString(data.certificateType));
+    fill(json, "certificateType", GetCertificateIdUseEnumTypeHelper.toString(data.certificateType));
 
     // childCertificateHashData
     if (!data.childCertificateHashData.empty())
     {
 
-        rapidjson::Value                   childCertificateHashData_json(rapidjson::kArrayType);
-        CertificateHashDataType20Converter childCertificateHashData_converter;
+        rapidjson::Value                 childCertificateHashData_json(rapidjson::kArrayType);
+        CertificateHashDataTypeConverter childCertificateHashData_converter;
         childCertificateHashData_converter.setAllocator(allocator);
-        for (const CertificateHashDataType20& item : data.childCertificateHashData)
+        for (const CertificateHashDataType& item : data.childCertificateHashData)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");

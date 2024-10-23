@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COSTKINDENUMTYPE20_H
-#define OPENOCPP_COSTKINDENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_COSTKINDENUMTYPE_H
+#define OPENOCPP_OCPP20_COSTKINDENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,18 +36,18 @@ namespace ocpp20
 /** @brief Cost. Cost_ Kind. Cost_ Kind_ Code
 urn:x-oca:ocpp:uid:1:569243
 The kind of cost referred to in the message element amount */
-enum class CostKindEnumType20
+enum class CostKindEnumType
 {
     CarbonDioxideEmission,
     RelativePricePercentage,
     RenewableGenerationPercentage,
 };
 
-/** @brief Helper to convert a CostKindEnumType20 enum to string */
-extern const EnumToStringFromString<CostKindEnumType20> CostKindEnumType20Helper;
+/** @brief Helper to convert a CostKindEnumType enum to string */
+extern const EnumToStringFromString<CostKindEnumType> CostKindEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_COSTKINDENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_COSTKINDENUMTYPE_H

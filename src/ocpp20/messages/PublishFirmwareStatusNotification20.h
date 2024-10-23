@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_PUBLISHFIRMWARESTATUSNOTIFICATION20_H
-#define OPENOCPP_PUBLISHFIRMWARESTATUSNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_PUBLISHFIRMWARESTATUSNOTIFICATION_H
+#define OPENOCPP_OCPP20_PUBLISHFIRMWARESTATUSNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -36,16 +36,16 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the PublishFirmwareStatusNotification20 messages */
-static const std::string PUBLISHFIRMWARESTATUSNOTIFICATION20_ACTION = "PublishFirmwareStatusNotification";
+/** @brief Action corresponding to the PublishFirmwareStatusNotification messages */
+static const std::string PUBLISHFIRMWARESTATUSNOTIFICATION_ACTION = "PublishFirmwareStatusNotification";
 
-/** @brief PublishFirmwareStatusNotification20Req message */
-struct PublishFirmwareStatusNotification20Req
+/** @brief PublishFirmwareStatusNotificationReq message */
+struct PublishFirmwareStatusNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::PublishFirmwareStatusEnumType20 status;
+    ocpp::types::ocpp20::PublishFirmwareStatusEnumType status;
     /** @brief Required if status is Published. Can be multiple URI’s, if the Local Controller supports e.g. HTTP, HTTPS, and FTP. */
     std::vector<std::string> location;
     /** @brief The request id that was
@@ -55,18 +55,18 @@ triggered this action. */
     ocpp::types::Optional<int> requestId;
 };
 
-/** @brief PublishFirmwareStatusNotification20Conf message */
-struct PublishFirmwareStatusNotification20Conf
+/** @brief PublishFirmwareStatusNotificationConf message */
+struct PublishFirmwareStatusNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(PublishFirmwareStatusNotification20)
+MESSAGE_CONVERTERS(PublishFirmwareStatusNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_PUBLISHFIRMWARESTATUSNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_PUBLISHFIRMWARESTATUSNOTIFICATION_H

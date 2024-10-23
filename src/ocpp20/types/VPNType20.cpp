@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a VPNType20 from a JSON representation */
-bool VPNType20Converter::fromJson(const rapidjson::Value&       json,
-                                  VPNType20&                    data,
-                                  std::string&                  error_code,
-                                  [[maybe_unused]] std::string& error_message)
+/** @brief Convert a VPNType from a JSON representation */
+bool VPNTypeConverter::fromJson(const rapidjson::Value&       json,
+                                VPNType&                      data,
+                                std::string&                  error_code,
+                                [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -63,7 +63,7 @@ bool VPNType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "key", data.key);
 
     // type
-    data.type = VPNEnumType20Helper.fromString(json["type"].GetString());
+    data.type = VPNEnumTypeHelper.fromString(json["type"].GetString());
 
     if (!ret)
     {
@@ -73,15 +73,15 @@ bool VPNType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a VPNType20 to a JSON representation */
-bool VPNType20Converter::toJson(const VPNType20& data, rapidjson::Document& json)
+/** @brief Convert a VPNType to a JSON representation */
+bool VPNTypeConverter::toJson(const VPNType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -105,7 +105,7 @@ bool VPNType20Converter::toJson(const VPNType20& data, rapidjson::Document& json
     fill(json, "key", data.key);
 
     // type
-    fill(json, "type", VPNEnumType20Helper.toString(data.type));
+    fill(json, "type", VPNEnumTypeHelper.toString(data.type));
 
     return ret;
 }

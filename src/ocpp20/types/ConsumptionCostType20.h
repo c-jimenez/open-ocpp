@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CONSUMPTIONCOSTTYPE20_H
-#define OPENOCPP_CONSUMPTIONCOSTTYPE20_H
+#ifndef OPENOCPP_OCPP20_CONSUMPTIONCOSTTYPE_H
+#define OPENOCPP_OCPP20_CONSUMPTIONCOSTTYPE_H
 
 #include "CostType20.h"
 #include "CustomDataType20.h"
@@ -41,37 +41,37 @@ namespace ocpp20
 /** @brief Consumption_ Cost
 urn:x-oca:ocpp:uid:2:233259
  */
-struct ConsumptionCostType20
+struct ConsumptionCostType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Consumption_ Cost. Start_ Value. Numeric
 urn:x-oca:ocpp:uid:1:569246
 The lowest level of consumption that defines the starting point of this consumption block. The block interval extends to the start of the next interval. */
     float startValue;
     /** @brief  */
-    std::vector<CostType20> cost;
+    std::vector<CostType> cost;
 };
 
-/** @brief Converter class for ConsumptionCostType20 type */
-class ConsumptionCostType20Converter : public ocpp::messages::IMessageConverter<ConsumptionCostType20>
+/** @brief Converter class for ConsumptionCostType type */
+class ConsumptionCostTypeConverter : public ocpp::messages::IMessageConverter<ConsumptionCostType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ConsumptionCostType20>* clone() const override { return new ConsumptionCostType20Converter(); }
+    ocpp::messages::IMessageConverter<ConsumptionCostType>* clone() const override { return new ConsumptionCostTypeConverter(); }
 
-    /** @brief Convert a ConsumptionCostType20 from a JSON representation */
+    /** @brief Convert a ConsumptionCostType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ConsumptionCostType20&        data,
+                  ConsumptionCostType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ConsumptionCostType20 to a JSON representation */
-    bool toJson(const ConsumptionCostType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ConsumptionCostType to a JSON representation */
+    bool toJson(const ConsumptionCostType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CONSUMPTIONCOSTTYPE20_H
+#endif // OPENOCPP_OCPP20_CONSUMPTIONCOSTTYPE_H

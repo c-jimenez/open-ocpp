@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MONITORENUMTYPE20_H
-#define OPENOCPP_MONITORENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MONITORENUMTYPE_H
+#define OPENOCPP_OCPP20_MONITORENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief The type of this monitor, e.g. a threshold, delta or periodic monitor. */
-enum class MonitorEnumType20
+enum class MonitorEnumType
 {
     UpperThreshold,
     LowerThreshold,
@@ -43,11 +43,11 @@ enum class MonitorEnumType20
     PeriodicClockAligned,
 };
 
-/** @brief Helper to convert a MonitorEnumType20 enum to string */
-extern const EnumToStringFromString<MonitorEnumType20> MonitorEnumType20Helper;
+/** @brief Helper to convert a MonitorEnumType enum to string */
+extern const EnumToStringFromString<MonitorEnumType> MonitorEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MONITORENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MONITORENUMTYPE_H

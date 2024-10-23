@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a GetDisplayMessages20Req from a JSON representation */
-bool GetDisplayMessages20ReqConverter::fromJson(const rapidjson::Value&  json,
-                                                GetDisplayMessages20Req& data,
-                                                std::string&             error_code,
-                                                std::string&             error_message)
+/** @brief Convert a GetDisplayMessagesReq from a JSON representation */
+bool GetDisplayMessagesReqConverter::fromJson(const rapidjson::Value& json,
+                                              GetDisplayMessagesReq&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -64,13 +64,13 @@ bool GetDisplayMessages20ReqConverter::fromJson(const rapidjson::Value&  json,
     // priority
     if (json.HasMember("priority"))
     {
-        data.priority = ocpp::types::ocpp20::MessagePriorityEnumType20Helper.fromString(json["priority"].GetString());
+        data.priority = ocpp::types::ocpp20::MessagePriorityEnumTypeHelper.fromString(json["priority"].GetString());
     }
 
     // state
     if (json.HasMember("state"))
     {
-        data.state = ocpp::types::ocpp20::MessageStateEnumType20Helper.fromString(json["state"].GetString());
+        data.state = ocpp::types::ocpp20::MessageStateEnumTypeHelper.fromString(json["state"].GetString());
     }
 
     if (!ret)
@@ -81,15 +81,15 @@ bool GetDisplayMessages20ReqConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @brief Convert a GetDisplayMessages20Req to a JSON representation */
-bool GetDisplayMessages20ReqConverter::toJson(const GetDisplayMessages20Req& data, rapidjson::Document& json)
+/** @brief Convert a GetDisplayMessagesReq to a JSON representation */
+bool GetDisplayMessagesReqConverter::toJson(const GetDisplayMessagesReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -115,40 +115,40 @@ bool GetDisplayMessages20ReqConverter::toJson(const GetDisplayMessages20Req& dat
     // priority
     if (data.priority.isSet())
     {
-        fill(json, "priority", ocpp::types::ocpp20::MessagePriorityEnumType20Helper.toString(data.priority));
+        fill(json, "priority", ocpp::types::ocpp20::MessagePriorityEnumTypeHelper.toString(data.priority));
     }
 
     // state
     if (data.state.isSet())
     {
-        fill(json, "state", ocpp::types::ocpp20::MessageStateEnumType20Helper.toString(data.state));
+        fill(json, "state", ocpp::types::ocpp20::MessageStateEnumTypeHelper.toString(data.state));
     }
 
     return ret;
 }
 
-/** @brief Convert a GetDisplayMessages20Conf from a JSON representation */
-bool GetDisplayMessages20ConfConverter::fromJson(const rapidjson::Value&   json,
-                                                 GetDisplayMessages20Conf& data,
-                                                 std::string&              error_code,
-                                                 std::string&              error_message)
+/** @brief Convert a GetDisplayMessagesConf from a JSON representation */
+bool GetDisplayMessagesConfConverter::fromJson(const rapidjson::Value& json,
+                                               GetDisplayMessagesConf& data,
+                                               std::string&            error_code,
+                                               std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::GetDisplayMessagesStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::GetDisplayMessagesStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -160,15 +160,15 @@ bool GetDisplayMessages20ConfConverter::fromJson(const rapidjson::Value&   json,
     return ret;
 }
 
-/** @brief Convert a GetDisplayMessages20Conf to a JSON representation */
-bool GetDisplayMessages20ConfConverter::toJson(const GetDisplayMessages20Conf& data, rapidjson::Document& json)
+/** @brief Convert a GetDisplayMessagesConf to a JSON representation */
+bool GetDisplayMessagesConfConverter::toJson(const GetDisplayMessagesConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -177,12 +177,12 @@ bool GetDisplayMessages20ConfConverter::toJson(const GetDisplayMessages20Conf& d
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::GetDisplayMessagesStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::GetDisplayMessagesStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

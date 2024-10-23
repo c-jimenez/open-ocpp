@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a VariableType20 from a JSON representation */
-bool VariableType20Converter::fromJson(const rapidjson::Value&       json,
-                                       VariableType20&               data,
-                                       std::string&                  error_code,
-                                       [[maybe_unused]] std::string& error_message)
+/** @brief Convert a VariableType from a JSON representation */
+bool VariableTypeConverter::fromJson(const rapidjson::Value&       json,
+                                     VariableType&                 data,
+                                     std::string&                  error_code,
+                                     [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -61,15 +61,15 @@ bool VariableType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a VariableType20 to a JSON representation */
-bool VariableType20Converter::toJson(const VariableType20& data, rapidjson::Document& json)
+/** @brief Convert a VariableType to a JSON representation */
+bool VariableTypeConverter::toJson(const VariableType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

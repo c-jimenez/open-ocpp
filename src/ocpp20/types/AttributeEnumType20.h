@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_ATTRIBUTEENUMTYPE20_H
-#define OPENOCPP_ATTRIBUTEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_ATTRIBUTEENUMTYPE_H
+#define OPENOCPP_OCPP20_ATTRIBUTEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -35,7 +35,7 @@ namespace ocpp20
 
 /** @brief Attribute: Actual, MinSet, MaxSet, etc.
 Defaults to Actual if absent. */
-enum class AttributeEnumType20
+enum class AttributeEnumType
 {
     Actual,
     Target,
@@ -43,11 +43,11 @@ enum class AttributeEnumType20
     MaxSet,
 };
 
-/** @brief Helper to convert a AttributeEnumType20 enum to string */
-extern const EnumToStringFromString<AttributeEnumType20> AttributeEnumType20Helper;
+/** @brief Helper to convert a AttributeEnumType enum to string */
+extern const EnumToStringFromString<AttributeEnumType> AttributeEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_ATTRIBUTEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_ATTRIBUTEENUMTYPE_H

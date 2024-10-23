@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a EventNotificationEnumType20 enum to string */
-const EnumToStringFromString<EventNotificationEnumType20> EventNotificationEnumType20Helper = {
-    {EventNotificationEnumType20::HardWiredNotification, "HardWiredNotification"},
-    {EventNotificationEnumType20::HardWiredMonitor, "HardWiredMonitor"},
-    {EventNotificationEnumType20::PreconfiguredMonitor, "PreconfiguredMonitor"},
-    {EventNotificationEnumType20::CustomMonitor, "CustomMonitor"},
+/** @brief Helper to convert a EventNotificationEnumType enum to string */
+const EnumToStringFromString<EventNotificationEnumType> EventNotificationEnumTypeHelper = {
+    {EventNotificationEnumType::HardWiredNotification, "HardWiredNotification"},
+    {EventNotificationEnumType::HardWiredMonitor, "HardWiredMonitor"},
+    {EventNotificationEnumType::PreconfiguredMonitor, "PreconfiguredMonitor"},
+    {EventNotificationEnumType::CustomMonitor, "CustomMonitor"},
 };
 
 } // namespace ocpp20

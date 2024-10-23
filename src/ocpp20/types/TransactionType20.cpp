@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a TransactionType20 from a JSON representation */
-bool TransactionType20Converter::fromJson(const rapidjson::Value&       json,
-                                          TransactionType20&            data,
-                                          std::string&                  error_code,
-                                          [[maybe_unused]] std::string& error_message)
+/** @brief Convert a TransactionType from a JSON representation */
+bool TransactionTypeConverter::fromJson(const rapidjson::Value&       json,
+                                        TransactionType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,7 +53,7 @@ bool TransactionType20Converter::fromJson(const rapidjson::Value&       json,
     // chargingState
     if (json.HasMember("chargingState"))
     {
-        data.chargingState = ChargingStateEnumType20Helper.fromString(json["chargingState"].GetString());
+        data.chargingState = ChargingStateEnumTypeHelper.fromString(json["chargingState"].GetString());
     }
 
     // timeSpentCharging
@@ -62,7 +62,7 @@ bool TransactionType20Converter::fromJson(const rapidjson::Value&       json,
     // stoppedReason
     if (json.HasMember("stoppedReason"))
     {
-        data.stoppedReason = ReasonEnumType20Helper.fromString(json["stoppedReason"].GetString());
+        data.stoppedReason = ReasonEnumTypeHelper.fromString(json["stoppedReason"].GetString());
     }
 
     // remoteStartId
@@ -76,15 +76,15 @@ bool TransactionType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a TransactionType20 to a JSON representation */
-bool TransactionType20Converter::toJson(const TransactionType20& data, rapidjson::Document& json)
+/** @brief Convert a TransactionType to a JSON representation */
+bool TransactionTypeConverter::toJson(const TransactionType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -98,7 +98,7 @@ bool TransactionType20Converter::toJson(const TransactionType20& data, rapidjson
     // chargingState
     if (data.chargingState.isSet())
     {
-        fill(json, "chargingState", ChargingStateEnumType20Helper.toString(data.chargingState));
+        fill(json, "chargingState", ChargingStateEnumTypeHelper.toString(data.chargingState));
     }
 
     // timeSpentCharging
@@ -107,7 +107,7 @@ bool TransactionType20Converter::toJson(const TransactionType20& data, rapidjson
     // stoppedReason
     if (data.stoppedReason.isSet())
     {
-        fill(json, "stoppedReason", ReasonEnumType20Helper.toString(data.stoppedReason));
+        fill(json, "stoppedReason", ReasonEnumTypeHelper.toString(data.stoppedReason));
     }
 
     // remoteStartId

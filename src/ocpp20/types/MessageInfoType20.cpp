@@ -32,25 +32,25 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a MessageInfoType20 from a JSON representation */
-bool MessageInfoType20Converter::fromJson(const rapidjson::Value&       json,
-                                          MessageInfoType20&            data,
-                                          std::string&                  error_code,
-                                          [[maybe_unused]] std::string& error_message)
+/** @brief Convert a MessageInfoType from a JSON representation */
+bool MessageInfoTypeConverter::fromJson(const rapidjson::Value&       json,
+                                        MessageInfoType&              data,
+                                        std::string&                  error_code,
+                                        [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // display
     if (json.HasMember("display"))
     {
-        ComponentType20Converter display_converter;
+        ComponentTypeConverter display_converter;
         ret = ret && display_converter.fromJson(json["display"], data.display, error_code, error_message);
     }
 
@@ -58,12 +58,12 @@ bool MessageInfoType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "id", data.id);
 
     // priority
-    data.priority = MessagePriorityEnumType20Helper.fromString(json["priority"].GetString());
+    data.priority = MessagePriorityEnumTypeHelper.fromString(json["priority"].GetString());
 
     // state
     if (json.HasMember("state"))
     {
-        data.state = MessageStateEnumType20Helper.fromString(json["state"].GetString());
+        data.state = MessageStateEnumTypeHelper.fromString(json["state"].GetString());
     }
 
     // startDateTime
@@ -76,7 +76,7 @@ bool MessageInfoType20Converter::fromJson(const rapidjson::Value&       json,
     extract(json, "transactionId", data.transactionId);
 
     // message
-    MessageContentType20Converter message_converter;
+    MessageContentTypeConverter message_converter;
     ret = ret && message_converter.fromJson(json["message"], data.message, error_code, error_message);
 
     if (!ret)
@@ -87,15 +87,15 @@ bool MessageInfoType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a MessageInfoType20 to a JSON representation */
-bool MessageInfoType20Converter::toJson(const MessageInfoType20& data, rapidjson::Document& json)
+/** @brief Convert a MessageInfoType to a JSON representation */
+bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -106,7 +106,7 @@ bool MessageInfoType20Converter::toJson(const MessageInfoType20& data, rapidjson
     // display
     if (data.display.isSet())
     {
-        ComponentType20Converter display_converter;
+        ComponentTypeConverter display_converter;
         display_converter.setAllocator(allocator);
         rapidjson::Document display_doc;
         display_doc.Parse("{}");
@@ -118,12 +118,12 @@ bool MessageInfoType20Converter::toJson(const MessageInfoType20& data, rapidjson
     fill(json, "id", data.id);
 
     // priority
-    fill(json, "priority", MessagePriorityEnumType20Helper.toString(data.priority));
+    fill(json, "priority", MessagePriorityEnumTypeHelper.toString(data.priority));
 
     // state
     if (data.state.isSet())
     {
-        fill(json, "state", MessageStateEnumType20Helper.toString(data.state));
+        fill(json, "state", MessageStateEnumTypeHelper.toString(data.state));
     }
 
     // startDateTime
@@ -136,7 +136,7 @@ bool MessageInfoType20Converter::toJson(const MessageInfoType20& data, rapidjson
     fill(json, "transactionId", data.transactionId);
 
     // message
-    MessageContentType20Converter message_converter;
+    MessageContentTypeConverter message_converter;
     message_converter.setAllocator(allocator);
     rapidjson::Document message_doc;
     message_doc.Parse("{}");

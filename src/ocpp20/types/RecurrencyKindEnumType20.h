@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RECURRENCYKINDENUMTYPE20_H
-#define OPENOCPP_RECURRENCYKINDENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_RECURRENCYKINDENUMTYPE_H
+#define OPENOCPP_OCPP20_RECURRENCYKINDENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,17 +36,17 @@ namespace ocpp20
 /** @brief Charging_ Profile. Recurrency_ Kind. Recurrency_ Kind_ Code
 urn:x-oca:ocpp:uid:1:569233
 Indicates the start point of a recurrence. */
-enum class RecurrencyKindEnumType20
+enum class RecurrencyKindEnumType
 {
     Daily,
     Weekly,
 };
 
-/** @brief Helper to convert a RecurrencyKindEnumType20 enum to string */
-extern const EnumToStringFromString<RecurrencyKindEnumType20> RecurrencyKindEnumType20Helper;
+/** @brief Helper to convert a RecurrencyKindEnumType enum to string */
+extern const EnumToStringFromString<RecurrencyKindEnumType> RecurrencyKindEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_RECURRENCYKINDENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_RECURRENCYKINDENUMTYPE_H

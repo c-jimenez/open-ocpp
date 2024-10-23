@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CERTIFICATEACTIONENUMTYPE20_H
-#define OPENOCPP_CERTIFICATEACTIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CERTIFICATEACTIONENUMTYPE_H
+#define OPENOCPP_OCPP20_CERTIFICATEACTIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Defines whether certificate needs to be installed or updated. */
-enum class CertificateActionEnumType20
+enum class CertificateActionEnumType
 {
     Install,
     Update,
 };
 
-/** @brief Helper to convert a CertificateActionEnumType20 enum to string */
-extern const EnumToStringFromString<CertificateActionEnumType20> CertificateActionEnumType20Helper;
+/** @brief Helper to convert a CertificateActionEnumType enum to string */
+extern const EnumToStringFromString<CertificateActionEnumType> CertificateActionEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CERTIFICATEACTIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CERTIFICATEACTIONENUMTYPE_H

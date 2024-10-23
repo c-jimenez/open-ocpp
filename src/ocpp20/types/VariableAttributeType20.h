@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VARIABLEATTRIBUTETYPE20_H
-#define OPENOCPP_VARIABLEATTRIBUTETYPE20_H
+#ifndef OPENOCPP_OCPP20_VARIABLEATTRIBUTETYPE_H
+#define OPENOCPP_OCPP20_VARIABLEATTRIBUTETYPE_H
 
 #include "AttributeEnumType20.h"
 #include "CustomDataType20.h"
@@ -41,43 +41,43 @@ namespace ocpp20
 
 /** @brief Attribute data of a variable.
  */
-struct VariableAttributeType20
+struct VariableAttributeType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<AttributeEnumType20> type;
+    ocpp::types::Optional<AttributeEnumType> type;
     /** @brief Value of the attribute. May only be omitted when mutability is set to 'WriteOnly'.
 
 The Configuration Variable &lt;&lt;configkey-reporting-value-size,ReportingValueSize&gt;&gt; can be used to limit GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal. */
     ocpp::types::Optional<ocpp::types::CiStringType<2500u>> value;
     /** @brief  */
-    ocpp::types::Optional<MutabilityEnumType20> mutability;
+    ocpp::types::Optional<MutabilityEnumType> mutability;
     /** @brief If true, value will be persistent across system reboots or power down. Default when omitted is false. */
     ocpp::types::Optional<bool> persistent;
     /** @brief If true, value that will never be changed by the Charging Station at runtime. Default when omitted is false. */
     ocpp::types::Optional<bool> constant;
 };
 
-/** @brief Converter class for VariableAttributeType20 type */
-class VariableAttributeType20Converter : public ocpp::messages::IMessageConverter<VariableAttributeType20>
+/** @brief Converter class for VariableAttributeType type */
+class VariableAttributeTypeConverter : public ocpp::messages::IMessageConverter<VariableAttributeType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VariableAttributeType20>* clone() const override { return new VariableAttributeType20Converter(); }
+    ocpp::messages::IMessageConverter<VariableAttributeType>* clone() const override { return new VariableAttributeTypeConverter(); }
 
-    /** @brief Convert a VariableAttributeType20 from a JSON representation */
+    /** @brief Convert a VariableAttributeType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VariableAttributeType20&      data,
+                  VariableAttributeType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a VariableAttributeType20 to a JSON representation */
-    bool toJson(const VariableAttributeType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a VariableAttributeType to a JSON representation */
+    bool toJson(const VariableAttributeType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VARIABLEATTRIBUTETYPE20_H
+#endif // OPENOCPP_OCPP20_VARIABLEATTRIBUTETYPE_H

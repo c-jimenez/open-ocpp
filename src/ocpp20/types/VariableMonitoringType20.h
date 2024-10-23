@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VARIABLEMONITORINGTYPE20_H
-#define OPENOCPP_VARIABLEMONITORINGTYPE20_H
+#ifndef OPENOCPP_OCPP20_VARIABLEMONITORINGTYPE_H
+#define OPENOCPP_OCPP20_VARIABLEMONITORINGTYPE_H
 
 #include "CustomDataType20.h"
 #include "MonitorEnumType20.h"
@@ -39,10 +39,10 @@ namespace ocpp20
 
 /** @brief A monitoring setting for a variable.
  */
-struct VariableMonitoringType20
+struct VariableMonitoringType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identifies the monitor. */
     int id;
     /** @brief Monitor only active when a transaction is ongoing on a component relevant to this transaction. */
@@ -51,7 +51,7 @@ struct VariableMonitoringType20
 For Periodic or PeriodicClockAligned this is the interval in seconds. */
     float value;
     /** @brief  */
-    MonitorEnumType20 type;
+    MonitorEnumType type;
     /** @brief The severity that will be assigned to an event that is triggered by this monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
 
 The severity levels have the following meaning: +
@@ -78,25 +78,25 @@ Indicates information useful to developers for debugging, not useful during oper
     int severity;
 };
 
-/** @brief Converter class for VariableMonitoringType20 type */
-class VariableMonitoringType20Converter : public ocpp::messages::IMessageConverter<VariableMonitoringType20>
+/** @brief Converter class for VariableMonitoringType type */
+class VariableMonitoringTypeConverter : public ocpp::messages::IMessageConverter<VariableMonitoringType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VariableMonitoringType20>* clone() const override { return new VariableMonitoringType20Converter(); }
+    ocpp::messages::IMessageConverter<VariableMonitoringType>* clone() const override { return new VariableMonitoringTypeConverter(); }
 
-    /** @brief Convert a VariableMonitoringType20 from a JSON representation */
+    /** @brief Convert a VariableMonitoringType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VariableMonitoringType20&     data,
+                  VariableMonitoringType&       data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a VariableMonitoringType20 to a JSON representation */
-    bool toJson(const VariableMonitoringType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a VariableMonitoringType to a JSON representation */
+    bool toJson(const VariableMonitoringType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VARIABLEMONITORINGTYPE20_H
+#endif // OPENOCPP_OCPP20_VARIABLEMONITORINGTYPE_H

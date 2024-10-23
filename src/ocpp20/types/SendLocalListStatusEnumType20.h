@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SENDLOCALLISTSTATUSENUMTYPE20_H
-#define OPENOCPP_SENDLOCALLISTSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_SENDLOCALLISTSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_SENDLOCALLISTSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief This indicates whether the Charging Station has successfully received and applied the update of the Local Authorization List. */
-enum class SendLocalListStatusEnumType20
+enum class SendLocalListStatusEnumType
 {
     Accepted,
     Failed,
     VersionMismatch,
 };
 
-/** @brief Helper to convert a SendLocalListStatusEnumType20 enum to string */
-extern const EnumToStringFromString<SendLocalListStatusEnumType20> SendLocalListStatusEnumType20Helper;
+/** @brief Helper to convert a SendLocalListStatusEnumType enum to string */
+extern const EnumToStringFromString<SendLocalListStatusEnumType> SendLocalListStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SENDLOCALLISTSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_SENDLOCALLISTSTATUSENUMTYPE_H

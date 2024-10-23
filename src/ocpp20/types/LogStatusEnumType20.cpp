@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a LogStatusEnumType20 enum to string */
-const EnumToStringFromString<LogStatusEnumType20> LogStatusEnumType20Helper = {
-    {LogStatusEnumType20::Accepted, "Accepted"},
-    {LogStatusEnumType20::Rejected, "Rejected"},
-    {LogStatusEnumType20::AcceptedCanceled, "AcceptedCanceled"},
+/** @brief Helper to convert a LogStatusEnumType enum to string */
+const EnumToStringFromString<LogStatusEnumType> LogStatusEnumTypeHelper = {
+    {LogStatusEnumType::Accepted, "Accepted"},
+    {LogStatusEnumType::Rejected, "Rejected"},
+    {LogStatusEnumType::AcceptedCanceled, "AcceptedCanceled"},
 };
 
 } // namespace ocpp20

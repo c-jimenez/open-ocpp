@@ -23,10 +23,10 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IWebsocketClient.h"
 {%- for msg_name in csms_msgs %}
-#include "{{msg_name}}.h"
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 {%- for msg_name in cs_msgs %}
-#include "{{msg_name}}.h"
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 
 #include <functional>

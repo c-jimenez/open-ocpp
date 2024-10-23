@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_OCPPTRANSPORTENUMTYPE20_H
-#define OPENOCPP_OCPPTRANSPORTENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_OCPPTRANSPORTENUMTYPE_H
+#define OPENOCPP_OCPP20_OCPPTRANSPORTENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,17 +36,17 @@ namespace ocpp20
 /** @brief Communication_ Function. OCPP_ Transport. OCPP_ Transport_ Code
 urn:x-oca:ocpp:uid:1:569356
 Defines the transport protocol (e.g. SOAP or JSON). Note: SOAP is not supported in OCPP 2.0, but is supported by other versions of OCPP. */
-enum class OCPPTransportEnumType20
+enum class OCPPTransportEnumType
 {
     JSON,
     SOAP,
 };
 
-/** @brief Helper to convert a OCPPTransportEnumType20 enum to string */
-extern const EnumToStringFromString<OCPPTransportEnumType20> OCPPTransportEnumType20Helper;
+/** @brief Helper to convert a OCPPTransportEnumType enum to string */
+extern const EnumToStringFromString<OCPPTransportEnumType> OCPPTransportEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_OCPPTRANSPORTENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_OCPPTRANSPORTENUMTYPE_H

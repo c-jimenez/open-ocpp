@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGSCHEDULETYPE20_H
-#define OPENOCPP_CHARGINGSCHEDULETYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGSCHEDULETYPE_H
+#define OPENOCPP_OCPP20_CHARGINGSCHEDULETYPE_H
 
 #include "ChargingRateUnitEnumType20.h"
 #include "ChargingSchedulePeriodType20.h"
@@ -45,10 +45,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233256
 Charging schedule structure defines a list of charging periods, as used in: GetCompositeSchedule.conf and ChargingProfile. 
  */
-struct ChargingScheduleType20
+struct ChargingScheduleType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identifies the ChargingSchedule. */
     int id;
     /** @brief Charging_ Schedule. Start_ Schedule. Date_ Time
@@ -60,36 +60,36 @@ urn:x-oca:ocpp:uid:1:569236
 Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction if chargingProfilePurpose = TxProfile. */
     ocpp::types::Optional<int> duration;
     /** @brief  */
-    ChargingRateUnitEnumType20 chargingRateUnit;
+    ChargingRateUnitEnumType chargingRateUnit;
     /** @brief  */
-    std::vector<ChargingSchedulePeriodType20> chargingSchedulePeriod;
+    std::vector<ChargingSchedulePeriodType> chargingSchedulePeriod;
     /** @brief Charging_ Schedule. Min_ Charging_ Rate. Numeric
 urn:x-oca:ocpp:uid:1:569239
 Minimum charging rate supported by the EV. The unit of measure is defined by the chargingRateUnit. This parameter is intended to be used by a local smart charging algorithm to optimize the power allocation for in the case a charging process is inefficient at lower charging rates. Accepts at most one digit fraction (e.g. 8.1) */
     ocpp::types::Optional<float> minChargingRate;
     /** @brief  */
-    ocpp::types::Optional<SalesTariffType20> salesTariff;
+    ocpp::types::Optional<SalesTariffType> salesTariff;
 };
 
-/** @brief Converter class for ChargingScheduleType20 type */
-class ChargingScheduleType20Converter : public ocpp::messages::IMessageConverter<ChargingScheduleType20>
+/** @brief Converter class for ChargingScheduleType type */
+class ChargingScheduleTypeConverter : public ocpp::messages::IMessageConverter<ChargingScheduleType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingScheduleType20>* clone() const override { return new ChargingScheduleType20Converter(); }
+    ocpp::messages::IMessageConverter<ChargingScheduleType>* clone() const override { return new ChargingScheduleTypeConverter(); }
 
-    /** @brief Convert a ChargingScheduleType20 from a JSON representation */
+    /** @brief Convert a ChargingScheduleType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingScheduleType20&       data,
+                  ChargingScheduleType&         data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingScheduleType20 to a JSON representation */
-    bool toJson(const ChargingScheduleType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingScheduleType to a JSON representation */
+    bool toJson(const ChargingScheduleType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGSCHEDULETYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGSCHEDULETYPE_H

@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ReportBaseEnumType20 enum to string */
-const EnumToStringFromString<ReportBaseEnumType20> ReportBaseEnumType20Helper = {
-    {ReportBaseEnumType20::ConfigurationInventory, "ConfigurationInventory"},
-    {ReportBaseEnumType20::FullInventory, "FullInventory"},
-    {ReportBaseEnumType20::SummaryInventory, "SummaryInventory"},
+/** @brief Helper to convert a ReportBaseEnumType enum to string */
+const EnumToStringFromString<ReportBaseEnumType> ReportBaseEnumTypeHelper = {
+    {ReportBaseEnumType::ConfigurationInventory, "ConfigurationInventory"},
+    {ReportBaseEnumType::FullInventory, "FullInventory"},
+    {ReportBaseEnumType::SummaryInventory, "SummaryInventory"},
 };
 
 } // namespace ocpp20

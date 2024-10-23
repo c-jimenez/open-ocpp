@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a UnlockStatusEnumType20 enum to string */
-const EnumToStringFromString<UnlockStatusEnumType20> UnlockStatusEnumType20Helper = {
-    {UnlockStatusEnumType20::Unlocked, "Unlocked"},
-    {UnlockStatusEnumType20::UnlockFailed, "UnlockFailed"},
-    {UnlockStatusEnumType20::OngoingAuthorizedTransaction, "OngoingAuthorizedTransaction"},
-    {UnlockStatusEnumType20::UnknownConnector, "UnknownConnector"},
+/** @brief Helper to convert a UnlockStatusEnumType enum to string */
+const EnumToStringFromString<UnlockStatusEnumType> UnlockStatusEnumTypeHelper = {
+    {UnlockStatusEnumType::Unlocked, "Unlocked"},
+    {UnlockStatusEnumType::UnlockFailed, "UnlockFailed"},
+    {UnlockStatusEnumType::OngoingAuthorizedTransaction, "OngoingAuthorizedTransaction"},
+    {UnlockStatusEnumType::UnknownConnector, "UnknownConnector"},
 };
 
 } // namespace ocpp20

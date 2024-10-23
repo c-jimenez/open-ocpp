@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a UnlockConnector20Req from a JSON representation */
-bool UnlockConnector20ReqConverter::fromJson(const rapidjson::Value& json,
-                                             UnlockConnector20Req&   data,
-                                             std::string&            error_code,
-                                             std::string&            error_message)
+/** @brief Convert a UnlockConnectorReq from a JSON representation */
+bool UnlockConnectorReqConverter::fromJson(const rapidjson::Value& json,
+                                           UnlockConnectorReq&     data,
+                                           std::string&            error_code,
+                                           std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -61,15 +61,15 @@ bool UnlockConnector20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a UnlockConnector20Req to a JSON representation */
-bool UnlockConnector20ReqConverter::toJson(const UnlockConnector20Req& data, rapidjson::Document& json)
+/** @brief Convert a UnlockConnectorReq to a JSON representation */
+bool UnlockConnectorReqConverter::toJson(const UnlockConnectorReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -86,28 +86,28 @@ bool UnlockConnector20ReqConverter::toJson(const UnlockConnector20Req& data, rap
     return ret;
 }
 
-/** @brief Convert a UnlockConnector20Conf from a JSON representation */
-bool UnlockConnector20ConfConverter::fromJson(const rapidjson::Value& json,
-                                              UnlockConnector20Conf&  data,
-                                              std::string&            error_code,
-                                              std::string&            error_message)
+/** @brief Convert a UnlockConnectorConf from a JSON representation */
+bool UnlockConnectorConfConverter::fromJson(const rapidjson::Value& json,
+                                            UnlockConnectorConf&    data,
+                                            std::string&            error_code,
+                                            std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::UnlockStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::UnlockStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -119,15 +119,15 @@ bool UnlockConnector20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a UnlockConnector20Conf to a JSON representation */
-bool UnlockConnector20ConfConverter::toJson(const UnlockConnector20Conf& data, rapidjson::Document& json)
+/** @brief Convert a UnlockConnectorConf to a JSON representation */
+bool UnlockConnectorConfConverter::toJson(const UnlockConnectorConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -136,12 +136,12 @@ bool UnlockConnector20ConfConverter::toJson(const UnlockConnector20Conf& data, r
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::UnlockStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::UnlockStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

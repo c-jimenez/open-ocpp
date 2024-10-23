@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_IDTOKENTYPE20_H
-#define OPENOCPP_IDTOKENTYPE20_H
+#ifndef OPENOCPP_OCPP20_IDTOKENTYPE_H
+#define OPENOCPP_OCPP20_IDTOKENTYPE_H
 
 #include "AdditionalInfoType20.h"
 #include "CustomDataType20.h"
@@ -42,37 +42,37 @@ namespace ocpp20
 
 /** @brief Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
  */
-struct IdTokenType20
+struct IdTokenType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    std::vector<AdditionalInfoType20> additionalInfo;
+    std::vector<AdditionalInfoType> additionalInfo;
     /** @brief IdToken is case insensitive. Might hold the hidden id of an RFID tag, but can for example also contain a UUID. */
     ocpp::types::CiStringType<36u> idToken;
     /** @brief  */
-    IdTokenEnumType20 type;
+    IdTokenEnumType type;
 };
 
-/** @brief Converter class for IdTokenType20 type */
-class IdTokenType20Converter : public ocpp::messages::IMessageConverter<IdTokenType20>
+/** @brief Converter class for IdTokenType type */
+class IdTokenTypeConverter : public ocpp::messages::IMessageConverter<IdTokenType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<IdTokenType20>* clone() const override { return new IdTokenType20Converter(); }
+    ocpp::messages::IMessageConverter<IdTokenType>* clone() const override { return new IdTokenTypeConverter(); }
 
-    /** @brief Convert a IdTokenType20 from a JSON representation */
+    /** @brief Convert a IdTokenType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  IdTokenType20&                data,
+                  IdTokenType&                  data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a IdTokenType20 to a JSON representation */
-    bool toJson(const IdTokenType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a IdTokenType to a JSON representation */
+    bool toJson(const IdTokenType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_IDTOKENTYPE20_H
+#endif // OPENOCPP_OCPP20_IDTOKENTYPE_H

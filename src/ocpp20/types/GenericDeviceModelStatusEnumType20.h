@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GENERICDEVICEMODELSTATUSENUMTYPE20_H
-#define OPENOCPP_GENERICDEVICEMODELSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GENERICDEVICEMODELSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GENERICDEVICEMODELSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This field indicates whether the Charging Station was able to accept the request. */
-enum class GenericDeviceModelStatusEnumType20
+enum class GenericDeviceModelStatusEnumType
 {
     Accepted,
     Rejected,
@@ -42,11 +42,11 @@ enum class GenericDeviceModelStatusEnumType20
     EmptyResultSet,
 };
 
-/** @brief Helper to convert a GenericDeviceModelStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GenericDeviceModelStatusEnumType20> GenericDeviceModelStatusEnumType20Helper;
+/** @brief Helper to convert a GenericDeviceModelStatusEnumType enum to string */
+extern const EnumToStringFromString<GenericDeviceModelStatusEnumType> GenericDeviceModelStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GENERICDEVICEMODELSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GENERICDEVICEMODELSTATUSENUMTYPE_H

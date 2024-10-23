@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REPORTCHARGINGPROFILES20_H
-#define OPENOCPP_REPORTCHARGINGPROFILES20_H
+#ifndef OPENOCPP_OCPP20_REPORTCHARGINGPROFILES_H
+#define OPENOCPP_OCPP20_REPORTCHARGINGPROFILES_H
 
 #include "IMessageConverter.h"
 
@@ -37,38 +37,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the ReportChargingProfiles20 messages */
-static const std::string REPORTCHARGINGPROFILES20_ACTION = "ReportChargingProfiles";
+/** @brief Action corresponding to the ReportChargingProfiles messages */
+static const std::string REPORTCHARGINGPROFILES_ACTION = "ReportChargingProfiles";
 
-/** @brief ReportChargingProfiles20Req message */
-struct ReportChargingProfiles20Req
+/** @brief ReportChargingProfilesReq message */
+struct ReportChargingProfilesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Id used to match the &lt;&lt;getchargingprofilesrequest, GetChargingProfilesRequest&gt;&gt; message with the resulting ReportChargingProfilesRequest messages. When the CSMS provided a requestId in the &lt;&lt;getchargingprofilesrequest, GetChargingProfilesRequest&gt;&gt;, this field SHALL contain the same value. */
     int requestId;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingLimitSourceEnumType20 chargingLimitSource;
+    ocpp::types::ocpp20::ChargingLimitSourceEnumType chargingLimitSource;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ChargingProfileType20> chargingProfile;
+    std::vector<ocpp::types::ocpp20::ChargingProfileType> chargingProfile;
     /** @brief To Be Continued. Default value when omitted: false. false indicates that there are no further messages as part of this report. */
     ocpp::types::Optional<bool> tbc;
     /** @brief The evse to which the charging profile applies. If evseId = 0, the message contains an overall limit for the Charging Station. */
     int evseId;
 };
 
-/** @brief ReportChargingProfiles20Conf message */
-struct ReportChargingProfiles20Conf
+/** @brief ReportChargingProfilesConf message */
+struct ReportChargingProfilesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(ReportChargingProfiles20)
+MESSAGE_CONVERTERS(ReportChargingProfiles)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_REPORTCHARGINGPROFILES20_H
+#endif // OPENOCPP_OCPP20_REPORTCHARGINGPROFILES_H

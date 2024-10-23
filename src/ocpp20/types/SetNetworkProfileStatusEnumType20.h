@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETNETWORKPROFILESTATUSENUMTYPE20_H
-#define OPENOCPP_SETNETWORKPROFILESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_SETNETWORKPROFILESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_SETNETWORKPROFILESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Result of operation. */
-enum class SetNetworkProfileStatusEnumType20
+enum class SetNetworkProfileStatusEnumType
 {
     Accepted,
     Rejected,
     Failed,
 };
 
-/** @brief Helper to convert a SetNetworkProfileStatusEnumType20 enum to string */
-extern const EnumToStringFromString<SetNetworkProfileStatusEnumType20> SetNetworkProfileStatusEnumType20Helper;
+/** @brief Helper to convert a SetNetworkProfileStatusEnumType enum to string */
+extern const EnumToStringFromString<SetNetworkProfileStatusEnumType> SetNetworkProfileStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SETNETWORKPROFILESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_SETNETWORKPROFILESTATUSENUMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETVARIABLESTATUSENUMTYPE20_H
-#define OPENOCPP_GETVARIABLESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GETVARIABLESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GETVARIABLESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Result status of getting the variable. */
-enum class GetVariableStatusEnumType20
+enum class GetVariableStatusEnumType
 {
     Accepted,
     Rejected,
@@ -43,11 +43,11 @@ enum class GetVariableStatusEnumType20
     NotSupportedAttributeType,
 };
 
-/** @brief Helper to convert a GetVariableStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GetVariableStatusEnumType20> GetVariableStatusEnumType20Helper;
+/** @brief Helper to convert a GetVariableStatusEnumType enum to string */
+extern const EnumToStringFromString<GetVariableStatusEnumType> GetVariableStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GETVARIABLESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GETVARIABLESTATUSENUMTYPE_H

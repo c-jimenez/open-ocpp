@@ -40,89 +40,83 @@ ChargePointHandler20::ChargePointHandler20(const std::string&                   
                                            const ocpp::messages::ocpp20::MessagesConverter20& messages_converter,
                                            ocpp::messages::MessageDispatcher&                 msg_dispatcher,
                                            ICentralSystemProxy20&                             central_system)
-    : GenericMessageHandler<BootNotification20Req, BootNotification20Conf>(BOOTNOTIFICATION20_ACTION, messages_converter),
-      GenericMessageHandler<Authorize20Req, Authorize20Conf>(AUTHORIZE20_ACTION, messages_converter),
-      GenericMessageHandler<ClearedChargingLimit20Req, ClearedChargingLimit20Conf>(CLEAREDCHARGINGLIMIT20_ACTION, messages_converter),
-      GenericMessageHandler<CostUpdated20Req, CostUpdated20Conf>(COSTUPDATED20_ACTION, messages_converter),
-      GenericMessageHandler<DataTransfer20Req, DataTransfer20Conf>(DATATRANSFER20_ACTION, messages_converter),
-      GenericMessageHandler<FirmwareStatusNotification20Req, FirmwareStatusNotification20Conf>(FIRMWARESTATUSNOTIFICATION20_ACTION,
-                                                                                               messages_converter),
-      GenericMessageHandler<Heartbeat20Req, Heartbeat20Conf>(HEARTBEAT20_ACTION, messages_converter),
-      GenericMessageHandler<LogStatusNotification20Req, LogStatusNotification20Conf>(LOGSTATUSNOTIFICATION20_ACTION, messages_converter),
-      GenericMessageHandler<MeterValues20Req, MeterValues20Conf>(METERVALUES20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyChargingLimit20Req, NotifyChargingLimit20Conf>(NOTIFYCHARGINGLIMIT20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyCustomerInformation20Req, NotifyCustomerInformation20Conf>(NOTIFYCUSTOMERINFORMATION20_ACTION,
-                                                                                             messages_converter),
-      GenericMessageHandler<NotifyDisplayMessages20Req, NotifyDisplayMessages20Conf>(NOTIFYDISPLAYMESSAGES20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyEVChargingNeeds20Req, NotifyEVChargingNeeds20Conf>(NOTIFYEVCHARGINGNEEDS20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyEVChargingSchedule20Req, NotifyEVChargingSchedule20Conf>(NOTIFYEVCHARGINGSCHEDULE20_ACTION,
+    : GenericMessageHandler<BootNotificationReq, BootNotificationConf>(BOOTNOTIFICATION_ACTION, messages_converter),
+      GenericMessageHandler<AuthorizeReq, AuthorizeConf>(AUTHORIZE_ACTION, messages_converter),
+      GenericMessageHandler<ClearedChargingLimitReq, ClearedChargingLimitConf>(CLEAREDCHARGINGLIMIT_ACTION, messages_converter),
+      GenericMessageHandler<CostUpdatedReq, CostUpdatedConf>(COSTUPDATED_ACTION, messages_converter),
+      GenericMessageHandler<DataTransferReq, DataTransferConf>(DATATRANSFER_ACTION, messages_converter),
+      GenericMessageHandler<FirmwareStatusNotificationReq, FirmwareStatusNotificationConf>(FIRMWARESTATUSNOTIFICATION_ACTION,
                                                                                            messages_converter),
-      GenericMessageHandler<NotifyEvent20Req, NotifyEvent20Conf>(NOTIFYEVENT20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyMonitoringReport20Req, NotifyMonitoringReport20Conf>(NOTIFYMONITORINGREPORT20_ACTION, messages_converter),
-      GenericMessageHandler<NotifyReport20Req, NotifyReport20Conf>(NOTIFYREPORT20_ACTION, messages_converter),
-      GenericMessageHandler<PublishFirmwareStatusNotification20Req, PublishFirmwareStatusNotification20Conf>(
-          PUBLISHFIRMWARESTATUSNOTIFICATION20_ACTION, messages_converter),
-      GenericMessageHandler<ReportChargingProfiles20Req, ReportChargingProfiles20Conf>(REPORTCHARGINGPROFILES20_ACTION, messages_converter),
-      GenericMessageHandler<ReservationStatusUpdate20Req, ReservationStatusUpdate20Conf>(RESERVATIONSTATUSUPDATE20_ACTION,
+      GenericMessageHandler<HeartbeatReq, HeartbeatConf>(HEARTBEAT_ACTION, messages_converter),
+      GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>(LOGSTATUSNOTIFICATION_ACTION, messages_converter),
+      GenericMessageHandler<MeterValuesReq, MeterValuesConf>(METERVALUES_ACTION, messages_converter),
+      GenericMessageHandler<NotifyChargingLimitReq, NotifyChargingLimitConf>(NOTIFYCHARGINGLIMIT_ACTION, messages_converter),
+      GenericMessageHandler<NotifyCustomerInformationReq, NotifyCustomerInformationConf>(NOTIFYCUSTOMERINFORMATION_ACTION,
                                                                                          messages_converter),
-      GenericMessageHandler<SecurityEventNotification20Req, SecurityEventNotification20Conf>(SECURITYEVENTNOTIFICATION20_ACTION,
-                                                                                             messages_converter),
-      GenericMessageHandler<SignCertificate20Req, SignCertificate20Conf>(SIGNCERTIFICATE20_ACTION, messages_converter),
-      GenericMessageHandler<StatusNotification20Req, StatusNotification20Conf>(STATUSNOTIFICATION20_ACTION, messages_converter),
-      GenericMessageHandler<TransactionEvent20Req, TransactionEvent20Conf>(TRANSACTIONEVENT20_ACTION, messages_converter),
+      GenericMessageHandler<NotifyDisplayMessagesReq, NotifyDisplayMessagesConf>(NOTIFYDISPLAYMESSAGES_ACTION, messages_converter),
+      GenericMessageHandler<NotifyEVChargingNeedsReq, NotifyEVChargingNeedsConf>(NOTIFYEVCHARGINGNEEDS_ACTION, messages_converter),
+      GenericMessageHandler<NotifyEVChargingScheduleReq, NotifyEVChargingScheduleConf>(NOTIFYEVCHARGINGSCHEDULE_ACTION, messages_converter),
+      GenericMessageHandler<NotifyEventReq, NotifyEventConf>(NOTIFYEVENT_ACTION, messages_converter),
+      GenericMessageHandler<NotifyMonitoringReportReq, NotifyMonitoringReportConf>(NOTIFYMONITORINGREPORT_ACTION, messages_converter),
+      GenericMessageHandler<NotifyReportReq, NotifyReportConf>(NOTIFYREPORT_ACTION, messages_converter),
+      GenericMessageHandler<PublishFirmwareStatusNotificationReq, PublishFirmwareStatusNotificationConf>(
+          PUBLISHFIRMWARESTATUSNOTIFICATION_ACTION, messages_converter),
+      GenericMessageHandler<ReportChargingProfilesReq, ReportChargingProfilesConf>(REPORTCHARGINGPROFILES_ACTION, messages_converter),
+      GenericMessageHandler<ReservationStatusUpdateReq, ReservationStatusUpdateConf>(RESERVATIONSTATUSUPDATE_ACTION, messages_converter),
+      GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>(SECURITYEVENTNOTIFICATION_ACTION,
+                                                                                         messages_converter),
+      GenericMessageHandler<SignCertificateReq, SignCertificateConf>(SIGNCERTIFICATE_ACTION, messages_converter),
+      GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>(STATUSNOTIFICATION_ACTION, messages_converter),
+      GenericMessageHandler<TransactionEventReq, TransactionEventConf>(TRANSACTIONEVENT_ACTION, messages_converter),
 
       m_identifier(identifier),
       m_central_system(central_system)
 {
-    msg_dispatcher.registerHandler(BOOTNOTIFICATION20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<BootNotification20Req, BootNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(AUTHORIZE20_ACTION, *dynamic_cast<GenericMessageHandler<Authorize20Req, Authorize20Conf>*>(this));
-    msg_dispatcher.registerHandler(CLEAREDCHARGINGLIMIT20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ClearedChargingLimit20Req, ClearedChargingLimit20Conf>*>(this));
-    msg_dispatcher.registerHandler(COSTUPDATED20_ACTION, *dynamic_cast<GenericMessageHandler<CostUpdated20Req, CostUpdated20Conf>*>(this));
-    msg_dispatcher.registerHandler(DATATRANSFER20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<DataTransfer20Req, DataTransfer20Conf>*>(this));
+    msg_dispatcher.registerHandler(BOOTNOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<BootNotificationReq, BootNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(AUTHORIZE_ACTION, *dynamic_cast<GenericMessageHandler<AuthorizeReq, AuthorizeConf>*>(this));
+    msg_dispatcher.registerHandler(CLEAREDCHARGINGLIMIT_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ClearedChargingLimitReq, ClearedChargingLimitConf>*>(this));
+    msg_dispatcher.registerHandler(COSTUPDATED_ACTION, *dynamic_cast<GenericMessageHandler<CostUpdatedReq, CostUpdatedConf>*>(this));
+    msg_dispatcher.registerHandler(DATATRANSFER_ACTION, *dynamic_cast<GenericMessageHandler<DataTransferReq, DataTransferConf>*>(this));
     msg_dispatcher.registerHandler(
-        FIRMWARESTATUSNOTIFICATION20_ACTION,
-        *dynamic_cast<GenericMessageHandler<FirmwareStatusNotification20Req, FirmwareStatusNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(HEARTBEAT20_ACTION, *dynamic_cast<GenericMessageHandler<Heartbeat20Req, Heartbeat20Conf>*>(this));
-    msg_dispatcher.registerHandler(LOGSTATUSNOTIFICATION20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<LogStatusNotification20Req, LogStatusNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(METERVALUES20_ACTION, *dynamic_cast<GenericMessageHandler<MeterValues20Req, MeterValues20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYCHARGINGLIMIT20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<NotifyChargingLimit20Req, NotifyChargingLimit20Conf>*>(this));
+        FIRMWARESTATUSNOTIFICATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<FirmwareStatusNotificationReq, FirmwareStatusNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(HEARTBEAT_ACTION, *dynamic_cast<GenericMessageHandler<HeartbeatReq, HeartbeatConf>*>(this));
+    msg_dispatcher.registerHandler(LOGSTATUSNOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<LogStatusNotificationReq, LogStatusNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(METERVALUES_ACTION, *dynamic_cast<GenericMessageHandler<MeterValuesReq, MeterValuesConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYCHARGINGLIMIT_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<NotifyChargingLimitReq, NotifyChargingLimitConf>*>(this));
     msg_dispatcher.registerHandler(
-        NOTIFYCUSTOMERINFORMATION20_ACTION,
-        *dynamic_cast<GenericMessageHandler<NotifyCustomerInformation20Req, NotifyCustomerInformation20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYDISPLAYMESSAGES20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<NotifyDisplayMessages20Req, NotifyDisplayMessages20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYEVCHARGINGNEEDS20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<NotifyEVChargingNeeds20Req, NotifyEVChargingNeeds20Conf>*>(this));
+        NOTIFYCUSTOMERINFORMATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<NotifyCustomerInformationReq, NotifyCustomerInformationConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYDISPLAYMESSAGES_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<NotifyDisplayMessagesReq, NotifyDisplayMessagesConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYEVCHARGINGNEEDS_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<NotifyEVChargingNeedsReq, NotifyEVChargingNeedsConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYEVCHARGINGSCHEDULE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<NotifyEVChargingScheduleReq, NotifyEVChargingScheduleConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYEVENT_ACTION, *dynamic_cast<GenericMessageHandler<NotifyEventReq, NotifyEventConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYMONITORINGREPORT_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<NotifyMonitoringReportReq, NotifyMonitoringReportConf>*>(this));
+    msg_dispatcher.registerHandler(NOTIFYREPORT_ACTION, *dynamic_cast<GenericMessageHandler<NotifyReportReq, NotifyReportConf>*>(this));
     msg_dispatcher.registerHandler(
-        NOTIFYEVCHARGINGSCHEDULE20_ACTION,
-        *dynamic_cast<GenericMessageHandler<NotifyEVChargingSchedule20Req, NotifyEVChargingSchedule20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYEVENT20_ACTION, *dynamic_cast<GenericMessageHandler<NotifyEvent20Req, NotifyEvent20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYMONITORINGREPORT20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<NotifyMonitoringReport20Req, NotifyMonitoringReport20Conf>*>(this));
-    msg_dispatcher.registerHandler(NOTIFYREPORT20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<NotifyReport20Req, NotifyReport20Conf>*>(this));
+        PUBLISHFIRMWARESTATUSNOTIFICATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<PublishFirmwareStatusNotificationReq, PublishFirmwareStatusNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(REPORTCHARGINGPROFILES_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ReportChargingProfilesReq, ReportChargingProfilesConf>*>(this));
+    msg_dispatcher.registerHandler(RESERVATIONSTATUSUPDATE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<ReservationStatusUpdateReq, ReservationStatusUpdateConf>*>(this));
     msg_dispatcher.registerHandler(
-        PUBLISHFIRMWARESTATUSNOTIFICATION20_ACTION,
-        *dynamic_cast<GenericMessageHandler<PublishFirmwareStatusNotification20Req, PublishFirmwareStatusNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(REPORTCHARGINGPROFILES20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<ReportChargingProfiles20Req, ReportChargingProfiles20Conf>*>(this));
-    msg_dispatcher.registerHandler(
-        RESERVATIONSTATUSUPDATE20_ACTION,
-        *dynamic_cast<GenericMessageHandler<ReservationStatusUpdate20Req, ReservationStatusUpdate20Conf>*>(this));
-    msg_dispatcher.registerHandler(
-        SECURITYEVENTNOTIFICATION20_ACTION,
-        *dynamic_cast<GenericMessageHandler<SecurityEventNotification20Req, SecurityEventNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(SIGNCERTIFICATE20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<SignCertificate20Req, SignCertificate20Conf>*>(this));
-    msg_dispatcher.registerHandler(STATUSNOTIFICATION20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<StatusNotification20Req, StatusNotification20Conf>*>(this));
-    msg_dispatcher.registerHandler(TRANSACTIONEVENT20_ACTION,
-                                   *dynamic_cast<GenericMessageHandler<TransactionEvent20Req, TransactionEvent20Conf>*>(this));
+        SECURITYEVENTNOTIFICATION_ACTION,
+        *dynamic_cast<GenericMessageHandler<SecurityEventNotificationReq, SecurityEventNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(SIGNCERTIFICATE_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<SignCertificateReq, SignCertificateConf>*>(this));
+    msg_dispatcher.registerHandler(STATUSNOTIFICATION_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<StatusNotificationReq, StatusNotificationConf>*>(this));
+    msg_dispatcher.registerHandler(TRANSACTIONEVENT_ACTION,
+                                   *dynamic_cast<GenericMessageHandler<TransactionEventReq, TransactionEventConf>*>(this));
 }
 /** @brief Destructor */
 ChargePointHandler20::~ChargePointHandler20() { }
@@ -133,288 +127,288 @@ ChargePointHandler20::~ChargePointHandler20() { }
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::BootNotification20Req& request,
-                                         ocpp::messages::ocpp20::BootNotification20Conf&      response,
-                                         std::string&                                         error_code,
-                                         std::string&                                         error_message)
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::BootNotificationReq& request,
+                                         ocpp::messages::ocpp20::BootNotificationConf&      response,
+                                         std::string&                                       error_code,
+                                         std::string&                                       error_message)
 {
-    return forward(BOOTNOTIFICATION20_ACTION, request, response, error_code, error_message);
+    return forward(BOOTNOTIFICATION_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::Authorize20Req& request,
-                                         ocpp::messages::ocpp20::Authorize20Conf&      response,
-                                         std::string&                                  error_code,
-                                         std::string&                                  error_message)
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::AuthorizeReq& request,
+                                         ocpp::messages::ocpp20::AuthorizeConf&      response,
+                                         std::string&                                error_code,
+                                         std::string&                                error_message)
 {
-    return forward(AUTHORIZE20_ACTION, request, response, error_code, error_message);
+    return forward(AUTHORIZE_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ClearedChargingLimit20Req& request,
-                                         ocpp::messages::ocpp20::ClearedChargingLimit20Conf&      response,
-                                         std::string&                                             error_code,
-                                         std::string&                                             error_message)
-{
-    return forward(CLEAREDCHARGINGLIMIT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::CostUpdated20Req& request,
-                                         ocpp::messages::ocpp20::CostUpdated20Conf&      response,
-                                         std::string&                                    error_code,
-                                         std::string&                                    error_message)
-{
-    return forward(COSTUPDATED20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                                         ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                                         std::string&                                     error_code,
-                                         std::string&                                     error_message)
-{
-    return forward(DATATRANSFER20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::FirmwareStatusNotification20Req& request,
-                                         ocpp::messages::ocpp20::FirmwareStatusNotification20Conf&      response,
-                                         std::string&                                                   error_code,
-                                         std::string&                                                   error_message)
-{
-    return forward(FIRMWARESTATUSNOTIFICATION20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::Heartbeat20Req& request,
-                                         ocpp::messages::ocpp20::Heartbeat20Conf&      response,
-                                         std::string&                                  error_code,
-                                         std::string&                                  error_message)
-{
-    return forward(HEARTBEAT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::LogStatusNotification20Req& request,
-                                         ocpp::messages::ocpp20::LogStatusNotification20Conf&      response,
-                                         std::string&                                              error_code,
-                                         std::string&                                              error_message)
-{
-    return forward(LOGSTATUSNOTIFICATION20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::MeterValues20Req& request,
-                                         ocpp::messages::ocpp20::MeterValues20Conf&      response,
-                                         std::string&                                    error_code,
-                                         std::string&                                    error_message)
-{
-    return forward(METERVALUES20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyChargingLimit20Req& request,
-                                         ocpp::messages::ocpp20::NotifyChargingLimit20Conf&      response,
-                                         std::string&                                            error_code,
-                                         std::string&                                            error_message)
-{
-    return forward(NOTIFYCHARGINGLIMIT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyCustomerInformation20Req& request,
-                                         ocpp::messages::ocpp20::NotifyCustomerInformation20Conf&      response,
-                                         std::string&                                                  error_code,
-                                         std::string&                                                  error_message)
-{
-    return forward(NOTIFYCUSTOMERINFORMATION20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyDisplayMessages20Req& request,
-                                         ocpp::messages::ocpp20::NotifyDisplayMessages20Conf&      response,
-                                         std::string&                                              error_code,
-                                         std::string&                                              error_message)
-{
-    return forward(NOTIFYDISPLAYMESSAGES20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEVChargingNeeds20Req& request,
-                                         ocpp::messages::ocpp20::NotifyEVChargingNeeds20Conf&      response,
-                                         std::string&                                              error_code,
-                                         std::string&                                              error_message)
-{
-    return forward(NOTIFYEVCHARGINGNEEDS20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEVChargingSchedule20Req& request,
-                                         ocpp::messages::ocpp20::NotifyEVChargingSchedule20Conf&      response,
-                                         std::string&                                                 error_code,
-                                         std::string&                                                 error_message)
-{
-    return forward(NOTIFYEVCHARGINGSCHEDULE20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEvent20Req& request,
-                                         ocpp::messages::ocpp20::NotifyEvent20Conf&      response,
-                                         std::string&                                    error_code,
-                                         std::string&                                    error_message)
-{
-    return forward(NOTIFYEVENT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyMonitoringReport20Req& request,
-                                         ocpp::messages::ocpp20::NotifyMonitoringReport20Conf&      response,
-                                         std::string&                                               error_code,
-                                         std::string&                                               error_message)
-{
-    return forward(NOTIFYMONITORINGREPORT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyReport20Req& request,
-                                         ocpp::messages::ocpp20::NotifyReport20Conf&      response,
-                                         std::string&                                     error_code,
-                                         std::string&                                     error_message)
-{
-    return forward(NOTIFYREPORT20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Req& request,
-                                         ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Conf&      response,
-                                         std::string&                                                          error_code,
-                                         std::string&                                                          error_message)
-{
-    return forward(PUBLISHFIRMWARESTATUSNOTIFICATION20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ReportChargingProfiles20Req& request,
-                                         ocpp::messages::ocpp20::ReportChargingProfiles20Conf&      response,
-                                         std::string&                                               error_code,
-                                         std::string&                                               error_message)
-{
-    return forward(REPORTCHARGINGPROFILES20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ReservationStatusUpdate20Req& request,
-                                         ocpp::messages::ocpp20::ReservationStatusUpdate20Conf&      response,
-                                         std::string&                                                error_code,
-                                         std::string&                                                error_message)
-{
-    return forward(RESERVATIONSTATUSUPDATE20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::SecurityEventNotification20Req& request,
-                                         ocpp::messages::ocpp20::SecurityEventNotification20Conf&      response,
-                                         std::string&                                                  error_code,
-                                         std::string&                                                  error_message)
-{
-    return forward(SECURITYEVENTNOTIFICATION20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::SignCertificate20Req& request,
-                                         ocpp::messages::ocpp20::SignCertificate20Conf&      response,
-                                         std::string&                                        error_code,
-                                         std::string&                                        error_message)
-{
-    return forward(SIGNCERTIFICATE20_ACTION, request, response, error_code, error_message);
-}
-/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
-     *                                                                                ResponseType& response,
-     *                                                                                std::string& error_code,
-     *                                                                                std::string& error_message)
-     */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::StatusNotification20Req& request,
-                                         ocpp::messages::ocpp20::StatusNotification20Conf&      response,
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ClearedChargingLimitReq& request,
+                                         ocpp::messages::ocpp20::ClearedChargingLimitConf&      response,
                                          std::string&                                           error_code,
                                          std::string&                                           error_message)
 {
-    return forward(STATUSNOTIFICATION20_ACTION, request, response, error_code, error_message);
+    return forward(CLEAREDCHARGINGLIMIT_ACTION, request, response, error_code, error_message);
 }
 /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
      *                                                                                ResponseType& response,
      *                                                                                std::string& error_code,
      *                                                                                std::string& error_message)
      */
-bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::TransactionEvent20Req& request,
-                                         ocpp::messages::ocpp20::TransactionEvent20Conf&      response,
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::CostUpdatedReq& request,
+                                         ocpp::messages::ocpp20::CostUpdatedConf&      response,
+                                         std::string&                                  error_code,
+                                         std::string&                                  error_message)
+{
+    return forward(COSTUPDATED_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::DataTransferReq& request,
+                                         ocpp::messages::ocpp20::DataTransferConf&      response,
+                                         std::string&                                   error_code,
+                                         std::string&                                   error_message)
+{
+    return forward(DATATRANSFER_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::FirmwareStatusNotificationReq& request,
+                                         ocpp::messages::ocpp20::FirmwareStatusNotificationConf&      response,
+                                         std::string&                                                 error_code,
+                                         std::string&                                                 error_message)
+{
+    return forward(FIRMWARESTATUSNOTIFICATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::HeartbeatReq& request,
+                                         ocpp::messages::ocpp20::HeartbeatConf&      response,
+                                         std::string&                                error_code,
+                                         std::string&                                error_message)
+{
+    return forward(HEARTBEAT_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::LogStatusNotificationReq& request,
+                                         ocpp::messages::ocpp20::LogStatusNotificationConf&      response,
+                                         std::string&                                            error_code,
+                                         std::string&                                            error_message)
+{
+    return forward(LOGSTATUSNOTIFICATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::MeterValuesReq& request,
+                                         ocpp::messages::ocpp20::MeterValuesConf&      response,
+                                         std::string&                                  error_code,
+                                         std::string&                                  error_message)
+{
+    return forward(METERVALUES_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyChargingLimitReq& request,
+                                         ocpp::messages::ocpp20::NotifyChargingLimitConf&      response,
+                                         std::string&                                          error_code,
+                                         std::string&                                          error_message)
+{
+    return forward(NOTIFYCHARGINGLIMIT_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyCustomerInformationReq& request,
+                                         ocpp::messages::ocpp20::NotifyCustomerInformationConf&      response,
+                                         std::string&                                                error_code,
+                                         std::string&                                                error_message)
+{
+    return forward(NOTIFYCUSTOMERINFORMATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyDisplayMessagesReq& request,
+                                         ocpp::messages::ocpp20::NotifyDisplayMessagesConf&      response,
+                                         std::string&                                            error_code,
+                                         std::string&                                            error_message)
+{
+    return forward(NOTIFYDISPLAYMESSAGES_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEVChargingNeedsReq& request,
+                                         ocpp::messages::ocpp20::NotifyEVChargingNeedsConf&      response,
+                                         std::string&                                            error_code,
+                                         std::string&                                            error_message)
+{
+    return forward(NOTIFYEVCHARGINGNEEDS_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEVChargingScheduleReq& request,
+                                         ocpp::messages::ocpp20::NotifyEVChargingScheduleConf&      response,
+                                         std::string&                                               error_code,
+                                         std::string&                                               error_message)
+{
+    return forward(NOTIFYEVCHARGINGSCHEDULE_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyEventReq& request,
+                                         ocpp::messages::ocpp20::NotifyEventConf&      response,
+                                         std::string&                                  error_code,
+                                         std::string&                                  error_message)
+{
+    return forward(NOTIFYEVENT_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyMonitoringReportReq& request,
+                                         ocpp::messages::ocpp20::NotifyMonitoringReportConf&      response,
+                                         std::string&                                             error_code,
+                                         std::string&                                             error_message)
+{
+    return forward(NOTIFYMONITORINGREPORT_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::NotifyReportReq& request,
+                                         ocpp::messages::ocpp20::NotifyReportConf&      response,
+                                         std::string&                                   error_code,
+                                         std::string&                                   error_message)
+{
+    return forward(NOTIFYREPORT_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::PublishFirmwareStatusNotificationReq& request,
+                                         ocpp::messages::ocpp20::PublishFirmwareStatusNotificationConf&      response,
+                                         std::string&                                                        error_code,
+                                         std::string&                                                        error_message)
+{
+    return forward(PUBLISHFIRMWARESTATUSNOTIFICATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ReportChargingProfilesReq& request,
+                                         ocpp::messages::ocpp20::ReportChargingProfilesConf&      response,
+                                         std::string&                                             error_code,
+                                         std::string&                                             error_message)
+{
+    return forward(REPORTCHARGINGPROFILES_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::ReservationStatusUpdateReq& request,
+                                         ocpp::messages::ocpp20::ReservationStatusUpdateConf&      response,
+                                         std::string&                                              error_code,
+                                         std::string&                                              error_message)
+{
+    return forward(RESERVATIONSTATUSUPDATE_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::SecurityEventNotificationReq& request,
+                                         ocpp::messages::ocpp20::SecurityEventNotificationConf&      response,
+                                         std::string&                                                error_code,
+                                         std::string&                                                error_message)
+{
+    return forward(SECURITYEVENTNOTIFICATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::SignCertificateReq& request,
+                                         ocpp::messages::ocpp20::SignCertificateConf&      response,
+                                         std::string&                                      error_code,
+                                         std::string&                                      error_message)
+{
+    return forward(SIGNCERTIFICATE_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::StatusNotificationReq& request,
+                                         ocpp::messages::ocpp20::StatusNotificationConf&      response,
                                          std::string&                                         error_code,
                                          std::string&                                         error_message)
 {
-    return forward(TRANSACTIONEVENT20_ACTION, request, response, error_code, error_message);
+    return forward(STATUSNOTIFICATION_ACTION, request, response, error_code, error_message);
+}
+/** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+bool ChargePointHandler20::handleMessage(const ocpp::messages::ocpp20::TransactionEventReq& request,
+                                         ocpp::messages::ocpp20::TransactionEventConf&      response,
+                                         std::string&                                       error_code,
+                                         std::string&                                       error_message)
+{
+    return forward(TRANSACTIONEVENT_ACTION, request, response, error_code, error_message);
 }
 
 } // namespace ocpp20

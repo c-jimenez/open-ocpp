@@ -22,7 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #define OPENOCPP_{{ocpp_version_namespace.upper()}}_ICHARGEPOINTREQUESTHANDLER{{ocpp_version_suffix}}_H
 
 {%- for msg_name in cs_msgs %}
-#include "{{msg_name}}.h"
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 
 #include <vector>

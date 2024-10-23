@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_INSTALLCERTIFICATE20_H
-#define OPENOCPP_INSTALLCERTIFICATE20_H
+#ifndef OPENOCPP_OCPP20_INSTALLCERTIFICATE_H
+#define OPENOCPP_OCPP20_INSTALLCERTIFICATE_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the InstallCertificate20 messages */
-static const std::string INSTALLCERTIFICATE20_ACTION = "InstallCertificate";
+/** @brief Action corresponding to the InstallCertificate messages */
+static const std::string INSTALLCERTIFICATE_ACTION = "InstallCertificate";
 
-/** @brief InstallCertificate20Req message */
-struct InstallCertificate20Req
+/** @brief InstallCertificateReq message */
+struct InstallCertificateReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::InstallCertificateUseEnumType20 certificateType;
+    ocpp::types::ocpp20::InstallCertificateUseEnumType certificateType;
     /** @brief A PEM encoded X.509 certificate. */
     ocpp::types::CiStringType<5500u> certificate;
 };
 
-/** @brief InstallCertificate20Conf message */
-struct InstallCertificate20Conf
+/** @brief InstallCertificateConf message */
+struct InstallCertificateConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::InstallCertificateStatusEnumType20 status;
+    ocpp::types::ocpp20::InstallCertificateStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(InstallCertificate20)
+MESSAGE_CONVERTERS(InstallCertificate)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_INSTALLCERTIFICATE20_H
+#endif // OPENOCPP_OCPP20_INSTALLCERTIFICATE_H

@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a ChargingProfileType20 from a JSON representation */
-bool ChargingProfileType20Converter::fromJson(const rapidjson::Value&       json,
-                                              ChargingProfileType20&        data,
-                                              std::string&                  error_code,
-                                              [[maybe_unused]] std::string& error_message)
+/** @brief Convert a ChargingProfileType from a JSON representation */
+bool ChargingProfileTypeConverter::fromJson(const rapidjson::Value&       json,
+                                            ChargingProfileType&          data,
+                                            std::string&                  error_code,
+                                            [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -54,15 +54,15 @@ bool ChargingProfileType20Converter::fromJson(const rapidjson::Value&       json
     extract(json, "stackLevel", data.stackLevel);
 
     // chargingProfilePurpose
-    data.chargingProfilePurpose = ChargingProfilePurposeEnumType20Helper.fromString(json["chargingProfilePurpose"].GetString());
+    data.chargingProfilePurpose = ChargingProfilePurposeEnumTypeHelper.fromString(json["chargingProfilePurpose"].GetString());
 
     // chargingProfileKind
-    data.chargingProfileKind = ChargingProfileKindEnumType20Helper.fromString(json["chargingProfileKind"].GetString());
+    data.chargingProfileKind = ChargingProfileKindEnumTypeHelper.fromString(json["chargingProfileKind"].GetString());
 
     // recurrencyKind
     if (json.HasMember("recurrencyKind"))
     {
-        data.recurrencyKind = RecurrencyKindEnumType20Helper.fromString(json["recurrencyKind"].GetString());
+        data.recurrencyKind = RecurrencyKindEnumTypeHelper.fromString(json["recurrencyKind"].GetString());
     }
 
     // validFrom
@@ -74,12 +74,12 @@ bool ChargingProfileType20Converter::fromJson(const rapidjson::Value&       json
     // chargingSchedule
     if (json.HasMember("chargingSchedule"))
     {
-        const rapidjson::Value&         chargingSchedule_json = json["chargingSchedule"];
-        ChargingScheduleType20Converter chargingSchedule_converter;
+        const rapidjson::Value&       chargingSchedule_json = json["chargingSchedule"];
+        ChargingScheduleTypeConverter chargingSchedule_converter;
         for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
         {
-            ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
-            ret                          = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
+            ChargingScheduleType& item = data.chargingSchedule.emplace_back();
+            ret                        = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -94,15 +94,15 @@ bool ChargingProfileType20Converter::fromJson(const rapidjson::Value&       json
     return ret;
 }
 
-/** @brief Convert a ChargingProfileType20 to a JSON representation */
-bool ChargingProfileType20Converter::toJson(const ChargingProfileType20& data, rapidjson::Document& json)
+/** @brief Convert a ChargingProfileType to a JSON representation */
+bool ChargingProfileTypeConverter::toJson(const ChargingProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -117,15 +117,15 @@ bool ChargingProfileType20Converter::toJson(const ChargingProfileType20& data, r
     fill(json, "stackLevel", data.stackLevel);
 
     // chargingProfilePurpose
-    fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumType20Helper.toString(data.chargingProfilePurpose));
+    fill(json, "chargingProfilePurpose", ChargingProfilePurposeEnumTypeHelper.toString(data.chargingProfilePurpose));
 
     // chargingProfileKind
-    fill(json, "chargingProfileKind", ChargingProfileKindEnumType20Helper.toString(data.chargingProfileKind));
+    fill(json, "chargingProfileKind", ChargingProfileKindEnumTypeHelper.toString(data.chargingProfileKind));
 
     // recurrencyKind
     if (data.recurrencyKind.isSet())
     {
-        fill(json, "recurrencyKind", RecurrencyKindEnumType20Helper.toString(data.recurrencyKind));
+        fill(json, "recurrencyKind", RecurrencyKindEnumTypeHelper.toString(data.recurrencyKind));
     }
 
     // validFrom
@@ -136,10 +136,10 @@ bool ChargingProfileType20Converter::toJson(const ChargingProfileType20& data, r
 
     // chargingSchedule
 
-    rapidjson::Value                chargingSchedule_json(rapidjson::kArrayType);
-    ChargingScheduleType20Converter chargingSchedule_converter;
+    rapidjson::Value              chargingSchedule_json(rapidjson::kArrayType);
+    ChargingScheduleTypeConverter chargingSchedule_converter;
     chargingSchedule_converter.setAllocator(allocator);
-    for (const ChargingScheduleType20& item : data.chargingSchedule)
+    for (const ChargingScheduleType& item : data.chargingSchedule)
     {
         rapidjson::Document item_doc;
         item_doc.Parse("{}");

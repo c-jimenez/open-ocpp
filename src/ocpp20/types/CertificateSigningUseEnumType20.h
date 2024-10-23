@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CERTIFICATESIGNINGUSEENUMTYPE20_H
-#define OPENOCPP_CERTIFICATESIGNINGUSEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CERTIFICATESIGNINGUSEENUMTYPE_H
+#define OPENOCPP_OCPP20_CERTIFICATESIGNINGUSEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Indicates the type of certificate that is to be signed. When omitted the certificate is to be used for both the 15118 connection (if implemented) and the Charging Station to CSMS connection. */
-enum class CertificateSigningUseEnumType20
+enum class CertificateSigningUseEnumType
 {
     ChargingStationCertificate,
     V2GCertificate,
 };
 
-/** @brief Helper to convert a CertificateSigningUseEnumType20 enum to string */
-extern const EnumToStringFromString<CertificateSigningUseEnumType20> CertificateSigningUseEnumType20Helper;
+/** @brief Helper to convert a CertificateSigningUseEnumType enum to string */
+extern const EnumToStringFromString<CertificateSigningUseEnumType> CertificateSigningUseEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CERTIFICATESIGNINGUSEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CERTIFICATESIGNINGUSEENUMTYPE_H

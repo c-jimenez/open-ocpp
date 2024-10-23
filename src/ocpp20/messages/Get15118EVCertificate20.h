@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GET15118EVCERTIFICATE20_H
-#define OPENOCPP_GET15118EVCERTIFICATE20_H
+#ifndef OPENOCPP_OCPP20_GET15118EVCERTIFICATE_H
+#define OPENOCPP_OCPP20_GET15118EVCERTIFICATE_H
 
 #include "IMessageConverter.h"
 
@@ -38,40 +38,40 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the Get15118EVCertificate20 messages */
-static const std::string GET15118EVCERTIFICATE20_ACTION = "Get15118EVCertificate";
+/** @brief Action corresponding to the Get15118EVCertificate messages */
+static const std::string GET15118EVCERTIFICATE_ACTION = "Get15118EVCertificate";
 
-/** @brief Get15118EVCertificate20Req message */
-struct Get15118EVCertificate20Req
+/** @brief Get15118EVCertificateReq message */
+struct Get15118EVCertificateReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Schema version currently used for the 15118 session between EV and Charging Station. Needed for parsing of the EXI stream by the CSMS. */
     ocpp::types::CiStringType<50u> iso15118SchemaVersion;
     /** @brief  */
-    ocpp::types::ocpp20::CertificateActionEnumType20 action;
+    ocpp::types::ocpp20::CertificateActionEnumType action;
     /** @brief Raw CertificateInstallationReq request from EV, Base64 encoded. */
     ocpp::types::CiStringType<5600u> exiRequest;
 };
 
-/** @brief Get15118EVCertificate20Conf message */
-struct Get15118EVCertificate20Conf
+/** @brief Get15118EVCertificateConf message */
+struct Get15118EVCertificateConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::Iso15118EVCertificateStatusEnumType20 status;
+    ocpp::types::ocpp20::Iso15118EVCertificateStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief Raw CertificateInstallationRes response for the EV, Base64 encoded. */
     ocpp::types::CiStringType<5600u> exiResponse;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(Get15118EVCertificate20)
+MESSAGE_CONVERTERS(Get15118EVCertificate)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GET15118EVCERTIFICATE20_H
+#endif // OPENOCPP_OCPP20_GET15118EVCERTIFICATE_H

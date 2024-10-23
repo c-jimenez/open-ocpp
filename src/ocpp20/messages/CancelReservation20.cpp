@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a CancelReservation20Req from a JSON representation */
-bool CancelReservation20ReqConverter::fromJson(const rapidjson::Value& json,
-                                               CancelReservation20Req& data,
-                                               std::string&            error_code,
-                                               std::string&            error_message)
+/** @brief Convert a CancelReservationReq from a JSON representation */
+bool CancelReservationReqConverter::fromJson(const rapidjson::Value& json,
+                                             CancelReservationReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -58,15 +58,15 @@ bool CancelReservation20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a CancelReservation20Req to a JSON representation */
-bool CancelReservation20ReqConverter::toJson(const CancelReservation20Req& data, rapidjson::Document& json)
+/** @brief Convert a CancelReservationReq to a JSON representation */
+bool CancelReservationReqConverter::toJson(const CancelReservationReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -80,28 +80,28 @@ bool CancelReservation20ReqConverter::toJson(const CancelReservation20Req& data,
     return ret;
 }
 
-/** @brief Convert a CancelReservation20Conf from a JSON representation */
-bool CancelReservation20ConfConverter::fromJson(const rapidjson::Value&  json,
-                                                CancelReservation20Conf& data,
-                                                std::string&             error_code,
-                                                std::string&             error_message)
+/** @brief Convert a CancelReservationConf from a JSON representation */
+bool CancelReservationConfConverter::fromJson(const rapidjson::Value& json,
+                                              CancelReservationConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::CancelReservationStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::CancelReservationStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -113,15 +113,15 @@ bool CancelReservation20ConfConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @brief Convert a CancelReservation20Conf to a JSON representation */
-bool CancelReservation20ConfConverter::toJson(const CancelReservation20Conf& data, rapidjson::Document& json)
+/** @brief Convert a CancelReservationConf to a JSON representation */
+bool CancelReservationConfConverter::toJson(const CancelReservationConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -130,12 +130,12 @@ bool CancelReservation20ConfConverter::toJson(const CancelReservation20Conf& dat
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::CancelReservationStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::CancelReservationStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

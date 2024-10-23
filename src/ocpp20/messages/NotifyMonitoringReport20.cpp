@@ -32,30 +32,30 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a NotifyMonitoringReport20Req from a JSON representation */
-bool NotifyMonitoringReport20ReqConverter::fromJson(const rapidjson::Value&      json,
-                                                    NotifyMonitoringReport20Req& data,
-                                                    std::string&                 error_code,
-                                                    std::string&                 error_message)
+/** @brief Convert a NotifyMonitoringReportReq from a JSON representation */
+bool NotifyMonitoringReportReqConverter::fromJson(const rapidjson::Value&    json,
+                                                  NotifyMonitoringReportReq& data,
+                                                  std::string&               error_code,
+                                                  std::string&               error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // monitor
     if (json.HasMember("monitor"))
     {
-        const rapidjson::Value&                            monitor_json = json["monitor"];
-        ocpp::types::ocpp20::MonitoringDataType20Converter monitor_converter;
+        const rapidjson::Value&                          monitor_json = json["monitor"];
+        ocpp::types::ocpp20::MonitoringDataTypeConverter monitor_converter;
         for (auto it = monitor_json.Begin(); ret && (it != monitor_json.End()); ++it)
         {
-            ocpp::types::ocpp20::MonitoringDataType20& item = data.monitor.emplace_back();
-            ret                                             = ret && monitor_converter.fromJson(*it, item, error_code, error_message);
+            ocpp::types::ocpp20::MonitoringDataType& item = data.monitor.emplace_back();
+            ret                                           = ret && monitor_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -79,15 +79,15 @@ bool NotifyMonitoringReport20ReqConverter::fromJson(const rapidjson::Value&     
     return ret;
 }
 
-/** @brief Convert a NotifyMonitoringReport20Req to a JSON representation */
-bool NotifyMonitoringReport20ReqConverter::toJson(const NotifyMonitoringReport20Req& data, rapidjson::Document& json)
+/** @brief Convert a NotifyMonitoringReportReq to a JSON representation */
+bool NotifyMonitoringReportReqConverter::toJson(const NotifyMonitoringReportReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -99,10 +99,10 @@ bool NotifyMonitoringReport20ReqConverter::toJson(const NotifyMonitoringReport20
     if (!data.monitor.empty())
     {
 
-        rapidjson::Value                                   monitor_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::MonitoringDataType20Converter monitor_converter;
+        rapidjson::Value                                 monitor_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::MonitoringDataTypeConverter monitor_converter;
         monitor_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::MonitoringDataType20& item : data.monitor)
+        for (const ocpp::types::ocpp20::MonitoringDataType& item : data.monitor)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -127,18 +127,18 @@ bool NotifyMonitoringReport20ReqConverter::toJson(const NotifyMonitoringReport20
     return ret;
 }
 
-/** @brief Convert a NotifyMonitoringReport20Conf from a JSON representation */
-bool NotifyMonitoringReport20ConfConverter::fromJson(const rapidjson::Value&       json,
-                                                     NotifyMonitoringReport20Conf& data,
-                                                     std::string&                  error_code,
-                                                     std::string&                  error_message)
+/** @brief Convert a NotifyMonitoringReportConf from a JSON representation */
+bool NotifyMonitoringReportConfConverter::fromJson(const rapidjson::Value&     json,
+                                                   NotifyMonitoringReportConf& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -150,15 +150,15 @@ bool NotifyMonitoringReport20ConfConverter::fromJson(const rapidjson::Value&    
     return ret;
 }
 
-/** @brief Convert a NotifyMonitoringReport20Conf to a JSON representation */
-bool NotifyMonitoringReport20ConfConverter::toJson(const NotifyMonitoringReport20Conf& data, rapidjson::Document& json)
+/** @brief Convert a NotifyMonitoringReportConf to a JSON representation */
+bool NotifyMonitoringReportConfConverter::toJson(const NotifyMonitoringReportConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

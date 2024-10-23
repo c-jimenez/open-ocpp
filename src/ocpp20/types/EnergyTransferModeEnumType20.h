@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_ENERGYTRANSFERMODEENUMTYPE20_H
-#define OPENOCPP_ENERGYTRANSFERMODEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_ENERGYTRANSFERMODEENUMTYPE_H
+#define OPENOCPP_OCPP20_ENERGYTRANSFERMODEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Charging_ Needs. Requested. Energy_ Transfer_ Mode_ Code
 urn:x-oca:ocpp:uid:1:569209
 Mode of energy transfer requested by the EV. */
-enum class EnergyTransferModeEnumType20
+enum class EnergyTransferModeEnumType
 {
     DC,
     AC_single_phase,
@@ -44,11 +44,11 @@ enum class EnergyTransferModeEnumType20
     AC_three_phase,
 };
 
-/** @brief Helper to convert a EnergyTransferModeEnumType20 enum to string */
-extern const EnumToStringFromString<EnergyTransferModeEnumType20> EnergyTransferModeEnumType20Helper;
+/** @brief Helper to convert a EnergyTransferModeEnumType enum to string */
+extern const EnumToStringFromString<EnergyTransferModeEnumType> EnergyTransferModeEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_ENERGYTRANSFERMODEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_ENERGYTRANSFERMODEENUMTYPE_H

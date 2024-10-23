@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CUSTOMDATATYPE20_H
-#define OPENOCPP_CUSTOMDATATYPE20_H
+#ifndef OPENOCPP_OCPP20_CUSTOMDATATYPE_H
+#define OPENOCPP_OCPP20_CUSTOMDATATYPE_H
 
 #include "CiStringType.h"
 #include "IMessageConverter.h"
@@ -35,31 +35,31 @@ namespace ocpp20
 {
 
 /** @brief This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data. */
-struct CustomDataType20
+struct CustomDataType
 {
     /** @brief  */
     ocpp::types::CiStringType<255u> vendorId;
 };
 
-/** @brief Converter class for CustomDataType20 type */
-class CustomDataType20Converter : public ocpp::messages::IMessageConverter<CustomDataType20>
+/** @brief Converter class for CustomDataType type */
+class CustomDataTypeConverter : public ocpp::messages::IMessageConverter<CustomDataType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<CustomDataType20>* clone() const override { return new CustomDataType20Converter(); }
+    ocpp::messages::IMessageConverter<CustomDataType>* clone() const override { return new CustomDataTypeConverter(); }
 
-    /** @brief Convert a CustomDataType20 from a JSON representation */
+    /** @brief Convert a CustomDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CustomDataType20&             data,
+                  CustomDataType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a CustomDataType20 to a JSON representation */
-    bool toJson(const CustomDataType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a CustomDataType to a JSON representation */
+    bool toJson(const CustomDataType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CUSTOMDATATYPE20_H
+#endif // OPENOCPP_OCPP20_CUSTOMDATATYPE_H

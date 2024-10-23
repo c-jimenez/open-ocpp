@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UNPUBLISHFIRMWARE20_H
-#define OPENOCPP_UNPUBLISHFIRMWARE20_H
+#ifndef OPENOCPP_OCPP20_UNPUBLISHFIRMWARE_H
+#define OPENOCPP_OCPP20_UNPUBLISHFIRMWARE_H
 
 #include "IMessageConverter.h"
 
@@ -36,32 +36,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the UnpublishFirmware20 messages */
-static const std::string UNPUBLISHFIRMWARE20_ACTION = "UnpublishFirmware";
+/** @brief Action corresponding to the UnpublishFirmware messages */
+static const std::string UNPUBLISHFIRMWARE_ACTION = "UnpublishFirmware";
 
-/** @brief UnpublishFirmware20Req message */
-struct UnpublishFirmware20Req
+/** @brief UnpublishFirmwareReq message */
+struct UnpublishFirmwareReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The MD5 checksum over the entire firmware file as a hexadecimal string of length 32. */
     ocpp::types::CiStringType<32u> checksum;
 };
 
-/** @brief UnpublishFirmware20Conf message */
-struct UnpublishFirmware20Conf
+/** @brief UnpublishFirmwareConf message */
+struct UnpublishFirmwareConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::UnpublishFirmwareStatusEnumType20 status;
+    ocpp::types::ocpp20::UnpublishFirmwareStatusEnumType status;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(UnpublishFirmware20)
+MESSAGE_CONVERTERS(UnpublishFirmware)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_UNPUBLISHFIRMWARE20_H
+#endif // OPENOCPP_OCPP20_UNPUBLISHFIRMWARE_H

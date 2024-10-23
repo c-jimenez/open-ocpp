@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a UpdateFirmware20Req from a JSON representation */
-bool UpdateFirmware20ReqConverter::fromJson(const rapidjson::Value& json,
-                                            UpdateFirmware20Req&    data,
-                                            std::string&            error_code,
-                                            std::string&            error_message)
+/** @brief Convert a UpdateFirmwareReq from a JSON representation */
+bool UpdateFirmwareReqConverter::fromJson(const rapidjson::Value& json,
+                                          UpdateFirmwareReq&      data,
+                                          std::string&            error_code,
+                                          std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -57,7 +57,7 @@ bool UpdateFirmware20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "requestId", data.requestId);
 
     // firmware
-    ocpp::types::ocpp20::FirmwareType20Converter firmware_converter;
+    ocpp::types::ocpp20::FirmwareTypeConverter firmware_converter;
     ret = ret && firmware_converter.fromJson(json["firmware"], data.firmware, error_code, error_message);
 
     if (!ret)
@@ -68,15 +68,15 @@ bool UpdateFirmware20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a UpdateFirmware20Req to a JSON representation */
-bool UpdateFirmware20ReqConverter::toJson(const UpdateFirmware20Req& data, rapidjson::Document& json)
+/** @brief Convert a UpdateFirmwareReq to a JSON representation */
+bool UpdateFirmwareReqConverter::toJson(const UpdateFirmwareReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -94,7 +94,7 @@ bool UpdateFirmware20ReqConverter::toJson(const UpdateFirmware20Req& data, rapid
     fill(json, "requestId", data.requestId);
 
     // firmware
-    ocpp::types::ocpp20::FirmwareType20Converter firmware_converter;
+    ocpp::types::ocpp20::FirmwareTypeConverter firmware_converter;
     firmware_converter.setAllocator(allocator);
     rapidjson::Document firmware_doc;
     firmware_doc.Parse("{}");
@@ -104,28 +104,28 @@ bool UpdateFirmware20ReqConverter::toJson(const UpdateFirmware20Req& data, rapid
     return ret;
 }
 
-/** @brief Convert a UpdateFirmware20Conf from a JSON representation */
-bool UpdateFirmware20ConfConverter::fromJson(const rapidjson::Value& json,
-                                             UpdateFirmware20Conf&   data,
-                                             std::string&            error_code,
-                                             std::string&            error_message)
+/** @brief Convert a UpdateFirmwareConf from a JSON representation */
+bool UpdateFirmwareConfConverter::fromJson(const rapidjson::Value& json,
+                                           UpdateFirmwareConf&     data,
+                                           std::string&            error_code,
+                                           std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::UpdateFirmwareStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::UpdateFirmwareStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -137,15 +137,15 @@ bool UpdateFirmware20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a UpdateFirmware20Conf to a JSON representation */
-bool UpdateFirmware20ConfConverter::toJson(const UpdateFirmware20Conf& data, rapidjson::Document& json)
+/** @brief Convert a UpdateFirmwareConf to a JSON representation */
+bool UpdateFirmwareConfConverter::toJson(const UpdateFirmwareConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -154,12 +154,12 @@ bool UpdateFirmware20ConfConverter::toJson(const UpdateFirmware20Conf& data, rap
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::UpdateFirmwareStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::UpdateFirmwareStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

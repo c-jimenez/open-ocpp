@@ -83,14 +83,14 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "UpdateFirmware20.h"
 
 /** @brief Macro to register a message converter for an OCPP action */
-#define REGISTER_CONVERTER(action)                                                   \
-    registerRequestConverter<action##20Req>(#action, *new action##20ReqConverter()); \
-    registerResponseConverter<action##20Conf>(#action, *new action##20ConfConverter())
+#define REGISTER_CONVERTER(action)                                               \
+    registerRequestConverter<action##Req>(#action, *new action##ReqConverter()); \
+    registerResponseConverter<action##Conf>(#action, *new action##ConfConverter())
 
 /** @brief Macro to delete a message converter for an OCPP action */
-#define DELETE_CONVERTER(action)                    \
-    deleteRequestConverter<action##20Req>(#action); \
-    deleteResponseConverter<action##20Conf>(#action)
+#define DELETE_CONVERTER(action)                  \
+    deleteRequestConverter<action##Req>(#action); \
+    deleteResponseConverter<action##Conf>(#action)
 
 namespace ocpp
 {

@@ -59,251 +59,251 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::ICharg
 
     // OCPP operations
 
-    /** @brief Called on reception of a CancelReservation20 message from the central */
-    bool onCancelReservation20(const ocpp::messages::ocpp20::CancelReservation20Req& request,
-                               ocpp::messages::ocpp20::CancelReservation20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a CertificateSigned20 message from the central */
-    bool onCertificateSigned20(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
-                               ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a ChangeAvailability20 message from the central */
-    bool onChangeAvailability20(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
-                                ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
-                                std::string&                                           error,
-                                std::string&                                           message) override;
-
-    /** @brief Called on reception of a ClearCache20 message from the central */
-    bool onClearCache20(const ocpp::messages::ocpp20::ClearCache20Req& request,
-                        ocpp::messages::ocpp20::ClearCache20Conf&      response,
-                        std::string&                                   error,
-                        std::string&                                   message) override;
-
-    /** @brief Called on reception of a ClearChargingProfile20 message from the central */
-    bool onClearChargingProfile20(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
-                                  ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
-                                  std::string&                                             error,
-                                  std::string&                                             message) override;
-
-    /** @brief Called on reception of a ClearDisplayMessage20 message from the central */
-    bool onClearDisplayMessage20(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
-                                 ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
-                                 std::string&                                            error,
-                                 std::string&                                            message) override;
-
-    /** @brief Called on reception of a ClearVariableMonitoring20 message from the central */
-    bool onClearVariableMonitoring20(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
-                                     ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
-                                     std::string&                                                error,
-                                     std::string&                                                message) override;
-
-    /** @brief Called on reception of a CustomerInformation20 message from the central */
-    bool onCustomerInformation20(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
-                                 ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
-                                 std::string&                                            error,
-                                 std::string&                                            message) override;
-
-    /** @brief Called on reception of a DataTransfer20 message from the central */
-    bool onDataTransfer20(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                          ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                          std::string&                                     error,
-                          std::string&                                     message) override;
-
-    /** @brief Called on reception of a DeleteCertificate20 message from the central */
-    bool onDeleteCertificate20(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
-                               ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a Get15118EVCertificate20 message from the central */
-    bool onGet15118EVCertificate20(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
-                                   ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
-                                   std::string&                                              error,
-                                   std::string&                                              message) override;
-
-    /** @brief Called on reception of a GetBaseReport20 message from the central */
-    bool onGetBaseReport20(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
-                           ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
-                           std::string&                                      error,
-                           std::string&                                      message) override;
-
-    /** @brief Called on reception of a GetCertificateStatus20 message from the central */
-    bool onGetCertificateStatus20(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
-                                  ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
-                                  std::string&                                             error,
-                                  std::string&                                             message) override;
-
-    /** @brief Called on reception of a GetChargingProfiles20 message from the central */
-    bool onGetChargingProfiles20(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
-                                 ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
-                                 std::string&                                            error,
-                                 std::string&                                            message) override;
-
-    /** @brief Called on reception of a GetCompositeSchedule20 message from the central */
-    bool onGetCompositeSchedule20(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
-                                  ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
-                                  std::string&                                             error,
-                                  std::string&                                             message) override;
-
-    /** @brief Called on reception of a GetDisplayMessages20 message from the central */
-    bool onGetDisplayMessages20(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
-                                ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
-                                std::string&                                           error,
-                                std::string&                                           message) override;
-
-    /** @brief Called on reception of a GetInstalledCertificateIds20 message from the central */
-    bool onGetInstalledCertificateIds20(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
-                                        ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&      response,
-                                        std::string&                                                   error,
-                                        std::string&                                                   message) override;
-
-    /** @brief Called on reception of a GetLocalListVersion20 message from the central */
-    bool onGetLocalListVersion20(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
-                                 ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
-                                 std::string&                                            error,
-                                 std::string&                                            message) override;
-
-    /** @brief Called on reception of a GetLog20 message from the central */
-    bool onGetLog20(const ocpp::messages::ocpp20::GetLog20Req& request,
-                    ocpp::messages::ocpp20::GetLog20Conf&      response,
-                    std::string&                               error,
-                    std::string&                               message) override;
-
-    /** @brief Called on reception of a GetMonitoringReport20 message from the central */
-    bool onGetMonitoringReport20(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
-                                 ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
-                                 std::string&                                            error,
-                                 std::string&                                            message) override;
-
-    /** @brief Called on reception of a GetReport20 message from the central */
-    bool onGetReport20(const ocpp::messages::ocpp20::GetReport20Req& request,
-                       ocpp::messages::ocpp20::GetReport20Conf&      response,
-                       std::string&                                  error,
-                       std::string&                                  message) override;
-
-    /** @brief Called on reception of a GetTransactionStatus20 message from the central */
-    bool onGetTransactionStatus20(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
-                                  ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
-                                  std::string&                                             error,
-                                  std::string&                                             message) override;
-
-    /** @brief Called on reception of a GetVariables20 message from the central */
-    bool onGetVariables20(const ocpp::messages::ocpp20::GetVariables20Req& request,
-                          ocpp::messages::ocpp20::GetVariables20Conf&      response,
-                          std::string&                                     error,
-                          std::string&                                     message) override;
-
-    /** @brief Called on reception of a InstallCertificate20 message from the central */
-    bool onInstallCertificate20(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
-                                ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
-                                std::string&                                           error,
-                                std::string&                                           message) override;
-
-    /** @brief Called on reception of a PublishFirmware20 message from the central */
-    bool onPublishFirmware20(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
-                             ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
+    /** @brief Called on reception of a CancelReservation message from the central */
+    bool onCancelReservation(const ocpp::messages::ocpp20::CancelReservationReq& request,
+                             ocpp::messages::ocpp20::CancelReservationConf&      response,
                              std::string&                                        error,
                              std::string&                                        message) override;
 
-    /** @brief Called on reception of a RequestStartTransaction20 message from the central */
-    bool onRequestStartTransaction20(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
-                                     ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
-                                     std::string&                                                error,
-                                     std::string&                                                message) override;
-
-    /** @brief Called on reception of a RequestStopTransaction20 message from the central */
-    bool onRequestStopTransaction20(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
-                                    ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
-                                    std::string&                                               error,
-                                    std::string&                                               message) override;
-
-    /** @brief Called on reception of a ReserveNow20 message from the central */
-    bool onReserveNow20(const ocpp::messages::ocpp20::ReserveNow20Req& request,
-                        ocpp::messages::ocpp20::ReserveNow20Conf&      response,
-                        std::string&                                   error,
-                        std::string&                                   message) override;
-
-    /** @brief Called on reception of a Reset20 message from the central */
-    bool onReset20(const ocpp::messages::ocpp20::Reset20Req& request,
-                   ocpp::messages::ocpp20::Reset20Conf&      response,
-                   std::string&                              error,
-                   std::string&                              message) override;
-
-    /** @brief Called on reception of a SendLocalList20 message from the central */
-    bool onSendLocalList20(const ocpp::messages::ocpp20::SendLocalList20Req& request,
-                           ocpp::messages::ocpp20::SendLocalList20Conf&      response,
-                           std::string&                                      error,
-                           std::string&                                      message) override;
-
-    /** @brief Called on reception of a SetChargingProfile20 message from the central */
-    bool onSetChargingProfile20(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
-                                ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
-                                std::string&                                           error,
-                                std::string&                                           message) override;
-
-    /** @brief Called on reception of a SetDisplayMessage20 message from the central */
-    bool onSetDisplayMessage20(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
-                               ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a SetMonitoringBase20 message from the central */
-    bool onSetMonitoringBase20(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
-                               ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a SetMonitoringLevel20 message from the central */
-    bool onSetMonitoringLevel20(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
-                                ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
-                                std::string&                                           error,
-                                std::string&                                           message) override;
-
-    /** @brief Called on reception of a SetNetworkProfile20 message from the central */
-    bool onSetNetworkProfile20(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
-                               ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
-                               std::string&                                          error,
-                               std::string&                                          message) override;
-
-    /** @brief Called on reception of a SetVariableMonitoring20 message from the central */
-    bool onSetVariableMonitoring20(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
-                                   ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
-                                   std::string&                                              error,
-                                   std::string&                                              message) override;
-
-    /** @brief Called on reception of a SetVariables20 message from the central */
-    bool onSetVariables20(const ocpp::messages::ocpp20::SetVariables20Req& request,
-                          ocpp::messages::ocpp20::SetVariables20Conf&      response,
-                          std::string&                                     error,
-                          std::string&                                     message) override;
-
-    /** @brief Called on reception of a TriggerMessage20 message from the central */
-    bool onTriggerMessage20(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
-                            ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
-                            std::string&                                       error,
-                            std::string&                                       message) override;
-
-    /** @brief Called on reception of a UnlockConnector20 message from the central */
-    bool onUnlockConnector20(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
-                             ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
+    /** @brief Called on reception of a CertificateSigned message from the central */
+    bool onCertificateSigned(const ocpp::messages::ocpp20::CertificateSignedReq& request,
+                             ocpp::messages::ocpp20::CertificateSignedConf&      response,
                              std::string&                                        error,
                              std::string&                                        message) override;
 
-    /** @brief Called on reception of a UnpublishFirmware20 message from the central */
-    bool onUnpublishFirmware20(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
-                               ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
+    /** @brief Called on reception of a ChangeAvailability message from the central */
+    bool onChangeAvailability(const ocpp::messages::ocpp20::ChangeAvailabilityReq& request,
+                              ocpp::messages::ocpp20::ChangeAvailabilityConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message) override;
+
+    /** @brief Called on reception of a ClearCache message from the central */
+    bool onClearCache(const ocpp::messages::ocpp20::ClearCacheReq& request,
+                      ocpp::messages::ocpp20::ClearCacheConf&      response,
+                      std::string&                                 error,
+                      std::string&                                 message) override;
+
+    /** @brief Called on reception of a ClearChargingProfile message from the central */
+    bool onClearChargingProfile(const ocpp::messages::ocpp20::ClearChargingProfileReq& request,
+                                ocpp::messages::ocpp20::ClearChargingProfileConf&      response,
+                                std::string&                                           error,
+                                std::string&                                           message) override;
+
+    /** @brief Called on reception of a ClearDisplayMessage message from the central */
+    bool onClearDisplayMessage(const ocpp::messages::ocpp20::ClearDisplayMessageReq& request,
+                               ocpp::messages::ocpp20::ClearDisplayMessageConf&      response,
                                std::string&                                          error,
                                std::string&                                          message) override;
 
-    /** @brief Called on reception of a UpdateFirmware20 message from the central */
-    bool onUpdateFirmware20(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
-                            ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
-                            std::string&                                       error,
-                            std::string&                                       message) override;
+    /** @brief Called on reception of a ClearVariableMonitoring message from the central */
+    bool onClearVariableMonitoring(const ocpp::messages::ocpp20::ClearVariableMonitoringReq& request,
+                                   ocpp::messages::ocpp20::ClearVariableMonitoringConf&      response,
+                                   std::string&                                              error,
+                                   std::string&                                              message) override;
+
+    /** @brief Called on reception of a CustomerInformation message from the central */
+    bool onCustomerInformation(const ocpp::messages::ocpp20::CustomerInformationReq& request,
+                               ocpp::messages::ocpp20::CustomerInformationConf&      response,
+                               std::string&                                          error,
+                               std::string&                                          message) override;
+
+    /** @brief Called on reception of a DataTransfer message from the central */
+    bool onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
+                        ocpp::messages::ocpp20::DataTransferConf&      response,
+                        std::string&                                   error,
+                        std::string&                                   message) override;
+
+    /** @brief Called on reception of a DeleteCertificate message from the central */
+    bool onDeleteCertificate(const ocpp::messages::ocpp20::DeleteCertificateReq& request,
+                             ocpp::messages::ocpp20::DeleteCertificateConf&      response,
+                             std::string&                                        error,
+                             std::string&                                        message) override;
+
+    /** @brief Called on reception of a Get15118EVCertificate message from the central */
+    bool onGet15118EVCertificate(const ocpp::messages::ocpp20::Get15118EVCertificateReq& request,
+                                 ocpp::messages::ocpp20::Get15118EVCertificateConf&      response,
+                                 std::string&                                            error,
+                                 std::string&                                            message) override;
+
+    /** @brief Called on reception of a GetBaseReport message from the central */
+    bool onGetBaseReport(const ocpp::messages::ocpp20::GetBaseReportReq& request,
+                         ocpp::messages::ocpp20::GetBaseReportConf&      response,
+                         std::string&                                    error,
+                         std::string&                                    message) override;
+
+    /** @brief Called on reception of a GetCertificateStatus message from the central */
+    bool onGetCertificateStatus(const ocpp::messages::ocpp20::GetCertificateStatusReq& request,
+                                ocpp::messages::ocpp20::GetCertificateStatusConf&      response,
+                                std::string&                                           error,
+                                std::string&                                           message) override;
+
+    /** @brief Called on reception of a GetChargingProfiles message from the central */
+    bool onGetChargingProfiles(const ocpp::messages::ocpp20::GetChargingProfilesReq& request,
+                               ocpp::messages::ocpp20::GetChargingProfilesConf&      response,
+                               std::string&                                          error,
+                               std::string&                                          message) override;
+
+    /** @brief Called on reception of a GetCompositeSchedule message from the central */
+    bool onGetCompositeSchedule(const ocpp::messages::ocpp20::GetCompositeScheduleReq& request,
+                                ocpp::messages::ocpp20::GetCompositeScheduleConf&      response,
+                                std::string&                                           error,
+                                std::string&                                           message) override;
+
+    /** @brief Called on reception of a GetDisplayMessages message from the central */
+    bool onGetDisplayMessages(const ocpp::messages::ocpp20::GetDisplayMessagesReq& request,
+                              ocpp::messages::ocpp20::GetDisplayMessagesConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message) override;
+
+    /** @brief Called on reception of a GetInstalledCertificateIds message from the central */
+    bool onGetInstalledCertificateIds(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq& request,
+                                      ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&      response,
+                                      std::string&                                                 error,
+                                      std::string&                                                 message) override;
+
+    /** @brief Called on reception of a GetLocalListVersion message from the central */
+    bool onGetLocalListVersion(const ocpp::messages::ocpp20::GetLocalListVersionReq& request,
+                               ocpp::messages::ocpp20::GetLocalListVersionConf&      response,
+                               std::string&                                          error,
+                               std::string&                                          message) override;
+
+    /** @brief Called on reception of a GetLog message from the central */
+    bool onGetLog(const ocpp::messages::ocpp20::GetLogReq& request,
+                  ocpp::messages::ocpp20::GetLogConf&      response,
+                  std::string&                             error,
+                  std::string&                             message) override;
+
+    /** @brief Called on reception of a GetMonitoringReport message from the central */
+    bool onGetMonitoringReport(const ocpp::messages::ocpp20::GetMonitoringReportReq& request,
+                               ocpp::messages::ocpp20::GetMonitoringReportConf&      response,
+                               std::string&                                          error,
+                               std::string&                                          message) override;
+
+    /** @brief Called on reception of a GetReport message from the central */
+    bool onGetReport(const ocpp::messages::ocpp20::GetReportReq& request,
+                     ocpp::messages::ocpp20::GetReportConf&      response,
+                     std::string&                                error,
+                     std::string&                                message) override;
+
+    /** @brief Called on reception of a GetTransactionStatus message from the central */
+    bool onGetTransactionStatus(const ocpp::messages::ocpp20::GetTransactionStatusReq& request,
+                                ocpp::messages::ocpp20::GetTransactionStatusConf&      response,
+                                std::string&                                           error,
+                                std::string&                                           message) override;
+
+    /** @brief Called on reception of a GetVariables message from the central */
+    bool onGetVariables(const ocpp::messages::ocpp20::GetVariablesReq& request,
+                        ocpp::messages::ocpp20::GetVariablesConf&      response,
+                        std::string&                                   error,
+                        std::string&                                   message) override;
+
+    /** @brief Called on reception of a InstallCertificate message from the central */
+    bool onInstallCertificate(const ocpp::messages::ocpp20::InstallCertificateReq& request,
+                              ocpp::messages::ocpp20::InstallCertificateConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message) override;
+
+    /** @brief Called on reception of a PublishFirmware message from the central */
+    bool onPublishFirmware(const ocpp::messages::ocpp20::PublishFirmwareReq& request,
+                           ocpp::messages::ocpp20::PublishFirmwareConf&      response,
+                           std::string&                                      error,
+                           std::string&                                      message) override;
+
+    /** @brief Called on reception of a RequestStartTransaction message from the central */
+    bool onRequestStartTransaction(const ocpp::messages::ocpp20::RequestStartTransactionReq& request,
+                                   ocpp::messages::ocpp20::RequestStartTransactionConf&      response,
+                                   std::string&                                              error,
+                                   std::string&                                              message) override;
+
+    /** @brief Called on reception of a RequestStopTransaction message from the central */
+    bool onRequestStopTransaction(const ocpp::messages::ocpp20::RequestStopTransactionReq& request,
+                                  ocpp::messages::ocpp20::RequestStopTransactionConf&      response,
+                                  std::string&                                             error,
+                                  std::string&                                             message) override;
+
+    /** @brief Called on reception of a ReserveNow message from the central */
+    bool onReserveNow(const ocpp::messages::ocpp20::ReserveNowReq& request,
+                      ocpp::messages::ocpp20::ReserveNowConf&      response,
+                      std::string&                                 error,
+                      std::string&                                 message) override;
+
+    /** @brief Called on reception of a Reset message from the central */
+    bool onReset(const ocpp::messages::ocpp20::ResetReq& request,
+                 ocpp::messages::ocpp20::ResetConf&      response,
+                 std::string&                            error,
+                 std::string&                            message) override;
+
+    /** @brief Called on reception of a SendLocalList message from the central */
+    bool onSendLocalList(const ocpp::messages::ocpp20::SendLocalListReq& request,
+                         ocpp::messages::ocpp20::SendLocalListConf&      response,
+                         std::string&                                    error,
+                         std::string&                                    message) override;
+
+    /** @brief Called on reception of a SetChargingProfile message from the central */
+    bool onSetChargingProfile(const ocpp::messages::ocpp20::SetChargingProfileReq& request,
+                              ocpp::messages::ocpp20::SetChargingProfileConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message) override;
+
+    /** @brief Called on reception of a SetDisplayMessage message from the central */
+    bool onSetDisplayMessage(const ocpp::messages::ocpp20::SetDisplayMessageReq& request,
+                             ocpp::messages::ocpp20::SetDisplayMessageConf&      response,
+                             std::string&                                        error,
+                             std::string&                                        message) override;
+
+    /** @brief Called on reception of a SetMonitoringBase message from the central */
+    bool onSetMonitoringBase(const ocpp::messages::ocpp20::SetMonitoringBaseReq& request,
+                             ocpp::messages::ocpp20::SetMonitoringBaseConf&      response,
+                             std::string&                                        error,
+                             std::string&                                        message) override;
+
+    /** @brief Called on reception of a SetMonitoringLevel message from the central */
+    bool onSetMonitoringLevel(const ocpp::messages::ocpp20::SetMonitoringLevelReq& request,
+                              ocpp::messages::ocpp20::SetMonitoringLevelConf&      response,
+                              std::string&                                         error,
+                              std::string&                                         message) override;
+
+    /** @brief Called on reception of a SetNetworkProfile message from the central */
+    bool onSetNetworkProfile(const ocpp::messages::ocpp20::SetNetworkProfileReq& request,
+                             ocpp::messages::ocpp20::SetNetworkProfileConf&      response,
+                             std::string&                                        error,
+                             std::string&                                        message) override;
+
+    /** @brief Called on reception of a SetVariableMonitoring message from the central */
+    bool onSetVariableMonitoring(const ocpp::messages::ocpp20::SetVariableMonitoringReq& request,
+                                 ocpp::messages::ocpp20::SetVariableMonitoringConf&      response,
+                                 std::string&                                            error,
+                                 std::string&                                            message) override;
+
+    /** @brief Called on reception of a SetVariables message from the central */
+    bool onSetVariables(const ocpp::messages::ocpp20::SetVariablesReq& request,
+                        ocpp::messages::ocpp20::SetVariablesConf&      response,
+                        std::string&                                   error,
+                        std::string&                                   message) override;
+
+    /** @brief Called on reception of a TriggerMessage message from the central */
+    bool onTriggerMessage(const ocpp::messages::ocpp20::TriggerMessageReq& request,
+                          ocpp::messages::ocpp20::TriggerMessageConf&      response,
+                          std::string&                                     error,
+                          std::string&                                     message) override;
+
+    /** @brief Called on reception of a UnlockConnector message from the central */
+    bool onUnlockConnector(const ocpp::messages::ocpp20::UnlockConnectorReq& request,
+                           ocpp::messages::ocpp20::UnlockConnectorConf&      response,
+                           std::string&                                      error,
+                           std::string&                                      message) override;
+
+    /** @brief Called on reception of a UnpublishFirmware message from the central */
+    bool onUnpublishFirmware(const ocpp::messages::ocpp20::UnpublishFirmwareReq& request,
+                             ocpp::messages::ocpp20::UnpublishFirmwareConf&      response,
+                             std::string&                                        error,
+                             std::string&                                        message) override;
+
+    /** @brief Called on reception of a UpdateFirmware message from the central */
+    bool onUpdateFirmware(const ocpp::messages::ocpp20::UpdateFirmwareReq& request,
+                          ocpp::messages::ocpp20::UpdateFirmwareConf&      response,
+                          std::string&                                     error,
+                          std::string&                                     message) override;
 
   protected:
     /** @brief Get the configuration */

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGLIMITTYPE20_H
-#define OPENOCPP_CHARGINGLIMITTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGLIMITTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGLIMITTYPE_H
 
 #include "ChargingLimitSourceEnumType20.h"
 #include "CustomDataType20.h"
@@ -40,37 +40,37 @@ namespace ocpp20
 /** @brief Charging_ Limit
 urn:x-enexis:ecdm:uid:2:234489
  */
-struct ChargingLimitType20
+struct ChargingLimitType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ChargingLimitSourceEnumType20 chargingLimitSource;
+    ChargingLimitSourceEnumType chargingLimitSource;
     /** @brief Charging_ Limit. Is_ Grid_ Critical. Indicator
 urn:x-enexis:ecdm:uid:1:570847
 Indicates whether the charging limit is critical for the grid. */
     ocpp::types::Optional<bool> isGridCritical;
 };
 
-/** @brief Converter class for ChargingLimitType20 type */
-class ChargingLimitType20Converter : public ocpp::messages::IMessageConverter<ChargingLimitType20>
+/** @brief Converter class for ChargingLimitType type */
+class ChargingLimitTypeConverter : public ocpp::messages::IMessageConverter<ChargingLimitType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingLimitType20>* clone() const override { return new ChargingLimitType20Converter(); }
+    ocpp::messages::IMessageConverter<ChargingLimitType>* clone() const override { return new ChargingLimitTypeConverter(); }
 
-    /** @brief Convert a ChargingLimitType20 from a JSON representation */
+    /** @brief Convert a ChargingLimitType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingLimitType20&          data,
+                  ChargingLimitType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingLimitType20 to a JSON representation */
-    bool toJson(const ChargingLimitType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingLimitType to a JSON representation */
+    bool toJson(const ChargingLimitType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGLIMITTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGLIMITTYPE_H

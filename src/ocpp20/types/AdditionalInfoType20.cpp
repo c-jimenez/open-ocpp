@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a AdditionalInfoType20 from a JSON representation */
-bool AdditionalInfoType20Converter::fromJson(const rapidjson::Value&       json,
-                                             AdditionalInfoType20&         data,
-                                             std::string&                  error_code,
-                                             [[maybe_unused]] std::string& error_message)
+/** @brief Convert a AdditionalInfoType from a JSON representation */
+bool AdditionalInfoTypeConverter::fromJson(const rapidjson::Value&       json,
+                                           AdditionalInfoType&           data,
+                                           std::string&                  error_code,
+                                           [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -61,15 +61,15 @@ bool AdditionalInfoType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a AdditionalInfoType20 to a JSON representation */
-bool AdditionalInfoType20Converter::toJson(const AdditionalInfoType20& data, rapidjson::Document& json)
+/** @brief Convert a AdditionalInfoType to a JSON representation */
+bool AdditionalInfoTypeConverter::toJson(const AdditionalInfoType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

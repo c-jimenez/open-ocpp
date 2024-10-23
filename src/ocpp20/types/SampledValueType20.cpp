@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a SampledValueType20 from a JSON representation */
-bool SampledValueType20Converter::fromJson(const rapidjson::Value&       json,
-                                           SampledValueType20&           data,
-                                           std::string&                  error_code,
-                                           [[maybe_unused]] std::string& error_message)
+/** @brief Convert a SampledValueType from a JSON representation */
+bool SampledValueTypeConverter::fromJson(const rapidjson::Value&       json,
+                                         SampledValueType&             data,
+                                         std::string&                  error_code,
+                                         [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -53,38 +53,38 @@ bool SampledValueType20Converter::fromJson(const rapidjson::Value&       json,
     // context
     if (json.HasMember("context"))
     {
-        data.context = ReadingContextEnumType20Helper.fromString(json["context"].GetString());
+        data.context = ReadingContextEnumTypeHelper.fromString(json["context"].GetString());
     }
 
     // measurand
     if (json.HasMember("measurand"))
     {
-        data.measurand = MeasurandEnumType20Helper.fromString(json["measurand"].GetString());
+        data.measurand = MeasurandEnumTypeHelper.fromString(json["measurand"].GetString());
     }
 
     // phase
     if (json.HasMember("phase"))
     {
-        data.phase = PhaseEnumType20Helper.fromString(json["phase"].GetString());
+        data.phase = PhaseEnumTypeHelper.fromString(json["phase"].GetString());
     }
 
     // location
     if (json.HasMember("location"))
     {
-        data.location = LocationEnumType20Helper.fromString(json["location"].GetString());
+        data.location = LocationEnumTypeHelper.fromString(json["location"].GetString());
     }
 
     // signedMeterValue
     if (json.HasMember("signedMeterValue"))
     {
-        SignedMeterValueType20Converter signedMeterValue_converter;
+        SignedMeterValueTypeConverter signedMeterValue_converter;
         ret = ret && signedMeterValue_converter.fromJson(json["signedMeterValue"], data.signedMeterValue, error_code, error_message);
     }
 
     // unitOfMeasure
     if (json.HasMember("unitOfMeasure"))
     {
-        UnitOfMeasureType20Converter unitOfMeasure_converter;
+        UnitOfMeasureTypeConverter unitOfMeasure_converter;
         ret = ret && unitOfMeasure_converter.fromJson(json["unitOfMeasure"], data.unitOfMeasure, error_code, error_message);
     }
 
@@ -96,15 +96,15 @@ bool SampledValueType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a SampledValueType20 to a JSON representation */
-bool SampledValueType20Converter::toJson(const SampledValueType20& data, rapidjson::Document& json)
+/** @brief Convert a SampledValueType to a JSON representation */
+bool SampledValueTypeConverter::toJson(const SampledValueType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -118,31 +118,31 @@ bool SampledValueType20Converter::toJson(const SampledValueType20& data, rapidjs
     // context
     if (data.context.isSet())
     {
-        fill(json, "context", ReadingContextEnumType20Helper.toString(data.context));
+        fill(json, "context", ReadingContextEnumTypeHelper.toString(data.context));
     }
 
     // measurand
     if (data.measurand.isSet())
     {
-        fill(json, "measurand", MeasurandEnumType20Helper.toString(data.measurand));
+        fill(json, "measurand", MeasurandEnumTypeHelper.toString(data.measurand));
     }
 
     // phase
     if (data.phase.isSet())
     {
-        fill(json, "phase", PhaseEnumType20Helper.toString(data.phase));
+        fill(json, "phase", PhaseEnumTypeHelper.toString(data.phase));
     }
 
     // location
     if (data.location.isSet())
     {
-        fill(json, "location", LocationEnumType20Helper.toString(data.location));
+        fill(json, "location", LocationEnumTypeHelper.toString(data.location));
     }
 
     // signedMeterValue
     if (data.signedMeterValue.isSet())
     {
-        SignedMeterValueType20Converter signedMeterValue_converter;
+        SignedMeterValueTypeConverter signedMeterValue_converter;
         signedMeterValue_converter.setAllocator(allocator);
         rapidjson::Document signedMeterValue_doc;
         signedMeterValue_doc.Parse("{}");
@@ -153,7 +153,7 @@ bool SampledValueType20Converter::toJson(const SampledValueType20& data, rapidjs
     // unitOfMeasure
     if (data.unitOfMeasure.isSet())
     {
-        UnitOfMeasureType20Converter unitOfMeasure_converter;
+        UnitOfMeasureTypeConverter unitOfMeasure_converter;
         unitOfMeasure_converter.setAllocator(allocator);
         rapidjson::Document unitOfMeasure_doc;
         unitOfMeasure_doc.Parse("{}");

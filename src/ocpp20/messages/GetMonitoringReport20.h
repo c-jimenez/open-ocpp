@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETMONITORINGREPORT20_H
-#define OPENOCPP_GETMONITORINGREPORT20_H
+#ifndef OPENOCPP_OCPP20_GETMONITORINGREPORT_H
+#define OPENOCPP_OCPP20_GETMONITORINGREPORT_H
 
 #include "IMessageConverter.h"
 
@@ -39,38 +39,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetMonitoringReport20 messages */
-static const std::string GETMONITORINGREPORT20_ACTION = "GetMonitoringReport";
+/** @brief Action corresponding to the GetMonitoringReport messages */
+static const std::string GETMONITORINGREPORT_ACTION = "GetMonitoringReport";
 
-/** @brief GetMonitoringReport20Req message */
-struct GetMonitoringReport20Req
+/** @brief GetMonitoringReportReq message */
+struct GetMonitoringReportReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::ComponentVariableType20> componentVariable;
+    std::vector<ocpp::types::ocpp20::ComponentVariableType> componentVariable;
     /** @brief The Id of the request. */
     int requestId;
     /** @brief This field contains criteria for components for which a monitoring report is requested */
-    std::vector<ocpp::types::ocpp20::MonitoringCriterionEnumType20> monitoringCriteria;
+    std::vector<ocpp::types::ocpp20::MonitoringCriterionEnumType> monitoringCriteria;
 };
 
-/** @brief GetMonitoringReport20Conf message */
-struct GetMonitoringReport20Conf
+/** @brief GetMonitoringReportConf message */
+struct GetMonitoringReportConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericDeviceModelStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetMonitoringReport20)
+MESSAGE_CONVERTERS(GetMonitoringReport)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETMONITORINGREPORT20_H
+#endif // OPENOCPP_OCPP20_GETMONITORINGREPORT_H

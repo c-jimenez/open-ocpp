@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETLOCALLISTVERSION20_H
-#define OPENOCPP_GETLOCALLISTVERSION20_H
+#ifndef OPENOCPP_OCPP20_GETLOCALLISTVERSION_H
+#define OPENOCPP_OCPP20_GETLOCALLISTVERSION_H
 
 #include "IMessageConverter.h"
 
@@ -35,30 +35,30 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetLocalListVersion20 messages */
-static const std::string GETLOCALLISTVERSION20_ACTION = "GetLocalListVersion";
+/** @brief Action corresponding to the GetLocalListVersion messages */
+static const std::string GETLOCALLISTVERSION_ACTION = "GetLocalListVersion";
 
-/** @brief GetLocalListVersion20Req message */
-struct GetLocalListVersion20Req
+/** @brief GetLocalListVersionReq message */
+struct GetLocalListVersionReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
-/** @brief GetLocalListVersion20Conf message */
-struct GetLocalListVersion20Conf
+/** @brief GetLocalListVersionConf message */
+struct GetLocalListVersionConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief This contains the current version number of the local authorization list in the Charging Station. */
     int versionNumber;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetLocalListVersion20)
+MESSAGE_CONVERTERS(GetLocalListVersion)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETLOCALLISTVERSION20_H
+#endif // OPENOCPP_OCPP20_GETLOCALLISTVERSION_H

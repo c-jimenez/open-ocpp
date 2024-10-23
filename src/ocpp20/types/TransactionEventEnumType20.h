@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_TRANSACTIONEVENTENUMTYPE20_H
-#define OPENOCPP_TRANSACTIONEVENTENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_TRANSACTIONEVENTENUMTYPE_H
+#define OPENOCPP_OCPP20_TRANSACTIONEVENTENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -35,18 +35,18 @@ namespace ocpp20
 
 /** @brief This contains the type of this event.
 The first TransactionEvent of a transaction SHALL contain: "Started" The last TransactionEvent of a transaction SHALL contain: "Ended" All others SHALL contain: "Updated" */
-enum class TransactionEventEnumType20
+enum class TransactionEventEnumType
 {
     Ended,
     Started,
     Updated,
 };
 
-/** @brief Helper to convert a TransactionEventEnumType20 enum to string */
-extern const EnumToStringFromString<TransactionEventEnumType20> TransactionEventEnumType20Helper;
+/** @brief Helper to convert a TransactionEventEnumType enum to string */
+extern const EnumToStringFromString<TransactionEventEnumType> TransactionEventEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_TRANSACTIONEVENTENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_TRANSACTIONEVENTENUMTYPE_H

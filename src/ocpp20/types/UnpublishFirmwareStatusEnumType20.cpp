@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a UnpublishFirmwareStatusEnumType20 enum to string */
-const EnumToStringFromString<UnpublishFirmwareStatusEnumType20> UnpublishFirmwareStatusEnumType20Helper = {
-    {UnpublishFirmwareStatusEnumType20::DownloadOngoing, "DownloadOngoing"},
-    {UnpublishFirmwareStatusEnumType20::NoFirmware, "NoFirmware"},
-    {UnpublishFirmwareStatusEnumType20::Unpublished, "Unpublished"},
+/** @brief Helper to convert a UnpublishFirmwareStatusEnumType enum to string */
+const EnumToStringFromString<UnpublishFirmwareStatusEnumType> UnpublishFirmwareStatusEnumTypeHelper = {
+    {UnpublishFirmwareStatusEnumType::DownloadOngoing, "DownloadOngoing"},
+    {UnpublishFirmwareStatusEnumType::NoFirmware, "NoFirmware"},
+    {UnpublishFirmwareStatusEnumType::Unpublished, "Unpublished"},
 };
 
 } // namespace ocpp20

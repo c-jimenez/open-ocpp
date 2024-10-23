@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETVARIABLES20_H
-#define OPENOCPP_SETVARIABLES20_H
+#ifndef OPENOCPP_OCPP20_SETVARIABLES_H
+#define OPENOCPP_OCPP20_SETVARIABLES_H
 
 #include "IMessageConverter.h"
 
@@ -37,32 +37,32 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetVariables20 messages */
-static const std::string SETVARIABLES20_ACTION = "SetVariables";
+/** @brief Action corresponding to the SetVariables messages */
+static const std::string SETVARIABLES_ACTION = "SetVariables";
 
-/** @brief SetVariables20Req message */
-struct SetVariables20Req
+/** @brief SetVariablesReq message */
+struct SetVariablesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::SetVariableDataType20> setVariableData;
+    std::vector<ocpp::types::ocpp20::SetVariableDataType> setVariableData;
 };
 
-/** @brief SetVariables20Conf message */
-struct SetVariables20Conf
+/** @brief SetVariablesConf message */
+struct SetVariablesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::SetVariableResultType20> setVariableResult;
+    std::vector<ocpp::types::ocpp20::SetVariableResultType> setVariableResult;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetVariables20)
+MESSAGE_CONVERTERS(SetVariables)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETVARIABLES20_H
+#endif // OPENOCPP_OCPP20_SETVARIABLES_H

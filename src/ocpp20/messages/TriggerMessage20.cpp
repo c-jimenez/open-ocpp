@@ -32,30 +32,30 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a TriggerMessage20Req from a JSON representation */
-bool TriggerMessage20ReqConverter::fromJson(const rapidjson::Value& json,
-                                            TriggerMessage20Req&    data,
-                                            std::string&            error_code,
-                                            std::string&            error_message)
+/** @brief Convert a TriggerMessageReq from a JSON representation */
+bool TriggerMessageReqConverter::fromJson(const rapidjson::Value& json,
+                                          TriggerMessageReq&      data,
+                                          std::string&            error_code,
+                                          std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // evse
     if (json.HasMember("evse"))
     {
-        ocpp::types::ocpp20::EVSEType20Converter evse_converter;
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
         ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
     }
 
     // requestedMessage
-    data.requestedMessage = ocpp::types::ocpp20::MessageTriggerEnumType20Helper.fromString(json["requestedMessage"].GetString());
+    data.requestedMessage = ocpp::types::ocpp20::MessageTriggerEnumTypeHelper.fromString(json["requestedMessage"].GetString());
 
     if (!ret)
     {
@@ -65,15 +65,15 @@ bool TriggerMessage20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a TriggerMessage20Req to a JSON representation */
-bool TriggerMessage20ReqConverter::toJson(const TriggerMessage20Req& data, rapidjson::Document& json)
+/** @brief Convert a TriggerMessageReq to a JSON representation */
+bool TriggerMessageReqConverter::toJson(const TriggerMessageReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -84,7 +84,7 @@ bool TriggerMessage20ReqConverter::toJson(const TriggerMessage20Req& data, rapid
     // evse
     if (data.evse.isSet())
     {
-        ocpp::types::ocpp20::EVSEType20Converter evse_converter;
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
         evse_converter.setAllocator(allocator);
         rapidjson::Document evse_doc;
         evse_doc.Parse("{}");
@@ -93,33 +93,33 @@ bool TriggerMessage20ReqConverter::toJson(const TriggerMessage20Req& data, rapid
     }
 
     // requestedMessage
-    fill(json, "requestedMessage", ocpp::types::ocpp20::MessageTriggerEnumType20Helper.toString(data.requestedMessage));
+    fill(json, "requestedMessage", ocpp::types::ocpp20::MessageTriggerEnumTypeHelper.toString(data.requestedMessage));
 
     return ret;
 }
 
-/** @brief Convert a TriggerMessage20Conf from a JSON representation */
-bool TriggerMessage20ConfConverter::fromJson(const rapidjson::Value& json,
-                                             TriggerMessage20Conf&   data,
-                                             std::string&            error_code,
-                                             std::string&            error_message)
+/** @brief Convert a TriggerMessageConf from a JSON representation */
+bool TriggerMessageConfConverter::fromJson(const rapidjson::Value& json,
+                                           TriggerMessageConf&     data,
+                                           std::string&            error_code,
+                                           std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::TriggerMessageStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::TriggerMessageStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -131,15 +131,15 @@ bool TriggerMessage20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a TriggerMessage20Conf to a JSON representation */
-bool TriggerMessage20ConfConverter::toJson(const TriggerMessage20Conf& data, rapidjson::Document& json)
+/** @brief Convert a TriggerMessageConf to a JSON representation */
+bool TriggerMessageConfConverter::toJson(const TriggerMessageConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -148,12 +148,12 @@ bool TriggerMessage20ConfConverter::toJson(const TriggerMessage20Conf& data, rap
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::TriggerMessageStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::TriggerMessageStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

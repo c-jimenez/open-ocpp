@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETMONITORINGLEVEL20_H
-#define OPENOCPP_SETMONITORINGLEVEL20_H
+#ifndef OPENOCPP_OCPP20_SETMONITORINGLEVEL_H
+#define OPENOCPP_OCPP20_SETMONITORINGLEVEL_H
 
 #include "IMessageConverter.h"
 
@@ -37,14 +37,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetMonitoringLevel20 messages */
-static const std::string SETMONITORINGLEVEL20_ACTION = "SetMonitoringLevel";
+/** @brief Action corresponding to the SetMonitoringLevel messages */
+static const std::string SETMONITORINGLEVEL_ACTION = "SetMonitoringLevel";
 
-/** @brief SetMonitoringLevel20Req message */
-struct SetMonitoringLevel20Req
+/** @brief SetMonitoringLevelReq message */
+struct SetMonitoringLevelReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The Charging Station SHALL only report events with a severity number lower than or equal to this severity.
 The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
 
@@ -72,22 +72,22 @@ Indicates information useful to developers for debugging, not useful during oper
     int severity;
 };
 
-/** @brief SetMonitoringLevel20Conf message */
-struct SetMonitoringLevel20Conf
+/** @brief SetMonitoringLevelConf message */
+struct SetMonitoringLevelConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetMonitoringLevel20)
+MESSAGE_CONVERTERS(SetMonitoringLevel)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETMONITORINGLEVEL20_H
+#endif // OPENOCPP_OCPP20_SETMONITORINGLEVEL_H

@@ -32,20 +32,20 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a Reset20Req from a JSON representation */
-bool Reset20ReqConverter::fromJson(const rapidjson::Value& json, Reset20Req& data, std::string& error_code, std::string& error_message)
+/** @brief Convert a ResetReq from a JSON representation */
+bool ResetReqConverter::fromJson(const rapidjson::Value& json, ResetReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // type
-    data.type = ocpp::types::ocpp20::ResetEnumType20Helper.fromString(json["type"].GetString());
+    data.type = ocpp::types::ocpp20::ResetEnumTypeHelper.fromString(json["type"].GetString());
 
     // evseId
     extract(json, "evseId", data.evseId);
@@ -58,15 +58,15 @@ bool Reset20ReqConverter::fromJson(const rapidjson::Value& json, Reset20Req& dat
     return ret;
 }
 
-/** @brief Convert a Reset20Req to a JSON representation */
-bool Reset20ReqConverter::toJson(const Reset20Req& data, rapidjson::Document& json)
+/** @brief Convert a ResetReq to a JSON representation */
+bool ResetReqConverter::toJson(const ResetReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -75,7 +75,7 @@ bool Reset20ReqConverter::toJson(const Reset20Req& data, rapidjson::Document& js
     }
 
     // type
-    fill(json, "type", ocpp::types::ocpp20::ResetEnumType20Helper.toString(data.type));
+    fill(json, "type", ocpp::types::ocpp20::ResetEnumTypeHelper.toString(data.type));
 
     // evseId
     fill(json, "evseId", data.evseId);
@@ -83,25 +83,25 @@ bool Reset20ReqConverter::toJson(const Reset20Req& data, rapidjson::Document& js
     return ret;
 }
 
-/** @brief Convert a Reset20Conf from a JSON representation */
-bool Reset20ConfConverter::fromJson(const rapidjson::Value& json, Reset20Conf& data, std::string& error_code, std::string& error_message)
+/** @brief Convert a ResetConf from a JSON representation */
+bool ResetConfConverter::fromJson(const rapidjson::Value& json, ResetConf& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::ResetStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::ResetStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -113,15 +113,15 @@ bool Reset20ConfConverter::fromJson(const rapidjson::Value& json, Reset20Conf& d
     return ret;
 }
 
-/** @brief Convert a Reset20Conf to a JSON representation */
-bool Reset20ConfConverter::toJson(const Reset20Conf& data, rapidjson::Document& json)
+/** @brief Convert a ResetConf to a JSON representation */
+bool ResetConfConverter::toJson(const ResetConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -130,12 +130,12 @@ bool Reset20ConfConverter::toJson(const Reset20Conf& data, rapidjson::Document& 
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::ResetStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::ResetStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

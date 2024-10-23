@@ -210,9 +210,6 @@ class Message(Type):
         self.name = ""
         ''' Name of the message '''
 
-        self.raw_name = ""
-        ''' Name of the message without OCPP suffix '''
-
         self.id = ""
         ''' Id of the message definition '''
 
@@ -442,7 +439,7 @@ def parse_type_contents(name, contents, ocpp_version_suffix) -> Type:
 
     # Generic type data
     type = Type()
-    type.name = f"{name}{ocpp_version_suffix}"
+    type.name = f"{name}"
     type.basic_type = contents["type"]
     if "description" in contents:
         type.comment = contents["description"]    
@@ -458,7 +455,7 @@ def parse_type_contents(name, contents, ocpp_version_suffix) -> Type:
                 field.comment = property_definition["description"]
             if "$ref" in property_definition:
                 external_type = property_definition["$ref"]
-                field.type = external_type[external_type.rfind("/") + 1:] + ocpp_version_suffix
+                field.type = external_type[external_type.rfind("/") + 1:]
                 type.requires.append(field.type)
             else:
                 if "type" in property_definition:
@@ -474,7 +471,7 @@ def parse_type_contents(name, contents, ocpp_version_suffix) -> Type:
                 elif field.type == "array":
                     if "$ref" in property_definition["items"]:
                         external_type = property_definition["items"]["$ref"]
-                        field.array_type = external_type[external_type.rfind("/") + 1:] + ocpp_version_suffix
+                        field.array_type = external_type[external_type.rfind("/") + 1:]
                         type.requires.append(field.array_type)
                     else:
                         field.array_type = property_definition["items"]["type"]
@@ -527,7 +524,7 @@ def parse_message_contents(message, contents, ocpp_version_suffix) -> None:
 
     return
 
-def gen_ocpp_enum(message, enum, templates, params) -> None:
+def gen_ocpp_enum(message, enum, templates, params, ocpp_version_suffix) -> None:
     ''' 
         Generate the code corresponding to an OCPP enum
 
@@ -542,31 +539,34 @@ def gen_ocpp_enum(message, enum, templates, params) -> None:
 
         @param params: Command line parameters
         @type params: Parameters
+
+        @param ocpp_version_suffix: Suffix of the OCPP version
+        @type ocpp_version_suffix: string
     '''
 
     # Generate header file
-    enum_header_path = os.path.join(params.types_dir, enum.name + ".h")
+    enum_header_path = os.path.join(params.types_dir, enum.name + ocpp_version_suffix + ".h")
     enum_header = open(enum_header_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["enum_header"])
-    rendered_template = template.render(message = message, enum = enum, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(message = message, enum = enum, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     enum_header.write(rendered_template)
     enum_header.close()
 
     # Generate implementation file
-    enum_impl_path = os.path.join(params.types_dir, enum.name + ".cpp")
+    enum_impl_path = os.path.join(params.types_dir, enum.name + ocpp_version_suffix + ".cpp")
     enum_impl = open(enum_impl_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["enum_impl"])
-    rendered_template = template.render(message = message, enum = enum, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(message = message, enum = enum, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     enum_impl.write(rendered_template)
     enum_impl.close()
 
-def gen_ocpp_type(message, type, other_types, templates, params) -> None:
+def gen_ocpp_type(message, type, other_types, templates, params, ocpp_version_suffix) -> None:
     ''' 
         Generate the code corresponding to an OCPP type
 
@@ -584,26 +584,29 @@ def gen_ocpp_type(message, type, other_types, templates, params) -> None:
 
         @param params: Command line parameters
         @type params: Parameters
+
+        @param ocpp_version_suffix: Suffix of the OCPP version
+        @type ocpp_version_suffix: string
     '''
 
     # Generate header file
-    type_header_path = os.path.join(params.types_dir, type.name + ".h")
+    type_header_path = os.path.join(params.types_dir, type.name + ocpp_version_suffix + ".h")
     type_header = open(type_header_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["type_header"])
-    rendered_template = template.render(message = message, type = type, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(message = message, type = type, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     type_header.write(rendered_template)
     type_header.close()
 
     # Generate implementation file
-    type_impl_path = os.path.join(params.types_dir, type.name + ".cpp")
+    type_impl_path = os.path.join(params.types_dir, type.name + ocpp_version_suffix + ".cpp")
     type_impl = open(type_impl_path, "wt")
 
     env = jinja2.Environment()
     template = env.from_string(templates["type_impl"])
-    rendered_template = template.render(message = message, type = type, other_types=other_types, ocpp_version_namespace = params.ocpp_version)
+    rendered_template = template.render(message = message, type = type, other_types=other_types, ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
 
     type_impl.write(rendered_template)
     type_impl.close()
@@ -626,8 +629,7 @@ def gen_ocpp_message(message, templates, params) -> None:
     ocpp_version_suffix = params.ocpp_version[4:]
 
     msg = Message()
-    msg.name = f"{message}{ocpp_version_suffix}"
-    msg.raw_name = message
+    msg.name = f"{message}"
     
     # Parse input files
     request = json.load(open(os.path.join(params.input_dir, f"{ocpp_message}Request.json")))
@@ -637,7 +639,7 @@ def gen_ocpp_message(message, templates, params) -> None:
 
     msg.id = request["$id"]
     msg.comment = request["comment"]
-    msg.types = {f"{ocpp_message}{ocpp_version_suffix}Req": msg.request, f"{ocpp_message}{ocpp_version_suffix}Conf": msg.response}
+    msg.types = {f"{ocpp_message}Req": msg.request, f"{ocpp_message}Conf": msg.response}
 
     # Required types
     msg.requires = msg.request.requires
@@ -653,9 +655,9 @@ def gen_ocpp_message(message, templates, params) -> None:
         associated_types[type.name] = type
     for associated_type in associated_types.values():
         if associated_type.basic_type == "enum":
-            gen_ocpp_enum(msg, associated_type, templates, params)
+            gen_ocpp_enum(msg, associated_type, templates, params, ocpp_version_suffix)
         else:
-            gen_ocpp_type(msg, associated_type, associated_types, templates, params)
+            gen_ocpp_type(msg, associated_type, associated_types, templates, params, ocpp_version_suffix)
 
     # Generate message header file
     msg_header_path = os.path.join(params.messages_dir, ocpp_message + ocpp_version_suffix + ".h")
@@ -756,6 +758,8 @@ def gen_chargepoint(templates, params, msg_list):
     gen_file.write(rendered_template)
     gen_file.close()
 
+    return
+
 
 def gen_centralsystem(templates, params, msg_list):
     ''' 
@@ -833,6 +837,8 @@ def gen_centralsystem(templates, params, msg_list):
     rendered_template = template.render(csms_msgs = msg_list["from_csms"], cs_msgs = msg_list["from_cs"], ocpp_version_namespace = params.ocpp_version, ocpp_version_suffix = ocpp_version_suffix)
     gen_file.write(rendered_template)
     gen_file.close()
+
+    return
 
 
 def gen_localcontroller(templates, params, msg_list):
@@ -953,6 +959,8 @@ def gen_localcontroller(templates, params, msg_list):
     gen_file.write(rendered_template)
     gen_file.close()
 
+    return
+
 
 
 # Entry point
@@ -984,14 +992,6 @@ if __name__ == '__main__':
         msg_list_file_path = os.path.join(params.input_dir, "list.json")
         try:
             msg_list = json.load(open(msg_list_file_path, "rt"))
-            renamed_msgs = []
-            for msg in msg_list["from_csms"]:
-                renamed_msgs.append(f"{msg}{ocpp_version_suffix}")
-            msg_list["from_csms"] = renamed_msgs
-            renamed_msgs = []
-            for msg in msg_list["from_cs"]:
-                renamed_msgs.append(f"{msg}{ocpp_version_suffix}")
-            msg_list["from_cs"] = renamed_msgs
         except:
             print(f"Unable to load messages list file : {msg_list_file_path}")
 

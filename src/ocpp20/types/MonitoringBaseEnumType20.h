@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MONITORINGBASEENUMTYPE20_H
-#define OPENOCPP_MONITORINGBASEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MONITORINGBASEENUMTYPE_H
+#define OPENOCPP_OCPP20_MONITORINGBASEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Specify which monitoring base will be set */
-enum class MonitoringBaseEnumType20
+enum class MonitoringBaseEnumType
 {
     All,
     FactoryDefault,
     HardWiredOnly,
 };
 
-/** @brief Helper to convert a MonitoringBaseEnumType20 enum to string */
-extern const EnumToStringFromString<MonitoringBaseEnumType20> MonitoringBaseEnumType20Helper;
+/** @brief Helper to convert a MonitoringBaseEnumType enum to string */
+extern const EnumToStringFromString<MonitoringBaseEnumType> MonitoringBaseEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MONITORINGBASEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MONITORINGBASEENUMTYPE_H

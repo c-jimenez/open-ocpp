@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETDISPLAYMESSAGE20_H
-#define OPENOCPP_SETDISPLAYMESSAGE20_H
+#ifndef OPENOCPP_OCPP20_SETDISPLAYMESSAGE_H
+#define OPENOCPP_OCPP20_SETDISPLAYMESSAGE_H
 
 #include "IMessageConverter.h"
 
@@ -38,34 +38,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetDisplayMessage20 messages */
-static const std::string SETDISPLAYMESSAGE20_ACTION = "SetDisplayMessage";
+/** @brief Action corresponding to the SetDisplayMessage messages */
+static const std::string SETDISPLAYMESSAGE_ACTION = "SetDisplayMessage";
 
-/** @brief SetDisplayMessage20Req message */
-struct SetDisplayMessage20Req
+/** @brief SetDisplayMessageReq message */
+struct SetDisplayMessageReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::MessageInfoType20 message;
+    ocpp::types::ocpp20::MessageInfoType message;
 };
 
-/** @brief SetDisplayMessage20Conf message */
-struct SetDisplayMessage20Conf
+/** @brief SetDisplayMessageConf message */
+struct SetDisplayMessageConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::DisplayMessageStatusEnumType20 status;
+    ocpp::types::ocpp20::DisplayMessageStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetDisplayMessage20)
+MESSAGE_CONVERTERS(SetDisplayMessage)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETDISPLAYMESSAGE20_H
+#endif // OPENOCPP_OCPP20_SETDISPLAYMESSAGE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UNITOFMEASURETYPE20_H
-#define OPENOCPP_UNITOFMEASURETYPE20_H
+#ifndef OPENOCPP_OCPP20_UNITOFMEASURETYPE_H
+#define OPENOCPP_OCPP20_UNITOFMEASURETYPE_H
 
 #include "CustomDataType20.h"
 
@@ -39,10 +39,10 @@ namespace ocpp20
 
 /** @brief Represents a UnitOfMeasure with a multiplier
  */
-struct UnitOfMeasureType20
+struct UnitOfMeasureType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Unit of the value. Default = "Wh" if the (default) measurand is an "Energy" type.
 This field SHALL use a value from the list Standardized Units of Measurements in Part 2 Appendices. 
 If an applicable unit is available in that list, otherwise a "custom" unit might be used. */
@@ -51,25 +51,25 @@ If an applicable unit is available in that list, otherwise a "custom" unit might
     ocpp::types::Optional<int> multiplier;
 };
 
-/** @brief Converter class for UnitOfMeasureType20 type */
-class UnitOfMeasureType20Converter : public ocpp::messages::IMessageConverter<UnitOfMeasureType20>
+/** @brief Converter class for UnitOfMeasureType type */
+class UnitOfMeasureTypeConverter : public ocpp::messages::IMessageConverter<UnitOfMeasureType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<UnitOfMeasureType20>* clone() const override { return new UnitOfMeasureType20Converter(); }
+    ocpp::messages::IMessageConverter<UnitOfMeasureType>* clone() const override { return new UnitOfMeasureTypeConverter(); }
 
-    /** @brief Convert a UnitOfMeasureType20 from a JSON representation */
+    /** @brief Convert a UnitOfMeasureType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  UnitOfMeasureType20&          data,
+                  UnitOfMeasureType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a UnitOfMeasureType20 to a JSON representation */
-    bool toJson(const UnitOfMeasureType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a UnitOfMeasureType to a JSON representation */
+    bool toJson(const UnitOfMeasureType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_UNITOFMEASURETYPE20_H
+#endif // OPENOCPP_OCPP20_UNITOFMEASURETYPE_H

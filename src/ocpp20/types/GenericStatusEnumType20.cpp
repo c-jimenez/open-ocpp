@@ -30,10 +30,10 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a GenericStatusEnumType20 enum to string */
-const EnumToStringFromString<GenericStatusEnumType20> GenericStatusEnumType20Helper = {
-    {GenericStatusEnumType20::Accepted, "Accepted"},
-    {GenericStatusEnumType20::Rejected, "Rejected"},
+/** @brief Helper to convert a GenericStatusEnumType enum to string */
+const EnumToStringFromString<GenericStatusEnumType> GenericStatusEnumTypeHelper = {
+    {GenericStatusEnumType::Accepted, "Accepted"},
+    {GenericStatusEnumType::Rejected, "Rejected"},
 };
 
 } // namespace ocpp20

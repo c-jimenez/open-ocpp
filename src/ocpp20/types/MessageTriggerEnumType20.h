@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGETRIGGERENUMTYPE20_H
-#define OPENOCPP_MESSAGETRIGGERENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGETRIGGERENUMTYPE_H
+#define OPENOCPP_OCPP20_MESSAGETRIGGERENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Type of message to be triggered. */
-enum class MessageTriggerEnumType20
+enum class MessageTriggerEnumType
 {
     BootNotification,
     LogStatusNotification,
@@ -49,11 +49,11 @@ enum class MessageTriggerEnumType20
     PublishFirmwareStatusNotification,
 };
 
-/** @brief Helper to convert a MessageTriggerEnumType20 enum to string */
-extern const EnumToStringFromString<MessageTriggerEnumType20> MessageTriggerEnumType20Helper;
+/** @brief Helper to convert a MessageTriggerEnumType enum to string */
+extern const EnumToStringFromString<MessageTriggerEnumType> MessageTriggerEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGETRIGGERENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGETRIGGERENUMTYPE_H

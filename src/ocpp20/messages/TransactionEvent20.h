@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_TRANSACTIONEVENT20_H
-#define OPENOCPP_TRANSACTIONEVENT20_H
+#ifndef OPENOCPP_OCPP20_TRANSACTIONEVENT_H
+#define OPENOCPP_OCPP20_TRANSACTIONEVENT_H
 
 #include "IMessageConverter.h"
 
@@ -43,22 +43,22 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the TransactionEvent20 messages */
-static const std::string TRANSACTIONEVENT20_ACTION = "TransactionEvent";
+/** @brief Action corresponding to the TransactionEvent messages */
+static const std::string TRANSACTIONEVENT_ACTION = "TransactionEvent";
 
-/** @brief TransactionEvent20Req message */
-struct TransactionEvent20Req
+/** @brief TransactionEventReq message */
+struct TransactionEventReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::TransactionEventEnumType20 eventType;
+    ocpp::types::ocpp20::TransactionEventEnumType eventType;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::MeterValueType20> meterValue;
+    std::vector<ocpp::types::ocpp20::MeterValueType> meterValue;
     /** @brief The date and time at which this transaction event occurred. */
     ocpp::types::DateTime timestamp;
     /** @brief  */
-    ocpp::types::ocpp20::TriggerReasonEnumType20 triggerReason;
+    ocpp::types::ocpp20::TriggerReasonEnumType triggerReason;
     /** @brief Incremental sequence number, helps with determining if all messages of a transaction have been received. */
     int seqNo;
     /** @brief Indication that this transaction event happened when the Charging Station was offline. Default = false, meaning: the event occurred when the Charging Station was online. */
@@ -70,33 +70,33 @@ struct TransactionEvent20Req
     /** @brief This contains the Id of the reservation that terminates as a result of this transaction. */
     ocpp::types::Optional<int> reservationId;
     /** @brief  */
-    ocpp::types::ocpp20::TransactionType20 transactionInfo;
+    ocpp::types::ocpp20::TransactionType transactionInfo;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType20> evse;
+    ocpp::types::Optional<ocpp::types::ocpp20::EVSEType> evse;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType20> idToken;
+    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenType> idToken;
 };
 
-/** @brief TransactionEvent20Conf message */
-struct TransactionEvent20Conf
+/** @brief TransactionEventConf message */
+struct TransactionEventConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief SHALL only be sent when charging has ended. Final total cost of this transaction, including taxes. In the currency configured with the Configuration Variable: &lt;&lt;configkey-currency,`Currency`&gt;&gt;. When omitted, the transaction was NOT free. To indicate a free transaction, the CSMS SHALL send 0.00. */
     ocpp::types::Optional<float> totalCost;
     /** @brief Priority from a business point of view. Default priority is 0, The range is from -9 to 9. Higher values indicate a higher priority. The chargingPriority in &lt;&lt;transactioneventresponse,TransactionEventResponse&gt;&gt; is temporarily, so it may not be set in the &lt;&lt;cmn_idtokeninfotype,IdTokenInfoType&gt;&gt; afterwards. Also the chargingPriority in &lt;&lt;transactioneventresponse,TransactionEventResponse&gt;&gt; overrules the one in &lt;&lt;cmn_idtokeninfotype,IdTokenInfoType&gt;&gt;. */
     ocpp::types::Optional<int> chargingPriority;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenInfoType20> idTokenInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::IdTokenInfoType> idTokenInfo;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::MessageContentType20> updatedPersonalMessage;
+    ocpp::types::Optional<ocpp::types::ocpp20::MessageContentType> updatedPersonalMessage;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(TransactionEvent20)
+MESSAGE_CONVERTERS(TransactionEvent)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_TRANSACTIONEVENT20_H
+#endif // OPENOCPP_OCPP20_TRANSACTIONEVENT_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETTRANSACTIONSTATUS20_H
-#define OPENOCPP_GETTRANSACTIONSTATUS20_H
+#ifndef OPENOCPP_OCPP20_GETTRANSACTIONSTATUS_H
+#define OPENOCPP_OCPP20_GETTRANSACTIONSTATUS_H
 
 #include "IMessageConverter.h"
 
@@ -35,23 +35,23 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetTransactionStatus20 messages */
-static const std::string GETTRANSACTIONSTATUS20_ACTION = "GetTransactionStatus";
+/** @brief Action corresponding to the GetTransactionStatus messages */
+static const std::string GETTRANSACTIONSTATUS_ACTION = "GetTransactionStatus";
 
-/** @brief GetTransactionStatus20Req message */
-struct GetTransactionStatus20Req
+/** @brief GetTransactionStatusReq message */
+struct GetTransactionStatusReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The Id of the transaction for which the status is requested. */
     ocpp::types::Optional<ocpp::types::CiStringType<36u>> transactionId;
 };
 
-/** @brief GetTransactionStatus20Conf message */
-struct GetTransactionStatus20Conf
+/** @brief GetTransactionStatusConf message */
+struct GetTransactionStatusConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Whether the transaction is still ongoing. */
     ocpp::types::Optional<bool> ongoingIndicator;
     /** @brief Whether there are still message to be delivered. */
@@ -59,10 +59,10 @@ struct GetTransactionStatus20Conf
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetTransactionStatus20)
+MESSAGE_CONVERTERS(GetTransactionStatus)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETTRANSACTIONSTATUS20_H
+#endif // OPENOCPP_OCPP20_GETTRANSACTIONSTATUS_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGSCHEDULEPERIODTYPE20_H
-#define OPENOCPP_CHARGINGSCHEDULEPERIODTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGSCHEDULEPERIODTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGSCHEDULEPERIODTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -40,10 +40,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233257
 Charging schedule period structure defines a time period in a charging schedule.
  */
-struct ChargingSchedulePeriodType20
+struct ChargingSchedulePeriodType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Charging_ Schedule_ Period. Start_ Period. Elapsed_ Time
 urn:x-oca:ocpp:uid:1:569240
 Start of the period, in seconds from the start of schedule. The value of StartPeriod also defines the stop time of the previous period. */
@@ -60,28 +60,28 @@ The number of phases that can be used for charging. If a number of phases is nee
     ocpp::types::Optional<int> phaseToUse;
 };
 
-/** @brief Converter class for ChargingSchedulePeriodType20 type */
-class ChargingSchedulePeriodType20Converter : public ocpp::messages::IMessageConverter<ChargingSchedulePeriodType20>
+/** @brief Converter class for ChargingSchedulePeriodType type */
+class ChargingSchedulePeriodTypeConverter : public ocpp::messages::IMessageConverter<ChargingSchedulePeriodType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingSchedulePeriodType20>* clone() const override
+    ocpp::messages::IMessageConverter<ChargingSchedulePeriodType>* clone() const override
     {
-        return new ChargingSchedulePeriodType20Converter();
+        return new ChargingSchedulePeriodTypeConverter();
     }
 
-    /** @brief Convert a ChargingSchedulePeriodType20 from a JSON representation */
+    /** @brief Convert a ChargingSchedulePeriodType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingSchedulePeriodType20& data,
+                  ChargingSchedulePeriodType&   data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingSchedulePeriodType20 to a JSON representation */
-    bool toJson(const ChargingSchedulePeriodType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingSchedulePeriodType to a JSON representation */
+    bool toJson(const ChargingSchedulePeriodType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGSCHEDULEPERIODTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGSCHEDULEPERIODTYPE_H

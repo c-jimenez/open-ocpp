@@ -32,23 +32,23 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a SetMonitoringBase20Req from a JSON representation */
-bool SetMonitoringBase20ReqConverter::fromJson(const rapidjson::Value& json,
-                                               SetMonitoringBase20Req& data,
-                                               std::string&            error_code,
-                                               std::string&            error_message)
+/** @brief Convert a SetMonitoringBaseReq from a JSON representation */
+bool SetMonitoringBaseReqConverter::fromJson(const rapidjson::Value& json,
+                                             SetMonitoringBaseReq&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // monitoringBase
-    data.monitoringBase = ocpp::types::ocpp20::MonitoringBaseEnumType20Helper.fromString(json["monitoringBase"].GetString());
+    data.monitoringBase = ocpp::types::ocpp20::MonitoringBaseEnumTypeHelper.fromString(json["monitoringBase"].GetString());
 
     if (!ret)
     {
@@ -58,15 +58,15 @@ bool SetMonitoringBase20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a SetMonitoringBase20Req to a JSON representation */
-bool SetMonitoringBase20ReqConverter::toJson(const SetMonitoringBase20Req& data, rapidjson::Document& json)
+/** @brief Convert a SetMonitoringBaseReq to a JSON representation */
+bool SetMonitoringBaseReqConverter::toJson(const SetMonitoringBaseReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -75,33 +75,33 @@ bool SetMonitoringBase20ReqConverter::toJson(const SetMonitoringBase20Req& data,
     }
 
     // monitoringBase
-    fill(json, "monitoringBase", ocpp::types::ocpp20::MonitoringBaseEnumType20Helper.toString(data.monitoringBase));
+    fill(json, "monitoringBase", ocpp::types::ocpp20::MonitoringBaseEnumTypeHelper.toString(data.monitoringBase));
 
     return ret;
 }
 
-/** @brief Convert a SetMonitoringBase20Conf from a JSON representation */
-bool SetMonitoringBase20ConfConverter::fromJson(const rapidjson::Value&  json,
-                                                SetMonitoringBase20Conf& data,
-                                                std::string&             error_code,
-                                                std::string&             error_message)
+/** @brief Convert a SetMonitoringBaseConf from a JSON representation */
+bool SetMonitoringBaseConfConverter::fromJson(const rapidjson::Value& json,
+                                              SetMonitoringBaseConf&  data,
+                                              std::string&            error_code,
+                                              std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::GenericDeviceModelStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -113,15 +113,15 @@ bool SetMonitoringBase20ConfConverter::fromJson(const rapidjson::Value&  json,
     return ret;
 }
 
-/** @brief Convert a SetMonitoringBase20Conf to a JSON representation */
-bool SetMonitoringBase20ConfConverter::toJson(const SetMonitoringBase20Conf& data, rapidjson::Document& json)
+/** @brief Convert a SetMonitoringBaseConf to a JSON representation */
+bool SetMonitoringBaseConfConverter::toJson(const SetMonitoringBaseConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -130,12 +130,12 @@ bool SetMonitoringBase20ConfConverter::toJson(const SetMonitoringBase20Conf& dat
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::GenericDeviceModelStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::GenericDeviceModelStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

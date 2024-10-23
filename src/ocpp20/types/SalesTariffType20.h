@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SALESTARIFFTYPE20_H
-#define OPENOCPP_SALESTARIFFTYPE20_H
+#ifndef OPENOCPP_OCPP20_SALESTARIFFTYPE_H
+#define OPENOCPP_OCPP20_SALESTARIFFTYPE_H
 
 #include "CustomDataType20.h"
 #include "SalesTariffEntryType20.h"
@@ -43,10 +43,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233272
 NOTE: This dataType is based on dataTypes from &lt;&lt;ref-ISOIEC15118-2,ISO 15118-2&gt;&gt;.
  */
-struct SalesTariffType20
+struct SalesTariffType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identified_ Object. MRID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:569198
 SalesTariff identifier used to identify one sales tariff. An SAID remains a unique identifier for one schedule throughout a charging session. */
@@ -60,28 +60,28 @@ urn:x-oca:ocpp:uid:1:569284
 Defines the overall number of distinct price levels used across all provided SalesTariff elements. */
     ocpp::types::Optional<int> numEPriceLevels;
     /** @brief  */
-    std::vector<SalesTariffEntryType20> salesTariffEntry;
+    std::vector<SalesTariffEntryType> salesTariffEntry;
 };
 
-/** @brief Converter class for SalesTariffType20 type */
-class SalesTariffType20Converter : public ocpp::messages::IMessageConverter<SalesTariffType20>
+/** @brief Converter class for SalesTariffType type */
+class SalesTariffTypeConverter : public ocpp::messages::IMessageConverter<SalesTariffType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SalesTariffType20>* clone() const override { return new SalesTariffType20Converter(); }
+    ocpp::messages::IMessageConverter<SalesTariffType>* clone() const override { return new SalesTariffTypeConverter(); }
 
-    /** @brief Convert a SalesTariffType20 from a JSON representation */
+    /** @brief Convert a SalesTariffType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SalesTariffType20&            data,
+                  SalesTariffType&              data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SalesTariffType20 to a JSON representation */
-    bool toJson(const SalesTariffType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SalesTariffType to a JSON representation */
+    bool toJson(const SalesTariffType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SALESTARIFFTYPE20_H
+#endif // OPENOCPP_OCPP20_SALESTARIFFTYPE_H

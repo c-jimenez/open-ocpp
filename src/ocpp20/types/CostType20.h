@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_COSTTYPE20_H
-#define OPENOCPP_COSTTYPE20_H
+#ifndef OPENOCPP_OCPP20_COSTTYPE_H
+#define OPENOCPP_OCPP20_COSTTYPE_H
 
 #include "CostKindEnumType20.h"
 #include "CustomDataType20.h"
@@ -40,12 +40,12 @@ namespace ocpp20
 /** @brief Cost
 urn:x-oca:ocpp:uid:2:233258
  */
-struct CostType20
+struct CostType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    CostKindEnumType20 costKind;
+    CostKindEnumType costKind;
     /** @brief Cost. Amount. Amount
 urn:x-oca:ocpp:uid:1:569244
 The estimated or actual cost per kWh */
@@ -56,25 +56,25 @@ Values: -3..3, The amountMultiplier defines the exponent to base 10 (dec). The f
     ocpp::types::Optional<int> amountMultiplier;
 };
 
-/** @brief Converter class for CostType20 type */
-class CostType20Converter : public ocpp::messages::IMessageConverter<CostType20>
+/** @brief Converter class for CostType type */
+class CostTypeConverter : public ocpp::messages::IMessageConverter<CostType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<CostType20>* clone() const override { return new CostType20Converter(); }
+    ocpp::messages::IMessageConverter<CostType>* clone() const override { return new CostTypeConverter(); }
 
-    /** @brief Convert a CostType20 from a JSON representation */
+    /** @brief Convert a CostType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  CostType20&                   data,
+                  CostType&                     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a CostType20 to a JSON representation */
-    bool toJson(const CostType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a CostType to a JSON representation */
+    bool toJson(const CostType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_COSTTYPE20_H
+#endif // OPENOCPP_OCPP20_COSTTYPE_H

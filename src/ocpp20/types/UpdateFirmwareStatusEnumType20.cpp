@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a UpdateFirmwareStatusEnumType20 enum to string */
-const EnumToStringFromString<UpdateFirmwareStatusEnumType20> UpdateFirmwareStatusEnumType20Helper = {
-    {UpdateFirmwareStatusEnumType20::Accepted, "Accepted"},
-    {UpdateFirmwareStatusEnumType20::Rejected, "Rejected"},
-    {UpdateFirmwareStatusEnumType20::AcceptedCanceled, "AcceptedCanceled"},
-    {UpdateFirmwareStatusEnumType20::InvalidCertificate, "InvalidCertificate"},
-    {UpdateFirmwareStatusEnumType20::RevokedCertificate, "RevokedCertificate"},
+/** @brief Helper to convert a UpdateFirmwareStatusEnumType enum to string */
+const EnumToStringFromString<UpdateFirmwareStatusEnumType> UpdateFirmwareStatusEnumTypeHelper = {
+    {UpdateFirmwareStatusEnumType::Accepted, "Accepted"},
+    {UpdateFirmwareStatusEnumType::Rejected, "Rejected"},
+    {UpdateFirmwareStatusEnumType::AcceptedCanceled, "AcceptedCanceled"},
+    {UpdateFirmwareStatusEnumType::InvalidCertificate, "InvalidCertificate"},
+    {UpdateFirmwareStatusEnumType::RevokedCertificate, "RevokedCertificate"},
 };
 
 } // namespace ocpp20

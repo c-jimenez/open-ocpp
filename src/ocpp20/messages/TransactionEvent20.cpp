@@ -32,33 +32,33 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a TransactionEvent20Req from a JSON representation */
-bool TransactionEvent20ReqConverter::fromJson(const rapidjson::Value& json,
-                                              TransactionEvent20Req&  data,
-                                              std::string&            error_code,
-                                              std::string&            error_message)
+/** @brief Convert a TransactionEventReq from a JSON representation */
+bool TransactionEventReqConverter::fromJson(const rapidjson::Value& json,
+                                            TransactionEventReq&    data,
+                                            std::string&            error_code,
+                                            std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // eventType
-    data.eventType = ocpp::types::ocpp20::TransactionEventEnumType20Helper.fromString(json["eventType"].GetString());
+    data.eventType = ocpp::types::ocpp20::TransactionEventEnumTypeHelper.fromString(json["eventType"].GetString());
 
     // meterValue
     if (json.HasMember("meterValue"))
     {
-        const rapidjson::Value&                        meterValue_json = json["meterValue"];
-        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+        const rapidjson::Value&                      meterValue_json = json["meterValue"];
+        ocpp::types::ocpp20::MeterValueTypeConverter meterValue_converter;
         for (auto it = meterValue_json.Begin(); ret && (it != meterValue_json.End()); ++it)
         {
-            ocpp::types::ocpp20::MeterValueType20& item = data.meterValue.emplace_back();
-            ret                                         = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
+            ocpp::types::ocpp20::MeterValueType& item = data.meterValue.emplace_back();
+            ret                                       = ret && meterValue_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -66,7 +66,7 @@ bool TransactionEvent20ReqConverter::fromJson(const rapidjson::Value& json,
     ret = ret && extract(json, "timestamp", data.timestamp, error_message);
 
     // triggerReason
-    data.triggerReason = ocpp::types::ocpp20::TriggerReasonEnumType20Helper.fromString(json["triggerReason"].GetString());
+    data.triggerReason = ocpp::types::ocpp20::TriggerReasonEnumTypeHelper.fromString(json["triggerReason"].GetString());
 
     // seqNo
     extract(json, "seqNo", data.seqNo);
@@ -84,20 +84,20 @@ bool TransactionEvent20ReqConverter::fromJson(const rapidjson::Value& json,
     extract(json, "reservationId", data.reservationId);
 
     // transactionInfo
-    ocpp::types::ocpp20::TransactionType20Converter transactionInfo_converter;
+    ocpp::types::ocpp20::TransactionTypeConverter transactionInfo_converter;
     ret = ret && transactionInfo_converter.fromJson(json["transactionInfo"], data.transactionInfo, error_code, error_message);
 
     // evse
     if (json.HasMember("evse"))
     {
-        ocpp::types::ocpp20::EVSEType20Converter evse_converter;
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
         ret = ret && evse_converter.fromJson(json["evse"], data.evse, error_code, error_message);
     }
 
     // idToken
     if (json.HasMember("idToken"))
     {
-        ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         ret = ret && idToken_converter.fromJson(json["idToken"], data.idToken, error_code, error_message);
     }
 
@@ -109,15 +109,15 @@ bool TransactionEvent20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a TransactionEvent20Req to a JSON representation */
-bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, rapidjson::Document& json)
+/** @brief Convert a TransactionEventReq to a JSON representation */
+bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -126,16 +126,16 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     }
 
     // eventType
-    fill(json, "eventType", ocpp::types::ocpp20::TransactionEventEnumType20Helper.toString(data.eventType));
+    fill(json, "eventType", ocpp::types::ocpp20::TransactionEventEnumTypeHelper.toString(data.eventType));
 
     // meterValue
     if (!data.meterValue.empty())
     {
 
-        rapidjson::Value                               meterValue_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::MeterValueType20Converter meterValue_converter;
+        rapidjson::Value                             meterValue_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::MeterValueTypeConverter meterValue_converter;
         meterValue_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::MeterValueType20& item : data.meterValue)
+        for (const ocpp::types::ocpp20::MeterValueType& item : data.meterValue)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -149,7 +149,7 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     fill(json, "timestamp", data.timestamp);
 
     // triggerReason
-    fill(json, "triggerReason", ocpp::types::ocpp20::TriggerReasonEnumType20Helper.toString(data.triggerReason));
+    fill(json, "triggerReason", ocpp::types::ocpp20::TriggerReasonEnumTypeHelper.toString(data.triggerReason));
 
     // seqNo
     fill(json, "seqNo", data.seqNo);
@@ -167,7 +167,7 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     fill(json, "reservationId", data.reservationId);
 
     // transactionInfo
-    ocpp::types::ocpp20::TransactionType20Converter transactionInfo_converter;
+    ocpp::types::ocpp20::TransactionTypeConverter transactionInfo_converter;
     transactionInfo_converter.setAllocator(allocator);
     rapidjson::Document transactionInfo_doc;
     transactionInfo_doc.Parse("{}");
@@ -177,7 +177,7 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     // evse
     if (data.evse.isSet())
     {
-        ocpp::types::ocpp20::EVSEType20Converter evse_converter;
+        ocpp::types::ocpp20::EVSETypeConverter evse_converter;
         evse_converter.setAllocator(allocator);
         rapidjson::Document evse_doc;
         evse_doc.Parse("{}");
@@ -188,7 +188,7 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     // idToken
     if (data.idToken.isSet())
     {
-        ocpp::types::ocpp20::IdTokenType20Converter idToken_converter;
+        ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         idToken_converter.setAllocator(allocator);
         rapidjson::Document idToken_doc;
         idToken_doc.Parse("{}");
@@ -199,18 +199,18 @@ bool TransactionEvent20ReqConverter::toJson(const TransactionEvent20Req& data, r
     return ret;
 }
 
-/** @brief Convert a TransactionEvent20Conf from a JSON representation */
-bool TransactionEvent20ConfConverter::fromJson(const rapidjson::Value& json,
-                                               TransactionEvent20Conf& data,
-                                               std::string&            error_code,
-                                               std::string&            error_message)
+/** @brief Convert a TransactionEventConf from a JSON representation */
+bool TransactionEventConfConverter::fromJson(const rapidjson::Value& json,
+                                             TransactionEventConf&   data,
+                                             std::string&            error_code,
+                                             std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -223,14 +223,14 @@ bool TransactionEvent20ConfConverter::fromJson(const rapidjson::Value& json,
     // idTokenInfo
     if (json.HasMember("idTokenInfo"))
     {
-        ocpp::types::ocpp20::IdTokenInfoType20Converter idTokenInfo_converter;
+        ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
         ret = ret && idTokenInfo_converter.fromJson(json["idTokenInfo"], data.idTokenInfo, error_code, error_message);
     }
 
     // updatedPersonalMessage
     if (json.HasMember("updatedPersonalMessage"))
     {
-        ocpp::types::ocpp20::MessageContentType20Converter updatedPersonalMessage_converter;
+        ocpp::types::ocpp20::MessageContentTypeConverter updatedPersonalMessage_converter;
         ret = ret && updatedPersonalMessage_converter.fromJson(
                          json["updatedPersonalMessage"], data.updatedPersonalMessage, error_code, error_message);
     }
@@ -243,15 +243,15 @@ bool TransactionEvent20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a TransactionEvent20Conf to a JSON representation */
-bool TransactionEvent20ConfConverter::toJson(const TransactionEvent20Conf& data, rapidjson::Document& json)
+/** @brief Convert a TransactionEventConf to a JSON representation */
+bool TransactionEventConfConverter::toJson(const TransactionEventConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -268,7 +268,7 @@ bool TransactionEvent20ConfConverter::toJson(const TransactionEvent20Conf& data,
     // idTokenInfo
     if (data.idTokenInfo.isSet())
     {
-        ocpp::types::ocpp20::IdTokenInfoType20Converter idTokenInfo_converter;
+        ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
         idTokenInfo_converter.setAllocator(allocator);
         rapidjson::Document idTokenInfo_doc;
         idTokenInfo_doc.Parse("{}");
@@ -279,7 +279,7 @@ bool TransactionEvent20ConfConverter::toJson(const TransactionEvent20Conf& data,
     // updatedPersonalMessage
     if (data.updatedPersonalMessage.isSet())
     {
-        ocpp::types::ocpp20::MessageContentType20Converter updatedPersonalMessage_converter;
+        ocpp::types::ocpp20::MessageContentTypeConverter updatedPersonalMessage_converter;
         updatedPersonalMessage_converter.setAllocator(allocator);
         rapidjson::Document updatedPersonalMessage_doc;
         updatedPersonalMessage_doc.Parse("{}");

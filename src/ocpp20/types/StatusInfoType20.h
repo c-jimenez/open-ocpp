@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_STATUSINFOTYPE20_H
-#define OPENOCPP_STATUSINFOTYPE20_H
+#ifndef OPENOCPP_OCPP20_STATUSINFOTYPE_H
+#define OPENOCPP_OCPP20_STATUSINFOTYPE_H
 
 #include "CustomDataType20.h"
 
@@ -39,35 +39,35 @@ namespace ocpp20
 
 /** @brief Element providing more information about the status.
  */
-struct StatusInfoType20
+struct StatusInfoType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief A predefined code for the reason why the status is returned in this response. The string is case-insensitive. */
     ocpp::types::CiStringType<20u> reasonCode;
     /** @brief Additional text to provide detailed information. */
     ocpp::types::Optional<ocpp::types::CiStringType<512u>> additionalInfo;
 };
 
-/** @brief Converter class for StatusInfoType20 type */
-class StatusInfoType20Converter : public ocpp::messages::IMessageConverter<StatusInfoType20>
+/** @brief Converter class for StatusInfoType type */
+class StatusInfoTypeConverter : public ocpp::messages::IMessageConverter<StatusInfoType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<StatusInfoType20>* clone() const override { return new StatusInfoType20Converter(); }
+    ocpp::messages::IMessageConverter<StatusInfoType>* clone() const override { return new StatusInfoTypeConverter(); }
 
-    /** @brief Convert a StatusInfoType20 from a JSON representation */
+    /** @brief Convert a StatusInfoType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  StatusInfoType20&             data,
+                  StatusInfoType&               data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a StatusInfoType20 to a JSON representation */
-    bool toJson(const StatusInfoType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a StatusInfoType to a JSON representation */
+    bool toJson(const StatusInfoType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_STATUSINFOTYPE20_H
+#endif // OPENOCPP_OCPP20_STATUSINFOTYPE_H

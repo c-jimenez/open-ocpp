@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_DATATRANSFERSTATUSENUMTYPE20_H
-#define OPENOCPP_DATATRANSFERSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_DATATRANSFERSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_DATATRANSFERSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This indicates the success or failure of the data transfer. */
-enum class DataTransferStatusEnumType20
+enum class DataTransferStatusEnumType
 {
     Accepted,
     Rejected,
@@ -42,11 +42,11 @@ enum class DataTransferStatusEnumType20
     UnknownVendorId,
 };
 
-/** @brief Helper to convert a DataTransferStatusEnumType20 enum to string */
-extern const EnumToStringFromString<DataTransferStatusEnumType20> DataTransferStatusEnumType20Helper;
+/** @brief Helper to convert a DataTransferStatusEnumType enum to string */
+extern const EnumToStringFromString<DataTransferStatusEnumType> DataTransferStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_DATATRANSFERSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_DATATRANSFERSTATUSENUMTYPE_H

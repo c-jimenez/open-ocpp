@@ -30,14 +30,14 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a DisplayMessageStatusEnumType20 enum to string */
-const EnumToStringFromString<DisplayMessageStatusEnumType20> DisplayMessageStatusEnumType20Helper = {
-    {DisplayMessageStatusEnumType20::Accepted, "Accepted"},
-    {DisplayMessageStatusEnumType20::NotSupportedMessageFormat, "NotSupportedMessageFormat"},
-    {DisplayMessageStatusEnumType20::Rejected, "Rejected"},
-    {DisplayMessageStatusEnumType20::NotSupportedPriority, "NotSupportedPriority"},
-    {DisplayMessageStatusEnumType20::NotSupportedState, "NotSupportedState"},
-    {DisplayMessageStatusEnumType20::UnknownTransaction, "UnknownTransaction"},
+/** @brief Helper to convert a DisplayMessageStatusEnumType enum to string */
+const EnumToStringFromString<DisplayMessageStatusEnumType> DisplayMessageStatusEnumTypeHelper = {
+    {DisplayMessageStatusEnumType::Accepted, "Accepted"},
+    {DisplayMessageStatusEnumType::NotSupportedMessageFormat, "NotSupportedMessageFormat"},
+    {DisplayMessageStatusEnumType::Rejected, "Rejected"},
+    {DisplayMessageStatusEnumType::NotSupportedPriority, "NotSupportedPriority"},
+    {DisplayMessageStatusEnumType::NotSupportedState, "NotSupportedState"},
+    {DisplayMessageStatusEnumType::UnknownTransaction, "UnknownTransaction"},
 };
 
 } // namespace ocpp20

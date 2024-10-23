@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a RequestStopTransaction20Req from a JSON representation */
-bool RequestStopTransaction20ReqConverter::fromJson(const rapidjson::Value&      json,
-                                                    RequestStopTransaction20Req& data,
-                                                    std::string&                 error_code,
-                                                    std::string&                 error_message)
+/** @brief Convert a RequestStopTransactionReq from a JSON representation */
+bool RequestStopTransactionReqConverter::fromJson(const rapidjson::Value&    json,
+                                                  RequestStopTransactionReq& data,
+                                                  std::string&               error_code,
+                                                  std::string&               error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -58,15 +58,15 @@ bool RequestStopTransaction20ReqConverter::fromJson(const rapidjson::Value&     
     return ret;
 }
 
-/** @brief Convert a RequestStopTransaction20Req to a JSON representation */
-bool RequestStopTransaction20ReqConverter::toJson(const RequestStopTransaction20Req& data, rapidjson::Document& json)
+/** @brief Convert a RequestStopTransactionReq to a JSON representation */
+bool RequestStopTransactionReqConverter::toJson(const RequestStopTransactionReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -80,28 +80,28 @@ bool RequestStopTransaction20ReqConverter::toJson(const RequestStopTransaction20
     return ret;
 }
 
-/** @brief Convert a RequestStopTransaction20Conf from a JSON representation */
-bool RequestStopTransaction20ConfConverter::fromJson(const rapidjson::Value&       json,
-                                                     RequestStopTransaction20Conf& data,
-                                                     std::string&                  error_code,
-                                                     std::string&                  error_message)
+/** @brief Convert a RequestStopTransactionConf from a JSON representation */
+bool RequestStopTransactionConfConverter::fromJson(const rapidjson::Value&     json,
+                                                   RequestStopTransactionConf& data,
+                                                   std::string&                error_code,
+                                                   std::string&                error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::RequestStartStopStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::RequestStartStopStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -113,15 +113,15 @@ bool RequestStopTransaction20ConfConverter::fromJson(const rapidjson::Value&    
     return ret;
 }
 
-/** @brief Convert a RequestStopTransaction20Conf to a JSON representation */
-bool RequestStopTransaction20ConfConverter::toJson(const RequestStopTransaction20Conf& data, rapidjson::Document& json)
+/** @brief Convert a RequestStopTransactionConf to a JSON representation */
+bool RequestStopTransactionConfConverter::toJson(const RequestStopTransactionConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -130,12 +130,12 @@ bool RequestStopTransaction20ConfConverter::toJson(const RequestStopTransaction2
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::RequestStartStopStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::RequestStartStopStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

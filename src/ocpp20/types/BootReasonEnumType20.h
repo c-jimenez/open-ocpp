@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_BOOTREASONENUMTYPE20_H
-#define OPENOCPP_BOOTREASONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_BOOTREASONENUMTYPE_H
+#define OPENOCPP_OCPP20_BOOTREASONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief This contains the reason for sending this message to the CSMS. */
-enum class BootReasonEnumType20
+enum class BootReasonEnumType
 {
     ApplicationReset,
     FirmwareUpdate,
@@ -47,11 +47,11 @@ enum class BootReasonEnumType20
     Watchdog,
 };
 
-/** @brief Helper to convert a BootReasonEnumType20 enum to string */
-extern const EnumToStringFromString<BootReasonEnumType20> BootReasonEnumType20Helper;
+/** @brief Helper to convert a BootReasonEnumType enum to string */
+extern const EnumToStringFromString<BootReasonEnumType> BootReasonEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_BOOTREASONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_BOOTREASONENUMTYPE_H

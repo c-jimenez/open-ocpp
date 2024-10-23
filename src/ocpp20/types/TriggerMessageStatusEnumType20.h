@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_TRIGGERMESSAGESTATUSENUMTYPE20_H
-#define OPENOCPP_TRIGGERMESSAGESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_TRIGGERMESSAGESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_TRIGGERMESSAGESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Indicates whether the Charging Station will send the requested notification or not. */
-enum class TriggerMessageStatusEnumType20
+enum class TriggerMessageStatusEnumType
 {
     Accepted,
     Rejected,
     NotImplemented,
 };
 
-/** @brief Helper to convert a TriggerMessageStatusEnumType20 enum to string */
-extern const EnumToStringFromString<TriggerMessageStatusEnumType20> TriggerMessageStatusEnumType20Helper;
+/** @brief Helper to convert a TriggerMessageStatusEnumType enum to string */
+extern const EnumToStringFromString<TriggerMessageStatusEnumType> TriggerMessageStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_TRIGGERMESSAGESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_TRIGGERMESSAGESTATUSENUMTYPE_H

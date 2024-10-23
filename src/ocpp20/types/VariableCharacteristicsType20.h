@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VARIABLECHARACTERISTICSTYPE20_H
-#define OPENOCPP_VARIABLECHARACTERISTICSTYPE20_H
+#ifndef OPENOCPP_OCPP20_VARIABLECHARACTERISTICSTYPE_H
+#define OPENOCPP_OCPP20_VARIABLECHARACTERISTICSTYPE_H
 
 #include "CustomDataType20.h"
 #include "DataEnumType20.h"
@@ -40,14 +40,14 @@ namespace ocpp20
 
 /** @brief Fixed read-only parameters of a variable.
  */
-struct VariableCharacteristicsType20
+struct VariableCharacteristicsType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Unit of the variable. When the transmitted value has a unit, this field SHALL be included. */
     ocpp::types::Optional<ocpp::types::CiStringType<16u>> unit;
     /** @brief  */
-    DataEnumType20 dataType;
+    DataEnumType dataType;
     /** @brief Minimum possible value of this variable. */
     ocpp::types::Optional<float> minLimit;
     /** @brief Maximum possible value of this variable. When the datatype of this Variable is String, OptionList, SequenceList or MemberList, this field defines the maximum length of the (CSV) string. */
@@ -68,28 +68,28 @@ The Configuration Variable &lt;&lt;configkey-configuration-value-size,Configurat
     bool supportsMonitoring;
 };
 
-/** @brief Converter class for VariableCharacteristicsType20 type */
-class VariableCharacteristicsType20Converter : public ocpp::messages::IMessageConverter<VariableCharacteristicsType20>
+/** @brief Converter class for VariableCharacteristicsType type */
+class VariableCharacteristicsTypeConverter : public ocpp::messages::IMessageConverter<VariableCharacteristicsType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VariableCharacteristicsType20>* clone() const override
+    ocpp::messages::IMessageConverter<VariableCharacteristicsType>* clone() const override
     {
-        return new VariableCharacteristicsType20Converter();
+        return new VariableCharacteristicsTypeConverter();
     }
 
-    /** @brief Convert a VariableCharacteristicsType20 from a JSON representation */
-    bool fromJson(const rapidjson::Value&        json,
-                  VariableCharacteristicsType20& data,
-                  std::string&                   error_code,
-                  [[maybe_unused]] std::string&  error_message) override;
+    /** @brief Convert a VariableCharacteristicsType from a JSON representation */
+    bool fromJson(const rapidjson::Value&       json,
+                  VariableCharacteristicsType&  data,
+                  std::string&                  error_code,
+                  [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a VariableCharacteristicsType20 to a JSON representation */
-    bool toJson(const VariableCharacteristicsType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a VariableCharacteristicsType to a JSON representation */
+    bool toJson(const VariableCharacteristicsType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VARIABLECHARACTERISTICSTYPE20_H
+#endif // OPENOCPP_OCPP20_VARIABLECHARACTERISTICSTYPE_H

@@ -30,16 +30,16 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a IdTokenEnumType20 enum to string */
-const EnumToStringFromString<IdTokenEnumType20> IdTokenEnumType20Helper = {
-    {IdTokenEnumType20::Central, "Central"},
-    {IdTokenEnumType20::eMAID, "eMAID"},
-    {IdTokenEnumType20::ISO14443, "ISO14443"},
-    {IdTokenEnumType20::ISO15693, "ISO15693"},
-    {IdTokenEnumType20::KeyCode, "KeyCode"},
-    {IdTokenEnumType20::Local, "Local"},
-    {IdTokenEnumType20::MacAddress, "MacAddress"},
-    {IdTokenEnumType20::NoAuthorization, "NoAuthorization"},
+/** @brief Helper to convert a IdTokenEnumType enum to string */
+const EnumToStringFromString<IdTokenEnumType> IdTokenEnumTypeHelper = {
+    {IdTokenEnumType::Central, "Central"},
+    {IdTokenEnumType::eMAID, "eMAID"},
+    {IdTokenEnumType::ISO14443, "ISO14443"},
+    {IdTokenEnumType::ISO15693, "ISO15693"},
+    {IdTokenEnumType::KeyCode, "KeyCode"},
+    {IdTokenEnumType::Local, "Local"},
+    {IdTokenEnumType::MacAddress, "MacAddress"},
+    {IdTokenEnumType::NoAuthorization, "NoAuthorization"},
 };
 
 } // namespace ocpp20

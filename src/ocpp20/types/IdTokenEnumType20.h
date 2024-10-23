@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_IDTOKENENUMTYPE20_H
-#define OPENOCPP_IDTOKENENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_IDTOKENENUMTYPE_H
+#define OPENOCPP_OCPP20_IDTOKENENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Enumeration of possible idToken types. */
-enum class IdTokenEnumType20
+enum class IdTokenEnumType
 {
     Central,
     eMAID,
@@ -46,11 +46,11 @@ enum class IdTokenEnumType20
     NoAuthorization,
 };
 
-/** @brief Helper to convert a IdTokenEnumType20 enum to string */
-extern const EnumToStringFromString<IdTokenEnumType20> IdTokenEnumType20Helper;
+/** @brief Helper to convert a IdTokenEnumType enum to string */
+extern const EnumToStringFromString<IdTokenEnumType> IdTokenEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_IDTOKENENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_IDTOKENENUMTYPE_H

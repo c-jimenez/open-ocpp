@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_MESSAGEPRIORITYENUMTYPE20_H
-#define OPENOCPP_MESSAGEPRIORITYENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_MESSAGEPRIORITYENUMTYPE_H
+#define OPENOCPP_OCPP20_MESSAGEPRIORITYENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,18 +36,18 @@ namespace ocpp20
 /** @brief Message_ Info. Priority. Message_ Priority_ Code
 urn:x-enexis:ecdm:uid:1:569253
 With what priority should this message be shown */
-enum class MessagePriorityEnumType20
+enum class MessagePriorityEnumType
 {
     AlwaysFront,
     InFront,
     NormalCycle,
 };
 
-/** @brief Helper to convert a MessagePriorityEnumType20 enum to string */
-extern const EnumToStringFromString<MessagePriorityEnumType20> MessagePriorityEnumType20Helper;
+/** @brief Helper to convert a MessagePriorityEnumType enum to string */
+extern const EnumToStringFromString<MessagePriorityEnumType> MessagePriorityEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_MESSAGEPRIORITYENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_MESSAGEPRIORITYENUMTYPE_H

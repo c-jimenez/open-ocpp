@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETDISPLAYMESSAGESSTATUSENUMTYPE20_H
-#define OPENOCPP_GETDISPLAYMESSAGESSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_GETDISPLAYMESSAGESSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_GETDISPLAYMESSAGESSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Indicates if the Charging Station has Display Messages that match the request criteria in the &lt;&lt;getdisplaymessagesrequest,GetDisplayMessagesRequest&gt;&gt; */
-enum class GetDisplayMessagesStatusEnumType20
+enum class GetDisplayMessagesStatusEnumType
 {
     Accepted,
     Unknown,
 };
 
-/** @brief Helper to convert a GetDisplayMessagesStatusEnumType20 enum to string */
-extern const EnumToStringFromString<GetDisplayMessagesStatusEnumType20> GetDisplayMessagesStatusEnumType20Helper;
+/** @brief Helper to convert a GetDisplayMessagesStatusEnumType enum to string */
+extern const EnumToStringFromString<GetDisplayMessagesStatusEnumType> GetDisplayMessagesStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_GETDISPLAYMESSAGESSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_GETDISPLAYMESSAGESSTATUSENUMTYPE_H

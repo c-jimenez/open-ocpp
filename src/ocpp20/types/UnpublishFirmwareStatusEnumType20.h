@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_UNPUBLISHFIRMWARESTATUSENUMTYPE20_H
-#define OPENOCPP_UNPUBLISHFIRMWARESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_UNPUBLISHFIRMWARESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_UNPUBLISHFIRMWARESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Indicates whether the Local Controller succeeded in unpublishing the firmware. */
-enum class UnpublishFirmwareStatusEnumType20
+enum class UnpublishFirmwareStatusEnumType
 {
     DownloadOngoing,
     NoFirmware,
     Unpublished,
 };
 
-/** @brief Helper to convert a UnpublishFirmwareStatusEnumType20 enum to string */
-extern const EnumToStringFromString<UnpublishFirmwareStatusEnumType20> UnpublishFirmwareStatusEnumType20Helper;
+/** @brief Helper to convert a UnpublishFirmwareStatusEnumType enum to string */
+extern const EnumToStringFromString<UnpublishFirmwareStatusEnumType> UnpublishFirmwareStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_UNPUBLISHFIRMWARESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_UNPUBLISHFIRMWARESTATUSENUMTYPE_H

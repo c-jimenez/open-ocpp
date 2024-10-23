@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a NotifyReport20Req from a JSON representation */
-bool NotifyReport20ReqConverter::fromJson(const rapidjson::Value& json,
-                                          NotifyReport20Req&      data,
-                                          std::string&            error_code,
-                                          std::string&            error_message)
+/** @brief Convert a NotifyReportReq from a JSON representation */
+bool NotifyReportReqConverter::fromJson(const rapidjson::Value& json,
+                                        NotifyReportReq&        data,
+                                        std::string&            error_code,
+                                        std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -56,12 +56,12 @@ bool NotifyReport20ReqConverter::fromJson(const rapidjson::Value& json,
     // reportData
     if (json.HasMember("reportData"))
     {
-        const rapidjson::Value&                        reportData_json = json["reportData"];
-        ocpp::types::ocpp20::ReportDataType20Converter reportData_converter;
+        const rapidjson::Value&                      reportData_json = json["reportData"];
+        ocpp::types::ocpp20::ReportDataTypeConverter reportData_converter;
         for (auto it = reportData_json.Begin(); ret && (it != reportData_json.End()); ++it)
         {
-            ocpp::types::ocpp20::ReportDataType20& item = data.reportData.emplace_back();
-            ret                                         = ret && reportData_converter.fromJson(*it, item, error_code, error_message);
+            ocpp::types::ocpp20::ReportDataType& item = data.reportData.emplace_back();
+            ret                                       = ret && reportData_converter.fromJson(*it, item, error_code, error_message);
         }
     }
 
@@ -79,15 +79,15 @@ bool NotifyReport20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a NotifyReport20Req to a JSON representation */
-bool NotifyReport20ReqConverter::toJson(const NotifyReport20Req& data, rapidjson::Document& json)
+/** @brief Convert a NotifyReportReq to a JSON representation */
+bool NotifyReportReqConverter::toJson(const NotifyReportReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -105,10 +105,10 @@ bool NotifyReport20ReqConverter::toJson(const NotifyReport20Req& data, rapidjson
     if (!data.reportData.empty())
     {
 
-        rapidjson::Value                               reportData_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::ReportDataType20Converter reportData_converter;
+        rapidjson::Value                             reportData_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::ReportDataTypeConverter reportData_converter;
         reportData_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::ReportDataType20& item : data.reportData)
+        for (const ocpp::types::ocpp20::ReportDataType& item : data.reportData)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -127,18 +127,18 @@ bool NotifyReport20ReqConverter::toJson(const NotifyReport20Req& data, rapidjson
     return ret;
 }
 
-/** @brief Convert a NotifyReport20Conf from a JSON representation */
-bool NotifyReport20ConfConverter::fromJson(const rapidjson::Value& json,
-                                           NotifyReport20Conf&     data,
-                                           std::string&            error_code,
-                                           std::string&            error_message)
+/** @brief Convert a NotifyReportConf from a JSON representation */
+bool NotifyReportConfConverter::fromJson(const rapidjson::Value& json,
+                                         NotifyReportConf&       data,
+                                         std::string&            error_code,
+                                         std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -150,15 +150,15 @@ bool NotifyReport20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a NotifyReport20Conf to a JSON representation */
-bool NotifyReport20ConfConverter::toJson(const NotifyReport20Conf& data, rapidjson::Document& json)
+/** @brief Convert a NotifyReportConf to a JSON representation */
+bool NotifyReportConfConverter::toJson(const NotifyReportConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

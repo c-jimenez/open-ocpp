@@ -32,18 +32,18 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a RelativeTimeIntervalType20 from a JSON representation */
-bool RelativeTimeIntervalType20Converter::fromJson(const rapidjson::Value&       json,
-                                                   RelativeTimeIntervalType20&   data,
-                                                   std::string&                  error_code,
-                                                   [[maybe_unused]] std::string& error_message)
+/** @brief Convert a RelativeTimeIntervalType from a JSON representation */
+bool RelativeTimeIntervalTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                 RelativeTimeIntervalType&     data,
+                                                 std::string&                  error_code,
+                                                 [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -61,15 +61,15 @@ bool RelativeTimeIntervalType20Converter::fromJson(const rapidjson::Value&      
     return ret;
 }
 
-/** @brief Convert a RelativeTimeIntervalType20 to a JSON representation */
-bool RelativeTimeIntervalType20Converter::toJson(const RelativeTimeIntervalType20& data, rapidjson::Document& json)
+/** @brief Convert a RelativeTimeIntervalType to a JSON representation */
+bool RelativeTimeIntervalTypeConverter::toJson(const RelativeTimeIntervalType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

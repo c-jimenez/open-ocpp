@@ -32,24 +32,24 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a GetLog20Req from a JSON representation */
-bool GetLog20ReqConverter::fromJson(const rapidjson::Value& json, GetLog20Req& data, std::string& error_code, std::string& error_message)
+/** @brief Convert a GetLogReq from a JSON representation */
+bool GetLogReqConverter::fromJson(const rapidjson::Value& json, GetLogReq& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // log
-    ocpp::types::ocpp20::LogParametersType20Converter log_converter;
+    ocpp::types::ocpp20::LogParametersTypeConverter log_converter;
     ret = ret && log_converter.fromJson(json["log"], data.log, error_code, error_message);
 
     // logType
-    data.logType = ocpp::types::ocpp20::LogEnumType20Helper.fromString(json["logType"].GetString());
+    data.logType = ocpp::types::ocpp20::LogEnumTypeHelper.fromString(json["logType"].GetString());
 
     // requestId
     extract(json, "requestId", data.requestId);
@@ -68,15 +68,15 @@ bool GetLog20ReqConverter::fromJson(const rapidjson::Value& json, GetLog20Req& d
     return ret;
 }
 
-/** @brief Convert a GetLog20Req to a JSON representation */
-bool GetLog20ReqConverter::toJson(const GetLog20Req& data, rapidjson::Document& json)
+/** @brief Convert a GetLogReq to a JSON representation */
+bool GetLogReqConverter::toJson(const GetLogReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -85,7 +85,7 @@ bool GetLog20ReqConverter::toJson(const GetLog20Req& data, rapidjson::Document& 
     }
 
     // log
-    ocpp::types::ocpp20::LogParametersType20Converter log_converter;
+    ocpp::types::ocpp20::LogParametersTypeConverter log_converter;
     log_converter.setAllocator(allocator);
     rapidjson::Document log_doc;
     log_doc.Parse("{}");
@@ -93,7 +93,7 @@ bool GetLog20ReqConverter::toJson(const GetLog20Req& data, rapidjson::Document& 
     json.AddMember(rapidjson::StringRef("log"), log_doc.Move(), *allocator);
 
     // logType
-    fill(json, "logType", ocpp::types::ocpp20::LogEnumType20Helper.toString(data.logType));
+    fill(json, "logType", ocpp::types::ocpp20::LogEnumTypeHelper.toString(data.logType));
 
     // requestId
     fill(json, "requestId", data.requestId);
@@ -107,25 +107,25 @@ bool GetLog20ReqConverter::toJson(const GetLog20Req& data, rapidjson::Document& 
     return ret;
 }
 
-/** @brief Convert a GetLog20Conf from a JSON representation */
-bool GetLog20ConfConverter::fromJson(const rapidjson::Value& json, GetLog20Conf& data, std::string& error_code, std::string& error_message)
+/** @brief Convert a GetLogConf from a JSON representation */
+bool GetLogConfConverter::fromJson(const rapidjson::Value& json, GetLogConf& data, std::string& error_code, std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::LogStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::LogStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -140,15 +140,15 @@ bool GetLog20ConfConverter::fromJson(const rapidjson::Value& json, GetLog20Conf&
     return ret;
 }
 
-/** @brief Convert a GetLog20Conf to a JSON representation */
-bool GetLog20ConfConverter::toJson(const GetLog20Conf& data, rapidjson::Document& json)
+/** @brief Convert a GetLogConf to a JSON representation */
+bool GetLogConfConverter::toJson(const GetLogConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -157,12 +157,12 @@ bool GetLog20ConfConverter::toJson(const GetLog20Conf& data, rapidjson::Document
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::LogStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::LogStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

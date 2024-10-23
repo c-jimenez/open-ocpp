@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_DATATRANSFER20_H
-#define OPENOCPP_DATATRANSFER20_H
+#ifndef OPENOCPP_OCPP20_DATATRANSFER_H
+#define OPENOCPP_OCPP20_DATATRANSFER_H
 
 #include "IMessageConverter.h"
 
@@ -37,14 +37,14 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the DataTransfer20 messages */
-static const std::string DATATRANSFER20_ACTION = "DataTransfer";
+/** @brief Action corresponding to the DataTransfer messages */
+static const std::string DATATRANSFER_ACTION = "DataTransfer";
 
-/** @brief DataTransfer20Req message */
-struct DataTransfer20Req
+/** @brief DataTransferReq message */
+struct DataTransferReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief May be used to indicate a specific message or implementation. */
     ocpp::types::Optional<ocpp::types::CiStringType<50u>> messageId;
     /** @brief Data without specified length or format. This needs to be decided by both parties (Open to implementation). */
@@ -53,24 +53,24 @@ struct DataTransfer20Req
     ocpp::types::CiStringType<255u> vendorId;
 };
 
-/** @brief DataTransfer20Conf message */
-struct DataTransfer20Conf
+/** @brief DataTransferConf message */
+struct DataTransferConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::DataTransferStatusEnumType20 status;
+    ocpp::types::ocpp20::DataTransferStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief Data without specified length or format, in response to request. */
     ocpp::types::Optional<std::string> data;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(DataTransfer20)
+MESSAGE_CONVERTERS(DataTransfer)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_DATATRANSFER20_H
+#endif // OPENOCPP_OCPP20_DATATRANSFER_H

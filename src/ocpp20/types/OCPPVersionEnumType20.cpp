@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a OCPPVersionEnumType20 enum to string */
-const EnumToStringFromString<OCPPVersionEnumType20> OCPPVersionEnumType20Helper = {
-    {OCPPVersionEnumType20::OCPP12, "OCPP12"},
-    {OCPPVersionEnumType20::OCPP15, "OCPP15"},
-    {OCPPVersionEnumType20::OCPP16, "OCPP16"},
-    {OCPPVersionEnumType20::OCPP20, "OCPP20"},
+/** @brief Helper to convert a OCPPVersionEnumType enum to string */
+const EnumToStringFromString<OCPPVersionEnumType> OCPPVersionEnumTypeHelper = {
+    {OCPPVersionEnumType::OCPP12, "OCPP12"},
+    {OCPPVersionEnumType::OCPP15, "OCPP15"},
+    {OCPPVersionEnumType::OCPP16, "OCPP16"},
+    {OCPPVersionEnumType::OCPP20, "OCPP20"},
 };
 
 } // namespace ocpp20

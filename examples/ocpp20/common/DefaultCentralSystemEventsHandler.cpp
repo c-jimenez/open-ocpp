@@ -43,7 +43,7 @@ using namespace ocpp::types::ocpp20;
 using namespace ocpp::x509;
 
 /** @brief Display a list of meter values */
-static void displayMeterValues(const std::vector<MeterValueType20> meter_values);
+static void displayMeterValues(const std::vector<MeterValueType> meter_values);
 
 /** @brief Constructor */
 DefaultCentralSystemEventsHandler::DefaultCentralSystemEventsHandler(CentralSystemDemoConfig& config,
@@ -167,12 +167,12 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::disconnected(
     m_event_handler.removeChargePoint(m_chargepoint->identifier());
 }
 
-/** @brief Called on reception of a BootNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onBootNotification20(
-    const ocpp::messages::ocpp20::BootNotification20Req& request,
-    ocpp::messages::ocpp20::BootNotification20Conf&      response,
-    std::string&                                         error,
-    std::string&                                         message)
+/** @brief Called on reception of a BootNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onBootNotification(
+    const ocpp::messages::ocpp20::BootNotificationReq& request,
+    ocpp::messages::ocpp20::BootNotificationConf&      response,
+    std::string&                                       error,
+    std::string&                                       message)
 {
     bool ret = true;
 
@@ -185,25 +185,25 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onBootNotific
 
     response.currentTime = DateTime::now();
     response.interval    = m_event_handler.getConfig().heartbeatInterval().count();
-    response.status      = RegistrationStatusEnumType20::Accepted;
+    response.status      = RegistrationStatusEnumType::Accepted;
     if (m_event_handler.setPendingEnabled())
     {
         if (!m_event_handler.isAcceptedChargePoint(m_chargepoint->identifier()))
         {
             m_event_handler.addPendingChargePoint(m_chargepoint);
             response.interval = m_event_handler.getConfig().bootNotificationRetryInterval().count();
-            response.status   = RegistrationStatusEnumType20::Pending;
+            response.status   = RegistrationStatusEnumType::Pending;
         }
     }
 
     return ret;
 }
 
-/** @brief Called on reception of a Authorize20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onAuthorize20(const ocpp::messages::ocpp20::Authorize20Req& request,
-                                                                                 ocpp::messages::ocpp20::Authorize20Conf&      response,
-                                                                                 std::string&                                  error,
-                                                                                 std::string&                                  message)
+/** @brief Called on reception of a Authorize request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onAuthorize(const ocpp::messages::ocpp20::AuthorizeReq& request,
+                                                                               ocpp::messages::ocpp20::AuthorizeConf&      response,
+                                                                               std::string&                                error,
+                                                                               std::string&                                message)
 {
     bool ret = true;
 
@@ -211,20 +211,20 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onAuthorize20
     (void)message;
 
     cout << "[" << m_chargepoint->identifier() << "] - Authorize"
-         << " type = " << IdTokenEnumType20Helper.toString(request.idToken.type) << " token = " << request.idToken.idToken.str() << endl;
+         << " type = " << IdTokenEnumTypeHelper.toString(request.idToken.type) << " token = " << request.idToken.idToken.str() << endl;
 
-    response.idTokenInfo.status                      = AuthorizationStatusEnumType20::Accepted;
+    response.idTokenInfo.status                      = AuthorizationStatusEnumType::Accepted;
     response.idTokenInfo.cacheExpiryDateTime.value() = DateTime(DateTime::now().timestamp() + 3600);
 
     return ret;
 }
 
-/** @brief Called on reception of a ClearedChargingLimit20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onClearedChargingLimit20(
-    const ocpp::messages::ocpp20::ClearedChargingLimit20Req& request,
-    ocpp::messages::ocpp20::ClearedChargingLimit20Conf&      response,
-    std::string&                                             error,
-    std::string&                                             message)
+/** @brief Called on reception of a ClearedChargingLimit request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onClearedChargingLimit(
+    const ocpp::messages::ocpp20::ClearedChargingLimitReq& request,
+    ocpp::messages::ocpp20::ClearedChargingLimitConf&      response,
+    std::string&                                           error,
+    std::string&                                           message)
 {
     bool ret = true;
 
@@ -238,11 +238,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onClearedChar
     return ret;
 }
 
-/** @brief Called on reception of a CostUpdated20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onCostUpdated20(const ocpp::messages::ocpp20::CostUpdated20Req& request,
-                                                                                   ocpp::messages::ocpp20::CostUpdated20Conf&      response,
-                                                                                   std::string&                                    error,
-                                                                                   std::string&                                    message)
+/** @brief Called on reception of a CostUpdated request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onCostUpdated(const ocpp::messages::ocpp20::CostUpdatedReq& request,
+                                                                                 ocpp::messages::ocpp20::CostUpdatedConf&      response,
+                                                                                 std::string&                                  error,
+                                                                                 std::string&                                  message)
 {
     bool ret = true;
 
@@ -256,12 +256,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onCostUpdated
     return ret;
 }
 
-/** @brief Called on reception of a DataTransfer20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onDataTransfer20(
-    const ocpp::messages::ocpp20::DataTransfer20Req& request,
-    ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-    std::string&                                     error,
-    std::string&                                     message)
+/** @brief Called on reception of a DataTransfer request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
+                                                                                  ocpp::messages::ocpp20::DataTransferConf&      response,
+                                                                                  std::string&                                   error,
+                                                                                  std::string&                                   message)
 {
     bool ret = true;
 
@@ -271,17 +270,17 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onDataTransfe
 
     cout << "[" << m_chargepoint->identifier() << "] - DataTransfer" << endl;
 
-    response.status = DataTransferStatusEnumType20::UnknownVendorId;
+    response.status = DataTransferStatusEnumType::UnknownVendorId;
 
     return ret;
 }
 
-/** @brief Called on reception of a FirmwareStatusNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onFirmwareStatusNotification20(
-    const ocpp::messages::ocpp20::FirmwareStatusNotification20Req& request,
-    ocpp::messages::ocpp20::FirmwareStatusNotification20Conf&      response,
-    std::string&                                                   error,
-    std::string&                                                   message)
+/** @brief Called on reception of a FirmwareStatusNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onFirmwareStatusNotification(
+    const ocpp::messages::ocpp20::FirmwareStatusNotificationReq& request,
+    ocpp::messages::ocpp20::FirmwareStatusNotificationConf&      response,
+    std::string&                                                 error,
+    std::string&                                                 message)
 {
     bool ret = true;
 
@@ -295,11 +294,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onFirmwareSta
     return ret;
 }
 
-/** @brief Called on reception of a Heartbeat20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onHeartbeat20(const ocpp::messages::ocpp20::Heartbeat20Req& request,
-                                                                                 ocpp::messages::ocpp20::Heartbeat20Conf&      response,
-                                                                                 std::string&                                  error,
-                                                                                 std::string&                                  message)
+/** @brief Called on reception of a Heartbeat request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onHeartbeat(const ocpp::messages::ocpp20::HeartbeatReq& request,
+                                                                               ocpp::messages::ocpp20::HeartbeatConf&      response,
+                                                                               std::string&                                error,
+                                                                               std::string&                                message)
 {
     bool ret = true;
 
@@ -314,12 +313,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onHeartbeat20
     return ret;
 }
 
-/** @brief Called on reception of a LogStatusNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onLogStatusNotification20(
-    const ocpp::messages::ocpp20::LogStatusNotification20Req& request,
-    ocpp::messages::ocpp20::LogStatusNotification20Conf&      response,
-    std::string&                                              error,
-    std::string&                                              message)
+/** @brief Called on reception of a LogStatusNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onLogStatusNotification(
+    const ocpp::messages::ocpp20::LogStatusNotificationReq& request,
+    ocpp::messages::ocpp20::LogStatusNotificationConf&      response,
+    std::string&                                            error,
+    std::string&                                            message)
 {
     bool ret = true;
 
@@ -333,11 +332,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onLogStatusNo
     return ret;
 }
 
-/** @brief Called on reception of a MeterValues20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onMeterValues20(const ocpp::messages::ocpp20::MeterValues20Req& request,
-                                                                                   ocpp::messages::ocpp20::MeterValues20Conf&      response,
-                                                                                   std::string&                                    error,
-                                                                                   std::string&                                    message)
+/** @brief Called on reception of a MeterValues request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onMeterValues(const ocpp::messages::ocpp20::MeterValuesReq& request,
+                                                                                 ocpp::messages::ocpp20::MeterValuesConf&      response,
+                                                                                 std::string&                                  error,
+                                                                                 std::string&                                  message)
 {
     bool ret = true;
 
@@ -352,12 +351,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onMeterValues
     return ret;
 }
 
-/** @brief Called on reception of a NotifyChargingLimit20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyChargingLimit20(
-    const ocpp::messages::ocpp20::NotifyChargingLimit20Req& request,
-    ocpp::messages::ocpp20::NotifyChargingLimit20Conf&      response,
-    std::string&                                            error,
-    std::string&                                            message)
+/** @brief Called on reception of a NotifyChargingLimit request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyChargingLimit(
+    const ocpp::messages::ocpp20::NotifyChargingLimitReq& request,
+    ocpp::messages::ocpp20::NotifyChargingLimitConf&      response,
+    std::string&                                          error,
+    std::string&                                          message)
 {
     bool ret = true;
 
@@ -371,12 +370,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyCharg
     return ret;
 }
 
-/** @brief Called on reception of a NotifyCustomerInformation20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyCustomerInformation20(
-    const ocpp::messages::ocpp20::NotifyCustomerInformation20Req& request,
-    ocpp::messages::ocpp20::NotifyCustomerInformation20Conf&      response,
-    std::string&                                                  error,
-    std::string&                                                  message)
+/** @brief Called on reception of a NotifyCustomerInformation request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyCustomerInformation(
+    const ocpp::messages::ocpp20::NotifyCustomerInformationReq& request,
+    ocpp::messages::ocpp20::NotifyCustomerInformationConf&      response,
+    std::string&                                                error,
+    std::string&                                                message)
 {
     bool ret = true;
 
@@ -390,12 +389,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyCusto
     return ret;
 }
 
-/** @brief Called on reception of a NotifyDisplayMessages20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyDisplayMessages20(
-    const ocpp::messages::ocpp20::NotifyDisplayMessages20Req& request,
-    ocpp::messages::ocpp20::NotifyDisplayMessages20Conf&      response,
-    std::string&                                              error,
-    std::string&                                              message)
+/** @brief Called on reception of a NotifyDisplayMessages request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyDisplayMessages(
+    const ocpp::messages::ocpp20::NotifyDisplayMessagesReq& request,
+    ocpp::messages::ocpp20::NotifyDisplayMessagesConf&      response,
+    std::string&                                            error,
+    std::string&                                            message)
 {
     bool ret = true;
 
@@ -409,12 +408,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyDispl
     return ret;
 }
 
-/** @brief Called on reception of a NotifyEVChargingNeeds20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVChargingNeeds20(
-    const ocpp::messages::ocpp20::NotifyEVChargingNeeds20Req& request,
-    ocpp::messages::ocpp20::NotifyEVChargingNeeds20Conf&      response,
-    std::string&                                              error,
-    std::string&                                              message)
+/** @brief Called on reception of a NotifyEVChargingNeeds request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVChargingNeeds(
+    const ocpp::messages::ocpp20::NotifyEVChargingNeedsReq& request,
+    ocpp::messages::ocpp20::NotifyEVChargingNeedsConf&      response,
+    std::string&                                            error,
+    std::string&                                            message)
 {
     bool ret = true;
 
@@ -428,12 +427,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVCha
     return ret;
 }
 
-/** @brief Called on reception of a NotifyEVChargingSchedule20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVChargingSchedule20(
-    const ocpp::messages::ocpp20::NotifyEVChargingSchedule20Req& request,
-    ocpp::messages::ocpp20::NotifyEVChargingSchedule20Conf&      response,
-    std::string&                                                 error,
-    std::string&                                                 message)
+/** @brief Called on reception of a NotifyEVChargingSchedule request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVChargingSchedule(
+    const ocpp::messages::ocpp20::NotifyEVChargingScheduleReq& request,
+    ocpp::messages::ocpp20::NotifyEVChargingScheduleConf&      response,
+    std::string&                                               error,
+    std::string&                                               message)
 {
     bool ret = true;
 
@@ -447,11 +446,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEVCha
     return ret;
 }
 
-/** @brief Called on reception of a NotifyEvent20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEvent20(const ocpp::messages::ocpp20::NotifyEvent20Req& request,
-                                                                                   ocpp::messages::ocpp20::NotifyEvent20Conf&      response,
-                                                                                   std::string&                                    error,
-                                                                                   std::string&                                    message)
+/** @brief Called on reception of a NotifyEvent request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEvent(const ocpp::messages::ocpp20::NotifyEventReq& request,
+                                                                                 ocpp::messages::ocpp20::NotifyEventConf&      response,
+                                                                                 std::string&                                  error,
+                                                                                 std::string&                                  message)
 {
     bool ret = true;
 
@@ -465,12 +464,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyEvent
     return ret;
 }
 
-/** @brief Called on reception of a NotifyMonitoringReport20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyMonitoringReport20(
-    const ocpp::messages::ocpp20::NotifyMonitoringReport20Req& request,
-    ocpp::messages::ocpp20::NotifyMonitoringReport20Conf&      response,
-    std::string&                                               error,
-    std::string&                                               message)
+/** @brief Called on reception of a NotifyMonitoringReport request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyMonitoringReport(
+    const ocpp::messages::ocpp20::NotifyMonitoringReportReq& request,
+    ocpp::messages::ocpp20::NotifyMonitoringReportConf&      response,
+    std::string&                                             error,
+    std::string&                                             message)
 {
     bool ret = true;
 
@@ -484,12 +483,11 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyMonit
     return ret;
 }
 
-/** @brief Called on reception of a NotifyReport20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyReport20(
-    const ocpp::messages::ocpp20::NotifyReport20Req& request,
-    ocpp::messages::ocpp20::NotifyReport20Conf&      response,
-    std::string&                                     error,
-    std::string&                                     message)
+/** @brief Called on reception of a NotifyReport request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyReport(const ocpp::messages::ocpp20::NotifyReportReq& request,
+                                                                                  ocpp::messages::ocpp20::NotifyReportConf&      response,
+                                                                                  std::string&                                   error,
+                                                                                  std::string&                                   message)
 {
     bool ret = true;
 
@@ -503,12 +501,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onNotifyRepor
     return ret;
 }
 
-/** @brief Called on reception of a PublishFirmwareStatusNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onPublishFirmwareStatusNotification20(
-    const ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Req& request,
-    ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Conf&      response,
-    std::string&                                                          error,
-    std::string&                                                          message)
+/** @brief Called on reception of a PublishFirmwareStatusNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onPublishFirmwareStatusNotification(
+    const ocpp::messages::ocpp20::PublishFirmwareStatusNotificationReq& request,
+    ocpp::messages::ocpp20::PublishFirmwareStatusNotificationConf&      response,
+    std::string&                                                        error,
+    std::string&                                                        message)
 {
     bool ret = true;
 
@@ -522,12 +520,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onPublishFirm
     return ret;
 }
 
-/** @brief Called on reception of a ReportChargingProfiles20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReportChargingProfiles20(
-    const ocpp::messages::ocpp20::ReportChargingProfiles20Req& request,
-    ocpp::messages::ocpp20::ReportChargingProfiles20Conf&      response,
-    std::string&                                               error,
-    std::string&                                               message)
+/** @brief Called on reception of a ReportChargingProfiles request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReportChargingProfiles(
+    const ocpp::messages::ocpp20::ReportChargingProfilesReq& request,
+    ocpp::messages::ocpp20::ReportChargingProfilesConf&      response,
+    std::string&                                             error,
+    std::string&                                             message)
 {
     bool ret = true;
 
@@ -541,12 +539,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReportCharg
     return ret;
 }
 
-/** @brief Called on reception of a ReservationStatusUpdate20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReservationStatusUpdate20(
-    const ocpp::messages::ocpp20::ReservationStatusUpdate20Req& request,
-    ocpp::messages::ocpp20::ReservationStatusUpdate20Conf&      response,
-    std::string&                                                error,
-    std::string&                                                message)
+/** @brief Called on reception of a ReservationStatusUpdate request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReservationStatusUpdate(
+    const ocpp::messages::ocpp20::ReservationStatusUpdateReq& request,
+    ocpp::messages::ocpp20::ReservationStatusUpdateConf&      response,
+    std::string&                                              error,
+    std::string&                                              message)
 {
     bool ret = true;
 
@@ -560,12 +558,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onReservation
     return ret;
 }
 
-/** @brief Called on reception of a SecurityEventNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSecurityEventNotification20(
-    const ocpp::messages::ocpp20::SecurityEventNotification20Req& request,
-    ocpp::messages::ocpp20::SecurityEventNotification20Conf&      response,
-    std::string&                                                  error,
-    std::string&                                                  message)
+/** @brief Called on reception of a SecurityEventNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSecurityEventNotification(
+    const ocpp::messages::ocpp20::SecurityEventNotificationReq& request,
+    ocpp::messages::ocpp20::SecurityEventNotificationConf&      response,
+    std::string&                                                error,
+    std::string&                                                message)
 {
     bool ret = true;
 
@@ -579,12 +577,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSecurityEve
     return ret;
 }
 
-/** @brief Called on reception of a SignCertificate20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSignCertificate20(
-    const ocpp::messages::ocpp20::SignCertificate20Req& request,
-    ocpp::messages::ocpp20::SignCertificate20Conf&      response,
-    std::string&                                        error,
-    std::string&                                        message)
+/** @brief Called on reception of a SignCertificate request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSignCertificate(
+    const ocpp::messages::ocpp20::SignCertificateReq& request,
+    ocpp::messages::ocpp20::SignCertificateConf&      response,
+    std::string&                                      error,
+    std::string&                                      message)
 {
     bool ret = true;
 
@@ -594,17 +592,17 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onSignCertifi
 
     cout << "[" << m_chargepoint->identifier() << "] - SignCertificate" << endl;
 
-    response.status = GenericStatusEnumType20::Rejected;
+    response.status = GenericStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a StatusNotification20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onStatusNotification20(
-    const ocpp::messages::ocpp20::StatusNotification20Req& request,
-    ocpp::messages::ocpp20::StatusNotification20Conf&      response,
-    std::string&                                           error,
-    std::string&                                           message)
+/** @brief Called on reception of a StatusNotification request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onStatusNotification(
+    const ocpp::messages::ocpp20::StatusNotificationReq& request,
+    ocpp::messages::ocpp20::StatusNotificationConf&      response,
+    std::string&                                         error,
+    std::string&                                         message)
 {
     bool ret = true;
 
@@ -618,12 +616,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onStatusNotif
     return ret;
 }
 
-/** @brief Called on reception of a TransactionEvent20 request from the charge point */
-bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onTransactionEvent20(
-    const ocpp::messages::ocpp20::TransactionEvent20Req& request,
-    ocpp::messages::ocpp20::TransactionEvent20Conf&      response,
-    std::string&                                         error,
-    std::string&                                         message)
+/** @brief Called on reception of a TransactionEvent request from the charge point */
+bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onTransactionEvent(
+    const ocpp::messages::ocpp20::TransactionEventReq& request,
+    ocpp::messages::ocpp20::TransactionEventConf&      response,
+    std::string&                                       error,
+    std::string&                                       message)
 {
     bool ret = true;
 
@@ -635,19 +633,19 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onTransaction
 
     switch (request.eventType)
     {
-        case TransactionEventEnumType20::Started:
+        case TransactionEventEnumType::Started:
         {
             cout << "Start transaction : id = " << request.transactionInfo.transactionId.str() << endl;
         }
         break;
 
-        case TransactionEventEnumType20::Ended:
+        case TransactionEventEnumType::Ended:
         {
             cout << "End transaction : id = " << request.transactionInfo.transactionId.str() << endl;
         }
         break;
 
-        case TransactionEventEnumType20::Updated:
+        case TransactionEventEnumType::Updated:
         {
             cout << "Transaction update : id = " << request.transactionInfo.transactionId.str() << endl;
             displayMeterValues(request.meterValue);
@@ -662,12 +660,12 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::onTransaction
 }
 
 /** @brief Display a list of meter values */
-static void displayMeterValues(const std::vector<MeterValueType20> meter_values)
+static void displayMeterValues(const std::vector<MeterValueType> meter_values)
 {
-    for (const MeterValueType20& meter_value : meter_values)
+    for (const MeterValueType& meter_value : meter_values)
     {
         cout << " - timestamp : " << meter_value.timestamp.str() << ", sampled values : " << endl;
-        for (const SampledValueType20& sampled_value : meter_value.sampledValue)
+        for (const SampledValueType& sampled_value : meter_value.sampledValue)
         {
             cout << "    - value = " << sampled_value.value;
             if (sampled_value.unitOfMeasure.isSet())
@@ -676,19 +674,19 @@ static void displayMeterValues(const std::vector<MeterValueType20> meter_values)
             }
             if (sampled_value.phase.isSet())
             {
-                cout << ", phase = " << PhaseEnumType20Helper.toString(sampled_value.phase);
+                cout << ", phase = " << PhaseEnumTypeHelper.toString(sampled_value.phase);
             }
             if (sampled_value.measurand.isSet())
             {
-                cout << ", measurand = " << MeasurandEnumType20Helper.toString(sampled_value.measurand);
+                cout << ", measurand = " << MeasurandEnumTypeHelper.toString(sampled_value.measurand);
             }
             if (sampled_value.context.isSet())
             {
-                cout << ", context = " << ReadingContextEnumType20Helper.toString(sampled_value.context);
+                cout << ", context = " << ReadingContextEnumTypeHelper.toString(sampled_value.context);
             }
             if (sampled_value.location.isSet())
             {
-                cout << ", location = " << LocationEnumType20Helper.toString(sampled_value.location);
+                cout << ", location = " << LocationEnumTypeHelper.toString(sampled_value.location);
             }
             cout << endl;
         }

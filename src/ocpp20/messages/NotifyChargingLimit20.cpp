@@ -32,29 +32,29 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a NotifyChargingLimit20Req from a JSON representation */
-bool NotifyChargingLimit20ReqConverter::fromJson(const rapidjson::Value&   json,
-                                                 NotifyChargingLimit20Req& data,
-                                                 std::string&              error_code,
-                                                 std::string&              error_message)
+/** @brief Convert a NotifyChargingLimitReq from a JSON representation */
+bool NotifyChargingLimitReqConverter::fromJson(const rapidjson::Value& json,
+                                               NotifyChargingLimitReq& data,
+                                               std::string&            error_code,
+                                               std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // chargingSchedule
     if (json.HasMember("chargingSchedule"))
     {
-        const rapidjson::Value&                              chargingSchedule_json = json["chargingSchedule"];
-        ocpp::types::ocpp20::ChargingScheduleType20Converter chargingSchedule_converter;
+        const rapidjson::Value&                            chargingSchedule_json = json["chargingSchedule"];
+        ocpp::types::ocpp20::ChargingScheduleTypeConverter chargingSchedule_converter;
         for (auto it = chargingSchedule_json.Begin(); ret && (it != chargingSchedule_json.End()); ++it)
         {
-            ocpp::types::ocpp20::ChargingScheduleType20& item = data.chargingSchedule.emplace_back();
+            ocpp::types::ocpp20::ChargingScheduleType& item = data.chargingSchedule.emplace_back();
             ret = ret && chargingSchedule_converter.fromJson(*it, item, error_code, error_message);
         }
     }
@@ -63,7 +63,7 @@ bool NotifyChargingLimit20ReqConverter::fromJson(const rapidjson::Value&   json,
     extract(json, "evseId", data.evseId);
 
     // chargingLimit
-    ocpp::types::ocpp20::ChargingLimitType20Converter chargingLimit_converter;
+    ocpp::types::ocpp20::ChargingLimitTypeConverter chargingLimit_converter;
     ret = ret && chargingLimit_converter.fromJson(json["chargingLimit"], data.chargingLimit, error_code, error_message);
 
     if (!ret)
@@ -74,15 +74,15 @@ bool NotifyChargingLimit20ReqConverter::fromJson(const rapidjson::Value&   json,
     return ret;
 }
 
-/** @brief Convert a NotifyChargingLimit20Req to a JSON representation */
-bool NotifyChargingLimit20ReqConverter::toJson(const NotifyChargingLimit20Req& data, rapidjson::Document& json)
+/** @brief Convert a NotifyChargingLimitReq to a JSON representation */
+bool NotifyChargingLimitReqConverter::toJson(const NotifyChargingLimitReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -94,10 +94,10 @@ bool NotifyChargingLimit20ReqConverter::toJson(const NotifyChargingLimit20Req& d
     if (!data.chargingSchedule.empty())
     {
 
-        rapidjson::Value                                     chargingSchedule_json(rapidjson::kArrayType);
-        ocpp::types::ocpp20::ChargingScheduleType20Converter chargingSchedule_converter;
+        rapidjson::Value                                   chargingSchedule_json(rapidjson::kArrayType);
+        ocpp::types::ocpp20::ChargingScheduleTypeConverter chargingSchedule_converter;
         chargingSchedule_converter.setAllocator(allocator);
-        for (const ocpp::types::ocpp20::ChargingScheduleType20& item : data.chargingSchedule)
+        for (const ocpp::types::ocpp20::ChargingScheduleType& item : data.chargingSchedule)
         {
             rapidjson::Document item_doc;
             item_doc.Parse("{}");
@@ -111,7 +111,7 @@ bool NotifyChargingLimit20ReqConverter::toJson(const NotifyChargingLimit20Req& d
     fill(json, "evseId", data.evseId);
 
     // chargingLimit
-    ocpp::types::ocpp20::ChargingLimitType20Converter chargingLimit_converter;
+    ocpp::types::ocpp20::ChargingLimitTypeConverter chargingLimit_converter;
     chargingLimit_converter.setAllocator(allocator);
     rapidjson::Document chargingLimit_doc;
     chargingLimit_doc.Parse("{}");
@@ -121,18 +121,18 @@ bool NotifyChargingLimit20ReqConverter::toJson(const NotifyChargingLimit20Req& d
     return ret;
 }
 
-/** @brief Convert a NotifyChargingLimit20Conf from a JSON representation */
-bool NotifyChargingLimit20ConfConverter::fromJson(const rapidjson::Value&    json,
-                                                  NotifyChargingLimit20Conf& data,
-                                                  std::string&               error_code,
-                                                  std::string&               error_message)
+/** @brief Convert a NotifyChargingLimitConf from a JSON representation */
+bool NotifyChargingLimitConfConverter::fromJson(const rapidjson::Value&  json,
+                                                NotifyChargingLimitConf& data,
+                                                std::string&             error_code,
+                                                std::string&             error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -144,15 +144,15 @@ bool NotifyChargingLimit20ConfConverter::fromJson(const rapidjson::Value&    jso
     return ret;
 }
 
-/** @brief Convert a NotifyChargingLimit20Conf to a JSON representation */
-bool NotifyChargingLimit20ConfConverter::toJson(const NotifyChargingLimit20Conf& data, rapidjson::Document& json)
+/** @brief Convert a NotifyChargingLimitConf to a JSON representation */
+bool NotifyChargingLimitConfConverter::toJson(const NotifyChargingLimitConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");

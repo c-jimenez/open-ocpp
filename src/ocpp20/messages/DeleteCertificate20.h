@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_DELETECERTIFICATE20_H
-#define OPENOCPP_DELETECERTIFICATE20_H
+#ifndef OPENOCPP_OCPP20_DELETECERTIFICATE_H
+#define OPENOCPP_OCPP20_DELETECERTIFICATE_H
 
 #include "IMessageConverter.h"
 
@@ -38,34 +38,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the DeleteCertificate20 messages */
-static const std::string DELETECERTIFICATE20_ACTION = "DeleteCertificate";
+/** @brief Action corresponding to the DeleteCertificate messages */
+static const std::string DELETECERTIFICATE_ACTION = "DeleteCertificate";
 
-/** @brief DeleteCertificate20Req message */
-struct DeleteCertificate20Req
+/** @brief DeleteCertificateReq message */
+struct DeleteCertificateReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::CertificateHashDataType20 certificateHashData;
+    ocpp::types::ocpp20::CertificateHashDataType certificateHashData;
 };
 
-/** @brief DeleteCertificate20Conf message */
-struct DeleteCertificate20Conf
+/** @brief DeleteCertificateConf message */
+struct DeleteCertificateConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::DeleteCertificateStatusEnumType20 status;
+    ocpp::types::ocpp20::DeleteCertificateStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(DeleteCertificate20)
+MESSAGE_CONVERTERS(DeleteCertificate)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_DELETECERTIFICATE20_H
+#endif // OPENOCPP_OCPP20_DELETECERTIFICATE_H

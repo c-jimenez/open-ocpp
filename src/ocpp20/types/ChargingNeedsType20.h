@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGNEEDSTYPE20_H
-#define OPENOCPP_CHARGINGNEEDSTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGNEEDSTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGNEEDSTYPE_H
 
 #include "ACChargingParametersType20.h"
 #include "CustomDataType20.h"
@@ -43,41 +43,41 @@ namespace ocpp20
 /** @brief Charging_ Needs
 urn:x-oca:ocpp:uid:2:233249
  */
-struct ChargingNeedsType20
+struct ChargingNeedsType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief  */
-    ocpp::types::Optional<ACChargingParametersType20> acChargingParameters;
+    ocpp::types::Optional<ACChargingParametersType> acChargingParameters;
     /** @brief  */
-    ocpp::types::Optional<DCChargingParametersType20> dcChargingParameters;
+    ocpp::types::Optional<DCChargingParametersType> dcChargingParameters;
     /** @brief  */
-    EnergyTransferModeEnumType20 requestedEnergyTransfer;
+    EnergyTransferModeEnumType requestedEnergyTransfer;
     /** @brief Charging_ Needs. Departure_ Time. Date_ Time
 urn:x-oca:ocpp:uid:1:569223
 Estimated departure time of the EV. */
     ocpp::types::Optional<ocpp::types::DateTime> departureTime;
 };
 
-/** @brief Converter class for ChargingNeedsType20 type */
-class ChargingNeedsType20Converter : public ocpp::messages::IMessageConverter<ChargingNeedsType20>
+/** @brief Converter class for ChargingNeedsType type */
+class ChargingNeedsTypeConverter : public ocpp::messages::IMessageConverter<ChargingNeedsType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingNeedsType20>* clone() const override { return new ChargingNeedsType20Converter(); }
+    ocpp::messages::IMessageConverter<ChargingNeedsType>* clone() const override { return new ChargingNeedsTypeConverter(); }
 
-    /** @brief Convert a ChargingNeedsType20 from a JSON representation */
+    /** @brief Convert a ChargingNeedsType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingNeedsType20&          data,
+                  ChargingNeedsType&            data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingNeedsType20 to a JSON representation */
-    bool toJson(const ChargingNeedsType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingNeedsType to a JSON representation */
+    bool toJson(const ChargingNeedsType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGNEEDSTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGNEEDSTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETNETWORKPROFILE20_H
-#define OPENOCPP_SETNETWORKPROFILE20_H
+#ifndef OPENOCPP_OCPP20_SETNETWORKPROFILE_H
+#define OPENOCPP_OCPP20_SETNETWORKPROFILE_H
 
 #include "IMessageConverter.h"
 
@@ -38,36 +38,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SetNetworkProfile20 messages */
-static const std::string SETNETWORKPROFILE20_ACTION = "SetNetworkProfile";
+/** @brief Action corresponding to the SetNetworkProfile messages */
+static const std::string SETNETWORKPROFILE_ACTION = "SetNetworkProfile";
 
-/** @brief SetNetworkProfile20Req message */
-struct SetNetworkProfile20Req
+/** @brief SetNetworkProfileReq message */
+struct SetNetworkProfileReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Slot in which the configuration should be stored. */
     int configurationSlot;
     /** @brief  */
-    ocpp::types::ocpp20::NetworkConnectionProfileType20 connectionData;
+    ocpp::types::ocpp20::NetworkConnectionProfileType connectionData;
 };
 
-/** @brief SetNetworkProfile20Conf message */
-struct SetNetworkProfile20Conf
+/** @brief SetNetworkProfileConf message */
+struct SetNetworkProfileConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::SetNetworkProfileStatusEnumType20 status;
+    ocpp::types::ocpp20::SetNetworkProfileStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SetNetworkProfile20)
+MESSAGE_CONVERTERS(SetNetworkProfile)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SETNETWORKPROFILE20_H
+#endif // OPENOCPP_OCPP20_SETNETWORKPROFILE_H

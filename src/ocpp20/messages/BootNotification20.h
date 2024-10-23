@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_BOOTNOTIFICATION20_H
-#define OPENOCPP_BOOTNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_BOOTNOTIFICATION_H
+#define OPENOCPP_OCPP20_BOOTNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -39,40 +39,40 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the BootNotification20 messages */
-static const std::string BOOTNOTIFICATION20_ACTION = "BootNotification";
+/** @brief Action corresponding to the BootNotification messages */
+static const std::string BOOTNOTIFICATION_ACTION = "BootNotification";
 
-/** @brief BootNotification20Req message */
-struct BootNotification20Req
+/** @brief BootNotificationReq message */
+struct BootNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::ChargingStationType20 chargingStation;
+    ocpp::types::ocpp20::ChargingStationType chargingStation;
     /** @brief  */
-    ocpp::types::ocpp20::BootReasonEnumType20 reason;
+    ocpp::types::ocpp20::BootReasonEnumType reason;
 };
 
-/** @brief BootNotification20Conf message */
-struct BootNotification20Conf
+/** @brief BootNotificationConf message */
+struct BootNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief This contains the CSMS’s current time. */
     ocpp::types::DateTime currentTime;
     /** @brief When &lt;&lt;cmn_registrationstatusenumtype,Status&gt;&gt; is Accepted, this contains the heartbeat interval in seconds. If the CSMS returns something other than Accepted, the value of the interval field indicates the minimum wait time before sending a next BootNotification request. */
     int interval;
     /** @brief  */
-    ocpp::types::ocpp20::RegistrationStatusEnumType20 status;
+    ocpp::types::ocpp20::RegistrationStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(BootNotification20)
+MESSAGE_CONVERTERS(BootNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_BOOTNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_BOOTNOTIFICATION_H

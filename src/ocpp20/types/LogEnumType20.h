@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_LOGENUMTYPE20_H
-#define OPENOCPP_LOGENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_LOGENUMTYPE_H
+#define OPENOCPP_OCPP20_LOGENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -35,17 +35,17 @@ namespace ocpp20
 
 /** @brief This contains the type of log file that the Charging Station
 should send. */
-enum class LogEnumType20
+enum class LogEnumType
 {
     DiagnosticsLog,
     SecurityLog,
 };
 
-/** @brief Helper to convert a LogEnumType20 enum to string */
-extern const EnumToStringFromString<LogEnumType20> LogEnumType20Helper;
+/** @brief Helper to convert a LogEnumType enum to string */
+extern const EnumToStringFromString<LogEnumType> LogEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_LOGENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_LOGENUMTYPE_H

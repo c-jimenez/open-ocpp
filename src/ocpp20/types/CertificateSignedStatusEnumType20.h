@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CERTIFICATESIGNEDSTATUSENUMTYPE20_H
-#define OPENOCPP_CERTIFICATESIGNEDSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CERTIFICATESIGNEDSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CERTIFICATESIGNEDSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Returns whether certificate signing has been accepted, otherwise rejected. */
-enum class CertificateSignedStatusEnumType20
+enum class CertificateSignedStatusEnumType
 {
     Accepted,
     Rejected,
 };
 
-/** @brief Helper to convert a CertificateSignedStatusEnumType20 enum to string */
-extern const EnumToStringFromString<CertificateSignedStatusEnumType20> CertificateSignedStatusEnumType20Helper;
+/** @brief Helper to convert a CertificateSignedStatusEnumType enum to string */
+extern const EnumToStringFromString<CertificateSignedStatusEnumType> CertificateSignedStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CERTIFICATESIGNEDSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CERTIFICATESIGNEDSTATUSENUMTYPE_H

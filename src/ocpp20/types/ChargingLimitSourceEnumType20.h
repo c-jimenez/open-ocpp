@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGLIMITSOURCEENUMTYPE20_H
-#define OPENOCPP_CHARGINGLIMITSOURCEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGLIMITSOURCEENUMTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGLIMITSOURCEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief  */
-enum class ChargingLimitSourceEnumType20
+enum class ChargingLimitSourceEnumType
 {
     EMS,
     Other,
@@ -42,11 +42,11 @@ enum class ChargingLimitSourceEnumType20
     CSO,
 };
 
-/** @brief Helper to convert a ChargingLimitSourceEnumType20 enum to string */
-extern const EnumToStringFromString<ChargingLimitSourceEnumType20> ChargingLimitSourceEnumType20Helper;
+/** @brief Helper to convert a ChargingLimitSourceEnumType enum to string */
+extern const EnumToStringFromString<ChargingLimitSourceEnumType> ChargingLimitSourceEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGLIMITSOURCEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGLIMITSOURCEENUMTYPE_H

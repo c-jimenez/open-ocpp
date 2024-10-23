@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SIGNEDMETERVALUETYPE20_H
-#define OPENOCPP_SIGNEDMETERVALUETYPE20_H
+#ifndef OPENOCPP_OCPP20_SIGNEDMETERVALUETYPE_H
+#define OPENOCPP_OCPP20_SIGNEDMETERVALUETYPE_H
 
 #include "CustomDataType20.h"
 
@@ -39,10 +39,10 @@ namespace ocpp20
 
 /** @brief Represent a signed version of the meter value.
  */
-struct SignedMeterValueType20
+struct SignedMeterValueType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Base64 encoded, contains the signed data which might contain more then just the meter value. It can contain information like timestamps, reference to a customer etc. */
     ocpp::types::CiStringType<2500u> signedMeterData;
     /** @brief Method used to create the digital signature. */
@@ -53,25 +53,25 @@ struct SignedMeterValueType20
     ocpp::types::CiStringType<2500u> publicKey;
 };
 
-/** @brief Converter class for SignedMeterValueType20 type */
-class SignedMeterValueType20Converter : public ocpp::messages::IMessageConverter<SignedMeterValueType20>
+/** @brief Converter class for SignedMeterValueType type */
+class SignedMeterValueTypeConverter : public ocpp::messages::IMessageConverter<SignedMeterValueType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SignedMeterValueType20>* clone() const override { return new SignedMeterValueType20Converter(); }
+    ocpp::messages::IMessageConverter<SignedMeterValueType>* clone() const override { return new SignedMeterValueTypeConverter(); }
 
-    /** @brief Convert a SignedMeterValueType20 from a JSON representation */
+    /** @brief Convert a SignedMeterValueType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SignedMeterValueType20&       data,
+                  SignedMeterValueType&         data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SignedMeterValueType20 to a JSON representation */
-    bool toJson(const SignedMeterValueType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SignedMeterValueType to a JSON representation */
+    bool toJson(const SignedMeterValueType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SIGNEDMETERVALUETYPE20_H
+#endif // OPENOCPP_OCPP20_SIGNEDMETERVALUETYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_EVSETYPE20_H
-#define OPENOCPP_EVSETYPE20_H
+#ifndef OPENOCPP_OCPP20_EVSETYPE_H
+#define OPENOCPP_OCPP20_EVSETYPE_H
 
 #include "CustomDataType20.h"
 
@@ -40,10 +40,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233123
 Electric Vehicle Supply Equipment
  */
-struct EVSEType20
+struct EVSEType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Identified_ Object. MRID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:569198
 EVSE Identifier. This contains a number (&gt; 0) designating an EVSE of the Charging Station. */
@@ -52,25 +52,25 @@ EVSE Identifier. This contains a number (&gt; 0) designating an EVSE of the Char
     ocpp::types::Optional<int> connectorId;
 };
 
-/** @brief Converter class for EVSEType20 type */
-class EVSEType20Converter : public ocpp::messages::IMessageConverter<EVSEType20>
+/** @brief Converter class for EVSEType type */
+class EVSETypeConverter : public ocpp::messages::IMessageConverter<EVSEType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<EVSEType20>* clone() const override { return new EVSEType20Converter(); }
+    ocpp::messages::IMessageConverter<EVSEType>* clone() const override { return new EVSETypeConverter(); }
 
-    /** @brief Convert a EVSEType20 from a JSON representation */
+    /** @brief Convert a EVSEType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  EVSEType20&                   data,
+                  EVSEType&                     data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a EVSEType20 to a JSON representation */
-    bool toJson(const EVSEType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a EVSEType to a JSON representation */
+    bool toJson(const EVSEType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_EVSETYPE20_H
+#endif // OPENOCPP_OCPP20_EVSETYPE_H

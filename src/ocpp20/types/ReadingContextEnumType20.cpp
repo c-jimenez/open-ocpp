@@ -30,16 +30,16 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ReadingContextEnumType20 enum to string */
-const EnumToStringFromString<ReadingContextEnumType20> ReadingContextEnumType20Helper = {
-    {ReadingContextEnumType20::Interruption_Begin, "Interruption.Begin"},
-    {ReadingContextEnumType20::Interruption_End, "Interruption.End"},
-    {ReadingContextEnumType20::Other, "Other"},
-    {ReadingContextEnumType20::Sample_Clock, "Sample.Clock"},
-    {ReadingContextEnumType20::Sample_Periodic, "Sample.Periodic"},
-    {ReadingContextEnumType20::Transaction_Begin, "Transaction.Begin"},
-    {ReadingContextEnumType20::Transaction_End, "Transaction.End"},
-    {ReadingContextEnumType20::Trigger, "Trigger"},
+/** @brief Helper to convert a ReadingContextEnumType enum to string */
+const EnumToStringFromString<ReadingContextEnumType> ReadingContextEnumTypeHelper = {
+    {ReadingContextEnumType::Interruption_Begin, "Interruption.Begin"},
+    {ReadingContextEnumType::Interruption_End, "Interruption.End"},
+    {ReadingContextEnumType::Other, "Other"},
+    {ReadingContextEnumType::Sample_Clock, "Sample.Clock"},
+    {ReadingContextEnumType::Sample_Periodic, "Sample.Periodic"},
+    {ReadingContextEnumType::Transaction_Begin, "Transaction.Begin"},
+    {ReadingContextEnumType::Transaction_End, "Transaction.End"},
+    {ReadingContextEnumType::Trigger, "Trigger"},
 };
 
 } // namespace ocpp20

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_AUTHORIZE20_H
-#define OPENOCPP_AUTHORIZE20_H
+#ifndef OPENOCPP_OCPP20_AUTHORIZE_H
+#define OPENOCPP_OCPP20_AUTHORIZE_H
 
 #include "IMessageConverter.h"
 
@@ -39,38 +39,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the Authorize20 messages */
-static const std::string AUTHORIZE20_ACTION = "Authorize";
+/** @brief Action corresponding to the Authorize messages */
+static const std::string AUTHORIZE_ACTION = "Authorize";
 
-/** @brief Authorize20Req message */
-struct Authorize20Req
+/** @brief AuthorizeReq message */
+struct AuthorizeReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::IdTokenType20 idToken;
+    ocpp::types::ocpp20::IdTokenType idToken;
     /** @brief The X.509 certificated presented by EV and encoded in PEM format. */
     ocpp::types::Optional<ocpp::types::CiStringType<5500u>> certificate;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::OCSPRequestDataType20> iso15118CertificateHashData;
+    std::vector<ocpp::types::ocpp20::OCSPRequestDataType> iso15118CertificateHashData;
 };
 
-/** @brief Authorize20Conf message */
-struct Authorize20Conf
+/** @brief AuthorizeConf message */
+struct AuthorizeConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::IdTokenInfoType20 idTokenInfo;
+    ocpp::types::ocpp20::IdTokenInfoType idTokenInfo;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::AuthorizeCertificateStatusEnumType20> certificateStatus;
+    ocpp::types::Optional<ocpp::types::ocpp20::AuthorizeCertificateStatusEnumType> certificateStatus;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(Authorize20)
+MESSAGE_CONVERTERS(Authorize)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_AUTHORIZE20_H
+#endif // OPENOCPP_OCPP20_AUTHORIZE_H

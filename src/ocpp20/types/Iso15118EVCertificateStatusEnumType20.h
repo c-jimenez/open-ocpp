@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_ISO15118EVCERTIFICATESTATUSENUMTYPE20_H
-#define OPENOCPP_ISO15118EVCERTIFICATESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_ISO15118EVCERTIFICATESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_ISO15118EVCERTIFICATESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Indicates whether the message was processed properly. */
-enum class Iso15118EVCertificateStatusEnumType20
+enum class Iso15118EVCertificateStatusEnumType
 {
     Accepted,
     Failed,
 };
 
-/** @brief Helper to convert a Iso15118EVCertificateStatusEnumType20 enum to string */
-extern const EnumToStringFromString<Iso15118EVCertificateStatusEnumType20> Iso15118EVCertificateStatusEnumType20Helper;
+/** @brief Helper to convert a Iso15118EVCertificateStatusEnumType enum to string */
+extern const EnumToStringFromString<Iso15118EVCertificateStatusEnumType> Iso15118EVCertificateStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_ISO15118EVCERTIFICATESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_ISO15118EVCERTIFICATESTATUSENUMTYPE_H

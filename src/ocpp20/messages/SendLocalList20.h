@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SENDLOCALLIST20_H
-#define OPENOCPP_SENDLOCALLIST20_H
+#ifndef OPENOCPP_OCPP20_SENDLOCALLIST_H
+#define OPENOCPP_OCPP20_SENDLOCALLIST_H
 
 #include "IMessageConverter.h"
 
@@ -39,38 +39,38 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the SendLocalList20 messages */
-static const std::string SENDLOCALLIST20_ACTION = "SendLocalList";
+/** @brief Action corresponding to the SendLocalList messages */
+static const std::string SENDLOCALLIST_ACTION = "SendLocalList";
 
-/** @brief SendLocalList20Req message */
-struct SendLocalList20Req
+/** @brief SendLocalListReq message */
+struct SendLocalListReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::AuthorizationData20> localAuthorizationList;
+    std::vector<ocpp::types::ocpp20::AuthorizationData> localAuthorizationList;
     /** @brief In case of a full update this is the version number of the full list. In case of a differential update it is the version number of the list after the update has been applied. */
     int versionNumber;
     /** @brief  */
-    ocpp::types::ocpp20::UpdateEnumType20 updateType;
+    ocpp::types::ocpp20::UpdateEnumType updateType;
 };
 
-/** @brief SendLocalList20Conf message */
-struct SendLocalList20Conf
+/** @brief SendLocalListConf message */
+struct SendLocalListConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::SendLocalListStatusEnumType20 status;
+    ocpp::types::ocpp20::SendLocalListStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(SendLocalList20)
+MESSAGE_CONVERTERS(SendLocalList)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_SENDLOCALLIST20_H
+#endif // OPENOCPP_OCPP20_SENDLOCALLIST_H

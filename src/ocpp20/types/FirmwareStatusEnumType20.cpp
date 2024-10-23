@@ -30,22 +30,22 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a FirmwareStatusEnumType20 enum to string */
-const EnumToStringFromString<FirmwareStatusEnumType20> FirmwareStatusEnumType20Helper = {
-    {FirmwareStatusEnumType20::Downloaded, "Downloaded"},
-    {FirmwareStatusEnumType20::DownloadFailed, "DownloadFailed"},
-    {FirmwareStatusEnumType20::Downloading, "Downloading"},
-    {FirmwareStatusEnumType20::DownloadScheduled, "DownloadScheduled"},
-    {FirmwareStatusEnumType20::DownloadPaused, "DownloadPaused"},
-    {FirmwareStatusEnumType20::Idle, "Idle"},
-    {FirmwareStatusEnumType20::InstallationFailed, "InstallationFailed"},
-    {FirmwareStatusEnumType20::Installing, "Installing"},
-    {FirmwareStatusEnumType20::Installed, "Installed"},
-    {FirmwareStatusEnumType20::InstallRebooting, "InstallRebooting"},
-    {FirmwareStatusEnumType20::InstallScheduled, "InstallScheduled"},
-    {FirmwareStatusEnumType20::InstallVerificationFailed, "InstallVerificationFailed"},
-    {FirmwareStatusEnumType20::InvalidSignature, "InvalidSignature"},
-    {FirmwareStatusEnumType20::SignatureVerified, "SignatureVerified"},
+/** @brief Helper to convert a FirmwareStatusEnumType enum to string */
+const EnumToStringFromString<FirmwareStatusEnumType> FirmwareStatusEnumTypeHelper = {
+    {FirmwareStatusEnumType::Downloaded, "Downloaded"},
+    {FirmwareStatusEnumType::DownloadFailed, "DownloadFailed"},
+    {FirmwareStatusEnumType::Downloading, "Downloading"},
+    {FirmwareStatusEnumType::DownloadScheduled, "DownloadScheduled"},
+    {FirmwareStatusEnumType::DownloadPaused, "DownloadPaused"},
+    {FirmwareStatusEnumType::Idle, "Idle"},
+    {FirmwareStatusEnumType::InstallationFailed, "InstallationFailed"},
+    {FirmwareStatusEnumType::Installing, "Installing"},
+    {FirmwareStatusEnumType::Installed, "Installed"},
+    {FirmwareStatusEnumType::InstallRebooting, "InstallRebooting"},
+    {FirmwareStatusEnumType::InstallScheduled, "InstallScheduled"},
+    {FirmwareStatusEnumType::InstallVerificationFailed, "InstallVerificationFailed"},
+    {FirmwareStatusEnumType::InvalidSignature, "InvalidSignature"},
+    {FirmwareStatusEnumType::SignatureVerified, "SignatureVerified"},
 };
 
 } // namespace ocpp20

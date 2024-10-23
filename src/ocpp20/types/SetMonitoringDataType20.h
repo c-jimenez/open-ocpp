@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_SETMONITORINGDATATYPE20_H
-#define OPENOCPP_SETMONITORINGDATATYPE20_H
+#ifndef OPENOCPP_OCPP20_SETMONITORINGDATATYPE_H
+#define OPENOCPP_OCPP20_SETMONITORINGDATATYPE_H
 
 #include "ComponentType20.h"
 #include "CustomDataType20.h"
@@ -41,10 +41,10 @@ namespace ocpp20
 
 /** @brief Class to hold parameters of SetVariableMonitoring request.
  */
-struct SetMonitoringDataType20
+struct SetMonitoringDataType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief An id SHALL only be given to replace an existing monitor. The Charging Station handles the generation of id's for new monitors. */
     ocpp::types::Optional<int> id;
     /** @brief Monitor only active when a transaction is ongoing on a component relevant to this transaction. Default = false. */
@@ -53,7 +53,7 @@ struct SetMonitoringDataType20
 For Periodic or PeriodicClockAligned this is the interval in seconds. */
     float value;
     /** @brief  */
-    MonitorEnumType20 type;
+    MonitorEnumType type;
     /** @brief The severity that will be assigned to an event that is triggered by this monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
 
 The severity levels have the following meaning: +
@@ -79,30 +79,30 @@ Indicates a regular operational event. May be used for reporting, measuring thro
 Indicates information useful to developers for debugging, not useful during operations. */
     int severity;
     /** @brief  */
-    ComponentType20 component;
+    ComponentType component;
     /** @brief  */
-    VariableType20 variable;
+    VariableType variable;
 };
 
-/** @brief Converter class for SetMonitoringDataType20 type */
-class SetMonitoringDataType20Converter : public ocpp::messages::IMessageConverter<SetMonitoringDataType20>
+/** @brief Converter class for SetMonitoringDataType type */
+class SetMonitoringDataTypeConverter : public ocpp::messages::IMessageConverter<SetMonitoringDataType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<SetMonitoringDataType20>* clone() const override { return new SetMonitoringDataType20Converter(); }
+    ocpp::messages::IMessageConverter<SetMonitoringDataType>* clone() const override { return new SetMonitoringDataTypeConverter(); }
 
-    /** @brief Convert a SetMonitoringDataType20 from a JSON representation */
+    /** @brief Convert a SetMonitoringDataType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  SetMonitoringDataType20&      data,
+                  SetMonitoringDataType&        data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a SetMonitoringDataType20 to a JSON representation */
-    bool toJson(const SetMonitoringDataType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a SetMonitoringDataType to a JSON representation */
+    bool toJson(const SetMonitoringDataType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_SETMONITORINGDATATYPE20_H
+#endif // OPENOCPP_OCPP20_SETMONITORINGDATATYPE_H

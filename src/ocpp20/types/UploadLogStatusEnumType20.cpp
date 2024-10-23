@@ -30,16 +30,16 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a UploadLogStatusEnumType20 enum to string */
-const EnumToStringFromString<UploadLogStatusEnumType20> UploadLogStatusEnumType20Helper = {
-    {UploadLogStatusEnumType20::BadMessage, "BadMessage"},
-    {UploadLogStatusEnumType20::Idle, "Idle"},
-    {UploadLogStatusEnumType20::NotSupportedOperation, "NotSupportedOperation"},
-    {UploadLogStatusEnumType20::PermissionDenied, "PermissionDenied"},
-    {UploadLogStatusEnumType20::Uploaded, "Uploaded"},
-    {UploadLogStatusEnumType20::UploadFailure, "UploadFailure"},
-    {UploadLogStatusEnumType20::Uploading, "Uploading"},
-    {UploadLogStatusEnumType20::AcceptedCanceled, "AcceptedCanceled"},
+/** @brief Helper to convert a UploadLogStatusEnumType enum to string */
+const EnumToStringFromString<UploadLogStatusEnumType> UploadLogStatusEnumTypeHelper = {
+    {UploadLogStatusEnumType::BadMessage, "BadMessage"},
+    {UploadLogStatusEnumType::Idle, "Idle"},
+    {UploadLogStatusEnumType::NotSupportedOperation, "NotSupportedOperation"},
+    {UploadLogStatusEnumType::PermissionDenied, "PermissionDenied"},
+    {UploadLogStatusEnumType::Uploaded, "Uploaded"},
+    {UploadLogStatusEnumType::UploadFailure, "UploadFailure"},
+    {UploadLogStatusEnumType::Uploading, "Uploading"},
+    {UploadLogStatusEnumType::AcceptedCanceled, "AcceptedCanceled"},
 };
 
 } // namespace ocpp20

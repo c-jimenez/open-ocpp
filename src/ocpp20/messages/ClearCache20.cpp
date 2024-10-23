@@ -32,18 +32,18 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Convert a ClearCache20Req from a JSON representation */
-bool ClearCache20ReqConverter::fromJson(const rapidjson::Value& json,
-                                        ClearCache20Req&        data,
-                                        std::string&            error_code,
-                                        std::string&            error_message)
+/** @brief Convert a ClearCacheReq from a JSON representation */
+bool ClearCacheReqConverter::fromJson(const rapidjson::Value& json,
+                                      ClearCacheReq&          data,
+                                      std::string&            error_code,
+                                      std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
@@ -55,15 +55,15 @@ bool ClearCache20ReqConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a ClearCache20Req to a JSON representation */
-bool ClearCache20ReqConverter::toJson(const ClearCache20Req& data, rapidjson::Document& json)
+/** @brief Convert a ClearCacheReq to a JSON representation */
+bool ClearCacheReqConverter::toJson(const ClearCacheReq& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -74,28 +74,28 @@ bool ClearCache20ReqConverter::toJson(const ClearCache20Req& data, rapidjson::Do
     return ret;
 }
 
-/** @brief Convert a ClearCache20Conf from a JSON representation */
-bool ClearCache20ConfConverter::fromJson(const rapidjson::Value& json,
-                                         ClearCache20Conf&       data,
-                                         std::string&            error_code,
-                                         std::string&            error_message)
+/** @brief Convert a ClearCacheConf from a JSON representation */
+bool ClearCacheConfConverter::fromJson(const rapidjson::Value& json,
+                                       ClearCacheConf&         data,
+                                       std::string&            error_code,
+                                       std::string&            error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // status
-    data.status = ocpp::types::ocpp20::ClearCacheStatusEnumType20Helper.fromString(json["status"].GetString());
+    data.status = ocpp::types::ocpp20::ClearCacheStatusEnumTypeHelper.fromString(json["status"].GetString());
 
     // statusInfo
     if (json.HasMember("statusInfo"))
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         ret = ret && statusInfo_converter.fromJson(json["statusInfo"], data.statusInfo, error_code, error_message);
     }
 
@@ -107,15 +107,15 @@ bool ClearCache20ConfConverter::fromJson(const rapidjson::Value& json,
     return ret;
 }
 
-/** @brief Convert a ClearCache20Conf to a JSON representation */
-bool ClearCache20ConfConverter::toJson(const ClearCache20Conf& data, rapidjson::Document& json)
+/** @brief Convert a ClearCacheConf to a JSON representation */
+bool ClearCacheConfConverter::toJson(const ClearCacheConf& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        ocpp::types::ocpp20::CustomDataType20Converter customData_converter;
+        ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -124,12 +124,12 @@ bool ClearCache20ConfConverter::toJson(const ClearCache20Conf& data, rapidjson::
     }
 
     // status
-    fill(json, "status", ocpp::types::ocpp20::ClearCacheStatusEnumType20Helper.toString(data.status));
+    fill(json, "status", ocpp::types::ocpp20::ClearCacheStatusEnumTypeHelper.toString(data.status));
 
     // statusInfo
     if (data.statusInfo.isSet())
     {
-        ocpp::types::ocpp20::StatusInfoType20Converter statusInfo_converter;
+        ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
         rapidjson::Document statusInfo_doc;
         statusInfo_doc.Parse("{}");

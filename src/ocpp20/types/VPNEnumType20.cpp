@@ -30,12 +30,12 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a VPNEnumType20 enum to string */
-const EnumToStringFromString<VPNEnumType20> VPNEnumType20Helper = {
-    {VPNEnumType20::IKEv2, "IKEv2"},
-    {VPNEnumType20::IPSec, "IPSec"},
-    {VPNEnumType20::L2TP, "L2TP"},
-    {VPNEnumType20::PPTP, "PPTP"},
+/** @brief Helper to convert a VPNEnumType enum to string */
+const EnumToStringFromString<VPNEnumType> VPNEnumTypeHelper = {
+    {VPNEnumType::IKEv2, "IKEv2"},
+    {VPNEnumType::IPSec, "IPSec"},
+    {VPNEnumType::L2TP, "L2TP"},
+    {VPNEnumType::PPTP, "PPTP"},
 };
 
 } // namespace ocpp20

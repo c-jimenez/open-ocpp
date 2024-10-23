@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a MutabilityEnumType20 enum to string */
-const EnumToStringFromString<MutabilityEnumType20> MutabilityEnumType20Helper = {
-    {MutabilityEnumType20::ReadOnly, "ReadOnly"},
-    {MutabilityEnumType20::WriteOnly, "WriteOnly"},
-    {MutabilityEnumType20::ReadWrite, "ReadWrite"},
+/** @brief Helper to convert a MutabilityEnumType enum to string */
+const EnumToStringFromString<MutabilityEnumType> MutabilityEnumTypeHelper = {
+    {MutabilityEnumType::ReadOnly, "ReadOnly"},
+    {MutabilityEnumType::WriteOnly, "WriteOnly"},
+    {MutabilityEnumType::ReadWrite, "ReadWrite"},
 };
 
 } // namespace ocpp20

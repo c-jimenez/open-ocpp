@@ -30,11 +30,11 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a TriggerMessageStatusEnumType20 enum to string */
-const EnumToStringFromString<TriggerMessageStatusEnumType20> TriggerMessageStatusEnumType20Helper = {
-    {TriggerMessageStatusEnumType20::Accepted, "Accepted"},
-    {TriggerMessageStatusEnumType20::Rejected, "Rejected"},
-    {TriggerMessageStatusEnumType20::NotImplemented, "NotImplemented"},
+/** @brief Helper to convert a TriggerMessageStatusEnumType enum to string */
+const EnumToStringFromString<TriggerMessageStatusEnumType> TriggerMessageStatusEnumTypeHelper = {
+    {TriggerMessageStatusEnumType::Accepted, "Accepted"},
+    {TriggerMessageStatusEnumType::Rejected, "Rejected"},
+    {TriggerMessageStatusEnumType::NotImplemented, "NotImplemented"},
 };
 
 } // namespace ocpp20

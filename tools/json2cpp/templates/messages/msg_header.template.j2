@@ -21,12 +21,12 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  {{msg.comment}}
 */
 
-#ifndef OPENOCPP_{{msg.name.upper()}}_H
-#define OPENOCPP_{{msg.name.upper()}}_H
+#ifndef OPENOCPP_{{ocpp_version_namespace.upper()}}_{{msg.name.upper()}}_H
+#define OPENOCPP_{{ocpp_version_namespace.upper()}}_{{msg.name.upper()}}_H
 
 #include "IMessageConverter.h"
 {% for dependency in msg.requires %}
-#include "{{dependency}}.h"
+#include "{{dependency}}{{ocpp_version_suffix}}.h"
 {%- endfor %}
 
 namespace ocpp
@@ -37,7 +37,7 @@ namespace {{ocpp_version_namespace}}
 {
 
 /** @brief Action corresponding to the {{msg.name}} messages */
-static const std::string {{msg.name.upper()}}_ACTION = "{{msg.raw_name}}";
+static const std::string {{msg.name.upper()}}_ACTION = "{{msg.name}}";
 
 {%- for msg_name in msg.types %}
 {%- set type = msg.types[msg_name] %}
@@ -60,4 +60,4 @@ MESSAGE_CONVERTERS({{msg.name}})
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_{{msg.name.upper()}}_H
+#endif // OPENOCPP_{{ocpp_version_namespace.upper()}}_{{msg.name.upper()}}_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RESERVATIONUPDATESTATUSENUMTYPE20_H
-#define OPENOCPP_RESERVATIONUPDATESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_RESERVATIONUPDATESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_RESERVATIONUPDATESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief The updated reservation status. */
-enum class ReservationUpdateStatusEnumType20
+enum class ReservationUpdateStatusEnumType
 {
     Expired,
     Removed,
 };
 
-/** @brief Helper to convert a ReservationUpdateStatusEnumType20 enum to string */
-extern const EnumToStringFromString<ReservationUpdateStatusEnumType20> ReservationUpdateStatusEnumType20Helper;
+/** @brief Helper to convert a ReservationUpdateStatusEnumType enum to string */
+extern const EnumToStringFromString<ReservationUpdateStatusEnumType> ReservationUpdateStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_RESERVATIONUPDATESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_RESERVATIONUPDATESTATUSENUMTYPE_H

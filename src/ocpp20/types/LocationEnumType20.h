@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_LOCATIONENUMTYPE20_H
-#define OPENOCPP_LOCATIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_LOCATIONENUMTYPE_H
+#define OPENOCPP_OCPP20_LOCATIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Sampled_ Value. Location. Location_ Code
 urn:x-oca:ocpp:uid:1:569265
 Indicates where the measured value has been sampled. Default =  "Outlet" */
-enum class LocationEnumType20
+enum class LocationEnumType
 {
     Body,
     Cable,
@@ -45,11 +45,11 @@ enum class LocationEnumType20
     Outlet,
 };
 
-/** @brief Helper to convert a LocationEnumType20 enum to string */
-extern const EnumToStringFromString<LocationEnumType20> LocationEnumType20Helper;
+/** @brief Helper to convert a LocationEnumType enum to string */
+extern const EnumToStringFromString<LocationEnumType> LocationEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_LOCATIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_LOCATIONENUMTYPE_H

@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_VARIABLETYPE20_H
-#define OPENOCPP_VARIABLETYPE20_H
+#ifndef OPENOCPP_OCPP20_VARIABLETYPE_H
+#define OPENOCPP_OCPP20_VARIABLETYPE_H
 
 #include "CustomDataType20.h"
 
@@ -39,35 +39,35 @@ namespace ocpp20
 
 /** @brief Reference key to a component-variable.
  */
-struct VariableType20
+struct VariableType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Name of the variable. Name should be taken from the list of standardized variable names whenever possible. Case Insensitive. strongly advised to use Camel Case. */
     ocpp::types::CiStringType<50u> name;
     /** @brief Name of instance in case the variable exists as multiple instances. Case Insensitive. strongly advised to use Camel Case. */
     ocpp::types::Optional<ocpp::types::CiStringType<50u>> instance;
 };
 
-/** @brief Converter class for VariableType20 type */
-class VariableType20Converter : public ocpp::messages::IMessageConverter<VariableType20>
+/** @brief Converter class for VariableType type */
+class VariableTypeConverter : public ocpp::messages::IMessageConverter<VariableType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<VariableType20>* clone() const override { return new VariableType20Converter(); }
+    ocpp::messages::IMessageConverter<VariableType>* clone() const override { return new VariableTypeConverter(); }
 
-    /** @brief Convert a VariableType20 from a JSON representation */
+    /** @brief Convert a VariableType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  VariableType20&               data,
+                  VariableType&                 data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a VariableType20 to a JSON representation */
-    bool toJson(const VariableType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a VariableType to a JSON representation */
+    bool toJson(const VariableType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_VARIABLETYPE20_H
+#endif // OPENOCPP_OCPP20_VARIABLETYPE_H

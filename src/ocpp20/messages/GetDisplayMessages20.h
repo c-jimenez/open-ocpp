@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETDISPLAYMESSAGES20_H
-#define OPENOCPP_GETDISPLAYMESSAGES20_H
+#ifndef OPENOCPP_OCPP20_GETDISPLAYMESSAGES_H
+#define OPENOCPP_OCPP20_GETDISPLAYMESSAGES_H
 
 #include "IMessageConverter.h"
 
@@ -39,40 +39,40 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetDisplayMessages20 messages */
-static const std::string GETDISPLAYMESSAGES20_ACTION = "GetDisplayMessages";
+/** @brief Action corresponding to the GetDisplayMessages messages */
+static const std::string GETDISPLAYMESSAGES_ACTION = "GetDisplayMessages";
 
-/** @brief GetDisplayMessages20Req message */
-struct GetDisplayMessages20Req
+/** @brief GetDisplayMessagesReq message */
+struct GetDisplayMessagesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief If provided the Charging Station shall return Display Messages of the given ids. This field SHALL NOT contain more ids than set in &lt;&lt;configkey-number-of-display-messages,NumberOfDisplayMessages.maxLimit&gt;&gt; */
     std::vector<int> id;
     /** @brief The Id of this request. */
     int requestId;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::MessagePriorityEnumType20> priority;
+    ocpp::types::Optional<ocpp::types::ocpp20::MessagePriorityEnumType> priority;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::MessageStateEnumType20> state;
+    ocpp::types::Optional<ocpp::types::ocpp20::MessageStateEnumType> state;
 };
 
-/** @brief GetDisplayMessages20Conf message */
-struct GetDisplayMessages20Conf
+/** @brief GetDisplayMessagesConf message */
+struct GetDisplayMessagesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GetDisplayMessagesStatusEnumType20 status;
+    ocpp::types::ocpp20::GetDisplayMessagesStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetDisplayMessages20)
+MESSAGE_CONVERTERS(GetDisplayMessages)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETDISPLAYMESSAGES20_H
+#endif // OPENOCPP_OCPP20_GETDISPLAYMESSAGES_H

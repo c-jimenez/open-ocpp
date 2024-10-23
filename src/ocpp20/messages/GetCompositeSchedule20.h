@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_GETCOMPOSITESCHEDULE20_H
-#define OPENOCPP_GETCOMPOSITESCHEDULE20_H
+#ifndef OPENOCPP_OCPP20_GETCOMPOSITESCHEDULE_H
+#define OPENOCPP_OCPP20_GETCOMPOSITESCHEDULE_H
 
 #include "IMessageConverter.h"
 
@@ -39,40 +39,40 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the GetCompositeSchedule20 messages */
-static const std::string GETCOMPOSITESCHEDULE20_ACTION = "GetCompositeSchedule";
+/** @brief Action corresponding to the GetCompositeSchedule messages */
+static const std::string GETCOMPOSITESCHEDULE_ACTION = "GetCompositeSchedule";
 
-/** @brief GetCompositeSchedule20Req message */
-struct GetCompositeSchedule20Req
+/** @brief GetCompositeScheduleReq message */
+struct GetCompositeScheduleReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Length of the requested schedule in seconds. */
     int duration;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::ChargingRateUnitEnumType20> chargingRateUnit;
+    ocpp::types::Optional<ocpp::types::ocpp20::ChargingRateUnitEnumType> chargingRateUnit;
     /** @brief The ID of the EVSE for which the schedule is requested. When evseid=0, the Charging Station will calculate the expected consumption for the grid connection. */
     int evseId;
 };
 
-/** @brief GetCompositeSchedule20Conf message */
-struct GetCompositeSchedule20Conf
+/** @brief GetCompositeScheduleConf message */
+struct GetCompositeScheduleConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief  */
-    ocpp::types::ocpp20::GenericStatusEnumType20 status;
+    ocpp::types::ocpp20::GenericStatusEnumType status;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType20> statusInfo;
+    ocpp::types::Optional<ocpp::types::ocpp20::StatusInfoType> statusInfo;
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CompositeScheduleType20> schedule;
+    ocpp::types::Optional<ocpp::types::ocpp20::CompositeScheduleType> schedule;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(GetCompositeSchedule20)
+MESSAGE_CONVERTERS(GetCompositeSchedule)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_GETCOMPOSITESCHEDULE20_H
+#endif // OPENOCPP_OCPP20_GETCOMPOSITESCHEDULE_H

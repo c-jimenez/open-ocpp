@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_EVENTNOTIFICATIONENUMTYPE20_H
-#define OPENOCPP_EVENTNOTIFICATIONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_EVENTNOTIFICATIONENUMTYPE_H
+#define OPENOCPP_OCPP20_EVENTNOTIFICATIONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Specifies the event notification type of the message. */
-enum class EventNotificationEnumType20
+enum class EventNotificationEnumType
 {
     HardWiredNotification,
     HardWiredMonitor,
@@ -42,11 +42,11 @@ enum class EventNotificationEnumType20
     CustomMonitor,
 };
 
-/** @brief Helper to convert a EventNotificationEnumType20 enum to string */
-extern const EnumToStringFromString<EventNotificationEnumType20> EventNotificationEnumType20Helper;
+/** @brief Helper to convert a EventNotificationEnumType enum to string */
+extern const EnumToStringFromString<EventNotificationEnumType> EventNotificationEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_EVENTNOTIFICATIONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_EVENTNOTIFICATIONENUMTYPE_H

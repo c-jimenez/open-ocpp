@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_METERVALUES20_H
-#define OPENOCPP_METERVALUES20_H
+#ifndef OPENOCPP_OCPP20_METERVALUES_H
+#define OPENOCPP_OCPP20_METERVALUES_H
 
 #include "IMessageConverter.h"
 
@@ -36,34 +36,34 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the MeterValues20 messages */
-static const std::string METERVALUES20_ACTION = "MeterValues";
+/** @brief Action corresponding to the MeterValues messages */
+static const std::string METERVALUES_ACTION = "MeterValues";
 
-/** @brief MeterValues20Req message */
-struct MeterValues20Req
+/** @brief MeterValuesReq message */
+struct MeterValuesReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief Request_ Body. EVSEID. Numeric_ Identifier
 urn:x-enexis:ecdm:uid:1:571101
 This contains a number (&gt;0) designating an EVSE of the Charging Station. ‘0’ (zero) is used to designate the main power meter. */
     int evseId;
     /** @brief  */
-    std::vector<ocpp::types::ocpp20::MeterValueType20> meterValue;
+    std::vector<ocpp::types::ocpp20::MeterValueType> meterValue;
 };
 
-/** @brief MeterValues20Conf message */
-struct MeterValues20Conf
+/** @brief MeterValuesConf message */
+struct MeterValuesConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(MeterValues20)
+MESSAGE_CONVERTERS(MeterValues)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_METERVALUES20_H
+#endif // OPENOCPP_OCPP20_METERVALUES_H

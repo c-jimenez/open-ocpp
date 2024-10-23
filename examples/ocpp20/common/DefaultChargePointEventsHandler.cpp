@@ -61,11 +61,11 @@ void DefaultChargePointEventsHandler::connectionStateChanged(bool isConnected)
 
 // OCPP operations
 
-/** @brief Called on reception of a CancelReservation20 message from the central */
-bool DefaultChargePointEventsHandler::onCancelReservation20(const ocpp::messages::ocpp20::CancelReservation20Req& request,
-                                                            ocpp::messages::ocpp20::CancelReservation20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a CancelReservation message from the central */
+bool DefaultChargePointEventsHandler::onCancelReservation(const ocpp::messages::ocpp20::CancelReservationReq& request,
+                                                          ocpp::messages::ocpp20::CancelReservationConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -75,16 +75,16 @@ bool DefaultChargePointEventsHandler::onCancelReservation20(const ocpp::messages
 
     cout << "CancelReservation" << endl;
 
-    response.status = CancelReservationStatusEnumType20::Rejected;
+    response.status = CancelReservationStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a CertificateSigned20 message from the central */
-bool DefaultChargePointEventsHandler::onCertificateSigned20(const ocpp::messages::ocpp20::CertificateSigned20Req& request,
-                                                            ocpp::messages::ocpp20::CertificateSigned20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a CertificateSigned message from the central */
+bool DefaultChargePointEventsHandler::onCertificateSigned(const ocpp::messages::ocpp20::CertificateSignedReq& request,
+                                                          ocpp::messages::ocpp20::CertificateSignedConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -94,16 +94,16 @@ bool DefaultChargePointEventsHandler::onCertificateSigned20(const ocpp::messages
 
     cout << "CertificateSigned" << endl;
 
-    response.status = CertificateSignedStatusEnumType20::Rejected;
+    response.status = CertificateSignedStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a ChangeAvailability20 message from the central */
-bool DefaultChargePointEventsHandler::onChangeAvailability20(const ocpp::messages::ocpp20::ChangeAvailability20Req& request,
-                                                             ocpp::messages::ocpp20::ChangeAvailability20Conf&      response,
-                                                             std::string&                                           error,
-                                                             std::string&                                           message)
+/** @brief Called on reception of a ChangeAvailability message from the central */
+bool DefaultChargePointEventsHandler::onChangeAvailability(const ocpp::messages::ocpp20::ChangeAvailabilityReq& request,
+                                                           ocpp::messages::ocpp20::ChangeAvailabilityConf&      response,
+                                                           std::string&                                         error,
+                                                           std::string&                                         message)
 {
     bool ret = true;
 
@@ -113,16 +113,16 @@ bool DefaultChargePointEventsHandler::onChangeAvailability20(const ocpp::message
 
     cout << "ChangeAvailability" << endl;
 
-    response.status = ChangeAvailabilityStatusEnumType20::Rejected;
+    response.status = ChangeAvailabilityStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a ClearCache20 message from the central */
-bool DefaultChargePointEventsHandler::onClearCache20(const ocpp::messages::ocpp20::ClearCache20Req& request,
-                                                     ocpp::messages::ocpp20::ClearCache20Conf&      response,
-                                                     std::string&                                   error,
-                                                     std::string&                                   message)
+/** @brief Called on reception of a ClearCache message from the central */
+bool DefaultChargePointEventsHandler::onClearCache(const ocpp::messages::ocpp20::ClearCacheReq& request,
+                                                   ocpp::messages::ocpp20::ClearCacheConf&      response,
+                                                   std::string&                                 error,
+                                                   std::string&                                 message)
 {
     bool ret = true;
 
@@ -132,16 +132,16 @@ bool DefaultChargePointEventsHandler::onClearCache20(const ocpp::messages::ocpp2
 
     cout << "ClearCache" << endl;
 
-    response.status = ClearCacheStatusEnumType20::Rejected;
+    response.status = ClearCacheStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a ClearChargingProfile20 message from the central */
-bool DefaultChargePointEventsHandler::onClearChargingProfile20(const ocpp::messages::ocpp20::ClearChargingProfile20Req& request,
-                                                               ocpp::messages::ocpp20::ClearChargingProfile20Conf&      response,
-                                                               std::string&                                             error,
-                                                               std::string&                                             message)
+/** @brief Called on reception of a ClearChargingProfile message from the central */
+bool DefaultChargePointEventsHandler::onClearChargingProfile(const ocpp::messages::ocpp20::ClearChargingProfileReq& request,
+                                                             ocpp::messages::ocpp20::ClearChargingProfileConf&      response,
+                                                             std::string&                                           error,
+                                                             std::string&                                           message)
 {
     bool ret = true;
 
@@ -151,16 +151,16 @@ bool DefaultChargePointEventsHandler::onClearChargingProfile20(const ocpp::messa
 
     cout << "ClearChargingProfile" << endl;
 
-    response.status = ClearChargingProfileStatusEnumType20::Unknown;
+    response.status = ClearChargingProfileStatusEnumType::Unknown;
 
     return ret;
 }
 
-/** @brief Called on reception of a ClearDisplayMessage20 message from the central */
-bool DefaultChargePointEventsHandler::onClearDisplayMessage20(const ocpp::messages::ocpp20::ClearDisplayMessage20Req& request,
-                                                              ocpp::messages::ocpp20::ClearDisplayMessage20Conf&      response,
-                                                              std::string&                                            error,
-                                                              std::string&                                            message)
+/** @brief Called on reception of a ClearDisplayMessage message from the central */
+bool DefaultChargePointEventsHandler::onClearDisplayMessage(const ocpp::messages::ocpp20::ClearDisplayMessageReq& request,
+                                                            ocpp::messages::ocpp20::ClearDisplayMessageConf&      response,
+                                                            std::string&                                          error,
+                                                            std::string&                                          message)
 {
     bool ret = true;
 
@@ -170,16 +170,16 @@ bool DefaultChargePointEventsHandler::onClearDisplayMessage20(const ocpp::messag
 
     cout << "ClearDisplayMessage" << endl;
 
-    response.status = ClearMessageStatusEnumType20::Unknown;
+    response.status = ClearMessageStatusEnumType::Unknown;
 
     return ret;
 }
 
-/** @brief Called on reception of a ClearVariableMonitoring20 message from the central */
-bool DefaultChargePointEventsHandler::onClearVariableMonitoring20(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req& request,
-                                                                  ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&      response,
-                                                                  std::string&                                                error,
-                                                                  std::string&                                                message)
+/** @brief Called on reception of a ClearVariableMonitoring message from the central */
+bool DefaultChargePointEventsHandler::onClearVariableMonitoring(const ocpp::messages::ocpp20::ClearVariableMonitoringReq& request,
+                                                                ocpp::messages::ocpp20::ClearVariableMonitoringConf&      response,
+                                                                std::string&                                              error,
+                                                                std::string&                                              message)
 {
     bool ret = true;
 
@@ -192,55 +192,17 @@ bool DefaultChargePointEventsHandler::onClearVariableMonitoring20(const ocpp::me
     {
         (void)id;
 
-        ClearMonitoringResultType20 result;
-        result.status = ClearMonitoringStatusEnumType20::Rejected;
+        ClearMonitoringResultType result;
+        result.status = ClearMonitoringStatusEnumType::Rejected;
         response.clearMonitoringResult.push_back(result);
     }
 
     return ret;
 }
 
-/** @brief Called on reception of a CustomerInformation20 message from the central */
-bool DefaultChargePointEventsHandler::onCustomerInformation20(const ocpp::messages::ocpp20::CustomerInformation20Req& request,
-                                                              ocpp::messages::ocpp20::CustomerInformation20Conf&      response,
-                                                              std::string&                                            error,
-                                                              std::string&                                            message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "CustomerInformation" << endl;
-
-    response.status = CustomerInformationStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a DataTransfer20 message from the central */
-bool DefaultChargePointEventsHandler::onDataTransfer20(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                                                       ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                                                       std::string&                                     error,
-                                                       std::string&                                     message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "DataTransfer" << endl;
-
-    response.status = DataTransferStatusEnumType20::UnknownVendorId;
-
-    return ret;
-}
-
-/** @brief Called on reception of a DeleteCertificate20 message from the central */
-bool DefaultChargePointEventsHandler::onDeleteCertificate20(const ocpp::messages::ocpp20::DeleteCertificate20Req& request,
-                                                            ocpp::messages::ocpp20::DeleteCertificate20Conf&      response,
+/** @brief Called on reception of a CustomerInformation message from the central */
+bool DefaultChargePointEventsHandler::onCustomerInformation(const ocpp::messages::ocpp20::CustomerInformationReq& request,
+                                                            ocpp::messages::ocpp20::CustomerInformationConf&      response,
                                                             std::string&                                          error,
                                                             std::string&                                          message)
 {
@@ -250,18 +212,56 @@ bool DefaultChargePointEventsHandler::onDeleteCertificate20(const ocpp::messages
     (void)error;
     (void)message;
 
-    cout << "DeleteCertificate" << endl;
+    cout << "CustomerInformation" << endl;
 
-    response.status = DeleteCertificateStatusEnumType20::NotFound;
+    response.status = CustomerInformationStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a Get15118EVCertificate20 message from the central */
-bool DefaultChargePointEventsHandler::onGet15118EVCertificate20(const ocpp::messages::ocpp20::Get15118EVCertificate20Req& request,
-                                                                ocpp::messages::ocpp20::Get15118EVCertificate20Conf&      response,
-                                                                std::string&                                              error,
-                                                                std::string&                                              message)
+/** @brief Called on reception of a DataTransfer message from the central */
+bool DefaultChargePointEventsHandler::onDataTransfer(const ocpp::messages::ocpp20::DataTransferReq& request,
+                                                     ocpp::messages::ocpp20::DataTransferConf&      response,
+                                                     std::string&                                   error,
+                                                     std::string&                                   message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "DataTransfer" << endl;
+
+    response.status = DataTransferStatusEnumType::UnknownVendorId;
+
+    return ret;
+}
+
+/** @brief Called on reception of a DeleteCertificate message from the central */
+bool DefaultChargePointEventsHandler::onDeleteCertificate(const ocpp::messages::ocpp20::DeleteCertificateReq& request,
+                                                          ocpp::messages::ocpp20::DeleteCertificateConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "DeleteCertificate" << endl;
+
+    response.status = DeleteCertificateStatusEnumType::NotFound;
+
+    return ret;
+}
+
+/** @brief Called on reception of a Get15118EVCertificate message from the central */
+bool DefaultChargePointEventsHandler::onGet15118EVCertificate(const ocpp::messages::ocpp20::Get15118EVCertificateReq& request,
+                                                              ocpp::messages::ocpp20::Get15118EVCertificateConf&      response,
+                                                              std::string&                                            error,
+                                                              std::string&                                            message)
 {
     bool ret = true;
 
@@ -271,16 +271,16 @@ bool DefaultChargePointEventsHandler::onGet15118EVCertificate20(const ocpp::mess
 
     cout << "Get15118EVCertificate" << endl;
 
-    response.status = Iso15118EVCertificateStatusEnumType20::Failed;
+    response.status = Iso15118EVCertificateStatusEnumType::Failed;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetBaseReport20 message from the central */
-bool DefaultChargePointEventsHandler::onGetBaseReport20(const ocpp::messages::ocpp20::GetBaseReport20Req& request,
-                                                        ocpp::messages::ocpp20::GetBaseReport20Conf&      response,
-                                                        std::string&                                      error,
-                                                        std::string&                                      message)
+/** @brief Called on reception of a GetBaseReport message from the central */
+bool DefaultChargePointEventsHandler::onGetBaseReport(const ocpp::messages::ocpp20::GetBaseReportReq& request,
+                                                      ocpp::messages::ocpp20::GetBaseReportConf&      response,
+                                                      std::string&                                    error,
+                                                      std::string&                                    message)
 {
     bool ret = true;
 
@@ -290,71 +290,14 @@ bool DefaultChargePointEventsHandler::onGetBaseReport20(const ocpp::messages::oc
 
     cout << "GetBaseReport" << endl;
 
-    response.status = GenericDeviceModelStatusEnumType20::NotSupported;
+    response.status = GenericDeviceModelStatusEnumType::NotSupported;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetCertificateStatus20 message from the central */
-bool DefaultChargePointEventsHandler::onGetCertificateStatus20(const ocpp::messages::ocpp20::GetCertificateStatus20Req& request,
-                                                               ocpp::messages::ocpp20::GetCertificateStatus20Conf&      response,
-                                                               std::string&                                             error,
-                                                               std::string&                                             message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "GetCertificateStatus" << endl;
-
-    response.status = GetCertificateStatusEnumType20::Failed;
-
-    return ret;
-}
-
-/** @brief Called on reception of a GetChargingProfiles20 message from the central */
-bool DefaultChargePointEventsHandler::onGetChargingProfiles20(const ocpp::messages::ocpp20::GetChargingProfiles20Req& request,
-                                                              ocpp::messages::ocpp20::GetChargingProfiles20Conf&      response,
-                                                              std::string&                                            error,
-                                                              std::string&                                            message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "GetChargingProfiles" << endl;
-
-    response.status = GetChargingProfileStatusEnumType20::NoProfiles;
-
-    return ret;
-}
-
-/** @brief Called on reception of a GetCompositeSchedule20 message from the central */
-bool DefaultChargePointEventsHandler::onGetCompositeSchedule20(const ocpp::messages::ocpp20::GetCompositeSchedule20Req& request,
-                                                               ocpp::messages::ocpp20::GetCompositeSchedule20Conf&      response,
-                                                               std::string&                                             error,
-                                                               std::string&                                             message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "GetCompositeSchedule" << endl;
-
-    response.status = GenericStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a GetDisplayMessages20 message from the central */
-bool DefaultChargePointEventsHandler::onGetDisplayMessages20(const ocpp::messages::ocpp20::GetDisplayMessages20Req& request,
-                                                             ocpp::messages::ocpp20::GetDisplayMessages20Conf&      response,
+/** @brief Called on reception of a GetCertificateStatus message from the central */
+bool DefaultChargePointEventsHandler::onGetCertificateStatus(const ocpp::messages::ocpp20::GetCertificateStatusReq& request,
+                                                             ocpp::messages::ocpp20::GetCertificateStatusConf&      response,
                                                              std::string&                                           error,
                                                              std::string&                                           message)
 {
@@ -364,18 +307,75 @@ bool DefaultChargePointEventsHandler::onGetDisplayMessages20(const ocpp::message
     (void)error;
     (void)message;
 
-    cout << "GetDisplayMessages" << endl;
+    cout << "GetCertificateStatus" << endl;
 
-    response.status = GetDisplayMessagesStatusEnumType20::Unknown;
+    response.status = GetCertificateStatusEnumType::Failed;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetInstalledCertificateIds20 message from the central */
-bool DefaultChargePointEventsHandler::onGetInstalledCertificateIds20(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req& request,
-                                                                     ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf& response,
-                                                                     std::string&                                              error,
-                                                                     std::string&                                              message)
+/** @brief Called on reception of a GetChargingProfiles message from the central */
+bool DefaultChargePointEventsHandler::onGetChargingProfiles(const ocpp::messages::ocpp20::GetChargingProfilesReq& request,
+                                                            ocpp::messages::ocpp20::GetChargingProfilesConf&      response,
+                                                            std::string&                                          error,
+                                                            std::string&                                          message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "GetChargingProfiles" << endl;
+
+    response.status = GetChargingProfileStatusEnumType::NoProfiles;
+
+    return ret;
+}
+
+/** @brief Called on reception of a GetCompositeSchedule message from the central */
+bool DefaultChargePointEventsHandler::onGetCompositeSchedule(const ocpp::messages::ocpp20::GetCompositeScheduleReq& request,
+                                                             ocpp::messages::ocpp20::GetCompositeScheduleConf&      response,
+                                                             std::string&                                           error,
+                                                             std::string&                                           message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "GetCompositeSchedule" << endl;
+
+    response.status = GenericStatusEnumType::Rejected;
+
+    return ret;
+}
+
+/** @brief Called on reception of a GetDisplayMessages message from the central */
+bool DefaultChargePointEventsHandler::onGetDisplayMessages(const ocpp::messages::ocpp20::GetDisplayMessagesReq& request,
+                                                           ocpp::messages::ocpp20::GetDisplayMessagesConf&      response,
+                                                           std::string&                                         error,
+                                                           std::string&                                         message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "GetDisplayMessages" << endl;
+
+    response.status = GetDisplayMessagesStatusEnumType::Unknown;
+
+    return ret;
+}
+
+/** @brief Called on reception of a GetInstalledCertificateIds message from the central */
+bool DefaultChargePointEventsHandler::onGetInstalledCertificateIds(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq& request,
+                                                                   ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&      response,
+                                                                   std::string&                                                 error,
+                                                                   std::string&                                                 message)
 {
     bool ret = true;
 
@@ -385,16 +385,16 @@ bool DefaultChargePointEventsHandler::onGetInstalledCertificateIds20(const ocpp:
 
     cout << "GetInstalledCertificateIds" << endl;
 
-    response.status = GetInstalledCertificateStatusEnumType20::NotFound;
+    response.status = GetInstalledCertificateStatusEnumType::NotFound;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetLocalListVersion20 message from the central */
-bool DefaultChargePointEventsHandler::onGetLocalListVersion20(const ocpp::messages::ocpp20::GetLocalListVersion20Req& request,
-                                                              ocpp::messages::ocpp20::GetLocalListVersion20Conf&      response,
-                                                              std::string&                                            error,
-                                                              std::string&                                            message)
+/** @brief Called on reception of a GetLocalListVersion message from the central */
+bool DefaultChargePointEventsHandler::onGetLocalListVersion(const ocpp::messages::ocpp20::GetLocalListVersionReq& request,
+                                                            ocpp::messages::ocpp20::GetLocalListVersionConf&      response,
+                                                            std::string&                                          error,
+                                                            std::string&                                          message)
 {
     bool ret = true;
 
@@ -409,11 +409,11 @@ bool DefaultChargePointEventsHandler::onGetLocalListVersion20(const ocpp::messag
     return ret;
 }
 
-/** @brief Called on reception of a GetLog20 message from the central */
-bool DefaultChargePointEventsHandler::onGetLog20(const ocpp::messages::ocpp20::GetLog20Req& request,
-                                                 ocpp::messages::ocpp20::GetLog20Conf&      response,
-                                                 std::string&                               error,
-                                                 std::string&                               message)
+/** @brief Called on reception of a GetLog message from the central */
+bool DefaultChargePointEventsHandler::onGetLog(const ocpp::messages::ocpp20::GetLogReq& request,
+                                               ocpp::messages::ocpp20::GetLogConf&      response,
+                                               std::string&                             error,
+                                               std::string&                             message)
 {
     bool ret = true;
 
@@ -423,16 +423,16 @@ bool DefaultChargePointEventsHandler::onGetLog20(const ocpp::messages::ocpp20::G
 
     cout << "GetLog" << endl;
 
-    response.status = LogStatusEnumType20::Rejected;
+    response.status = LogStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetMonitoringReport20 message from the central */
-bool DefaultChargePointEventsHandler::onGetMonitoringReport20(const ocpp::messages::ocpp20::GetMonitoringReport20Req& request,
-                                                              ocpp::messages::ocpp20::GetMonitoringReport20Conf&      response,
-                                                              std::string&                                            error,
-                                                              std::string&                                            message)
+/** @brief Called on reception of a GetMonitoringReport message from the central */
+bool DefaultChargePointEventsHandler::onGetMonitoringReport(const ocpp::messages::ocpp20::GetMonitoringReportReq& request,
+                                                            ocpp::messages::ocpp20::GetMonitoringReportConf&      response,
+                                                            std::string&                                          error,
+                                                            std::string&                                          message)
 {
     bool ret = true;
 
@@ -442,16 +442,16 @@ bool DefaultChargePointEventsHandler::onGetMonitoringReport20(const ocpp::messag
 
     cout << "GetMonitoringReport" << endl;
 
-    response.status = GenericDeviceModelStatusEnumType20::NotSupported;
+    response.status = GenericDeviceModelStatusEnumType::NotSupported;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetReport20 message from the central */
-bool DefaultChargePointEventsHandler::onGetReport20(const ocpp::messages::ocpp20::GetReport20Req& request,
-                                                    ocpp::messages::ocpp20::GetReport20Conf&      response,
-                                                    std::string&                                  error,
-                                                    std::string&                                  message)
+/** @brief Called on reception of a GetReport message from the central */
+bool DefaultChargePointEventsHandler::onGetReport(const ocpp::messages::ocpp20::GetReportReq& request,
+                                                  ocpp::messages::ocpp20::GetReportConf&      response,
+                                                  std::string&                                error,
+                                                  std::string&                                message)
 {
     bool ret = true;
 
@@ -461,16 +461,16 @@ bool DefaultChargePointEventsHandler::onGetReport20(const ocpp::messages::ocpp20
 
     cout << "GetReport" << endl;
 
-    response.status = GenericDeviceModelStatusEnumType20::NotSupported;
+    response.status = GenericDeviceModelStatusEnumType::NotSupported;
 
     return ret;
 }
 
-/** @brief Called on reception of a GetTransactionStatus20 message from the central */
-bool DefaultChargePointEventsHandler::onGetTransactionStatus20(const ocpp::messages::ocpp20::GetTransactionStatus20Req& request,
-                                                               ocpp::messages::ocpp20::GetTransactionStatus20Conf&      response,
-                                                               std::string&                                             error,
-                                                               std::string&                                             message)
+/** @brief Called on reception of a GetTransactionStatus message from the central */
+bool DefaultChargePointEventsHandler::onGetTransactionStatus(const ocpp::messages::ocpp20::GetTransactionStatusReq& request,
+                                                             ocpp::messages::ocpp20::GetTransactionStatusConf&      response,
+                                                             std::string&                                           error,
+                                                             std::string&                                           message)
 {
     bool ret = true;
 
@@ -485,11 +485,11 @@ bool DefaultChargePointEventsHandler::onGetTransactionStatus20(const ocpp::messa
     return ret;
 }
 
-/** @brief Called on reception of a GetVariables20 message from the central */
-bool DefaultChargePointEventsHandler::onGetVariables20(const ocpp::messages::ocpp20::GetVariables20Req& request,
-                                                       ocpp::messages::ocpp20::GetVariables20Conf&      response,
-                                                       std::string&                                     error,
-                                                       std::string&                                     message)
+/** @brief Called on reception of a GetVariables message from the central */
+bool DefaultChargePointEventsHandler::onGetVariables(const ocpp::messages::ocpp20::GetVariablesReq& request,
+                                                     ocpp::messages::ocpp20::GetVariablesConf&      response,
+                                                     std::string&                                   error,
+                                                     std::string&                                   message)
 {
     bool ret = true;
 
@@ -502,19 +502,19 @@ bool DefaultChargePointEventsHandler::onGetVariables20(const ocpp::messages::ocp
     {
         (void)var_data;
 
-        GetVariableResultType20 result;
-        result.attributeStatus = GetVariableStatusEnumType20::UnknownVariable;
+        GetVariableResultType result;
+        result.attributeStatus = GetVariableStatusEnumType::UnknownVariable;
         response.getVariableResult.push_back(result);
     }
 
     return ret;
 }
 
-/** @brief Called on reception of a InstallCertificate20 message from the central */
-bool DefaultChargePointEventsHandler::onInstallCertificate20(const ocpp::messages::ocpp20::InstallCertificate20Req& request,
-                                                             ocpp::messages::ocpp20::InstallCertificate20Conf&      response,
-                                                             std::string&                                           error,
-                                                             std::string&                                           message)
+/** @brief Called on reception of a InstallCertificate message from the central */
+bool DefaultChargePointEventsHandler::onInstallCertificate(const ocpp::messages::ocpp20::InstallCertificateReq& request,
+                                                           ocpp::messages::ocpp20::InstallCertificateConf&      response,
+                                                           std::string&                                         error,
+                                                           std::string&                                         message)
 {
     bool ret = true;
 
@@ -524,109 +524,14 @@ bool DefaultChargePointEventsHandler::onInstallCertificate20(const ocpp::message
 
     cout << "InstallCertificate" << endl;
 
-    response.status = InstallCertificateStatusEnumType20::Rejected;
+    response.status = InstallCertificateStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a PublishFirmware20 message from the central */
-bool DefaultChargePointEventsHandler::onPublishFirmware20(const ocpp::messages::ocpp20::PublishFirmware20Req& request,
-                                                          ocpp::messages::ocpp20::PublishFirmware20Conf&      response,
-                                                          std::string&                                        error,
-                                                          std::string&                                        message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "PublishFirmware" << endl;
-
-    response.status = GenericStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a RequestStartTransaction20 message from the central */
-bool DefaultChargePointEventsHandler::onRequestStartTransaction20(const ocpp::messages::ocpp20::RequestStartTransaction20Req& request,
-                                                                  ocpp::messages::ocpp20::RequestStartTransaction20Conf&      response,
-                                                                  std::string&                                                error,
-                                                                  std::string&                                                message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "RequestStartTransaction" << endl;
-
-    response.status = RequestStartStopStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a RequestStopTransaction20 message from the central */
-bool DefaultChargePointEventsHandler::onRequestStopTransaction20(const ocpp::messages::ocpp20::RequestStopTransaction20Req& request,
-                                                                 ocpp::messages::ocpp20::RequestStopTransaction20Conf&      response,
-                                                                 std::string&                                               error,
-                                                                 std::string&                                               message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "RequestStopTransaction" << endl;
-
-    response.status = RequestStartStopStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a ReserveNow20 message from the central */
-bool DefaultChargePointEventsHandler::onReserveNow20(const ocpp::messages::ocpp20::ReserveNow20Req& request,
-                                                     ocpp::messages::ocpp20::ReserveNow20Conf&      response,
-                                                     std::string&                                   error,
-                                                     std::string&                                   message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "ReserveNow" << endl;
-
-    response.status = ReserveNowStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a Reset20 message from the central */
-bool DefaultChargePointEventsHandler::onReset20(const ocpp::messages::ocpp20::Reset20Req& request,
-                                                ocpp::messages::ocpp20::Reset20Conf&      response,
-                                                std::string&                              error,
-                                                std::string&                              message)
-{
-    bool ret = true;
-
-    (void)request;
-    (void)error;
-    (void)message;
-
-    cout << "Reset" << endl;
-
-    response.status = ResetStatusEnumType20::Rejected;
-
-    return ret;
-}
-
-/** @brief Called on reception of a SendLocalList20 message from the central */
-bool DefaultChargePointEventsHandler::onSendLocalList20(const ocpp::messages::ocpp20::SendLocalList20Req& request,
-                                                        ocpp::messages::ocpp20::SendLocalList20Conf&      response,
+/** @brief Called on reception of a PublishFirmware message from the central */
+bool DefaultChargePointEventsHandler::onPublishFirmware(const ocpp::messages::ocpp20::PublishFirmwareReq& request,
+                                                        ocpp::messages::ocpp20::PublishFirmwareConf&      response,
                                                         std::string&                                      error,
                                                         std::string&                                      message)
 {
@@ -636,18 +541,113 @@ bool DefaultChargePointEventsHandler::onSendLocalList20(const ocpp::messages::oc
     (void)error;
     (void)message;
 
-    cout << "SendLocalList" << endl;
+    cout << "PublishFirmware" << endl;
 
-    response.status = SendLocalListStatusEnumType20::Failed;
+    response.status = GenericStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetChargingProfile20 message from the central */
-bool DefaultChargePointEventsHandler::onSetChargingProfile20(const ocpp::messages::ocpp20::SetChargingProfile20Req& request,
-                                                             ocpp::messages::ocpp20::SetChargingProfile20Conf&      response,
-                                                             std::string&                                           error,
-                                                             std::string&                                           message)
+/** @brief Called on reception of a RequestStartTransaction message from the central */
+bool DefaultChargePointEventsHandler::onRequestStartTransaction(const ocpp::messages::ocpp20::RequestStartTransactionReq& request,
+                                                                ocpp::messages::ocpp20::RequestStartTransactionConf&      response,
+                                                                std::string&                                              error,
+                                                                std::string&                                              message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "RequestStartTransaction" << endl;
+
+    response.status = RequestStartStopStatusEnumType::Rejected;
+
+    return ret;
+}
+
+/** @brief Called on reception of a RequestStopTransaction message from the central */
+bool DefaultChargePointEventsHandler::onRequestStopTransaction(const ocpp::messages::ocpp20::RequestStopTransactionReq& request,
+                                                               ocpp::messages::ocpp20::RequestStopTransactionConf&      response,
+                                                               std::string&                                             error,
+                                                               std::string&                                             message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "RequestStopTransaction" << endl;
+
+    response.status = RequestStartStopStatusEnumType::Rejected;
+
+    return ret;
+}
+
+/** @brief Called on reception of a ReserveNow message from the central */
+bool DefaultChargePointEventsHandler::onReserveNow(const ocpp::messages::ocpp20::ReserveNowReq& request,
+                                                   ocpp::messages::ocpp20::ReserveNowConf&      response,
+                                                   std::string&                                 error,
+                                                   std::string&                                 message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "ReserveNow" << endl;
+
+    response.status = ReserveNowStatusEnumType::Rejected;
+
+    return ret;
+}
+
+/** @brief Called on reception of a Reset message from the central */
+bool DefaultChargePointEventsHandler::onReset(const ocpp::messages::ocpp20::ResetReq& request,
+                                              ocpp::messages::ocpp20::ResetConf&      response,
+                                              std::string&                            error,
+                                              std::string&                            message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "Reset" << endl;
+
+    response.status = ResetStatusEnumType::Rejected;
+
+    return ret;
+}
+
+/** @brief Called on reception of a SendLocalList message from the central */
+bool DefaultChargePointEventsHandler::onSendLocalList(const ocpp::messages::ocpp20::SendLocalListReq& request,
+                                                      ocpp::messages::ocpp20::SendLocalListConf&      response,
+                                                      std::string&                                    error,
+                                                      std::string&                                    message)
+{
+    bool ret = true;
+
+    (void)request;
+    (void)error;
+    (void)message;
+
+    cout << "SendLocalList" << endl;
+
+    response.status = SendLocalListStatusEnumType::Failed;
+
+    return ret;
+}
+
+/** @brief Called on reception of a SetChargingProfile message from the central */
+bool DefaultChargePointEventsHandler::onSetChargingProfile(const ocpp::messages::ocpp20::SetChargingProfileReq& request,
+                                                           ocpp::messages::ocpp20::SetChargingProfileConf&      response,
+                                                           std::string&                                         error,
+                                                           std::string&                                         message)
 {
     bool ret = true;
 
@@ -657,16 +657,16 @@ bool DefaultChargePointEventsHandler::onSetChargingProfile20(const ocpp::message
 
     cout << "SetChargingProfile" << endl;
 
-    response.status = ChargingProfileStatusEnumType20::Rejected;
+    response.status = ChargingProfileStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetDisplayMessage20 message from the central */
-bool DefaultChargePointEventsHandler::onSetDisplayMessage20(const ocpp::messages::ocpp20::SetDisplayMessage20Req& request,
-                                                            ocpp::messages::ocpp20::SetDisplayMessage20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a SetDisplayMessage message from the central */
+bool DefaultChargePointEventsHandler::onSetDisplayMessage(const ocpp::messages::ocpp20::SetDisplayMessageReq& request,
+                                                          ocpp::messages::ocpp20::SetDisplayMessageConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -676,16 +676,16 @@ bool DefaultChargePointEventsHandler::onSetDisplayMessage20(const ocpp::messages
 
     cout << "SetDisplayMessage" << endl;
 
-    response.status = DisplayMessageStatusEnumType20::Rejected;
+    response.status = DisplayMessageStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetMonitoringBase20 message from the central */
-bool DefaultChargePointEventsHandler::onSetMonitoringBase20(const ocpp::messages::ocpp20::SetMonitoringBase20Req& request,
-                                                            ocpp::messages::ocpp20::SetMonitoringBase20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a SetMonitoringBase message from the central */
+bool DefaultChargePointEventsHandler::onSetMonitoringBase(const ocpp::messages::ocpp20::SetMonitoringBaseReq& request,
+                                                          ocpp::messages::ocpp20::SetMonitoringBaseConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -695,16 +695,16 @@ bool DefaultChargePointEventsHandler::onSetMonitoringBase20(const ocpp::messages
 
     cout << "SetMonitoringBase" << endl;
 
-    response.status = GenericDeviceModelStatusEnumType20::Rejected;
+    response.status = GenericDeviceModelStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetMonitoringLevel20 message from the central */
-bool DefaultChargePointEventsHandler::onSetMonitoringLevel20(const ocpp::messages::ocpp20::SetMonitoringLevel20Req& request,
-                                                             ocpp::messages::ocpp20::SetMonitoringLevel20Conf&      response,
-                                                             std::string&                                           error,
-                                                             std::string&                                           message)
+/** @brief Called on reception of a SetMonitoringLevel message from the central */
+bool DefaultChargePointEventsHandler::onSetMonitoringLevel(const ocpp::messages::ocpp20::SetMonitoringLevelReq& request,
+                                                           ocpp::messages::ocpp20::SetMonitoringLevelConf&      response,
+                                                           std::string&                                         error,
+                                                           std::string&                                         message)
 {
     bool ret = true;
 
@@ -714,16 +714,16 @@ bool DefaultChargePointEventsHandler::onSetMonitoringLevel20(const ocpp::message
 
     cout << "SetMonitoringLevel" << endl;
 
-    response.status = GenericStatusEnumType20::Rejected;
+    response.status = GenericStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetNetworkProfile20 message from the central */
-bool DefaultChargePointEventsHandler::onSetNetworkProfile20(const ocpp::messages::ocpp20::SetNetworkProfile20Req& request,
-                                                            ocpp::messages::ocpp20::SetNetworkProfile20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a SetNetworkProfile message from the central */
+bool DefaultChargePointEventsHandler::onSetNetworkProfile(const ocpp::messages::ocpp20::SetNetworkProfileReq& request,
+                                                          ocpp::messages::ocpp20::SetNetworkProfileConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -733,16 +733,16 @@ bool DefaultChargePointEventsHandler::onSetNetworkProfile20(const ocpp::messages
 
     cout << "SetNetworkProfile" << endl;
 
-    response.status = SetNetworkProfileStatusEnumType20::Rejected;
+    response.status = SetNetworkProfileStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a SetVariableMonitoring20 message from the central */
-bool DefaultChargePointEventsHandler::onSetVariableMonitoring20(const ocpp::messages::ocpp20::SetVariableMonitoring20Req& request,
-                                                                ocpp::messages::ocpp20::SetVariableMonitoring20Conf&      response,
-                                                                std::string&                                              error,
-                                                                std::string&                                              message)
+/** @brief Called on reception of a SetVariableMonitoring message from the central */
+bool DefaultChargePointEventsHandler::onSetVariableMonitoring(const ocpp::messages::ocpp20::SetVariableMonitoringReq& request,
+                                                              ocpp::messages::ocpp20::SetVariableMonitoringConf&      response,
+                                                              std::string&                                            error,
+                                                              std::string&                                            message)
 {
     bool ret = true;
 
@@ -755,8 +755,8 @@ bool DefaultChargePointEventsHandler::onSetVariableMonitoring20(const ocpp::mess
     {
         (void)data;
 
-        SetMonitoringResultType20 result;
-        result.status    = SetMonitoringStatusEnumType20::Rejected;
+        SetMonitoringResultType result;
+        result.status    = SetMonitoringStatusEnumType::Rejected;
         result.type      = data.type;
         result.component = data.component;
         result.variable  = data.variable;
@@ -767,11 +767,11 @@ bool DefaultChargePointEventsHandler::onSetVariableMonitoring20(const ocpp::mess
     return ret;
 }
 
-/** @brief Called on reception of a SetVariables20 message from the central */
-bool DefaultChargePointEventsHandler::onSetVariables20(const ocpp::messages::ocpp20::SetVariables20Req& request,
-                                                       ocpp::messages::ocpp20::SetVariables20Conf&      response,
-                                                       std::string&                                     error,
-                                                       std::string&                                     message)
+/** @brief Called on reception of a SetVariables message from the central */
+bool DefaultChargePointEventsHandler::onSetVariables(const ocpp::messages::ocpp20::SetVariablesReq& request,
+                                                     ocpp::messages::ocpp20::SetVariablesConf&      response,
+                                                     std::string&                                   error,
+                                                     std::string&                                   message)
 {
     bool ret = true;
 
@@ -783,8 +783,8 @@ bool DefaultChargePointEventsHandler::onSetVariables20(const ocpp::messages::ocp
 
     for (const auto& var_data : request.setVariableData)
     {
-        SetVariableResultType20 result;
-        result.attributeStatus = SetVariableStatusEnumType20::Rejected;
+        SetVariableResultType result;
+        result.attributeStatus = SetVariableStatusEnumType::Rejected;
         result.component       = var_data.component;
         result.variable        = var_data.variable;
         response.setVariableResult.push_back(result);
@@ -793,11 +793,11 @@ bool DefaultChargePointEventsHandler::onSetVariables20(const ocpp::messages::ocp
     return ret;
 }
 
-/** @brief Called on reception of a TriggerMessage20 message from the central */
-bool DefaultChargePointEventsHandler::onTriggerMessage20(const ocpp::messages::ocpp20::TriggerMessage20Req& request,
-                                                         ocpp::messages::ocpp20::TriggerMessage20Conf&      response,
-                                                         std::string&                                       error,
-                                                         std::string&                                       message)
+/** @brief Called on reception of a TriggerMessage message from the central */
+bool DefaultChargePointEventsHandler::onTriggerMessage(const ocpp::messages::ocpp20::TriggerMessageReq& request,
+                                                       ocpp::messages::ocpp20::TriggerMessageConf&      response,
+                                                       std::string&                                     error,
+                                                       std::string&                                     message)
 {
     bool ret = true;
 
@@ -807,16 +807,16 @@ bool DefaultChargePointEventsHandler::onTriggerMessage20(const ocpp::messages::o
 
     cout << "TriggerMessage" << endl;
 
-    response.status = TriggerMessageStatusEnumType20::Rejected;
+    response.status = TriggerMessageStatusEnumType::Rejected;
 
     return ret;
 }
 
-/** @brief Called on reception of a UnlockConnector20 message from the central */
-bool DefaultChargePointEventsHandler::onUnlockConnector20(const ocpp::messages::ocpp20::UnlockConnector20Req& request,
-                                                          ocpp::messages::ocpp20::UnlockConnector20Conf&      response,
-                                                          std::string&                                        error,
-                                                          std::string&                                        message)
+/** @brief Called on reception of a UnlockConnector message from the central */
+bool DefaultChargePointEventsHandler::onUnlockConnector(const ocpp::messages::ocpp20::UnlockConnectorReq& request,
+                                                        ocpp::messages::ocpp20::UnlockConnectorConf&      response,
+                                                        std::string&                                      error,
+                                                        std::string&                                      message)
 {
     bool ret = true;
 
@@ -826,16 +826,16 @@ bool DefaultChargePointEventsHandler::onUnlockConnector20(const ocpp::messages::
 
     cout << "UnlockConnector" << endl;
 
-    response.status = UnlockStatusEnumType20::UnknownConnector;
+    response.status = UnlockStatusEnumType::UnknownConnector;
 
     return ret;
 }
 
-/** @brief Called on reception of a UnpublishFirmware20 message from the central */
-bool DefaultChargePointEventsHandler::onUnpublishFirmware20(const ocpp::messages::ocpp20::UnpublishFirmware20Req& request,
-                                                            ocpp::messages::ocpp20::UnpublishFirmware20Conf&      response,
-                                                            std::string&                                          error,
-                                                            std::string&                                          message)
+/** @brief Called on reception of a UnpublishFirmware message from the central */
+bool DefaultChargePointEventsHandler::onUnpublishFirmware(const ocpp::messages::ocpp20::UnpublishFirmwareReq& request,
+                                                          ocpp::messages::ocpp20::UnpublishFirmwareConf&      response,
+                                                          std::string&                                        error,
+                                                          std::string&                                        message)
 {
     bool ret = true;
 
@@ -845,16 +845,16 @@ bool DefaultChargePointEventsHandler::onUnpublishFirmware20(const ocpp::messages
 
     cout << "UnpublishFirmware" << endl;
 
-    response.status = UnpublishFirmwareStatusEnumType20::NoFirmware;
+    response.status = UnpublishFirmwareStatusEnumType::NoFirmware;
 
     return ret;
 }
 
-/** @brief Called on reception of a UpdateFirmware20 message from the central */
-bool DefaultChargePointEventsHandler::onUpdateFirmware20(const ocpp::messages::ocpp20::UpdateFirmware20Req& request,
-                                                         ocpp::messages::ocpp20::UpdateFirmware20Conf&      response,
-                                                         std::string&                                       error,
-                                                         std::string&                                       message)
+/** @brief Called on reception of a UpdateFirmware message from the central */
+bool DefaultChargePointEventsHandler::onUpdateFirmware(const ocpp::messages::ocpp20::UpdateFirmwareReq& request,
+                                                       ocpp::messages::ocpp20::UpdateFirmwareConf&      response,
+                                                       std::string&                                     error,
+                                                       std::string&                                     message)
 {
     bool ret = true;
 
@@ -864,7 +864,7 @@ bool DefaultChargePointEventsHandler::onUpdateFirmware20(const ocpp::messages::o
 
     cout << "UpdateFirmware" << endl;
 
-    response.status = UpdateFirmwareStatusEnumType20::Rejected;
+    response.status = UpdateFirmwareStatusEnumType::Rejected;
 
     return ret;
 }

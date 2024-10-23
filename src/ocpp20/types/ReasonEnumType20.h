@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_REASONENUMTYPE20_H
-#define OPENOCPP_REASONENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_REASONENUMTYPE_H
+#define OPENOCPP_OCPP20_REASONENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -36,7 +36,7 @@ namespace ocpp20
 /** @brief Transaction. Stopped_ Reason. EOT_ Reason_ Code
 urn:x-oca:ocpp:uid:1:569413
 This contains the reason why the transaction was stopped. MAY only be omitted when Reason is "Local". */
-enum class ReasonEnumType20
+enum class ReasonEnumType
 {
     DeAuthorized,
     EmergencyStop,
@@ -59,11 +59,11 @@ enum class ReasonEnumType20
     Timeout,
 };
 
-/** @brief Helper to convert a ReasonEnumType20 enum to string */
-extern const EnumToStringFromString<ReasonEnumType20> ReasonEnumType20Helper;
+/** @brief Helper to convert a ReasonEnumType enum to string */
+extern const EnumToStringFromString<ReasonEnumType> ReasonEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_REASONENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_REASONENUMTYPE_H

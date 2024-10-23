@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CHARGINGSTATIONTYPE20_H
-#define OPENOCPP_CHARGINGSTATIONTYPE20_H
+#ifndef OPENOCPP_OCPP20_CHARGINGSTATIONTYPE_H
+#define OPENOCPP_OCPP20_CHARGINGSTATIONTYPE_H
 
 #include "CustomDataType20.h"
 #include "ModemType20.h"
@@ -42,10 +42,10 @@ namespace ocpp20
 urn:x-oca:ocpp:uid:2:233122
 The physical system where an Electrical Vehicle (EV) can be charged.
  */
-struct ChargingStationType20
+struct ChargingStationType
 {
     /** @brief  */
-    ocpp::types::Optional<CustomDataType20> customData;
+    ocpp::types::Optional<CustomDataType> customData;
     /** @brief Device. Serial_ Number. Serial_ Number
 urn:x-oca:ocpp:uid:1:569324
 Vendor-specific device identifier. */
@@ -55,32 +55,32 @@ urn:x-oca:ocpp:uid:1:569325
 Defines the model of the device. */
     ocpp::types::CiStringType<20u> model;
     /** @brief  */
-    ocpp::types::Optional<ModemType20> modem;
+    ocpp::types::Optional<ModemType> modem;
     /** @brief Identifies the vendor (not necessarily in a unique manner). */
     ocpp::types::CiStringType<50u> vendorName;
     /** @brief This contains the firmware version of the Charging Station. */
     ocpp::types::Optional<ocpp::types::CiStringType<50u>> firmwareVersion;
 };
 
-/** @brief Converter class for ChargingStationType20 type */
-class ChargingStationType20Converter : public ocpp::messages::IMessageConverter<ChargingStationType20>
+/** @brief Converter class for ChargingStationType type */
+class ChargingStationTypeConverter : public ocpp::messages::IMessageConverter<ChargingStationType>
 {
   public:
     /** @brief Clone the converter */
-    ocpp::messages::IMessageConverter<ChargingStationType20>* clone() const override { return new ChargingStationType20Converter(); }
+    ocpp::messages::IMessageConverter<ChargingStationType>* clone() const override { return new ChargingStationTypeConverter(); }
 
-    /** @brief Convert a ChargingStationType20 from a JSON representation */
+    /** @brief Convert a ChargingStationType from a JSON representation */
     bool fromJson(const rapidjson::Value&       json,
-                  ChargingStationType20&        data,
+                  ChargingStationType&          data,
                   std::string&                  error_code,
                   [[maybe_unused]] std::string& error_message) override;
 
-    /** @brief Convert a ChargingStationType20 to a JSON representation */
-    bool toJson(const ChargingStationType20& data, rapidjson::Document& json) override;
+    /** @brief Convert a ChargingStationType to a JSON representation */
+    bool toJson(const ChargingStationType& data, rapidjson::Document& json) override;
 };
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CHARGINGSTATIONTYPE20_H
+#endif // OPENOCPP_OCPP20_CHARGINGSTATIONTYPE_H

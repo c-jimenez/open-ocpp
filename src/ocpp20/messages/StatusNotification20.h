@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_STATUSNOTIFICATION20_H
-#define OPENOCPP_STATUSNOTIFICATION20_H
+#ifndef OPENOCPP_OCPP20_STATUSNOTIFICATION_H
+#define OPENOCPP_OCPP20_STATUSNOTIFICATION_H
 
 #include "IMessageConverter.h"
 
@@ -36,36 +36,36 @@ namespace messages
 namespace ocpp20
 {
 
-/** @brief Action corresponding to the StatusNotification20 messages */
-static const std::string STATUSNOTIFICATION20_ACTION = "StatusNotification";
+/** @brief Action corresponding to the StatusNotification messages */
+static const std::string STATUSNOTIFICATION_ACTION = "StatusNotification";
 
-/** @brief StatusNotification20Req message */
-struct StatusNotification20Req
+/** @brief StatusNotificationReq message */
+struct StatusNotificationReq
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
     /** @brief The time for which the status is reported. If absent time of receipt of the message will be assumed. */
     ocpp::types::DateTime timestamp;
     /** @brief  */
-    ocpp::types::ocpp20::ConnectorStatusEnumType20 connectorStatus;
+    ocpp::types::ocpp20::ConnectorStatusEnumType connectorStatus;
     /** @brief The id of the EVSE to which the connector belongs for which the the status is reported. */
     int evseId;
     /** @brief The id of the connector within the EVSE for which the status is reported. */
     int connectorId;
 };
 
-/** @brief StatusNotification20Conf message */
-struct StatusNotification20Conf
+/** @brief StatusNotificationConf message */
+struct StatusNotificationConf
 {
     /** @brief  */
-    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType20> customData;
+    ocpp::types::Optional<ocpp::types::ocpp20::CustomDataType> customData;
 };
 
 // Message converters
-MESSAGE_CONVERTERS(StatusNotification20)
+MESSAGE_CONVERTERS(StatusNotification)
 
 } // namespace ocpp20
 } // namespace messages
 } // namespace ocpp
 
-#endif // OPENOCPP_STATUSNOTIFICATION20_H
+#endif // OPENOCPP_OCPP20_STATUSNOTIFICATION_H

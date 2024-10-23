@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_RESETENUMTYPE20_H
-#define OPENOCPP_RESETENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_RESETENUMTYPE_H
+#define OPENOCPP_OCPP20_RESETENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief This contains the type of reset that the Charging Station or EVSE should perform. */
-enum class ResetEnumType20
+enum class ResetEnumType
 {
     Immediate,
     OnIdle,
 };
 
-/** @brief Helper to convert a ResetEnumType20 enum to string */
-extern const EnumToStringFromString<ResetEnumType20> ResetEnumType20Helper;
+/** @brief Helper to convert a ResetEnumType enum to string */
+extern const EnumToStringFromString<ResetEnumType> ResetEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_RESETENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_RESETENUMTYPE_H

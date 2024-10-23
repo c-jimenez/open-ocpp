@@ -149,659 +149,658 @@ class ICentralSystemProxy20
 
     // OCPP operations
     /**
-     * @brief Send a BootNotification20 message to the central system
+     * @brief Send a BootNotification message to the central system
      * @param request Request to send
      * @param response Received response
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ocpp20::BootNotification20Req& request,
-                      ocpp::messages::ocpp20::BootNotification20Conf&      response,
-                      std::string&                                         error,
-                      std::string&                                         message) = 0;
+    virtual bool call(const ocpp::messages::ocpp20::BootNotificationReq& request,
+                      ocpp::messages::ocpp20::BootNotificationConf&      response,
+                      std::string&                                       error,
+                      std::string&                                       message) = 0;
     /**
-     * @brief Send a Authorize20 message to the central system
+     * @brief Send a Authorize message to the central system
      * @param request Request to send
      * @param response Received response
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ocpp20::Authorize20Req& request,
-                      ocpp::messages::ocpp20::Authorize20Conf&      response,
-                      std::string&                                  error,
-                      std::string&                                  message) = 0;
+    virtual bool call(const ocpp::messages::ocpp20::AuthorizeReq& request,
+                      ocpp::messages::ocpp20::AuthorizeConf&      response,
+                      std::string&                                error,
+                      std::string&                                message) = 0;
     /**
-     * @brief Send a ClearedChargingLimit20 message to the central system
+     * @brief Send a ClearedChargingLimit message to the central system
      * @param request Request to send
      * @param response Received response
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ocpp20::ClearedChargingLimit20Req& request,
-                      ocpp::messages::ocpp20::ClearedChargingLimit20Conf&      response,
-                      std::string&                                             error,
-                      std::string&                                             message) = 0;
-    /**
-     * @brief Send a CostUpdated20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::CostUpdated20Req& request,
-                      ocpp::messages::ocpp20::CostUpdated20Conf&      response,
-                      std::string&                                    error,
-                      std::string&                                    message) = 0;
-    /**
-     * @brief Send a DataTransfer20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::DataTransfer20Req& request,
-                      ocpp::messages::ocpp20::DataTransfer20Conf&      response,
-                      std::string&                                     error,
-                      std::string&                                     message) = 0;
-    /**
-     * @brief Send a FirmwareStatusNotification20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::FirmwareStatusNotification20Req& request,
-                      ocpp::messages::ocpp20::FirmwareStatusNotification20Conf&      response,
-                      std::string&                                                   error,
-                      std::string&                                                   message) = 0;
-    /**
-     * @brief Send a Heartbeat20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::Heartbeat20Req& request,
-                      ocpp::messages::ocpp20::Heartbeat20Conf&      response,
-                      std::string&                                  error,
-                      std::string&                                  message) = 0;
-    /**
-     * @brief Send a LogStatusNotification20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::LogStatusNotification20Req& request,
-                      ocpp::messages::ocpp20::LogStatusNotification20Conf&      response,
-                      std::string&                                              error,
-                      std::string&                                              message) = 0;
-    /**
-     * @brief Send a MeterValues20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::MeterValues20Req& request,
-                      ocpp::messages::ocpp20::MeterValues20Conf&      response,
-                      std::string&                                    error,
-                      std::string&                                    message) = 0;
-    /**
-     * @brief Send a NotifyChargingLimit20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyChargingLimit20Req& request,
-                      ocpp::messages::ocpp20::NotifyChargingLimit20Conf&      response,
-                      std::string&                                            error,
-                      std::string&                                            message) = 0;
-    /**
-     * @brief Send a NotifyCustomerInformation20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyCustomerInformation20Req& request,
-                      ocpp::messages::ocpp20::NotifyCustomerInformation20Conf&      response,
-                      std::string&                                                  error,
-                      std::string&                                                  message) = 0;
-    /**
-     * @brief Send a NotifyDisplayMessages20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyDisplayMessages20Req& request,
-                      ocpp::messages::ocpp20::NotifyDisplayMessages20Conf&      response,
-                      std::string&                                              error,
-                      std::string&                                              message) = 0;
-    /**
-     * @brief Send a NotifyEVChargingNeeds20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyEVChargingNeeds20Req& request,
-                      ocpp::messages::ocpp20::NotifyEVChargingNeeds20Conf&      response,
-                      std::string&                                              error,
-                      std::string&                                              message) = 0;
-    /**
-     * @brief Send a NotifyEVChargingSchedule20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyEVChargingSchedule20Req& request,
-                      ocpp::messages::ocpp20::NotifyEVChargingSchedule20Conf&      response,
-                      std::string&                                                 error,
-                      std::string&                                                 message) = 0;
-    /**
-     * @brief Send a NotifyEvent20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyEvent20Req& request,
-                      ocpp::messages::ocpp20::NotifyEvent20Conf&      response,
-                      std::string&                                    error,
-                      std::string&                                    message) = 0;
-    /**
-     * @brief Send a NotifyMonitoringReport20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyMonitoringReport20Req& request,
-                      ocpp::messages::ocpp20::NotifyMonitoringReport20Conf&      response,
-                      std::string&                                               error,
-                      std::string&                                               message) = 0;
-    /**
-     * @brief Send a NotifyReport20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::NotifyReport20Req& request,
-                      ocpp::messages::ocpp20::NotifyReport20Conf&      response,
-                      std::string&                                     error,
-                      std::string&                                     message) = 0;
-    /**
-     * @brief Send a PublishFirmwareStatusNotification20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Req& request,
-                      ocpp::messages::ocpp20::PublishFirmwareStatusNotification20Conf&      response,
-                      std::string&                                                          error,
-                      std::string&                                                          message) = 0;
-    /**
-     * @brief Send a ReportChargingProfiles20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::ReportChargingProfiles20Req& request,
-                      ocpp::messages::ocpp20::ReportChargingProfiles20Conf&      response,
-                      std::string&                                               error,
-                      std::string&                                               message) = 0;
-    /**
-     * @brief Send a ReservationStatusUpdate20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::ReservationStatusUpdate20Req& request,
-                      ocpp::messages::ocpp20::ReservationStatusUpdate20Conf&      response,
-                      std::string&                                                error,
-                      std::string&                                                message) = 0;
-    /**
-     * @brief Send a SecurityEventNotification20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::SecurityEventNotification20Req& request,
-                      ocpp::messages::ocpp20::SecurityEventNotification20Conf&      response,
-                      std::string&                                                  error,
-                      std::string&                                                  message) = 0;
-    /**
-     * @brief Send a SignCertificate20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::SignCertificate20Req& request,
-                      ocpp::messages::ocpp20::SignCertificate20Conf&      response,
-                      std::string&                                        error,
-                      std::string&                                        message) = 0;
-    /**
-     * @brief Send a StatusNotification20 message to the central system
-     * @param request Request to send
-     * @param response Received response
-     * @param error Error (Empty if not a CallError)
-     * @param message Error message (Empty if not a CallError)
-     * @return true if the request has been sent and a response has been received, false otherwise
-     */
-    virtual bool call(const ocpp::messages::ocpp20::StatusNotification20Req& request,
-                      ocpp::messages::ocpp20::StatusNotification20Conf&      response,
+    virtual bool call(const ocpp::messages::ocpp20::ClearedChargingLimitReq& request,
+                      ocpp::messages::ocpp20::ClearedChargingLimitConf&      response,
                       std::string&                                           error,
                       std::string&                                           message) = 0;
     /**
-     * @brief Send a TransactionEvent20 message to the central system
+     * @brief Send a CostUpdated message to the central system
      * @param request Request to send
      * @param response Received response
      * @param error Error (Empty if not a CallError)
      * @param message Error message (Empty if not a CallError)
      * @return true if the request has been sent and a response has been received, false otherwise
      */
-    virtual bool call(const ocpp::messages::ocpp20::TransactionEvent20Req& request,
-                      ocpp::messages::ocpp20::TransactionEvent20Conf&      response,
+    virtual bool call(const ocpp::messages::ocpp20::CostUpdatedReq& request,
+                      ocpp::messages::ocpp20::CostUpdatedConf&      response,
+                      std::string&                                  error,
+                      std::string&                                  message) = 0;
+    /**
+     * @brief Send a DataTransfer message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::DataTransferReq& request,
+                      ocpp::messages::ocpp20::DataTransferConf&      response,
+                      std::string&                                   error,
+                      std::string&                                   message) = 0;
+    /**
+     * @brief Send a FirmwareStatusNotification message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::FirmwareStatusNotificationReq& request,
+                      ocpp::messages::ocpp20::FirmwareStatusNotificationConf&      response,
+                      std::string&                                                 error,
+                      std::string&                                                 message) = 0;
+    /**
+     * @brief Send a Heartbeat message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::HeartbeatReq& request,
+                      ocpp::messages::ocpp20::HeartbeatConf&      response,
+                      std::string&                                error,
+                      std::string&                                message) = 0;
+    /**
+     * @brief Send a LogStatusNotification message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::LogStatusNotificationReq& request,
+                      ocpp::messages::ocpp20::LogStatusNotificationConf&      response,
+                      std::string&                                            error,
+                      std::string&                                            message) = 0;
+    /**
+     * @brief Send a MeterValues message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::MeterValuesReq& request,
+                      ocpp::messages::ocpp20::MeterValuesConf&      response,
+                      std::string&                                  error,
+                      std::string&                                  message) = 0;
+    /**
+     * @brief Send a NotifyChargingLimit message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyChargingLimitReq& request,
+                      ocpp::messages::ocpp20::NotifyChargingLimitConf&      response,
+                      std::string&                                          error,
+                      std::string&                                          message) = 0;
+    /**
+     * @brief Send a NotifyCustomerInformation message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyCustomerInformationReq& request,
+                      ocpp::messages::ocpp20::NotifyCustomerInformationConf&      response,
+                      std::string&                                                error,
+                      std::string&                                                message) = 0;
+    /**
+     * @brief Send a NotifyDisplayMessages message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyDisplayMessagesReq& request,
+                      ocpp::messages::ocpp20::NotifyDisplayMessagesConf&      response,
+                      std::string&                                            error,
+                      std::string&                                            message) = 0;
+    /**
+     * @brief Send a NotifyEVChargingNeeds message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyEVChargingNeedsReq& request,
+                      ocpp::messages::ocpp20::NotifyEVChargingNeedsConf&      response,
+                      std::string&                                            error,
+                      std::string&                                            message) = 0;
+    /**
+     * @brief Send a NotifyEVChargingSchedule message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyEVChargingScheduleReq& request,
+                      ocpp::messages::ocpp20::NotifyEVChargingScheduleConf&      response,
+                      std::string&                                               error,
+                      std::string&                                               message) = 0;
+    /**
+     * @brief Send a NotifyEvent message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyEventReq& request,
+                      ocpp::messages::ocpp20::NotifyEventConf&      response,
+                      std::string&                                  error,
+                      std::string&                                  message) = 0;
+    /**
+     * @brief Send a NotifyMonitoringReport message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyMonitoringReportReq& request,
+                      ocpp::messages::ocpp20::NotifyMonitoringReportConf&      response,
+                      std::string&                                             error,
+                      std::string&                                             message) = 0;
+    /**
+     * @brief Send a NotifyReport message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::NotifyReportReq& request,
+                      ocpp::messages::ocpp20::NotifyReportConf&      response,
+                      std::string&                                   error,
+                      std::string&                                   message) = 0;
+    /**
+     * @brief Send a PublishFirmwareStatusNotification message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::PublishFirmwareStatusNotificationReq& request,
+                      ocpp::messages::ocpp20::PublishFirmwareStatusNotificationConf&      response,
+                      std::string&                                                        error,
+                      std::string&                                                        message) = 0;
+    /**
+     * @brief Send a ReportChargingProfiles message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::ReportChargingProfilesReq& request,
+                      ocpp::messages::ocpp20::ReportChargingProfilesConf&      response,
+                      std::string&                                             error,
+                      std::string&                                             message) = 0;
+    /**
+     * @brief Send a ReservationStatusUpdate message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::ReservationStatusUpdateReq& request,
+                      ocpp::messages::ocpp20::ReservationStatusUpdateConf&      response,
+                      std::string&                                              error,
+                      std::string&                                              message) = 0;
+    /**
+     * @brief Send a SecurityEventNotification message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::SecurityEventNotificationReq& request,
+                      ocpp::messages::ocpp20::SecurityEventNotificationConf&      response,
+                      std::string&                                                error,
+                      std::string&                                                message) = 0;
+    /**
+     * @brief Send a SignCertificate message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::SignCertificateReq& request,
+                      ocpp::messages::ocpp20::SignCertificateConf&      response,
+                      std::string&                                      error,
+                      std::string&                                      message) = 0;
+    /**
+     * @brief Send a StatusNotification message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::StatusNotificationReq& request,
+                      ocpp::messages::ocpp20::StatusNotificationConf&      response,
                       std::string&                                         error,
                       std::string&                                         message) = 0;
     /**
-     * @brief Register a handler for the CancelReservation20 request from the central system
+     * @brief Send a TransactionEvent message to the central system
+     * @param request Request to send
+     * @param response Received response
+     * @param error Error (Empty if not a CallError)
+     * @param message Error message (Empty if not a CallError)
+     * @return true if the request has been sent and a response has been received, false otherwise
+     */
+    virtual bool call(const ocpp::messages::ocpp20::TransactionEventReq& request,
+                      ocpp::messages::ocpp20::TransactionEventConf&      response,
+                      std::string&                                       error,
+                      std::string&                                       message) = 0;
+    /**
+     * @brief Register a handler for the CancelReservation request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CancelReservation20Req&,
-                                                    ocpp::messages::ocpp20::CancelReservation20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CancelReservationReq&,
+                                                    ocpp::messages::ocpp20::CancelReservationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the CertificateSigned20 request from the central system
+     * @brief Register a handler for the CertificateSigned request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CertificateSigned20Req&,
-                                                    ocpp::messages::ocpp20::CertificateSigned20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CertificateSignedReq&,
+                                                    ocpp::messages::ocpp20::CertificateSignedConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the ChangeAvailability20 request from the central system
+     * @brief Register a handler for the ChangeAvailability request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ChangeAvailability20Req&,
-                                                    ocpp::messages::ocpp20::ChangeAvailability20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ChangeAvailabilityReq&,
+                                                    ocpp::messages::ocpp20::ChangeAvailabilityConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the ClearCache20 request from the central system
+     * @brief Register a handler for the ClearCache request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::ClearCache20Req&, ocpp::messages::ocpp20::ClearCache20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::ClearCacheReq&, ocpp::messages::ocpp20::ClearCacheConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the ClearChargingProfile20 request from the central system
+     * @brief Register a handler for the ClearChargingProfile request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearChargingProfile20Req&,
-                                                    ocpp::messages::ocpp20::ClearChargingProfile20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearChargingProfileReq&,
+                                                    ocpp::messages::ocpp20::ClearChargingProfileConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the ClearDisplayMessage20 request from the central system
+     * @brief Register a handler for the ClearDisplayMessage request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearDisplayMessage20Req&,
-                                                    ocpp::messages::ocpp20::ClearDisplayMessage20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearDisplayMessageReq&,
+                                                    ocpp::messages::ocpp20::ClearDisplayMessageConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the ClearVariableMonitoring20 request from the central system
+     * @brief Register a handler for the ClearVariableMonitoring request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearVariableMonitoring20Req&,
-                                                    ocpp::messages::ocpp20::ClearVariableMonitoring20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::ClearVariableMonitoringReq&,
+                                                    ocpp::messages::ocpp20::ClearVariableMonitoringConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the CustomerInformation20 request from the central system
+     * @brief Register a handler for the CustomerInformation request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CustomerInformation20Req&,
-                                                    ocpp::messages::ocpp20::CustomerInformation20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::CustomerInformationReq&,
+                                                    ocpp::messages::ocpp20::CustomerInformationConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the DataTransfer20 request from the central system
+     * @brief Register a handler for the DataTransfer request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::DataTransfer20Req&, ocpp::messages::ocpp20::DataTransfer20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::DataTransferReq&, ocpp::messages::ocpp20::DataTransferConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the DeleteCertificate20 request from the central system
+     * @brief Register a handler for the DeleteCertificate request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::DeleteCertificate20Req&,
-                                                    ocpp::messages::ocpp20::DeleteCertificate20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::DeleteCertificateReq&,
+                                                    ocpp::messages::ocpp20::DeleteCertificateConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the Get15118EVCertificate20 request from the central system
+     * @brief Register a handler for the Get15118EVCertificate request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::Get15118EVCertificate20Req&,
-                                                    ocpp::messages::ocpp20::Get15118EVCertificate20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::Get15118EVCertificateReq&,
+                                                    ocpp::messages::ocpp20::Get15118EVCertificateConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the GetBaseReport20 request from the central system
+     * @brief Register a handler for the GetBaseReport request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp20::GetBaseReportReq&, ocpp::messages::ocpp20::GetBaseReportConf&, std::string&, std::string&)>
+            handler) = 0;
+    /**
+     * @brief Register a handler for the GetCertificateStatus request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetCertificateStatusReq&,
+                                                    ocpp::messages::ocpp20::GetCertificateStatusConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetChargingProfiles request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetChargingProfilesReq&,
+                                                    ocpp::messages::ocpp20::GetChargingProfilesConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetCompositeSchedule request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetCompositeScheduleReq&,
+                                                    ocpp::messages::ocpp20::GetCompositeScheduleConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetDisplayMessages request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetDisplayMessagesReq&,
+                                                    ocpp::messages::ocpp20::GetDisplayMessagesConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetInstalledCertificateIds request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetInstalledCertificateIdsReq&,
+                                                    ocpp::messages::ocpp20::GetInstalledCertificateIdsConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetLocalListVersion request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetLocalListVersionReq&,
+                                                    ocpp::messages::ocpp20::GetLocalListVersionConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetLog request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ocpp20::GetLogReq&, ocpp::messages::ocpp20::GetLogConf&, std::string&, std::string&)>
+            handler) = 0;
+    /**
+     * @brief Register a handler for the GetMonitoringReport request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetMonitoringReportReq&,
+                                                    ocpp::messages::ocpp20::GetMonitoringReportConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetReport request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ocpp20::GetReportReq&, ocpp::messages::ocpp20::GetReportConf&, std::string&, std::string&)>
+            handler) = 0;
+    /**
+     * @brief Register a handler for the GetTransactionStatus request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetTransactionStatusReq&,
+                                                    ocpp::messages::ocpp20::GetTransactionStatusConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the GetVariables request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(
+        std::function<
+            bool(const ocpp::messages::ocpp20::GetVariablesReq&, ocpp::messages::ocpp20::GetVariablesConf&, std::string&, std::string&)>
+            handler) = 0;
+    /**
+     * @brief Register a handler for the InstallCertificate request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::InstallCertificateReq&,
+                                                    ocpp::messages::ocpp20::InstallCertificateConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the PublishFirmware request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<bool(
-            const ocpp::messages::ocpp20::GetBaseReport20Req&, ocpp::messages::ocpp20::GetBaseReport20Conf&, std::string&, std::string&)>
+            const ocpp::messages::ocpp20::PublishFirmwareReq&, ocpp::messages::ocpp20::PublishFirmwareConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the GetCertificateStatus20 request from the central system
+     * @brief Register a handler for the RequestStartTransaction request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetCertificateStatus20Req&,
-                                                    ocpp::messages::ocpp20::GetCertificateStatus20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::RequestStartTransactionReq&,
+                                                    ocpp::messages::ocpp20::RequestStartTransactionConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the GetChargingProfiles20 request from the central system
+     * @brief Register a handler for the RequestStopTransaction request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetChargingProfiles20Req&,
-                                                    ocpp::messages::ocpp20::GetChargingProfiles20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::RequestStopTransactionReq&,
+                                                    ocpp::messages::ocpp20::RequestStopTransactionConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the GetCompositeSchedule20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetCompositeSchedule20Req&,
-                                                    ocpp::messages::ocpp20::GetCompositeSchedule20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the GetDisplayMessages20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetDisplayMessages20Req&,
-                                                    ocpp::messages::ocpp20::GetDisplayMessages20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the GetInstalledCertificateIds20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetInstalledCertificateIds20Req&,
-                                                    ocpp::messages::ocpp20::GetInstalledCertificateIds20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the GetLocalListVersion20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetLocalListVersion20Req&,
-                                                    ocpp::messages::ocpp20::GetLocalListVersion20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the GetLog20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::ocpp20::GetLog20Req&, ocpp::messages::ocpp20::GetLog20Conf&, std::string&, std::string&)>
-            handler) = 0;
-    /**
-     * @brief Register a handler for the GetMonitoringReport20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetMonitoringReport20Req&,
-                                                    ocpp::messages::ocpp20::GetMonitoringReport20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the GetReport20 request from the central system
+     * @brief Register a handler for the ReserveNow request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::GetReport20Req&, ocpp::messages::ocpp20::GetReport20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::ReserveNowReq&, ocpp::messages::ocpp20::ReserveNowConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the GetTransactionStatus20 request from the central system
+     * @brief Register a handler for the Reset request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::GetTransactionStatus20Req&,
-                                                    ocpp::messages::ocpp20::GetTransactionStatus20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
+    virtual bool registerHandler(
+        std::function<bool(const ocpp::messages::ocpp20::ResetReq&, ocpp::messages::ocpp20::ResetConf&, std::string&, std::string&)>
+            handler) = 0;
     /**
-     * @brief Register a handler for the GetVariables20 request from the central system
+     * @brief Register a handler for the SendLocalList request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::GetVariables20Req&, ocpp::messages::ocpp20::GetVariables20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::SendLocalListReq&, ocpp::messages::ocpp20::SendLocalListConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the InstallCertificate20 request from the central system
+     * @brief Register a handler for the SetChargingProfile request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::InstallCertificate20Req&,
-                                                    ocpp::messages::ocpp20::InstallCertificate20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetChargingProfileReq&,
+                                                    ocpp::messages::ocpp20::SetChargingProfileConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the PublishFirmware20 request from the central system
+     * @brief Register a handler for the SetDisplayMessage request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::PublishFirmware20Req&,
-                                                    ocpp::messages::ocpp20::PublishFirmware20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetDisplayMessageReq&,
+                                                    ocpp::messages::ocpp20::SetDisplayMessageConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the RequestStartTransaction20 request from the central system
+     * @brief Register a handler for the SetMonitoringBase request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::RequestStartTransaction20Req&,
-                                                    ocpp::messages::ocpp20::RequestStartTransaction20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetMonitoringBaseReq&,
+                                                    ocpp::messages::ocpp20::SetMonitoringBaseConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the RequestStopTransaction20 request from the central system
+     * @brief Register a handler for the SetMonitoringLevel request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::RequestStopTransaction20Req&,
-                                                    ocpp::messages::ocpp20::RequestStopTransaction20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetMonitoringLevelReq&,
+                                                    ocpp::messages::ocpp20::SetMonitoringLevelConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the ReserveNow20 request from the central system
+     * @brief Register a handler for the SetNetworkProfile request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetNetworkProfileReq&,
+                                                    ocpp::messages::ocpp20::SetNetworkProfileConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the SetVariableMonitoring request from the central system
+     * @param handler Handler function
+     * @return true if the handler has been registered, false otherwise
+     */
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetVariableMonitoringReq&,
+                                                    ocpp::messages::ocpp20::SetVariableMonitoringConf&,
+                                                    std::string&,
+                                                    std::string&)> handler) = 0;
+    /**
+     * @brief Register a handler for the SetVariables request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::ReserveNow20Req&, ocpp::messages::ocpp20::ReserveNow20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::SetVariablesReq&, ocpp::messages::ocpp20::SetVariablesConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the Reset20 request from the central system
+     * @brief Register a handler for the TriggerMessage request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
-        std::function<bool(const ocpp::messages::ocpp20::Reset20Req&, ocpp::messages::ocpp20::Reset20Conf&, std::string&, std::string&)>
+        std::function<
+            bool(const ocpp::messages::ocpp20::TriggerMessageReq&, ocpp::messages::ocpp20::TriggerMessageConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the SendLocalList20 request from the central system
+     * @brief Register a handler for the UnlockConnector request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<bool(
-            const ocpp::messages::ocpp20::SendLocalList20Req&, ocpp::messages::ocpp20::SendLocalList20Conf&, std::string&, std::string&)>
+            const ocpp::messages::ocpp20::UnlockConnectorReq&, ocpp::messages::ocpp20::UnlockConnectorConf&, std::string&, std::string&)>
             handler) = 0;
     /**
-     * @brief Register a handler for the SetChargingProfile20 request from the central system
+     * @brief Register a handler for the UnpublishFirmware request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetChargingProfile20Req&,
-                                                    ocpp::messages::ocpp20::SetChargingProfile20Conf&,
+    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::UnpublishFirmwareReq&,
+                                                    ocpp::messages::ocpp20::UnpublishFirmwareConf&,
                                                     std::string&,
                                                     std::string&)> handler) = 0;
     /**
-     * @brief Register a handler for the SetDisplayMessage20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetDisplayMessage20Req&,
-                                                    ocpp::messages::ocpp20::SetDisplayMessage20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the SetMonitoringBase20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetMonitoringBase20Req&,
-                                                    ocpp::messages::ocpp20::SetMonitoringBase20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the SetMonitoringLevel20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetMonitoringLevel20Req&,
-                                                    ocpp::messages::ocpp20::SetMonitoringLevel20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the SetNetworkProfile20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetNetworkProfile20Req&,
-                                                    ocpp::messages::ocpp20::SetNetworkProfile20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the SetVariableMonitoring20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::SetVariableMonitoring20Req&,
-                                                    ocpp::messages::ocpp20::SetVariableMonitoring20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the SetVariables20 request from the central system
+     * @brief Register a handler for the UpdateFirmware request from the central system
      * @param handler Handler function
      * @return true if the handler has been registered, false otherwise
      */
     virtual bool registerHandler(
         std::function<
-            bool(const ocpp::messages::ocpp20::SetVariables20Req&, ocpp::messages::ocpp20::SetVariables20Conf&, std::string&, std::string&)>
-            handler) = 0;
-    /**
-     * @brief Register a handler for the TriggerMessage20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::ocpp20::TriggerMessage20Req&, ocpp::messages::ocpp20::TriggerMessage20Conf&, std::string&, std::string&)>
-            handler) = 0;
-    /**
-     * @brief Register a handler for the UnlockConnector20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::UnlockConnector20Req&,
-                                                    ocpp::messages::ocpp20::UnlockConnector20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the UnpublishFirmware20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(std::function<bool(const ocpp::messages::ocpp20::UnpublishFirmware20Req&,
-                                                    ocpp::messages::ocpp20::UnpublishFirmware20Conf&,
-                                                    std::string&,
-                                                    std::string&)> handler) = 0;
-    /**
-     * @brief Register a handler for the UpdateFirmware20 request from the central system
-     * @param handler Handler function
-     * @return true if the handler has been registered, false otherwise
-     */
-    virtual bool registerHandler(
-        std::function<bool(
-            const ocpp::messages::ocpp20::UpdateFirmware20Req&, ocpp::messages::ocpp20::UpdateFirmware20Conf&, std::string&, std::string&)>
+            bool(const ocpp::messages::ocpp20::UpdateFirmwareReq&, ocpp::messages::ocpp20::UpdateFirmwareConf&, std::string&, std::string&)>
             handler) = 0;
 };
 

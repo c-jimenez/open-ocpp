@@ -32,44 +32,44 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a SetVariableResultType20 from a JSON representation */
-bool SetVariableResultType20Converter::fromJson(const rapidjson::Value&       json,
-                                                SetVariableResultType20&      data,
-                                                std::string&                  error_code,
-                                                [[maybe_unused]] std::string& error_message)
+/** @brief Convert a SetVariableResultType from a JSON representation */
+bool SetVariableResultTypeConverter::fromJson(const rapidjson::Value&       json,
+                                              SetVariableResultType&        data,
+                                              std::string&                  error_code,
+                                              [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // attributeType
     if (json.HasMember("attributeType"))
     {
-        data.attributeType = AttributeEnumType20Helper.fromString(json["attributeType"].GetString());
+        data.attributeType = AttributeEnumTypeHelper.fromString(json["attributeType"].GetString());
     }
 
     // attributeStatus
-    data.attributeStatus = SetVariableStatusEnumType20Helper.fromString(json["attributeStatus"].GetString());
+    data.attributeStatus = SetVariableStatusEnumTypeHelper.fromString(json["attributeStatus"].GetString());
 
     // attributeStatusInfo
     if (json.HasMember("attributeStatusInfo"))
     {
-        StatusInfoType20Converter attributeStatusInfo_converter;
+        StatusInfoTypeConverter attributeStatusInfo_converter;
         ret =
             ret && attributeStatusInfo_converter.fromJson(json["attributeStatusInfo"], data.attributeStatusInfo, error_code, error_message);
     }
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     ret = ret && component_converter.fromJson(json["component"], data.component, error_code, error_message);
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     ret = ret && variable_converter.fromJson(json["variable"], data.variable, error_code, error_message);
 
     if (!ret)
@@ -80,15 +80,15 @@ bool SetVariableResultType20Converter::fromJson(const rapidjson::Value&       js
     return ret;
 }
 
-/** @brief Convert a SetVariableResultType20 to a JSON representation */
-bool SetVariableResultType20Converter::toJson(const SetVariableResultType20& data, rapidjson::Document& json)
+/** @brief Convert a SetVariableResultType to a JSON representation */
+bool SetVariableResultTypeConverter::toJson(const SetVariableResultType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -99,16 +99,16 @@ bool SetVariableResultType20Converter::toJson(const SetVariableResultType20& dat
     // attributeType
     if (data.attributeType.isSet())
     {
-        fill(json, "attributeType", AttributeEnumType20Helper.toString(data.attributeType));
+        fill(json, "attributeType", AttributeEnumTypeHelper.toString(data.attributeType));
     }
 
     // attributeStatus
-    fill(json, "attributeStatus", SetVariableStatusEnumType20Helper.toString(data.attributeStatus));
+    fill(json, "attributeStatus", SetVariableStatusEnumTypeHelper.toString(data.attributeStatus));
 
     // attributeStatusInfo
     if (data.attributeStatusInfo.isSet())
     {
-        StatusInfoType20Converter attributeStatusInfo_converter;
+        StatusInfoTypeConverter attributeStatusInfo_converter;
         attributeStatusInfo_converter.setAllocator(allocator);
         rapidjson::Document attributeStatusInfo_doc;
         attributeStatusInfo_doc.Parse("{}");
@@ -117,7 +117,7 @@ bool SetVariableResultType20Converter::toJson(const SetVariableResultType20& dat
     }
 
     // component
-    ComponentType20Converter component_converter;
+    ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
     rapidjson::Document component_doc;
     component_doc.Parse("{}");
@@ -125,7 +125,7 @@ bool SetVariableResultType20Converter::toJson(const SetVariableResultType20& dat
     json.AddMember(rapidjson::StringRef("component"), component_doc.Move(), *allocator);
 
     // variable
-    VariableType20Converter variable_converter;
+    VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
     rapidjson::Document variable_doc;
     variable_doc.Parse("{}");

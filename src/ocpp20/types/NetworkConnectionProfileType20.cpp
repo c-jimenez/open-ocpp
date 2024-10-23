@@ -32,33 +32,33 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a NetworkConnectionProfileType20 from a JSON representation */
-bool NetworkConnectionProfileType20Converter::fromJson(const rapidjson::Value&         json,
-                                                       NetworkConnectionProfileType20& data,
-                                                       std::string&                    error_code,
-                                                       [[maybe_unused]] std::string&   error_message)
+/** @brief Convert a NetworkConnectionProfileType from a JSON representation */
+bool NetworkConnectionProfileTypeConverter::fromJson(const rapidjson::Value&       json,
+                                                     NetworkConnectionProfileType& data,
+                                                     std::string&                  error_code,
+                                                     [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // apn
     if (json.HasMember("apn"))
     {
-        APNType20Converter apn_converter;
+        APNTypeConverter apn_converter;
         ret = ret && apn_converter.fromJson(json["apn"], data.apn, error_code, error_message);
     }
 
     // ocppVersion
-    data.ocppVersion = OCPPVersionEnumType20Helper.fromString(json["ocppVersion"].GetString());
+    data.ocppVersion = OCPPVersionEnumTypeHelper.fromString(json["ocppVersion"].GetString());
 
     // ocppTransport
-    data.ocppTransport = OCPPTransportEnumType20Helper.fromString(json["ocppTransport"].GetString());
+    data.ocppTransport = OCPPTransportEnumTypeHelper.fromString(json["ocppTransport"].GetString());
 
     // ocppCsmsUrl
     extract(json, "ocppCsmsUrl", data.ocppCsmsUrl);
@@ -70,12 +70,12 @@ bool NetworkConnectionProfileType20Converter::fromJson(const rapidjson::Value&  
     extract(json, "securityProfile", data.securityProfile);
 
     // ocppInterface
-    data.ocppInterface = OCPPInterfaceEnumType20Helper.fromString(json["ocppInterface"].GetString());
+    data.ocppInterface = OCPPInterfaceEnumTypeHelper.fromString(json["ocppInterface"].GetString());
 
     // vpn
     if (json.HasMember("vpn"))
     {
-        VPNType20Converter vpn_converter;
+        VPNTypeConverter vpn_converter;
         ret = ret && vpn_converter.fromJson(json["vpn"], data.vpn, error_code, error_message);
     }
 
@@ -87,15 +87,15 @@ bool NetworkConnectionProfileType20Converter::fromJson(const rapidjson::Value&  
     return ret;
 }
 
-/** @brief Convert a NetworkConnectionProfileType20 to a JSON representation */
-bool NetworkConnectionProfileType20Converter::toJson(const NetworkConnectionProfileType20& data, rapidjson::Document& json)
+/** @brief Convert a NetworkConnectionProfileType to a JSON representation */
+bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfileType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -106,7 +106,7 @@ bool NetworkConnectionProfileType20Converter::toJson(const NetworkConnectionProf
     // apn
     if (data.apn.isSet())
     {
-        APNType20Converter apn_converter;
+        APNTypeConverter apn_converter;
         apn_converter.setAllocator(allocator);
         rapidjson::Document apn_doc;
         apn_doc.Parse("{}");
@@ -115,10 +115,10 @@ bool NetworkConnectionProfileType20Converter::toJson(const NetworkConnectionProf
     }
 
     // ocppVersion
-    fill(json, "ocppVersion", OCPPVersionEnumType20Helper.toString(data.ocppVersion));
+    fill(json, "ocppVersion", OCPPVersionEnumTypeHelper.toString(data.ocppVersion));
 
     // ocppTransport
-    fill(json, "ocppTransport", OCPPTransportEnumType20Helper.toString(data.ocppTransport));
+    fill(json, "ocppTransport", OCPPTransportEnumTypeHelper.toString(data.ocppTransport));
 
     // ocppCsmsUrl
     fill(json, "ocppCsmsUrl", data.ocppCsmsUrl);
@@ -130,12 +130,12 @@ bool NetworkConnectionProfileType20Converter::toJson(const NetworkConnectionProf
     fill(json, "securityProfile", data.securityProfile);
 
     // ocppInterface
-    fill(json, "ocppInterface", OCPPInterfaceEnumType20Helper.toString(data.ocppInterface));
+    fill(json, "ocppInterface", OCPPInterfaceEnumTypeHelper.toString(data.ocppInterface));
 
     // vpn
     if (data.vpn.isSet())
     {
-        VPNType20Converter vpn_converter;
+        VPNTypeConverter vpn_converter;
         vpn_converter.setAllocator(allocator);
         rapidjson::Document vpn_doc;
         vpn_doc.Parse("{}");

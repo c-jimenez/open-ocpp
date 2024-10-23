@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_OCPPINTERFACEENUMTYPE20_H
-#define OPENOCPP_OCPPINTERFACEENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_OCPPINTERFACEENUMTYPE_H
+#define OPENOCPP_OCPP20_OCPPINTERFACEENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,7 +34,7 @@ namespace ocpp20
 {
 
 /** @brief Applicable Network Interface. */
-enum class OCPPInterfaceEnumType20
+enum class OCPPInterfaceEnumType
 {
     Wired0,
     Wired1,
@@ -46,11 +46,11 @@ enum class OCPPInterfaceEnumType20
     Wireless3,
 };
 
-/** @brief Helper to convert a OCPPInterfaceEnumType20 enum to string */
-extern const EnumToStringFromString<OCPPInterfaceEnumType20> OCPPInterfaceEnumType20Helper;
+/** @brief Helper to convert a OCPPInterfaceEnumType enum to string */
+extern const EnumToStringFromString<OCPPInterfaceEnumType> OCPPInterfaceEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_OCPPINTERFACEENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_OCPPINTERFACEENUMTYPE_H

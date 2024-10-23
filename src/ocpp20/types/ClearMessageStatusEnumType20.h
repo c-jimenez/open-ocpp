@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CLEARMESSAGESTATUSENUMTYPE20_H
-#define OPENOCPP_CLEARMESSAGESTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CLEARMESSAGESTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CLEARMESSAGESTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,17 +34,17 @@ namespace ocpp20
 {
 
 /** @brief Returns whether the Charging Station has been able to remove the message. */
-enum class ClearMessageStatusEnumType20
+enum class ClearMessageStatusEnumType
 {
     Accepted,
     Unknown,
 };
 
-/** @brief Helper to convert a ClearMessageStatusEnumType20 enum to string */
-extern const EnumToStringFromString<ClearMessageStatusEnumType20> ClearMessageStatusEnumType20Helper;
+/** @brief Helper to convert a ClearMessageStatusEnumType enum to string */
+extern const EnumToStringFromString<ClearMessageStatusEnumType> ClearMessageStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CLEARMESSAGESTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CLEARMESSAGESTATUSENUMTYPE_H

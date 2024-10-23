@@ -30,13 +30,13 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Helper to convert a ConnectorStatusEnumType20 enum to string */
-const EnumToStringFromString<ConnectorStatusEnumType20> ConnectorStatusEnumType20Helper = {
-    {ConnectorStatusEnumType20::Available, "Available"},
-    {ConnectorStatusEnumType20::Occupied, "Occupied"},
-    {ConnectorStatusEnumType20::Reserved, "Reserved"},
-    {ConnectorStatusEnumType20::Unavailable, "Unavailable"},
-    {ConnectorStatusEnumType20::Faulted, "Faulted"},
+/** @brief Helper to convert a ConnectorStatusEnumType enum to string */
+const EnumToStringFromString<ConnectorStatusEnumType> ConnectorStatusEnumTypeHelper = {
+    {ConnectorStatusEnumType::Available, "Available"},
+    {ConnectorStatusEnumType::Occupied, "Occupied"},
+    {ConnectorStatusEnumType::Reserved, "Reserved"},
+    {ConnectorStatusEnumType::Unavailable, "Unavailable"},
+    {ConnectorStatusEnumType::Faulted, "Faulted"},
 };
 
 } // namespace ocpp20

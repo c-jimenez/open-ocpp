@@ -21,8 +21,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
                                  OCPP 2.0.1 FINAL
 */
 
-#ifndef OPENOCPP_CUSTOMERINFORMATIONSTATUSENUMTYPE20_H
-#define OPENOCPP_CUSTOMERINFORMATIONSTATUSENUMTYPE20_H
+#ifndef OPENOCPP_OCPP20_CUSTOMERINFORMATIONSTATUSENUMTYPE_H
+#define OPENOCPP_OCPP20_CUSTOMERINFORMATIONSTATUSENUMTYPE_H
 
 #include "EnumToStringFromString.h"
 
@@ -34,18 +34,18 @@ namespace ocpp20
 {
 
 /** @brief Indicates whether the request was accepted. */
-enum class CustomerInformationStatusEnumType20
+enum class CustomerInformationStatusEnumType
 {
     Accepted,
     Rejected,
     Invalid,
 };
 
-/** @brief Helper to convert a CustomerInformationStatusEnumType20 enum to string */
-extern const EnumToStringFromString<CustomerInformationStatusEnumType20> CustomerInformationStatusEnumType20Helper;
+/** @brief Helper to convert a CustomerInformationStatusEnumType enum to string */
+extern const EnumToStringFromString<CustomerInformationStatusEnumType> CustomerInformationStatusEnumTypeHelper;
 
 } // namespace ocpp20
 } // namespace types
 } // namespace ocpp
 
-#endif // OPENOCPP_CUSTOMERINFORMATIONSTATUSENUMTYPE20_H
+#endif // OPENOCPP_OCPP20_CUSTOMERINFORMATIONSTATUSENUMTYPE_H

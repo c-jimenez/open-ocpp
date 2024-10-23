@@ -32,23 +32,23 @@ namespace types
 namespace ocpp20
 {
 
-/** @brief Convert a CostType20 from a JSON representation */
-bool CostType20Converter::fromJson(const rapidjson::Value&       json,
-                                   CostType20&                   data,
-                                   std::string&                  error_code,
-                                   [[maybe_unused]] std::string& error_message)
+/** @brief Convert a CostType from a JSON representation */
+bool CostTypeConverter::fromJson(const rapidjson::Value&       json,
+                                 CostType&                     data,
+                                 std::string&                  error_code,
+                                 [[maybe_unused]] std::string& error_message)
 {
     bool ret = true;
 
     // customData
     if (json.HasMember("customData"))
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         ret = ret && customData_converter.fromJson(json["customData"], data.customData, error_code, error_message);
     }
 
     // costKind
-    data.costKind = CostKindEnumType20Helper.fromString(json["costKind"].GetString());
+    data.costKind = CostKindEnumTypeHelper.fromString(json["costKind"].GetString());
 
     // amount
     extract(json, "amount", data.amount);
@@ -64,15 +64,15 @@ bool CostType20Converter::fromJson(const rapidjson::Value&       json,
     return ret;
 }
 
-/** @brief Convert a CostType20 to a JSON representation */
-bool CostType20Converter::toJson(const CostType20& data, rapidjson::Document& json)
+/** @brief Convert a CostType to a JSON representation */
+bool CostTypeConverter::toJson(const CostType& data, rapidjson::Document& json)
 {
     bool ret = true;
 
     // customData
     if (data.customData.isSet())
     {
-        CustomDataType20Converter customData_converter;
+        CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
         rapidjson::Document customData_doc;
         customData_doc.Parse("{}");
@@ -81,7 +81,7 @@ bool CostType20Converter::toJson(const CostType20& data, rapidjson::Document& js
     }
 
     // costKind
-    fill(json, "costKind", CostKindEnumType20Helper.toString(data.costKind));
+    fill(json, "costKind", CostKindEnumTypeHelper.toString(data.costKind));
 
     // amount
     fill(json, "amount", data.amount);
