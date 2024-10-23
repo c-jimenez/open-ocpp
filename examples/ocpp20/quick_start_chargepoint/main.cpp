@@ -125,8 +125,8 @@ int main(int argc, char* argv[])
     std::string error;
     std::string error_msg;
 
-    auto                         last_boot_notif        = std::chrono::steady_clock::time_point();
-    std::chrono::seconds         hb_boot_notif_interval = std::chrono::seconds(10);
+    auto                       last_boot_notif        = std::chrono::steady_clock::time_point();
+    std::chrono::seconds       hb_boot_notif_interval = std::chrono::seconds(10);
     RegistrationStatusEnumType registration_status    = RegistrationStatusEnumType::Rejected;
 
     unsigned int transaction_id = std::chrono::system_clock::now().time_since_epoch().count();

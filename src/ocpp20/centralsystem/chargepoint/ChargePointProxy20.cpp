@@ -44,7 +44,7 @@ ChargePointProxy20::ChargePointProxy20(ICentralSystem20&                        
       m_rpc(rpc),
       m_msg_dispatcher(messages_validator),
       m_msg_sender(*m_rpc, messages_converter, messages_validator, stack_config.callRequestTimeout()),
-      m_handler(m_identifier, messages_converter, m_msg_dispatcher, stack_config),
+      m_handler(m_identifier, messages_converter, m_msg_dispatcher),
       m_messages_validator(messages_validator),
       m_messages_converter(messages_converter)
 {
