@@ -32,8 +32,8 @@ namespace types
 const EnumToStringFromString<GetCertificateIdUseEnumType> GetCertificateIdUseEnumTypeHelper = {
     {GetCertificateIdUseEnumType::MORootCertificate, "MORootCertificate"},
     {GetCertificateIdUseEnumType::V2GCertificateChain, "V2GCertificateChain"},
-    {GetCertificateIdUseEnumType::V2GRootCertificate, "V2GRootCertificate"}};
-
+    {GetCertificateIdUseEnumType::V2GRootCertificate, "V2GRootCertificate"},
+    {GetCertificateIdUseEnumType::OEMRootCertificate, "OEMRootCertificate"}};
 } // namespace types
 
 namespace messages
