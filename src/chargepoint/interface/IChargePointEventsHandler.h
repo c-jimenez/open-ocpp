@@ -324,12 +324,14 @@ class IChargePointEventsHandler
      * @param v2g_root_certificate Indicate if V2G root certificates must be listed
      * @param mo_root_certificate Indicate if MO root certificates must be listed
      * @param v2g_certificate_chain Indicate if V2G certificate chains must be listed
+     * @param oem_root_certificate Indicate if OEM root certificates must be listed
      * @param certificates Installed certificates with their type
      */
     virtual void iso15118GetInstalledCertificates(
         bool v2g_root_certificate,
         bool mo_root_certificate,
         bool v2g_certificate_chain,
+        bool oem_root_certificate,
         std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
             certificates) = 0;
 

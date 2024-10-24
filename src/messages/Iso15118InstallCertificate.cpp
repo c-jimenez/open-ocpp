@@ -29,7 +29,8 @@ namespace types
 /** @brief Helper to convert a enum class InstallCertificateUseEnumType enum to string */
 const EnumToStringFromString<InstallCertificateUseEnumType> InstallCertificateUseEnumTypeHelper = {
     {InstallCertificateUseEnumType::MORootCertificate, "MORootCertificate"},
-    {InstallCertificateUseEnumType::V2GRootCertificate, "V2GRootCertificate"}};
+    {InstallCertificateUseEnumType::V2GRootCertificate, "V2GRootCertificate"},
+    {InstallCertificateUseEnumType::OEMRootCertificate, "OEMRootCertificate"}};
 
 /** @brief Helper to convert a enum class InstallCertificateStatusEnumType enum to string */
 const EnumToStringFromString<InstallCertificateStatusEnumType> InstallCertificateStatusEnumTypeHelper = {

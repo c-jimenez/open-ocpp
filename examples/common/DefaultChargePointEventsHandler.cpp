@@ -786,17 +786,20 @@ ocpp::types::DeleteCertificateStatusEnumType DefaultChargePointEventsHandler::is
                                     bool,
                                     bool,
                                     bool,
+                                    bool,
                                     std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>&) */
 void DefaultChargePointEventsHandler::iso15118GetInstalledCertificates(
     bool v2g_root_certificate,
     bool mo_root_certificate,
     bool v2g_certificate_chain,
+    bool oem_root_certificate,
     std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
         certificates)
 {
     cout << "ISO15118 get installed certificates requested : v2g_root_certificate = " << (v2g_root_certificate ? "yes" : "no")
          << " - mo_root_certificate = " << (mo_root_certificate ? "yes" : "no")
-         << " - v2g_certificate_chain = " << (v2g_certificate_chain ? "yes" : "no") << endl;
+         << " - v2g_certificate_chain = " << (v2g_certificate_chain ? "yes" : "no")
+         << " - oem_root_certificate = " << (oem_root_certificate ? "yes" : "no") << endl;
 
     for (auto const& dir_entry : std::filesystem::directory_iterator{m_working_dir})
     {
@@ -833,6 +836,16 @@ void DefaultChargePointEventsHandler::iso15118GetInstalledCertificates(
                     certificates.emplace_back(std::move(tuple));
                 }
             }
+            if (oem_root_certificate)
+            {
+                if (ocpp::helpers::startsWith(filename, "iso_oem_root_") && ocpp::helpers::endsWith(filename, ".pem"))
+                {
+                    auto tuple = std::make_tuple(GetCertificateIdUseEnumType::OEMRootCertificate,
+                                                 Certificate(dir_entry.path()),
+                                                 std::vector<ocpp::x509::Certificate>());
+                    certificates.emplace_back(std::move(tuple));
+                }
+            }
         }
     }
 }
@@ -856,18 +869,23 @@ ocpp::types::InstallCertificateStatusEnumType DefaultChargePointEventsHandler::i
         Sha2 sha256;
         sha256.compute(certificate.pem().c_str(), certificate.pem().size());
 
-        if (type == InstallCertificateUseEnumType::V2GRootCertificate)
         {
-            // V2 root certificate
             std::stringstream name;
-            name << "iso_v2g_root_" << sha256.resultString() << ".pem";
-            cert_filename = (m_working_dir / name.str()).string();
-        }
-        else
-        {
-            // MO root certificate
-            std::stringstream name;
-            name << "iso_mo_root_" << sha256.resultString() << ".pem";
+            switch (type)
+            {
+                case InstallCertificateUseEnumType::V2GRootCertificate:
+                    name << "iso_v2g_root_";
+                    break;
+                case InstallCertificateUseEnumType::MORootCertificate:
+                    name << "iso_mo_root_";
+                    break;
+                case InstallCertificateUseEnumType::OEMRootCertificate:
+                    // Intended fallthrough
+                default:
+                    name << "iso_oem_root_";
+                    break;
+            }
+            name << sha256.resultString() << ".pem";
             cert_filename = (m_working_dir / name.str()).string();
         }
 
