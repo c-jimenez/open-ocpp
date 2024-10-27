@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "ChargePointDemoConfig.h"
 #include "DefaultChargePointEventsHandler.h"
+#include "DeviceModelLoader.h"
 #include "IChargePoint20.h"
 
 #include <chrono>
@@ -106,6 +107,22 @@ int main(int argc, char* argv[])
     std::filesystem::path path(working_dir);
     path /= "quick_start_chargepoint20.ini";
     ChargePointDemoConfig config(path.string());
+
+    // Device model
+    std::filesystem::path device_model_path(working_dir);
+    device_model_path /= "quick_start_chargepoint20_device_model.json";
+    DeviceModelLoader device_model_loader(config.stackConfig());
+    if (device_model_loader.init())
+    {
+        if (!device_model_loader.load(device_model_path))
+        {
+            std::cout << "Unable to load device model : " << device_model_loader.lastError() << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "Unable to initialize device model loader : " << device_model_loader.lastError() << std::endl;
+    }
 
     // Event handler
     DefaultChargePointEventsHandler event_handler(config, working_dir);
