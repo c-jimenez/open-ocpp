@@ -83,8 +83,7 @@ bool IdTokenTypeConverter::toJson(const IdTokenType& data, rapidjson::Document& 
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -98,8 +97,7 @@ bool IdTokenTypeConverter::toJson(const IdTokenType& data, rapidjson::Document& 
         additionalInfo_converter.setAllocator(allocator);
         for (const AdditionalInfoType& item : data.additionalInfo)
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && additionalInfo_converter.toJson(item, item_doc);
             additionalInfo_json.PushBack(item_doc.Move(), *allocator);
         }

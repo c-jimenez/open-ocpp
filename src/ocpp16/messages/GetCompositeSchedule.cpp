@@ -104,8 +104,7 @@ bool GetCompositeScheduleConfConverter::toJson(const GetCompositeScheduleConf& d
         ChargingScheduleConverter charging_schedule_converter;
         charging_schedule_converter.setAllocator(allocator);
 
-        rapidjson::Document value;
-        value.Parse("{}");
+        rapidjson::Document value(rapidjson::kObjectType);
         ret = charging_schedule_converter.toJson(data.chargingSchedule, value);
         json.AddMember(rapidjson::StringRef("chargingSchedule"), value.Move(), *allocator);
     }

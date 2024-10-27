@@ -89,8 +89,7 @@ bool MeterValueConverter::toJson(const ocpp::types::ocpp16::MeterValue& data, ra
     rapidjson::Value sampledValue(rapidjson::kArrayType);
     for (const SampledValue& sampled_value : data.sampledValue)
     {
-        rapidjson::Document sampled;
-        sampled.Parse("{}");
+        rapidjson::Document sampled(rapidjson::kObjectType);
         fill(sampled, "value", sampled_value.value);
         if (sampled_value.context.isSet())
         {

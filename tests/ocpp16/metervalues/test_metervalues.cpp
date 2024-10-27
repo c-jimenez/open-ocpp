@@ -987,8 +987,7 @@ TEST_SUITE("Metervalues component")
         status_mgr.forceRegistrationStatus(RegistrationStatus::Accepted);
 
         // Response
-        rapidjson::Document json_resp;
-        json_resp.Parse("{}");
+        rapidjson::Document json_resp(rapidjson::kObjectType);
         rpc.setResponse(json_resp);
 
         // Send meter values on connector 2

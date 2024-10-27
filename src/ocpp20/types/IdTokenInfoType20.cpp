@@ -105,8 +105,7 @@ bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Do
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -140,8 +139,7 @@ bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Do
     {
         IdTokenTypeConverter groupIdToken_converter;
         groupIdToken_converter.setAllocator(allocator);
-        rapidjson::Document groupIdToken_doc;
-        groupIdToken_doc.Parse("{}");
+        rapidjson::Document groupIdToken_doc(rapidjson::kObjectType);
         ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
         json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
     }
@@ -154,8 +152,7 @@ bool IdTokenInfoTypeConverter::toJson(const IdTokenInfoType& data, rapidjson::Do
     {
         MessageContentTypeConverter personalMessage_converter;
         personalMessage_converter.setAllocator(allocator);
-        rapidjson::Document personalMessage_doc;
-        personalMessage_doc.Parse("{}");
+        rapidjson::Document personalMessage_doc(rapidjson::kObjectType);
         ret = ret && personalMessage_converter.toJson(data.personalMessage, personalMessage_doc);
         json.AddMember(rapidjson::StringRef("personalMessage"), personalMessage_doc.Move(), *allocator);
     }

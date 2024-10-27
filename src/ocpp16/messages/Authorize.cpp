@@ -74,9 +74,8 @@ bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Docume
 {
     IdTagInfoConverter id_tag_info_converter;
     id_tag_info_converter.setAllocator(allocator);
-    rapidjson::Document id_tag_info;
-    id_tag_info.Parse("{}");
-    bool ret = id_tag_info_converter.toJson(data.idTagInfo, id_tag_info);
+    rapidjson::Document id_tag_info(rapidjson::kObjectType);
+    bool                ret = id_tag_info_converter.toJson(data.idTagInfo, id_tag_info);
     json.AddMember(rapidjson::StringRef("idTagInfo"), id_tag_info.Move(), *allocator);
     return ret;
 }

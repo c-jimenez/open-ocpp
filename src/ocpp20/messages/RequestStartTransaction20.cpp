@@ -89,8 +89,7 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -103,8 +102,7 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     {
         ocpp::types::ocpp20::IdTokenTypeConverter groupIdToken_converter;
         groupIdToken_converter.setAllocator(allocator);
-        rapidjson::Document groupIdToken_doc;
-        groupIdToken_doc.Parse("{}");
+        rapidjson::Document groupIdToken_doc(rapidjson::kObjectType);
         ret = ret && groupIdToken_converter.toJson(data.groupIdToken, groupIdToken_doc);
         json.AddMember(rapidjson::StringRef("groupIdToken"), groupIdToken_doc.Move(), *allocator);
     }
@@ -112,8 +110,7 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     // idToken
     ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     idToken_converter.setAllocator(allocator);
-    rapidjson::Document idToken_doc;
-    idToken_doc.Parse("{}");
+    rapidjson::Document idToken_doc(rapidjson::kObjectType);
     ret = ret && idToken_converter.toJson(data.idToken, idToken_doc);
     json.AddMember(rapidjson::StringRef("idToken"), idToken_doc.Move(), *allocator);
 
@@ -125,8 +122,7 @@ bool RequestStartTransactionReqConverter::toJson(const RequestStartTransactionRe
     {
         ocpp::types::ocpp20::ChargingProfileTypeConverter chargingProfile_converter;
         chargingProfile_converter.setAllocator(allocator);
-        rapidjson::Document chargingProfile_doc;
-        chargingProfile_doc.Parse("{}");
+        rapidjson::Document chargingProfile_doc(rapidjson::kObjectType);
         ret = ret && chargingProfile_converter.toJson(data.chargingProfile, chargingProfile_doc);
         json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile_doc.Move(), *allocator);
     }
@@ -180,8 +176,7 @@ bool RequestStartTransactionConfConverter::toJson(const RequestStartTransactionC
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -194,8 +189,7 @@ bool RequestStartTransactionConfConverter::toJson(const RequestStartTransactionC
     {
         ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
-        rapidjson::Document statusInfo_doc;
-        statusInfo_doc.Parse("{}");
+        rapidjson::Document statusInfo_doc(rapidjson::kObjectType);
         ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
         json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }

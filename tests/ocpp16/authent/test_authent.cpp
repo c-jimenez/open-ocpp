@@ -57,8 +57,7 @@ static void setAuthorizeResponse(RpcStub& rpc, const IdTagInfo& tag_info)
     AuthorizeConf resp;
     resp.idTagInfo = tag_info;
 
-    rapidjson::Document json_resp;
-    json_resp.Parse("{}");
+    rapidjson::Document    json_resp(rapidjson::kObjectType);
     AuthorizeConfConverter converter;
     converter.setAllocator(&json_resp.GetAllocator());
     converter.toJson(resp, json_resp);

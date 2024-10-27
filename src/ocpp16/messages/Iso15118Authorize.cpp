@@ -85,8 +85,7 @@ bool Iso15118AuthorizeReqConverter::toJson(const Iso15118AuthorizeReq& data, rap
         certificate_hash_converter.setAllocator(allocator);
         for (const OcspRequestDataType& certificate_hash : data.iso15118CertificateHashData)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && certificate_hash_converter.toJson(certificate_hash, value);
             certificateHashData.PushBack(value.Move(), *allocator);
         }
@@ -115,9 +114,8 @@ bool Iso15118AuthorizeConfConverter::toJson(const Iso15118AuthorizeConf& data, r
 {
     IdTokenInfoTypeConverter id_token_info_converter;
     id_token_info_converter.setAllocator(allocator);
-    rapidjson::Document id_token_info;
-    id_token_info.Parse("{}");
-    bool ret = id_token_info_converter.toJson(data.idTokenInfo, id_token_info);
+    rapidjson::Document id_token_info(rapidjson::kObjectType);
+    bool                ret = id_token_info_converter.toJson(data.idTokenInfo, id_token_info);
     json.AddMember(rapidjson::StringRef("idTokenInfo"), id_token_info.Move(), *allocator);
     if (data.certificateStatus.isSet())
     {

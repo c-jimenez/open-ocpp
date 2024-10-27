@@ -60,8 +60,7 @@ bool AuthorizationDataConverter::toJson(const ocpp::types::ocpp16::Authorization
     {
         IdTagInfoConverter id_tag_info_converter;
         id_tag_info_converter.setAllocator(allocator);
-        rapidjson::Document value;
-        value.Parse("{}");
+        rapidjson::Document value(rapidjson::kObjectType);
         ret = id_tag_info_converter.toJson(data.idTagInfo, value);
         json.AddMember(rapidjson::StringRef("idTagInfo"), value.Move(), *allocator);
     }

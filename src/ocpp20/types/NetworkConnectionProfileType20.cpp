@@ -97,8 +97,7 @@ bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfil
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -108,8 +107,7 @@ bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfil
     {
         APNTypeConverter apn_converter;
         apn_converter.setAllocator(allocator);
-        rapidjson::Document apn_doc;
-        apn_doc.Parse("{}");
+        rapidjson::Document apn_doc(rapidjson::kObjectType);
         ret = ret && apn_converter.toJson(data.apn, apn_doc);
         json.AddMember(rapidjson::StringRef("apn"), apn_doc.Move(), *allocator);
     }
@@ -137,8 +135,7 @@ bool NetworkConnectionProfileTypeConverter::toJson(const NetworkConnectionProfil
     {
         VPNTypeConverter vpn_converter;
         vpn_converter.setAllocator(allocator);
-        rapidjson::Document vpn_doc;
-        vpn_doc.Parse("{}");
+        rapidjson::Document vpn_doc(rapidjson::kObjectType);
         ret = ret && vpn_converter.toJson(data.vpn, vpn_doc);
         json.AddMember(rapidjson::StringRef("vpn"), vpn_doc.Move(), *allocator);
     }

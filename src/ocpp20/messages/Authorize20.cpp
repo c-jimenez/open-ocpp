@@ -81,8 +81,7 @@ bool AuthorizeReqConverter::toJson(const AuthorizeReq& data, rapidjson::Document
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -90,8 +89,7 @@ bool AuthorizeReqConverter::toJson(const AuthorizeReq& data, rapidjson::Document
     // idToken
     ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
     idToken_converter.setAllocator(allocator);
-    rapidjson::Document idToken_doc;
-    idToken_doc.Parse("{}");
+    rapidjson::Document idToken_doc(rapidjson::kObjectType);
     ret = ret && idToken_converter.toJson(data.idToken, idToken_doc);
     json.AddMember(rapidjson::StringRef("idToken"), idToken_doc.Move(), *allocator);
 
@@ -107,8 +105,7 @@ bool AuthorizeReqConverter::toJson(const AuthorizeReq& data, rapidjson::Document
         iso15118CertificateHashData_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::OCSPRequestDataType& item : data.iso15118CertificateHashData)
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && iso15118CertificateHashData_converter.toJson(item, item_doc);
             iso15118CertificateHashData_json.PushBack(item_doc.Move(), *allocator);
         }
@@ -162,8 +159,7 @@ bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Docume
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -171,8 +167,7 @@ bool AuthorizeConfConverter::toJson(const AuthorizeConf& data, rapidjson::Docume
     // idTokenInfo
     ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
     idTokenInfo_converter.setAllocator(allocator);
-    rapidjson::Document idTokenInfo_doc;
-    idTokenInfo_doc.Parse("{}");
+    rapidjson::Document idTokenInfo_doc(rapidjson::kObjectType);
     ret = ret && idTokenInfo_converter.toJson(data.idTokenInfo, idTokenInfo_doc);
     json.AddMember(rapidjson::StringRef("idTokenInfo"), idTokenInfo_doc.Move(), *allocator);
 

@@ -77,8 +77,7 @@ bool SetVariableMonitoringReqConverter::toJson(const SetVariableMonitoringReq& d
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -90,8 +89,7 @@ bool SetVariableMonitoringReqConverter::toJson(const SetVariableMonitoringReq& d
     setMonitoringData_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::SetMonitoringDataType& item : data.setMonitoringData)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && setMonitoringData_converter.toJson(item, item_doc);
         setMonitoringData_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -145,8 +143,7 @@ bool SetVariableMonitoringConfConverter::toJson(const SetVariableMonitoringConf&
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -158,8 +155,7 @@ bool SetVariableMonitoringConfConverter::toJson(const SetVariableMonitoringConf&
     setMonitoringResult_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::SetMonitoringResultType& item : data.setMonitoringResult)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && setMonitoringResult_converter.toJson(item, item_doc);
         setMonitoringResult_json.PushBack(item_doc.Move(), *allocator);
     }

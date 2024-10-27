@@ -58,9 +58,8 @@ bool GetCertificateStatusReqConverter::toJson(const GetCertificateStatusReq& dat
     OcspRequestDataTypeConverter ocsp_request_converter;
     ocsp_request_converter.setAllocator(allocator);
 
-    rapidjson::Document value;
-    value.Parse("{}");
-    bool ret = ocsp_request_converter.toJson(data.ocspRequestData, value);
+    rapidjson::Document value(rapidjson::kObjectType);
+    bool                ret = ocsp_request_converter.toJson(data.ocspRequestData, value);
     if (ret)
     {
         json.AddMember(rapidjson::StringRef("ocspRequestData"), value.Move(), *allocator);

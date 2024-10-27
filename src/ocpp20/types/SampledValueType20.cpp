@@ -106,8 +106,7 @@ bool SampledValueTypeConverter::toJson(const SampledValueType& data, rapidjson::
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -144,8 +143,7 @@ bool SampledValueTypeConverter::toJson(const SampledValueType& data, rapidjson::
     {
         SignedMeterValueTypeConverter signedMeterValue_converter;
         signedMeterValue_converter.setAllocator(allocator);
-        rapidjson::Document signedMeterValue_doc;
-        signedMeterValue_doc.Parse("{}");
+        rapidjson::Document signedMeterValue_doc(rapidjson::kObjectType);
         ret = ret && signedMeterValue_converter.toJson(data.signedMeterValue, signedMeterValue_doc);
         json.AddMember(rapidjson::StringRef("signedMeterValue"), signedMeterValue_doc.Move(), *allocator);
     }
@@ -155,8 +153,7 @@ bool SampledValueTypeConverter::toJson(const SampledValueType& data, rapidjson::
     {
         UnitOfMeasureTypeConverter unitOfMeasure_converter;
         unitOfMeasure_converter.setAllocator(allocator);
-        rapidjson::Document unitOfMeasure_doc;
-        unitOfMeasure_doc.Parse("{}");
+        rapidjson::Document unitOfMeasure_doc(rapidjson::kObjectType);
         ret = ret && unitOfMeasure_converter.toJson(data.unitOfMeasure, unitOfMeasure_doc);
         json.AddMember(rapidjson::StringRef("unitOfMeasure"), unitOfMeasure_doc.Move(), *allocator);
     }

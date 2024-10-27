@@ -81,9 +81,8 @@ bool CertificateHashDataChainTypeConverter::toJson(const ocpp::types::ocpp16::Ce
 
     CertificateHashDataTypeConverter certificate_hash_data_type_converter;
     certificate_hash_data_type_converter.setAllocator(allocator);
-    rapidjson::Document hash_data;
-    hash_data.Parse("{}");
-    bool ret = certificate_hash_data_type_converter.toJson(data.certificateHashData, hash_data);
+    rapidjson::Document hash_data(rapidjson::kObjectType);
+    bool                ret = certificate_hash_data_type_converter.toJson(data.certificateHashData, hash_data);
     if (ret)
     {
         json.AddMember(rapidjson::StringRef("certificateHashData"), hash_data.Move(), *allocator);
@@ -91,8 +90,7 @@ bool CertificateHashDataChainTypeConverter::toJson(const ocpp::types::ocpp16::Ce
         rapidjson::Value childCertificateHashData(rapidjson::kArrayType);
         for (const auto& child_certificate : data.childCertificateHashData)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && certificate_hash_data_type_converter.toJson(child_certificate, value);
             if (ret)
             {

@@ -78,8 +78,7 @@ bool ComponentTypeConverter::toJson(const ComponentType& data, rapidjson::Docume
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -89,8 +88,7 @@ bool ComponentTypeConverter::toJson(const ComponentType& data, rapidjson::Docume
     {
         EVSETypeConverter evse_converter;
         evse_converter.setAllocator(allocator);
-        rapidjson::Document evse_doc;
-        evse_doc.Parse("{}");
+        rapidjson::Document evse_doc(rapidjson::kObjectType);
         ret = ret && evse_converter.toJson(data.evse, evse_doc);
         json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
     }

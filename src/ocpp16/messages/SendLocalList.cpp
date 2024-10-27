@@ -81,8 +81,7 @@ bool SendLocalListReqConverter::toJson(const SendLocalListReq& data, rapidjson::
         rapidjson::Value localAuthorizationList(rapidjson::kArrayType);
         for (const AuthorizationData& authorization_data : data.localAuthorizationList)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && authorization_data_converter.toJson(authorization_data, value);
             localAuthorizationList.PushBack(value.Move(), *allocator);
         }

@@ -78,8 +78,7 @@ bool UpdateFirmwareReqConverter::toJson(const UpdateFirmwareReq& data, rapidjson
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -96,8 +95,7 @@ bool UpdateFirmwareReqConverter::toJson(const UpdateFirmwareReq& data, rapidjson
     // firmware
     ocpp::types::ocpp20::FirmwareTypeConverter firmware_converter;
     firmware_converter.setAllocator(allocator);
-    rapidjson::Document firmware_doc;
-    firmware_doc.Parse("{}");
+    rapidjson::Document firmware_doc(rapidjson::kObjectType);
     ret = ret && firmware_converter.toJson(data.firmware, firmware_doc);
     json.AddMember(rapidjson::StringRef("firmware"), firmware_doc.Move(), *allocator);
 
@@ -147,8 +145,7 @@ bool UpdateFirmwareConfConverter::toJson(const UpdateFirmwareConf& data, rapidjs
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -161,8 +158,7 @@ bool UpdateFirmwareConfConverter::toJson(const UpdateFirmwareConf& data, rapidjs
     {
         ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
-        rapidjson::Document statusInfo_doc;
-        statusInfo_doc.Parse("{}");
+        rapidjson::Document statusInfo_doc(rapidjson::kObjectType);
         ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
         json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }
