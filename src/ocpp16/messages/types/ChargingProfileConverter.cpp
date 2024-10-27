@@ -81,9 +81,8 @@ bool ChargingProfileConverter::toJson(const ocpp::types::ocpp16::ChargingProfile
 
     ChargingScheduleConverter charging_schedule_converter;
     charging_schedule_converter.setAllocator(allocator);
-    rapidjson::Document charging_schedule;
-    charging_schedule.Parse("{}");
-    bool ret = charging_schedule_converter.toJson(data.chargingSchedule, charging_schedule);
+    rapidjson::Document charging_schedule(rapidjson::kObjectType);
+    bool                ret = charging_schedule_converter.toJson(data.chargingSchedule, charging_schedule);
     json.AddMember(rapidjson::StringRef("chargingSchedule"), charging_schedule.Move(), *allocator);
 
     return ret;

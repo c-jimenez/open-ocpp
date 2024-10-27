@@ -77,8 +77,7 @@ bool SetVariablesReqConverter::toJson(const SetVariablesReq& data, rapidjson::Do
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -90,8 +89,7 @@ bool SetVariablesReqConverter::toJson(const SetVariablesReq& data, rapidjson::Do
     setVariableData_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::SetVariableDataType& item : data.setVariableData)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && setVariableData_converter.toJson(item, item_doc);
         setVariableData_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -145,8 +143,7 @@ bool SetVariablesConfConverter::toJson(const SetVariablesConf& data, rapidjson::
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -158,8 +155,7 @@ bool SetVariablesConfConverter::toJson(const SetVariablesConf& data, rapidjson::
     setVariableResult_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::SetVariableResultType& item : data.setVariableResult)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && setVariableResult_converter.toJson(item, item_doc);
         setVariableResult_json.PushBack(item_doc.Move(), *allocator);
     }

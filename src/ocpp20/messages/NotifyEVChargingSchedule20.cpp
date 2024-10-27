@@ -75,8 +75,7 @@ bool NotifyEVChargingScheduleReqConverter::toJson(const NotifyEVChargingSchedule
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -87,8 +86,7 @@ bool NotifyEVChargingScheduleReqConverter::toJson(const NotifyEVChargingSchedule
     // chargingSchedule
     ocpp::types::ocpp20::ChargingScheduleTypeConverter chargingSchedule_converter;
     chargingSchedule_converter.setAllocator(allocator);
-    rapidjson::Document chargingSchedule_doc;
-    chargingSchedule_doc.Parse("{}");
+    rapidjson::Document chargingSchedule_doc(rapidjson::kObjectType);
     ret = ret && chargingSchedule_converter.toJson(data.chargingSchedule, chargingSchedule_doc);
     json.AddMember(rapidjson::StringRef("chargingSchedule"), chargingSchedule_doc.Move(), *allocator);
 
@@ -141,8 +139,7 @@ bool NotifyEVChargingScheduleConfConverter::toJson(const NotifyEVChargingSchedul
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -155,8 +152,7 @@ bool NotifyEVChargingScheduleConfConverter::toJson(const NotifyEVChargingSchedul
     {
         ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
-        rapidjson::Document statusInfo_doc;
-        statusInfo_doc.Parse("{}");
+        rapidjson::Document statusInfo_doc(rapidjson::kObjectType);
         ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
         json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }

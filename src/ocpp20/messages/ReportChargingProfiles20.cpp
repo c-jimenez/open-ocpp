@@ -89,8 +89,7 @@ bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq&
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -108,8 +107,7 @@ bool ReportChargingProfilesReqConverter::toJson(const ReportChargingProfilesReq&
     chargingProfile_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::ChargingProfileType& item : data.chargingProfile)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && chargingProfile_converter.toJson(item, item_doc);
         chargingProfile_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -157,8 +155,7 @@ bool ReportChargingProfilesConfConverter::toJson(const ReportChargingProfilesCon
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }

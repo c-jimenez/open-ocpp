@@ -75,8 +75,7 @@ bool GetLogReqConverter::toJson(const GetLogReq& data, rapidjson::Document& json
     fill(json, "retries", data.retries);
     fill(json, "retryInterval", data.retryInterval);
 
-    rapidjson::Document log;
-    log.Parse("{}");
+    rapidjson::Document log(rapidjson::kObjectType);
     fill(log, "remoteLocation", data.log.remoteLocation);
     fill(log, "oldestTimestamp", data.log.oldestTimestamp);
     fill(log, "latestTimestamp", data.log.latestTimestamp);

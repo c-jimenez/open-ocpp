@@ -97,8 +97,7 @@ bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Do
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -108,8 +107,7 @@ bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Do
     {
         ComponentTypeConverter display_converter;
         display_converter.setAllocator(allocator);
-        rapidjson::Document display_doc;
-        display_doc.Parse("{}");
+        rapidjson::Document display_doc(rapidjson::kObjectType);
         ret = ret && display_converter.toJson(data.display, display_doc);
         json.AddMember(rapidjson::StringRef("display"), display_doc.Move(), *allocator);
     }
@@ -138,8 +136,7 @@ bool MessageInfoTypeConverter::toJson(const MessageInfoType& data, rapidjson::Do
     // message
     MessageContentTypeConverter message_converter;
     message_converter.setAllocator(allocator);
-    rapidjson::Document message_doc;
-    message_doc.Parse("{}");
+    rapidjson::Document message_doc(rapidjson::kObjectType);
     ret = ret && message_converter.toJson(data.message, message_doc);
     json.AddMember(rapidjson::StringRef("message"), message_doc.Move(), *allocator);
 

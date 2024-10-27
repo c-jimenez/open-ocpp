@@ -102,8 +102,7 @@ bool StopTransactionReqConverter::toJson(const StopTransactionReq& data, rapidjs
         metervalue_converter.setAllocator(allocator);
         for (const MeterValue& meter_value : data.transactionData)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && metervalue_converter.toJson(meter_value, value);
             transactionData.PushBack(value.Move(), *allocator);
         }
@@ -136,8 +135,7 @@ bool StopTransactionConfConverter::toJson(const StopTransactionConf& data, rapid
         IdTagInfoConverter id_tag_info_converter;
         id_tag_info_converter.setAllocator(allocator);
 
-        rapidjson::Document id_tag_info;
-        id_tag_info.Parse("{}");
+        rapidjson::Document id_tag_info(rapidjson::kObjectType);
         ret = id_tag_info_converter.toJson(data.idTagInfo, id_tag_info);
         json.AddMember(rapidjson::StringRef("idTagInfo"), id_tag_info.Move(), *allocator);
     }

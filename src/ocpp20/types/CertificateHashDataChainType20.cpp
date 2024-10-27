@@ -84,8 +84,7 @@ bool CertificateHashDataChainTypeConverter::toJson(const CertificateHashDataChai
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -93,8 +92,7 @@ bool CertificateHashDataChainTypeConverter::toJson(const CertificateHashDataChai
     // certificateHashData
     CertificateHashDataTypeConverter certificateHashData_converter;
     certificateHashData_converter.setAllocator(allocator);
-    rapidjson::Document certificateHashData_doc;
-    certificateHashData_doc.Parse("{}");
+    rapidjson::Document certificateHashData_doc(rapidjson::kObjectType);
     ret = ret && certificateHashData_converter.toJson(data.certificateHashData, certificateHashData_doc);
     json.AddMember(rapidjson::StringRef("certificateHashData"), certificateHashData_doc.Move(), *allocator);
 
@@ -110,8 +108,7 @@ bool CertificateHashDataChainTypeConverter::toJson(const CertificateHashDataChai
         childCertificateHashData_converter.setAllocator(allocator);
         for (const CertificateHashDataType& item : data.childCertificateHashData)
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && childCertificateHashData_converter.toJson(item, item_doc);
             childCertificateHashData_json.PushBack(item_doc.Move(), *allocator);
         }

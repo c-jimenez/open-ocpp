@@ -57,9 +57,8 @@ bool DeleteCertificateReqConverter::toJson(const DeleteCertificateReq& data, rap
 {
     CertificateHashDataTypeConverter certificate_hash_converter;
     certificate_hash_converter.setAllocator(allocator);
-    rapidjson::Document value;
-    value.Parse("{}");
-    bool ret = certificate_hash_converter.toJson(data.certificateHashData, value);
+    rapidjson::Document value(rapidjson::kObjectType);
+    bool                ret = certificate_hash_converter.toJson(data.certificateHashData, value);
     json.AddMember(rapidjson::StringRef("certificateHashData"), value.Move(), *allocator);
     return ret;
 }

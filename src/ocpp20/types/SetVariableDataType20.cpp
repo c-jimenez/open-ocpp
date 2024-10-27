@@ -82,8 +82,7 @@ bool SetVariableDataTypeConverter::toJson(const SetVariableDataType& data, rapid
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -100,16 +99,14 @@ bool SetVariableDataTypeConverter::toJson(const SetVariableDataType& data, rapid
     // component
     ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
-    rapidjson::Document component_doc;
-    component_doc.Parse("{}");
+    rapidjson::Document component_doc(rapidjson::kObjectType);
     ret = ret && component_converter.toJson(data.component, component_doc);
     json.AddMember(rapidjson::StringRef("component"), component_doc.Move(), *allocator);
 
     // variable
     VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
-    rapidjson::Document variable_doc;
-    variable_doc.Parse("{}");
+    rapidjson::Document variable_doc(rapidjson::kObjectType);
     ret = ret && variable_converter.toJson(data.variable, variable_doc);
     json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
 

@@ -290,8 +290,7 @@ class ChargePointHandler
                     handleMessage(req, resp);
 
                     // Convert response to JSON
-                    rapidjson::Document response;
-                    response.Parse("{}");
+                    rapidjson::Document response(rapidjson::kObjectType);
                     resp_converter->setAllocator(&response.GetAllocator());
                     if (resp_converter->toJson(resp, response))
                     {

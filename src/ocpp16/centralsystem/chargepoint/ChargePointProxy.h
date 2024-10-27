@@ -370,10 +370,9 @@ class ChargePointProxy : public ICentralSystem::IChargePoint, public ocpp::rpc::
         req.messageId.value().assign(action);
 
         // Convert request to JSON
-        rapidjson::Document                        json_req;
+        rapidjson::Document                        json_req(rapidjson::kObjectType);
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        json_req.Parse("{}");
         req_converter->setAllocator(&json_req.GetAllocator());
         req_converter->toJson(request, json_req);
         json_req.Accept(writer);

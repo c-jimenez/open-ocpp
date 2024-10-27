@@ -93,8 +93,7 @@ bool GetVariableResultTypeConverter::toJson(const GetVariableResultType& data, r
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -104,8 +103,7 @@ bool GetVariableResultTypeConverter::toJson(const GetVariableResultType& data, r
     {
         StatusInfoTypeConverter attributeStatusInfo_converter;
         attributeStatusInfo_converter.setAllocator(allocator);
-        rapidjson::Document attributeStatusInfo_doc;
-        attributeStatusInfo_doc.Parse("{}");
+        rapidjson::Document attributeStatusInfo_doc(rapidjson::kObjectType);
         ret = ret && attributeStatusInfo_converter.toJson(data.attributeStatusInfo, attributeStatusInfo_doc);
         json.AddMember(rapidjson::StringRef("attributeStatusInfo"), attributeStatusInfo_doc.Move(), *allocator);
     }
@@ -125,16 +123,14 @@ bool GetVariableResultTypeConverter::toJson(const GetVariableResultType& data, r
     // component
     ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
-    rapidjson::Document component_doc;
-    component_doc.Parse("{}");
+    rapidjson::Document component_doc(rapidjson::kObjectType);
     ret = ret && component_converter.toJson(data.component, component_doc);
     json.AddMember(rapidjson::StringRef("component"), component_doc.Move(), *allocator);
 
     // variable
     VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
-    rapidjson::Document variable_doc;
-    variable_doc.Parse("{}");
+    rapidjson::Document variable_doc(rapidjson::kObjectType);
     ret = ret && variable_converter.toJson(data.variable, variable_doc);
     json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
 

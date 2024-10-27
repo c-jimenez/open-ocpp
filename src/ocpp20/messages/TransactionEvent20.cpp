@@ -119,8 +119,7 @@ bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapid
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -137,8 +136,7 @@ bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapid
         meterValue_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::MeterValueType& item : data.meterValue)
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && meterValue_converter.toJson(item, item_doc);
             meterValue_json.PushBack(item_doc.Move(), *allocator);
         }
@@ -169,8 +167,7 @@ bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapid
     // transactionInfo
     ocpp::types::ocpp20::TransactionTypeConverter transactionInfo_converter;
     transactionInfo_converter.setAllocator(allocator);
-    rapidjson::Document transactionInfo_doc;
-    transactionInfo_doc.Parse("{}");
+    rapidjson::Document transactionInfo_doc(rapidjson::kObjectType);
     ret = ret && transactionInfo_converter.toJson(data.transactionInfo, transactionInfo_doc);
     json.AddMember(rapidjson::StringRef("transactionInfo"), transactionInfo_doc.Move(), *allocator);
 
@@ -179,8 +176,7 @@ bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapid
     {
         ocpp::types::ocpp20::EVSETypeConverter evse_converter;
         evse_converter.setAllocator(allocator);
-        rapidjson::Document evse_doc;
-        evse_doc.Parse("{}");
+        rapidjson::Document evse_doc(rapidjson::kObjectType);
         ret = ret && evse_converter.toJson(data.evse, evse_doc);
         json.AddMember(rapidjson::StringRef("evse"), evse_doc.Move(), *allocator);
     }
@@ -190,8 +186,7 @@ bool TransactionEventReqConverter::toJson(const TransactionEventReq& data, rapid
     {
         ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         idToken_converter.setAllocator(allocator);
-        rapidjson::Document idToken_doc;
-        idToken_doc.Parse("{}");
+        rapidjson::Document idToken_doc(rapidjson::kObjectType);
         ret = ret && idToken_converter.toJson(data.idToken, idToken_doc);
         json.AddMember(rapidjson::StringRef("idToken"), idToken_doc.Move(), *allocator);
     }
@@ -253,8 +248,7 @@ bool TransactionEventConfConverter::toJson(const TransactionEventConf& data, rap
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -270,8 +264,7 @@ bool TransactionEventConfConverter::toJson(const TransactionEventConf& data, rap
     {
         ocpp::types::ocpp20::IdTokenInfoTypeConverter idTokenInfo_converter;
         idTokenInfo_converter.setAllocator(allocator);
-        rapidjson::Document idTokenInfo_doc;
-        idTokenInfo_doc.Parse("{}");
+        rapidjson::Document idTokenInfo_doc(rapidjson::kObjectType);
         ret = ret && idTokenInfo_converter.toJson(data.idTokenInfo, idTokenInfo_doc);
         json.AddMember(rapidjson::StringRef("idTokenInfo"), idTokenInfo_doc.Move(), *allocator);
     }
@@ -281,8 +274,7 @@ bool TransactionEventConfConverter::toJson(const TransactionEventConf& data, rap
     {
         ocpp::types::ocpp20::MessageContentTypeConverter updatedPersonalMessage_converter;
         updatedPersonalMessage_converter.setAllocator(allocator);
-        rapidjson::Document updatedPersonalMessage_doc;
-        updatedPersonalMessage_doc.Parse("{}");
+        rapidjson::Document updatedPersonalMessage_doc(rapidjson::kObjectType);
         ret = ret && updatedPersonalMessage_converter.toJson(data.updatedPersonalMessage, updatedPersonalMessage_doc);
         json.AddMember(rapidjson::StringRef("updatedPersonalMessage"), updatedPersonalMessage_doc.Move(), *allocator);
     }

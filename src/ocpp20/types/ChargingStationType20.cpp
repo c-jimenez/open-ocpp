@@ -84,8 +84,7 @@ bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapid
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -101,8 +100,7 @@ bool ChargingStationTypeConverter::toJson(const ChargingStationType& data, rapid
     {
         ModemTypeConverter modem_converter;
         modem_converter.setAllocator(allocator);
-        rapidjson::Document modem_doc;
-        modem_doc.Parse("{}");
+        rapidjson::Document modem_doc(rapidjson::kObjectType);
         ret = ret && modem_converter.toJson(data.modem, modem_doc);
         json.AddMember(rapidjson::StringRef("modem"), modem_doc.Move(), *allocator);
     }

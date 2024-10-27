@@ -98,8 +98,7 @@ bool GetInstalledCertificateIdsConfConverter::toJson(const GetInstalledCertifica
         certificate_hash_converter.setAllocator(allocator);
         for (const CertificateHashDataType& certificate_hash : data.certificateHashData)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && certificate_hash_converter.toJson(certificate_hash, value);
             certificateHashData.PushBack(value.Move(), *allocator);
         }

@@ -75,9 +75,7 @@ bool RemoteStartTransactionReqConverter::toJson(const RemoteStartTransactionReq&
         ChargingProfileConverter charging_profile_converter;
         charging_profile_converter.setAllocator(allocator);
 
-        rapidjson::Document chargingProfile;
-        chargingProfile.Parse("{}");
-
+        rapidjson::Document chargingProfile(rapidjson::kObjectType);
         ret = charging_profile_converter.toJson(data.chargingProfile, chargingProfile);
         json.AddMember(rapidjson::StringRef("chargingProfile"), chargingProfile.Move(), *allocator);
     }

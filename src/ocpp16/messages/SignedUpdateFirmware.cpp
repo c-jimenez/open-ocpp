@@ -78,8 +78,7 @@ bool SignedUpdateFirmwareReqConverter::toJson(const SignedUpdateFirmwareReq& dat
     fill(json, "retries", data.retries);
     fill(json, "retryInterval", data.retryInterval);
 
-    rapidjson::Document firmware;
-    firmware.Parse("{}");
+    rapidjson::Document firmware(rapidjson::kObjectType);
     fill(firmware, "location", data.firmware.location);
     fill(firmware, "retrieveDateTime", data.firmware.retrieveDateTime);
     fill(firmware, "installDateTime", data.firmware.installDateTime);

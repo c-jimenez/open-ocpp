@@ -319,8 +319,7 @@ bool SecurityManager::logSecurityEvent(const std::string& type, const std::strin
             else
             {
                 // Stack is not started, queue the notification
-                rapidjson::Document payload;
-                payload.Parse("{}");
+                rapidjson::Document payload(rapidjson::kObjectType);
                 m_security_event_req_converter->setAllocator(&payload.GetAllocator());
                 if (m_security_event_req_converter->toJson(request, payload))
                 {

@@ -85,10 +85,8 @@ bool SetChargingProfileReqConverter::toJson(const SetChargingProfileReq& data, r
     ChargingProfileConverter charging_profile_converter;
     charging_profile_converter.setAllocator(allocator);
 
-    rapidjson::Document csChargingProfiles;
-    csChargingProfiles.Parse("{}");
-
-    bool ret = charging_profile_converter.toJson(data.csChargingProfiles, csChargingProfiles);
+    rapidjson::Document csChargingProfiles(rapidjson::kObjectType);
+    bool                ret = charging_profile_converter.toJson(data.csChargingProfiles, csChargingProfiles);
     json.AddMember(rapidjson::StringRef("csChargingProfiles"), csChargingProfiles.Move(), *allocator);
 
     return ret;

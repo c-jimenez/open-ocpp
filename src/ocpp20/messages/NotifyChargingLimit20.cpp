@@ -84,8 +84,7 @@ bool NotifyChargingLimitReqConverter::toJson(const NotifyChargingLimitReq& data,
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -99,8 +98,7 @@ bool NotifyChargingLimitReqConverter::toJson(const NotifyChargingLimitReq& data,
         chargingSchedule_converter.setAllocator(allocator);
         for (const ocpp::types::ocpp20::ChargingScheduleType& item : data.chargingSchedule)
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && chargingSchedule_converter.toJson(item, item_doc);
             chargingSchedule_json.PushBack(item_doc.Move(), *allocator);
         }
@@ -113,8 +111,7 @@ bool NotifyChargingLimitReqConverter::toJson(const NotifyChargingLimitReq& data,
     // chargingLimit
     ocpp::types::ocpp20::ChargingLimitTypeConverter chargingLimit_converter;
     chargingLimit_converter.setAllocator(allocator);
-    rapidjson::Document chargingLimit_doc;
-    chargingLimit_doc.Parse("{}");
+    rapidjson::Document chargingLimit_doc(rapidjson::kObjectType);
     ret = ret && chargingLimit_converter.toJson(data.chargingLimit, chargingLimit_doc);
     json.AddMember(rapidjson::StringRef("chargingLimit"), chargingLimit_doc.Move(), *allocator);
 
@@ -154,8 +151,7 @@ bool NotifyChargingLimitConfConverter::toJson(const NotifyChargingLimitConf& dat
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }

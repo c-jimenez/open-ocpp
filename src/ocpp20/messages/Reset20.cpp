@@ -68,8 +68,7 @@ bool ResetReqConverter::toJson(const ResetReq& data, rapidjson::Document& json)
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -123,8 +122,7 @@ bool ResetConfConverter::toJson(const ResetConf& data, rapidjson::Document& json
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -137,8 +135,7 @@ bool ResetConfConverter::toJson(const ResetConf& data, rapidjson::Document& json
     {
         ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
-        rapidjson::Document statusInfo_doc;
-        statusInfo_doc.Parse("{}");
+        rapidjson::Document statusInfo_doc(rapidjson::kObjectType);
         ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
         json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }

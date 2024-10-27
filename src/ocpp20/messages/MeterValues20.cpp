@@ -80,8 +80,7 @@ bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Docu
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -96,8 +95,7 @@ bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Docu
     meterValue_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::MeterValueType& item : data.meterValue)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && meterValue_converter.toJson(item, item_doc);
         meterValue_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -139,8 +137,7 @@ bool MeterValuesConfConverter::toJson(const MeterValuesConf& data, rapidjson::Do
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }

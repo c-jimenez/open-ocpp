@@ -178,10 +178,9 @@ void RpcBase::unregisterSpy(IRpc::ISpy& spy)
 void RpcBase::processIncomingRequest(std::shared_ptr<RpcMessage>& rpc_message)
 {
     // Notify call
-    rapidjson::Document response;
+    rapidjson::Document response(rapidjson::kObjectType);
     std::string         error;
     std::string         error_code;
-    response.Parse("{}");
     if (m_rpc_listener->rpcCallReceived(rpc_message->action, rpc_message->payload, response, error_code, error))
     {
         // Serialize message

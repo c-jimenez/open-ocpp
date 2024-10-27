@@ -138,8 +138,7 @@ class GenericMessageSender
         if (req_converter && resp_converter)
         {
             // Convert request
-            rapidjson::Document payload;
-            payload.Parse("{}");
+            rapidjson::Document payload(rapidjson::kObjectType);
             req_converter->setAllocator(&payload.GetAllocator());
             if (req_converter->toJson(request, payload))
             {

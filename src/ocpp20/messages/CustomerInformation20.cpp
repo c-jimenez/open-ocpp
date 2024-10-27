@@ -92,8 +92,7 @@ bool CustomerInformationReqConverter::toJson(const CustomerInformationReq& data,
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -103,8 +102,7 @@ bool CustomerInformationReqConverter::toJson(const CustomerInformationReq& data,
     {
         ocpp::types::ocpp20::CertificateHashDataTypeConverter customerCertificate_converter;
         customerCertificate_converter.setAllocator(allocator);
-        rapidjson::Document customerCertificate_doc;
-        customerCertificate_doc.Parse("{}");
+        rapidjson::Document customerCertificate_doc(rapidjson::kObjectType);
         ret = ret && customerCertificate_converter.toJson(data.customerCertificate, customerCertificate_doc);
         json.AddMember(rapidjson::StringRef("customerCertificate"), customerCertificate_doc.Move(), *allocator);
     }
@@ -114,8 +112,7 @@ bool CustomerInformationReqConverter::toJson(const CustomerInformationReq& data,
     {
         ocpp::types::ocpp20::IdTokenTypeConverter idToken_converter;
         idToken_converter.setAllocator(allocator);
-        rapidjson::Document idToken_doc;
-        idToken_doc.Parse("{}");
+        rapidjson::Document idToken_doc(rapidjson::kObjectType);
         ret = ret && idToken_converter.toJson(data.idToken, idToken_doc);
         json.AddMember(rapidjson::StringRef("idToken"), idToken_doc.Move(), *allocator);
     }
@@ -178,8 +175,7 @@ bool CustomerInformationConfConverter::toJson(const CustomerInformationConf& dat
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -192,8 +188,7 @@ bool CustomerInformationConfConverter::toJson(const CustomerInformationConf& dat
     {
         ocpp::types::ocpp20::StatusInfoTypeConverter statusInfo_converter;
         statusInfo_converter.setAllocator(allocator);
-        rapidjson::Document statusInfo_doc;
-        statusInfo_doc.Parse("{}");
+        rapidjson::Document statusInfo_doc(rapidjson::kObjectType);
         ret = ret && statusInfo_converter.toJson(data.statusInfo, statusInfo_doc);
         json.AddMember(rapidjson::StringRef("statusInfo"), statusInfo_doc.Move(), *allocator);
     }

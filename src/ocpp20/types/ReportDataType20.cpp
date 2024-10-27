@@ -93,8 +93,7 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -102,16 +101,14 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     // component
     ComponentTypeConverter component_converter;
     component_converter.setAllocator(allocator);
-    rapidjson::Document component_doc;
-    component_doc.Parse("{}");
+    rapidjson::Document component_doc(rapidjson::kObjectType);
     ret = ret && component_converter.toJson(data.component, component_doc);
     json.AddMember(rapidjson::StringRef("component"), component_doc.Move(), *allocator);
 
     // variable
     VariableTypeConverter variable_converter;
     variable_converter.setAllocator(allocator);
-    rapidjson::Document variable_doc;
-    variable_doc.Parse("{}");
+    rapidjson::Document variable_doc(rapidjson::kObjectType);
     ret = ret && variable_converter.toJson(data.variable, variable_doc);
     json.AddMember(rapidjson::StringRef("variable"), variable_doc.Move(), *allocator);
 
@@ -122,8 +119,7 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     variableAttribute_converter.setAllocator(allocator);
     for (const VariableAttributeType& item : data.variableAttribute)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && variableAttribute_converter.toJson(item, item_doc);
         variableAttribute_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -134,8 +130,7 @@ bool ReportDataTypeConverter::toJson(const ReportDataType& data, rapidjson::Docu
     {
         VariableCharacteristicsTypeConverter variableCharacteristics_converter;
         variableCharacteristics_converter.setAllocator(allocator);
-        rapidjson::Document variableCharacteristics_doc;
-        variableCharacteristics_doc.Parse("{}");
+        rapidjson::Document variableCharacteristics_doc(rapidjson::kObjectType);
         ret = ret && variableCharacteristics_converter.toJson(data.variableCharacteristics, variableCharacteristics_doc);
         json.AddMember(rapidjson::StringRef("variableCharacteristics"), variableCharacteristics_doc.Move(), *allocator);
     }

@@ -99,8 +99,7 @@ bool ChargingScheduleTypeConverter::toJson(const ChargingScheduleType& data, rap
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -124,8 +123,7 @@ bool ChargingScheduleTypeConverter::toJson(const ChargingScheduleType& data, rap
     chargingSchedulePeriod_converter.setAllocator(allocator);
     for (const ChargingSchedulePeriodType& item : data.chargingSchedulePeriod)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && chargingSchedulePeriod_converter.toJson(item, item_doc);
         chargingSchedulePeriod_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -139,8 +137,7 @@ bool ChargingScheduleTypeConverter::toJson(const ChargingScheduleType& data, rap
     {
         SalesTariffTypeConverter salesTariff_converter;
         salesTariff_converter.setAllocator(allocator);
-        rapidjson::Document salesTariff_doc;
-        salesTariff_doc.Parse("{}");
+        rapidjson::Document salesTariff_doc(rapidjson::kObjectType);
         ret = ret && salesTariff_converter.toJson(data.salesTariff, salesTariff_doc);
         json.AddMember(rapidjson::StringRef("salesTariff"), salesTariff_doc.Move(), *allocator);
     }

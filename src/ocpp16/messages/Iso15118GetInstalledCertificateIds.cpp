@@ -98,8 +98,7 @@ bool Iso15118GetInstalledCertificateIdsConfConverter::toJson(const Iso15118GetIn
         certificate_hash_converter.setAllocator(allocator);
         for (const CertificateHashDataChainType& certificate_hash : data.certificateHashDataChain)
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             ret = ret && certificate_hash_converter.toJson(certificate_hash, value);
             certificateHashDataChain.PushBack(value.Move(), *allocator);
         }

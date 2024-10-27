@@ -130,8 +130,7 @@ bool {{type.name}}Converter::toJson(const {{type.name}}& data, rapidjson::Docume
     {%- else %}
     {{field.type}}Converter {{field.name}}_converter;
     {{field.name}}_converter.setAllocator(allocator);
-    rapidjson::Document {{field.name}}_doc;
-    {{field.name}}_doc.Parse("{}");
+    rapidjson::Document {{field.name}}_doc(rapidjson::kObjectType);
     ret = ret && {{field.name}}_converter.toJson(data.{{field.name}}, {{field.name}}_doc);
     json.AddMember(rapidjson::StringRef("{{field.name}}"), {{field.name}}_doc.Move(), *allocator);
     {%- endif %}
@@ -159,8 +158,7 @@ bool {{type.name}}Converter::toJson(const {{type.name}}& data, rapidjson::Docume
         {{field.name}}_converter.setAllocator(allocator);
         for (const {{field.array_type}}& item : data.{{field.name}})
         {
-            rapidjson::Document item_doc;
-            item_doc.Parse("{}");
+            rapidjson::Document item_doc(rapidjson::kObjectType);
             ret = ret && {{field.name}}_converter.toJson(item, item_doc);
             {{field.name}}_json.PushBack(item_doc.Move(), *allocator);
         }

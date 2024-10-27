@@ -188,10 +188,9 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
         req.messageId.value().assign(action);
 
         // Convert request to JSON
-        rapidjson::Document                        json_req;
+        rapidjson::Document                        json_req(rapidjson::kObjectType);
         rapidjson::StringBuffer                    buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        json_req.Parse("{}");
         req_converter->setAllocator(&json_req.GetAllocator());
         req_converter->toJson(request, json_req);
         json_req.Accept(writer);
@@ -265,8 +264,7 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
                     handle(req, resp);
 
                     // Convert response to JSON
-                    rapidjson::Document response;
-                    response.Parse("{}");
+                    rapidjson::Document response(rapidjson::kObjectType);
                     resp_converter->setAllocator(&response.GetAllocator());
                     if (resp_converter->toJson(resp, response))
                     {

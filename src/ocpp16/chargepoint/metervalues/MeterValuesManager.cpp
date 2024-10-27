@@ -590,8 +590,7 @@ std::string MeterValuesManager::serialize(const ocpp::types::ocpp16::MeterValue&
 {
     std::string meter_value_str;
 
-    rapidjson::Document meter_value_json;
-    meter_value_json.Parse("{}");
+    rapidjson::Document meter_value_json(rapidjson::kObjectType);
     MeterValueConverter meter_value_converter;
     meter_value_converter.setAllocator(&meter_value_json.GetAllocator());
     meter_value_converter.toJson(meter_value, meter_value_json);

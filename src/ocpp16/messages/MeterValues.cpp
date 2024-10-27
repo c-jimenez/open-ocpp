@@ -134,8 +134,7 @@ bool MeterValuesReqConverter::toJson(const MeterValuesReq& data, rapidjson::Docu
     metervalue_converter.setAllocator(allocator);
     for (const MeterValue& meter_value : data.meterValue)
     {
-        rapidjson::Document value;
-        value.Parse("{}");
+        rapidjson::Document value(rapidjson::kObjectType);
         ret = ret && metervalue_converter.toJson(meter_value, value);
         meterValue.PushBack(value.Move(), *allocator);
     }

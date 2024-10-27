@@ -86,8 +86,7 @@ bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Docu
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -108,8 +107,7 @@ bool NotifyEventReqConverter::toJson(const NotifyEventReq& data, rapidjson::Docu
     eventData_converter.setAllocator(allocator);
     for (const ocpp::types::ocpp20::EventDataType& item : data.eventData)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && eventData_converter.toJson(item, item_doc);
         eventData_json.PushBack(item_doc.Move(), *allocator);
     }
@@ -151,8 +149,7 @@ bool NotifyEventConfConverter::toJson(const NotifyEventConf& data, rapidjson::Do
     {
         ocpp::types::ocpp20::CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }

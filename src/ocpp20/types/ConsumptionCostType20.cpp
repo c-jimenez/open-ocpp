@@ -80,8 +80,7 @@ bool ConsumptionCostTypeConverter::toJson(const ConsumptionCostType& data, rapid
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -96,8 +95,7 @@ bool ConsumptionCostTypeConverter::toJson(const ConsumptionCostType& data, rapid
     cost_converter.setAllocator(allocator);
     for (const CostType& item : data.cost)
     {
-        rapidjson::Document item_doc;
-        item_doc.Parse("{}");
+        rapidjson::Document item_doc(rapidjson::kObjectType);
         ret = ret && cost_converter.toJson(item, item_doc);
         cost_json.PushBack(item_doc.Move(), *allocator);
     }

@@ -356,8 +356,7 @@ std::string ProfileDatabase::serialize(const ocpp::types::ocpp16::ChargingProfil
 {
     std::string profile_str;
 
-    rapidjson::Document profile_json;
-    profile_json.Parse("{}");
+    rapidjson::Document      profile_json(rapidjson::kObjectType);
     ChargingProfileConverter charging_profile_converter;
     charging_profile_converter.setAllocator(&profile_json.GetAllocator());
     charging_profile_converter.toJson(profile, profile_json);

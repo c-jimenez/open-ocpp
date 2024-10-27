@@ -76,8 +76,7 @@ bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -85,8 +84,7 @@ bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson
     // idToken
     IdTokenTypeConverter idToken_converter;
     idToken_converter.setAllocator(allocator);
-    rapidjson::Document idToken_doc;
-    idToken_doc.Parse("{}");
+    rapidjson::Document idToken_doc(rapidjson::kObjectType);
     ret = ret && idToken_converter.toJson(data.idToken, idToken_doc);
     json.AddMember(rapidjson::StringRef("idToken"), idToken_doc.Move(), *allocator);
 
@@ -95,8 +93,7 @@ bool AuthorizationDataConverter::toJson(const AuthorizationData& data, rapidjson
     {
         IdTokenInfoTypeConverter idTokenInfo_converter;
         idTokenInfo_converter.setAllocator(allocator);
-        rapidjson::Document idTokenInfo_doc;
-        idTokenInfo_doc.Parse("{}");
+        rapidjson::Document idTokenInfo_doc(rapidjson::kObjectType);
         ret = ret && idTokenInfo_converter.toJson(data.idTokenInfo, idTokenInfo_doc);
         json.AddMember(rapidjson::StringRef("idTokenInfo"), idTokenInfo_doc.Move(), *allocator);
     }

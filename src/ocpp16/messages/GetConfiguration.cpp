@@ -110,8 +110,7 @@ bool GetConfigurationConfConverter::toJson(const GetConfigurationConf& data, rap
         rapidjson::Document::AllocatorType& _allocator = json.GetAllocator();
         for (const KeyValue& key : data.configurationKey.value())
         {
-            rapidjson::Document value;
-            value.Parse("{}");
+            rapidjson::Document value(rapidjson::kObjectType);
             fill(value, "key", key.key);
             fill(value, "readonly", key.readonly);
             fill(value, "value", key.value);

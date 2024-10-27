@@ -82,8 +82,7 @@ bool ChargingScheduleConverter::toJson(const ocpp::types::ocpp16::ChargingSchedu
     rapidjson::Value chargingSchedulePeriod(rapidjson::kArrayType);
     for (const ChargingSchedulePeriod& schedule_period : data.chargingSchedulePeriod)
     {
-        rapidjson::Document value;
-        value.Parse("{}");
+        rapidjson::Document value(rapidjson::kObjectType);
         fill(value, "startPeriod", schedule_period.startPeriod);
         fill(value, "limit", schedule_period.limit);
         fill(value, "numberPhases", schedule_period.numberPhases);

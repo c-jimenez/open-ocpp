@@ -87,8 +87,7 @@ bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson
     {
         CustomDataTypeConverter customData_converter;
         customData_converter.setAllocator(allocator);
-        rapidjson::Document customData_doc;
-        customData_doc.Parse("{}");
+        rapidjson::Document customData_doc(rapidjson::kObjectType);
         ret = ret && customData_converter.toJson(data.customData, customData_doc);
         json.AddMember(rapidjson::StringRef("customData"), customData_doc.Move(), *allocator);
     }
@@ -98,8 +97,7 @@ bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson
     {
         ACChargingParametersTypeConverter acChargingParameters_converter;
         acChargingParameters_converter.setAllocator(allocator);
-        rapidjson::Document acChargingParameters_doc;
-        acChargingParameters_doc.Parse("{}");
+        rapidjson::Document acChargingParameters_doc(rapidjson::kObjectType);
         ret = ret && acChargingParameters_converter.toJson(data.acChargingParameters, acChargingParameters_doc);
         json.AddMember(rapidjson::StringRef("acChargingParameters"), acChargingParameters_doc.Move(), *allocator);
     }
@@ -109,8 +107,7 @@ bool ChargingNeedsTypeConverter::toJson(const ChargingNeedsType& data, rapidjson
     {
         DCChargingParametersTypeConverter dcChargingParameters_converter;
         dcChargingParameters_converter.setAllocator(allocator);
-        rapidjson::Document dcChargingParameters_doc;
-        dcChargingParameters_doc.Parse("{}");
+        rapidjson::Document dcChargingParameters_doc(rapidjson::kObjectType);
         ret = ret && dcChargingParameters_converter.toJson(data.dcChargingParameters, dcChargingParameters_doc);
         json.AddMember(rapidjson::StringRef("dcChargingParameters"), dcChargingParameters_doc.Move(), *allocator);
     }
