@@ -6,10 +6,12 @@
 # Library target
 add_library(chargepoint20 OBJECT
     ChargePoint20.cpp
+
+    devicemodel/DeviceModelLoader.cpp
 )
 
 # Exported includes
-target_include_directories(chargepoint20 PUBLIC interface)
+target_include_directories(chargepoint20 PUBLIC interface devicemodel)
 
 # Private includes
 target_include_directories(chargepoint20 PRIVATE config)
