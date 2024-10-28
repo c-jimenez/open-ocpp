@@ -18,6 +18,25 @@
 					"minLength": 1,
 					"maxLength": 50
 				},
+				"evse":
+				{
+					"$comment": "Id of the EVSE associated with the variable",
+					"type": "integer",
+					"minimum": 1
+				},
+				"connector":
+				{
+					"$comment": "Id of the connector associated with the variable",
+					"type": "integer",
+					"minimum": 1
+				},
+				"instance":
+				{
+					"$comment": "Instance of the variable",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 50
+				},
 				"variables":
 				{
 					"$comment": "List of the variables included in the components",
@@ -46,18 +65,6 @@
 					"type": "string",
 					"minLength": 1,
 					"maxLength": 50
-				},
-				"evse":
-				{
-					"$comment": "Id of the EVSE associated with the variable",
-					"type": "integer",
-					"minimum": 1
-				},
-				"connector":
-				{
-					"$comment": "Id of the connector associated with the variable",
-					"type": "integer",
-					"minimum": 1
 				},
 				"instance":
 				{

@@ -39,7 +39,7 @@ class Optional
     Optional(const T& value) : m_value(value), m_is_set(true) { }
 
     /** @brief Move constructor */
-    Optional(T&& value) : m_value(value), m_is_set(true) { }
+    Optional(T&& value) : m_value(std::move(value)), m_is_set(true) { }
 
     /**
      * @brief Copy operator
@@ -137,6 +137,23 @@ class Optional
     {
         m_is_set = true;
         return m_value;
+    }
+
+    /** 
+     * @brief Get the underlying value if it set, if not, return the given default value
+     * @param default_value Default value to return if not set
+     * @return Underlying value if set, default value otherwise
+     */
+    const T& valueOr(const T& default_value) const
+    {
+        if (m_is_set)
+        {
+            return m_value;
+        }
+        else
+        {
+            return default_value;
+        }
     }
 
     /**

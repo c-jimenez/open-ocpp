@@ -16,16 +16,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPENOCPP_OCPP20_DEVICEMODELLOADER_H
-#define OPENOCPP_OCPP20_DEVICEMODELLOADER_H
+#ifndef OPENOCPP_OCPP20_DEVICEMODELMANAGER20_H
+#define OPENOCPP_OCPP20_DEVICEMODELMANAGER20_H
 
 #include "IChargePointConfig20.h"
+#include "IDeviceModel20.h"
 #include "JsonValidator.h"
-#include "Optional.h"
-#include "VariableAttributeType20.h"
-#include "VariableCharacteristicsType20.h"
-
-#include <map>
 
 namespace ocpp
 {
@@ -34,41 +30,15 @@ namespace chargepoint
 namespace ocpp20
 {
 
-/** @brief Variable */
-struct Variable
-{
-    /** @brief Name */
-    std::string name;
-    /** @brief EVSE id */
-    ocpp::types::Optional<unsigned int> evse;
-    /** @brief Connector id */
-    ocpp::types::Optional<unsigned int> connector;
-    /** @brief Instance */
-    ocpp::types::Optional<std::string> instance;
-    /** @brief Attributes */
-    ocpp::types::ocpp20::VariableAttributeType attributes;
-    /** @brief Characteristics */
-    ocpp::types::ocpp20::VariableCharacteristicsType characteristics;
-};
-
-/** @brief Component */
-struct Component
-{
-    /** @brief Name */
-    std::string name;
-    /** @brief Variables */
-    std::map<std::string, std::map<std::string, Variable>> variables;
-};
-
-/** @brief Helper class to load/store the device model */
-class DeviceModelLoader
+/** @brief Handle of the device model operations */
+class DeviceModelManager20 : public IDeviceModel20
 {
   public:
     /** @brief Constructor */
-    DeviceModelLoader(const ocpp::config::IChargePointConfig20& stack_config);
+    DeviceModelManager20(const ocpp::config::IChargePointConfig20& stack_config);
 
     /** @brief Destructor */
-    virtual ~DeviceModelLoader();
+    virtual ~DeviceModelManager20();
 
     /** 
      * @brief Initialize the device model loader
@@ -93,8 +63,19 @@ class DeviceModelLoader
     /** @brief Get the last error message */
     const std::string& lastError() const { return m_last_error; }
 
-    /** @brief Get the device model */
-    const std::map<std::string, Component>& deviceModel() const { return m_components; }
+    // IDeviceModel interface
+
+    /** @brief Register a listener to device model events */
+    void registerListener(IListener& listener) override { m_listener = &listener; }
+
+    /** @brief Get the full device model */
+    const DeviceModel& getModel() const override { return m_device_model; }
+
+    /** @brief Get a variable value in the device model */
+    ocpp::types::ocpp20::GetVariableResultType getVariable(const ocpp::types::ocpp20::GetVariableDataType& requested_var) override;
+
+    /** @brief Set a variable value in the device model */
+    ocpp::types::ocpp20::SetVariableResultType setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var) override;
 
   private:
     /** @brief Stack configuration */
@@ -103,17 +84,29 @@ class DeviceModelLoader
     ocpp::json::JsonValidator m_validator;
     /** @brief Last error message */
     std::string m_last_error;
-    /** @brief Components in the device model */
-    std::map<std::string, Component> m_components;
+    /** @brief Device model */
+    DeviceModel m_device_model;
+    /** @brief Listener to device model events */
+    IListener* m_listener;
 
     /** @brief Load the device model from its JSON representation */
     void loadDeviceModel(const rapidjson::Document& device_model_doc);
     /** @brief Save the device model to a JSON representation */
     void saveDeviceModel(rapidjson::Document& device_model_doc);
+
+    /** @brief Look for a component in the device model */
+    const Component* getComponent(const ocpp::types::ocpp20::ComponentType& requested_component);
+    /** @brief Look for a variable in the device model */
+    const Variable* getVariable(const Component&                                                     component,
+                                const ocpp::types::Optional<ocpp::types::ocpp20::AttributeEnumType>& attribute,
+                                const ocpp::types::ocpp20::VariableType&                             requested_var,
+                                bool&                                                                not_supported_attribute_type);
+    /** @brief Check the validity of the value to set to a variable */
+    bool isValidValue(const Variable& var, const std::string& value);
 };
 
 } // namespace ocpp20
 } // namespace chargepoint
 } // namespace ocpp
 
-#endif // OPENOCPP_OCPP20_CHARGEPOINT20_H
+#endif // OPENOCPP_OCPP20_DEVICEMODELMANAGER20_H

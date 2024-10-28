@@ -7,7 +7,7 @@
 add_library(chargepoint20 OBJECT
     ChargePoint20.cpp
 
-    devicemodel/DeviceModelLoader.cpp
+    devicemodel/DeviceModelManager20.cpp
 )
 
 # Exported includes
