@@ -24,9 +24,11 @@ SOFTWARE.
 
 #include "DefaultChargePointEventsHandler.h"
 #include "ChargePointDemoConfig.h"
+#include "NotifyReport20.h"
 
 #include <fstream>
 #include <iostream>
+#include <thread>
 
 // With MSVC compiler, the system() call returns directly the command's return value
 #ifdef _MSC_VER
@@ -36,11 +38,16 @@ SOFTWARE.
 using namespace std;
 using namespace ocpp::types;
 using namespace ocpp::types::ocpp20;
+using namespace ocpp::messages;
+using namespace ocpp::messages::ocpp20;
 
 /** @brief Constructor */
-DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir)
-    : m_config(config), m_chargepoint(nullptr), m_working_dir(working_dir), m_is_connected(false)
+DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig&                     config,
+                                                                 ocpp::chargepoint::ocpp20::IDeviceModel20& device_model,
+                                                                 const std::filesystem::path&               working_dir)
+    : m_config(config), m_device_model(device_model), m_chargepoint(nullptr), m_working_dir(working_dir), m_is_connected(false)
 {
+    m_device_model.registerListener(*this);
 }
 
 /** @brief Destructor */
@@ -57,6 +64,24 @@ void DefaultChargePointEventsHandler::connectionStateChanged(bool isConnected)
 {
     cout << "Connection state changed : " << isConnected << endl;
     m_is_connected = isConnected;
+}
+
+// IDeviceModel20 interface
+
+/** @brief Called to retrieve the value of a variable */
+void DefaultChargePointEventsHandler::getVariable(ocpp::types::ocpp20::GetVariableResultType& var)
+{
+    std::string value;
+    m_config.getDeviceModelValue(var.component, var.variable, value);
+    var.attributeValue.value().assign(std::move(value));
+}
+
+/** @brief Called to set the value of a variable */
+ocpp::types::ocpp20::SetVariableStatusEnumType DefaultChargePointEventsHandler::setVariable(
+    const ocpp::types::ocpp20::SetVariableDataType& var)
+{
+    m_config.setDeviceModelValue(var.component, var.variable, var.attributeValue.str());
+    return SetVariableStatusEnumType::Accepted;
 }
 
 // OCPP operations
@@ -284,13 +309,78 @@ bool DefaultChargePointEventsHandler::onGetBaseReport(const ocpp::messages::ocpp
 {
     bool ret = true;
 
-    (void)request;
     (void)error;
     (void)message;
 
     cout << "GetBaseReport" << endl;
 
-    response.status = GenericDeviceModelStatusEnumType::NotSupported;
+    if (request.reportBase == ReportBaseEnumType::SummaryInventory)
+    {
+        response.status = GenericDeviceModelStatusEnumType::NotSupported;
+    }
+    else
+    {
+        std::thread report_thread(
+            [this, type = request.reportBase, req_id = request.requestId]
+            {
+                NotifyReportReq notif_req;
+                notif_req.requestId   = req_id;
+                notif_req.generatedAt = DateTime::now();
+                notif_req.seqNo       = 0;
+                notif_req.tbc         = false;
+
+                const auto& device_model = m_device_model.getModel();
+                for (const auto& [_, comps] : device_model.components)
+                {
+                    for (const auto& component : comps)
+                    {
+                        for (const auto& [_, vars] : component.variables)
+                        {
+                            for (const auto& [_, var] : vars)
+                            {
+                                if ((type == ReportBaseEnumType::FullInventory) || !var.attributes.type.isSet() ||
+                                    (var.attributes.mutability.value() == MutabilityEnumType::ReadWrite))
+                                {
+                                    ReportDataType report_data;
+                                    report_data.component.name.assign(component.name);
+                                    if (component.instance.isSet())
+                                    {
+                                        report_data.component.instance.value().assign(component.instance.value());
+                                    }
+                                    if (component.evse.isSet())
+                                    {
+                                        report_data.component.evse.value().id = component.evse.value();
+                                    }
+                                    if (component.connector.isSet())
+                                    {
+                                        report_data.component.evse.value().connectorId.value() = component.connector.value();
+                                    }
+                                    report_data.variable.name.assign(var.name);
+                                    if (var.instance.isSet())
+                                    {
+                                        report_data.variable.instance.value().assign(var.instance.value());
+                                    }
+                                    report_data.variableAttribute.push_back(var.attributes);
+                                    report_data.variableCharacteristics = var.characteristics;
+
+                                    notif_req.reportData.push_back(std::move(report_data));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                (void)device_model;
+
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+
+                NotifyReportConf notif_conf;
+                std::string      error;
+                std::string      error_msg;
+                m_chargepoint->call(notif_req, notif_conf, error, error_msg);
+            });
+        report_thread.detach();
+    }
 
     return ret;
 }
@@ -500,10 +590,7 @@ bool DefaultChargePointEventsHandler::onGetVariables(const ocpp::messages::ocpp2
 
     for (const auto& var_data : request.getVariableData)
     {
-        (void)var_data;
-
-        GetVariableResultType result;
-        result.attributeStatus = GetVariableStatusEnumType::UnknownVariable;
+        GetVariableResultType result = m_device_model.getVariable(var_data);
         response.getVariableResult.push_back(result);
     }
 
@@ -783,10 +870,7 @@ bool DefaultChargePointEventsHandler::onSetVariables(const ocpp::messages::ocpp2
 
     for (const auto& var_data : request.setVariableData)
     {
-        SetVariableResultType result;
-        result.attributeStatus = SetVariableStatusEnumType::Rejected;
-        result.component       = var_data.component;
-        result.variable        = var_data.variable;
+        SetVariableResultType result = m_device_model.setVariable(var_data);
         response.setVariableResult.push_back(result);
     }
 

@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include "IChargePoint20.h"
 #include "IChargePointEventsHandler20.h"
+#include "IDeviceModel20.h"
 
 #include <filesystem>
 #include <vector>
@@ -34,11 +35,14 @@ SOFTWARE.
 class ChargePointDemoConfig;
 
 /** @brief Default charge point event handlers implementation for the examples */
-class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::IChargePointEventsHandler20
+class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::IChargePointEventsHandler20,
+                                        public ocpp::chargepoint::ocpp20::IDeviceModel20::IListener
 {
   public:
     /** @brief Constructor */
-    DefaultChargePointEventsHandler(ChargePointDemoConfig& config, const std::filesystem::path& working_dir);
+    DefaultChargePointEventsHandler(ChargePointDemoConfig&                     config,
+                                    ocpp::chargepoint::ocpp20::IDeviceModel20& device_model,
+                                    const std::filesystem::path&               working_dir);
 
     /** @brief Destructor */
     virtual ~DefaultChargePointEventsHandler();
@@ -48,6 +52,14 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::ICharg
 
     /** @brief Indicate if the Charge Point is connected */
     bool isConnected() const { return m_is_connected; }
+
+    // IDeviceModel20 interface
+
+    /** @brief Called to retrieve the value of a variable */
+    void getVariable(ocpp::types::ocpp20::GetVariableResultType& var) override;
+
+    /** @brief Called to set the value of a variable */
+    ocpp::types::ocpp20::SetVariableStatusEnumType setVariable(const ocpp::types::ocpp20::SetVariableDataType& var) override;
 
     // IChargePointEventsHandler20 interface
 
@@ -312,6 +324,8 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::ICharg
   private:
     /** @brief Configuration */
     ChargePointDemoConfig& m_config;
+    /** @brief Device model */
+    ocpp::chargepoint::ocpp20::IDeviceModel20& m_device_model;
     /** @brief Associated Charge Point instance */
     ocpp::chargepoint::ocpp20::IChargePoint20* m_chargepoint;
     /** @brief Working directory */

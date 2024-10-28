@@ -26,6 +26,7 @@ SOFTWARE.
 #define CHARGEPOINTDEMOCONFIG_H
 
 #include "ChargePointConfig.h"
+#include "IDeviceModel20.h"
 #include "IniFile.h"
 
 /** @brief Configuration of the Charge Point demo */
@@ -41,12 +42,62 @@ class ChargePointDemoConfig
     /** @brief Set the value of a stack internal configuration key */
     void setStackConfigValue(const std::string& key, const std::string& value) { m_stack_config.setConfigValue(key, value); }
 
+    /** @brief Get the value of a variable of the device model */
+    bool getDeviceModelValue(const ocpp::types::ocpp20::ComponentType& component,
+                             const ocpp::types::ocpp20::VariableType&  variable,
+                             std::string&                              value)
+    {
+        auto ini_value = m_config.get(buildComponentName(component), buildVariableName(variable));
+        value          = ini_value.toString();
+        return true;
+    }
+
+    /** @brief Set the value of a variable of the device model */
+    bool setDeviceModelValue(const ocpp::types::ocpp20::ComponentType& component,
+                             const ocpp::types::ocpp20::VariableType&  variable,
+                             const std::string&                        value)
+    {
+        m_config.set(buildComponentName(component), buildVariableName(variable), value);
+        m_config.store();
+        return true;
+    }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile m_config;
 
     /** @brief Stack internal configuration */
     ChargePointConfig m_stack_config;
+
+    /** @brief Build the device model component unique name */
+    std::string buildComponentName(const ocpp::types::ocpp20::ComponentType& component)
+    {
+        std::string name = component.name;
+        if (component.instance.isSet())
+        {
+            name += "." + component.instance.value().str();
+        }
+        if (component.evse.isSet())
+        {
+            name += "." + std::to_string(component.evse.value().id);
+            if (component.evse.value().connectorId.isSet())
+            {
+                name += "." + std::to_string(component.evse.value().connectorId.value());
+            }
+        }
+        return name;
+    }
+
+    /** @brief Build the device model variable unique name */
+    std::string buildVariableName(const ocpp::types::ocpp20::VariableType& variable)
+    {
+        std::string name = variable.name;
+        if (variable.instance.isSet())
+        {
+            name += "." + variable.instance.value().str();
+        }
+        return name;
+    }
 };
 
 #endif // CHARGEPOINTDEMOCONFIG_H

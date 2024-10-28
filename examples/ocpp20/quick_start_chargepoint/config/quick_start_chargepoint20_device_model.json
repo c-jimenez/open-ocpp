@@ -115,10 +115,15 @@
 						"data_type": "boolean"
 					},
 					"required": false
-				},
+				}
+			]
+		},
+		{
+			"name": "AlignedDataCtrlr",
+			"evse": 1,
+			"variables": [
 				{
 					"name": "SendDuringIdle",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -356,7 +361,6 @@
 				},
 				{
 					"name": "TimeOffset",
-					"instance": "1",
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -369,7 +373,6 @@
 				},
 				{
 					"name": "NextTimeOffsetTransitionDateTime",
-					"instance": "1",
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -702,10 +705,15 @@
 						"data_type": "boolean"
 					},
 					"required": false
-				},
+				}
+			]
+		},
+		{
+			"name": "ISO15118Ctrlr",
+			"evse": 1,
+			"variables": [
 				{
 					"name": "ProtocolSupportedByEV",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -718,7 +726,6 @@
 				},
 				{
 					"name": "ProtocolAgreed",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -731,7 +738,6 @@
 				},
 				{
 					"name": "SeccId",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -744,7 +750,6 @@
 				},
 				{
 					"name": "CountryName",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -757,7 +762,6 @@
 				},
 				{
 					"name": "OrganizationName",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -770,7 +774,6 @@
 				},
 				{
 					"name": "ISO15118EvseId",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -1855,10 +1858,11 @@
 		},
 		{
 			"name": "EVSE",
+			"instance": "EVSE 1",
+			"evse": 1,
 			"variables": [
 				{
 					"name": "Available",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1871,7 +1875,6 @@
 				},
 				{
 					"name": "AvailabilityState",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1885,7 +1888,6 @@
 				},
 				{
 					"name": "AllowReset",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1898,7 +1900,6 @@
 				},
 				{
 					"name": "PhaseRotation",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -1911,7 +1912,6 @@
 				},
 				{
 					"name": "SupplyPhases",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1924,7 +1924,6 @@
 				},
 				{
 					"name": "Power",
-					"evse": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1939,11 +1938,12 @@
 		},
 		{
 			"name": "Connector",
+			"evse": 1,
+			"connector": 1,
 			"variables": [
 				{
 					"name": "Available",
-					"evse": 1,
-					"connector": 1,
+					
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1956,8 +1956,6 @@
 				},
 				{
 					"name": "AvailabilityState",
-					"evse": 1,
-					"connector": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1971,8 +1969,6 @@
 				},
 				{
 					"name": "ConnectorType",
-					"evse": 1,
-					"connector": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -1986,8 +1982,6 @@
 				},
 				{
 					"name": "PhaseRotation",
-					"evse": 1,
-					"connector": 1,
 					"attributes": 
 					{
 						"mutability": "ReadWrite"
@@ -2000,8 +1994,6 @@
 				},
 				{
 					"name": "SupplyPhases",
-					"evse": 1,
-					"connector": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
@@ -2014,8 +2006,6 @@
 				},
 				{
 					"name": "Power",
-					"evse": 1,
-					"connector": 1,
 					"attributes": 
 					{
 						"mutability": "ReadOnly"
