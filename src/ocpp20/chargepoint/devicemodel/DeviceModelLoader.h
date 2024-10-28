@@ -57,7 +57,7 @@ struct Component
     /** @brief Name */
     std::string name;
     /** @brief Variables */
-    std::map<std::string, Variable> variables;
+    std::map<std::string, std::map<std::string, Variable>> variables;
 };
 
 /** @brief Helper class to load/store the device model */

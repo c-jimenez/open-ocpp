@@ -255,7 +255,19 @@ void DeviceModelLoader::loadDeviceModel(const rapidjson::Document& device_model_
             }
 
             // Add to list of variables
-            component.variables[var.name] = std::move(var);
+            const Variable& cvar     = var;
+            auto            iter_var = component.variables.find(var.name);
+            if (iter_var != component.variables.end())
+            {
+
+                iter_var->second[cvar.instance.value()] = std::move(var);
+            }
+            else
+            {
+                std::map<std::string, Variable> vars;
+                vars[cvar.instance.value()]                    = std::move(var);
+                component.variables[vars.begin()->second.name] = std::move(vars);
+            }
         }
 
         // Add to list of components
@@ -281,120 +293,124 @@ void DeviceModelLoader::saveDeviceModel(rapidjson::Document& device_model_doc)
 
         // For each variable
         rapidjson::Value variables_json(rapidjson::kArrayType);
-        for (const auto& [_, var] : component.variables)
+        for (const auto& [_, vars] : component.variables)
         {
-            rapidjson::Value var_json(rapidjson::kObjectType);
-
-            // Name
-            var_json.AddMember(rapidjson::StringRef("name"), rapidjson::Value(var.name.c_str(), allocator).Move(), allocator);
-
-            // EVSE id
-            if (var.evse.isSet())
+            for (const auto& [_, var] : vars)
             {
-                var_json.AddMember(rapidjson::StringRef("evse"), rapidjson::Value(var.evse.value()).Move(), allocator);
-            }
+                rapidjson::Value var_json(rapidjson::kObjectType);
 
-            // Connector id
-            if (var.connector.isSet())
-            {
-                var_json.AddMember(rapidjson::StringRef("connector"), rapidjson::Value(var.connector.value()).Move(), allocator);
-            }
+                // Name
+                var_json.AddMember(rapidjson::StringRef("name"), rapidjson::Value(var.name.c_str(), allocator).Move(), allocator);
 
-            // Instance
-            if (var.instance.isSet())
-            {
-                var_json.AddMember(
-                    rapidjson::StringRef("instance"), rapidjson::Value(var.instance.value().c_str(), allocator).Move(), allocator);
-            }
-
-            // Attributes
-            {
-                rapidjson::Value var_attributes_json(rapidjson::kObjectType);
-
-                // Type
-                if (var.attributes.type.isSet())
+                // EVSE id
+                if (var.evse.isSet())
                 {
-                    var_attributes_json.AddMember(
-                        rapidjson::StringRef("type"),
-                        rapidjson::Value(AttributeEnumTypeHelper.toString(var.attributes.type.value()).c_str(), allocator).Move(),
-                        allocator);
+                    var_json.AddMember(rapidjson::StringRef("evse"), rapidjson::Value(var.evse.value()).Move(), allocator);
                 }
 
-                // Mutability
-                if (var.attributes.mutability.isSet())
+                // Connector id
+                if (var.connector.isSet())
                 {
-                    var_attributes_json.AddMember(
-                        rapidjson::StringRef("mutability"),
-                        rapidjson::Value(MutabilityEnumTypeHelper.toString(var.attributes.mutability.value()).c_str(), allocator).Move(),
-                        allocator);
+                    var_json.AddMember(rapidjson::StringRef("connector"), rapidjson::Value(var.connector.value()).Move(), allocator);
                 }
 
-                // Persistent flag
-                if (var.attributes.persistent.isSet())
+                // Instance
+                if (var.instance.isSet())
                 {
-                    var_attributes_json.AddMember(
-                        rapidjson::StringRef("persistent"), rapidjson::Value(var.attributes.persistent.value()).Move(), allocator);
+                    var_json.AddMember(
+                        rapidjson::StringRef("instance"), rapidjson::Value(var.instance.value().c_str(), allocator).Move(), allocator);
                 }
 
-                // Constant flag
-                if (var.attributes.constant.isSet())
+                // Attributes
                 {
-                    var_attributes_json.AddMember(
-                        rapidjson::StringRef("constant"), rapidjson::Value(var.attributes.constant.value()).Move(), allocator);
+                    rapidjson::Value var_attributes_json(rapidjson::kObjectType);
+
+                    // Type
+                    if (var.attributes.type.isSet())
+                    {
+                        var_attributes_json.AddMember(
+                            rapidjson::StringRef("type"),
+                            rapidjson::Value(AttributeEnumTypeHelper.toString(var.attributes.type.value()).c_str(), allocator).Move(),
+                            allocator);
+                    }
+
+                    // Mutability
+                    if (var.attributes.mutability.isSet())
+                    {
+                        var_attributes_json.AddMember(
+                            rapidjson::StringRef("mutability"),
+                            rapidjson::Value(MutabilityEnumTypeHelper.toString(var.attributes.mutability.value()).c_str(), allocator)
+                                .Move(),
+                            allocator);
+                    }
+
+                    // Persistent flag
+                    if (var.attributes.persistent.isSet())
+                    {
+                        var_attributes_json.AddMember(
+                            rapidjson::StringRef("persistent"), rapidjson::Value(var.attributes.persistent.value()).Move(), allocator);
+                    }
+
+                    // Constant flag
+                    if (var.attributes.constant.isSet())
+                    {
+                        var_attributes_json.AddMember(
+                            rapidjson::StringRef("constant"), rapidjson::Value(var.attributes.constant.value()).Move(), allocator);
+                    }
+
+                    var_json.AddMember(rapidjson::StringRef("attributes"), var_attributes_json.Move(), allocator);
                 }
 
-                var_json.AddMember(rapidjson::StringRef("attributes"), var_attributes_json.Move(), allocator);
-            }
-
-            // Characteristics
-            {
-                rapidjson::Value var_chars_json(rapidjson::kObjectType);
-
-                // Data type
-                var_chars_json.AddMember(
-                    rapidjson::StringRef("data_type"),
-                    rapidjson::Value(DataEnumTypeHelper.toString(var.characteristics.dataType).c_str(), allocator).Move(),
-                    allocator);
-
-                // Unit
-                if (var.characteristics.unit.isSet())
+                // Characteristics
                 {
-                    var_chars_json.AddMember(rapidjson::StringRef("unit"),
-                                             rapidjson::Value(var.characteristics.unit.value().c_str(), allocator).Move(),
-                                             allocator);
-                }
+                    rapidjson::Value var_chars_json(rapidjson::kObjectType);
 
-                // Min limit
-                if (var.characteristics.minLimit.isSet())
-                {
+                    // Data type
                     var_chars_json.AddMember(
-                        rapidjson::StringRef("min_limit"), rapidjson::Value(var.characteristics.minLimit.value()).Move(), allocator);
-                }
+                        rapidjson::StringRef("data_type"),
+                        rapidjson::Value(DataEnumTypeHelper.toString(var.characteristics.dataType).c_str(), allocator).Move(),
+                        allocator);
 
-                // Max limit
-                if (var.characteristics.maxLimit.isSet())
-                {
-                    var_chars_json.AddMember(
-                        rapidjson::StringRef("max_limit"), rapidjson::Value(var.characteristics.maxLimit.value()).Move(), allocator);
-                }
+                    // Unit
+                    if (var.characteristics.unit.isSet())
+                    {
+                        var_chars_json.AddMember(rapidjson::StringRef("unit"),
+                                                 rapidjson::Value(var.characteristics.unit.value().c_str(), allocator).Move(),
+                                                 allocator);
+                    }
 
-                // Values list
-                if (var.characteristics.valuesList.isSet())
-                {
-                    var_chars_json.AddMember(rapidjson::StringRef("values_list"),
-                                             rapidjson::Value(var.characteristics.valuesList.value().c_str(), allocator).Move(),
+                    // Min limit
+                    if (var.characteristics.minLimit.isSet())
+                    {
+                        var_chars_json.AddMember(
+                            rapidjson::StringRef("min_limit"), rapidjson::Value(var.characteristics.minLimit.value()).Move(), allocator);
+                    }
+
+                    // Max limit
+                    if (var.characteristics.maxLimit.isSet())
+                    {
+                        var_chars_json.AddMember(
+                            rapidjson::StringRef("max_limit"), rapidjson::Value(var.characteristics.maxLimit.value()).Move(), allocator);
+                    }
+
+                    // Values list
+                    if (var.characteristics.valuesList.isSet())
+                    {
+                        var_chars_json.AddMember(rapidjson::StringRef("values_list"),
+                                                 rapidjson::Value(var.characteristics.valuesList.value().c_str(), allocator).Move(),
+                                                 allocator);
+                    }
+
+                    // Supports monitoring flag
+                    var_chars_json.AddMember(rapidjson::StringRef("supports_monitoring"),
+                                             rapidjson::Value(var.characteristics.supportsMonitoring).Move(),
                                              allocator);
+
+                    var_json.AddMember(rapidjson::StringRef("characteristics"), var_chars_json.Move(), allocator);
                 }
 
-                // Supports monitoring flag
-                var_chars_json.AddMember(rapidjson::StringRef("supports_monitoring"),
-                                         rapidjson::Value(var.characteristics.supportsMonitoring).Move(),
-                                         allocator);
-
-                var_json.AddMember(rapidjson::StringRef("characteristics"), var_chars_json.Move(), allocator);
+                variables_json.PushBack(var_json.Move(), allocator);
             }
-
-            variables_json.PushBack(var_json.Move(), allocator);
         }
         component_json.AddMember(rapidjson::StringRef("variables"), variables_json.Move(), allocator);
 
