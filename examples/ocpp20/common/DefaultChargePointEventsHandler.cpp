@@ -42,9 +42,9 @@ using namespace ocpp::messages;
 using namespace ocpp::messages::ocpp20;
 
 /** @brief Constructor */
-DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig&                     config,
-                                                                 ocpp::chargepoint::ocpp20::IDeviceModel20& device_model,
-                                                                 const std::filesystem::path&               working_dir)
+DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemoConfig&                   config,
+                                                                 ocpp::chargepoint::ocpp20::IDeviceModel& device_model,
+                                                                 const std::filesystem::path&             working_dir)
     : m_config(config), m_device_model(device_model), m_chargepoint(nullptr), m_working_dir(working_dir), m_is_connected(false)
 {
     m_device_model.registerListener(*this);
@@ -74,6 +74,7 @@ void DefaultChargePointEventsHandler::getVariable(ocpp::types::ocpp20::GetVariab
     std::string value;
     m_config.getDeviceModelValue(var.component, var.variable, value);
     var.attributeValue.value().assign(std::move(value));
+    var.attributeStatus = GetVariableStatusEnumType::Accepted;
 }
 
 /** @brief Called to set the value of a variable */

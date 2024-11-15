@@ -1,6 +1,8 @@
-# Quick start Charge Point OCPP 2.0.1 example
+# Quick start Basic Charge Point OCPP 2.0.1 example
 
 ## Description
+
+The Basic Charge Point implements only the use cases defined in OCPP 2.0.1 Part 0 Specification §4.
 
 This example simulates a charge point which start a charging session locally with an id tag.
 
@@ -14,8 +16,9 @@ Each charging sessions lasts 30s and there is a 10s break between 2 charging ses
 
 ## Command line
 
-quick_start_chargepoint [-t id_tag] [-w working_dir] [-r] [-d]
+quick_start_basicchargepoint [-t id_tag] [-w working_dir] [-r] [-d]
 
 * -t : Id tag to use (Default = AABBCCDDEEFF)
 * -w : Working directory where to store the configuration file (Default = current directory)
 * -r : Reset all the OCPP persistent data
+* -d : Reset all the connector persistent data

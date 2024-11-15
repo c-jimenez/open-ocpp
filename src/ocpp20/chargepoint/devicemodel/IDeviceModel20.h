@@ -72,14 +72,14 @@ struct DeviceModel
 };
 
 /** @brief Interface to interact with the device model */
-class IDeviceModel20
+class IDeviceModel
 {
   public:
     // Forward declaration
     class IListener;
 
     /** @brief Destructor */
-    virtual ~IDeviceModel20() { }
+    virtual ~IDeviceModel() { }
 
     /** @brief Register a listener to device model events */
     virtual void registerListener(IListener& listener) = 0;
@@ -92,6 +92,9 @@ class IDeviceModel20
 
     /** @brief Set a variable value in the device model */
     virtual ocpp::types::ocpp20::SetVariableResultType setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var) = 0;
+
+    /** @brief Update a variable value in the device model without value or mutability check */
+    virtual ocpp::types::ocpp20::SetVariableResultType updateVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var) = 0;
 
     /** @brief Interface to the listeners of the device model events */
     class IListener

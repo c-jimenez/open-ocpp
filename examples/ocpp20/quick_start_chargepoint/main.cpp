@@ -110,8 +110,8 @@ int main(int argc, char* argv[])
 
     // Device model
     std::filesystem::path device_model_path(working_dir);
-    device_model_path /= "quick_start_chargepoint20_device_model.json";
-    DeviceModelManager20 device_model_mgr(config.stackConfig());
+    device_model_path /= "quick_start_chargepoint20.json";
+    DeviceModelManager device_model_mgr(config.stackConfig());
     if (device_model_mgr.init())
     {
         if (!device_model_mgr.load(device_model_path))
@@ -170,9 +170,17 @@ int main(int argc, char* argv[])
                 BootNotificationReq  boot_notif_req;
                 BootNotificationConf boot_notif_conf;
                 boot_notif_req.reason = BootReasonEnumType::PowerUp;
-                boot_notif_req.chargingStation.vendorName.assign("Open OCPP");
-                boot_notif_req.chargingStation.model.assign("Quick Start CS OCPP 2.0.1");
-                boot_notif_req.chargingStation.firmwareVersion.value().assign("1.2.3.4");
+                boot_notif_req.chargingStation.vendorName.assign(config.stackConfig().chargePointVendor());
+                boot_notif_req.chargingStation.model.assign(config.stackConfig().chargePointModel());
+                boot_notif_req.chargingStation.firmwareVersion.value().assign(config.stackConfig().firmwareVersion());
+                if (!config.stackConfig().iccid().empty())
+                {
+                    boot_notif_req.chargingStation.modem.value().iccid.value().assign(config.stackConfig().iccid());
+                }
+                if (!config.stackConfig().imsi().empty())
+                {
+                    boot_notif_req.chargingStation.modem.value().imsi.value().assign(config.stackConfig().imsi());
+                }
                 if (charge_point->call(boot_notif_req, boot_notif_conf, error, error_msg))
                 {
                     registration_status    = boot_notif_conf.status;

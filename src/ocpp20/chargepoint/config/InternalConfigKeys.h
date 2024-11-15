@@ -40,6 +40,8 @@ static constexpr const char* TOTAL_UPTIME_KEY = "TotalUpTime";
 static constexpr const char* TOTAL_DISCONNECTED_TIME_KEY = "TotalDisconnectedTime";
 /** @brief Configuration key : last connection URL */
 static constexpr const char* LAST_CONNECTION_URL_KEY = "LastConnectionUrl";
+/** @brief Configuration key : last registration status */
+static constexpr const char* LAST_REGISTRATION_STATUS_KEY = "LastRegistrationStatus";
 
 } // namespace ocpp20
 } // namespace chargepoint
