@@ -31,14 +31,14 @@ namespace ocpp20
 {
 
 /** @brief Handle of the device model operations */
-class DeviceModelManager20 : public IDeviceModel20
+class DeviceModelManager : public IDeviceModel
 {
   public:
     /** @brief Constructor */
-    DeviceModelManager20(const ocpp::config::IChargePointConfig20& stack_config);
+    DeviceModelManager(const ocpp::config::IChargePointConfig20& stack_config);
 
     /** @brief Destructor */
-    virtual ~DeviceModelManager20();
+    virtual ~DeviceModelManager();
 
     /** 
      * @brief Initialize the device model loader
@@ -77,6 +77,9 @@ class DeviceModelManager20 : public IDeviceModel20
     /** @brief Set a variable value in the device model */
     ocpp::types::ocpp20::SetVariableResultType setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var) override;
 
+    /** @brief Update a variable value in the device model without value or mutability check */
+    ocpp::types::ocpp20::SetVariableResultType updateVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var) override;
+
   private:
     /** @brief Stack configuration */
     const ocpp::config::IChargePointConfig20& m_stack_config;
@@ -103,6 +106,8 @@ class DeviceModelManager20 : public IDeviceModel20
                                 bool&                                                                not_supported_attribute_type);
     /** @brief Check the validity of the value to set to a variable */
     bool isValidValue(const Variable& var, const std::string& value);
+    /** @brief Set a variable value in the device model */
+    ocpp::types::ocpp20::SetVariableResultType setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var, bool check_value);
 };
 
 } // namespace ocpp20

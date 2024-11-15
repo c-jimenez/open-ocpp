@@ -33,16 +33,16 @@ namespace ocpp20
 {
 
 /** @brief Constructor */
-DeviceModelManager20::DeviceModelManager20(const ocpp::config::IChargePointConfig20& stack_config)
+DeviceModelManager::DeviceModelManager(const ocpp::config::IChargePointConfig20& stack_config)
     : m_stack_config(stack_config), m_validator(), m_last_error(), m_device_model(), m_listener(nullptr)
 {
 }
 
 /** @brief Destructor */
-DeviceModelManager20::~DeviceModelManager20() { }
+DeviceModelManager::~DeviceModelManager() { }
 
 /** @brief Initialize the device model loader */
-bool DeviceModelManager20::init()
+bool DeviceModelManager::init()
 {
     bool ret = false;
 
@@ -59,7 +59,7 @@ bool DeviceModelManager20::init()
 }
 
 /** @brief Load the device model from a file */
-bool DeviceModelManager20::load(const std::string& device_model_file_path)
+bool DeviceModelManager::load(const std::string& device_model_file_path)
 {
     bool ret = false;
 
@@ -101,7 +101,7 @@ bool DeviceModelManager20::load(const std::string& device_model_file_path)
 }
 
 /** @brief Save the device model to a file */
-bool DeviceModelManager20::save(const std::string& device_model_file_path)
+bool DeviceModelManager::save(const std::string& device_model_file_path)
 {
     bool ret = false;
 
@@ -134,7 +134,7 @@ bool DeviceModelManager20::save(const std::string& device_model_file_path)
 // IDeviceModel interface
 
 /** @brief Get a variable value in the device model */
-ocpp::types::ocpp20::GetVariableResultType DeviceModelManager20::getVariable(const ocpp::types::ocpp20::GetVariableDataType& requested_var)
+ocpp::types::ocpp20::GetVariableResultType DeviceModelManager::getVariable(const ocpp::types::ocpp20::GetVariableDataType& requested_var)
 {
     GetVariableResultType result;
 
@@ -148,8 +148,24 @@ ocpp::types::ocpp20::GetVariableResultType DeviceModelManager20::getVariable(con
         if (var)
         {
             // Notify request
-            result.component       = requested_var.component;
-            result.variable        = requested_var.variable;
+            result.component = requested_var.component;
+            if (component->evse.isSet())
+            {
+                result.component.evse.value().id = component->evse;
+                if (component->connector.isSet())
+                {
+                    result.component.evse.value().connectorId.value() = component->connector.value();
+                }
+            }
+            if (component->instance.isSet())
+            {
+                result.component.instance.value().assign(component->instance.value());
+            }
+            result.variable = requested_var.variable;
+            if (var->instance.isSet())
+            {
+                result.variable.instance.value().assign(var->instance.value());
+            }
             result.attributeType   = requested_var.attributeType;
             result.attributeStatus = GetVariableStatusEnumType::Rejected;
             if (m_listener)
@@ -178,59 +194,19 @@ ocpp::types::ocpp20::GetVariableResultType DeviceModelManager20::getVariable(con
 }
 
 /** @brief Set a variable value in the device model */
-ocpp::types::ocpp20::SetVariableResultType DeviceModelManager20::setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var)
+ocpp::types::ocpp20::SetVariableResultType DeviceModelManager::setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var)
 {
-    SetVariableResultType result;
+    return setVariable(requested_var, true);
+}
 
-    // Get requested component
-    const Component* component = getComponent(requested_var.component);
-    if (component)
-    {
-        // Get the requested variable
-        bool            not_supported_attribute_type = false;
-        const Variable* var = getVariable(*component, requested_var.attributeType, requested_var.variable, not_supported_attribute_type);
-        if (var)
-        {
-            // Check value
-            result.component       = requested_var.component;
-            result.variable        = requested_var.variable;
-            result.attributeType   = requested_var.attributeType;
-            result.attributeStatus = SetVariableStatusEnumType::Rejected;
-            if (isValidValue(*var, requested_var.attributeValue.str()))
-            {
-                // Notify request
-                result.component       = requested_var.component;
-                result.variable        = requested_var.variable;
-                result.attributeType   = requested_var.attributeType;
-                result.attributeStatus = SetVariableStatusEnumType::Rejected;
-                if (m_listener)
-                {
-                    result.attributeStatus = m_listener->setVariable(requested_var);
-                }
-            }
-        }
-        else
-        {
-            if (not_supported_attribute_type)
-            {
-                result.attributeStatus = SetVariableStatusEnumType::NotSupportedAttributeType;
-            }
-            else
-            {
-                result.attributeStatus = SetVariableStatusEnumType::UnknownVariable;
-            }
-        }
-    }
-    else
-    {
-        result.attributeStatus = SetVariableStatusEnumType::UnknownComponent;
-    }
-
-    return result;
+/** @brief Update a variable value in the device model without value or mutability check */
+ocpp::types::ocpp20::SetVariableResultType DeviceModelManager::updateVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var)
+{
+    return setVariable(requested_var, false);
 }
 
 /** @brief Load the device model from its JSON representation */
-void DeviceModelManager20::loadDeviceModel(const rapidjson::Document& device_model_doc)
+void DeviceModelManager::loadDeviceModel(const rapidjson::Document& device_model_doc)
 {
     // Clear device model
     m_device_model.components.clear();
@@ -392,7 +368,7 @@ void DeviceModelManager20::loadDeviceModel(const rapidjson::Document& device_mod
 }
 
 /** @brief Save the device model to a JSON representation */
-void DeviceModelManager20::saveDeviceModel(rapidjson::Document& device_model_doc)
+void DeviceModelManager::saveDeviceModel(rapidjson::Document& device_model_doc)
 {
     RAPIDJSON_DEFAULT_ALLOCATOR& allocator = device_model_doc.GetAllocator();
 
@@ -550,7 +526,7 @@ void DeviceModelManager20::saveDeviceModel(rapidjson::Document& device_model_doc
 }
 
 /** @brief Look for a component in the device model */
-const Component* DeviceModelManager20::getComponent(const ocpp::types::ocpp20::ComponentType& requested_component)
+const Component* DeviceModelManager::getComponent(const ocpp::types::ocpp20::ComponentType& requested_component)
 {
     const Component* component = nullptr;
 
@@ -575,10 +551,10 @@ const Component* DeviceModelManager20::getComponent(const ocpp::types::ocpp20::C
 }
 
 /** @brief Look for a variable in the device model */
-const Variable* DeviceModelManager20::getVariable(const Component&                                                     component,
-                                                  const ocpp::types::Optional<ocpp::types::ocpp20::AttributeEnumType>& attribute,
-                                                  const ocpp::types::ocpp20::VariableType&                             requested_var,
-                                                  bool& not_supported_attribute_type)
+const Variable* DeviceModelManager::getVariable(const Component&                                                     component,
+                                                const ocpp::types::Optional<ocpp::types::ocpp20::AttributeEnumType>& attribute,
+                                                const ocpp::types::ocpp20::VariableType&                             requested_var,
+                                                bool& not_supported_attribute_type)
 
 {
     const Variable* var          = nullptr;
@@ -606,9 +582,15 @@ const Variable* DeviceModelManager20::getVariable(const Component&              
 }
 
 /** @brief Check the validity of the value to set to a variable */
-bool DeviceModelManager20::isValidValue(const Variable& var, const std::string& value)
+bool DeviceModelManager::isValidValue(const Variable& var, const std::string& value)
 {
     bool ret = true;
+
+    if (var.attributes.mutability.isSet() && (var.attributes.mutability.value() == MutabilityEnumType::ReadOnly))
+    {
+        m_last_error = "Attempting to modify a Read-Only variable : " + var.name;
+        ret          = false;
+    }
 
     if (var.characteristics.minLimit.isSet())
     {
@@ -709,6 +691,75 @@ bool DeviceModelManager20::isValidValue(const Variable& var, const std::string& 
     }
 
     return ret;
+}
+
+/** @brief Set a variable value in the device model */
+ocpp::types::ocpp20::SetVariableResultType DeviceModelManager::setVariable(const ocpp::types::ocpp20::SetVariableDataType& requested_var,
+                                                                           bool                                            check_value)
+{
+    SetVariableResultType result;
+
+    // Get requested component
+    const Component* component = getComponent(requested_var.component);
+    if (component)
+    {
+        // Get the requested variable
+        bool            not_supported_attribute_type = false;
+        const Variable* var = getVariable(*component, requested_var.attributeType, requested_var.variable, not_supported_attribute_type);
+        if (var)
+        {
+            // Check value
+            result.component       = requested_var.component;
+            result.variable        = requested_var.variable;
+            result.attributeType   = requested_var.attributeType;
+            result.attributeStatus = SetVariableStatusEnumType::Rejected;
+            if (!check_value || isValidValue(*var, requested_var.attributeValue.str()))
+            {
+                // Notify request
+                result.component = requested_var.component;
+                if (component->evse.isSet())
+                {
+                    result.component.evse.value().id = component->evse;
+                    if (component->connector.isSet())
+                    {
+                        result.component.evse.value().connectorId.value() = component->connector.value();
+                    }
+                }
+                if (component->instance.isSet())
+                {
+                    result.component.instance.value().assign(component->instance.value());
+                }
+                result.variable = requested_var.variable;
+                if (var->instance.isSet())
+                {
+                    result.variable.instance.value().assign(var->instance.value());
+                }
+                result.attributeType   = requested_var.attributeType;
+                result.attributeStatus = SetVariableStatusEnumType::Rejected;
+                if (m_listener)
+                {
+                    result.attributeStatus = m_listener->setVariable(requested_var);
+                }
+            }
+        }
+        else
+        {
+            if (not_supported_attribute_type)
+            {
+                result.attributeStatus = SetVariableStatusEnumType::NotSupportedAttributeType;
+            }
+            else
+            {
+                result.attributeStatus = SetVariableStatusEnumType::UnknownVariable;
+            }
+        }
+    }
+    else
+    {
+        result.attributeStatus = SetVariableStatusEnumType::UnknownComponent;
+    }
+
+    return result;
 }
 
 } // namespace ocpp20

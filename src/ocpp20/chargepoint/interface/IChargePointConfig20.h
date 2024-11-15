@@ -80,6 +80,21 @@ class IChargePointConfig20
      *         (Warning : enabling this feature is not recommended in production) */
     virtual bool tlsSkipServerNameCheck() const = 0;
 
+    // Charge point identification
+
+    /** @brief Charge point model */
+    virtual std::string chargePointModel() const = 0;
+    /** @brief Charge point serial number */
+    virtual std::string chargePointSerialNumber() const = 0;
+    /** @brief Charge point vendor */
+    virtual std::string chargePointVendor() const = 0;
+    /** @brief Firmware version */
+    virtual std::string firmwareVersion() const = 0;
+    /** @brief ICCID of the moden's SIM card */
+    virtual std::string iccid() const = 0;
+    /** @brief IMSI of the moden's SIM card */
+    virtual std::string imsi() const = 0;
+
     // Log
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */

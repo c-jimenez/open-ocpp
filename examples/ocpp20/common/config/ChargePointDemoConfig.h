@@ -62,6 +62,9 @@ class ChargePointDemoConfig
         return true;
     }
 
+    /** @brief Save the configuration */
+    bool save() { return m_config.store(); }
+
   private:
     /** @brief Configuration file */
     ocpp::helpers::IniFile m_config;

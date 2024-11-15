@@ -2,6 +2,7 @@
 # Common utility class for examples library
 add_library(examples_common20 OBJECT
     DefaultChargePointEventsHandler.cpp
+    DefaultBasicChargePointEventsHandler.cpp
     DefaultCentralSystemEventsHandler.cpp
     DefaultLocalControllerEventsHandler.cpp
 )

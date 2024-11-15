@@ -87,6 +87,21 @@ class ChargePointConfig : public ocpp::config::IChargePointConfig20
      *         (Warning : enabling this feature is not recommended in production) */
     bool tlsSkipServerNameCheck() const override { return getBool("TlsSkipServerNameCheck"); }
 
+    // Charge point identification
+
+    /** @brief Charge point model */
+    std::string chargePointModel() const override { return getString("ChargePointModel"); }
+    /** @brief Charge point serial number */
+    std::string chargePointSerialNumber() const override { return getString("ChargePointSerialNumber"); }
+    /** @brief Charge point vendor */
+    std::string chargePointVendor() const override { return getString("ChargePointVendor"); }
+    /** @brief Firmware version */
+    std::string firmwareVersion() const override { return getString("FirmwareVersion"); }
+    /** @brief ICCID of the moden's SIM card */
+    std::string iccid() const override { return getString("Iccid"); }
+    /** @brief IMSI of the moden's SIM card */
+    std::string imsi() const override { return getString("Imsi"); }
+
     // Logs
 
     /** @brief Maximum number of entries in the log (0 = no logs in database) */

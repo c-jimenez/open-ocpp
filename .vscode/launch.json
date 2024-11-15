@@ -13,6 +13,15 @@
         {
             "type": "gdb",
             "request": "launch",
+            "name": "x86 Basic CP debug",
+            "target": "${workspaceRoot}/bin/gcc_native/quick_start_basicchargepoint20",
+            "cwd": "${workspaceRoot}/bin/gcc_native/",
+            "arguments": "-r",
+            "valuesFormatting": "parseText"
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
             "name": "x86 CS debug",
             "target": "${workspaceRoot}/bin/gcc_native/quick_start_centralsystem20",
             "cwd": "${workspaceRoot}/bin/gcc_native/",

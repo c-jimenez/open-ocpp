@@ -36,13 +36,13 @@ class ChargePointDemoConfig;
 
 /** @brief Default charge point event handlers implementation for the examples */
 class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::IChargePointEventsHandler20,
-                                        public ocpp::chargepoint::ocpp20::IDeviceModel20::IListener
+                                        public ocpp::chargepoint::ocpp20::IDeviceModel::IListener
 {
   public:
     /** @brief Constructor */
-    DefaultChargePointEventsHandler(ChargePointDemoConfig&                     config,
-                                    ocpp::chargepoint::ocpp20::IDeviceModel20& device_model,
-                                    const std::filesystem::path&               working_dir);
+    DefaultChargePointEventsHandler(ChargePointDemoConfig&                   config,
+                                    ocpp::chargepoint::ocpp20::IDeviceModel& device_model,
+                                    const std::filesystem::path&             working_dir);
 
     /** @brief Destructor */
     virtual ~DefaultChargePointEventsHandler();
@@ -53,7 +53,7 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::ICharg
     /** @brief Indicate if the Charge Point is connected */
     bool isConnected() const { return m_is_connected; }
 
-    // IDeviceModel20 interface
+    // IDeviceModel interface
 
     /** @brief Called to retrieve the value of a variable */
     void getVariable(ocpp::types::ocpp20::GetVariableResultType& var) override;
@@ -325,7 +325,7 @@ class DefaultChargePointEventsHandler : public ocpp::chargepoint::ocpp20::ICharg
     /** @brief Configuration */
     ChargePointDemoConfig& m_config;
     /** @brief Device model */
-    ocpp::chargepoint::ocpp20::IDeviceModel20& m_device_model;
+    ocpp::chargepoint::ocpp20::IDeviceModel& m_device_model;
     /** @brief Associated Charge Point instance */
     ocpp::chargepoint::ocpp20::IChargePoint20* m_chargepoint;
     /** @brief Working directory */
