@@ -228,7 +228,10 @@ lws_tls_server_certs_load(struct lws_vhost *vhost, struct lws *wsi,
 			return 1;
 		}
 
-		if (private_key) {
+		if (!private_key) {
+			lwsl_err("ssl private key not set\n");
+			return 1;
+		} else {
 			/* set the private key from KeyFile */
 			if (SSL_CTX_use_PrivateKey_file(vhost->tls.ssl_ctx, private_key,
 							SSL_FILETYPE_PEM) != 1) {
@@ -242,14 +245,6 @@ lws_tls_server_certs_load(struct lws_vhost *vhost, struct lws *wsi,
 					       (char *)vhost->context->pt[0].serv_buf);
 				lwsl_err("ssl problem getting key '%s' %lu: %s\n",
 					 private_key, error, s);
-				return 1;
-			}
-		} else {
-			if (vhost->protocols[0].callback(wsi,
-				      LWS_CALLBACK_OPENSSL_CONTEXT_REQUIRES_PRIVATE_KEY,
-							 vhost->tls.ssl_ctx, NULL, 0)) {
-				lwsl_err("ssl private key not set\n");
-
 				return 1;
 			}
 		}
@@ -389,7 +384,10 @@ lws_tls_server_certs_load(struct lws_vhost *vhost, struct lws *wsi,
 		return 1;
 	}
 
-	if (n != LWS_TLS_EXTANT_ALTERNATIVE && private_key) {
+	if (n == LWS_TLS_EXTANT_ALTERNATIVE || !private_key) {
+		lwsl_err("ssl private key not set\n");
+		return 1;
+	} else {
 		/* set the private key from KeyFile */
 		if (SSL_CTX_use_PrivateKey_file(vhost->tls.ssl_ctx, private_key,
 					        SSL_FILETYPE_PEM) != 1) {
@@ -398,14 +396,6 @@ lws_tls_server_certs_load(struct lws_vhost *vhost, struct lws *wsi,
 				 private_key, error,
 				 ERR_error_string(error,
 				      (char *)vhost->context->pt[0].serv_buf));
-			return 1;
-		}
-	} else {
-		if (vhost->protocols[0].callback(wsi,
-			      LWS_CALLBACK_OPENSSL_CONTEXT_REQUIRES_PRIVATE_KEY,
-						 vhost->tls.ssl_ctx, NULL, 0)) {
-			lwsl_err("ssl private key not set\n");
-
 			return 1;
 		}
 	}
@@ -709,14 +699,14 @@ lws_tls_server_new_nonblocking(struct lws *wsi, lws_sockfd_type accept_fd)
 	return 0;
 }
 
-int
+enum lws_ssl_capable_status
 lws_tls_server_abort_connection(struct lws *wsi)
 {
 	if (wsi->tls.use_ssl)
 		SSL_shutdown(wsi->tls.ssl);
 	SSL_free(wsi->tls.ssl);
 
-	return 0;
+	return LWS_SSL_CAPABLE_DONE;
 }
 
 enum lws_ssl_capable_status

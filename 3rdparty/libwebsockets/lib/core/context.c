@@ -327,10 +327,6 @@ static const char * const opts_str =
 #if defined(LWS_WITH_SECURE_STREAMS_PROXY_API)
 			"SSPROX "
 #endif
-
-#if defined(LWS_WITH_MBEDTLS)
-			"MbedTLS "
-#endif
 #if defined(LWS_WITH_CONMON)
 			"ConMon "
 #endif
@@ -389,6 +385,9 @@ lws_create_context(const struct lws_context_creation_info *info)
 	uint16_t us_wait_resolution = 0;
 #if defined(LWS_WITH_CACHE_NSCOOKIEJAR) && defined(LWS_WITH_CLIENT)
 	struct lws_cache_creation_info ci;
+#endif
+#if defined(LWS_WITH_MBEDTLS)
+	char mbedtls_version[32];
 #endif
 
 #if defined(__ANDROID__)
@@ -609,6 +608,12 @@ lws_create_context(const struct lws_context_creation_info *info)
 		goto early_bail;
 	}
 
+#if defined(LWS_WITH_SYS_STATE)
+   // NOTE: we need to init this fields because they may be used in logger when context destroying
+	context->mgr_system.state_names = system_state_names;
+	context->mgr_system.context = context;
+#endif
+
 #if defined(LWS_WITH_NETWORK)
 	context->event_loop_ops = plev->ops;
 	context->us_wait_resolution = us_wait_resolution;
@@ -782,7 +787,16 @@ lws_create_context(const struct lws_context_creation_info *info)
 
 #endif /* network */
 
+#if defined(LWS_WITH_MBEDTLS)
+	mbedtls_version_get_string(mbedtls_version);
+#endif
+
+#if defined(LWS_WITH_MBEDTLS)
+	lwsl_cx_notice(context, "LWS: %s, MbedTLS-%s %s%s", library_version, mbedtls_version, opts_str, s);
+#else
 	lwsl_cx_notice(context, "LWS: %s, %s%s", library_version, opts_str, s);
+#endif
+
 #if defined(LWS_WITH_NETWORK)
 	lwsl_cx_info(context, "Event loop: %s", plev->ops->name);
 #endif
@@ -1340,11 +1354,9 @@ lws_create_context(const struct lws_context_creation_info *info)
 	 * init the lws_state mgr for the system state
 	 */
 
-	context->mgr_system.state_names		= system_state_names;
 	context->mgr_system.name		= "system";
 	context->mgr_system.state		= LWS_SYSTATE_CONTEXT_CREATED;
 	context->mgr_system.parent		= context;
-	context->mgr_system.context		= context;
 #if defined(LWS_WITH_SYS_SMD)
 	context->mgr_system.smd_class		= LWSSMDCL_SYSTEM_STATE;
 #endif
@@ -1676,9 +1688,9 @@ lws_pt_destroy(struct lws_context_per_thread *pt)
 		pt->pipe_wsi = NULL;
 	}
 
-	if (pt->dummy_pipe_fds[0]
+	if ((pt->dummy_pipe_fds[0] || pt->dummy_pipe_fds[1])
 #if !defined(WIN32)
-	    && (int)pt->dummy_pipe_fds[0] != -1
+	    && ((int)pt->dummy_pipe_fds[0] != -1 || (int)pt->dummy_pipe_fds[1] != -1)
 #endif
 	) {
 		struct lws wsi;
