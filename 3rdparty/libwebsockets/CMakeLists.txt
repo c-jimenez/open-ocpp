@@ -410,7 +410,7 @@ set(CPACK_RPM_PACKAGE_LICENSE "MIT")
 set(CPACK_PACKAGE_NAME "${PACKAGE}")
 set(CPACK_PACKAGE_VERSION_MAJOR "4")
 set(CPACK_PACKAGE_VERSION_MINOR "3")
-set(CPACK_PACKAGE_VERSION_PATCH_NUMBER "2")
+set(CPACK_PACKAGE_VERSION_PATCH_NUMBER "3")
 
 set(CPACK_PACKAGE_VERSION_PATCH "${CPACK_PACKAGE_VERSION_PATCH_NUMBER}-${LWS_BUILD_HASH}")
 set(CPACK_PACKAGE_RELEASE 1)
@@ -849,6 +849,8 @@ endif()
 if (MSVC)
 	# Turn off pointless microsoft security warnings.
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+	# Fail the build if any warnings
+	add_compile_options(/W3 /WX)
 	# Unbreak MSVC broken preprocessor __VA_ARGS__ behaviour
 	if (MSVC_VERSION GREATER 1925)
 		add_compile_options(/Zc:preprocessor /wd5105)
@@ -880,7 +882,7 @@ endif()
 #
 # ZLIB (needed for deflate extension and if LWS_WITH_HTTP_STREAM_COMPRESSION)
 #
-if (LWS_WITH_ZLIB)
+if (LWS_WITH_ZLIB AND NOT LWS_WITH_BUNDLED_ZLIB)
 	if (NOT ZLIB_FOUND)
 		if (LWS_WITH_MINIZ)
 			find_package(Miniz REQUIRED)
