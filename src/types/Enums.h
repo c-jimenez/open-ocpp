@@ -1025,7 +1025,9 @@ enum class GetCertificateIdUseEnumType
                their certificates from the V2G root */
     MORootCertificate,
     /** @brief ISO 15118 V2G certificate chain (excluding the V2GRootCertificate) */
-    V2GCertificateChain
+    V2GCertificateChain,
+    /** @brief ISO 15118-20 OEM root certificates */
+    OEMRootCertificate
 };
 
 /** @brief Helper to convert a GetCertificateIdUseEnumType enum to string */
@@ -1064,7 +1066,9 @@ enum class InstallCertificateUseEnumType
                certificates */
     V2GRootCertificate,
     /** @brief Use for certificate from an eMobility Service */
-    MORootCertificate
+    MORootCertificate,
+    /** @brief Use for certificate from an OEM (Vehicle Manufacturer used for bi-directional TLS connection between Secc and EV */
+    OEMRootCertificate
 };
 
 /** @brief Helper to convert a InstallCertificateUseEnumType enum to string */

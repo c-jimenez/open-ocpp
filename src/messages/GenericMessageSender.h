@@ -21,6 +21,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IRequestFifo.h"
 #include "IRpc.h"
+#include "Logger.h"
 #include "MessagesConverter.h"
 #include "MessagesValidator.h"
 
@@ -152,15 +153,22 @@ class GenericMessageSender
                         {
                             // Validate response
                             ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, false);
-                            if (validator && validator->isValid(resp))
+                            if (validator)
                             {
-                                // Convert response
-                                std::string error_code;
-                                std::string error_message;
-                                resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                                if (resp_converter->fromJson(resp, response, error_code, error_message))
+                                if (validator->isValid(resp))
                                 {
-                                    ret = CallResult::Ok;
+                                    // Convert response
+                                    std::string error_code;
+                                    std::string error_message;
+                                    resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                                    if (resp_converter->fromJson(resp, response, error_code, error_message))
+                                    {
+                                        ret = CallResult::Ok;
+                                    }
+                                }
+                                else
+                                {
+                                    LOG_ERROR << "[" << action << "] - Invalid response : " << validator->lastError();
                                 }
                             }
                         }
@@ -219,15 +227,22 @@ class GenericMessageSender
                 {
                     // Validate response
                     ocpp::json::JsonValidator* validator = m_messages_validator.getValidator(action, false);
-                    if (validator && validator->isValid(resp))
+                    if (validator)
                     {
-                        // Convert response
-                        std::string error_code;
-                        std::string error_message;
-                        resp_converter->setAllocator(&rpc_frame.GetAllocator());
-                        if (resp_converter->fromJson(resp, response, error_code, error_message))
+                        if (validator->isValid(resp))
                         {
-                            ret = CallResult::Ok;
+                            // Convert response
+                            std::string error_code;
+                            std::string error_message;
+                            resp_converter->setAllocator(&rpc_frame.GetAllocator());
+                            if (resp_converter->fromJson(resp, response, error_code, error_message))
+                            {
+                                ret = CallResult::Ok;
+                            }
+                        }
+                        else
+                        {
+                            LOG_ERROR << "[" << action << "] - Invalid response : " << validator->lastError();
                         }
                     }
                 }

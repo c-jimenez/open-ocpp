@@ -407,6 +407,7 @@ _lws_vhost_init_server(const struct lws_context_creation_info *info,
 		       struct lws_vhost *vhost)
 {
 	struct vh_sock_args a;
+	int n;
 
 	a.info = info;
 	a.vhost = vhost;
@@ -479,8 +480,9 @@ _lws_vhost_init_server(const struct lws_context_creation_info *info,
 	      (vhost->options & LWS_SERVER_OPTION_IPV6_V6ONLY_VALUE))) {
 #endif
 		a.af = AF_INET;
-		if (_lws_vhost_init_server_af(&a))
-			return 1;
+		n = _lws_vhost_init_server_af(&a);
+		if (n)
+			return n;
 
 #if defined(LWS_WITH_IPV6)
 	}
@@ -1232,6 +1234,8 @@ lws_check_basic_auth(struct lws *wsi, const char *basic_auth_login_file,
 
 	return LCBA_CONTINUE;
 #else
+	if (!basic_auth_login_file && auth_mode == LWSAUTHM_DEFAULT)
+		return LCBA_CONTINUE;
 	return LCBA_FAILED_AUTH;
 #endif
 }
@@ -1854,7 +1858,7 @@ lws_http_action(struct lws *wsi)
 		pp = lws_vhost_name_to_protocol(wsi->a.vhost, name);
 		if (!pp) {
 			lwsl_err("Unable to find plugin '%s'\n",
-				 hit->origin);
+				 name);
 			return 1;
 		}
 

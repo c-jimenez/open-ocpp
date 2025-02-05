@@ -339,18 +339,21 @@ ocpp::types::DeleteCertificateStatusEnumType ChargePointEventsHandlerStub::iso15
                                     bool,
                                     bool,
                                     bool,
+                                    bool,
                                     std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>>&) */
 void ChargePointEventsHandlerStub::iso15118GetInstalledCertificates(
     bool v2g_root_certificate,
     bool mo_root_certificate,
     bool v2g_certificate_chain,
+    bool oem_root_certificate,
     std::vector<std::tuple<ocpp::types::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
         certificates)
 {
     (void)certificates;
     m_calls["iso15118GetInstalledCertificates"] = {{"v2g_root_certificate", std::to_string(v2g_root_certificate)},
                                                    {"mo_root_certificate", std::to_string(mo_root_certificate)},
-                                                   {"v2g_certificate_chain", std::to_string(v2g_certificate_chain)}};
+                                                   {"v2g_certificate_chain", std::to_string(v2g_certificate_chain)},
+                                                   {"oem_root_certificate", std::to_string(oem_root_certificate)}};
 }
 
 /** @copydoc ocpp::types::InstallCertificateStatusEnumType IChargePointEventsHandler::iso15118CertificateReceived(
