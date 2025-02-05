@@ -223,6 +223,10 @@ void RpcBase::start()
         // Initialize transaction id sequence
         m_transaction_id = std::rand();
 
+        // Start queues
+        m_requests_queue.setEnable(true);
+        m_results_queue.setEnable(true);
+
         // Check if a pool has been configured
         if (m_pool)
         {
@@ -232,8 +236,6 @@ void RpcBase::start()
         else
         {
             // Start reception thread
-            m_requests_queue.setEnable(true);
-            m_results_queue.setEnable(true);
             m_rx_thread = new std::thread(std::bind(&RpcBase::rxThread, this));
         }
     }
