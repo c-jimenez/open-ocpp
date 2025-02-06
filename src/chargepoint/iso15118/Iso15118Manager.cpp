@@ -375,7 +375,8 @@ void Iso15118Manager::handle(const ocpp::messages::Iso15118GetInstalledCertifica
 
     // Notify handler to get the list of installed certificates
     std::vector<std::tuple<GetCertificateIdUseEnumType, Certificate, std::vector<Certificate>>> certificates;
-    m_events_handler.iso15118GetInstalledCertificates(v2g_root_certificate, mo_root_certificate, v2g_certificate_chain, oem_root_certificate, certificates);
+    m_events_handler.iso15118GetInstalledCertificates(
+        v2g_root_certificate, mo_root_certificate, v2g_certificate_chain, oem_root_certificate, certificates);
     if (!certificates.empty())
     {
         // Compute hashes for each certificate
