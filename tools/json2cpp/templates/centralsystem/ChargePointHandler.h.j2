@@ -1,0 +1,101 @@
+/*
+Copyright (c) 2020 Cedric Jimenez
+This file is part of OpenOCPP.
+
+OpenOCPP is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 2.1 of the License, or
+(at your option) any later version.
+
+OpenOCPP is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#ifndef OPENOCPP_{{ocpp_version_namespace.upper()}}_CS_CHARGEPOINTHANDLER{{ocpp_version_suffix}}_H
+#define OPENOCPP_{{ocpp_version_namespace.upper()}}_CS_CHARGEPOINTHANDLER{{ocpp_version_suffix}}_H
+
+#include "Logger.h"
+#include "GenericMessageHandler.h"
+#include "MessagesConverter{{ocpp_version_suffix}}.h"
+{%- for msg_name in cs_msgs %}
+#include "{{msg_name}}{{ocpp_version_suffix}}.h"
+{%- endfor %}
+
+namespace ocpp
+{
+namespace config
+{
+class ICentralSystemConfig{{ocpp_version_suffix}};
+} // namespace config
+namespace messages
+{
+class MessageDispatcher;
+
+namespace {{ocpp_version_namespace}}
+{
+class MessagesConverter{{ocpp_version_suffix}};
+} // namespace {{ocpp_version_namespace}}
+} // namespace messages
+
+namespace centralsystem
+{
+namespace {{ocpp_version_namespace}}
+{
+
+class IChargePointRequestHandler{{ocpp_version_suffix}};
+
+/** @brief Handler for charge point requests */
+class ChargePointHandler{{ocpp_version_suffix}}
+    : 
+      {%- for msg_name in cs_msgs %}
+      public ocpp::messages::GenericMessageHandler<ocpp::messages::{{ocpp_version_namespace}}::{{msg_name}}Req,
+                                                   ocpp::messages::{{ocpp_version_namespace}}::{{msg_name}}Conf>{% if not loop.last %},{% endif %}
+      {%- endfor %}
+{
+  public:
+    /**
+     * @brief Constructor
+     * @param identifier Charge point's identifier
+     * @param messages_converter Converter from/to OCPP to/from JSON messages
+     * @param msg_dispatcher Message dispatcher
+     */
+    ChargePointHandler{{ocpp_version_suffix}}(const std::string&                               identifier,
+                       const ocpp::messages::{{ocpp_version_namespace}}::MessagesConverter{{ocpp_version_suffix}}& messages_converter,
+                       ocpp::messages::MessageDispatcher&               msg_dispatcher);
+    /** @brief Destructor */
+    virtual ~ChargePointHandler{{ocpp_version_suffix}}();
+
+    /** @brief Register the event handler */
+    void registerHandler(IChargePointRequestHandler{{ocpp_version_suffix}}& handler) { m_handler = &handler; }
+
+    // OCPP handlers
+
+    {%- for msg_name in cs_msgs %}
+    /** @copydoc bool GenericMessageHandler<RequestType, ResponseType>::handleMessage(const RequestType& request,
+     *                                                                                ResponseType& response,
+     *                                                                                std::string& error_code,
+     *                                                                                std::string& error_message)
+     */
+    bool handleMessage(const ocpp::messages::{{ocpp_version_namespace}}::{{msg_name}}Req& request,
+                       ocpp::messages::{{ocpp_version_namespace}}::{{msg_name}}Conf&      response,
+                       std::string&                                        error_code,
+                       std::string&                                        error_message) override;
+    {%- endfor %}
+
+  private:
+    /** @brief Charge point's identifier */
+    const std::string m_identifier;
+    /** @brief Request handler */
+    IChargePointRequestHandler{{ocpp_version_suffix}}* m_handler;
+};
+
+} // namespace {{ocpp_version_namespace}}
+} // namespace centralsystem
+} // namespace ocpp
+
+#endif // OPENOCPP_{{ocpp_version_namespace.upper()}}_CS_CHARGEPOINTHANDLER{{ocpp_version_suffix}}_H

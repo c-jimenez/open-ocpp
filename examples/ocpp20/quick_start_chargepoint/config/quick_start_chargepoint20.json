@@ -1,0 +1,2022 @@
+{
+	"components": [
+		{
+			"name": "AlignedDataCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Measurands",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "Interval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "SignReadings",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "TxEndedMeasurands",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "TxEndedInterval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "PublicKeyWithSignedMeterValue",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "Never,OncePerTransaction,EveryMeterValue"
+					},
+					"required": false
+				},
+				{
+					"name": "RegisterValuesWithoutPhases",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "AlignedDataCtrlr",
+			"evse": 1,
+			"variables": [
+				{
+					"name": "SendDuringIdle",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "AuthCacheCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "LifeTime",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": false
+				},
+				{
+					"name": "Storage",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 1000000
+					},
+					"required": false
+				},
+				{
+					"name": "Policy",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "LRU,LFU,FIFO,CUSTOM"
+					},
+					"required": false
+				},
+				{
+					"name": "DisablePostAuthorize",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "AuthCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "AdditionalInfoItemsPerMessage",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "OfflineTxForUnknownIdEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "AuthorizeRemoteStart",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "LocalAuthorizeOffline",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "LocalPreAuthorize",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "MasterPassGroupId",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 36
+					},
+					"required": false
+				},
+				{
+					"name": "DisableRemoteAuthorization",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "ClockCtrlr",
+			"variables": [
+				{
+					"name": "dateTime",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "dateTime"
+					},
+					"required": true
+				},
+				{
+					"name": "NtpSource",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "DHCP,manual"
+					},
+					"required": false
+				},
+				{
+					"name": "NtpServerUri",
+					"instance": "1",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "TimeOffset",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "NextTimeOffsetTransitionDateTime",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "dateTime"
+					},
+					"required": false
+				},
+				{
+					"name": "TimeOffset",
+					"instance": "1",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "TimeSource",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "SequenceList",
+						"values_list": "Heartbeat,NTP,GPS,RealTimeClock,MobileNetwork,RadioTimeTransmitter"
+					},
+					"required": true
+				},
+				{
+					"name": "TimeZone",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "TimeAdjustmentReportingThreshold",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "CustomizationCtrlr",
+			"variables": [
+				{
+					"name": "CustomImplementationEnabled",
+					"instance": "<VendorId>",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "DeviceDataCtrlr",
+			"variables": [
+				{
+					"name": "ItemsPerMessage",
+					"instance": "GetReport",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "ItemsPerMessage",
+					"instance": "GetVariables",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "BytesPerMessage",
+					"instance": "GetReport",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "BytesPerMessage",
+					"instance": "GetVariables",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "ConfigurationValueSize",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 1000
+					},
+					"required": false
+				},
+				{
+					"name": "ReportingValueSize",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 2500
+					},
+					"required": false
+				},
+				{
+					"name": "ItemsPerMessage",
+					"instance": "SetVariables",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "BytesPerMessage",
+					"instance": "SetVariables",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "DisplayMessageCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "DisplayMessages",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 10
+					},
+					"required": true
+				},
+				{
+					"name": "SupportedFormats",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"values_list": "ASCII,HTML,URI,UTF8"
+					},
+					"required": true
+				},
+				{
+					"name": "SupportedPriorities",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"values_list": "AlwaysFront,InFront,NormalCycle"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "ISO15118Ctrlr",
+			"variables": [
+				{
+					"name": "CentralContractValidationAllowed",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ContractValidationOffline",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "PnCEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "V2GCertificateInstallationEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ContractCertificateInstallationEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "RequestMeteringReceipt",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "ISO15118Ctrlr",
+			"evse": 1,
+			"variables": [
+				{
+					"name": "ProtocolSupportedByEV",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "ProtocolAgreed",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "SeccId",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "CountryName",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "OrganizationName",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "ISO15118EvseId",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "LocalAuthListCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Entries",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 10000
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ItemsPerMessage",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "BytesPerMessage",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "Storage",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 1000000
+					},
+					"required": false
+				},
+				{
+					"name": "DisablePostAuthorize",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "SupportsExpiryDateTime",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "MonitoringCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ItemsPerMessage",
+					"instance": "ClearVariableMonitoring",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "ItemsPerMessage",
+					"instance": "SetVariableMonitoring",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "BytesPerMessage",
+					"instance": "ClearVariableMonitoring",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "BytesPerMessage",
+					"instance": "SetVariableMonitoring",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "OfflineQueuingSeverity",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "ActiveMonitoringBase",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "All,FactoryDefault,HardwiredOnly"
+					},
+					"required": false
+				},
+				{
+					"name": "ActiveMonitoringLevel",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"min_limit": 0,
+						"max_limit": 9
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "OCPPCommCtrlr",
+			"variables": [
+				{
+					"name": "ActiveNetworkProfile",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "MessageTimeout",
+					"instance": "Default",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "FileTransferProtocols",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList"
+					},
+					"required": true
+				},
+				{
+					"name": "HeartbeatInterval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s",
+						"min_limit": 1
+					},
+					"required": false
+				},
+				{
+					"name": "NetworkConfigurationPriority",
+					"attributes": 
+					{
+						"mutability": "ReadWrite",
+						"type": "Actual"
+					},
+					"characteristics": 
+					{
+						"data_type": "SequenceList",
+						"values_list": ""
+					},
+					"required": true
+				},
+				{
+					"name": "NetworkProfileConnectionAttempts",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "OfflineThreshold",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s",
+						"min_limit": 1
+					},
+					"required": true
+				},
+				{
+					"name": "QueueAllMessages",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "MessageAttemptsTransactionEvent",
+					"instance": "TransactionEvent",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "MessageAttemptIntervalTransactionEvent",
+					"instance": "TransactionEvent",
+					"attributes": 
+					{
+						"mutability": "ReadWrite",
+						"type": "Actual"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "UnlockOnEVSideDisconnect",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "ResetRetries",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "FieldLength",
+					"instance": "<message>.<field>",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				},
+				{
+					"name": "RetryBackOffRepeatTimes",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "RetryBackOffRandomRange",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "RetryBackOffWaitMinimum",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "WebSocketPingInterval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "ReservationCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "NonEvseSpecific",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "SampledDataCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "SignReadings",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "TxEndedMeasurands",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "TxEndedInterval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "TxStartedMeasurands",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "TxUpdatedMeasurands",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "TxUpdatedInterval",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "SecurityCtrlr",
+			"variables": [
+				{
+					"name": "BasicAuthPassword",
+					"attributes": 
+					{
+						"mutability": "WriteOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 40
+					},
+					"required": false
+				},
+				{
+					"name": "Identity",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 48
+					},
+					"required": false
+				},
+				{
+					"name": "OrganizationName",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": true
+				},
+				{
+					"name": "CertificateEntries",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 20
+					},
+					"required": true
+				},
+				{
+					"name": "SecurityProfile",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "AdditionalRootCertificateCheck",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "MaxCertificateChainSize",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 10000
+					},
+					"required": false
+				},
+				{
+					"name": "CertSigningWaitMinimum",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": false
+				},
+				{
+					"name": "CertSigningRepeatTimes",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": false
+				}
+			]
+		},
+		{
+			"name": "SmartChargingCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ACPhaseSwitchingSupported",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "ProfileStackLevel",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "RateUnit",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"values_list": "A,W"
+					},
+					"required": true
+				},
+				{
+					"name": "PeriodsPerSchedule",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "ExternalControlSignalsEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "NotifyChargingLimitWithSchedules",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Phases3to1",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Entries",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"max_limit": 100
+					},
+					"required": true
+				},
+				{
+					"name": "LimitChangeSignificance",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "decimal"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "TariffCostCtrlr",
+			"variables": [
+				{
+					"name": "Enabled",
+					"instance": "Tariff",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"instance": "Tariff",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "TariffFallbackMessage",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 255
+					},
+					"required": true
+				},
+				{
+					"name": "Enabled",
+					"instance": "Cost",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"instance": "Cost",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "TotalCostFallbackMessage",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 255
+					},
+					"required": true
+				},
+				{
+					"name": "Currency",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"max_limit": 3
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "TxCtrlr",
+			"variables": [
+				{
+					"name": "EVConnectionTimeOut",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "s"
+					},
+					"required": true
+				},
+				{
+					"name": "StopTxOnEVSideDisconnect",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "TxBeforeAcceptedEnabled",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "TxStartPoint",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"values_list": "ParkingBayOccupancy,EVConnected,Authorized,PowerPathClosed,EnergyTransfer,DataSigned"
+					},
+					"required": true
+				},
+				{
+					"name": "TxStopPoint",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "MemberList",
+						"values_list": "ParkingBayOccupancy,EVConnected,Authorized,PowerPathClosed,EnergyTransfer,DataSigned"
+					},
+					"required": true
+				},
+				{
+					"name": "MaxEnergyOnInvalidId",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer",
+						"unit": "Wh"
+					},
+					"required": false
+				},
+				{
+					"name": "StopTxOnInvalidId",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "ChargingStation",
+			"variables": [
+				{
+					"name": "AllowNewSessionsPendingFirmwareUpdate",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "EVSE",
+			"instance": "EVSE 1",
+			"evse": 1,
+			"variables": [
+				{
+					"name": "Available",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "AvailabilityState",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "Available,Occupied,Reserved,Unavailable,Faulted"
+					},
+					"required": true
+				},
+				{
+					"name": "AllowReset",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "PhaseRotation",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "SupplyPhases",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "Power",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "decimal"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "Connector",
+			"evse": 1,
+			"connector": 1,
+			"variables": [
+				{
+					"name": "Available",
+					
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "boolean"
+					},
+					"required": true
+				},
+				{
+					"name": "AvailabilityState",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "OptionList",
+						"values_list": "Available,Occupied,Reserved,Unavailable,Faulted"
+					},
+					"required": true
+				},
+				{
+					"name": "ConnectorType",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "string",
+						"values_list": "cCCS1,cCCS2,cG105,cTesla,cType1,cType2,s309-1P-16A,s309-1P-32A,s309-3P-16A,s309-3P-32A,sBS1361,sCEE-7-7,sType2,sType3,Other1PhMax16A,Other1PhOver16A,Other3Ph,Pan,wInductive,wResonant,Undetermined,Unknown,cGBT,cChaoJi,OppCharge"
+					},
+					"required": true
+				},
+				{
+					"name": "PhaseRotation",
+					"attributes": 
+					{
+						"mutability": "ReadWrite"
+					},
+					"characteristics": 
+					{
+						"data_type": "string"
+					},
+					"required": false
+				},
+				{
+					"name": "SupplyPhases",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "integer"
+					},
+					"required": true
+				},
+				{
+					"name": "Power",
+					"attributes": 
+					{
+						"mutability": "ReadOnly"
+					},
+					"characteristics": 
+					{
+						"data_type": "decimal"
+					},
+					"required": true
+				}
+			]
+		}
+	]
+}

@@ -1,16 +1,10 @@
 
-# Common utility class for examples library
-add_library(examples_common OBJECT
-    DefaultCentralSystemEventsHandler.cpp
-    DefaultChargePointEventsHandler.cpp
-    DefaultLocalControllerEventsHandler.cpp
-
-    config/OcppConfig.cpp
-
+# Common utility classes for examples libraries
+add_library(examples_common STATIC
     simulators/MainMeterSimulator.cpp
     simulators/MeterSimulator.cpp
 )
-target_include_directories(examples_common PUBLIC . config simulators)
+target_include_directories(examples_common PUBLIC . simulators)
 
 # Dependencies
 if (NOT MSVC)

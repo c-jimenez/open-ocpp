@@ -157,12 +157,12 @@ class CiStringType : public ICiStringType
         bool ret = false;
         if (value.size() <= MAX_STRING_SIZE)
         {
-            m_string.assign(value);
+            m_string.assign(std::move(value));
             ret = true;
         }
         else
         {
-            m_string.assign(value);
+            m_string.assign(std::move(value));
             m_string.resize(MAX_STRING_SIZE);
         }
         return ret;
