@@ -341,6 +341,12 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::HeartbeatReq& reque
     // Empty request
     (void)request;
 
+    // Notify request
+    if (m_handler)
+    {
+        m_handler->heartbeat();
+    }
+
     // Prepare response
     response.currentTime = DateTime::now();
 
