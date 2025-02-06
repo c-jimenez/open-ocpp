@@ -45,6 +45,11 @@ class IChargePointRequestHandler
     virtual void disconnected() = 0;
 
     /**
+     * @brief Called when an heartbeat has been received
+     */
+    virtual void heartbeat() { }
+
+    /**
      * @brief Called to get authorization informations for an id tag
      * @param id_tag Id tag to check
      * @return Authorization informations for the id tag (see IdTagInfo documentation)
