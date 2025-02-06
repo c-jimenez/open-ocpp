@@ -57,7 +57,7 @@ lws_client_connect_4_established(struct lws *wsi, struct lws *wsi_piggyback,
 	if (wsi->a.vhost->http.http_proxy_port) {
 		const char *cpa;
 
-		cpa = lws_wsi_client_stash_item(wsi, CIS_ADDRESS,
+		cpa = lws_wsi_client_stash_item(wsi, CIS_HOST,
 						_WSI_TOKEN_CLIENT_PEER_ADDRESS);
 		if (!cpa)
 			goto failed;
