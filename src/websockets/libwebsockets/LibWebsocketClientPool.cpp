@@ -147,7 +147,7 @@ void LibWebsocketClientPool::process()
 
     // Dummy vhost to handle context related events
     struct lws_protocols             protocols[] = {{"LibWebsocketClientPool", &LibWebsocketClientPool::eventCallback, 0, 0, 0, this, 0},
-                                                    LWS_PROTOCOL_LIST_TERM};
+                                        LWS_PROTOCOL_LIST_TERM};
     struct lws_context_creation_info vhost_info;
     memset(&vhost_info, 0, sizeof(vhost_info));
     vhost_info.protocols = protocols;
@@ -537,8 +537,15 @@ void LibWebsocketClientPool::Client::connectCallback(struct lws_sorted_usec_list
                 connect_info.vhost   = client->m_vhost;
                 connect_info.address = client->m_url.address().c_str();
                 connect_info.path    = client->m_url.path().c_str();
-                connect_info.host    = connect_info.address;
-                connect_info.origin  = connect_info.address;
+                if (client->m_credentials.server_name.empty())
+                {
+                    connect_info.host = connect_info.address;
+                }
+                else
+                {
+                    connect_info.host = client->m_credentials.server_name.c_str();
+                }
+                connect_info.origin = connect_info.address;
                 if (client->m_url.protocol() == "wss")
                 {
                     connect_info.ssl_connection = LCCSCF_USE_SSL;

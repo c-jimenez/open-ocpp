@@ -358,8 +358,15 @@ void LibWebsocketClient::connectCallback(struct lws_sorted_usec_list* sul) noexc
     i.context = client->m_context;
     i.address = client->m_url.address().c_str();
     i.path    = client->m_url.path().c_str();
-    i.host    = i.address;
-    i.origin  = i.address;
+    if (client->m_credentials.server_name.empty())
+    {
+        i.host = i.address;
+    }
+    else
+    {
+        i.host = client->m_credentials.server_name.c_str();
+    }
+    i.origin = i.address;
     if (client->m_url.protocol() == "wss")
     {
         i.ssl_connection = LCCSCF_USE_SSL;
