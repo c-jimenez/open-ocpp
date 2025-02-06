@@ -149,6 +149,8 @@ class IWebsocketClient
         /** @brief Skip server name check in certificates for TLS connections
          *         (Warning : enabling this feature is not recommended in production) */
         bool skip_server_name_check;
+        /** @brief Server name (used for server certificate check) */
+        std::string server_name;
     };
 };
 
