@@ -365,7 +365,7 @@ void MeterValuesManager::processSampled(unsigned int connector_id)
 
                 // Get connector
                 Connector* connector = m_connectors.getConnector(connector_id);
-                if (connector)
+                if (connector && connector->status == ocpp::types::ChargePointStatus::Charging)
                 {
                     // Send sampled meter values
                     sendMeterValues(connector->id, measurands, ReadingContext::SamplePeriodic, connector->transaction_id);
