@@ -241,7 +241,7 @@ bool SmartChargingManager::handleMessage(const ocpp::messages::SetChargingProfil
         if (request.csChargingProfiles.stackLevel <= m_ocpp_config.chargeProfileMaxStackLevel())
         {
             // Check schedule
-            if (request.csChargingProfiles.chargingSchedule.chargingSchedulePeriod.size() <= m_ocpp_config.chargeProfileMaxStackLevel())
+            if (request.csChargingProfiles.chargingSchedule.chargingSchedulePeriod.size() <= m_ocpp_config.chargingScheduleMaxPeriods())
             {
                 // Check charging rate unit
                 ChargingRateUnitType unit          = request.csChargingProfiles.chargingSchedule.chargingRateUnit;
