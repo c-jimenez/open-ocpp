@@ -258,8 +258,8 @@ ocpp::types::DataTransferStatus Iso15118Manager::onDataTransferRequest(const std
         else
         {
             // Unknown message
-            LOG_ERROR << "[ISO15118] Unknown message : " << message_id;
-            status = DataTransferStatus::UnknownMessageId;
+            LOG_WARNING << "[ISO15118] Unknown message : " << message_id << ", forwarding to user";
+            status = m_events_handler.dataTransferRequested(vendor_id, message_id, request_data, response_data);
         }
     }
     else
