@@ -99,6 +99,8 @@ void RequestFifoManager::requestQueued()
 /** @brief Process a FIFO request */
 void RequestFifoManager::processFifoRequest()
 {
+    std::lock_guard lock(m_process_mutex);
+  
     // Check the connection state
     if (m_msg_sender.isConnected())
     {
