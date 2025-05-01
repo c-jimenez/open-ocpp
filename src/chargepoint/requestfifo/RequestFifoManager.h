@@ -19,6 +19,8 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENOCPP_REQUESTFIFOMANAGER_H
 #define OPENOCPP_REQUESTFIFOMANAGER_H
 
+#include <mutex>
+
 #include "IRequestFifo.h"
 #include "Timer.h"
 
@@ -98,6 +100,9 @@ class RequestFifoManager : public ocpp::messages::IRequestFifo::IListener
     ocpp::helpers::Timer m_request_retry_timer;
     /** @brief Retry count for the current request */
     unsigned int m_request_retry_count;
+
+    /** @brief Mutex protectiing against concurrent processFifoRequest calls */
+    std::mutex m_process_mutex;
 
     /** @brief Process a FIFO request */
     void processFifoRequest();
