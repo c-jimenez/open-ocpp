@@ -930,8 +930,8 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
         bool mo_root_certificate,
         bool v2g_certificate_chain,
         bool oem_root_certificate,
-            std::tuple<ocpp::types::ocpp16::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>>>&
-            certificates) override
+        std::tuple<ocpp::types::ocpp16::GetCertificateIdUseEnumType, ocpp::x509::Certificate, std::vector<ocpp::x509::Certificate>> >
+            &certificates) override
     {
         (void)v2g_root_certificate;
         (void)mo_root_certificate;
