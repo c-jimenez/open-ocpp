@@ -329,7 +329,7 @@ bool MaintenanceManager::handleMessage(const ocpp::messages::GetDiagnosticsReq& 
         {
             // Extract filename for the response
             std::filesystem::path diag_file(local_diagnostic_file);
-            response.fileName.assign(diag_file.filename().string());
+            response.fileName.value().assign(diag_file.filename().string());
 
             // Create a separate thread since the operation can be time consuming
             m_diagnostics_thread = new std::thread(std::bind(&MaintenanceManager::processGetDiagnostics,

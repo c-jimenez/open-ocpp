@@ -434,7 +434,7 @@ void StatusManager::bootNotificationProcess()
 
                 // Configure hearbeat
                 std::chrono::seconds interval(boot_conf.interval);
-                if(boot_conf.interval == 0)
+                if (boot_conf.interval == 0)
                 {
                     interval = m_ocpp_config.heartbeatInterval();
                 }
@@ -442,7 +442,7 @@ void StatusManager::bootNotificationProcess()
                 {
                     m_ocpp_config.heartbeatInterval(interval);
                 }
-                
+
                 m_heartbeat_timer.start(std::chrono::milliseconds(interval));
             }
             else
@@ -559,7 +559,7 @@ void StatusManager::sendBootNotification()
 
         // Restart hearbeat timer
         std::chrono::seconds interval(boot_conf.interval);
-        if(boot_conf.interval == 0)
+        if (boot_conf.interval == 0)
         {
             interval = m_ocpp_config.heartbeatInterval();
         }
@@ -567,7 +567,7 @@ void StatusManager::sendBootNotification()
         {
             m_ocpp_config.heartbeatInterval(interval);
         }
-        
+
         m_heartbeat_timer.restart(std::chrono::milliseconds(interval));
 
         // Save registration status
