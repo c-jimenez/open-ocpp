@@ -448,8 +448,9 @@ bool ChargePointProxy::getDiagnostics(const std::string&                        
     if (res == CallResult::Ok)
     {
         ret                = true;
-        diagnotic_filename = resp.fileName;
-        LOG_INFO << "[" << m_identifier << "] - Get diagnostics : filename = " << resp.fileName.str();
+        diagnotic_filename = resp.fileName.value();
+        LOG_INFO << "[" << m_identifier << "] - Get diagnostics : filename = "
+                 << (resp.fileName.isSet() ? resp.fileName.value().str() : "no diagnostic available");
     }
     else
     {

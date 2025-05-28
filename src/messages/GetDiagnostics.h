@@ -61,7 +61,7 @@ struct GetDiagnosticsConf
     /** @brief Optional. This contains the name of the file with diagnostic information that will
                be uploaded. This field is not present when no diagnostic information is
                available. */
-    ocpp::types::CiStringType<255> fileName;
+    ocpp::types::Optional<ocpp::types::CiStringType<255>> fileName;
 };
 
 // Message converters
