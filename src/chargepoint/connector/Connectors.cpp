@@ -85,6 +85,7 @@ void Connectors::initDatabaseTable()
     // Create database
     auto query = m_database.query("CREATE TABLE IF NOT EXISTS Connectors ("
                                   "[id] INT UNSIGNED,"
+                                  "[availability] INT,"
                                   "[status] INT,"
                                   "[last_notified_status] INT,"
                                   "[transaction_id] INT,"
@@ -105,10 +106,23 @@ void Connectors::initDatabaseTable()
         }
     }
 
+    // Migration for availability field
+    auto check_db = m_database.query("SELECT [availability] FROM Connectors WHERE TRUE;");
+    if (check_db) {
+        if (!check_db->exec()) {
+            resetConnectors();
+        }
+    } else {
+        auto drop_table = m_database.query("DROP TABLE IF EXISTS Connectors;");
+        if (drop_table && drop_table->exec()) {
+            initDatabaseTable();
+        }
+    }
+
     // Create parametrized queries
     m_find_query   = m_database.query("SELECT * FROM Connectors WHERE id=?;");
-    m_insert_query = m_database.query("INSERT INTO Connectors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-    m_update_query = m_database.query("UPDATE Connectors SET [status]=?, [last_notified_status]=?, [transaction_id]=?, "
+    m_insert_query = m_database.query("INSERT INTO Connectors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+    m_update_query = m_database.query("UPDATE Connectors SET [availability]=?, [status]=?, [last_notified_status]=?, [transaction_id]=?, "
                                       "[transaction_id_offline]=?, [transaction_start]=?, [transaction_id_tag]=?, "
                                       "[transaction_parent_id_tag]=?, [reservation_id]=?, [reservation_id_tag]=?, "
                                       "[reservation_parent_id_tag]=?, [reservation_expiry_date]=? WHERE id=?;");
@@ -237,20 +251,22 @@ bool Connectors::loadConnector(Connector& connector)
             ret = m_find_query->hasRows();
             if (ret)
             {
-                connector.status                    = static_cast<ChargePointStatus>(m_find_query->getInt32(1u));
-                connector.last_notified_status      = static_cast<ChargePointStatus>(m_find_query->getInt32(2u));
-                connector.transaction_id            = m_find_query->getInt32(3u);
-                connector.transaction_id_offline    = m_find_query->getInt32(4u);
-                connector.transaction_start         = static_cast<std::time_t>(m_find_query->getInt64(5u));
-                connector.transaction_id_tag        = m_find_query->getString(6u);
-                connector.transaction_parent_id_tag = m_find_query->getString(7u);
-                connector.reservation_id            = m_find_query->getInt32(8u);
-                connector.reservation_id_tag        = m_find_query->getString(9u);
-                connector.reservation_parent_id_tag = m_find_query->getString(10u);
-                connector.reservation_expiry_date   = static_cast<std::time_t>(m_find_query->getInt64(11u));
+                connector.availability              = static_cast<AvailabilityType>(m_find_query->getInt32(1u));
+                connector.status                    = static_cast<ChargePointStatus>(m_find_query->getInt32(2u));
+                connector.last_notified_status      = static_cast<ChargePointStatus>(m_find_query->getInt32(3u));
+                connector.transaction_id            = m_find_query->getInt32(4u);
+                connector.transaction_id_offline    = m_find_query->getInt32(5u);
+                connector.transaction_start         = static_cast<std::time_t>(m_find_query->getInt64(6u));
+                connector.transaction_id_tag        = m_find_query->getString(7u);
+                connector.transaction_parent_id_tag = m_find_query->getString(8u);
+                connector.reservation_id            = m_find_query->getInt32(9u);
+                connector.reservation_id_tag        = m_find_query->getString(10u);
+                connector.reservation_parent_id_tag = m_find_query->getString(11u);
+                connector.reservation_expiry_date   = static_cast<std::time_t>(m_find_query->getInt64(12u));
 
                 LOG_DEBUG << "Connector " << connector.id << " loaded from database : "
-                          << "status = " << ChargePointStatusHelper.toString(connector.status)
+                          << "availability = " << AvailabilityTypeHelper.toString(connector.availability)
+                          << " - status = " << ChargePointStatusHelper.toString(connector.status)
                           << " - last_notified_status = " << ChargePointStatusHelper.toString(connector.last_notified_status)
                           << " - transaction_id = " << connector.transaction_id
                           << " - transaction_id_offline = " << connector.transaction_id_offline
@@ -284,18 +300,19 @@ bool Connectors::saveConnector(const Connector& connector)
 
     if (m_update_query)
     {
-        m_update_query->bind(0u, static_cast<int>(connector.status));
-        m_update_query->bind(1u, static_cast<int>(connector.last_notified_status));
-        m_update_query->bind(2u, connector.transaction_id);
-        m_update_query->bind(3u, connector.transaction_id_offline);
-        m_update_query->bind(4u, static_cast<int64_t>(connector.transaction_start));
-        m_update_query->bind(5u, connector.transaction_id_tag);
-        m_update_query->bind(6u, connector.transaction_parent_id_tag);
-        m_update_query->bind(7u, connector.reservation_id);
-        m_update_query->bind(8u, connector.reservation_id_tag);
-        m_update_query->bind(9u, connector.reservation_parent_id_tag);
-        m_update_query->bind(10u, static_cast<int64_t>(connector.reservation_expiry_date));
-        m_update_query->bind(11u, connector.id);
+        m_update_query->bind(0u, static_cast<int>(connector.availability));
+        m_update_query->bind(1u, static_cast<int>(connector.status));
+        m_update_query->bind(2u, static_cast<int>(connector.last_notified_status));
+        m_update_query->bind(3u, connector.transaction_id);
+        m_update_query->bind(4u, connector.transaction_id_offline);
+        m_update_query->bind(5u, static_cast<int64_t>(connector.transaction_start));
+        m_update_query->bind(6u, connector.transaction_id_tag);
+        m_update_query->bind(7u, connector.transaction_parent_id_tag);
+        m_update_query->bind(8u, connector.reservation_id);
+        m_update_query->bind(9u, connector.reservation_id_tag);
+        m_update_query->bind(10u, connector.reservation_parent_id_tag);
+        m_update_query->bind(11u, static_cast<int64_t>(connector.reservation_expiry_date));
+        m_update_query->bind(12u, connector.id);
         ret = m_update_query->exec();
         if (ret)
         {
@@ -319,17 +336,18 @@ bool Connectors::createConnector(const Connector& connector)
     if (m_insert_query)
     {
         m_insert_query->bind(0u, connector.id);
-        m_insert_query->bind(1u, static_cast<int>(connector.status));
-        m_insert_query->bind(2u, static_cast<int>(connector.last_notified_status));
-        m_insert_query->bind(3u, connector.transaction_id);
-        m_insert_query->bind(4u, connector.transaction_id_offline);
-        m_insert_query->bind(5u, static_cast<int64_t>(connector.transaction_start));
-        m_insert_query->bind(6u, connector.transaction_id_tag);
-        m_insert_query->bind(7u, connector.transaction_parent_id_tag);
-        m_insert_query->bind(8u, connector.reservation_id);
-        m_insert_query->bind(9u, connector.reservation_id_tag);
-        m_insert_query->bind(10u, connector.reservation_parent_id_tag);
-        m_insert_query->bind(11u, static_cast<int64_t>(connector.reservation_expiry_date));
+        m_insert_query->bind(1u, static_cast<int>(connector.availability));
+        m_insert_query->bind(2u, static_cast<int>(connector.status));
+        m_insert_query->bind(3u, static_cast<int>(connector.last_notified_status));
+        m_insert_query->bind(4u, connector.transaction_id);
+        m_insert_query->bind(5u, connector.transaction_id_offline);
+        m_insert_query->bind(6u, static_cast<int64_t>(connector.transaction_start));
+        m_insert_query->bind(7u, connector.transaction_id_tag);
+        m_insert_query->bind(8u, connector.transaction_parent_id_tag);
+        m_insert_query->bind(9u, connector.reservation_id);
+        m_insert_query->bind(10u, connector.reservation_id_tag);
+        m_insert_query->bind(11u, connector.reservation_parent_id_tag);
+        m_insert_query->bind(12u, static_cast<int64_t>(connector.reservation_expiry_date));
         ret = m_insert_query->exec();
         if (ret)
         {
