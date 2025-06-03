@@ -127,8 +127,8 @@ class ChargePoint : public IChargePoint,
     /** @copydoc ocpp::types::AuthorizationStatus IChargePoint::authorize(unsigned int, const std::string&, std::string&) */
     ocpp::types::AuthorizationStatus authorize(unsigned int connector_id, const std::string& id_tag, std::string& parent_id) override;
 
-    /** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&) */
-    ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) override;
+    /** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&, int&) */
+    ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id) override;
 
     /** @copydoc bool IChargePoint::stopTransaction(unsigned int, const std::string&, ocpp::types::Reason) */
     bool stopTransaction(unsigned int connector_id, const std::string& id_tag, ocpp::types::Reason reason) override;

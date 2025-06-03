@@ -195,6 +195,7 @@ int main(int argc, char* argv[])
                 AuthorizationStatus status = charge_point->iso15118Authorize(ev_certificate, token_id, cert_hash_data, cert_status);
                 if (status == AuthorizationStatus::Accepted)
                 {
+                    int transaction_id = 0;
                     std::cout << "Token id and certificate authorized" << std::endl;
 
                     // Preparing state
@@ -202,10 +203,10 @@ int main(int argc, char* argv[])
                     std::this_thread::sleep_for(std::chrono::seconds(1u));
 
                     // Try to start charging session
-                    status = charge_point->startTransaction(connector_id, token_id);
+                    status = charge_point->startTransaction(connector_id, token_id, transaction_id);
                     if (status == AuthorizationStatus::Accepted)
                     {
-                        std::cout << "Transaction authorized, start charging" << std::endl;
+                        std::cout << "Transaction " << transaction_id << " authorized, start charging" << std::endl;
 
                         // Charging state
                         charge_point->statusNotification(connector_id, ChargePointStatus::Charging);

@@ -75,7 +75,7 @@ TransactionManager::TransactionManager(ocpp::config::IOcppConfig&               
 TransactionManager::~TransactionManager() { }
 
 /** @brief Start a transaction */
-ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned int connector_id, const std::string& id_tag)
+ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -169,6 +169,7 @@ ocpp::types::AuthorizationStatus TransactionManager::startTransaction(unsigned i
                         connector->transaction_parent_id_tag = start_transaction_conf.idTagInfo.parentIdTag.value().str();
                         m_connectors.saveConnector(connector->id);
                     }
+                    transaction_id = connector->transaction_id;
 
                     // Assign pending charging profiles to the transaction
                     m_smart_charging_manager.assignPendingTxProfiles(connector_id, connector->transaction_id);

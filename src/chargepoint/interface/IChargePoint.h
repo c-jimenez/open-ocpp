@@ -158,9 +158,10 @@ class IChargePoint
      * @brief Start a transaction
      * @param connector_id Id of the connector
      * @param id_tag Id of the user
+     * @param transaction_id Id of the transaction
      * @return ocpp::types::AuthorizationStatus (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag) = 0;
+    virtual ocpp::types::AuthorizationStatus startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id) = 0;
 
     /**
      * @brief Stop a transaction

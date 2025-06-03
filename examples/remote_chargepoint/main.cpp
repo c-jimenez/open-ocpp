@@ -218,10 +218,11 @@ int main(int argc, char* argv[])
             if (restore || !config.ocppConfig().authorizeRemoteTxRequests() ||
                 (charge_point->authorize(connector_id, id_tag, parent_id) == AuthorizationStatus::Accepted))
             {
+                int transaction_id = 0;
                 // Start transaction
-                if (restore || charge_point->startTransaction(connector_id, id_tag) == AuthorizationStatus::Accepted)
+                if (restore || charge_point->startTransaction(connector_id, id_tag, transaction_id) == AuthorizationStatus::Accepted)
                 {
-                    // Notify suspent
+                    // Notify suspended
                     if (!restore)
                     {
                         charge_point->statusNotification(connector_id, ChargePointStatus::SuspendedEVSE);

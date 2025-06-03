@@ -543,8 +543,8 @@ ocpp::types::AuthorizationStatus ChargePoint::authorize(unsigned int connector_i
     return ret;
 }
 
-/** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&) */
-ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int connector_id, const std::string& id_tag)
+/** @copydoc ocpp::types::AuthorizationStatus IChargePoint::startTransaction(unsigned int, const std::string&, int&) */
+ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int connector_id, const std::string& id_tag, int& transaction_id)
 {
     AuthorizationStatus ret = AuthorizationStatus::Invalid;
 
@@ -552,7 +552,7 @@ ocpp::types::AuthorizationStatus ChargePoint::startTransaction(unsigned int conn
     {
         if (m_status_manager->getRegistrationStatus() == RegistrationStatus::Accepted)
         {
-            ret = m_transaction_manager->startTransaction(connector_id, id_tag);
+            ret = m_transaction_manager->startTransaction(connector_id, id_tag, transaction_id);
         }
         else
         {
