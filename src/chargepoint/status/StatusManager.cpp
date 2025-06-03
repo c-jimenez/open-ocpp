@@ -373,6 +373,15 @@ bool StatusManager::handleMessage(const ocpp::messages::ChangeAvailabilityReq& r
                 status = ChargePointStatus::Available;
             }
 
+            // Update Connector Availability
+            Connector* connector = m_connectors.getConnector(connector_id);
+            if (connector)
+            {
+               std::lock_guard<std::mutex> lock(connector->mutex);
+               connector->availability = static_cast<ocpp::types::AvailabilityType>(request.type);
+               m_connectors.saveConnector(connector->id);
+            }
+
             // In the case the ChangeAvailability.req contains ConnectorId = 0, the status change applies to the Charge Point and all Connectors.
             if (connector_id == 0)
             {

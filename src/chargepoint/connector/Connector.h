@@ -38,6 +38,7 @@ struct Connector
     Connector(unsigned int _id, ocpp::helpers::ITimerPool& timer_pool)
         : id(_id),
           mutex(),
+          availability(ocpp::types::AvailabilityType::Operative),
           status(ocpp::types::ChargePointStatus::Available),
           error_code(ocpp::types::ChargePointErrorCode::NoError),
           status_timestamp(ocpp::types::DateTime::now()),
@@ -66,6 +67,8 @@ struct Connector
 
     // Status notification data
 
+    /** @brief Availability */
+    ocpp::types::AvailabilityType availability;
     /** @brief Status */
     ocpp::types::ChargePointStatus status;
     /** @brief Error code */
