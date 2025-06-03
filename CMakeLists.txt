@@ -132,15 +132,17 @@ install(TARGETS ${OPEN_OCPP_SHARED_TARGET} ${OPEN_OCPP_STATIC_TARGET}
 install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp)
 install(FILES ${OCPP_SCHEMAS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/schemas)
 
-file(GLOB RAPIDJSON_HEADERS
-     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/*.h")
-file(GLOB RAPIDJSON_INTERNAL_HEADERS
-     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/internal/*.h")
-file(GLOB RAPIDJSON_ERROR_HEADERS
-     LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/error/*.h")
-install(FILES ${RAPIDJSON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson)
-install(FILES ${RAPIDJSON_INTERNAL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/internal)
-install(FILES ${RAPIDJSON_ERROR_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/error)
+if(${INSTALL_RAPID_JSON})
+    file(GLOB RAPIDJSON_HEADERS
+         LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/*.h")
+    file(GLOB RAPIDJSON_INTERNAL_HEADERS
+         LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/internal/*.h")
+    file(GLOB RAPIDJSON_ERROR_HEADERS
+         LIST_DIRECTORIES false RELATIVE ${CMAKE_SOURCE_DIR} "${CMAKE_SOURCE_DIR}/3rdparty/rapidjson/include/rapidjson/error/*.h")
+    install(FILES ${RAPIDJSON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson)
+    install(FILES ${RAPIDJSON_INTERNAL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/internal)
+    install(FILES ${RAPIDJSON_ERROR_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openocpp/rapidjson/error)
+endif()
 
 # Generate pkgconfig files
 set(PKG_CONFIG_LIBDIR       "\${prefix}/lib")

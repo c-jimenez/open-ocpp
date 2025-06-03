@@ -35,6 +35,9 @@ option(BUILD_SQLITE                 "Build sqlite3 library"                     
 # Install the Doctest header
 option(INSTALL_DOCTEST              "Install doctest headers"                                               ON)
 
+# Define Install Rapid Json headers
+option(INSTALL_RAPID_JSON           "Install headers of rapidjson"                                          ON)
+
 # Use only the CrtAllocator in Rapidjson, not the MemoryPoolAllocator
 option(USE_CRT_ALLOC_FOR_RAPIDJSON  "Use the CrtAllocator for Rapidjson instead of the MemoryPoolAllocator" OFF)
 if(USE_CRT_ALLOC_FOR_RAPIDJSON)
