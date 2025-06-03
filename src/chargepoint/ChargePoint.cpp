@@ -1224,5 +1224,160 @@ bool ChargePoint::doConnect()
                                m_ocpp_config.webSocketPingInterval());
 }
 
+/**
+ * @brief Get the configuration manager of the charge point
+ * @return The configuration manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+ConfigManager& ChargePoint::getConfigManager(void) const
+{
+    if (!m_config_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_config_manager.get();
+}
+
+/**
+ * @brief Get the status manager of the charge point
+ * @return The status manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+StatusManager& ChargePoint::getStatusManager(void) const
+{
+    if (!m_status_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_status_manager.get();
+}
+
+/**
+ * @brief Get the authentication manager of the charge point
+ * @return The authentication manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+AuthentManager& ChargePoint::getAuthentManager(void) const
+{
+    if (!m_authent_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_authent_manager.get();
+}
+
+/**
+ * @brief Get the transaction manager of the charge point
+ * @return The transaction manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+TransactionManager& ChargePoint::getTransactionManager(void) const
+{
+    if (!m_transaction_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_transaction_manager.get();
+}
+
+/**
+ * @brief Get the trigger manager of the charge point
+ * @return The trigger manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+TriggerMessageManager& ChargePoint::getTriggerManager(void) const
+{
+    if (!m_trigger_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_trigger_manager.get();
+}
+
+/**
+ * @brief Get the reservation manager of the charge point
+ * @return The reservation manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+ReservationManager& ChargePoint::getReservationManager(void) const
+{
+    if (!m_reservation_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_reservation_manager.get();
+}
+
+/**
+ * @brief Get the data transfer manager of the charge point
+ * @return The data transfer manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+DataTransferManager& ChargePoint::getDataTransferManager(void) const
+{
+    if (!m_data_transfer_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_data_transfer_manager.get();
+}
+
+/**
+ * @brief Get the meter values manager of the charge point
+ * @return The meter values manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+MeterValuesManager& ChargePoint::getMeterValuesManager(void) const
+{
+    if (!m_meter_values_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_meter_values_manager.get();
+}
+
+/**
+ * @brief Get the smart charging manager of the charge point
+ * @return The smart charging manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+SmartChargingManager& ChargePoint::getSmartChargingManager(void) const
+{
+    if (!m_smart_charging_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_smart_charging_manager.get();
+}
+
+/**
+ * @brief Get the maintenance manager of the charge point
+ * @return The maintenance manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+MaintenanceManager& ChargePoint::getMaintenanceManager(void) const
+{
+    if (!m_maintenance_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_maintenance_manager.get();
+}
+
+/**
+ * @brief Get the requests fifo manager of the charge point
+ * @return The requests fifo manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+RequestFifoManager& ChargePoint::getRequestsFifoManager(void) const
+{
+    if (!m_requests_fifo_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_requests_fifo_manager.get();
+}
+
+/**
+ * @brief Get the iso15118 manager of the charge point
+ * @return The iso15118 manager of the charge point
+ * @throw std::runtime_error if stack is not started
+ */
+Iso15118Manager& ChargePoint::getIso15118Manager(void) const
+{
+    if (!m_iso15118_manager) {
+        throw std::runtime_error("Stack is not started!");
+    }
+    return *m_iso15118_manager.get();
+}
 } // namespace chargepoint
 } // namespace ocpp
