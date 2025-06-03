@@ -1155,6 +1155,9 @@ bool ChargePoint::doConnect()
 
         // Reset registration status
         m_internal_config.setKey(LAST_REGISTRATION_STATUS_KEY, RegistrationStatusHelper.toString(RegistrationStatus::Rejected));
+        
+        // Notify that the connection URL has changed
+        m_events_handler.connectionUrlChanged(connection_url);
 
         LOG_INFO << "Connection URL has changed, reset registration status";
     }
