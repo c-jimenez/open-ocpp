@@ -172,7 +172,7 @@ enum class AuthorizationStatus
     Blocked,
     /** @brief Identifier has expired. Not allowed for charging */
     Expired,
-    /** @brief Identifier has expired. Not allowed for charging */
+    /** @brief Identifier is unknown. Not allowed for charging */
     Invalid,
     /** @brief Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant for a
                StartTransaction.req */
