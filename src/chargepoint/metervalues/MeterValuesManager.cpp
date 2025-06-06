@@ -73,11 +73,13 @@ MeterValuesManager::MeterValuesManager(ocpp::config::IOcppConfig&            ocp
 
     // Register configuration change handler
     config_manager.registerConfigChangedListener("ClockAlignedDataInterval", *this);
+    config_manager.registerConfigChangedListener("MeterValueSampleInterval", *this);
 
     // Start clock aligned and sample timers
     configureClockAlignedTimer();
-    for (const Connector* connector : m_connectors.getConnectors())
+    for (Connector* connector : m_connectors.getConnectors())
     {
+        connector->meter_values_timer.setCallback(std::bind(&MeterValuesManager::processSampled, this, connector->id));
         if (connector->transaction_id != 0)
         {
             startSampledMeterValues(connector->id);
@@ -131,7 +133,6 @@ void MeterValuesManager::startSampledMeterValues(unsigned int connector_id)
         if (connector)
         {
             // Start meter value timer for the connector
-            connector->meter_values_timer.setCallback(std::bind(&MeterValuesManager::processSampled, this, connector_id));
             connector->meter_values_timer.start(interval);
         }
     }
@@ -235,23 +236,74 @@ bool MeterValuesManager::onTriggerMessage(ocpp::types::MessageTriggerEnumType   
 /** @copydoc void IConfigChangedListener::configurationValueChanged(const std::string&) */
 void MeterValuesManager::configurationValueChanged(const std::string& key)
 {
-    // No need to check key, only ClockAlignedDataInterval is monitored
-    (void)key;
-
-    // Check new value
-    std::chrono::seconds interval = m_ocpp_config.clockAlignedDataInterval();
-    if (interval == std::chrono::seconds(0))
+    if (key == "metervaluesampleinterval")
     {
-        // Disable clock aligned values
-        m_clock_aligned_timer.stop();
-
-        LOG_INFO << "Clock aligned meter values disabled";
-    }
-    else
+        // Check new value
+        std::chrono::seconds interval = m_ocpp_config.meterValueSampleInterval();
+        for (Connector* connector : m_connectors.getConnectors())
+        {
+            if (interval == std::chrono::seconds(0))
+            {
+                // Disable meter values
+                connector->meter_values_timer.stop();
+                LOG_INFO << "Meter values disabled on connector " << connector->id;
+            }
+            else if (connector->status == ocpp::types::ChargePointStatus::Charging)
+            {
+                configureMeterValueSampleTimer(connector->id, interval);
+            }
+        }
+    }else if (key == "clockaligneddatainterval")
     {
-        // Reconfigure clock aligned timer
-        configureClockAlignedTimer();
+        // Check new value
+        std::chrono::seconds interval = m_ocpp_config.clockAlignedDataInterval();
+        if (interval == std::chrono::seconds(0))
+        {
+            // Disable clock aligned values
+            m_clock_aligned_timer.stop();
+
+            LOG_INFO << "Clock aligned meter values disabled";
+        }
+        else
+        {
+            // Reconfigure clock aligned timer
+            configureClockAlignedTimer();
+        }
     }
+}
+
+/** @brief Configure meter value sample timer */
+void MeterValuesManager::configureMeterValueSampleTimer(const unsigned int connector_id, const std::chrono::seconds interval)
+{
+    Connector* connector = m_connectors.getConnector(connector_id);
+
+    if (!connector) {
+        return;
+    }
+
+    // Reconfigure meter value timer
+    // Stop timer
+    connector->meter_values_timer.stop();
+
+    LOG_INFO << "Configure meter values on connector " << connector->id << " : interval in seconds = " << interval.count();
+
+    // Compute next due date
+    time_t    now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    struct tm aligned_time_tm;
+#ifdef _MSC_VER
+    localtime_s(&aligned_time_tm, &now);
+#else  // _MSC_VER
+    localtime_r(&now, &aligned_time_tm);
+#endif // _MSC_VER
+    aligned_time_tm.tm_min = 0;
+    aligned_time_tm.tm_sec = 0;
+    time_t aligned_time    = std::mktime(&aligned_time_tm);
+    while (aligned_time <= now)
+    {
+        aligned_time += interval.count();
+    }
+    std::chrono::seconds next_due_interval = std::chrono::seconds(aligned_time - now);
+    connector->meter_values_timer.start(std::chrono::milliseconds(next_due_interval));
 }
 
 /** @brief Configure clock-aligned timer */

@@ -134,6 +134,8 @@ class MeterValuesManager : public IMeterValuesManager,
     /** @brief Query to insert a meter value associated to a transaction */
     std::unique_ptr<ocpp::database::Database::Query> m_insert_query;
 
+    /** @brief Configure the meter value sample timer */
+    void configureMeterValueSampleTimer(const unsigned int connector_id, const std::chrono::seconds interval);
     /** @brief Configure clock-aligned timer */
     void configureClockAlignedTimer(void);
     /** @brief Process clock-aligned meter values */

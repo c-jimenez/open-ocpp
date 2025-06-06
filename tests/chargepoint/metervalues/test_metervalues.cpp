@@ -582,14 +582,14 @@ TEST_SUITE("Metervalues component")
 
         // Disable clock aligned values
         ocpp_config.setConfigValue("ClockAlignedDataInterval", "0");
-        meter_mgr.configurationValueChanged("ClockAlignedDataInterval");
+        meter_mgr.configurationValueChanged("clockaligneddatainterval");
 
         // Check periodic timer configuration
         CHECK_FALSE(periodic_timer->isStarted());
 
         // Re-enable clock aligned values
         ocpp_config.setConfigValue("ClockAlignedDataInterval", "100");
-        meter_mgr.configurationValueChanged("ClockAlignedDataInterval");
+        meter_mgr.configurationValueChanged("clockaligneddatainterval");
 
         // Check periodic timer configuration
         CHECK(periodic_timer->isStarted());
