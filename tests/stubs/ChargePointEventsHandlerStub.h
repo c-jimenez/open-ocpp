@@ -35,6 +35,9 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
 
     // IChargePointEventsHandler interface
 
+    /** @copydoc void IChargePointEventsHandler::connectionUrlChanged(std::string const&) */
+    void connectionUrlChanged(std::string const& url) override;
+
     /** @copydoc void IChargePointEventsHandler::connectionStateChanged(ocpp::types::RegistrationStatus) */
     void connectionFailed(ocpp::types::RegistrationStatus status) override;
 

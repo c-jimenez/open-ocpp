@@ -61,6 +61,12 @@ DefaultChargePointEventsHandler::DefaultChargePointEventsHandler(ChargePointDemo
 /** @brief Destructor */
 DefaultChargePointEventsHandler::~DefaultChargePointEventsHandler() { }
 
+/** @copydoc void IChargePointEventsHandler::connectionUrlChanged(std::string const&) */
+void DefaultChargePointEventsHandler::connectionUrlChanged(std::string const& url)
+{
+    cout << "Connection url changed to : " << url << endl;
+}
+
 /** @copydoc void IChargePointEventsHandler::connectionStateChanged(ocpp::types::RegistrationStatus) */
 void DefaultChargePointEventsHandler::connectionFailed(ocpp::types::RegistrationStatus status)
 {

@@ -40,6 +40,12 @@ class IChargePointEventsHandler
     virtual ~IChargePointEventsHandler() { }
 
     /**
+     * @brief Called when the connection URL has changed
+     * @param url New connection URL
+     */
+    virtual void connectionUrlChanged(std::string const& url) = 0;
+
+    /**
      * @brief Called when the first attempt to connect to the central system has failed
      * @param status Previous registration status (if Accepted, some offline operations are allowed)
      */

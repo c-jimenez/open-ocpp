@@ -38,6 +38,12 @@ ChargePointEventsHandlerStub::ChargePointEventsHandlerStub()
 /** @brief Destructor */
 ChargePointEventsHandlerStub::~ChargePointEventsHandlerStub() { }
 
+/** @copydoc void IChargePointEventsHandler::connectionUrlChanged(std::string const&) */
+void ChargePointEventsHandlerStub::connectionUrlChanged(std::string const& url)
+{
+    m_calls["connectionUrlChanged"] = {{"url", url}};
+}
+
 /** @copydoc void IChargePointEventsHandler::connectionStateChanged(ocpp::types::RegistrationStatus) */
 void ChargePointEventsHandlerStub::connectionFailed(ocpp::types::RegistrationStatus status)
 {
