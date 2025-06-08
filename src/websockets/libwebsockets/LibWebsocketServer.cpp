@@ -312,12 +312,8 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (strcmp("websocket", static_cast<char*>(in)) == 0)
             {
                 // Check URI
-#ifdef _MSC_VER
-                char uri[512u];
-#else  // _MSC_VER
-                char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-#endif // _MSC_VER
-                int uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
+                char* uri     = new char[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
+                int   uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
                 if ((uri_len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
                 {
@@ -423,6 +419,7 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
                     lwsl_err("invalid URI\n");
                     ret = -1;
                 }
+                delete[] uri;
             }
             else
             {
@@ -442,16 +439,13 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_clients[wsi] = client;
 
             // Notify connection
-#ifdef _MSC_VER
-            char uri[512u];
-#else  // _MSC_VER
-            char uri[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-#endif // _MSC_VER
+            char* uri = new char[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
             if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)
             {
                 uri[0] = 0;
             }
             server->m_listener->wsClientConnected(uri, client);
+            delete[] uri;
         }
         break;
 
