@@ -423,7 +423,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                 std::stringstream sign_cert_cmd_line;
                 sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
                                    << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
-                int err = WEXITSTATUS(system(sign_cert_cmd_line.str().c_str()));
+                int system_ret = system(sign_cert_cmd_line.str().c_str());
+                int err        = WEXITSTATUS(system_ret);
                 cout << "Command line : " << sign_cert_cmd_line.str() << " => " << err << endl;
 
                 // Check if the certificate has been generated
@@ -433,7 +434,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signCertifica
                     std::string       bundle_filename = certificate_filename + ".bundle";
                     std::stringstream generate_bundle_cmd_line;
                     generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
-                    err = WEXITSTATUS(system(generate_bundle_cmd_line.str().c_str()));
+                    int bundle_ret = system(generate_bundle_cmd_line.str().c_str());
+                    err            = WEXITSTATUS(bundle_ret);
                     cout << "Command line : " << generate_bundle_cmd_line.str() << " => " << err << endl;
                     if (std::filesystem::exists(bundle_filename))
                     {
@@ -611,7 +613,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118SignC
             std::stringstream sign_cert_cmd_line;
             sign_cert_cmd_line << "openssl x509 -req -sha256 -days 3650 -in " << csr_filename << " -CA " << ca_cert_path << " -CAkey "
                                << ca_cert_key_path << " -CAcreateserial -out " << certificate_filename;
-            int err = WEXITSTATUS(system(sign_cert_cmd_line.str().c_str()));
+            int system_ret = system(sign_cert_cmd_line.str().c_str());
+            int err        = WEXITSTATUS(system_ret);
             cout << "Command line : " << sign_cert_cmd_line.str() << " => " << err << endl;
 
             // Check if the certificate has been generated
@@ -621,7 +624,8 @@ bool DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118SignC
                 std::string       bundle_filename = certificate_filename + ".bundle";
                 std::stringstream generate_bundle_cmd_line;
                 generate_bundle_cmd_line << "cat " << certificate_filename << " " << ca_cert_path << " > " << bundle_filename;
-                err = WEXITSTATUS(system(generate_bundle_cmd_line.str().c_str()));
+                int bundle_ret = system(generate_bundle_cmd_line.str().c_str());
+                err            = WEXITSTATUS(bundle_ret);
                 cout << "Command line : " << generate_bundle_cmd_line.str() << " => " << err << endl;
                 if (std::filesystem::exists(bundle_filename))
                 {

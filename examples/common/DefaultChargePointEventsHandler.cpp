@@ -239,7 +239,8 @@ std::string DefaultChargePointEventsHandler::getDiagnostics(const ocpp::types::O
 
     std::stringstream ss;
     ss << "zip " << diag_file << " " << m_config.stackConfig().databasePath();
-    int err = WEXITSTATUS(system(ss.str().c_str()));
+    int sys_ret = system(ss.str().c_str());
+    int err     = WEXITSTATUS(sys_ret);
     cout << "Command line : " << ss.str() << " => " << err << endl;
 
     return diag_file;
@@ -295,7 +296,8 @@ bool DefaultChargePointEventsHandler::uploadFile(const std::string& file, const 
     {
         std::stringstream ss;
         ss << "curl --silent " << params << " -T " << file << " " << connection_url;
-        int err = WEXITSTATUS(system(ss.str().c_str()));
+        int sys_ret = system(ss.str().c_str());
+        int err     = WEXITSTATUS(sys_ret);
         cout << "Command line : " << ss.str() << endl;
         ret = (err == 0);
     }
@@ -339,7 +341,8 @@ bool DefaultChargePointEventsHandler::downloadFile(const std::string& url, const
     {
         std::stringstream ss;
         ss << "curl --silent " << params << " -o " << file << " " << connection_url;
-        int err = WEXITSTATUS(system(ss.str().c_str()));
+        int sys_ret = system(ss.str().c_str());
+        int err     = WEXITSTATUS(sys_ret);
         cout << "Command line : " << ss.str() << endl;
         ret = (err == 0);
     }
@@ -627,7 +630,8 @@ std::string DefaultChargePointEventsHandler::getLog(ocpp::types::LogEnumType    
 
         std::stringstream ss;
         ss << "zip " << log_file << " " << m_config.stackConfig().databasePath();
-        int err = WEXITSTATUS(system(ss.str().c_str()));
+        int sys_ret = system(ss.str().c_str());
+        int err     = WEXITSTATUS(sys_ret);
         cout << "Command line : " << ss.str() << " => " << err << endl;
     }
 
