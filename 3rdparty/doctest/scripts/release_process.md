@@ -1,17 +1,15 @@
-- update version in version.txt
+- update version in version.txt (following semver)
 - run update_stuff.py from the scripts folder
-- regenerate test output by running cmake with -DDOCTEST_TEST_MODE=COLLECT and then running ctest
-- run update_wandbox_link.py
-    - might need to do this first: set path=C:/Python27;%PATH% - or just call python from C:\Python27\python.exe
+- regenerate test output (actually only the `version` test's output changes and that was done to maximize code coverage - might remove it to simplify the release process)
+    - first run cmake with -DDOCTEST_TEST_MODE=COLLECT
+    - then run ctest & git add the changed and/or new .txt files
+- run changelog generator (WIP)
 - commit in dev
-- merge dev in master and coverity_scan (and rebase them?)
+- rebase dev onto master (linear history instead of merge commits)
 - push all branches (git push --all)
-- run update_changelog.py in master
-    - might need a tmp folder in the root drive (C or D)
-- commit in master and push
 - create github release with the same semver tag as the changelog
-- merge master in dev
-- update packages
+    - copy the text from a previous release and update the version numbers & dates
+- OPTIONAL: update packages (I've never done it)
     - vcpkg https://github.com/Microsoft/vcpkg/tree/master/ports/doctest
     - hunter
         - https://github.com/ruslo/hunter/blob/master/cmake/configs/default.cmake

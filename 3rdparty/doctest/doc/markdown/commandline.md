@@ -2,14 +2,16 @@
 
 **doctest** works quite nicely without any command line options at all - but for more control a bunch are available.
 
-**Query flags** - after the result is printed the program quits without executing any test cases (and if the framework is integrated into a client codebase which [**supplies it's own ```main()``` entry point**](main.md) - the program should check the result of ```shouldExit()``` method after calling ```run()``` on a ```doctest::Context``` object and should exit - this is left up to the user).
+**Query flags** - after the result is printed the program quits without executing any test cases (and if the framework is integrated into a client codebase which [**supplies its own ```main()``` entry point**](main.md) - the program should check the result of ```shouldExit()``` method after calling ```run()``` on a ```doctest::Context``` object and should exit - this is left up to the user).
 
 **Int/String options** - they require a value after the ```=``` sign - without spaces! For example: ```--order-by=rand```.
 
 **Bool options** - they expect ```1```/```yes```/```on```/```true``` or ```0```/```no```/```off```/```false``` after the ```=``` sign - but they can also be used like flags and the ```=value``` part can be skipped - then ```true``` is assumed.  
 
-**Filters** use wildcards for matching values - where ```*``` means "match any sequence" and ```?``` means "match any one character".
-To pass a pattern with an interval use ```""``` like this:  ```--test-case="*no sound*,vaguely named test number ?"```.
+**Filters** - a comma-separated list of wildcards for matching values - where ```*``` means "match any sequence" and ```?``` means "match any one character".
+To pass patterns with intervals use ```""``` like this:  ```--test-case="*no sound*,vaguely named test number ?"```. Patterns that contain a comma or a backslash can be escaped with ```\``` (example: ```--test-case=this\,test\,has\,commas\,and\,a\\\,backslash\,followed\,by\,a\,comma```).
+If a backslash is followed by neither ```\``` nor ```,``` it's left as is, e.g. ```--test-case="Test that \ works correctly"```.
+Be careful: your shell may use ```\``` for escaping as well, so `\` may actually get consumed by the shell instead of doctest.
 
 All the options can also be set with code (defaults/overrides) if the user [**supplies the ```main()``` function**](main.md).
 
@@ -28,7 +30,7 @@ All the options can also be set with code (defaults/overrides) if the user [**su
 | ```-sfe``` ```--source-file-exclude=<filters>``` | Same as ```--test-case-exclude=<filters>``` but filters based on the file in which test cases are written |
 | ```-ts``` &nbsp; ```--test-suite=<filters>``` | Same as ```--test-case=<filters>``` but filters based on the test suite in which test cases are in |
 | ```-tse``` ```--test-suite-exclude=<filters>``` | Same as ```--test-case-exclude=<filters>``` but filters based on the test suite in which test cases are in |
-| ```-sc``` &nbsp; ```--subcase=<filters>``` | Same as ```--test-case=<filters>``` but filters subcases based on their names |
+| ```-sc``` &nbsp; ```--subcase=<filters>``` | Same as ```--test-case=<filters>``` but filters subcases based on their names. Does not filter test cases (they have to be executed for subcases to be discovered) so you might want to use this together with ```--test-case=<filters>```. |
 | ```-sce``` ```--subcase-exclude=<filters>``` | Same as ```--test-case-exclude=<filters>``` but filters based on subcase names |
 | ```-r``` ```--reporters=<filters>``` | List of [**reporters**](reporters.md) to use (default is ```console```) |
 | ```-o``` &nbsp; ```--out=<string>``` | Output filename |
@@ -41,11 +43,14 @@ All the options can also be set with code (defaults/overrides) if the user [**su
 | **Bool Options** | <hr> |
 | ```-s``` &nbsp;&nbsp;&nbsp; ```--success=<bool>``` | To include successful assertions in the output |
 | ```-cs``` &nbsp; ```--case-sensitive=<bool>``` | Filters being treated as case sensitive |
-| ```-e``` &nbsp;&nbsp;&nbsp; ```--exit=<bool>``` | Exits after the tests finish - this is meaningful only when the client has [**provided the ```main()``` entry point**](main.md)  - the program should check the ```shouldExit()``` method after calling ```run()``` on a ```doctest::Context``` object and should exit - this is left up to the user. The idea is to be able to execute just the tests in a client program and to not continue with it's execution |
+| ```-e``` &nbsp;&nbsp;&nbsp; ```--exit=<bool>``` | Exits after the tests finish - this is meaningful only when the client has [**provided the ```main()``` entry point**](main.md)  - the program should check the ```shouldExit()``` method after calling ```run()``` on a ```doctest::Context``` object and should exit - this is left up to the user. The idea is to be able to execute just the tests in a client program and to not continue with its execution |
 | ```-d``` &nbsp; ```--duration=<bool>``` | Prints the time each test case took in seconds |
+| ```-m``` &nbsp; ```--minimal=<bool>``` | Only prints failing tests |
+| ```-q``` &nbsp; ```--quiet=<bool>``` | Does not print any output |
 | ```-nt``` &nbsp; ```--no-throw=<bool>``` | Skips [**exceptions-related assertion**](assertions.md#exceptions) checks |
 | ```-ne``` &nbsp; ```--no-exitcode=<bool>``` | Always returns a successful exit code - even if a test case has failed |
 | ```-nr``` &nbsp; ```--no-run=<bool>``` | Skips all runtime **doctest** operations (except the test registering which happens before the program enters ```main()```). This is useful if the testing framework is integrated into a client codebase which has [**provided the ```main()``` entry point**](main.md) and the user wants to skip running the tests and just use the program |
+| ```-ni``` &nbsp; ```--no-intro=<bool>``` | Omits the framework intro in the output |
 | ```-nv``` &nbsp; ```--no-version=<bool>``` | Omits the framework version in the output |
 | ```-nc``` &nbsp; ```--no-colors=<bool>``` | Disables colors in the output |
 | ```-fc``` &nbsp; ```--force-colors=<bool>``` | Forces the use of colors even when a tty cannot be detected |
@@ -53,6 +58,7 @@ All the options can also be set with code (defaults/overrides) if the user [**su
 | ```-ns``` &nbsp; ```--no-skip=<bool>``` | Don't skip test cases marked as skip with a decorator |
 | ```-gfl``` ```--gnu-file-line=<bool>``` | ```:n:``` vs ```(n):``` for line numbers in output (gnu mode is usually for linux tools/IDEs and is with the ```:``` separator) |
 | ```-npf``` ```--no-path-filenames=<bool>``` | Paths are removed from the output when a filename is printed - useful if you want the same output from the testing framework on different environments |
+| ```-spp``` ```--skip-path-prefixes=<string>``` | Remove the longest matching one in [**a list of prefixes**](configuration.md#doctest_config_options_file_prefix_separator) from any file path in the output - similar to ```-npf```, but can preserve some context by not removing the entire relative paths. Try: ```--spp=${CMAKE_SOURCE_DIR}/:${CMAKE_BINARY_DIR}/``` |
 | ```-nln``` ```--no-line-numbers=<bool>``` | Line numbers are replaced with ```0``` in the output when a source location is printed - useful if you want the same output from the testing framework even when test positions change within a source file |
 | ```-ndo``` ```--no-debug-output=<bool>``` | Disables output in the debug console when a debugger is attached |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| |
@@ -109,7 +115,7 @@ int program(int argc, const char** argv) {
 }
 ```
 
-When ran like this:
+When run like this:
 
 ```
 program.exe --dt-test-case=math* --my-option -s --dt-no-breaks

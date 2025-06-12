@@ -23,8 +23,6 @@ for line in fileinput.input(["../doctest/parts/doctest_fwd.h"]):
         doctest_contents += "#define DOCTEST_VERSION_MINOR " + version_minor + "\n"
     elif line.startswith("#define DOCTEST_VERSION_PATCH "):
         doctest_contents += "#define DOCTEST_VERSION_PATCH " + version_patch + "\n"
-    elif line.startswith("#define DOCTEST_VERSION_STR "):
-        doctest_contents += "#define DOCTEST_VERSION_STR \"" + version + "\"\n"
     else:
         doctest_contents += line
 
@@ -33,17 +31,14 @@ readme.write(doctest_contents)
 readme.close()
 
 # update meson file with version
+print("updating the meson file")
 meson_contents = ""
 for line in fileinput.input(["../meson.build"]):
     if line.startswith("project('doctest'"):
-        meson_contents += "project('doctest', ['cpp'], version: '" + version + "', meson_version:'>=0.50')\n"
+        meson_contents += "project('doctest', ['cpp'], version: '" + version + "')\n"
     else:
         meson_contents += line
 
 meson = open("../meson.build", "w")
 meson.write(meson_contents)
 meson.close()
-
-# run generate_html.py
-print("generating html documentation from markdown")
-os.system("python generate_html.py")
