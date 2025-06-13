@@ -312,8 +312,9 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             if (strcmp("websocket", static_cast<char*>(in)) == 0)
             {
                 // Check URI
-                char* uri     = new char[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-                int   uri_len = lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI);
+                const size_t uri_size = lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1;
+                char* uri     = new char[uri_size];
+                int   uri_len = lws_hdr_copy(wsi, uri, uri_size, WSI_TOKEN_GET_URI);
                 if ((uri_len >= static_cast<int>(server->m_url.path().size())) &&
                     (strncmp(uri, server->m_url.path().c_str(), server->m_url.path().size()) == 0))
                 {
@@ -439,8 +440,9 @@ int LibWebsocketServer::eventCallback(struct lws* wsi, enum lws_callback_reasons
             server->m_clients[wsi] = client;
 
             // Notify connection
-            char* uri = new char[lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1];
-            if (lws_hdr_copy(wsi, uri, sizeof(uri), WSI_TOKEN_GET_URI) <= 0)
+            const size_t uri_size = lws_hdr_total_length(wsi, WSI_TOKEN_GET_URI) + 1;
+            char* uri = new char[uri_size];
+            if (lws_hdr_copy(wsi, uri, uri_size, WSI_TOKEN_GET_URI) <= 0)
             {
                 uri[0] = 0;
             }
