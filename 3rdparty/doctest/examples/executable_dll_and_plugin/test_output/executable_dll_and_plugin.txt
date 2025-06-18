@@ -27,5 +27,5 @@ plugin.cpp(0): FATAL ERROR: certain death!
 
 ===============================================================================
 [doctest] test cases: 5 | 3 passed | 2 failed | 0 skipped
-[doctest] assertions: 2 | 0 passed | 2 failed |
+[doctest] assertions: 3 | 1 passed | 2 failed |
 [doctest] Status: FAILURE!

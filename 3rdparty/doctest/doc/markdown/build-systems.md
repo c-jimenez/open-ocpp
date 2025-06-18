@@ -1,8 +1,8 @@
 ## Build systems
 
-The latest released version of doctest can be obtained from here: https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h
+The latest released version of doctest can be obtained from here: https://raw.githubusercontent.com/doctest/doctest/master/doctest/doctest.h
 
-You can substitute ```master``` with ```dev``` or a tag like ```1.2.9``` for a specific version in the URL above.
+You can substitute ```master``` with ```dev``` or a tag like ```v1.4.8``` for a specific version in the URL above.
 
 ### CMake
 
@@ -17,8 +17,8 @@ find_package(doctest REQUIRED)
 
 # Make test executable
 add_executable(tests main.cpp)
-target_compile_features(test PRIVATE cxx_std_17)
-target_link_libraries(test PRIVATE doctest::doctest)
+target_compile_features(tests PRIVATE cxx_std_17)
+target_link_libraries(tests PRIVATE doctest::doctest)
 ```
 
 - You can also use the following CMake snippet to automatically fetch the entire **doctest** repository from github and configure it as an external project:
@@ -30,7 +30,7 @@ find_package(Git REQUIRED)
 ExternalProject_Add(
     doctest
     PREFIX ${CMAKE_BINARY_DIR}/doctest
-    GIT_REPOSITORY https://github.com/onqtam/doctest.git
+    GIT_REPOSITORY https://github.com/doctest/doctest.git
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CONFIGURE_COMMAND ""
@@ -69,12 +69,42 @@ target_link_libraries(my_tests doctest)
 
 **doctest** is available through the following package managers:
 
-- vcpkg
+- vcpkg    
+    - You can download and install doctest using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
+      ```sh
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh #.\bootstrap-vcpkg.bat(for windows)
+        ./vcpkg integrate install
+        ./vcpkg install doctest
+      ```
+      The doctest port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please create an issue or pull request on the [vcpkg repository](https://github.com/Microsoft/vcpkg).
+
 - hunter
 - conan
-    - https://bintray.com/bincrafters/public-conan/doctest:bincrafters
-    - https://bintray.com/mmha/conan/doctest%3Ammha
+    - https://conan.io/center/doctest
+    - https://github.com/conan-io/conan-center-index/tree/master/recipes/doctest
 - Homebrew (`brew install doctest`)
+
+- [build2](https://build2.org/) and [cppget.org](https://cppget.org/)
+    + You can automatically download and use a specific version of **doctest** from the stable section of the [cppget.org](https://cppget.org/) package repositiory ([cppget.org/doctest](https://cppget.org/doctest)) in each of your [build2](https://build2.org) projects.
+    + For that, make sure to add the stable section of the `cppget.org` repository to your project's `repositories.manifest` file to be able to fetch the package list.
+        ```
+        :
+        role: prerequisite
+        location: https://pkg.cppget.org/1/stable
+        #trust: ...
+        ```
+    + Add the dependency on **doctest** with your optional specific version constraint to your project's `manifest` file to make the package available for import.
+        ```
+        depends: doctest ^ 2.4.10
+        ```
+    + Import **doctest** and add it to the dependencies of your application in your `buildfile`. Please note, it is still a single header-only library and nothing will be linked. Only the path of the header file will be made available to the executable.
+        ```
+        import doctest = doctest%lib{doctest}
+        exe{my-exe}: {hxx cxx}{**} $doctest
+        ```
+    + For further information, please refer to [build2 | Documentation](https://build2.org/doc.xhtml), [cppget.org/doctest](https://cppget.org/doctest), or [GitHub: build2-packaging/doctest](https://github.com/build2-packaging/doctest) for bug reports.
 
 ---
 

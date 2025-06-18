@@ -1,9 +1,11 @@
+#define DOCTEST_CONFIG_ASSERTS_RETURN_VALUES
 #include <doctest/doctest.h>
 
 #include "header.h"
 
 DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #include <stdexcept>
+#include <cmath>
 DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_END
 
 TEST_CASE("normal macros") {
@@ -36,8 +38,11 @@ TEST_CASE("exceptions-related macros") {
     CHECK_THROWS_AS(throw_if(false, 0), int); // fails
 
     CHECK_THROWS_WITH(throw_if(true, "whops!"), "whops! no match!"); // fails
+    CHECK_THROWS_WITH(throw_if(true, "whops! does it match?"), doctest::Contains("whops!"));
+    CHECK_THROWS_WITH(throw_if(true, "whops! does it match?"), doctest::Contains("whops! no match!")); // fails
     CHECK_THROWS_WITH_AS(throw_if(true, "whops!"), "whops! no match!", bool); // fails
     CHECK_THROWS_WITH_AS(throw_if(true, "whops!"), "whops!", int); // fails
+    CHECK_THROWS_WITH_AS(throw_if(true, "whops! does it match?"), doctest::Contains("whops! no match!"), int); // fails
 
     CHECK_NOTHROW(throw_if(true, 0)); // fails
     CHECK_NOTHROW(throw_if(false, 0));
@@ -71,6 +76,10 @@ TEST_CASE("WARN level of asserts don't fail the test case") {
     WARN_NOTHROW(throw_if(true, 0));
 
     WARN_EQ(1, 0);
+    doctest::String myStr = doctest::String("Hello world, how are you doing? Well, nice to meet you, Goodbye!");
+    WARN_EQ(myStr, doctest::Contains("Hello"));
+    WARN(myStr == doctest::Contains("Goodbye"));
+    WARN(myStr != doctest::Contains("goodbye"));
     WARN_UNARY(0);
     WARN_UNARY_FALSE(1);
 }
@@ -86,6 +95,10 @@ TEST_CASE("CHECK level of asserts fail the test case but don't abort it") {
     CHECK_NOTHROW(throw_if(true, 0));
 
     CHECK_EQ(1, 0);
+    doctest::String myStr = doctest::String("Hello world, how are you doing? Well, nice to meet you, Goodbye!");
+    CHECK_EQ(myStr, doctest::Contains("Hello"));
+    CHECK(myStr == doctest::Contains("Goodbye"));
+    CHECK(myStr != doctest::Contains("goodbye"));
     CHECK_UNARY(0);
     CHECK_UNARY_FALSE(1);
 
@@ -113,19 +126,19 @@ TEST_CASE("REQUIRE level of asserts fail and abort the test case - 5") {
     MESSAGE("should not be reached!");
 }
 TEST_CASE("REQUIRE level of asserts fail and abort the test case - 6") {
-	REQUIRE_THROWS_WITH(throw_if(false, ""), "whops!");
+    REQUIRE_THROWS_WITH(throw_if(false, ""), "whops!");
     MESSAGE("should not be reached!");
 }
 TEST_CASE("REQUIRE level of asserts fail and abort the test case - 7") {
-	REQUIRE_THROWS_WITH(throw_if(true, ""), "whops!");
+    REQUIRE_THROWS_WITH(throw_if(true, ""), "whops!");
     MESSAGE("should not be reached!");
 }
 TEST_CASE("REQUIRE level of asserts fail and abort the test case - 8") {
-	REQUIRE_THROWS_WITH_AS(throw_if(false, ""), "whops!", bool);
+    REQUIRE_THROWS_WITH_AS(throw_if(false, ""), "whops!", bool);
     MESSAGE("should not be reached!");
 }
 TEST_CASE("REQUIRE level of asserts fail and abort the test case - 9") {
-	REQUIRE_THROWS_WITH_AS(throw_if(true, ""), "whops!", bool);
+    REQUIRE_THROWS_WITH_AS(throw_if(true, ""), "whops!", bool);
     MESSAGE("should not be reached!");
 }
 TEST_CASE("REQUIRE level of asserts fail and abort the test case - 10") {
@@ -191,3 +204,32 @@ static void someAssertsInFunction() {
 TEST_CASE("some asserts used in a function called by a test case") {
     someAssertsInFunction();
 }
+
+// TODO: Remove NOLINT (if (false && (__VA_ARGS__));)?
+DOCTEST_INLINE_NOINLINE void comp(int a, int b) { // NOLINT(misc-unused-parameters)
+    if (CHECK(a == b)) { MESSAGE(":D"); }
+    if (CHECK_FALSE(a != b)) { MESSAGE(":D"); }
+    if (CHECK_EQ(a, b)) { MESSAGE(":D"); }
+    if (CHECK_UNARY(a == b)) { MESSAGE(":D"); }
+    if (CHECK_UNARY_FALSE(a != b)) { MESSAGE(":D"); }
+}
+
+DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4702)
+TEST_CASE("check return values") {
+    comp(0, 0);
+
+    if (CHECK_THROWS(throw_if(true, true))) { MESSAGE(":D"); }
+    if (CHECK_THROWS_AS(throw_if(true, 2), int)) { MESSAGE(":D"); }
+    if (CHECK_NOTHROW(throw_if(false, 2))) { MESSAGE(":D"); }
+    if (CHECK_THROWS_WITH(throw_if(true, 2), "2")) { MESSAGE(":D"); }
+}
+
+TEST_CASE("check return values no print") {
+    comp(4, 2);
+
+    if (CHECK_THROWS(throw_if(false, false))) { MESSAGE(":D"); }
+    if (CHECK_THROWS_AS(throw_if(true, 2), doctest::Approx)) { MESSAGE(":D"); }
+    if (CHECK_NOTHROW(throw_if(true, 2))) { MESSAGE(":D"); }
+    if (CHECK_THROWS_WITH(throw_if(true, 2), "1")) { MESSAGE(":D"); }
+}
+DOCTEST_MSVC_SUPPRESS_WARNING_POP
