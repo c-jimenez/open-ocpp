@@ -23,6 +23,7 @@ As such it can be used and distributed in any commercial and non-commercial prod
   - [License](#license)
   - [Table of contents](#table-of-contents)
   - [Features](#features)
+  - [Branches and version management](#branches-and-version-management)
   - [Build](#build)
     - [Pre-requisites](#pre-requisites)
     - [Build options](#build-options)
@@ -40,6 +41,19 @@ As such it can be used and distributed in any commercial and non-commercial prod
 
 * [OCPP 1.6 features](./README_ocpp16.md)
 * [OCPP 2.0.1 features](./README_ocpp20.md)
+
+## Branches and version management
+
+The development of the OCPP 2.X.Y features has introduced a breaking change in the API and namespaces, so there are now 2 development branches:
+
+* The **develop** branch is now dedicated to the implementation of the OCPP 2.X.Y features and to bug fixes on the OCPP 1.6 features using the new API and namespaces
+* The **develop16** branch is dedicated for maintenance of the legacy OCPP 1.6 features and will only be used for bug fixing (backports from **develop** branch)
+
+The new **Open OCPP** releases created from the **develop** branch will have a version number **2.X.Y** starting with the **2.0.0** release.
+
+The legacy **Open OCPP** releases created from the **develop16** branch will have a version number **1.X.Y** starting with the **1.6.0** release.
+
+So if you are already working with **Open OCPP** without having any intention to migrate to the new API or to use the OCPP 2.X.Y features, you can keep following the **1.X.Y** releases. All the OCPP1.6 bug fixes will be backported on these releases.
 
 ## Build
 
