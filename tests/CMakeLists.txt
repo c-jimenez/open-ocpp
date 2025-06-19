@@ -1,6 +1,6 @@
 
 # Path to the JSON schemas
-add_definitions(-DSCHEMAS_DIR="${CMAKE_SOURCE_DIR}/schemas")
+add_definitions(-DSCHEMAS_DIR="${CMAKE_SOURCE_DIR}/schemas/ocpp16")
 
 # Common libraries
 if (NOT MSVC)
@@ -13,7 +13,7 @@ endif()
 include_directories(.)
 
 # Subdirectories
-add_subdirectory(chargepoint)
+add_subdirectory(ocpp16)
 add_subdirectory(rpc)
 add_subdirectory(stubs)
 add_subdirectory(tools)

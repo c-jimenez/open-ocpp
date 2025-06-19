@@ -1,0 +1,225 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "urn:OpenOCPP:2.0.1:DeviceModel",
+	"comment": "OCPP 2.0.1 Device Model",
+	"definitions":
+	{
+		"ComponentType":
+		{
+			"$comment": "Defines a component in the device model",
+			"type": "object",
+			"additionalProperties": false,
+			"properties":
+			{
+				"name":
+				{
+					"$comment": "Name of the component",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 50
+				},
+				"evse":
+				{
+					"$comment": "Id of the EVSE associated with the variable",
+					"type": "integer",
+					"minimum": 1
+				},
+				"connector":
+				{
+					"$comment": "Id of the connector associated with the variable",
+					"type": "integer",
+					"minimum": 1
+				},
+				"instance":
+				{
+					"$comment": "Instance of the variable",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 50
+				},
+				"variables":
+				{
+					"$comment": "List of the variables included in the components",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/VariableType"
+					},
+					"minItems": 1
+				}
+			},
+			"required": [
+				"name",
+				"variables"
+			]
+		},
+		"VariableType":
+		{
+			"$comment": "Defines a variable of a component in the device model",
+			"type": "object",
+			"additionalProperties": false,
+			"properties":
+			{
+				"name":
+				{
+					"$comment": "Name of the variable",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 50
+				},
+				"instance":
+				{
+					"$comment": "Instance of the variable",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 50
+				},
+				"attributes":
+				{
+					"$comment": "Attributes of the variable",
+					"type": "object",
+					"additionalProperties": false,
+					"properties":
+					{
+						"type":
+						{
+							"$ref": "#/definitions/AttributeEnumType",
+							"default": "actual"
+						},
+						"mutability":
+						{
+							"$ref": "#/definitions/MutabilityEnumType"
+						},
+						"persistent":
+						{
+							"$comment": "If true, value will be persistent across system reboots or power down",
+							"type": "boolean",
+							"default": true
+						},
+						"constant":
+						{
+							"$comment": "If true, value that will never be changed by the Charging Station at runtime",
+							"type": "boolean",
+							"default": false
+						}
+					},
+					"required": [
+						"mutability"
+					]
+				},
+				"characteristics":
+				{
+					"$comment": "Characteristics of the variable",
+					"type": "object",
+					"additionalProperties": false,
+					"properties":
+					{
+						"data_type":
+						{
+							"$ref": "#/definitions/DataTypeEnumType"
+						},
+						"unit":
+						{
+							"$comment": "Unit of the variable",
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 16
+						},
+						"min_limit":
+						{
+							"$comment": "Minimum possible value of the variable",
+							"type": "number"
+						},
+						"max_limit":
+						{
+							"$comment": "Maximum possible value of the variable. When the data_type of this Variable is String, OptionList, SequenceList or MemberList, this field defines the maximum length of the (CSV) string.",
+							"type": "number"
+						},
+						"values_list":
+						{
+							"$comment": "Mandatory when dataType = OptionList, MemberList or SequenceList. valuesList specifies the allowed values for the type",
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 1000
+						},
+						"supports_monitoring":
+						{
+							"$comment": "Flag indicating if this variable supports monitoring",
+							"type": "boolean",
+							"default": true
+						}
+					},
+					"required": [
+						"data_type"
+					]
+				},
+				"required":
+				{
+					"$comment": "Flag indicating if this variable is mandatory by the OCPP standard. Ignored by the Open OCPP stack.",
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"name",
+				"attributes",
+				"characteristics"
+			]
+		},
+		"AttributeEnumType":
+		{
+			"$comment": "Mutability of a variable",
+			"type": "string",
+			"additionalProperties": false,
+			"enum": [
+				"Actual",
+				"Target",
+				"MinSet",
+				"MaxSet"
+			]
+		},
+		"MutabilityEnumType":
+		{
+			"$comment": "Mutability of a variable",
+			"type": "string",
+			"additionalProperties": false,
+			"enum": [
+				"ReadOnly",
+				"WriteOnly",
+				"ReadWrite"
+			]
+		},
+		"DataTypeEnumType":
+		{
+			"$comment": "Data type of a variable",
+			"type": "string",
+			"additionalProperties": false,
+			"enum": [
+				"string",
+				"decimal",
+				"integer",
+				"dateTime",
+				"boolean",
+				"OptionList",
+				"SequenceList",
+				"MemberList"
+			]
+		}
+	},
+	"type": "object",
+	"additionalProperties": false,
+	"properties":
+	{
+		"components":
+		{
+			"$comment": "List of components",
+			"type": "array",
+			"items":
+			{
+				"$ref": "#/definitions/ComponentType"
+			},
+			"minItems": 1
+		}
+	},
+	"required": [
+		"components"
+	]
+}
