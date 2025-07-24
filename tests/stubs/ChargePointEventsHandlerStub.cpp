@@ -198,10 +198,10 @@ std::string ChargePointEventsHandlerStub::getDiagnostics(const ocpp::types::Opti
     return m_diag_file;
 }
 
-/** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested() */
-std::string ChargePointEventsHandlerStub::updateFirmwareRequested()
+/** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested(const std::string&) */
+std::string ChargePointEventsHandlerStub::updateFirmwareRequested(const std::string& url)
 {
-    m_calls["updateFirmwareRequested"] = {{}};
+    m_calls["updateFirmwareRequested"] = {{"url", url}};
     return m_diag_file;
 }
 

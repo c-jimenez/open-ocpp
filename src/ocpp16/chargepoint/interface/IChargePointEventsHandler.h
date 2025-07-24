@@ -184,9 +184,10 @@ class IChargePointEventsHandler
 
     /**
      * @brief Called on an update firmware request
+     * @param url URL from where to download the file
      * @return Path where to download the firmware
      */
-    virtual std::string updateFirmwareRequested() = 0;
+    virtual std::string updateFirmwareRequested(const std::string& url) = 0;
 
     /**
      * @brief Called when a firmware is ready to be installed

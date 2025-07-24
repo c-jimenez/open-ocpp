@@ -717,9 +717,10 @@ class ChargePointEventsHandler : public IChargePointEventsHandler
 
     /**
      * @brief Called on an update firmware request
+     * @param url URL from where to download the file
      * @return Path where to download the firmware
      */
-    std::string updateFirmwareRequested() override { return ""; }
+    std::string updateFirmwareRequested(const std::string& url) override { return ""; }
 
     /**
      * @brief Called when a firmware is ready to be installed

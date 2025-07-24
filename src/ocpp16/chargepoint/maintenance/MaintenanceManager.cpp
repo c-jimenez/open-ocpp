@@ -655,7 +655,7 @@ void MaintenanceManager::processUpdateFirmware(std::string                      
     }
 
     // Notify start of download
-    std::string local_firmware_file = m_events_handler.updateFirmwareRequested();
+    std::string local_firmware_file = m_events_handler.updateFirmwareRequested(location);
     m_firmware_status               = FirmwareStatus::Downloading;
     sendFirmwareStatusNotification();
 
@@ -857,7 +857,7 @@ void MaintenanceManager::processSignedUpdateFirmware(std::string                
     }
 
     // Notify start of download
-    std::string local_firmware_file = m_events_handler.updateFirmwareRequested();
+    std::string local_firmware_file = m_events_handler.updateFirmwareRequested(location);
     m_signed_firmware_status        = FirmwareStatusEnumType::Downloading;
     sendSignedFirmwareStatusNotification();
 

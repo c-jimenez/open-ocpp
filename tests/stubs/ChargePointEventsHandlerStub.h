@@ -102,8 +102,8 @@ class ChargePointEventsHandlerStub : public ocpp::chargepoint::IChargePointEvent
     std::string getDiagnostics(const ocpp::types::Optional<ocpp::types::DateTime>& start_time,
                                const ocpp::types::Optional<ocpp::types::DateTime>& stop_time) override;
 
-    /** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested() */
-    std::string updateFirmwareRequested() override;
+    /** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested(const std::string&) */
+    std::string updateFirmwareRequested(const std::string& url) override;
 
     /** @copydoc void IChargePointEventsHandler::installFirmware() */
     void installFirmware(const std::string& firmware_file) override;
