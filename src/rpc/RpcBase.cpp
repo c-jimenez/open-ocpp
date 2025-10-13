@@ -312,6 +312,8 @@ void RpcBase::processReceivedData(const void* data, size_t size)
     }
     catch (const std::exception&)
     {
+        sendCallError("", RPC_ERROR_PROTOCOL, "");
+        return;
     }
     if (valid && rpc_frame.IsArray() && (rpc_frame.Size() >= 3))
     {
