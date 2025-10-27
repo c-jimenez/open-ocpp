@@ -297,10 +297,6 @@ void RpcBase::processReceivedData(const void* data, size_t size)
 {
     // Decode received data
     std::string received_data(reinterpret_cast<const char*>(data), size);
-    for (ISpy* spy : m_spies)
-    {
-        spy->rcpMessageReceived(received_data);
-    }
 
     // RPC frame must be a JSON array
     bool                valid = false;
@@ -315,6 +311,10 @@ void RpcBase::processReceivedData(const void* data, size_t size)
     }
     if (valid && rpc_frame.IsArray() && (rpc_frame.Size() >= 3))
     {
+        for (ISpy* spy : m_spies)
+        {
+            spy->rcpMessageReceived(received_data);
+        }
         // Extract message type
         const rapidjson::Value& msg_type_value = rpc_frame[0];
         if (msg_type_value.IsUint())
