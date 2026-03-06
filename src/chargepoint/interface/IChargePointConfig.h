@@ -40,6 +40,8 @@ class IChargePointConfig
     virtual std::string databasePath() const = 0;
     /** @brief Path to the JSON schemas to validate the messages */
     virtual std::string jsonSchemasPath() const = 0;
+    /** @brief Path to the ISO chargepoint EV cert*/
+    virtual std::string EvCertPath() const = 0;
 
     // Communication parameters
 
