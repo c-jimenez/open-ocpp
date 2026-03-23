@@ -19,6 +19,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Iso15118Authorize.h"
 #include "IRpc.h"
 #include "IdTokenInfoTypeConverter.h"
+#include "IdTokenTypeConverter.h"
 #include "OcspRequestDataTypeConverter.h"
 
 using namespace ocpp::types;
@@ -54,7 +55,9 @@ bool Iso15118AuthorizeReqConverter::fromJson(const rapidjson::Value& json,
 {
     bool ret = true;
     extract(json, "certificate", data.certificate);
-    extract(json, "idToken", data.idToken);
+
+    IdTokenTypeConverter id_token_converter;
+    ret = ret && id_token_converter.fromJson(json["idToken"], data.idToken, error_code, error_message);
     if (json.HasMember("iso15118CertificateHashData"))
     {
         const rapidjson::Value&      certificateHashData = json["iso15118CertificateHashData"];
@@ -77,7 +80,13 @@ bool Iso15118AuthorizeReqConverter::toJson(const Iso15118AuthorizeReq& data, rap
     {
         fill(json, "certificate", data.certificate);
     }
-    fill(json, "idToken", data.idToken);
+
+    IdTokenTypeConverter id_token_converter;
+    id_token_converter.setAllocator(allocator);
+    rapidjson::Document id_token;
+    id_token.Parse("{}");
+    ret = ret && id_token_converter.toJson(data.idToken, id_token);
+    json.AddMember(rapidjson::StringRef("idToken"), id_token.Move(), *allocator);
     if (!data.iso15118CertificateHashData.empty())
     {
         rapidjson::Value             certificateHashData(rapidjson::kArrayType);

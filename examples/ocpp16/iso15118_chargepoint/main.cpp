@@ -40,7 +40,8 @@ using namespace ocpp::x509;
 int main(int argc, char* argv[])
 {
     // Default parameters
-    std::string token_id         = "AABBCCDDEEFF";
+    IdTokenType token_id;
+    token_id.idToken.assign("AABBCCDDEEFF");
     std::string working_dir      = ".";
     bool        reset_all        = false;
     bool        reset_connectors = false;
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
             {
                 argv++;
                 argc--;
-                token_id = *argv;
+                token_id.idToken.assign(*argv);
             }
             else if ((strcmp(*argv, "-w") == 0) && (argc > 1))
             {
@@ -103,7 +104,7 @@ int main(int argc, char* argv[])
     }
 
     std::cout << "Starting charge point with :" << std::endl;
-    std::cout << "  - token_id = " << token_id << std::endl;
+    std::cout << "  - token_id = " << token_id.idToken.str() << std::endl;
     std::cout << "  - working_dir = " << working_dir << std::endl;
 
     // Configuration
@@ -204,7 +205,7 @@ int main(int argc, char* argv[])
                     std::this_thread::sleep_for(std::chrono::seconds(1u));
 
                     // Try to start charging session
-                    status = charge_point->startTransaction(connector_id, token_id, transaction_id);
+                    status = charge_point->startTransaction(connector_id, token_id.idToken);
                     if (status == AuthorizationStatus::Accepted)
                     {
                         std::cout << "Transaction " << transaction_id << " authorized, start charging" << std::endl;
@@ -214,7 +215,7 @@ int main(int argc, char* argv[])
                         std::this_thread::sleep_for(std::chrono::seconds(30u));
 
                         // End transaction
-                        charge_point->stopTransaction(connector_id, token_id, Reason::Local);
+                        charge_point->stopTransaction(connector_id, token_id.idToken, Reason::Local);
 
                         // Finishing state
                         charge_point->statusNotification(connector_id, ChargePointStatus::Finishing);

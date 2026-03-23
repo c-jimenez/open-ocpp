@@ -659,7 +659,7 @@ bool ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::SignedFirmw
 void ChargePointHandler::handleMessage(const ocpp::messages::ocpp16::Iso15118AuthorizeReq& request,
                                        ocpp::messages::ocpp16::Iso15118AuthorizeConf&      response)
 {
-    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Authorize requested : idToken = " << request.idToken.str()
+    LOG_INFO << "[" << m_identifier << "] - [ISO15118] Authorize requested : idToken = " << request.idToken.idToken.str()
              << " -  certificate = " << (request.certificate.isSet() ? std::to_string(request.certificate.value().size()) : "not set");
 
     // Load certificate

@@ -191,8 +191,8 @@ void AuthentManager::update(const std::string& id_tag, const ocpp::types::ocpp16
     }
 }
 
-/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::iso15118Authorize(const std::string&) */
-ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const std::string& token_id)
+/** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::iso15118Authorize(const ocpp::types::ocpp16::IdTokenType&) */
+ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const ocpp::types::ocpp16::IdTokenType& token_id)
 {
     AuthorizationStatus status = AuthorizationStatus::Invalid;
 
@@ -205,12 +205,12 @@ ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const
         IdTagInfo tag_info;
         if (m_ocpp_config.localAuthListEnabled())
         {
-            found = m_local_list.check(token_id, tag_info);
+            found = m_local_list.check(token_id.idToken, tag_info);
             if (found)
             {
                 status = tag_info.status;
             }
-            LOG_DEBUG << "Token [" << token_id << "] found in local list : " << found;
+            LOG_DEBUG << "Token [" << token_id.idToken.str() << "] found in local list : " << found;
         }
 
         // Check local cache
@@ -218,12 +218,12 @@ ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const
         {
             if (m_ocpp_config.authorizationCacheEnabled())
             {
-                found = m_cache.check(token_id, tag_info);
+                found = m_cache.check(token_id.idToken, tag_info);
                 if (found)
                 {
                     status = tag_info.status;
                 }
-                LOG_DEBUG << "Token [" << token_id << "] found in cache : " << found;
+                LOG_DEBUG << "Token [" << token_id.idToken.str() << "] found in cache : " << found;
             }
         }
 
@@ -234,18 +234,18 @@ ocpp::types::ocpp16::AuthorizationStatus AuthentManager::iso15118Authorize(const
             {
                 status = AuthorizationStatus::Accepted;
 
-                LOG_DEBUG << "Token [" << token_id << "] unknown but accepted";
+                LOG_DEBUG << "Token [" << token_id.idToken.str() << "] unknown but accepted";
             }
         }
     }
 
-    LOG_INFO << "Authorization for token [" << token_id << "] : " << AuthorizationStatusHelper.toString(status);
+    LOG_INFO << "Authorization for token [" << token_id.idToken.str() << "] : " << AuthorizationStatusHelper.toString(status);
 
     return status;
 }
 
-/** @copydoc void IAuthentManager::iso15118Update(const std::string&, const ocpp::types::ocpp16::IdTokenInfoType&) */
-void AuthentManager::iso15118Update(const std::string& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info)
+/** @copydoc void IAuthentManager::iso15118Update(const ocpp::types::ocpp16::IdTokenType&, const ocpp::types::ocpp16::IdTokenInfoType&) */
+void AuthentManager::iso15118Update(const ocpp::types::ocpp16::IdTokenType& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info)
 {
     // Check if the cache is enabled
     if (m_ocpp_config.authorizationCacheEnabled())
@@ -255,7 +255,7 @@ void AuthentManager::iso15118Update(const std::string& token_id, const ocpp::typ
         if (m_ocpp_config.localAuthListEnabled())
         {
             IdTagInfo unused_tag_info;
-            in_local_list = m_local_list.check(token_id, unused_tag_info);
+            in_local_list = m_local_list.check(token_id.idToken, unused_tag_info);
         }
         if (!in_local_list)
         {
@@ -263,7 +263,7 @@ void AuthentManager::iso15118Update(const std::string& token_id, const ocpp::typ
             IdTagInfo tag_info;
             tag_info.status     = token_info.status;
             tag_info.expiryDate = token_info.cacheExpiryDateTime;
-            m_cache.update(token_id, tag_info);
+            m_cache.update(token_id.idToken, tag_info);
         }
     }
 }

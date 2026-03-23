@@ -70,11 +70,11 @@ class AuthentManager : public IAuthentManager
     /** @copydoc void IAuthentManager::update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo&) */
     void update(const std::string& id_tag, const ocpp::types::ocpp16::IdTagInfo& tag_info) override;
 
-    /** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::iso15118Authorize(const std::string&) */
-    ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const std::string& token_id) override;
+    /** @copydoc ocpp::types::ocpp16::AuthorizationStatus IAuthentManager::iso15118Authorize(const ocpp::types::ocpp16::IdTokenType&) */
+    ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const ocpp::types::ocpp16::IdTokenType& token_id) override;
 
-    /** @copydoc void IAuthentManager::iso15118Update(const std::string&, const ocpp::types::ocpp16::IdTokenInfoType&) */
-    void iso15118Update(const std::string& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info) override;
+    /** @copydoc void IAuthentManager::iso15118Update(const ocpp::types::ocpp16::IdTokenType&, const ocpp::types::ocpp16::IdTokenInfoType&) */
+    void iso15118Update(const ocpp::types::ocpp16::IdTokenType& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info) override;
 
   private:
     /** @brief Standard OCPP configuration */

@@ -489,17 +489,17 @@ void DefaultCentralSystemEventsHandler::ChargePointRequestHandler::signedFirmwar
 
 /** @copydoc ocpp::types::ocpp16::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
                                                           const ocpp::x509::Certificate&,
-                                                          const std::string&,
+                                                          const ocpp::types::ocpp16::IdTokenType&,
                                                           const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
                                                           ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) override; */
 ocpp::types::ocpp16::IdTokenInfoType DefaultCentralSystemEventsHandler::ChargePointRequestHandler::iso15118Authorize(
     const ocpp::x509::Certificate&                                                  certificate,
-    const std::string&                                                              id_token,
+    const ocpp::types::ocpp16::IdTokenType&                                         id_token,
     const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
     ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status)
 {
     cout << "[" << m_chargepoint->identifier() << "] - [ISO15118] Authorize : certificate = " << certificate.pem().size()
-         << " - id_token = " << id_token << " - cert_hash_data size = " << cert_hash_data.size() << endl;
+         << " - id_token = " << id_token.idToken.str() << " - cert_hash_data size = " << cert_hash_data.size() << endl;
 
     // Prepare response
     ocpp::types::ocpp16::IdTokenInfoType ret;
