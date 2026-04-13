@@ -21,7 +21,6 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 
 #include <iomanip>
 #include <iostream>
-#include <mutex>
 
 namespace ocpp
 {
@@ -126,6 +125,9 @@ std::function<void(unsigned int, const std::string&)> ExtLogger::m_log_function 
     LOG_OUTPUT << level << " - [" << std::put_time(&now_tm, "%Y-%m-%dT%T") << "] - " << log_line << std::endl;
 };
 
+/** @brief Mutex protecting the external logging function */
+std::mutex ExtLogger::m_log_function_mutex;
+
 /** @brief Constructor */
 ExtLogger::ExtLogger(const char* level_str, unsigned int level, const char* filename, const char* line) : m_log_output(), m_level(level)
 {
@@ -145,12 +147,29 @@ ExtLogger::ExtLogger(const char* name, const char* level_str, unsigned int level
 /** @brief Destructor */
 ExtLogger::~ExtLogger()
 {
-    m_log_function(m_level, m_log_output.str());
+    std::function<void(unsigned int, const std::string&)> log_function;
+
+    {
+        // Protect access to the global callback
+        std::lock_guard<std::mutex> lock(m_log_function_mutex);
+        log_function = m_log_function;
+    }
+    try
+    {
+        if (log_function)
+        {
+            log_function(m_level, m_log_output.str());
+        }
+    }
+    catch (...)
+    {
+    }
 }
 
 /** @brief Register an external logging function */
 void ExtLogger::registerLogFunction(std::function<void(unsigned int, const std::string&)> log_function)
 {
+    std::lock_guard<std::mutex> lock(m_log_function_mutex);
     m_log_function = log_function;
 }
 

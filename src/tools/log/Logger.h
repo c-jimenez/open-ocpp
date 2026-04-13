@@ -24,6 +24,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -249,6 +250,9 @@ class ExtLogger
     std::stringstream m_log_output;
     /** @brief Log level */
     unsigned int m_level;
+
+    /** @brief Mutex protecting the external logging function */
+    static std::mutex m_log_function_mutex;
 
     /** @brief External logging function */
     static std::function<void(unsigned int, const std::string&)> m_log_function;
