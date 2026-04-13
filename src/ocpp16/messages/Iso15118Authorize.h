@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IMessageConverter.h"
 #include "IdToken.h"
 #include "IdTokenInfoType.h"
+#include "IdTokenType.h"
 #include "OcspRequestDataType.h"
 #include "Optional.h"
 
@@ -43,7 +44,7 @@ struct Iso15118AuthorizeReq
     /** @brief Optional. The X.509 certificated presented by EV and encoded in PEM format */
     ocpp::types::Optional<ocpp::types::CiStringType<5500u>> certificate;
     /** @brief Required. This contains the identifier that needs to be authorized */
-    ocpp::types::ocpp16::IdToken idToken;
+    ocpp::types::ocpp16::IdTokenType idToken;
     /** @brief Optional. Contains the information needed to verify the EV Contract Certificate via OCSP */
     std::vector<ocpp::types::ocpp16::OcspRequestDataType> iso15118CertificateHashData;
 };

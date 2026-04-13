@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "Enums.h"
 #include "IdTagInfo.h"
 #include "IdTokenInfoType.h"
+#include "IdTokenType.h"
 
 namespace ocpp
 {
@@ -55,14 +56,15 @@ class IAuthentManager
      * @param token_id Token id of the user's
      * @return Authorization status (see AuthorizationStatus enum)
      */
-    virtual ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const std::string& token_id) = 0;
+    virtual ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(const ocpp::types::ocpp16::IdTokenType& token_id) = 0;
 
     /**
      * @brief Update an ISO15118 token information
      * @param token_id Id of the token to update
      * @param token_info New token informations
      */
-    virtual void iso15118Update(const std::string& token_id, const ocpp::types::ocpp16::IdTokenInfoType& token_info) = 0;
+    virtual void iso15118Update(const ocpp::types::ocpp16::IdTokenType&     token_id,
+                                const ocpp::types::ocpp16::IdTokenInfoType& token_info) = 0;
 };
 
 } // namespace chargepoint

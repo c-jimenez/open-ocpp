@@ -26,6 +26,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "GenericMessagesConverter.h"
 #include "IDataTransferManager.h"
 #include "IdTokenInfoType.h"
+#include "IdTokenType.h"
 #include "Iso15118.h"
 #include "Logger.h"
 #include "OcspRequestDataType.h"
@@ -100,7 +101,7 @@ class Iso15118Manager : public IDataTransferManager::IDataTransferHandler
     */
     ocpp::types::ocpp16::AuthorizationStatus authorize(
         const ocpp::x509::Certificate&                                                  certificate,
-        const std::string&                                                              id_token,
+        const ocpp::types::ocpp16::IdTokenType&                                         id_token,
         const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
         ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status);
     /**

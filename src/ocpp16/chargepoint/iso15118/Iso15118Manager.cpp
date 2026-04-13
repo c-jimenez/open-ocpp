@@ -78,11 +78,11 @@ Iso15118Manager::~Iso15118Manager() { }
 /** @brief Authorize an ISO15118 transaction */
 ocpp::types::ocpp16::AuthorizationStatus Iso15118Manager::authorize(
     const ocpp::x509::Certificate&                                                  certificate,
-    const std::string&                                                              id_token,
+    const ocpp::types::ocpp16::IdTokenType&                                         id_token,
     const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
     ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status)
 {
-    LOG_INFO << "[ISO15118] Authorize : token = " << id_token;
+    LOG_INFO << "[ISO15118] Authorize : token = " << id_token.idToken.str();
 
     AuthorizationStatus status = AuthorizationStatus::Invalid;
 
@@ -106,7 +106,7 @@ ocpp::types::ocpp16::AuthorizationStatus Iso15118Manager::authorize(
             {
                 request.certificate.value().assign(certificate.pem());
             }
-            request.idToken.assign(id_token);
+            request.idToken                     = id_token;
             request.iso15118CertificateHashData = cert_hash_data;
 
             // Send request

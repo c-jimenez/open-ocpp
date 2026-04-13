@@ -192,12 +192,12 @@ class DefaultCentralSystemEventsHandler : public ocpp::centralsystem::ICentralSy
 
         /** @copydoc ocpp::types::ocpp16::IdTokenInfoType IChargePointRequestHandler::iso15118Authorize(
                                                           const ocpp::x509::Certificate&,
-                                                          const std::string&,
+                                                          const ocpp::types::ocpp16::IdTokenType&,
                                                           const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&,
                                                           ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>&) override; */
         ocpp::types::ocpp16::IdTokenInfoType iso15118Authorize(
             const ocpp::x509::Certificate&                                                  certificate,
-            const std::string&                                                              id_token,
+            const ocpp::types::ocpp16::IdTokenType&                                         id_token,
             const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
             ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status) override;
 

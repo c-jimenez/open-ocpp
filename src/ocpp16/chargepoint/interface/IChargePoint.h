@@ -23,6 +23,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "IChargePointConfig.h"
 #include "IChargePointEventsHandler.h"
 #include "IOcppConfig.h"
+#include "IdTokenType.h"
 #include "OcspRequestDataType.h"
 #include "SecurityEvent.h"
 #include "SmartChargingSetpoint.h"
@@ -275,10 +276,9 @@ class IChargePoint
     */
     virtual ocpp::types::ocpp16::AuthorizationStatus iso15118Authorize(
         const ocpp::x509::Certificate&                                                  certificate,
-        const std::string&                                                              id_token,
+        const ocpp::types::ocpp16::IdTokenType&                                         id_token,
         const std::vector<ocpp::types::ocpp16::OcspRequestDataType>&                    cert_hash_data,
         ocpp::types::Optional<ocpp::types::ocpp16::AuthorizeCertificateStatusEnumType>& cert_status) = 0;
-
     /**
      * @brief Get or update an ISO15118 EV certificate
      * @param iso15118_schema_version Schema version currently used for the 15118 session between EV and Charge Point
