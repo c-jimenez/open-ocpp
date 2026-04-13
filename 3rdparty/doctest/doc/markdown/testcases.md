@@ -48,7 +48,7 @@ When any of these macros are used the console reporter recognises them and forma
 
 Other than the additional prefixes and the formatting in the console reporter these macros behave exactly as ```TEST_CASE```s and ```SUBCASE```s. As such there is nothing enforcing the correct sequencing of these macros - that's up to the programmer!
 
-Note that when using the [`--test-case=<filters>`](https://github.com/onqtam/doctest/blob/master/doc/markdown/commandline.md) command line option (or `--subcase=<filters>`) you will have to pass the prefix `Scenario: ` as well.
+Note that when using the [`--test-case=<filters>`](https://github.com/doctest/doctest/blob/master/doc/markdown/commandline.md) command line option (or `--subcase=<filters>`) you will have to pass the prefix `Scenario: ` as well.
 
 ## Test fixtures
 
@@ -122,8 +122,8 @@ Multiple decorators can be used at the same time. These are the currently suppor
 - **```skip(bool = true)```** - marks the test case to be skipped from execution - unless the ```--no-skip``` option is used
 - **```no_breaks(bool = true)```** - no breaking into the debugger for asserts in the test case - useful in combination with `may_fail`/`should_fail`/`expected_failures`
 - **```no_output(bool = true)```** - no output from asserts in the test case - useful in combination with `may_fail`/`should_fail`/`expected_failures`
-- **```may_fail(bool = true)```** - doesn't fail the test if any given assertion fails (but still reports it) - this can be useful to flag a work-in-progress, or a known issue that you don't want to immediately fix but still want to track in the your tests
-- **```should_fail(bool = true)```** - like **```may_fail()```** but fails the test if it passes - his can be useful if you want to be notified of accidental, or third-party, fixes
+- **```may_fail(bool = true)```** - doesn't fail the test if any given assertion fails (but still reports it) - this can be useful to flag a work-in-progress, or a known issue that you don't want to immediately fix but still want to track in your tests
+- **```should_fail(bool = true)```** - like **```may_fail()```** but fails the test if it passes - this can be useful if you want to be notified of accidental, or third-party, fixes
 - **```expected_failures(int)```** - defines the number of assertions that are expected to fail within the test case - reported as failure when the number of failed assertions is different than the declared expected number of failures
 - **```timeout(double)```** - fails the test case if its execution exceeds this limit (in seconds) - but doesn't terminate it - that would require subprocess support
 - **```test_suite("name")```** - can be used on test cases to override (or just set) the test suite they are in

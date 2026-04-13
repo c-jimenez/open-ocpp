@@ -22,6 +22,7 @@ along with OpenOCPP. If not, see <http://www.gnu.org/licenses/>.
 #include "json.h"
 
 #include <memory>
+#include <string>
 
 namespace ocpp
 {

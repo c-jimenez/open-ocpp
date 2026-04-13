@@ -41,21 +41,10 @@ bool JsonValidator::init(const std::string& schema_file)
     file.open(schema_file);
     if (file.is_open())
     {
-        // Read the whole file
-        std::string     json;
-        char            buffer[1024u];
-        std::streamsize size;
-        do
-        {
-            file.read(buffer, sizeof(buffer) - 1u);
-            size         = file.gcount();
-            buffer[size] = 0;
-            json.append(buffer);
-        } while (size != 0);
-
         // Parse JSON schema
-        rapidjson::Document schema_doc;
-        schema_doc.Parse(json.c_str());
+        rapidjson::IStreamWrapper file_wrapper(file);
+        rapidjson::Document       schema_doc;
+        schema_doc.ParseStream(file_wrapper);
         rapidjson::ParseErrorCode error = schema_doc.GetParseError();
         if (error == rapidjson::ParseErrorCode ::kParseErrorNone)
         {
@@ -64,6 +53,14 @@ bool JsonValidator::init(const std::string& schema_file)
             m_last_error = "";
             ret          = true;
         }
+        else
+        {
+            m_last_error = GetParseError_En(error);
+        }
+    }
+    else
+    {
+        m_last_error = "Unable to open schema file : " + schema_file;
     }
 
     return ret;
@@ -81,15 +78,7 @@ bool JsonValidator::isValid(const rapidjson::Value& json_document)
     ret = json_document.Accept(validator);
     if (!ret)
     {
-        const char* invalid_keyword = validator.GetInvalidSchemaKeyword();
-        if (invalid_keyword)
-        {
-            m_last_error = "Error on keyword : " + std::string(invalid_keyword);
-        }
-        else
-        {
-            m_last_error = "Unknown error";
-        }
+        m_last_error = GetValidateError_En(validator.GetInvalidSchemaCode());
     }
 
     return ret;

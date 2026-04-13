@@ -46,6 +46,8 @@ class ChargePointConfigStub : public IChargePointConfig
     std::string databasePath() const override { return getString("DatabasePath"); }
     /** @brief Path to the JSON schemas to validate the messages */
     std::string jsonSchemasPath() const override { return getString("JsonSchemasPath"); }
+    /** @brief Path to the ISO chargepoint EV cert*/
+    std::string EvCertPath() const override { return getString("EvCertPath"); }
 
     // Communication parameters
 

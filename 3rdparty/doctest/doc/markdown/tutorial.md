@@ -1,6 +1,6 @@
 ## Tutorial
 
-To get started with **doctest** all you need is to download the [**latest version**](https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h) which is just a single header and include it in your source files (or add this repository as a git submodule).
+To get started with **doctest** all you need is to download the [**latest version**](https://raw.githubusercontent.com/doctest/doctest/master/doctest/doctest.h) which is just a single header and include it in your source files (or add this repository as a git submodule).
 
 This tutorial assumes you can use the header directly: ```#include "doctest.h"``` - so it is either in the same folder with your test source files or you have set up the include paths to it in your build system properly. 
 
@@ -32,7 +32,7 @@ TEST_CASE("testing the factorial function") {
 
 This will compile to a complete executable which responds to command line arguments. If you just run it with no arguments it will execute all test cases (in this case - just one), report any failures, report a summary of how many tests passed and failed and returns 0 on success and 1 if anything failed (useful if you just want a yes/no answer to: "did it work").
 
-If you run this as written it will pass. Everything is good. Right? Well there is still a bug here. We missed to check if ```factorial(0) == 1``` so lets add that check as well:
+If you run this as written it will pass. Everything is good. Right? Well there is still a bug here. We missed to check if ```factorial(0) == 1``` so let's add that check as well:
 
 ```c++
 TEST_CASE("testing the factorial function") {
@@ -91,7 +91,7 @@ TEST_CASE("vectors can be sized and resized") {
     REQUIRE(v.size() == 5);
     REQUIRE(v.capacity() >= 5);
 
-    SUBCASE("adding to the vector increases it's size") {
+    SUBCASE("adding to the vector increases its size") {
         v.push_back(1);
 
         CHECK(v.size() == 6);
@@ -175,7 +175,7 @@ root
 
 Subcases can be nested to an arbitrary depth (limited only by your stack size). Each leaf subcase (a subcase that contains no nested subcases) will be executed exactly once on a separate path of execution from any other leaf subcase (so no leaf subcase can interfere with another). A fatal failure in a parent subcase will prevent nested subcases from running - but then that's the idea.
 
-Keep in mind that even though **doctest** is [**thread-safe**](faq.md#is-doctest-thread-aware) - using subcases has to be done only in the main test runner thread.
+Keep in mind that even though **doctest** is [**thread-safe**](faq.md#is-doctest-thread-aware) - using subcases has to be done only in the main test runner thread and all threads spawned in a subcase ought to be joined before the end of that subcase and no new subcases should be entered while other threads with doctest assertions in them are still running.
 
 ## Scaling up
 
@@ -190,7 +190,7 @@ The requirement is that the following block of code ([**or equivalent**](main.md
 
 appears in _exactly_ one translation unit (source file). Use as many additional source files as you need for your tests - partitioned however makes most sense for your way of working. Each additional file needs only to ```#include "doctest.h"``` - do not repeat the ```#define```!
 
-In fact it is usually a good idea to put the block with the ```#define``` in it's own source file.
+In fact it is usually a good idea to put the block with the ```#define``` in its own source file.
 
 ## Next steps
 

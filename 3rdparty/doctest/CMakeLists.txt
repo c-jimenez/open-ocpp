@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 if(POLICY CMP0077)
     cmake_policy(SET CMP0077 NEW)
@@ -53,6 +53,14 @@ else()
     target_include_directories(${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		if (NOT WIN32)
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 ")
+		endif()
+	endif()
+endif()
+
 # hack to support building on XCode 6 and 7 - propagate the definition to everything
 if(DEFINED DOCTEST_THREAD_LOCAL)
     target_compile_definitions(${PROJECT_NAME} INTERFACE
@@ -69,6 +77,7 @@ endif()
 
 if(${DOCTEST_WITH_MAIN_IN_STATIC_LIB})
     add_library(${PROJECT_NAME}_with_main STATIC EXCLUDE_FROM_ALL ${doctest_parts_folder}/doctest.cpp)
+    add_library(${PROJECT_NAME}::${PROJECT_NAME}_with_main ALIAS ${PROJECT_NAME}_with_main)
     target_compile_definitions(${PROJECT_NAME}_with_main PRIVATE
         DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN)
     set_target_properties(${PROJECT_NAME}_with_main PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
@@ -79,16 +88,14 @@ if(MAIN_PROJECT AND DOCTEST_WITH_TESTS)
     include(scripts/cmake/common.cmake)
 
     add_subdirectory(examples/all_features)
-
-    # for code coverage we want exactly one binary to be produced and exercised
-    if(NOT DEFINED ENV{CODE_COVERAGE})
-        add_subdirectory(examples/exe_with_static_libs)
-        add_subdirectory(examples/executable_dll_and_plugin)
-        add_subdirectory(examples/combining_the_same_tests_built_differently_in_multiple_shared_objects)
-        add_subdirectory(scripts/playground)
-        add_subdirectory(examples/mpi)
-    endif()
+    add_subdirectory(examples/exe_with_static_libs)
+    add_subdirectory(examples/executable_dll_and_plugin)
+    add_subdirectory(examples/combining_the_same_tests_built_differently_in_multiple_shared_objects)
+    add_subdirectory(scripts/playground)
+    add_subdirectory(examples/mpi)
 endif()
+
+set(DOCTEST_CMAKE_HELPER "${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake/doctest.cmake" CACHE PATH "Absolute path to to doctest helper file. `include(${DOCTEST_CMAKE_HELPER})`")
 
 ################################################################################
 ## PACKAGE SUPPORT
@@ -138,6 +145,11 @@ if(NOT ${DOCTEST_NO_INSTALL})
     install(
         FILES "doctest/doctest.h"
         DESTINATION "${include_install_dir}/doctest"
+    )
+    install(
+        DIRECTORY "doctest/extensions"
+        DESTINATION "${include_install_dir}/doctest"
+        FILES_MATCHING PATTERN "*.h"
     )
 
     install(

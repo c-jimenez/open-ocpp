@@ -119,6 +119,8 @@ Expects that no exception is thrown during evaluation of the expression.
 
 Note that these asserts also have a ```_MESSAGE``` form - like ```CHECK_THROWS_MESSAGE(expression, message)``` - these work identically to the ```_MESSAGE``` form of the normal macros (```CHECK_MESSAGE(a < b, "this shouldn't fail")```) described earlier.
 
+Also note that a singular expression is expected, this means either a function call, an IIFE (immediately invoked function expressions) like `[&]() { throw 1; }()` (note the `()` at the end) or something comparable. Passing in a function or lambda by itself will **not** work.
+
 One may use the [**```DOCTEST_CONFIG_VOID_CAST_EXPRESSIONS```**](configuration.md#doctest_config_void_cast_expressions) config identifier to cast the expression in these asserts to void to avoid warnings or other issues - for example nodiscard statements whose result isn't checked. This will however limit the ability to write entire ```{}``` blocks of code as the expression (or multiple statements) but in that case a simple lambda can be used. This should have been the default behavior from day 1 of the framework...
 
 ## Using asserts out of a testing context
@@ -129,9 +131,22 @@ A ```doctest::Context``` object still has to be created somewhere and set as the
 
 The results would be best when using the [**```DOCTEST_CONFIG_SUPER_FAST_ASSERTS```**](configuration.md#doctest_config_super_fast_asserts) config identifier.
 
-Checkout the [**example**](../../examples/all_features/asserts_used_outside_of_tests.cpp) showcasing how that is done. For more information see the [**issue for the feature request**](https://github.com/onqtam/doctest/issues/114).
+Checkout the [**example**](../../examples/all_features/asserts_used_outside_of_tests.cpp) showcasing how that is done. For more information see the [**issue for the feature request**](https://github.com/doctest/doctest/issues/114).
 
 Currently [**logging macros**](logging.md) cannot be used for extra context for asserts outside of a test run. That means that the ```_MESSAGE``` variants of asserts are also not usable - since they are just a packed ```INFO()``` with an assert right after it.
+
+## String containment
+
+```doctest::Contains``` can be used to check whether the string passed to its constructor is contained within the string it is compared with. Here's a simple example:
+
+```c++
+REQUIRE("foobar" == doctest::Contains("foo"));
+```
+
+It can also be used with the ```THROWS_WITH``` family of assertion macros to check whether the thrown exception [translated to a string](stringification.md#translating-exceptions) contains the provided string. Here's another example:
+```c++
+REQUIRE_THROWS_WITH(func(), doctest::Contains("Oopsie"));
+```
 
 ## Floating point comparisons
 
@@ -150,6 +165,20 @@ REQUIRE(22.0/7 == doctest::Approx(3.141).epsilon(0.01)); // allow for a 1% error
 ```
 
 When dealing with very large or very small numbers it can be useful to specify a scale, which can be achieved by calling the ```scale()``` method on the ```doctest::Approx``` instance.
+
+## NaN checking
+
+Two NaN floating point numbers do not compare equal to each other. This makes it quite inconvenient to check for NaN while capturing the value.
+```c++
+CHECK(std::isnan(performComputation()); // does not capture the result of the call
+```
+
+**doctest** provides `doctest::IsNaN` which can be used in assertions to check if a float (or any other floating point fundamental type) is indeed NaN, outputting the actual value if it is not.
+```c++
+CHECK(doctest::IsNaN(performComputation()); // captures the result!
+```
+
+`IsNaN` is able to capture the value, even if negated via `!`.
 
 --------
 
