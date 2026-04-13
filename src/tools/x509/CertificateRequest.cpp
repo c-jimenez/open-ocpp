@@ -135,8 +135,8 @@ void CertificateRequest::create(const Subject& subject, const Extensions& extens
     // Create X509 request
     X509_REQ* x509_req = X509_REQ_new();
 
-    // Set version (v3)
-    X509_REQ_set_version(x509_req, 2);
+    // Set version (v1(0))
+    X509_REQ_set_version(x509_req, 0);
 
     // Add subject
     X509_NAME* subject_name = X509_NAME_new();
