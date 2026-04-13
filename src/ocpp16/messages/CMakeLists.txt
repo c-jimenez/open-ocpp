@@ -63,6 +63,7 @@ add_library(messages16 OBJECT
     types/IdTokenInfoTypeConverter.cpp
     types/MeterValueConverter.cpp
     types/OcspRequestDataTypeConverter.cpp
+    types/IdTokenTypeConverter.cpp
 )
 
 # Exported includes

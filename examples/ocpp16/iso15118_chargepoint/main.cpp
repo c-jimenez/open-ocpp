@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
                     std::this_thread::sleep_for(std::chrono::seconds(1u));
 
                     // Try to start charging session
-                    status = charge_point->startTransaction(connector_id, token_id.idToken);
+                    status = charge_point->startTransaction(connector_id, token_id.idToken, transaction_id);
                     if (status == AuthorizationStatus::Accepted)
                     {
                         std::cout << "Transaction " << transaction_id << " authorized, start charging" << std::endl;
