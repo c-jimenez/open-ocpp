@@ -248,10 +248,10 @@ std::string DefaultChargePointEventsHandler::getDiagnostics(const ocpp::types::O
     return diag_file;
 }
 
-/** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested() */
-std::string DefaultChargePointEventsHandler::updateFirmwareRequested()
+/** @copydoc std::string IChargePointEventsHandler::updateFirmwareRequested(const std::string&) */
+std::string DefaultChargePointEventsHandler::updateFirmwareRequested(const std::string& url)
 {
-    cout << "Firmware update requested" << endl;
+    cout << "Firmware update requested from: " << url << endl;
     return "/tmp/firmware.tar.gz";
 }
 
