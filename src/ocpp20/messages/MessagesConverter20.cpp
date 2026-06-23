@@ -218,7 +218,6 @@ MessagesConverter20::~MessagesConverter20()
     DELETE_CONVERTER(Authorize);
     DELETE_CONVERTER(ClearedChargingLimit);
     DELETE_CONVERTER(CostUpdated);
-    DELETE_CONVERTER(DataTransfer);
     DELETE_CONVERTER(FirmwareStatusNotification);
     DELETE_CONVERTER(Heartbeat);
     DELETE_CONVERTER(LogStatusNotification);
